@@ -102,6 +102,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
+    orgIds: params.orgIds
   };
 }
 

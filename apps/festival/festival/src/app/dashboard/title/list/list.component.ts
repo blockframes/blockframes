@@ -16,7 +16,6 @@ const columns = {
   'storeConfig.status': 'Status'
 };
 
-
 @Component({
   selector: 'festival-dashboard-title-list',
   templateUrl: './list.component.html',
@@ -40,14 +39,12 @@ export class ListComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
   ) { }
 
-  ngOnInit() {
-    // Sync with anaytics: It's ok to give ALL movieIds they'll just be set to 0
-    this.sub = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.service.syncWithAnalytics(org.movieIds)),
-    ).subscribe();
+  async ngOnInit() {
+    const movies = await this.service.getValue(ref => ref.where('orgIds', 'array-contains', this.orgQuery.getValue().id))
+    const movieIds = movies.map(movie => movie.id);
+    this.sub = this.service.syncWithAnalytics(movieIds).subscribe();
 
-    this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.service.valueChanges(org.movieIds)),
+    this.titles$ = this.service.valueChanges(movieIds).pipe(
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
       tap(movies => {
@@ -67,4 +64,3 @@ export class ListComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 }
-

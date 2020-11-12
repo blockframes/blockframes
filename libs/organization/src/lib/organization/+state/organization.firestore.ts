@@ -35,7 +35,6 @@ interface OrganizationBase<D> extends PublicOrganization {
   email: string;
   fiscalNumber: string;
   isBlockchainEnabled: boolean;
-  movieIds: string[];
   updated: D;
   userIds: string[];
   status: OrganizationStatus;
@@ -94,7 +93,6 @@ export function createOrganizationBase(
     email: '',
     fiscalNumber: '',
     isBlockchainEnabled: false,
-    movieIds: [],
     status: 'pending',
     updated: new Date(),
     userIds: [],

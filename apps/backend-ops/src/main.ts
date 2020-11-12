@@ -41,7 +41,7 @@ async function runCommand() {
   } else if (cmd === 'restore') {
     return restoreShortcut();
   } else if (cmd === 'migrate') {
-    return migrate();
+    return migrate(false);
   } else if (cmd === 'syncUsers') {
     return syncUsers();
   } else if (cmd === 'printUsers') {
