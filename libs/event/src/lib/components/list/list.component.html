@@ -7,7 +7,7 @@
         {{ timeFrame | labelByDate }}
       </h2>
 
-      <ng-container *ngFor="let event of eventList; let isLast = last">
+      <ng-container *ngFor="let event of eventList">
         <li>
           <ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: event }"></ng-template>
         </li>
