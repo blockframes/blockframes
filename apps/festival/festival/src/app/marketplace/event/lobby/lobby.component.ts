@@ -1,13 +1,15 @@
 
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { pluck, switchMap, tap } from 'rxjs/operators';
+import { pluck, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { EventService, Event } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
+import { AuthQuery } from '@blockframes/auth/+state';
+import { TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
 
 @Component({
   selector: 'festival-lobby',
@@ -19,42 +21,46 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   public event$: Observable<Event>;
 
-  public videoTrack$ = new BehaviorSubject<LocalVideoTrack>(undefined);
-  public audioTrack$ = new BehaviorSubject<LocalAudioTrack>(undefined);
+  public track$ = new BehaviorSubject<{
+    video: LocalVideoTrack,
+    audio: LocalAudioTrack
+  }>({video: undefined, audio: undefined});
 
+  public userName: string;
 
   constructor(
-    private service: EventService,
+    private authQuery: AuthQuery,
+    private eventService: EventService,
     private route: ActivatedRoute,
     private twilioService: TwilioService,
   ) { }
 
   ngOnInit() {
+
+    this.userName = `${this.authQuery.user.firstName} ${this.authQuery.user.lastName}`;
+
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
-      switchMap((eventId: string) => this.service.queryDocs(eventId)),
+      switchMap((eventId: string) => this.eventService.queryDocs(eventId)),
     );
 
-    this.twilioService.getLocalVideoTrack().then(videoTrack => {
-      this.videoTrack$.next(videoTrack);
+    this.twilioService.getLocalTrack('video').then(videoTrack => {
+      const { audio } = this.track$.getValue();
+      this.track$.next({video: videoTrack, audio});
     });
 
-    this.twilioService.getLocalAudioTrack().then(audioTrack => {
-      audioTrack?.disable();
-      this.audioTrack$.next(audioTrack);
+    this.twilioService.getLocalTrack('audio').then(audioTrack => {
+      const { video } = this.track$.getValue();
+      this.track$.next({video, audio: audioTrack});
     });
   }
 
   ngOnDestroy() {
-    this.twilioService.cleanLocalAudio();
-    this.twilioService.cleanLocalVideo();
+    this.twilioService.cleanLocalTrack('video');
+    this.twilioService.cleanLocalTrack('audio');
   }
 
-  toggleVideo() {
-    this.twilioService.toggleVideo();
-  }
-
-  toggleAudio() {
-    this.twilioService.toggleAudio();
+  toggleLocalTrack(kind: TrackKind) {
+    this.twilioService.toggleLocalTrack(kind);
   }
 }

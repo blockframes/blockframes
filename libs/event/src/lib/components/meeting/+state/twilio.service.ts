@@ -2,13 +2,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { createLocalAudioTrack, createLocalVideoTrack, LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
+import { TrackKind } from './twilio.model';
 
 
 @Injectable({ providedIn: 'root' })
 export class TwilioService {
 
-  public videoTrack: LocalVideoTrack;
-  public audioTrack: LocalAudioTrack;
+  localTrack: {
+    video: LocalVideoTrack,
+    audio: LocalAudioTrack,
+  } = {
+    video: null,
+    audio: null,
+  }
 
   private token: string;
   private getAccessToken = this.functions.httpsCallable('getAccessToken');
@@ -21,77 +27,40 @@ export class TwilioService {
     return this.getAccessToken({ eventId }).toPromise();
   }
 
-  async getLocalVideoTrack(): Promise<LocalVideoTrack | null> {
-    if (!!this.videoTrack) {
-      return this.videoTrack;
+  async getLocalTrack(kind: 'video'): Promise<LocalVideoTrack | null>;
+  async getLocalTrack(kind: 'audio'): Promise<LocalAudioTrack | null>;
+  async getLocalTrack(kind: TrackKind): Promise<LocalVideoTrack | LocalAudioTrack | null> {
+    if (!!this.localTrack[kind]) {
+      return this.localTrack[kind];
     } else {
       try {
-        // const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        // if (!!mediaStream) {
-          this.videoTrack = await createLocalVideoTrack();
-          return this.videoTrack;
-        // } else {
-        //   return null;
-        // }
+        if (kind === 'video') {
+          this.localTrack[kind] = await createLocalVideoTrack();
+        } else if (kind === 'audio') {
+          this.localTrack[kind] = await createLocalAudioTrack();
+        }
+          return this.localTrack[kind];
       } catch(error) {
         return null
       }
     }
   }
 
-  async getLocalAudioTrack(): Promise<LocalAudioTrack | null> {
-    if (!!this.audioTrack) {
-      return this.audioTrack;
+  cleanLocalTrack(kind: TrackKind) {
+    if (!!this.localTrack[kind]) {
+      this.localTrack[kind].stop();
+      this.localTrack[kind].removeAllListeners();
+      this.localTrack[kind] = null;
+    }
+  }
+
+  toggleLocalTrack(kind: TrackKind) {
+    if (!this.localTrack[kind]) return;
+
+    if (this.localTrack[kind].isEnabled) {
+      this.localTrack[kind].disable();
     } else {
-      try {
-        // const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        // (window as any).bfa = mediaStream;
-        // if (!!mediaStream) {
-          this.audioTrack = await createLocalAudioTrack();
-          return this.audioTrack;
-        // } else {
-        //   return null;
-        // }
-      } catch(error) {
-        return null
-      }
-    }
-  }
-
-  cleanLocalAudio() {
-    if (!!this.audioTrack) {
-      this.audioTrack.stop();
-      this.audioTrack.removeAllListeners();
-      this.audioTrack = null;
-    }
-  }
-  cleanLocalVideo() {
-    if (!!this.videoTrack) {
-      this.videoTrack.stop();
-      this.videoTrack.removeAllListeners();
-      this.videoTrack = null;
-    }
-  }
-
-  toggleVideo() {
-
-    if (!this.videoTrack) return;
-
-    if (this.videoTrack.isEnabled) {
-      this.videoTrack.disable();
-    } else {
-      this.videoTrack.enable();
-    }
-  }
-
-  toggleAudio() {
-
-    if (!this.audioTrack) return;
-
-    if (this.audioTrack.isEnabled) {
-      this.audioTrack.disable();
-    } else {
-      this.audioTrack.enable();
+      this.localTrack[kind].enable();
     }
   }
 

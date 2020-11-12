@@ -3,6 +3,7 @@
   position: relative;
   line-height: 0;
   overflow: hidden;
+  background: black;
 
   video {
     width: 100%;
@@ -19,7 +20,6 @@
     height: 100%;
     top: 0;
     left: 0;
-    background: black;
 
     circle {
       fill: var(--primary);
@@ -31,7 +31,7 @@
     }
   }
 
-  &>div {
+  .name, .controls {
     position: absolute;
     transition: transform 0.3s ease-in-out;
 
@@ -40,22 +40,22 @@
       bottom: 0;
       left: 0;
       background: var(--background);
-      border-radius: 0 5px 0 0;
+      border-radius: 0 4px 0 0;
       padding: 8px 16px;
       color: var(--foreground-text);
-      transform: translateY(40px);
+      transform: translateY(100%);
     }
     &.controls {
       top: 0;
       right: 0;
       background: var(--background);
-      border-radius: 0 0 0 5px;
-      transform: translateY(-40px);
+      border-radius: 0 0 0 4px;
+      transform: translateY(-100%);
     }
   }
 
-  &:hover>div.name,
-  &:hover>div.controls {
+  &:hover .name,
+  &:hover .controls {
     transform: translateY(0);
   }
 }

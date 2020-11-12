@@ -5,34 +5,41 @@
     <h1>Meeting Lobby</h1>
     <h2>{{event.title}}</h2>
 
-    <meeting-video [video]="videoTrack$ | async" [audio]="audioTrack$ | async"></meeting-video>
+    <ng-container *ngIf="track$ | async as track">
+      <meeting-video
+        [video]="track.video"
+        [audio]="track.audio"
+        [name]="userName"
+        local
+      ></meeting-video>
 
-    <ng-container *ngIf="(videoTrack$ | async) as videoTrack; else noVideoTrack">
-      <button mat-icon-button (click)="toggleVideo()">
-        <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
-        <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
-      </button>
-    </ng-container>
-    <ng-template #noVideoTrack>
-      <span matTooltip="Your browser don't have the permission to access the camera">
-        <button mat-icon-button disabled>
-          <mat-icon svgIcon="videocam"></mat-icon>
+      <ng-container *ngIf="track.video; else noVideoTrack">
+        <button mat-icon-button (click)="toggleLocalTrack('video')">
+          <mat-icon *ngIf="track.video.isEnabled" svgIcon="videocam"></mat-icon>
+          <mat-icon *ngIf="!track.video.isEnabled" svgIcon="videocam_off"></mat-icon>
         </button>
-      </span>
-    </ng-template>
-    <ng-container *ngIf="(audioTrack$ | async) as audioTrack; else noAudioTrack">
-      <button mat-icon-button (click)="toggleAudio()">
-        <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
-        <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
-      </button>
-    </ng-container>
-    <ng-template #noAudioTrack>
-      <span matTooltip="Your browser don't have the permission to access the microphone">
-        <button mat-icon-button disabled>
-          <mat-icon svgIcon="unmute"></mat-icon>
+      </ng-container>
+      <ng-template #noVideoTrack>
+        <span>
+          <button mat-icon-button disabled matTooltip="Your browser don't have the permission to access the camera">
+            <mat-icon svgIcon="videocam"></mat-icon>
+          </button>
+        </span>
+      </ng-template>
+      <ng-container *ngIf="track.audio; else noAudioTrack">
+        <button mat-icon-button (click)="toggleLocalTrack('audio')">
+          <mat-icon *ngIf="track.audio.isEnabled" svgIcon="unmute"></mat-icon>
+          <mat-icon *ngIf="!track.audio.isEnabled" svgIcon="mute"></mat-icon>
         </button>
-      </span>
-    </ng-template>
+      </ng-container>
+      <ng-template #noAudioTrack>
+        <span matTooltip="Your browser don't have the permission to access the microphone">
+          <button mat-icon-button disabled>
+            <mat-icon svgIcon="unmute"></mat-icon>
+          </button>
+        </span>
+      </ng-template>
+    </ng-container>
 
     <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
 
