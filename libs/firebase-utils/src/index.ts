@@ -9,3 +9,4 @@ export * from './lib/util';
 export * from './lib/restore-storage-from-ci';
 export * from './lib/types'
 export * from './lib/algolia'
+export * from './lib/commands'

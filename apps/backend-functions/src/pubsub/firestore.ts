@@ -15,7 +15,8 @@ const firestorePubsubHandler: PubsubHandler = async (message) => {
       return exportFirestoreToBucket(db, bucket);
     } else if (command === 'import') {
       const bucket = await getBackupBucket();
-      return restoreFromBackupBucket(bucket, db);
+      const file = message.attributes.file;
+      return restoreFromBackupBucket(bucket, db, file);
     } else if (command === 'clear') {
       return clear(db);
     }

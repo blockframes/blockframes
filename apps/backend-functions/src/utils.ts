@@ -7,6 +7,8 @@ export { ErrorResultResponse } from '@blockframes/utils/utils';
 // DOCUMENT ON-CHANGES FUNCTIONS //
 ///////////////////////////////////
 
+type Function = (...args: any[]) => any;
+
 /**
  * Trigger a function when a document is written (create / update / delete).
  *
