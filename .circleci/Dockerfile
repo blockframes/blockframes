@@ -47,4 +47,4 @@ ENV NODE_OPTIONS --max_old_space_size=7168
 ENV PROJECT_ID blockframes-ci
 ENV NG_CONFIG ci
 ENV SERVICE_ACCOUNT FIREBASE_CI_SERVICE_ACCOUNT
-ENV ENV_TS env/env.ci.ts
+ENV ENV_TS env/env.blockframes-ci.ts
