@@ -271,7 +271,7 @@ jobs:
       - slack/notify:
           message: 'Deploying to demo1...'
       - prepare_environment
-      - build_deploy_upgrade
+      - build_deploy_prepare
   deploy-to-demo2:
     executor: blockframes-ci
     environment:
@@ -281,7 +281,7 @@ jobs:
       - slack/notify:
           message: 'Deploying to demo2...'
       - prepare_environment
-      - build_deploy_upgrade
+      - build_deploy_prepare
   deploy-to-demo3:
     executor: blockframes-ci
     environment:
@@ -291,7 +291,7 @@ jobs:
       - slack/notify:
           message: 'Deploying to demo3...'
       - prepare_environment
-      - build_deploy_upgrade
+      - build_deploy_prepare
   push-anon-db-to-ci:
     executor: blockframes-ci
     steps:
