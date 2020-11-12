@@ -33,7 +33,8 @@ export class EventEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
+    const type = this.form.value.type === 'meeting' ? 'lobby' : 'session';
+    this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/${type}`;
 
     const { start, end } = this.form.value;
     this.duration = end.getTime() - start.getTime();
