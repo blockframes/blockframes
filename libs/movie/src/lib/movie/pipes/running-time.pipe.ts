@@ -8,48 +8,31 @@ import { screeningStatus } from '@blockframes/utils/static-model/static-model';
  * @param isStatusNeeded For some component, like movie-card, we don't want the status in parenthesis
  */
 export function formatRunningTime(runningTime?: MovieRunningTime, isStatusNeeded: boolean = true) {
+  const { time, status } = runningTime;
+
   if (isStatusNeeded) {
     // if time and status
-    if (runningTime.time && runningTime.status) {
-      const status = screeningStatus[runningTime.status];
+    if (time && status) {
 
-      if (typeof runningTime.time === 'number') {
-        return `${runningTime.time} min (${status})`;
-      }
-      else return;
+      if (typeof time === 'number') return `${time} min (${screeningStatus[runningTime.status]})`;
     }
 
     // if only time
-    else if (runningTime.time && !runningTime.status) {
-      if(typeof runningTime.time === 'number') {
-        return `${runningTime.time} min`;
-      }
-      else return;
+    else if (time && !status) {
+      if(typeof time === 'number') return `${time} min`;
     }
 
     // if only status
-    else if (!runningTime.time && runningTime.status) {
-      const status = screeningStatus[runningTime.status];
-      return status;
-    }
-
-    // if no time and no status
-    else return
+    else if (!time && status) return screeningStatus[status];
   }
 
   else {
-     if (runningTime.time && runningTime.status) {
-      if(typeof runningTime.time === 'number') {
-        if (runningTime.status === "estimated") {
-          return `≈ ${runningTime.time} min`;
-        }
-        else return `${runningTime.time} min`;
+     if (time && status) {
+      if(typeof time === 'number') {
+        if (status === "estimated") return `≈ ${time} min`;
+        else return `${time} min`;
       }
-      else return;
     }
-
-    // if no time and no status
-    else return
   }
 
 }
