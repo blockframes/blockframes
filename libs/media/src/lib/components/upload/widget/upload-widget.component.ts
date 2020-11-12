@@ -7,6 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorStore } from '@blockframes/utils/helpers';
 import { slideUp } from '@blockframes/utils/animations/fade';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
+import { dissectFilePath } from '@blockframes/utils/file-sanitizer';
 
 @Component({
   selector: 'bf-upload-widget',
@@ -53,26 +54,10 @@ export class UploadWidgetComponent {
   async removeReference(task: AngularFireUploadTask) {
 
     const path = task.task.snapshot.ref.fullPath;
-    const filePathElements = path.split('/');
-
-    // remove tmp/
-    filePathElements.shift();
-    // remove "protected/"" or "public/"
-    filePathElements.shift();
-
-    const collection = filePathElements.shift();
-    const docId = filePathElements.shift();
-    
-    if (!docId || !collection) {
-      throw new Error('Invalid path pattern');
-    }
-
-    // remove the file name
-    filePathElements.pop();
+    const { collection, docId, fieldToUpdate } = dissectFilePath(path)
 
     const docSnapshot = await this.db.collection(collection).doc(docId).get().toPromise();
     const docData = docSnapshot.data();
-    const fieldToUpdate = filePathElements.join('.');
 
     const currentMediaValue = getDeepValue(docData, fieldToUpdate);
 

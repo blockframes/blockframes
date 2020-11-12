@@ -2,8 +2,8 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { chunk } from "lodash";
 import * as env from '@env'
-import { tempUploadDir, privacies } from "@blockframes/utils/file-sanitizer";
 import type { File as GFile } from '@google-cloud/storage';
+import { dissectFilePath } from "@blockframes/utils/file-sanitizer";
 
 export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
@@ -31,43 +31,7 @@ export function getCollection<T>(path: string): Promise<T[]> {
 export async function getDocAndPath(filePath: string | undefined) {
   const db = admin.firestore();
 
-  if (!filePath) {
-    throw new Error('Upload Error : Undefined File Path');
-  }
-
-  const filePathElements = filePath.split('/');
-
-  if (filePathElements.length < 4) {
-    const error = `Upload Error : File Path ${filePath} is malformed.`;
-    const solution = 'It should at least contain 3 slash.';
-    const example = 'Example: public/collection/id/field/fileName';
-    throw new Error(`${error} ${solution}\n${example}`);
-  }
-
-  // remove tmp/
-  let isInTmpDir = false;
-  if (filePathElements[0] === tempUploadDir) {
-    filePathElements.shift();
-    filePath = filePathElements.join('/');
-    isInTmpDir = true;
-  }
-
-  let security;
-  // remove "protected/"" or "public/"
-  if (privacies.includes(filePathElements[0] as any)) {
-    security = filePathElements.shift();
-  }
-
-  const collection = filePathElements.shift();
-  const docId = filePathElements.shift();
-
-  if (!docId || !collection) {
-    throw new Error('Invalid path pattern');
-  }
-
-  // remove the file name at the end
-  // `filePathElements` is now only composed by the field to update
-  filePathElements.pop();
+  const { collection, docId, isInTmpDir, security, fieldToUpdate } = dissectFilePath(filePath)  
 
   const doc = db.collection(collection).doc(docId);
   const docSnapshot = await doc.get();
@@ -75,10 +39,7 @@ export async function getDocAndPath(filePath: string | undefined) {
   if (!docSnapshot.exists) {
     throw new Error('File Path point to a firestore document that does not exists');
   }
-
   const docData = docSnapshot.data();
-
-  const fieldToUpdate = filePathElements.join('.');
 
   return {
     isInTmpDir,
