@@ -23,7 +23,8 @@ export async function upgrade(db: Firestore) {
 function updateRunningTime(runningTime) {
   if (typeof runningTime.time === 'number') {
     runningTime.time = runningTime.time
-  } else delete runningTime.time;
+  }
+  else delete runningTime.time;
 
   return runningTime;
 }

@@ -209,7 +209,6 @@ export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRel
 
 export function createRunningTime(runningTime: Partial<MovieRunningTime> = {}): MovieRunningTime {
   return {
-    time: null,
     status: '',
     ...runningTime
   };

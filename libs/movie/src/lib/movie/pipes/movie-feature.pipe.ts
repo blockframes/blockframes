@@ -24,7 +24,7 @@ export class MovieFeaturePipe implements PipeTransform {
       displayedGenres,
       displayedLanguages,
       release.year,
-      formatRunningTime(runningTime)
+      formatRunningTime(runningTime, false)
     ].filter(v => !!v).join(' | ');
   }
 }

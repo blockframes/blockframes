@@ -244,7 +244,7 @@ export interface MovieRelease {
 
 export interface MovieRunningTime {
   time?: number,
-  status: string,
+  status?: string,
 }
 
 export interface OtherLink {
