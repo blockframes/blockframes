@@ -37,7 +37,7 @@ export class EventViewComponent implements OnInit {
     this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
     this.accessRoute = `/c/o/marketplace/event/${this.event.id}/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
 
-    this.invitation$ = this.invitationQuery.whereIAmGuest().pipe(
+    this.invitation$ = this.invitationQuery.whereCurrentUserIsGuest().pipe(
       map(invits => invits.find(e => e.docId === this.event.id))
     );
   }

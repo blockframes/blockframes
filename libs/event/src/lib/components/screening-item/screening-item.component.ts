@@ -21,7 +21,7 @@ export class ScreeningItemComponent {
     this.screening = screening;
     this.movie = screening.movie;
     this.poster = screening.movie?.poster;
-    this.invitation$ = this.invitationQuery.whereIAmGuest().pipe(
+    this.invitation$ = this.invitationQuery.whereCurrentUserIsGuest().pipe(
       map(invits => invits.find(e => e.docId === screening.id))
     );
   }
