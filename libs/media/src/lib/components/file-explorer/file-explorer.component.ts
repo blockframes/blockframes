@@ -76,7 +76,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
       const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
 
       titles.forEach((title, index) =>
-        this.directories.push(createMovieFileStructure(title.id, title.title.original, index + 1)) // we do `index + 1` because `[0]` is the org
+        this.directories.push(createMovieFileStructure(title.id, title.title.international, index + 1)) // we do `index + 1` because `[0]` is the org
       );
       this.cdr.markForCheck();
     });
