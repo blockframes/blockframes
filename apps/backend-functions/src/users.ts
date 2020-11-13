@@ -5,7 +5,7 @@ import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreati
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
 import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
-import { getDocument, getFromEmail } from './data/internals';
+import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
@@ -206,10 +206,7 @@ export const sendUserMail = async (data: { subject: string, message: string, app
     throw new Error('Subject and message are mandatory parameters for the "sendUserMail()" function');
   }
 
-  let from;
-  if (user.orgId) {
-    from = await getFromEmail(user.orgId);
-  }
+  const from = getSendgridFrom(app);
 
   await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
