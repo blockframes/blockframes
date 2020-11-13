@@ -25,7 +25,7 @@ export const { storageBucket } = firebase;
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
 
-export const adminEmails: Record<string | 'default', string> = {
+export const supportEmails: Record<string | 'default', string> = {
   catalog: dev ? mockConfigIfNeeded('admin', 'email_catalog'): 'developers+catalog@cascade8.com',
   festival: dev ? mockConfigIfNeeded('admin', 'email_festival'): 'developers+festival@cascade8.com',
   financiers: dev ? mockConfigIfNeeded('admin', 'email_financiers'): 'developers+financiers@cascade8.com',
