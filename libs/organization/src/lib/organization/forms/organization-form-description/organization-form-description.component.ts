@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { orgActivity } from '@blockframes/utils/static-model';
 
 @Component({
-  selector: '[fiscalNumber] [activity] organization-form-description',
+  selector: '[fiscalNumber] [activity] [description] organization-form-description',
   templateUrl: './organization-form-description.component.html',
   styleUrls: ['./organization-form-description.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -12,6 +12,7 @@ export class OrganizationFormDescriptionComponent {
   activities = orgActivity;
   @Input() fiscalNumber: FormControl;
   @Input() activity: FormControl;
+  @Input() description: FormControl;
 
   constructor() { }
 

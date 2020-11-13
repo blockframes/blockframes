@@ -40,6 +40,7 @@ function createOrganizationFormControl(params?: Organization) {
   const organization = createOrganization(params);
   return {
     denomination: new OrganizationDenominationForm(organization.denomination),
+    description: new FormControl(organization.description),
     addresses: new OrganizationAddressesForm(organization.addresses),
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
