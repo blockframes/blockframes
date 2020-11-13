@@ -1,6 +1,6 @@
 import 'tsconfig-paths/register';
 import { loadAdminServices, catchErrors, latestAnonDbFilename } from '@blockframes/firebase-utils';
-import { backupBucket } from '../../env/env.ci';
+import { backupBucket } from '../../env/env.blockframes-ci';
 import { existsSync } from 'fs';
 import { join } from 'path';
 

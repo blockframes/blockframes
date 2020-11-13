@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register';
-import { backupBucket, firebase } from 'env/env.prod';
+import { backupBucket, firebase } from 'env/env.blockframes';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import * as admin from 'firebase-admin';
