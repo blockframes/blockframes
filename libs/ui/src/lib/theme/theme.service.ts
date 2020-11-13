@@ -43,7 +43,7 @@ export class ThemeService {
   initTheme(mode: Theme) {
     const isDarkMedia = this.media.matchMedia('(prefers-color-scheme: dark)');
     let theme: Theme | undefined;
-    // check: https://web.dev/prefers-color-scheme/#finding-out-if-dark-mode-is-supported-by-the-browser
+    // @dev check: https://web.dev/prefers-color-scheme/#finding-out-if-dark-mode-is-supported-by-the-browser
     if (isDarkMedia.media !== 'not all') {
       isDarkMedia.onchange = ({ matches }) => this.setTheme(matches ? 'dark' : 'light');
       theme = isDarkMedia.matches ? 'dark' : 'light';
