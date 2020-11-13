@@ -34,7 +34,7 @@
   </ng-container>
 </ng-container>
 <ng-template #noScreenings>
-  <ng-container *ngIf="org$ | async as org">
+  <ng-container *ngFor=" let org of orgs$ | async">
     <span class="mat-body-1">There is no screening scheduled at the moment. You can contact
       {{ org.denomination?.public || 'the organization' }} for any
       questions.</span>

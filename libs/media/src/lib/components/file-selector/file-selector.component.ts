@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '@blockframes/media/+state/media.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -34,7 +34,7 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
 
     const org = this.orgQuery.getActive();
     this.orgFiles = recursivelyListFiles(org).map(file => ({ path: file, isSelected: this.selectedFiles.includes(file) }));
-    this.movies = await this.movieService.getValue(ref => ref.where('orgIds', 'array-contains', org.id))
+    this.movies = await this.movieService.getValue(fromOrg(org.id))
     this.moviesFiles = {};
     this.movies.forEach(movie =>
       this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file =>

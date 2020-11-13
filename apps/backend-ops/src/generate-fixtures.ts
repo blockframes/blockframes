@@ -66,6 +66,8 @@ async function generateOrgs() {
 
   console.time('Fetching orgs from Firestore');
   const orgs = await getCollection<Organization>('orgs');
+  const movies = await Promise.all(orgs.map(org => getDocument(`movies/${org.id}`))) as Movie[]
+  const movieIds = movies.map(movie => movie.id);
   console.timeEnd('Fetching orgs from Firestore');
 
   const output: Partial<Organization>[] = orgs.map((org) => ({
@@ -73,7 +75,7 @@ async function generateOrgs() {
     denomination: org.denomination,
     description: org.description,
     email: org.email,
-    movieIds: org.movieIds,
+    movieIds,
     appAccess: org.appAccess,
     userIds: org.userIds,
   }));

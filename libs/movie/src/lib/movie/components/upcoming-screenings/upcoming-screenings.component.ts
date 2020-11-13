@@ -29,7 +29,7 @@ export class UpcomingScreeningsComponent {
   public screenings$ = this.eventService.filterScreeningsByMovieId(this.query.getActive().id).pipe(
     map(screenings => screenings.sort(this.sortByDate)));
 
-  public org$ = this.orgService.queryFromMovie(this.query.getActive());
+  public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
 
   public invitationWasSent = false;
 
@@ -42,7 +42,7 @@ export class UpcomingScreeningsComponent {
 
   askForInvitation(events: Event[]) {
     const eventId = this.sessionCtrl.value === 'first' ? events[0].id : events[1].id;
-    this.org$.pipe(take(1)).subscribe(orgs => {
+    this.orgs$.pipe(take(1)).subscribe(orgs => {
       orgs.forEach(org => {
         this.invitationService.request('org', org.id).from('user').to('attendEvent', eventId)
       })

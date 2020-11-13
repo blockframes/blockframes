@@ -40,8 +40,9 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
       tap(_ => this.store.reset()),
       switchMap(async contract => {
         // Filter movieIds before the query to relieve it.
-        const organizationMovieIds = await this.movieService.getValue(fromOrg(this.organizationQuery.getActive().id))
-        const ids = organizationMovieIds.map(m => m.id);
+        const orgId = this.organizationQuery.getActiveId();
+        const movies = await this.movieService.getValue(fromOrg(orgId));
+        const ids = movies.map(m => m.id);
         const movieIds = contract.titleIds.filter(titleId => ids.includes(titleId));
         return movieIds.length
           ? awaitSyncQuery.call(this.service, movieListContractQuery(contract.id, movieIds))

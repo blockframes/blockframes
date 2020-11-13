@@ -9,7 +9,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 export class MovieOrganizationListGuard extends CollectionGuard<MovieState> {
 
   constructor(
-    public service: MovieService,
+    protected service: MovieService,
     private organizationQuery: OrganizationQuery,
     private store: MovieStore,
   ) {

@@ -52,11 +52,8 @@ export class ListComponent implements OnInit {
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
       switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
-      map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.financiers)),
-      switchMap(movies => {
-        return this.filter$.pipe(map(filter => filterMovieCampaign(movies, filter)))
-      }),
+      switchMap(movies => this.filter$.pipe(map(filter => filterMovieCampaign(movies, filter)))),
       tap(movies => {
         !!movies.length ?
           this.dynTitle.setPageTitle('My titles') :
