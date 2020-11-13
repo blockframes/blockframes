@@ -151,9 +151,10 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
       return pathInfo.docId === userDoc.orgId;
     case 'movies':
       if (!userDoc.orgId) { return false; }
-      const org = await db.collection('orgs').doc(userDoc.orgId).get();
-      const orgDoc = createOrganizationBase(org.data());
-      return orgDoc.movieIds.some(id => pathInfo.docId === id);
+      const moviesCol = await db.collection('movies').where('orgIds', 'array-contains', userDoc.orgId).get();
+      const movies = moviesCol.docs.map(doc => doc.data());
+      const orgIds = movies.map(m => m.orgIds)
+      return orgIds.some(id => pathInfo.docId === id);
     default:
       return false;
   }

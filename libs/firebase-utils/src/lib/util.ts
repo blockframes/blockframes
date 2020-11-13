@@ -6,7 +6,7 @@ import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
-import { getDocument } from './firebase-utils'
+import { getCollectionRef, getDocument } from './firebase-utils'
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -130,6 +130,9 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
 }
 
 export async function hasAcceptedMovies(org: OrganizationDocument) {
-  const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)));
+  const moviesColRef = await admin.firestore().collection('movies')
+    .where('orgIds', 'array-contains', org.id)
+    .where('storeConfig.status', '==', 'accepted').get();
+  const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.storeConfig?.status === 'accepted')
 }
