@@ -2,53 +2,51 @@ export const privacies = ['public', 'protected'] as const;
 export type Privacy = typeof privacies[number];
 export const tempUploadDir = 'tmp';
 
-export function dissectFilePath(filePath: string | undefined) {
+export function deconstructFilePath(filePath: string | undefined) {
   if (!filePath) {
     throw new Error('Upload Error : Undefined File Path');
   }
 
-  const filePathElements = filePath.split('/');
+  const segments = filePath.split('/');
 
-  if (filePathElements.length < 4) {
+  if (segments.length < 4) {
     const error = `Upload Error : File Path ${filePath} is malformed.`;
     const solution = 'It should at least contain 3 slash.';
     const example = 'Example: public/collection/id/field/fileName';
     throw new Error(`${error} ${solution}\n${example}`);
   }
 
+  const isTmp = segments[0] === tempUploadDir;
   // remove tmp/
-  let isInTmpDir = false;
-  if (filePathElements[0] === tempUploadDir) {
-    filePathElements.shift();
-    filePath = filePathElements.join('/');
-    isInTmpDir = true;
+  if (isTmp) segments.shift();
+
+  // remove "protected/" or "public/"
+  let privacy: Privacy = segments.shift() as Privacy;
+  if (!privacies.includes(privacy)) {
+    throw new Error(`Path '${segments.join('/')}' should start with privacy setting`);
   }
 
-  let security: string;
-  // remove "protected/"" or "public/"
-  if (privacies.includes(filePathElements[0] as any)) {
-    security = filePathElements.shift();
-  }
-
-  const collection = filePathElements.shift();
-  const docId = filePathElements.shift();
+  const collection = segments.shift();
+  const docId = segments.shift();
 
   if (!docId || !collection) {
     throw new Error('Invalid path pattern');
   }
 
-  // remove the file name at the end
-  // `filePathElements` is now only composed by the field to update
-  filePathElements.pop();
+  const docPath = `${collection}/${docId}`;
 
-  const fieldToUpdate = filePathElements.join('.');
+  // remove the file name at the end
+  // `segments` is now only composed by the field to update
+  segments.pop();
+
+  const field = segments.join('.');
 
   return {
-    isInTmpDir,
-    security,
+    isTmp,
+    privacy,
     collection,
-    docId,
-    fieldToUpdate
+    docPath,
+    field
   }
 }
 

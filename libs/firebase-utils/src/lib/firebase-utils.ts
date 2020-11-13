@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import { chunk } from "lodash";
 import * as env from '@env'
 import type { File as GFile } from '@google-cloud/storage';
-import { dissectFilePath } from "@blockframes/utils/file-sanitizer";
+import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
 
 export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
@@ -31,23 +31,24 @@ export function getCollection<T>(path: string): Promise<T[]> {
 export async function getDocAndPath(filePath: string | undefined) {
   const db = admin.firestore();
 
-  const { collection, docId, isInTmpDir, security, fieldToUpdate } = dissectFilePath(filePath)  
+  const { collection, docPath, isTmp, privacy, field } = deconstructFilePath(filePath)  
 
-  const doc = db.collection(collection).doc(docId);
-  const docSnapshot = await doc.get();
+  const doc = db.doc(docPath);
+  const snapshot = await doc.get();
 
-  if (!docSnapshot.exists) {
+  if (!snapshot.exists) {
     throw new Error('File Path point to a firestore document that does not exists');
   }
-  const docData = docSnapshot.data();
+  const docData = snapshot.data();
 
   return {
-    isInTmpDir,
-    security,
+    isTmp,
+    privacy,
     filePath,
     doc,
     docData,
-    fieldToUpdate,
+    field,
+    docPath,
     collection
   }
 }

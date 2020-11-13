@@ -7,7 +7,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorStore } from '@blockframes/utils/helpers';
 import { slideUp } from '@blockframes/utils/animations/fade';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
-import { dissectFilePath } from '@blockframes/utils/file-sanitizer';
+import { deconstructFilePath } from '@blockframes/utils/file-sanitizer';
+import { HostedVideo, MovieNote } from '@blockframes/movie/+state/movie.firestore';
+import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: 'bf-upload-widget',
@@ -49,38 +51,27 @@ export class UploadWidgetComponent {
 
   /**
    * Removes the already-set References in the db 
-   * This function has similarities to function getDocAndPath in @blockframes/firebase-utils
    */
   async removeReference(task: AngularFireUploadTask) {
 
     const path = task.task.snapshot.ref.fullPath;
-    const { collection, docId, fieldToUpdate } = dissectFilePath(path)
+    const { docPath, field } = deconstructFilePath(path);
 
-    const docSnapshot = await this.db.collection(collection).doc(docId).get().toPromise();
-    const docData = docSnapshot.data();
+    const snapshot = await this.db.doc(docPath).get().toPromise();
+    const data = snapshot.data();
+    const media: string[] | HostedVideo[] | HostedMediaWithMetadata[] | MovieNote[] | string | HostedVideo = getDeepValue(data, field);
 
-    const currentMediaValue = getDeepValue(docData, fieldToUpdate);
-
-    if (Array.isArray(currentMediaValue)) {
-      const index = currentMediaValue.findIndex(ref => typeof ref === 'string' ? ref === path : ref.ref === path)
-      currentMediaValue.splice(index, 1);
-    } else if (!!currentMediaValue.ref) {
-      currentMediaValue.ref = '';
+    if (Array.isArray(media)) {
+      // Still Photos (string[]), Documents (HostedMediaWithMetadata[]), Notes & Statements (MovieNote) or OtherVideos (HostedVideo[])
+      const index = media.findIndex(ref => typeof ref === 'string' ? ref === path : ref.ref === path);
+      media.splice(index, 1);
+      return snapshot.ref.update({ [field]: media });
     } else {
-      const elements = fieldToUpdate.split('.');
-      if (elements.length === 1) {
-      // field with reference is directly on docData
-        docData[fieldToUpdate] = '';
-      } else {
-        // getting the parent object of the field with reference
-        // this is needed because currentMediaValue of type string is not connected to docData
-        const field = elements.pop();
-        const pathToParent = elements.join('.');
-        const mediaParent = getDeepValue(docData, pathToParent);
-        mediaParent[field] = '';
-      }
+      // Logo, profile image, and more (string), Screener (HostedVideo)
+      // Soon we will have files of type HostedMediaWithMetadata here too
+      // Chose to only update the reference field and not the whole object to not lose potential useful data (e.g. jwPlayerId)
+      const refField = typeof media === 'string' ? field : `${field}.ref`;
+      return snapshot.ref.update({ [refField]: '' });
     }
-
-    return docSnapshot.ref.update(docData);
   }
 }
