@@ -21,7 +21,7 @@ export function deconstructFilePath(filePath: string | undefined) {
   if (isTmp) segments.shift();
 
   // remove "protected/" or "public/"
-  let privacy: Privacy = segments.shift() as Privacy;
+  const privacy: Privacy = segments.shift() as Privacy;
   if (!privacies.includes(privacy)) {
     throw new Error(`Path '${segments.join('/')}' should start with privacy setting`);
   }
