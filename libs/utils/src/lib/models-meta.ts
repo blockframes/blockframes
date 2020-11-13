@@ -1,6 +1,8 @@
 import { App } from "./apps";
+import { firestore } from 'firebase/app';
+type Timestamp = firestore.Timestamp;
 
-export interface DocumentMeta<D> { 
+export interface DocumentMeta<D> {
   createdBy: string,
   updatedBy?: string,
   deletedBy?: string,
@@ -16,4 +18,25 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): Docu
     createdAt: new Date(),
     ...meta
   }
+}
+
+export function formatDocumentMetaFromFirestore(
+  meta: DocumentMeta<Timestamp>
+): DocumentMeta<Date> {
+
+  const m = { ...meta } as any;
+
+  if (!!meta.createdAt) {
+    m.createdAt = meta.createdAt.toDate();
+  }
+
+  if (!!meta.updatedAt) {
+    m.updatedAt = meta.updatedAt.toDate();
+  }
+
+  if (!!meta.deletedAt) {
+    m.deletedAt = meta.deletedAt.toDate();
+  }
+
+  return m;
 }
