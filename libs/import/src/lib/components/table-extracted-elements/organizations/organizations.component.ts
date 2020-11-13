@@ -124,7 +124,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
 
     importState.org.status = 'accepted';
 
-    await this.orgService.addOrganization(importState.org, superAdmin);
+    await this.orgService.addOrganization(importState.org, firstApp, superAdmin);
     const data = this.rows.data;
 
     importState.errors.push({

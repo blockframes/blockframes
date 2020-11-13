@@ -7,8 +7,8 @@ import {
   MovieAnalytics,
   SyncMovieAnalyticsOptions,
   createStoreConfig,
-  createDocumentMeta
 } from './movie.model';
+import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';

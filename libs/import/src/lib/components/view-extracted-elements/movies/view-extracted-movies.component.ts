@@ -3,7 +3,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import {
   Movie,
   MovieService,
-  createDocumentMeta,
   createMovieRating,
   createMovieReview,
   createMovieOriginalRelease,
@@ -12,6 +11,7 @@ import {
   createMovie,
   populateMovieLanguageSpecification,
 } from '@blockframes/movie/+state';
+import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';

@@ -5,6 +5,8 @@ import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationForm } from '../../forms/organization.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'organization-create',
@@ -22,6 +24,7 @@ export class OrganizationCreateComponent {
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
+    private routerQuery: RouterQuery
   ) {
   }
 
@@ -37,7 +40,7 @@ export class OrganizationCreateComponent {
 
     const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(this.form);
 
-    await this.service.addOrganization(documentToUpdate);
+    await this.service.addOrganization(documentToUpdate, getCurrentApp(this.routerQuery));
     this.router.navigate(['../app-access'], { relativeTo: this.route });
   }
 }

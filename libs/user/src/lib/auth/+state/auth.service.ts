@@ -14,6 +14,7 @@ import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId } from '@env';
+import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -110,8 +111,9 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /** Create the user in users collection on firestore. */
-  public createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string }) {
+  public createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string, meta: DocumentMeta<Date> }) {
     return {
+      _meta: createDocumentMeta(ctx.meta),
       uid: user.uid,
       email: user.email,
       firstName: ctx.firstName,
@@ -128,13 +130,13 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async createUser(email: string, orgName: string, app: App = getCurrentApp(this.routerQuery)): Promise<PublicUser> {
     const f = this.functions.httpsCallable('createUser');
-    const user : PublicUser =  await f({ email, orgName, app }).toPromise();
+    const user: PublicUser = await f({ email, orgName, app }).toPromise();
 
     return createUser(user);
   }
 
   public async getPrivacyPolicy() {
-    const { ip } = await this.http.get<{ip: string}>(`https://api.ipify.org/?format=json`).toPromise();
+    const { ip } = await this.http.get<{ ip: string }>(`https://api.ipify.org/?format=json`).toPromise();
     return {
       date: new Date(),
       ip: ip

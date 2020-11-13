@@ -6,7 +6,6 @@ import {
   MovieDocumentWithDates,
   MovieAnalytics,
   MovieLegalDocuments,
-  DocumentMeta,
   MovieStakeholders,
   MovieLanguageSpecification,
   LanguageRecord,
@@ -16,7 +15,6 @@ import {
   Prize,
   BoxOffice,
   MovieRelease,
-  MovieRunningTime,
   OtherLink,
   MovieShooting,
   MovieShootingDate,
@@ -258,14 +256,6 @@ export function createMovieLegalDocuments(
   return {
     chainOfTitles: [],
     ...params
-  }
-}
-
-export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {
-  return {
-    createdBy: '',
-    createdAt: new Date(),
-    ...meta
   }
 }
 

@@ -23,7 +23,13 @@ export const { storageBucket } = firebase;
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;
 
-export const adminEmail = functions.config().admin.email;
+export const adminEmails: Record<string | 'default', string> = {
+  catalog: functions.config().admin.email_catalog,
+  festival: functions.config().admin.email_festival,
+  financiers: functions.config().admin.email_financiers,
+  default: functions.config().admin.email
+} as const;
+
 export const adminPassword = functions.config().admin.password;
 
 export const jwplayerSecret = functions.config().jwplayer.secret;

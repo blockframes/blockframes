@@ -26,6 +26,7 @@ import { firestore } from "firebase/app";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { MovieAppAccess } from "@blockframes/utils/apps";
+import { DocumentMeta } from "@blockframes/utils/models-meta";
 
 // TODO issue#2582
 
@@ -211,15 +212,6 @@ export interface MovieReview {
   journalName?: string,
   criticQuote?: string,
   revueLink?: string,
-}
-
-export interface DocumentMeta<D> {
-  createdBy: string,
-  updatedBy?: string,
-  deletedBy?: string,
-  createdAt: D,
-  updatedAt?: D,
-  deletedAt?: D,
 }
 
 export interface MovieLegalDocuments {

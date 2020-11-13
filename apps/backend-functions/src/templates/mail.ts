@@ -1,17 +1,25 @@
 /**
  * Templates for transactional emails we send to user and to cascade8 admins.
  */
-import { adminEmail, appUrl } from '../environments/environment';
+import { adminEmails, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EmailRecipient } from '@blockframes/utils/emails/utils';
+import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/connexion#login';
 export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
+
+function getAdminEmailToUse(app?: App) {
+  if (app && !!adminEmails[app]) {
+    return adminEmails[app]
+  }
+  return adminEmails.default;
+}
 
 // ------------------------- //
 //   FOR BLOCKFRAMES USERS   //
@@ -201,7 +209,7 @@ const userFirstConnexionTemplate = (user: PublicUser) =>
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
 export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
   return {
-    to: adminEmail,
+    to: getAdminEmailToUse(org._meta.createdFrom),
     subject: 'A new organization has been created',
     text: organizationCreatedTemplate(org.id)
   };
@@ -213,7 +221,7 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
  */
 export async function organizationRequestedAccessToApp(org: OrganizationDocument): Promise<EmailRequest> {
   return {
-    to: adminEmail,
+    to: getAdminEmailToUse(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
     text: organizationRequestAccessToAppTemplate(org.id)
   };
@@ -221,7 +229,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
   return {
-    to: adminEmail,
+    to: getAdminEmailToUse(user._meta.createdFrom),
     subject: 'New user connexion',
     text: userFirstConnexionTemplate(user)
   };
@@ -229,7 +237,7 @@ export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest
 
 export function sendDemoRequestMail(information: RequestDemoInformations) {
   return {
-    to: adminEmail,
+    to: getAdminEmailToUse(information.app),
     subject: 'A demo has been requested',
     text: `A user wants to schedule a demo of Archipel Content.
 
@@ -244,9 +252,9 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
   }
 }
 
-export function sendContactEmail(userName: string, userMail: string, subject: string, message: string): EmailRequest {
+export function sendContactEmail(userName: string, userMail: string, subject: string, message: string, app: App): EmailRequest {
   return {
-    to: adminEmail,
+    to: getAdminEmailToUse(app),
     subject: 'An user contacts Blockframes Admin',
     text: ` ${userName} (${userMail}) has sent an email.
     Subject of the mail : ${subject}

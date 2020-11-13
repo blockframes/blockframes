@@ -81,12 +81,7 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
-        /**
-         * @dev TODO (#2826) since there is now way to get the used app when this function is triggered,
-         * we cannot set the custom "from" here
-        */
-        await startAccountCreationEmailFlow({ email, firstName: u.firstName });
-
+        await startAccountCreationEmailFlow({ email, firstName: u.firstName, app: u._meta.createdFrom });
       }
       tx.update(userDocRef, { email, uid });
     } else {
@@ -201,8 +196,8 @@ export const sendDemoRequest = async (data: RequestDemoInformations): Promise<Re
   return data;
 }
 
-export const sendUserMail = async (data: any, context: CallableContext): Promise<any> => {
-  const { subject, message } = data;
+export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext): Promise<any> => {
+  const { subject, message, app } = data;
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
@@ -216,7 +211,7 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
     from = await getFromEmail(user.orgId);
   }
 
-  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message), from);
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
 
 

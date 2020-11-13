@@ -25,7 +25,13 @@ export const { storageBucket } = firebase;
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
 
-export const adminEmail = dev ? mockConfigIfNeeded('admin', 'email'): 'developers@cascade8.com';
+export const adminEmails: Record<string | 'default', string> = {
+  catalog: dev ? mockConfigIfNeeded('admin', 'email_catalog'): 'developers+catalog@cascade8.com',
+  festival: dev ? mockConfigIfNeeded('admin', 'email_festival'): 'developers+festival@cascade8.com',
+  financiers: dev ? mockConfigIfNeeded('admin', 'email_financiers'): 'developers+financiers@cascade8.com',
+  default: dev ? mockConfigIfNeeded('admin', 'email'): 'developers@cascade8.com'
+} as const;
+
 export const adminPassword = mockConfigIfNeeded('admin', 'password');
 
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');
