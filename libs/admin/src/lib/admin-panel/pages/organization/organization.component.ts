@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization } from '@blockframes/organization/+state/organization.model';
@@ -83,8 +83,7 @@ export class OrganizationComponent implements OnInit {
     this.org = await this.organizationService.getValue(this.orgId);
     this.orgForm = new OrganizationAdminForm(this.org);
 
-    const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
-    const movies = await Promise.all(moviePromises);
+    const movies = await this.movieService.getValue(fromOrg(this.org.id))
     this.movies = movies.filter(m => !!m).map(m => ({
       ...m,
       edit: {
@@ -116,7 +115,7 @@ export class OrganizationComponent implements OnInit {
     this.invitationService.remove(invitation.id);
   }
 
-  private async getMembers(){
+  private async getMembers() {
     const members = await this.organizationService.getMembers(this.orgId);
     return members.map(m => ({
       ...m,
