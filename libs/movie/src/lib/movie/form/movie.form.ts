@@ -29,7 +29,6 @@ import {
   createTitle,
   createReleaseYear,
   createStoreConfig,
-  createRunningTime,
   createMovieStakeholders,
   createMoviePromotional,
   createMovieLanguageSpecification,
@@ -566,10 +565,10 @@ export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
 }
 
 function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']>) {
-  const { time, status } = createRunningTime(runningTime);
+  const { time, status } = runningTime;
   return {
-    time: new FormControl(time, [Validators.min(1), Validators.required]),
-    status: new FormControl(status, [Validators.required]),
+    time: new FormControl(time, [Validators.min(1)]),
+    status: new FormControl(status),
   }
 }
 
