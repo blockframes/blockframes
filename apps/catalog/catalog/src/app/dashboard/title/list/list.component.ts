@@ -60,8 +60,8 @@ export class TitleListComponent implements OnInit, OnDestroy {
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  public allMovies$ = this.query.selectAll();
-  public allMoviesLoading$ = this.query.selectLoading();
+  allMovies$ = this.query.selectAll();
+  allMoviesLoading$ = this.query.selectLoading();
 
   private sub: Subscription;
   private titleSub: Subscription;

@@ -13,14 +13,14 @@ import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
+import { Organization } from '@blockframes/organization/+state';
 
 
 @Injectable({ providedIn: 'root' })
@@ -31,7 +31,6 @@ export class MovieService extends CollectionService<MovieState> {
     private authQuery: AuthQuery,
     private permissionsService: PermissionsService,
     private userService: UserService,
-    private orgService: OrganizationService,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
@@ -67,13 +66,8 @@ export class MovieService extends CollectionService<MovieState> {
     // We use createdBy attribute to fetch OrgId
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
-
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
-
-    // We need to update the organisation here, because of the route navigation in the movie tunnel.
-    // If we do it in the backend functions, the org isn't updated fast enough to allow a good navigation in the movie tunnel
-    await this.orgService.update(user.orgId, (org) => ({ movieIds: [...org.movieIds, movie.id] }), { write })
     return this.permissionsService.addDocumentPermissions(movie.id, write as firestore.Transaction, user.orgId);
   }
 
@@ -94,22 +88,6 @@ export class MovieService extends CollectionService<MovieState> {
       '_meta.deletedAt': new Date()
     });
     return super.remove(movieId);
-  }
-
-  /** Gets every analytics for all movies and sync them. */
-  // @todo(#2684) use syncWithAnalytics instead
-  public syncAnalytics(options?: SyncMovieAnalyticsOptions) {
-    return combineLatest([
-      this.query.selectAll(options).pipe(map(movies => movies.map(m => m.id))),
-      this.query.analytics.select('ids')
-    ]).pipe(
-      filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
-      switchMap(([movieIds]) => {
-        const f = this.functions.httpsCallable('getMovieAnalytics');
-        return f({ movieIds, daysPerRange: 28 });
-      }),
-      tap(analytics => this.store.analytics.upsertMany(analytics))
-    )
   }
 
   /** Gets every analytics for all movies and sync them. */
@@ -158,4 +136,14 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.map(movie => createMovie(movie));
   }
 
+  public getAllMoviesByOrgId(id: string) {
+    return this.syncCollection(ref => ref.where('orgIds', 'array-contains', id)).pipe(
+      map(movie => movie.map(m => m.payload.doc.data())))
+  }
+
+  public findOrgByMovieId(id: string) {
+    return this.syncDoc({ id }).pipe(switchMap(movie => this.db.doc(`orgs/${movie.orgIds[0]}`).get().pipe(
+      map(orgDoc => orgDoc.data())
+    )))
+  }
 }

@@ -17,7 +17,7 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
 
   orgFiles: { path: string, isSelected: boolean }[];
   movies: Movie[];
-  moviesFiles: Record<string, { path: string, isSelected: boolean}[]>;
+  moviesFiles: Record<string, { path: string, isSelected: boolean }[]>;
   selectedFiles: string[];
 
   private sub: Subscription;
@@ -33,10 +33,10 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
     this.selectedFiles = this.data.selectedFiles ?? [];
 
     const org = this.orgQuery.getActive();
-    this.orgFiles = recursivelyListFiles(org).map(file => ({path: file, isSelected: this.selectedFiles.includes(file)}));
-    this.movies = await this.movieService.getValue(org.movieIds);
+    this.orgFiles = recursivelyListFiles(org).map(file => ({ path: file, isSelected: this.selectedFiles.includes(file) }));
+    this.movies = await this.movieService.getValue(ref => ref.where('orgIds', '==', org.id))
     this.moviesFiles = {};
-    this.movies.forEach(movie => this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file => ({path: file, isSelected: this.selectedFiles.includes(file)})));
+    this.movies.forEach(movie => this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file => ({ path: file, isSelected: this.selectedFiles.includes(file) })));
 
     // we set disableClose to `true` on the dialog, so we have to fake the exits events
     this.sub = this.dialogRef.backdropClick().subscribe(() => this.closeDialog()); // user click outside of the dialog

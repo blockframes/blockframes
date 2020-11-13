@@ -9,18 +9,18 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 export class MovieOrganizationListGuard extends CollectionGuard<MovieState> {
 
   constructor(
-    service: MovieService,
+    public service: MovieService,
     private organizationQuery: OrganizationQuery,
     private store: MovieStore,
   ) {
     super(service);
   }
 
-  /** Gets every movieIds of the user active organization and sync them. */
+  /** Gets every movie of the user active organization and sync them. */
   sync() {
     return this.organizationQuery.selectActive().pipe(
       tap(_ => this.store.reset()),
-      switchMap(org => this.service.syncManyDocs(org.movieIds))
+      switchMap(org => this.service.getAllMoviesByOrgId(org.id))
     );
   }
 }

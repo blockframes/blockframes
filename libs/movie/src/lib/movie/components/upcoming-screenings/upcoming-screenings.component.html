@@ -34,10 +34,10 @@
   </ng-container>
 </ng-container>
 <ng-template #noScreenings>
-  <ng-container *ngIf="org | async as org">
+  <ng-container *ngIf="org$ | async as org">
     <span class="mat-body-1">There is no screening scheduled at the moment. You can contact
-      {{ org[0].denomination?.public || 'the organization' }} for any
+      {{ org.denomination?.public || 'the organization' }} for any
       questions.</span>
-    <a mat-flat-button color="accent" [href]="'mailto:'+ org[0].email">Contact Sales Agent</a>
+    <a mat-flat-button color="accent" [href]="'mailto:'+ org.email">Contact Sales Agent</a>
   </ng-container>
 </ng-template>

@@ -1,14 +1,16 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Organization } from '../+state';
 import { MovieService } from '@blockframes/movie/+state';
+import { map } from 'rxjs/operators';
 
 @Pipe({ name: 'orgMovies', pure: true })
 export class OrgMoviesPipe implements PipeTransform {
-  constructor(private movieService: MovieService) {}
+  constructor(private movieService: MovieService) { }
 
-  transform(org: Organization, from: number = 0, to: number = org.movieIds.length) {
-    const movieIds = Object.assign([], org.movieIds).splice(from, to);
-    return this.movieService.valueChanges(movieIds);
+  transform(org: Organization, from: number = 0, to?: number) {
+    return this.movieService.getAllMoviesByOrgId(org.id).pipe(map(movies => {
+      return to ? movies.splice(from, to) : movies.splice(from, movies.length)
+    }));
   }
 }
 
@@ -16,4 +18,4 @@ export class OrgMoviesPipe implements PipeTransform {
   declarations: [OrgMoviesPipe],
   exports: [OrgMoviesPipe]
 })
-export class OrgMoviesModule {}
+export class OrgMoviesModule { }

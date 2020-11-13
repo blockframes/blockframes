@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
+import { MovieService } from '../+state';
 
 @Injectable({ providedIn: 'root' })
 export class MovieTunnelGuard implements CanActivate {
   constructor(
     private router: Router,
     private orgService: OrganizationService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private movieService: MovieService
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot) {
     const movieId: string = next.params['movieId'];
+    const movie = await this.movieService.getValue(movieId);
     let org = this.orgQuery.getActive();
-    if (org.movieIds.includes(movieId)) {
+    if (movie.orgIds.includes(org.id)) {
       return true;
     }
-    // When creating a move we need to make sure the org is updated before checking
-    org = await this.orgService.getValue(org.id);
-    const redirect = this.router.parseUrl(`/c/o/dashboard/title`);
-    return org.movieIds.includes(movieId) || redirect;
+    return this.router.parseUrl(`/c/o/dashboard/title`);
   }
 }

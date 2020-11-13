@@ -32,8 +32,9 @@ import {
   SubDirectoryFile,
   SubDirectoryImage
 } from './file-explorer.model';
-import { Subscription } from 'rxjs';
 
+// RxJs
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[org] file-explorer',
@@ -51,6 +52,8 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
   public breadCrumbs: { name: string, path: number[] }[] = [];
 
   private dialogSubscription: Subscription;
+
+  private sub: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -71,7 +74,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     this.goTo([0]);
 
     // create folders & files for every movies of this org
-    this.movieService.getValue(this.org.movieIds).then(titlesRaw => {
+    this.sub = this.movieService.getAllMoviesByOrgId(this.org.id).subscribe(titlesRaw => {
       const currentApp: App = this.routerQuery.getData('app');
       const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
 
@@ -86,6 +89,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     if (!!this.dialogSubscription) {
       this.dialogSubscription.unsubscribe();
     }
+    this.sub?.unsubscribe();
   }
 
 
@@ -94,7 +98,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     const pathCopy = [...path]; // without a copy we would be modifying the path of the parent directory
 
     let currentDirectory: Directory | SubDirectoryImage | SubDirectoryFile = this.directories[pathCopy.shift()];
-    this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path}];
+    this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path }];
 
     pathCopy.forEach(index => {
       if (currentDirectory.type === 'directory') {

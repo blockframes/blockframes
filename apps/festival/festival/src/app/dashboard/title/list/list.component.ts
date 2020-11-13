@@ -39,12 +39,12 @@ export class ListComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
   ) { }
 
-  async ngOnInit() {
-    const movies = await this.service.getValue(ref => ref.where('orgIds', 'array-contains', this.orgQuery.getValue().id))
-    const movieIds = movies.map(movie => movie.id);
-    this.sub = this.service.syncWithAnalytics(movieIds).subscribe();
+  ngOnInit() {
+    this.sub = this.service.getAllMoviesByOrgId(this.orgQuery.getActive().id).pipe(
+      switchMap(movies => this.service.syncWithAnalytics(movies.map(m => m.id)))
+    ).subscribe(console.log);
 
-    this.titles$ = this.service.valueChanges(movieIds).pipe(
+    this.titles$ = this.service.getAllMoviesByOrgId(this.orgQuery.getActive().id).pipe(
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
       tap(movies => {
@@ -61,6 +61,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 }

@@ -9,17 +9,13 @@ import {
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { CollectionConfig, CollectionService, WriteOptions, queryChanges } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
-
-const findOrgByMovieIdQuery = (movieId: string) => ({
-  path: 'orgs',
-  queryFn: ref => ref.where('movieIds', 'array-contains', movieId)
-})
+import { MovieService } from '@blockframes/movie/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -32,6 +28,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
+    private movieService: MovieService
   ) {
     super(store);
   }
@@ -162,9 +159,5 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public async uniqueOrgName(orgName: string): Promise<boolean> {
     return this.orgNameExist(orgName).then(exist => !exist);
-  }
-
-  public findOrgByMovieId(id: string) {
-    return queryChanges.call(this, findOrgByMovieIdQuery(id));
   }
 }
