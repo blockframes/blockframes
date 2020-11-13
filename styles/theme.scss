@@ -33,7 +33,7 @@
 @import './components/surface.scss';
 @import './components/scroll.scss';
 
-@include mat-core($bf-typography);
+@include mat-core();
 
 // COMPONENT THEMES
 
@@ -84,6 +84,7 @@
 }
 
 // COMPONENT TYPOGRAPHY
+@include angular-material-typography($bf-typography);
 @include mat-bf-expansion-panel-typography($bf-typography);
 @include mat-bf-list-typography($bf-typography);
 @include mat-bf-button-typography($bf-typography);
