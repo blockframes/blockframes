@@ -12,6 +12,7 @@ import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } fr
 import { generateFixtures } from './generate-fixtures';
 import { prepareFirestoreRulesPreDeploy, restoreFirestoreRulesPostDeploy } from './firestore-rules';
 import { backup } from './admin';
+import { selectEnvironment } from './select-environment';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -25,6 +26,8 @@ async function runCommand() {
     return prepareFirestoreRulesPreDeploy();
   } else if (cmd === 'restoreFirestoreRulesPostDeploy') {
     return restoreFirestoreRulesPostDeploy();
+  } else if (cmd === 'use') {
+    return selectEnvironment(flags.pop());
   } else if (cmd === 'prepareDb') {
     return prepareDb();
   } else if (cmd === 'prepareStorage') {

@@ -12,7 +12,7 @@ for i in {1..5}; do
   export ENV=production
 
   cp ./env/demo/env.demo${i}.ts ./env/env.ts
-  cp ./env/demo/env.demo${i}.ts ./env/env.prod.ts
+  cp ./env/demo/env.demo${i}.ts ./env/env.blockframes.ts
 
   npm run build:all
 

@@ -273,6 +273,13 @@ export const icons = [
   { name: 'marketplace', url: 'assets/icons/marketplace.svg' },
   { name: 'fullscreen', url: 'assets/icons/fullscreen.svg' },
   { name: 'fullscreen_exit', url: 'assets/icons/fullscreen_exit.svg' },
+
+  { name: 'mute', url: 'assets/icons/mute.svg' },
+  { name: 'unmute', url: 'assets/icons/unmute.svg' },
+  { name: 'videocam', url: 'assets/icons/videocam.svg' },
+  { name: 'videocam_off', url: 'assets/icons/videocam_off.svg' },
+  { name: 'volume', url: 'assets/icons/volume.svg' },
+  { name: 'volume_off', url: 'assets/icons/volume_off.svg' },
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];

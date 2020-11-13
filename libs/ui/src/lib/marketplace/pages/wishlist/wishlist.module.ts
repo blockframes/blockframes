@@ -6,8 +6,8 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -28,9 +28,9 @@ import { WishlistComponent } from './wishlist.component';
     FlexLayoutModule,
     // Blockframes
     ImageReferenceModule,
-    DurationModule,
     ToLabelModule,
     DisplayNameModule,
+    RunningTimePipeModule,
     // Material
     MatButtonModule,
     MatDividerModule,

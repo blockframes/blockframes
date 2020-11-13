@@ -20,16 +20,16 @@
           <div [formGroupName]="language.key" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
             <div fxLayout="row" fxLayoutGap="16px">
               <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
-              <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
               <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
+              <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
             </div>
             <button mat-mini-fab (click)="deleteLanguage(language.key)" color="warn">
               <mat-icon svgIcon="trash"></mat-icon>
             </button>
           </div>
           <ng-container *ngIf="language.value.hasError('noVersion')">
-            <p class="mat-error" *ngIf="language.value.touched">At least, one option is required.</p>
-            <p class="mat-caption" *ngIf="language.value.untouched">Please fill at least one option.</p>
+            <p class="mat-error" *ngIf="language.value.touched">Please select a version above or delete this language.</p>
+            <p class="mat-caption" *ngIf="language.value.untouched">Please select the applicable version(s).</p>
           </ng-container>
         </div>
       </ng-container>

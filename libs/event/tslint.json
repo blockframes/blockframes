@@ -1,8 +1,8 @@
 {
   "extends": "../../tslint.json",
   "rules": {
-    "directive-selector": [true, "attribute", ["event", "cal"], "camelCase"],
-    "component-selector": [true, "element", ["event", "cal"], "kebab-case"]
+    "directive-selector": [true, "attribute", ["event", "cal", "meeting"], "camelCase"],
+    "component-selector": [true, "element", ["event", "cal", "meeting"], "kebab-case"]
   },
   "linterOptions": {
     "exclude": ["!**/*"]
