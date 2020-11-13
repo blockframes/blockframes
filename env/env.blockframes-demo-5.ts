@@ -1,4 +1,5 @@
 export const production = true;
+export const dev = false;
 export const hmr = false;
 
 // TODO issue#1146 AFM CODE
@@ -34,7 +35,17 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: 'demo5_orgs'
+  indexNameMovies: {
+    festival: 'demo5_festival_movies',
+    financiers: 'demo5_financiers_movies',
+    catalog: 'demo5_catalog_movies',
+  },
+  indexNameOrganizations: {
+    festival: 'demo5_festival_org',
+    financiers: 'demo5_financiers_org',
+    catalog: 'demo5_catalog_org'
+  },
+  indexNameUsers: 'demo5_users',
 };
 
 // Ethereum
@@ -69,3 +80,16 @@ export const relayer = {
 
 export const backupBucket = 'demo5-backups';
 export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
+
+
+// BigQuery
+// ========
+export const bigQueryAnalyticsTable = 'blockframes-demo-5.analytics_197180636.events_';
+
+// Archipel Content OrgId
+// ======================
+export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+
+export const heavyChunkSize = 15;
+
+export const chunkSize = 30;

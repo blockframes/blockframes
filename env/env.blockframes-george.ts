@@ -52,13 +52,17 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: 'george_orgs',
   indexNameMovies: {
     festival: 'george_festival_movies',
     financiers: 'george_financiers_movies',
     catalog: 'george_catalog_movies',
   },
   indexNameUsers: 'george_users',
+  indexNameOrganizations: {
+    festival: 'george_festival_org',
+    financiers: 'george_financiers_org',
+    catalog: 'george_catalog_org'
+  },
 };
 
 // Ethereum
