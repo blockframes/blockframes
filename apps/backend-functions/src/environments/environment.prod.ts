@@ -24,9 +24,9 @@ export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;
 
 export const adminEmails: Record<string | 'default', string> = {
-  catalog: functions.config().admin.email_catalog,
-  festival: functions.config().admin.email_festival,
-  financiers: functions.config().admin.email_financiers,
+  catalog: functions.config().admin.email_catalog || functions.config().admin.email,
+  festival: functions.config().admin.email_festival || functions.config().admin.email,
+  financiers: functions.config().admin.email_financiers || functions.config().admin.email,
   default: functions.config().admin.email
 } as const;
 

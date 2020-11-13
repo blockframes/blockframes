@@ -111,9 +111,9 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /** Create the user in users collection on firestore. */
-  public createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string, meta: DocumentMeta<Date> }) {
+  public createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string, _meta: DocumentMeta<Date> }) {
     return {
-      _meta: createDocumentMeta(ctx.meta),
+      _meta: createDocumentMeta(ctx._meta),
       uid: user.uid,
       email: user.email,
       firstName: ctx.firstName,
