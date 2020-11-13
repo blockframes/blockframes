@@ -1,8 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-// Theme with variables
 @import './theme.scss';
-@import './variables.scss';
 
 :root {
   --layout-margin: 24px;
@@ -36,12 +34,6 @@ a {
   text-decoration: none;
   color: inherit;
 }
-
-.dark-theme p.bf-dark-text,
-.dark-theme span.bf-dark-text {
-  color: mat-color($bf-dark-foreground, dark-text);
-}
-
 
 main {
   height: 100%;

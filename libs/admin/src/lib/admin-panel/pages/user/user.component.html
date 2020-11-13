@@ -9,22 +9,22 @@
             <h4>{{ user.firstName }} {{ user.lastName }}</h4>
             <h3>Main infos</h3>
             <ul>
-              <li><b class="bf-dark-text">Id : </b> {{ user.uid }}</li>
-              <li><b class="bf-dark-text">Email : </b> {{ user.email }}</li>
-              <li><b class="bf-dark-text">Position : </b> {{ user.position }}</li>
-              <li><b class="bf-dark-text">Phone Number : </b> {{ user.phoneNumber }}</li>
+              <li><b>Id : </b> {{ user.uid }}</li>
+              <li><b>Email : </b> {{ user.email }}</li>
+              <li><b>Position : </b> {{ user.position }}</li>
+              <li><b>Phone Number : </b> {{ user.phoneNumber }}</li>
             </ul>
             <h3>Organization infos</h3>
             <ul>
               <li *ngIf="userOrg">
-                <b class="bf-dark-text">Organization : </b>
+                <b>Organization : </b>
                 <span>{{ userOrg | orgName:'long' }}</span>
                 <button mat-icon-button color="primary" [routerLink]="['/c/o/admin/panel/organization', userOrg.id]">
                   <mat-icon svgIcon="eye"></mat-icon>
                 </button>
               </li>
               <li *ngIf="userOrgRole">
-                <b class="bf-dark-text">User Role : </b>
+                <b>User Role : </b>
                 <span>{{ userOrgRole }}</span>
                 <member-permissions
                   [uid]="userId"
@@ -40,14 +40,14 @@
             <h3>Other settings</h3>
             <ul>
               <li>
-                <b class="bf-dark-text">Blockframes admin : </b>
+                <b>Blockframes admin : </b>
                 <a class="blockframes-admin-link" (click)="setBlockframesAdmin()">
                   <span>{{ isUserBlockframesAdmin? 'remove' : 'add' }}</span>
                   <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'star_fill': 'star'"></mat-icon>
                 </a>
               </li>
               <li>
-                <b class="bf-dark-text">Password : </b>
+                <b>Password : </b>
                 <a class="blockframes-admin-link" (click)="sendPasswordResetEmail()">
                   <span>Send reset password email</span>
                   <mat-icon svgIcon="mail"></mat-icon>
