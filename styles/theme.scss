@@ -31,6 +31,7 @@
 @import './components/mat-native-control.scss';
 @import './components/mat-datepicker.scss';
 @import './components/surface.scss';
+@import './components/scroll.scss';
 
 @include mat-core($bf-typography);
 
@@ -53,6 +54,7 @@
   @include mat-bf-slider-theme($theme);
   @include mat-bf-datepicker-theme($theme);
   @include surface-theme($theme);
+  @include scroll-theme($theme);
   @include bf-widget-theme($theme);
   @include bf-color-font($theme);
   @include bf-table-theme($theme);
