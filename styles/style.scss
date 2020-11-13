@@ -1,11 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
-// Theme with variables
 @import './theme.scss';
-@import './variables.scss';
 
 :root {
   --layout-margin: 24px;
+  --toolbarHeight: 80px;
 }
 
 * {
@@ -36,16 +35,6 @@ a {
   color: inherit;
 }
 
-.dark-theme p.bf-dark-text,
-.dark-theme span.bf-dark-text {
-  color: mat-color($bf-dark-foreground, dark-text);
-}
-
-/** Used for marketplace header & carousel */
-.light-theme .light-text {
-  color: mat-color($bf-light-foreground, light-text);
-}
-
 main {
   height: 100%;
 }
@@ -60,74 +49,21 @@ main {
   flex-direction: column-reverse;
 }
 
-// SCROLL
-.dark-theme {
-  /* width */
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-  /* Track */
-  ::-webkit-scrollbar-track {
-    width: 5px;
-    background: rgba(#f1f1f1, 0.1);
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    border: 3px solid transparent;
-    border-radius: 9px;
-    background: rgba(#f1f1f1, 0.5);
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(#f1f1f1, 0.8);
-  }
-}
-
-.light-theme {
-  /* width */
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-  /* Track */
-  ::-webkit-scrollbar-track {
-    width: 5px;
-    background: rgba(#050505, 0.1);
-  }
-
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    border: 3px solid transparent;
-    border-radius: 9px;
-    background: rgba(#050505, 0.5);
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(#050505, 0.8);
-  }
-}
-
-
 .app-bar {
-  width: 24em;
-  padding: 0 12px;
-  margin-left: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-
-  &:hover {
-    border-color: var(--primary);
-  }
+  margin-left: 24px;
 
   input {
-    height: 50px;
-    width: 24em;
-    margin-left: 12px;
+    height: calc(var(--toolbarHeight) - 24px);
+    width: 50vw;
+    padding: 0 16px;
     background-color: transparent;
-    border: none;
+    border: 1px solid var(--foreground-divider);
+    border-radius: 4px;
     font: inherit;
+
+    &:hover, &:focus {
+      border-color: var(--primary);
+    }
 
     &:focus {
       outline: none;
