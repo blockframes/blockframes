@@ -20,8 +20,9 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
-import { Organization } from '@blockframes/organization/+state';
+import { QueryFn } from '@angular/fire/firestore';
 
+export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -134,16 +135,5 @@ export class MovieService extends CollectionService<MovieState> {
     const movies = await this.getValue()
 
     return movies.map(movie => createMovie(movie));
-  }
-
-  public getAllMoviesByOrgId(id: string) {
-    return this.syncCollection(ref => ref.where('orgIds', 'array-contains', id)).pipe(
-      map(movie => movie.map(m => m.payload.doc.data())))
-  }
-
-  public findOrgByMovieId(id: string) {
-    return this.syncDoc({ id }).pipe(switchMap(movie => this.db.doc(`orgs/${movie.orgIds[0]}`).get().pipe(
-      map(orgDoc => orgDoc.data())
-    )))
   }
 }

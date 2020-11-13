@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard } from 'akita-ng-fire';
-import { MovieState, MovieService, MovieStore } from '../+state';
+import { MovieState, MovieService, MovieStore, fromOrg } from '../+state';
 import { switchMap, tap } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
@@ -20,7 +20,7 @@ export class MovieOrganizationListGuard extends CollectionGuard<MovieState> {
   sync() {
     return this.organizationQuery.selectActive().pipe(
       tap(_ => this.store.reset()),
-      switchMap(org => this.service.getAllMoviesByOrgId(org.id))
+      switchMap(org => this.service.valueChanges(fromOrg(org.id)))
     );
   }
 }

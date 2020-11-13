@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery, User } from '@blockframes/auth/+state';
 import {
   Organization,
@@ -15,11 +15,15 @@ import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
+
+  private app = getCurrentApp(this.routerQuery)
 
   constructor(
     private query: OrganizationQuery,
@@ -28,7 +32,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
-    private movieService: MovieService
+    private routerQuery: RouterQuery
   ) {
     super(store);
   }
@@ -159,5 +163,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public async uniqueOrgName(orgName: string): Promise<boolean> {
     return this.orgNameExist(orgName).then(exist => !exist);
+  }
+
+  public queryFromMovie(movie: Movie) {
+    return this.valueChanges(movie.orgIds).pipe(
+      map(orgs => orgs.filter(org => org.appAccess[this.app]))
+    );
   }
 }

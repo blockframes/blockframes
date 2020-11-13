@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { startWith, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -40,11 +40,11 @@ export class ListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.service.getAllMoviesByOrgId(this.orgQuery.getActive().id).pipe(
+    this.sub = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
       switchMap(movies => this.service.syncWithAnalytics(movies.map(m => m.id)))
     ).subscribe();
 
-    this.titles$ = this.service.getAllMoviesByOrgId(this.orgQuery.getActive().id).pipe(
+    this.titles$ = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
       tap(movies => {

@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MovieService } from '@blockframes/movie/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -19,6 +19,6 @@ export class OrganizationCardComponent implements OnInit {
   constructor(private movieService: MovieService) { }
 
   ngOnInit() {
-    this.orgMovieCount$ = this.movieService.getAllMoviesByOrgId(this.org.id).pipe(map(movies => movies.length));
+    this.orgMovieCount$ = this.movieService.valueChanges(fromOrg(this.org.id)).pipe(map(movies => movies.length));
   }
 }

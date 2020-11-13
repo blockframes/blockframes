@@ -6,10 +6,10 @@ import { FormControl } from '@angular/forms';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { EventService, Event } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
-import { MovieService } from '@blockframes/movie/+state';
 
 // RxJs
 import { map, take } from 'rxjs/operators';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'movie-screening',
@@ -29,7 +29,7 @@ export class UpcomingScreeningsComponent {
   public screenings$ = this.eventService.filterScreeningsByMovieId(this.query.getActive().id).pipe(
     map(screenings => screenings.sort(this.sortByDate)));
 
-  public org$ = this.movieService.findOrgByMovieId(this.query.getActive().id);
+  public org$ = this.orgService.queryFromMovie(this.query.getActive());
 
   public invitationWasSent = false;
 
@@ -37,13 +37,15 @@ export class UpcomingScreeningsComponent {
     private query: MovieQuery,
     private eventService: EventService,
     private invitationService: InvitationService,
-    private movieService: MovieService,
+    private orgService: OrganizationService,
     private cdr: ChangeDetectorRef) { }
 
   askForInvitation(events: Event[]) {
     const eventId = this.sessionCtrl.value === 'first' ? events[0].id : events[1].id;
-    this.org$.pipe(take(1)).subscribe(org => {
-      this.invitationService.request('org', org.id).from('user').to('attendEvent', eventId)
+    this.org$.pipe(take(1)).subscribe(orgs => {
+      orgs.forEach(org => {
+        this.invitationService.request('org', org.id).from('user').to('attendEvent', eventId)
+      })
       this.invitationWasSent = true;
       this.cdr.markForCheck();
     })

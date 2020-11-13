@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
-import { MovieService } from '@blockframes/movie/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
 import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
@@ -53,8 +53,6 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
 
   private dialogSubscription: Subscription;
 
-  private sub: Subscription;
-
   constructor(
     private dialog: MatDialog,
     private mediaService: MediaService,
@@ -74,7 +72,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     this.goTo([0]);
 
     // create folders & files for every movies of this org
-    this.sub = this.movieService.getAllMoviesByOrgId(this.org.id).subscribe(titlesRaw => {
+    this.movieService.getValue(fromOrg(this.org.id)).then(titlesRaw => {
       const currentApp: App = this.routerQuery.getData('app');
       const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
 
@@ -89,7 +87,6 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     if (!!this.dialogSubscription) {
       this.dialogSubscription.unsubscribe();
     }
-    this.sub?.unsubscribe();
   }
 
 
