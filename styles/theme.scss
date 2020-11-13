@@ -20,7 +20,6 @@
 @import './components/mat-snack-bar.scss';
 @import './components/mat-dialog.scss';
 @import './components/mat-slider.scss';
-@import 'footer';
 @import './components/apex-chart.scss';
 @import './components/bf-widget.scss';
 @import './components/bf-tunnel.scss';
@@ -54,7 +53,6 @@
   @include mat-bf-slider-theme($theme);
   @include mat-bf-datepicker-theme($theme);
   @include surface-theme($theme);
-  @include bf-footer-theme($theme);
   @include bf-widget-theme($theme);
   @include bf-color-font($theme);
   @include bf-table-theme($theme);
