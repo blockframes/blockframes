@@ -197,11 +197,10 @@ const organizationRequestAccessToAppTemplate = (orgId: string) =>
 
 /**
  * @param user
- * @TODO (#2826) add application used when first connecting
  */
 const userFirstConnexionTemplate = (user: PublicUser) =>
   `
-  User ${user.firstName} ${user.lastName} connected for the first time to the app.
+  User ${user.firstName} ${user.lastName} connected for the first time to the app ${user._meta.createdFrom}.
 
   Email: ${user.email}.
   `;
