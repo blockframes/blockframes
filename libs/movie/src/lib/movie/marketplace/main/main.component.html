@@ -69,19 +69,7 @@
     <article *ngIf="movie.runningTime.time || movie.runningTime.status">
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">
-        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time | duration }}</span>
-        <span *ngIf="movie.runningTime.status">
-          <!-- TODO #4124 rework the runningTime.time data ?-->
-          <ng-container
-          *ngIf="movie.runningTime.status === 'confirmed'
-          && movie.runningTime.time !== 'TBC'
-          && movie.runningTime.time !== 'TBD'
-          && movie.runningTime.time !== '-';
-          else runningTimeStatus">Confirmed</ng-container>
-          <ng-template #runningTimeStatus>
-            {{ movie.runningTime.status | toLabel: 'screeningStatus' }}
-          </ng-template>
-        </span>
+        <span>{{ movie.runningTime | getRunningTime }}</span>
       </div>
     </article>
 

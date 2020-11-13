@@ -14,6 +14,7 @@ function createOrgAdminControls(entity: Partial<Organization>) {
   }
   return {
     denomination: new OrganizationDenominationForm(org.denomination),
+    description: new FormControl(org.description),
     addresses: new OrganizationAddressesForm(org.addresses),
     email: new FormControl(org.email, Validators.email),
     fiscalNumber: new FormControl(org.fiscalNumber),
