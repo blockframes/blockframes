@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
-import { firebase as firebaseCI } from 'env/env.ci';
+import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';

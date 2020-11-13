@@ -99,7 +99,7 @@ After that is been done. We have to go into the wild jungle. The *angular.json*.
    "fileReplacements": [
 {
 "replace": "env/env.ts",
-"with": "env/env.prod.ts"
+"with": "env/env.blockframes.ts"
 },
 {
 "replace": "apps/YOUR_APP_NAME/YOUR_APP_NAME/src/environments/environment.ts",

@@ -1,0 +1,26 @@
+@mixin scroll-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $contrast: mat-color($foreground, text);
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    width: 5px;
+    background: rgba($contrast, 0.1);
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 9px;
+    background: rgba($contrast, 0.5);
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba($contrast, 0.8);
+  }
+}
