@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { startWith, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -15,7 +15,6 @@ const columns = {
   productionStatus: 'Production Status',
   'storeConfig.status': 'Status'
 };
-
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -41,13 +40,11 @@ export class ListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Sync with anaytics: It's ok to give ALL movieIds they'll just be set to 0
-    this.sub = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.service.syncWithAnalytics(org.movieIds)),
+    this.sub = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
+      switchMap(movies => this.service.syncWithAnalytics(movies.map(m => m.id)))
     ).subscribe();
 
-    this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.service.valueChanges(org.movieIds)),
+    this.titles$ = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
       tap(movies => {
@@ -64,7 +61,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 }
-

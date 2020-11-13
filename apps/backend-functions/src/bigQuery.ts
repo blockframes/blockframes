@@ -223,7 +223,7 @@ export const requestMovieAnalytics = async (
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
   // Security: only owner of the movie can load the data
-  if (movieIds.every(movieId => org.movieIds.includes(movieId))) {
+  if (movieIds.every(movieId => org.id === movieId)) {
     // Request bigQuery
     let [rows] = await executeQueryMovieAnalytics(queryMovieAnalytics, movieIds, daysPerRange);
     if (rows !== undefined && rows.length >= 0) {

@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
-import { MovieService } from '@blockframes/movie/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
 import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
@@ -32,8 +32,9 @@ import {
   SubDirectoryFile,
   SubDirectoryImage
 } from './file-explorer.model';
-import { Subscription } from 'rxjs';
 
+// RxJs
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[org] file-explorer',
@@ -71,7 +72,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     this.goTo([0]);
 
     // create folders & files for every movies of this org
-    this.movieService.getValue(this.org.movieIds).then(titlesRaw => {
+    this.movieService.getValue(fromOrg(this.org.id)).then(titlesRaw => {
       const currentApp: App = this.routerQuery.getData('app');
       const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
 
@@ -94,7 +95,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     const pathCopy = [...path]; // without a copy we would be modifying the path of the parent directory
 
     let currentDirectory: Directory | SubDirectoryImage | SubDirectoryFile = this.directories[pathCopy.shift()];
-    this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path}];
+    this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path }];
 
     pathCopy.forEach(index => {
       if (currentDirectory.type === 'directory') {
