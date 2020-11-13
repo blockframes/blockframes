@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { MovieState, MovieService, MovieStore, Movie } from '../+state';
+import { MovieState, MovieService, MovieStore, Movie, fromOrg } from '../+state';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
@@ -24,7 +24,8 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
     service: MovieService,
     private store: MovieStore,
     private contractQuery: ContractQuery,
-    private organizationQuery: OrganizationQuery
+    private organizationQuery: OrganizationQuery,
+    private movieService: MovieService
   ) {
     super(service);
   }
@@ -37,12 +38,11 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
     return this.contractQuery.selectActive().pipe(
       // Reset the store everytime the movieId changes.
       tap(_ => this.store.reset()),
-      switchMap(contract => {
+      switchMap(async contract => {
         // Filter movieIds before the query to relieve it.
-        const organizationMovieIds = this.organizationQuery.getActive().movieIds;
-        const movieIds = contract.titleIds.filter(titleId =>
-          organizationMovieIds.includes(titleId)
-        );
+        const organizationMovieIds = await this.movieService.getValue(fromOrg(this.organizationQuery.getActive().id))
+        const ids = organizationMovieIds.map(m => m.id);
+        const movieIds = contract.titleIds.filter(titleId => ids.includes(titleId));
         return movieIds.length
           ? awaitSyncQuery.call(this.service, movieListContractQuery(contract.id, movieIds))
           : of([]);

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { Movie } from '@blockframes/movie/+state';
+import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -45,11 +45,13 @@ export class ListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private movieService: MovieService
   ) { }
 
   ngOnInit() {
     this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.campaignService.queryMoviesCampaign(org.movieIds)),
+      switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
+      switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.financiers)),
       switchMap(movies => {
@@ -72,4 +74,3 @@ export class ListComponent implements OnInit {
     this.filter.setValue(filter);
   }
 }
-
