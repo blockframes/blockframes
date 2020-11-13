@@ -31,12 +31,12 @@ export default class FestivalScreeningPage {
       .contains(screeningTitle)
       .parent().parent().parent()
       .find('button[test-id=invitation-request]').click();
-    //cy.wait(3000);
+    cy.wait(TO.WAIT_1SEC);
   }
 
   clickOnMenu() {
     cy.get('festival-marketplace button[test-id=menu]', {timeout: 1000})
-      .first().click();
+      .click();
   }
 
   selectCalendar() {
