@@ -50,23 +50,20 @@ main {
 }
 
 .app-bar {
-  width: 24em;
-  padding: 0 12px;
-  margin-left: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-
-  &:hover {
-    border-color: var(--primary);
-  }
+  margin-left: 24px;
 
   input {
-    height: 50px;
-    width: 24em;
-    margin-left: 12px;
+    height: calc(var(--toolbarHeight) - 24px);
+    width: 50vw;
+    padding: 0 16px;
     background-color: transparent;
-    border: none;
+    border: 1px solid var(--foreground-divider);
+    border-radius: 4px;
     font: inherit;
+
+    &:hover, &:focus {
+      border-color: var(--primary);
+    }
 
     &:focus {
       outline: none;
