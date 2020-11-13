@@ -27,12 +27,6 @@
         fill: mat-color($warn, 500);
       }
     }
-    &[color="beware"] {
-      color: mat-color($background, beware);
-      path, g, polygon {
-        fill: mat-color($background, beware);
-      }
-    }
     &[color="disabled"] {
       color: mat-color($background, disabled-button);
       path, g, polygon {

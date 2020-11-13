@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { backupBucket } from 'env/env';
-import { backupBucket as backupBucketCI } from 'env/env.ci';
+import { backupBucket as backupBucketCI } from 'env/env.blockframes-ci';
 import * as admin from 'firebase-admin';
 import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';

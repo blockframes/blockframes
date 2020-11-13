@@ -1,4 +1,5 @@
 export const production = true;
+export const dev = false;
 export const hmr = false;
 
 // TODO issue#1146 AFM CODE
@@ -14,18 +15,18 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://demo3.archipelcontent.com',
-  market: 'https://demo3.archipelmarket.com',
-  crm: 'https://demo2.crm.blockframes.io',
+  content: 'https://demo5.archipelcontent.com',
+  market: 'https://demo5.archipelmarket.com',
+  crm: 'https://demo5.crm.blockframes.io',
 }
 
 export const firebase = {
-  apiKey: 'AIzaSyDuAWpaj0NVyMDWZURvl16IHsvJbVooXZ8',
-  authDomain: 'blockframes-demo-3.firebaseapp.com',
-  databaseURL: 'https://blockframes-demo-3.firebaseio.com',
-  projectId: 'blockframes-demo-3',
-  storageBucket: 'blockframes-demo-3.appspot.com',
-  messagingSenderId: '39302449355'
+  apiKey: 'AIzaSyBF8-76Sf4oOJfL-fwASGx8R51w9UkG0rw',
+  authDomain: 'blockframes-demo-5.firebaseapp.com',
+  databaseURL: 'https://blockframes-demo-5.firebaseio.com',
+  projectId: 'blockframes-demo-5',
+  storageBucket: 'blockframes-demo-5.appspot.com',
+  messagingSenderId: '671401949747'
 };
 
 // Algolia
@@ -34,7 +35,17 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: 'demo3_orgs'
+  indexNameMovies: {
+    festival: 'demo5_festival_movies',
+    financiers: 'demo5_financiers_movies',
+    catalog: 'demo5_catalog_movies',
+  },
+  indexNameOrganizations: {
+    festival: 'demo5_festival_org',
+    financiers: 'demo5_financiers_org',
+    catalog: 'demo5_catalog_org'
+  },
+  indexNameUsers: 'demo5_users',
 };
 
 // Ethereum
@@ -67,5 +78,18 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'demo3-backups';
+export const backupBucket = 'demo5-backups';
 export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
+
+
+// BigQuery
+// ========
+export const bigQueryAnalyticsTable = 'blockframes-demo-5.analytics_197180636.events_';
+
+// Archipel Content OrgId
+// ======================
+export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+
+export const heavyChunkSize = 15;
+
+export const chunkSize = 30;

@@ -20,7 +20,6 @@
 @import './components/mat-snack-bar.scss';
 @import './components/mat-dialog.scss';
 @import './components/mat-slider.scss';
-@import 'footer';
 @import './components/apex-chart.scss';
 @import './components/bf-widget.scss';
 @import './components/bf-tunnel.scss';
@@ -32,8 +31,9 @@
 @import './components/mat-native-control.scss';
 @import './components/mat-datepicker.scss';
 @import './components/surface.scss';
+@import './components/scroll.scss';
 
-@include mat-core($bf-typography);
+@include mat-core();
 
 // COMPONENT THEMES
 
@@ -54,7 +54,7 @@
   @include mat-bf-slider-theme($theme);
   @include mat-bf-datepicker-theme($theme);
   @include surface-theme($theme);
-  @include bf-footer-theme($theme);
+  @include scroll-theme($theme);
   @include bf-widget-theme($theme);
   @include bf-color-font($theme);
   @include bf-table-theme($theme);
@@ -84,6 +84,7 @@
 }
 
 // COMPONENT TYPOGRAPHY
+@include angular-material-typography($bf-typography);
 @include mat-bf-expansion-panel-typography($bf-typography);
 @include mat-bf-list-typography($bf-typography);
 @include mat-bf-button-typography($bf-typography);
