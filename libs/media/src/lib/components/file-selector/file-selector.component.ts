@@ -34,9 +34,11 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
 
     const org = this.orgQuery.getActive();
     this.orgFiles = recursivelyListFiles(org).map(file => ({ path: file, isSelected: this.selectedFiles.includes(file) }));
-    this.movies = await this.movieService.getValue(ref => ref.where('orgIds', '==', org.id))
+    this.movies = await this.movieService.getValue(ref => ref.where('orgIds', 'array-contains', org.id))
     this.moviesFiles = {};
-    this.movies.forEach(movie => this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file => ({ path: file, isSelected: this.selectedFiles.includes(file) })));
+    this.movies.forEach(movie =>
+      this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file =>
+        ({ path: file, isSelected: this.selectedFiles.includes(file) })));
 
     // we set disableClose to `true` on the dialog, so we have to fake the exits events
     this.sub = this.dialogRef.backdropClick().subscribe(() => this.closeDialog()); // user click outside of the dialog

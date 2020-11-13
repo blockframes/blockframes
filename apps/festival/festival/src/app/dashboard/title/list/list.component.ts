@@ -42,7 +42,7 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.service.getAllMoviesByOrgId(this.orgQuery.getActive().id).pipe(
       switchMap(movies => this.service.syncWithAnalytics(movies.map(m => m.id)))
-    ).subscribe(console.log);
+    ).subscribe();
 
     this.titles$ = this.service.getAllMoviesByOrgId(this.orgQuery.getActive().id).pipe(
       map(movies => movies.filter(movie => !!movie)),

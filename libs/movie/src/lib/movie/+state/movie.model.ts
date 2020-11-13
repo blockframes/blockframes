@@ -91,6 +91,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     soundFormat: null,
     isOriginalVersionAvailable: null,
     estimatedBudget: null,
+    orgIds: [],
     ...params,
     banner: params.banner ?? '',
     audience: createAudienceGoals(params.audience),
@@ -102,7 +103,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
-    orgIds: params.orgIds
   };
 }
 
