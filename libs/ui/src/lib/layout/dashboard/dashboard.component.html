@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav id="dashboard-navbar" role="navigation" [mode]="(ltMd$ | async) ? 'over' : 'side'"
+  <mat-sidenav class="dark-theme" id="dashboard-navbar" role="navigation" [mode]="(ltMd$ | async) ? 'over' : 'side'"
     [opened]="!(ltMd$ | async)">
     <mat-toolbar fxLayout fxLayoutAlign="space-between center">
       <a routerLink=".">
