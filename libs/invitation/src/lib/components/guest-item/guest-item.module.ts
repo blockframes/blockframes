@@ -5,6 +5,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { StatusModule } from '../../pipes/status.pipe';
 import { GuestPipeModule } from '../../pipes/guest.pipe';
+import { UserNameModule } from '@blockframes/utils/pipes/user-name.pipe';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     DisplayNameModule,
     StatusModule,
     GuestPipeModule,
+    UserNameModule,
     // Theme
     MatListModule,
     MatIconModule

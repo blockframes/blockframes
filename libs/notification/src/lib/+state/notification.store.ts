@@ -5,10 +5,11 @@ import { toDate } from '@blockframes/utils/helpers';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { Event } from '@blockframes/event/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { orgName } from '@blockframes/organization/+state';
+import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
+import { displayName } from '@blockframes/utils/pipes/display-name.pipe';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -22,13 +23,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   constructor(
     private movieQuery: MovieQuery,
     private firestore: AngularFirestore,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private orgService: OrganizationService
   ) {
     super(initialState);
   }
 
   public formatNotification(notification: Notification): Partial<Notification> {
-    const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
+    const displayUserName = notification.user ? `${displayName(notification.user)}` : 'Someone';
     const module = getCurrentModule(this.routerQuery.getValue().state.url);
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
@@ -42,7 +44,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'invitationFromUserToJoinOrgDecline':
         return {
           date: toDate(notification.date),
-          message: `${displayName}'s request to join your organization was refused.`,
+          message: `${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
@@ -50,7 +52,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'memberAddedToOrg':
         return {
           date: toDate(notification.date),
-          message: `${displayName} is now part of your organization.`,
+          message: `${displayUserName} is now part of your organization.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
@@ -58,7 +60,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'memberRemovedFromOrg':
         return {
           date: toDate(notification.date),
-          message: `${displayName} has been removed from your organization.`,
+          message: `${displayUserName} has been removed from your organization.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
@@ -183,12 +185,16 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     // Adding user data to the notification of meeting events
     if (!!event && event.type === 'meeting' && !!notification.organization) {
       const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerId}`);
-      const organizationName = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
+      const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
-      subject = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
+      subject = orgName(notification.organization);
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
-      subject = `${notification.user.lastName} ${notification.user.firstName}`;
+      if (notification.user.orgId) {
+        const org = await this.orgService.getValue(notification.user.orgId);
+        subject = `${displayName(notification.user)} (${orgName(org)})`;
+      }
+      else subject = `${displayName(notification.user)}`;
     } else if (notification.user && notification.user.email) {
       subject = notification.user.email;
     }
