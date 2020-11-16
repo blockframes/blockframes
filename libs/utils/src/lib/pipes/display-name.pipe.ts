@@ -2,26 +2,28 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person } from '../common-interfaces';
 
+export function displayName(person: Person) {
+  const firstLetterUppercase = (name) => name[0].toUpperCase() + name.substring(1);
+  const firstName = firstLetterUppercase(person.firstName);
+  const lastName = firstLetterUppercase(person.lastName);
+  return `${firstName} ${lastName}`;
+}
+
 @Pipe({
   name: 'displayName'
 })
 export class DisplayNamePipe implements PipeTransform {
   transform(value: Person | Person[]): string {
-    const capitalize = (str: string) => str?.toUpperCase();
     if (Array.isArray(value)) {
       return value.map(person => {
         if (person?.firstName) {
-          const firstName = capitalize(person.firstName);
-          const lastName = capitalize(person.lastName);
-          return `${firstName} ${lastName}`;
+          return displayName(person);
         } else {
           return value;
         }
       }).join(', ');
     } else {
-      const firstName = capitalize(value.firstName);
-      const lastName = capitalize(value.lastName);
-      return `${firstName} ${lastName}`;
+      return displayName(value);
     }
   }
 }
