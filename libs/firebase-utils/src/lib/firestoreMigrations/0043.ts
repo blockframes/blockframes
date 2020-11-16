@@ -3,7 +3,6 @@ import { runChunks } from '../firebase-utils';
 
 export async function upgrade(db: Firestore) {
     const orgsCol = await db.collection('orgs').get();
-    const batch = db.batch();
 
     runChunks(orgsCol.docs, async orgDoc => {
         const org = orgDoc.data();
