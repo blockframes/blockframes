@@ -5,12 +5,11 @@ export async function upgrade(db: Firestore) {
     const orgsCol = await db.collection('orgs').get();
     const batch = db.batch();
 
-    runChunks(orgsCol.docs, orgDoc => {
+    runChunks(orgsCol.docs, async orgDoc => {
         const org = orgDoc.data();
         delete org?.movieIds
-        batch.set(orgDoc.ref, org)
+        orgDoc.ref.update(org)
     })
 
     console.log('deleted movieIds from orgs collection');
-    await batch.commit();
 }
