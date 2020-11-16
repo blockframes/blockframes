@@ -1,9 +1,8 @@
 ﻿import { apps, assertFails, assertSucceeds, initializeTestApp, 
-        loadFirestoreRules, firestore, initializeAdminApp } from '@firebase/rules-unit-testing';
+        loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
 import { TokenOptions,  } from '@firebase/rules-unit-testing/dist/src/api';
-import { firestore } from 'firebase-admin';
 
 //type Firestore = ReturnType<typeof initFirestoreApp> //<-- does not work!
 
@@ -41,7 +40,7 @@ function setData(projectId: string, dataDB: Record<string, Object>) {
 
 describe('Blockframe Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: firebase.firestore.Firestore;
+  let db: any;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-c8'});
