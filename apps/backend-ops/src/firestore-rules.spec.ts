@@ -218,6 +218,11 @@ describe.only('Movies Rules Tests', () => {
       await assertSucceeds(movieRef.get());
     });
 
+    test("user with valid org should be able to read movie distribution rights", async () => {
+      const movieDRRef = db.doc("movies/M001/distributionRights/DR001");
+      await assertSucceeds(movieDRRef.get());
+    });
+
   });
 
   describe('With User not in org', () => {

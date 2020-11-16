@@ -37,6 +37,9 @@ export const testFixture = {
     "id": 'M001',
     "title": {
       "original": 'UnitTest'
+    },
+    "distributionRights/DR001": {
+      "id": 'DR001'
     }
   },
 
