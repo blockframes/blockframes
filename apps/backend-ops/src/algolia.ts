@@ -100,9 +100,6 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
             if (campaign?.minPledge) {
               movie['minPledge'] = campaign.minPledge;
             }
-            if (campaign?.minPledge) {
-              movie['minPledge'] = campaign.minPledge;
-            }
           }
 
           await storeSearchableMovie(movie, organizationName, process.env['ALGOLIA_API_KEY'])
