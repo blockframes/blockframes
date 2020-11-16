@@ -56,7 +56,7 @@ commands:
           paths:
             - node_modules
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-      - run: cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
           command: |
@@ -224,7 +224,7 @@ jobs:
     executor: blockframes-ci
     environment:
         NG_CONFIG: staging
-        ENV_TS: env/env.staging.ts
+        ENV_TS: env/env.blockframes-staging.ts
         SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
         PROJECT_ID: blockframes-staging
     steps:
@@ -240,7 +240,7 @@ jobs:
     executor: blockframes-ci
     environment:
         PROJECT_ID: blockframes
-        ENV_TS: 'env/env.prod.ts'
+        ENV_TS: 'env/env.blockframes.ts'
         NG_CONFIG: production
         SERVICE_ACCOUNT: FIREBASE_PRODUCTION_SERVICE_ACCOUNT
     steps:
@@ -254,7 +254,7 @@ jobs:
         PROJECT_ID: blockframes-staging
         NG_CONFIG: staging
         SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
-        ENV_TS: 'env/env.staging.ts'
+        ENV_TS: 'env/env.blockframes-staging.ts'
     steps:
       - slack/notify:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
@@ -266,12 +266,32 @@ jobs:
        PROJECT_ID: blockframes-demo-1
        SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
        NG_CONFIG: demo1
-       ENV_TS: './env/demo/env.demo1.ts'
+       ENV_TS: './env/env.blockframes-demo-1.ts'
     steps:
       - slack/notify:
           message: 'Deploying to demo1...'
       - prepare_environment
-      - build_deploy_upgrade
+      - build_deploy_prepare
+  deploy-to-demo2:
+    executor: blockframes-ci
+    environment:
+       PROJECT_ID: blockframes-demo-2
+       ENV_TS: './env/env.blockframes-demo-2.ts'
+    steps:
+      - slack/notify:
+          message: 'Deploying to demo2...'
+      - prepare_environment
+      - build_deploy_prepare
+  deploy-to-demo3:
+    executor: blockframes-ci
+    environment:
+       PROJECT_ID: blockframes-demo-3
+       ENV_TS: './env/env.blockframes-demo-3.ts'
+    steps:
+      - slack/notify:
+          message: 'Deploying to demo3...'
+      - prepare_environment
+      - build_deploy_prepare
   push-anon-db-to-ci:
     executor: blockframes-ci
     steps:
@@ -298,6 +318,16 @@ workflows:
       - copy-storage-from-prod
   deploy:
     jobs:
+      - deploy-to-demo3:
+          filters:
+            branches:
+              only:
+                - demo3
+      - deploy-to-demo2:
+          filters:
+            branches:
+              only:
+                - demo2
       - deploy-to-demo1:
           filters:
             branches:

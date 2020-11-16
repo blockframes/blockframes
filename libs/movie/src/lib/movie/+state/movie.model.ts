@@ -86,10 +86,12 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     productionStatus: null,
     rating: [],
     review: [],
+    runningTime: {},
     scoring: null,
     soundFormat: null,
     isOriginalVersionAvailable: null,
     estimatedBudget: null,
+    orgIds: [],
     ...params,
     banner: params.banner ?? '',
     audience: createAudienceGoals(params.audience),
@@ -97,7 +99,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
     release: createReleaseYear(params.release),
-    runningTime: createRunningTime(params.runningTime),
     shooting: createShooting(params.shooting),
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
@@ -204,14 +205,6 @@ export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRel
   return {
     status: '',
     ...release
-  };
-}
-
-export function createRunningTime(runningTime: Partial<MovieRunningTime> = {}): MovieRunningTime {
-  return {
-    time: null,
-    status: '',
-    ...runningTime
   };
 }
 

@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+// Material
+import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
@@ -33,6 +35,7 @@ export class SingleFileViewComponent implements OnInit {
     private mediaService: MediaService,
     private movieService: MovieService,
     private organizationService: OrganizationService,
+    private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -63,6 +66,10 @@ export class SingleFileViewComponent implements OnInit {
       await this.organizationService.update(id, documentToUpdate);
     }
     this.mediaService.uploadMedias(mediasToUpload);
+
+    if (!mediasToUpload[0].blobOrFile) {
+      this.snackBar.open('File deleted', 'close', { duration: 5000 });
+    }
   }
 
   public getSingleMediaForm(): HostedMediaForm {

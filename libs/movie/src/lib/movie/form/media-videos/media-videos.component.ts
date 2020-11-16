@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { getFileNameFromPath } from '@blockframes/media/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { allowedFiles } from '@blockframes/utils/utils';
@@ -12,15 +13,17 @@ import { MovieHostedVideoForm } from '../movie.form';
   styleUrls: ['./media-videos.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaVideosComponent implements OnInit {
+export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
-  currentOtherVideo: MovieHostedVideoForm;
-  selectedOtherVideo: number;
+  activeVideo = new MovieHostedVideoForm();
+  activeVideoIndex: number;
 
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
+
+  private sub: Subscription;
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -32,11 +35,19 @@ export class MovieFormMediaVideosComponent implements OnInit {
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
 
-    if (!this.otherVideos.length) {
-      this.otherVideos.add({ ref: '' });
+    if (!this.videoList.length) {
+      this.videoList.add({ ref: '' });
     }
-    this.selectedOtherVideo = 0;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.activeVideoIndex = 0;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
+
+    this.sub = this.activeVideo.valueChanges.subscribe(value => {
+      this.videoList.at(this.activeVideoIndex).patchValue(value);
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   trackByIndex(index: number) { return index; }
@@ -45,7 +56,7 @@ export class MovieFormMediaVideosComponent implements OnInit {
     return this.form.promotional.videos.screener.ref;
   }
 
-  get otherVideos() {
+  get videoList() {
     return this.form.promotional.videos.otherVideos;
   }
 
@@ -69,29 +80,29 @@ export class MovieFormMediaVideosComponent implements OnInit {
   }
 
   addOtherVideo() {
-    this.otherVideos.add({ ref: '' });
-    this.selectedOtherVideo = this.otherVideos.length - 1;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.videoList.add({ ref: '' });
+    this.activeVideoIndex = this.videoList.length - 1;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
     this.cdr.markForCheck();
   }
 
   selectOtherVideo(index: number) {
-    if (index < 0 || index >= this.otherVideos.length) return;
+    if (index < 0 || index >= this.videoList.length) return;
 
-    this.selectedOtherVideo = index;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.activeVideoIndex = index;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
     this.cdr.markForCheck();
   }
 
   deleteOtherVideo(index: number) {
-    if (index < 0 || index >= this.otherVideos.length) return;
+    if (index < 0 || index >= this.videoList.length) return;
 
-    this.otherVideos.removeAt(index);
-    if (!this.otherVideos.length) {
-      this.otherVideos.add({ ref: '' });
+    this.videoList.removeAt(index);
+    if (!this.videoList.length) {
+      this.videoList.add({ ref: '' });
     }
-    this.selectedOtherVideo = 0;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.activeVideoIndex = 0;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
     this.cdr.markForCheck();
   }
 }

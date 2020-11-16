@@ -49,7 +49,11 @@
         <mat-card-title>Company Description</mat-card-title>
       </mat-card-header>
       <mat-card-content fxLayout="column">
-        <organization-form-description [activity]="form.get('activity')" [fiscalNumber]="form.get('fiscalNumber')" ></organization-form-description>
+        <organization-form-description
+        [activity]="form.get('activity')"
+        [fiscalNumber]="form.get('fiscalNumber')"
+        [description]="form.get('description')">
+        </organization-form-description>
       </mat-card-content>
     </mat-card>
     <!-- Headquarters Address -->

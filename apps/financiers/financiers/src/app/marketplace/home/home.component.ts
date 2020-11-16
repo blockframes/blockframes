@@ -64,8 +64,8 @@ export class HomeComponent implements OnInit {
         size: 'banner'
       }
     ];
-
-    this.orgs$ = this.organizationService
+/* TODO 3498 */
+  /*   this.orgs$ = this.organizationService
       .valueChanges(ref => ref
         .where('appAccess.financiers.dashboard', '==', true)
         .where('status', '==', 'accepted'))
@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
     this.featuredOrg$ = this.orgs$.pipe(
       map(orgs => orgs.filter(org => org.movieIds.length > 3)),
       map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
-    );
+    ); */
 
   }
 }

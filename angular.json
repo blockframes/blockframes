@@ -295,7 +295,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
+                  "with": "env/env.blockframes.ts"
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
@@ -311,7 +311,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
+                  "with": "env/env.blockframes-staging.ts"
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
@@ -327,7 +327,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
+                  "with": "env/env.blockframes-ci.ts"
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
@@ -343,7 +343,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/demo/env.demo1.ts"
+                  "with": "env/env.blockframes-demo-1.ts"
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
@@ -428,7 +428,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/demo/env.demo1.ts"
+                  "with": "env/env.blockframes-demo-1.ts"
                 }
               ]
             }
@@ -590,7 +590,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
+                  "with": "env/env.blockframes.ts"
                 }
               ],
               "optimization": true,
@@ -621,7 +621,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
+                  "with": "env/env.blockframes-ci.ts"
                 }
               ],
               "optimization": true,
@@ -650,7 +650,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
+                  "with": "env/env.blockframes-staging.ts"
                 }
               ],
               "optimization": true,
@@ -679,7 +679,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/demo/env.demo1.ts"
+                  "with": "env/env.blockframes-demo-1.ts"
                 }
               ],
               "optimization": true,
@@ -833,7 +833,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
+                  "with": "env/env.blockframes.ts"
                 }
               ],
               "optimization": true,
@@ -861,7 +861,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
+                  "with": "env/env.blockframes-ci.ts"
                 }
               ],
               "optimization": true,
@@ -890,7 +890,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
+                  "with": "env/env.blockframes-staging.ts"
                 }
               ],
               "optimization": true,
@@ -919,7 +919,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/demo/env.demo1.ts"
+                  "with": "env/env.blockframes-demo-1.ts"
                 }
               ],
               "optimization": true,
@@ -983,7 +983,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
+                  "with": "env/env.blockframes.ts"
                 }
               ],
               "sourceMap": false,
@@ -994,7 +994,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
+                  "with": "env/env.blockframes-ci.ts"
                 }
               ],
               "sourceMap": false,
@@ -1005,7 +1005,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
+                  "with": "env/env.blockframes-staging.ts"
                 }
               ],
               "sourceMap": false,
@@ -1306,7 +1306,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
+                  "with": "env/env.blockframes.ts"
                 }
               ],
               "optimization": true,
@@ -1334,7 +1334,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
+                  "with": "env/env.blockframes-ci.ts"
                 }
               ],
               "optimization": true,
@@ -1363,7 +1363,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
+                  "with": "env/env.blockframes-staging.ts"
                 }
               ],
               "optimization": true,
@@ -1392,7 +1392,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/demo/env.demo1.ts"
+                  "with": "env/env.blockframes-demo-1.ts"
                 }
               ],
               "optimization": true,
@@ -1612,7 +1612,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
+                  "with": "env/env.blockframes.ts"
                 },
                 {
                   "replace": "apps/financiers/financiers/src/environments/environment.ts",
@@ -1647,7 +1647,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
+                  "with": "env/env.blockframes-ci.ts"
                 },
                 {
                   "replace": "apps/financiers/financiers/src/environments/environment.ts",
@@ -1667,7 +1667,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
+                  "with": "env/env.blockframes-staging.ts"
                 },
                 {
                   "replace": "apps/financiers/financiers/src/environments/environment.ts",
@@ -1687,7 +1687,7 @@
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
-                  "with": "env/demo/env.demo1.ts"
+                  "with": "env/env.blockframes-demo-1.ts"
                 },
                 {
                   "replace": "apps/financiers/financiers/src/environments/environment.ts",

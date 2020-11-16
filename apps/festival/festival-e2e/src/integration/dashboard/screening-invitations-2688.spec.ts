@@ -2,7 +2,7 @@
 
 // Utils
 import { NOW } from '../../fixtures/data'
-import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
+import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { EVENTS } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { Orgs } from '@blockframes/e2e/fixtures/orgs';
@@ -38,7 +38,8 @@ describe('Organiser invites other users to private screening', () => {
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
     signIn(users[UserIndex.Organiser]);
-    
+    acceptCookie();
+
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar();
@@ -59,6 +60,7 @@ describe('Organiser invites other users to private screening', () => {
 
   it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
     signIn(users[UserIndex.InvitedUser1]);
+    acceptCookie();
 
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalInvitationsPage = p1.goToInvitations();
@@ -80,6 +82,8 @@ describe('Organiser invites other users to private screening', () => {
 
   it(`InvitedUser2 logs in and refuses screening invitations`, () => {
     signIn(users[UserIndex.InvitedUser2]);
+    acceptCookie();
+
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
     cy.wait(2000);
@@ -88,6 +92,8 @@ describe('Organiser invites other users to private screening', () => {
 
   it('Organiser logs in and verifies the accepted invitations', () => {
     signIn(users[UserIndex.Organiser]);
+    acceptCookie();
+
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const p1 = new FestivalDashboardHomePage();
     const p2 = p1.goToNotifications()
@@ -97,6 +103,8 @@ describe('Organiser invites other users to private screening', () => {
 
   it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
     signIn(users[UserIndex.UninvitedGuest]);
+    acceptCookie();
+
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();

@@ -60,8 +60,8 @@ export class TitleListComponent implements OnInit, OnDestroy {
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  public allMovies$ = this.query.selectAll();
-  public allMoviesLoading$ = this.query.selectLoading();
+  allMovies$ = this.query.selectAll();
+  allMoviesLoading$ = this.query.selectLoading();
 
   private sub: Subscription;
   private titleSub: Subscription;
@@ -76,8 +76,10 @@ export class TitleListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // @todo(#2684) use syncWithAnalytics instead
-    this.sub = this.service.syncAnalytics().subscribe();
+    this.sub = this.allMovies$.pipe(switchMap(movies => {
+      const ids = movies.map(movie => movie.id);
+      return this.service.syncWithAnalytics(ids)
+    })).subscribe();
     const moviesAnalytics$ = this.query.analytics.selectAll();
 
     // Filtered movies

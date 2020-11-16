@@ -122,8 +122,6 @@ $bf-light-background: (
   unselected-chip: #eeeeee,
   disabled-list-option: #D1DBE6,
   tooltip: rgba(mat-color($mat-grey, 700), 0.9),
-  // TODO remove this custom variable when last palette will be imported
-  beware: #F6A92C,
 );
 
 ////////////////
@@ -146,9 +144,6 @@ $bf-light-foreground: (
   slider-off: rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
   text: #454E5D,
-
-  // Custom variables
-  light-text: #BBC8D4,
 );
 
 //////////

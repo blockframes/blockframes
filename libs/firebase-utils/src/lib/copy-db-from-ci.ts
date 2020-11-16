@@ -1,29 +1,23 @@
 import { join } from 'path';
 import { backupBucket } from 'env/env';
-import { backupBucket as backupBucketCI } from 'env/env.ci';
+import { backupBucket as backupBucketCI } from 'env/env.blockframes-ci';
 import * as admin from 'firebase-admin';
 import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';
 
-export async function copyDbFromCi(storage: admin.storage.Storage, ci: admin.app.App) {
+export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl'
+
+export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin.app.App) {
   const folder = join(process.cwd(), 'tmp');
 
   return catchErrors(async () => {
     // Get latest backup DB
     const ciStorage = ci.storage();
-    const [files] = await ciStorage.bucket(backupBucketCI).getFiles();
-    const last = files
-      .sort(
-        (a, b) =>
-          Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
-      )
-      .pop();
+    const last = await ciStorage.bucket(backupBucketCI).file(latestAnonDbFilename)
 
-    const metadata = last?.metadata;
-    const fname = `${metadata.bucket}-${metadata.generation}.jsonl`;
     console.log('Latest backup:', last?.metadata?.timeCreated);
     console.log('Remote name:', last?.name);
-    console.log('File name: ', fname);
+    console.log('File name: ', latestAnonDbFilename);
     console.log('File metadata is: ');
     console.dir(last?.metadata);
     console.log('Bucket name: ', last?.bucket?.name);
@@ -36,7 +30,7 @@ export async function copyDbFromCi(storage: admin.storage.Storage, ci: admin.app
     }
 
     // Download latest backup
-    const destination = join(folder, fname);
+    const destination = join(folder, latestAnonDbFilename);
     console.log(`Downloading latest backup to : ${destination}`);
 
     let downloadError = false;

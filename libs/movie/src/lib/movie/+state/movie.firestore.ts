@@ -85,6 +85,7 @@ interface MovieRaw<D> {
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
+  orgIds: string[]
 
 
   // New Data
@@ -243,8 +244,8 @@ export interface MovieRelease {
 }
 
 export interface MovieRunningTime {
-  time: number | string,
-  status: string,
+  time?: number,
+  status?: string,
 }
 
 export interface OtherLink {

@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
-import { valueByPath } from '@blockframes/utils/pipes';
+import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Index } from 'algoliasearch';
@@ -136,7 +136,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   edit(index: number) {
     const element = this.form.at(index).value;
     const value = typeof element === 'object'
-      ? valueByPath(element, this.displayWithPath)
+      ? getDeepValue(element, this.displayWithPath)
       : element;
     this.searchCtrl.setValue(value);
     this.input.nativeElement.value = value;

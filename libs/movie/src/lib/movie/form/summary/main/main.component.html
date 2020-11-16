@@ -99,11 +99,7 @@
     </li>
     <li test-id="info-runtime">
       <strong>Running Time </strong>
-      <missing-control [control]="movie.runningTime.get('status')">
-        <ng-template let-runningStatus>{{ runningStatus | toLabel: "screeningStatus"}}</ng-template>
-      </missing-control>
-      <ng-container> - </ng-container>
-      <missing-control [control]="movie.runningTime.get('time')">
+      <missing-control [control]="movie.runningTime">
         <ng-template let-runningTime>{{ runningTime | getRunningTime }}</ng-template>
       </missing-control>
     </li>

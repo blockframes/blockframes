@@ -1,13 +1,31 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { MovieRunningTime } from '../+state/movie.firestore';
+import { screeningStatus } from '@blockframes/utils/static-model/static-model';
 
+/**
+ * Format the running time to show 'time min' and the status if needed
+ * @param runningTime Object runningTime
+ * @param isStatusNeeded For some component, like movie-card, we don't want the status at all
+ */
+export function formatRunningTime(runningTime?: MovieRunningTime, isStatusNeeded: boolean = true) {
+  const { time, status } = runningTime;
+
+  if (isStatusNeeded) {
+    if (time && status) return `${time} min (${screeningStatus[runningTime.status]})`;
+    if (time && !status) return `${time} min`;
+    if (!time && status) return screeningStatus[status];
+  }
+
+  if (time) return status === "estimated" ? `≈ ${time} min` : `${time} min`;
+}
 
 @Pipe({
   name: 'getRunningTime',
   pure: true
 })
 export class RunningTimePipe implements PipeTransform {
-  transform(value: string | number): string {
-    return (typeof value === 'number') ? `${value}min` : 'TBC';
+  transform(runningTime: MovieRunningTime) {
+    return formatRunningTime(runningTime);
   }
 }
 
