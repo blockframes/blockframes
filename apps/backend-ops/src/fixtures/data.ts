@@ -4,6 +4,12 @@ export const testFixture = {
     "documentPermissions" : {
       "D001" : {
         "ownerId" : 'O001'
+      },
+      "MI-000": {
+        "canCreate": false
+      },
+      "MI-007": {
+        "canCreate": true
       }
     }
   },

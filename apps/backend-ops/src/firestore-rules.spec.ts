@@ -203,6 +203,8 @@ describe.only('Movies Rules Tests', () => {
   let db: Firestore;
 
   describe('With User in org', () => {
+    const newMovieTitle = 'MI-007'
+    const newMovieDetails = {id: `${newMovieTitle}`};
 
     beforeAll(async () => {
       db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
@@ -223,9 +225,41 @@ describe.only('Movies Rules Tests', () => {
       await assertSucceeds(movieDRRef.get());
     });
 
+    test("user valid org, storestatus other than draft should not be able to create movie", async () => {
+      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      let createdMovie:any = { ...newMovieDetails, storeConfig: {}};
+      createdMovie.storeConfig['status'] = 'released';
+      await assertFails(movieRef.set(createdMovie));
+    });
+
+    test("user valid org, without create permission for org should not be able to create movie", async () => {
+      const newMovieTitleUnavailable = 'MI-000';
+      const movieRef = db.doc(`movies/${newMovieTitleUnavailable}`);
+      let createdMovie:any = { ...newMovieDetails, storeConfig: {}};
+      createdMovie.storeConfig['status'] = 'draft';
+      await assertFails(movieRef.set(createdMovie));
+    });
+
+    test("user valid org, with create permission for org, invalid id should not be able to create movie", async () => {
+      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      const movieDetails = {id: 'MI-000', storeConfig: {}}
+      let createdMovie:any = { ...newMovieDetails, ...movieDetails };
+      createdMovie.storeConfig['status'] = 'draft';
+      await assertFails(movieRef.set(createdMovie));
+    });
+
+    test("user valid org, with create permission for org should be able to create movie", async () => {
+      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      const movieDetailsOther = {storeConfig: {status: 'draft'}}
+      let createdMovie:any = { ...newMovieDetails, ...movieDetailsOther};
+      await assertSucceeds(movieRef.set(createdMovie));
+    });
+
   });
 
   describe('With User not in org', () => {
+    const newMovieTitle = 'MI-007'
+    const newMovieDetails = {id: `${newMovieTitle}`};
 
     beforeAll(async () => {
       db  = initFirestoreApp(projectId, {uid: 'uid-peeptom'});
@@ -240,6 +274,12 @@ describe.only('Movies Rules Tests', () => {
       const movieRef = db.doc("movies/M001");
       await assertFails(movieRef.get());
     });
+
+    test("user without valid org shouldn't be able to create movie title", async () => {
+      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      await assertFails(movieRef.set(newMovieDetails));
+    });
+
   });  
 
 });
