@@ -1,8 +1,8 @@
-﻿import { apps, assertFails, assertSucceeds, initializeTestApp, 
+﻿import { apps, assertFails, assertSucceeds, initializeTestApp,
         loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
-import { TokenOptions,  } from '@firebase/rules-unit-testing/dist/src/api';
+import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 
 //type Firestore = ReturnType<typeof initFirestoreApp> //<-- does not work!
 
@@ -32,9 +32,9 @@ function setRules(projectId: string, rulePath: string) {
 
 function setData(projectId: string, dataDB: Record<string, Object>) {
   const app = initializeAdminApp({ projectId});
-  const db = app.firestore();
+  const dba = app.firestore();
   // Write data to firestore app
-  const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
+  const promises = Object.entries(dataDB).map(([key, doc]) => dba.doc(key).set(doc));
   return Promise.all(promises);
 }
 
