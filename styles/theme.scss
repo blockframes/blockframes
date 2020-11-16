@@ -90,3 +90,7 @@
 @include mat-bf-button-typography($bf-typography);
 @include mat-bf-toolbar-typography($bf-typography);
 @include mat-native-control($bf-typography);
+
+// Density
+// Remove the "_" when we switch to ng 11
+@include _angular-material-density(maximum);
