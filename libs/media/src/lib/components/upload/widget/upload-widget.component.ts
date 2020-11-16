@@ -69,7 +69,6 @@ export class UploadWidgetComponent {
     } else {
       // Logo, profile image, and more (string), Screener (HostedVideo)
       // Soon we will have files of type HostedMediaWithMetadata here too
-      // Chose to only update the reference field and not the whole object to not lose potential useful data (e.g. jwPlayerId)
       const refField = typeof media === 'string' ? field : `${field}.ref`;
       return snapshot.ref.update({ [refField]: '' });
     }
