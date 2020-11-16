@@ -8,7 +8,7 @@ export async function upgrade(db: Firestore) {
     runChunks(orgsCol.docs, async orgDoc => {
         const org = orgDoc.data();
         delete org?.movieIds
-        await orgDoc.ref.update(org)
+        await orgDoc.ref.set(org)
     })
 
     console.log('deleted movieIds from orgs collection');
