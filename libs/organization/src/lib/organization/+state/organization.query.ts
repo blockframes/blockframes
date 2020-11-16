@@ -11,16 +11,4 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   constructor(protected store: OrganizationStore) {
     super(store);
   }
-
-  /** listen on the list of movie ids from current org */
-  movieIds$ = this.selectActive().pipe(
-    map(org => org.movieIds),
-    distinctUntilChanged((a, b) => a.length === b.length)
-  );
-
-  /** Check if the current organization has movies */
-  hasMovies$ = this.selectActive().pipe(
-    map(org => !!org.movieIds.length),
-    distinctUntilChanged()
-  );
 }

@@ -3,7 +3,7 @@ import { EventForm, MeetingForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
@@ -45,7 +45,7 @@ export class EditComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Screening info');
@@ -57,8 +57,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
-      // org.movieIds also includes movies from the catalog app but please keep it this way. This way Marie can create events for movies that are only on catalog too.
-      switchMap(org => this.movieService.getValue(org.movieIds)),
+      switchMap(org => this.movieService.valueChanges(fromOrg(org.id))),
       map(titles => titles.filter(title => title.storeConfig.status === 'accepted' || 'submitted')),
     );
 

@@ -48,7 +48,7 @@ export const getPrivateVideoUrl = async (
   }
 
   const uid = context.auth.uid;
-  const { security, collection, doc, docData, fieldToUpdate } = await getDocAndPath(data.ref);
+  const { privacy, collection, doc, docData, field } = await getDocAndPath(data.ref);
 
   if (!docData) {
     return {
@@ -57,9 +57,9 @@ export const getPrivateVideoUrl = async (
     }
   }
 
-  let access = security === 'public';
+  let access = privacy === 'public';
 
-  if (!access && security === 'protected') {
+  if (!access && privacy === 'protected') {
 
     // CHECK FOR ORGANIZATION MEMBER
     if (collection === 'movies') {
@@ -140,7 +140,7 @@ export const getPrivateVideoUrl = async (
   }
 
   // get JwPlayerId
-  let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, fieldToUpdate)
+  let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, field)
   if (Array.isArray(savedRef)) {
     savedRef = savedRef.find(video => video.ref === data.ref);
   }

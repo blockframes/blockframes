@@ -1,10 +1,11 @@
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Optional } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Intercom } from 'ng-intercom';
+import { switchMap } from 'rxjs/operators';
 
 const isAcceptedInApp = movie => movie.storeConfig.status === 'accepted' && movie.storeConfig.appAccess.catalog === true;
 
@@ -28,8 +29,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // @todo(#2684) use syncWithAnalytics instead
-    this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.storeConfig.status === 'accepted' }).subscribe();
+    this.sub = this.movies$.pipe(switchMap(movies => {
+      const ids = movies.map(movie => movie.id);
+      return this.movieService.syncWithAnalytics(ids)
+    })).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
     this.movieQuery.getCount()
       ? this.dynTitle.setPageTitle('Seller\'s Dashboard')
