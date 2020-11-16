@@ -264,7 +264,6 @@ jobs:
     executor: blockframes-ci
     environment:
        PROJECT_ID: blockframes-demo-1
-       SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
        NG_CONFIG: demo1
        ENV_TS: './env/env.blockframes-demo-1.ts'
     steps:
