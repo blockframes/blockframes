@@ -226,7 +226,7 @@ describe('DB cleaning script', () => {
       users.docs.map(ref => ref.id)
     ];
 
-    await cleanOrganizations(organizationsBefore, userIds, movieIds);
+    await cleanOrganizations(organizationsBefore, userIds);
 
     const organizationsAfter: Snapshot = await getCollectionRef('orgs');
     const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movieIds)).length;
