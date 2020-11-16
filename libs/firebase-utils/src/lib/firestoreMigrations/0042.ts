@@ -13,7 +13,7 @@ export async function upgrade(db: Firestore) {
         const movieDoc = moviesCol.docs.find(doc => doc.ref.id === id);
         const movie = movieDoc?.data();
         /* Check if the movie object holds an orgIds array already, if not, add it. */
-        if (movie?.['orgIds']) {
+        if (movie?.['orgIds'] && !movie?.['orgIds'].includes(id)) {
             movie['orgIds'].push(id);
         } else {
             Object.assign(movie, { orgIds: [id] })
