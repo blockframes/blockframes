@@ -17,12 +17,12 @@ export async function upgrade(_: Firestore, storage: Storage) {
   await runChunks(files, async (f) => {
 
     try {
-      const { filePath, doc, docData, fieldToUpdate } = await getDocAndPath(f.name);
+      const { filePath, doc, docData, field } = await getDocAndPath(f.name);
 
-      const currentMediaValue = get(docData, fieldToUpdate);
-      if (has(docData, fieldToUpdate) && currentMediaValue === f.name) {
+      const currentMediaValue = get(docData, field);
+      if (has(docData, field) && currentMediaValue === f.name) {
         const newFilePath = await changeResourceDirectory(filePath, storage, doc.id);
-        await doc.update({ [fieldToUpdate]: newFilePath });
+        await doc.update({ [field]: newFilePath });
       } else {
         await f.delete();
         console.log(`Image ref not found on DB. Removed ${f.name}.`);

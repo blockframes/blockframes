@@ -4,6 +4,7 @@ import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
 import { UploadData, HostedMediaFormValue } from "./media.firestore";
@@ -34,7 +35,8 @@ export class MediaService {
   constructor(
     private storage: AngularFireStorage,
     private functions: AngularFireFunctions,
-    private overlay: Overlay
+    private overlay: Overlay,
+    private db: AngularFirestore
   ) { }
 
   async upload(uploadFiles: UploadData | UploadData[]) {
@@ -74,7 +76,7 @@ export class MediaService {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this._tasks }] });
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this._tasks }, { provide: 'db', useValue: this.db }] });
       this.overlayRef.attach(instance);
     }
   }

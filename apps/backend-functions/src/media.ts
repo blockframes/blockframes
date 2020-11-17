@@ -20,10 +20,10 @@ import { storage } from 'firebase-functions';
  */
 export async function linkFile(data: storage.ObjectMetadata) {
   // get the needed values
-  const { filePath, fieldToUpdate, isInTmpDir, docData, collection, doc } = await getDocAndPath(data.name);
+  const { filePath, field, isTmp, docData, collection, doc } = await getDocAndPath(data.name);
 
-  if (isInTmpDir && data.name) {
-    let savedRef: any = get(docData, fieldToUpdate);
+  if (isTmp && data.name) {
+    let savedRef: any = get(docData, field);
 
     if (Array.isArray(savedRef)) {
       savedRef = savedRef.map(e => e.ref || e).find(ref => ref === filePath) || '';
@@ -48,7 +48,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
           const uploadResult = await uploadToJWPlayer(to);
 
-          const hostedVideos: HostedVideo | HostedVideo[] = get(docData, fieldToUpdate);
+          const hostedVideos: HostedVideo | HostedVideo[] = get(docData, field);
 
           let update: HostedVideo | HostedVideo[] | {};
           if (uploadResult.success) {
@@ -74,7 +74,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
               update = {};
             }
           }
-          await doc.update({ [fieldToUpdate]: update });
+          await doc.update({ [field]: update });
         }
       }
       return true;

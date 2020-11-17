@@ -11,7 +11,7 @@ import { organizationCreated, organizationWasAccepted, organizationRequestedAcce
 import { OrganizationDocument, PublicUser, PermissionsDocument, MovieDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, modules, getAppName } from '@blockframes/utils/apps';
+import { app, modules, getAppName, getSendgridFrom } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
@@ -94,7 +94,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
     throw new Error('organization update function got invalid org data');
   }
   const emailRequest = await organizationCreated(org);
-  const from = await getFromEmail(org);
+  const from = getSendgridFrom(org._meta.createdFrom);
 
   if (await hasAcceptedMovies(org)) {
     org['hasAcceptedMovies'] = true;

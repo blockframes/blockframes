@@ -24,11 +24,14 @@ const functionsConfigMap: Record<string, string> = {
   'jwplayer.secret': 'JWPLAYER_SECRET',
   'algolia.api_key': 'ALGOLIA_API_KEY',
   'admin.email': 'CASCADE8_ADMIN',
+  'admin.email_catalog': 'CASCADE8_ADMIN_CATALOG',
+  'admin.email_festival': 'CASCADE8_ADMIN_FESTIVAL',
+  'admin.email_financiers': 'CASCADE8_ADMIN_FINANCIERS',
   'imgix.token': 'IMGIX_TOKEN',// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
   'twilio.account.sid': 'TWILIO_ACCOUNT_SID',
   'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
   'twilio.api.key.sid': 'TWILIO_API_KEY_SID'
- }
+}
 
 /**
  * This is temporary because key names are hardcoded.
@@ -36,14 +39,14 @@ const functionsConfigMap: Record<string, string> = {
  * But need to figure out how to indicate nested objects (more underscores?)
  */
 function getKeyValFormat(env?: string): string[] {
-  const formatEnvKey = (key: string) => `${ env ? camelcase(env) : ''}_${key}`
+  const formatEnvKey = (key: string) => `${env ? camelcase(env) : ''}_${key}`
   /**
    * This nested function will check to see if a key exists in process.env when prefixed
    * with a particular env name & default to base key if not set
    * @param key environment variable keyname
    */
   function getKeyName(key: string) {
-    if (env && process.env.hasOwnProperty(formatEnvKey(key)) ) {
+    if (env && process.env.hasOwnProperty(formatEnvKey(key))) {
       return formatEnvKey(key);
     }
     return key;
