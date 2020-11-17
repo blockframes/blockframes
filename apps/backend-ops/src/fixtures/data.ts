@@ -1,4 +1,4 @@
-export const testFixture = {
+﻿export const testFixture = {
   //Permissions
   "permissions/O001" : {
     "documentPermissions" : {
@@ -39,6 +39,10 @@ export const testFixture = {
   "users/uid-peeptom" : {
     email: 'tom@no-org.com',
     uid: 'uid-peeptom',
+  },
+  "users/uid-peeptom" : {
+    email: 'tom@no-org.com',
+    uid: 'uid-peeptom',
   },  
 
   //Blockframes Admin
@@ -62,6 +66,9 @@ export const testFixture = {
       "original": 'UnitTest'
     },
     "note": ''
+  }
+  "events/E001": {
+    "id": 'E001'
   },
 
   //Notifications
