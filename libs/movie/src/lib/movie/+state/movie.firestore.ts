@@ -86,6 +86,7 @@ interface MovieRaw<D> {
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
+  orgIds: string[]
 
 
   // New Data

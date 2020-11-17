@@ -36,7 +36,6 @@ interface OrganizationBase<D> extends PublicOrganization {
   email: string;
   fiscalNumber: string;
   isBlockchainEnabled: boolean;
-  movieIds: string[];
   userIds: string[];
   status: OrganizationStatus;
   wishlist: WishlistBase<D>[];
@@ -82,7 +81,6 @@ export function createOrganizationBase(
     email: '',
     fiscalNumber: '',
     isBlockchainEnabled: false,
-    movieIds: [],
     status: 'pending',
     userIds: [],
     wishlist: [],

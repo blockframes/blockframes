@@ -1,6 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { NgModule } from '@angular/core';
 
+/**
+ * Helper function to dynamically access object value pointed by the `path` param, like the rxjs pluck function
+ * @param object usually the result object from Algolia
+ * @param path string representing the path to the value, usually `this.pathToValue` or `this.displayWithPath`
+ * @example
+ * const object = { main: { nested: { name: 'Joe' } } };
+ * const path = 'main.nested.name';
+ * this.resolve(result); // 'Joe'
+ */
+export const getDeepValue = (object: Object, path: string) => path.split('.').reduce((result, key) => result?.[key], object);
+
 @Pipe({ name: 'deepKey' })
 export class DeepKeyPipe implements PipeTransform {
   transform(value: Object, deepKey: string) {
@@ -9,7 +20,6 @@ export class DeepKeyPipe implements PipeTransform {
       if (!value || !deepKey) return value;
 
       const conditions = deepKey.split('||').map(p => p.trim());
-      const getDeepValue = (val: Object, condition: string) => condition.split('.').reduce((result, key) => result?.[key], val);
 
       if (Array.isArray(value)) {
         return value.map(obj => {

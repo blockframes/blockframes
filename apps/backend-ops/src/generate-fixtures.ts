@@ -73,7 +73,6 @@ async function generateOrgs() {
     denomination: org.denomination,
     description: org.description,
     email: org.email,
-    movieIds: org.movieIds,
     appAccess: org.appAccess,
     userIds: org.userIds,
   }));

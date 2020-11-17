@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery, User } from '@blockframes/auth/+state';
 import {
   Organization,
@@ -9,22 +9,22 @@ import {
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { CollectionConfig, CollectionService, WriteOptions, queryChanges } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
+import { Movie } from '@blockframes/movie/+state';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { App } from '@blockframes/utils/apps';
-
-const findOrgByMovieIdQuery = (movieId: string) => ({
-  path: 'orgs',
-  queryFn: ref => ref.where('movieIds', 'array-contains', movieId)
-})
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
+
+  private app = getCurrentApp(this.routerQuery)
 
   constructor(
     private query: OrganizationQuery,
@@ -33,6 +33,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
+    private routerQuery: RouterQuery
   ) {
     super(store);
   }
@@ -165,7 +166,9 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.orgNameExist(orgName).then(exist => !exist);
   }
 
-  public findOrgByMovieId(id: string) {
-    return queryChanges.call(this, findOrgByMovieIdQuery(id));
+  public queryFromMovie(movie: Movie) {
+    return this.valueChanges(movie.orgIds).pipe(
+      map(orgs => orgs.filter(org => org.appAccess[this.app]))
+    );
   }
 }

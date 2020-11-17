@@ -2,13 +2,13 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 // Blockframes
-import { MovieService, MovieQuery } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, fromOrg } from '@blockframes/movie/+state';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 // RxJs
-import { map, switchMap, shareReplay, filter, tap } from 'rxjs/operators';
+import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
     const allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
-      switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
+      switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
       map(movies => movies.filter(movie => !!movie)),
       shareReplay(1),
       tap(_ => _isDataLoaded$.next(true))

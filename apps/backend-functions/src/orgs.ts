@@ -96,10 +96,8 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   const emailRequest = await organizationCreated(org);
   const from = getSendgridFrom(org._meta.createdFrom);
 
-  if (org.movieIds.length) {
-    if (await hasAcceptedMovies(org)) {
-      org['hasAcceptedMovies'] = true;
-    }
+  if (await hasAcceptedMovies(org)) {
+    org['hasAcceptedMovies'] = true;
   }
 
   return Promise.all([
