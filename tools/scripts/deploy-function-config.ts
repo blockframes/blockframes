@@ -23,10 +23,6 @@ const functionsConfigMap: Record<string, string> = {
   'jwplayer.key': 'JWPLAYER_KEY',// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
   'jwplayer.secret': 'JWPLAYER_SECRET',
   'algolia.api_key': 'ALGOLIA_API_KEY',
-  'admin.email': 'CASCADE8_ADMIN',
-  'admin.email_catalog': 'CASCADE8_ADMIN_CATALOG',
-  'admin.email_festival': 'CASCADE8_ADMIN_FESTIVAL',
-  'admin.email_financiers': 'CASCADE8_ADMIN_FINANCIERS',
   'imgix.token': 'IMGIX_TOKEN',// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
   'twilio.account.sid': 'TWILIO_ACCOUNT_SID',
   'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
