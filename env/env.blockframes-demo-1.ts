@@ -26,15 +26,6 @@ export const appUrl = {
   financiers: 'https://blockframes-demo1-financiers.web.app',
 }
 
-//Local firebase emulator UI
-export const emulatorConfig = {
-  functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: {
-    host: 'localhost:8080',
-    ssl: false
-  }
-};
-
 export const firebase = {
   apiKey: "AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM",
   authDomain: "blockframes-demo-1.firebaseapp.com",
@@ -137,6 +128,6 @@ export const bigQueryAnalyticsTable = 'blockframes-demo1.analytics_200039147.eve
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
-export const heavyChunkSize = 15;
+export const heavyChunkSize = 7;
 
-export const chunkSize = 30;
+export const chunkSize = 15;
