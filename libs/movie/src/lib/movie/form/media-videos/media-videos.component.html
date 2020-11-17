@@ -32,32 +32,16 @@
     <section>
       <p>Upload other videos such as trailer, teaser, promotional clip, etc...</p>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Video title (optional)</mat-label>
-        <input matInput [formControl]="activeVideo.title" >
-      </mat-form-field>
-      <file-upload
-        [form]="activeVideo.ref"
-        [storagePath]="getPath('otherVideos')"
-        allowedFileType="video">
-          <h3 title>Upload Video</h3>
-      </file-upload>
-      <p class="mat-caption">Keep in mind that those videos will be <strong>public</strong> and <strong>viewable by anyone</strong> on the marketplace.</p>
-      <mat-divider></mat-divider>
-      <mat-list>
-        <mat-list-item *ngFor="let video of videoList.value; let index = index; trackBy: trackByIndex">
-          <mat-icon mat-list-icon svgIcon="film" [color]="index === activeVideoIndex ? 'primary' : ''"></mat-icon>
-          <div mat-line>{{ video.title || video.ref.fileName || 'No Title' }}</div>
-          <button mat-icon-button  *ngIf="index !== activeVideoIndex" (click)="selectOtherVideo(index)"><mat-icon svgIcon="pencil"></mat-icon></button>
-          <button mat-icon-button  [color]="index === activeVideoIndex ? 'primary' : ''" (click)="deleteOtherVideo(index)"><mat-icon svgIcon="trash"></mat-icon></button>
-        </mat-list-item>
-      </mat-list>
-      <div fxLayout="row" fxLayoutAlign="center center" *ngIf="!!videoList.value.length">
-        <button mat-stroked-button color="primary" (click)="addOtherVideo()">
-          Add another Video
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-      </div>
+      <bf-form-list [form]="videoList" buttonText="Add a video" listPosition="bottom">
+        <ng-template itemRef let-video>
+          {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
+        </ng-template>
+        <ng-template formView let-activeForm>
+          <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
+            <h3 title>Upload Video</h3>
+          </file-upload>
+        </ng-template>
+      </bf-form-list>
     </section>
 
   </ng-container>
