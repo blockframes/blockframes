@@ -135,5 +135,5 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 // =======
 
 export const backupBucket = 'blockframes-demo-1-db-backups';
-export const heavyChunkSize = 7;
-export const chunkSize = 15;
+export const heavyChunkSize = 15;
+export const chunkSize = 30;

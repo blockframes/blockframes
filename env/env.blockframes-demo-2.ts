@@ -1,29 +1,8 @@
 export const production = true;
-export const dev = false;
-export const hmr = false;
-
-// TODO issue#1146 AFM CODE
-// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
-export const AFM_DISABLE = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true
 };
-
-//Local firebase emulator UI
-export const emulatorConfig = {
-  functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: {
-    host: 'localhost:8080',
-    ssl: false
-  }
-};
-
-// Analytics
-// =========
-
-export const sentryEnv = 'demo-2';
-export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
 
 // Firebase
 // ========
@@ -44,7 +23,6 @@ export const firebase = {
   messagingSenderId: '185137976939'
 };
 
-
 // Algolia
 // =======
 
@@ -64,17 +42,32 @@ export const algolia = {
   indexNameUsers: 'demo2_users',
 };
 
+// Support emails 
+// =======
+
+export const supportEmails = {
+  default: 'dev+demo2@blockframes.io', // redirect to => blockframes.dev@gmail.com
+  catalog: 'dev+demo2_catalog@blockframes.io',
+  festival: 'dev+demo2_festival@blockframes.io',
+  financiers: 'dev+demo2_financiers@blockframes.io'
+}
+
+// Yandex 
+// =======
+
+export const yandexId = 0;
+
+// Intercom
+// ========
+
+export const intercomId = 'srwfltp4';
+
 // Ethereum
 // ========
 
 export const network = 'goerli';
-export const mnemonic = ''; // defined in functions.config, see backend-functions/environments
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
-
-// OMDB
-// =======
-export const omdbApiKey = '4d1be897';
 
 // TODO(issue#847): change the address
 export const contracts = {
@@ -91,21 +84,20 @@ export const relayer = {
   factoryContract
 };
 
-// Functions
-// =========
+// OMDB
+// =======
 
-export const backupBucket = 'demo2-backups';
-export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
+export const omdbApiKey = '4d1be897';
 
-// Yandex Metrika Id
-export const yandexId = 0;
+// Sentry 
+// =======
 
-// Intercom
-// ========
-export const intercomId = 'srwfltp4';
+export const sentryEnv = 'demo-2';
+export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
 
 // Quorum
 // ========
+
 export const quorum = {
   archipelNode: {
     url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
@@ -129,12 +121,17 @@ export const quorum = {
 
 // BigQuery
 // ========
+
 export const bigQueryAnalyticsTable = 'blockframes-demo2.analytics_200039147.events_';
 
 // Archipel Content OrgId
-// ======================
+// ========
+
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
-export const heavyChunkSize = 15;
+// Import / Export parameters
+// =======
 
+export const backupBucket = 'demo2-backups';
+export const heavyChunkSize = 15;
 export const chunkSize = 30;
