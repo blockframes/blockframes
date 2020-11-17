@@ -214,7 +214,7 @@ describe.skip('Contracts Rules Tests', () => {
 
 describe('Events Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   describe('With User in org', () => {
 
@@ -275,10 +275,7 @@ describe('Events Rules Tests', () => {
   describe('With User not in org', () => {
 
     beforeAll(async () => {
-      db  = initFirestoreApp(projectId, {uid: 'uid-peeptom'});
-      await setRules(projectId, 'firestore.test.rules');
-      await setData(db, testFixture);
-      await setRules(projectId, 'firestore.rules');
+      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-peeptom'});
     });
 
     afterAll(() => Promise.all(apps().map(app => app.delete())));
