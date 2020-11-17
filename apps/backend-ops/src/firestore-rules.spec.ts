@@ -262,8 +262,7 @@ describe.only('Movies Rules Tests', () => {
     test.only("user valid org, updating unrestricted field should be able to update movie", async () => {
       const movieRef = db.doc(`movies/${existMovieTitle}`);
       const movieDetailsOther = {notes: 'update in unit-test'}
-      let updateMovie:any = {  ...movieRef, ...movieDetailsOther};
-      await assertSucceeds(movieRef.set(movieDetailsOther, {merge: true}));
+      await assertSucceeds(movieRef.update(movieDetailsOther));
     });
 
   });
@@ -314,7 +313,7 @@ describe.skip('Contracts Rules Tests', () => {
   });
 });
 
-describe.only('Events Rules Tests', () => {
+describe('Events Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 

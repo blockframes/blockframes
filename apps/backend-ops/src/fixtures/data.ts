@@ -1,24 +1,24 @@
 ﻿export const testFixture = {
   //Permissions
   "permissions/O001" : {
-    "documentPermissions" : {
-      "D001" : {
-        "ownerId" : 'O001'
-      },
-      "MI-000": {
-        "canCreate": false
-      },
-      "MI-007": {
-        "canCreate": true
-      },
-      "MI-077": {
-        "canCreate": true,
-        "ownerId": 'O001'
-      }
-    },
     "roles": {
       "uid-user2": 'member'
     }
+  },
+
+  "permissions/O001/documentPermissions/D001" : {
+    "ownerId" : 'O001'
+  },
+  "permissions/O001/documentPermissions/MI-000": {
+    "canCreate": false
+  },
+  "permissions/O001/documentPermissions/MI-007": {
+     "canCreate": true
+  },
+  "permissions/O001/documentPermissions/MI-077": {
+    "canUpdate": true,
+    "canCreate": true,
+    "ownerId": 'O001'
   },
 
   //Orgs
@@ -40,10 +40,6 @@
     email: 'tom@no-org.com',
     uid: 'uid-peeptom',
   },
-  "users/uid-peeptom" : {
-    email: 'tom@no-org.com',
-    uid: 'uid-peeptom',
-  },  
 
   //Blockframes Admin
   "blockframesAdmin/uid-c8" : {
@@ -66,7 +62,8 @@
       "original": 'UnitTest'
     },
     "note": ''
-  }
+  },
+
   "events/E001": {
     "id": 'E001'
   },
