@@ -10,7 +10,14 @@ export const testFixture = {
       },
       "MI-007": {
         "canCreate": true
+      },
+      "MI-077": {
+        "canCreate": true,
+        "ownerId": 'O001'
       }
+    },
+    "roles": {
+      "uid-user2": 'member'
     }
   },
 
@@ -47,6 +54,14 @@ export const testFixture = {
     "distributionRights/DR001": {
       "id": 'DR001'
     }
+  },
+
+  "movies/MI-077": {
+    "id": 'MI-077',
+    "title": {
+      "original": 'UnitTest'
+    },
+    "note": ''
   },
 
   //Notifications

@@ -203,7 +203,8 @@ describe.only('Movies Rules Tests', () => {
   let db: Firestore;
 
   describe('With User in org', () => {
-    const newMovieTitle = 'MI-007'
+    const newMovieTitle = 'MI-007';
+    const existMovieTitle = 'MI-077';
     const newMovieDetails = {id: `${newMovieTitle}`};
 
     beforeAll(async () => {
@@ -249,10 +250,20 @@ describe.only('Movies Rules Tests', () => {
     });
 
     test("user valid org, with create permission for org should be able to create movie", async () => {
-      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      //const movieRef = db.doc(`movies/${newMovieTitle}`);
       const movieDetailsOther = {storeConfig: {status: 'draft'}}
-      let createdMovie:any = { ...newMovieDetails, ...movieDetailsOther};
-      await assertSucceeds(movieRef.set(createdMovie));
+      const newTitle =  {id: `${newMovieTitle}`};
+      let createdMovie:any = {  ...newTitle, ...movieDetailsOther};
+      //await assertSucceeds(movieRef.set(createdMovie));
+      const movieDoc = db.collection('movies').doc(newMovieTitle).set(createdMovie);
+      await assertSucceeds(movieDoc)
+    });
+
+    test.only("user valid org, updating unrestricted field should be able to update movie", async () => {
+      const movieRef = db.doc(`movies/${existMovieTitle}`);
+      const movieDetailsOther = {notes: 'update in unit-test'}
+      let updateMovie:any = {  ...movieRef, ...movieDetailsOther};
+      await assertSucceeds(movieRef.set(movieDetailsOther, {merge: true}));
     });
 
   });
