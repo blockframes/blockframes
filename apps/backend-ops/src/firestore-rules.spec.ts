@@ -235,23 +235,45 @@ describe.skip('Contracts Rules Tests', () => {
   });
 });
 
-//TODO: 4201
-describe.skip('Events Rules Tests', () => {
+describe.only('Events Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
-  beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+  describe('With User in org', () => {
+
+    beforeAll(async () => {
+      db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
+      await setRules(projectId, 'firestore.test.rules');
+      await setData(db, testFixture);
+      await setRules(projectId, 'firestore.rules');
+    });
+
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+    test("user with valid org should be able to read event", async () => {
+      const eventRef = db.doc("events/E001");
+      await assertSucceeds(eventRef.get());
+    });
+
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  describe('With User not in org', () => {
 
-  test("test ", async () => {
+    beforeAll(async () => {
+      db  = initFirestoreApp(projectId, {uid: 'uid-peeptom'});
+      await setRules(projectId, 'firestore.test.rules');
+      await setData(db, testFixture);
+      await setRules(projectId, 'firestore.rules');
+    });
 
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+    test("user without valid org shouldn't be able to read event", async () => {
+      const eventRef = db.doc("events/E001");
+      await assertFails(eventRef.get());
+    });
   });
+
 });
 
 //TODO: 4187
