@@ -20,17 +20,6 @@ async function initFirestoreApp(projectId: string, rulePath: string, data: Recor
   return app.firestore();
 }
 
-/**
- * Helper function to setup Firestore DB Data
- */
-function setRules(projectId: string, rulePath: string) {
-  // Apply the firestore rules to the project
-  return loadFirestoreRules({
-    projectId,
-    rules: fs.readFileSync(rulePath, "utf8")
-  });
-}
-
 function setData(projectId: string, dataDB: Record<string, Object>) {
   const app = initializeAdminApp({ projectId});
   const db = app.firestore();
