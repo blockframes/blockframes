@@ -5,7 +5,6 @@ import { getFileNameFromPath } from '@blockframes/media/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { allowedFiles } from '@blockframes/utils/utils';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { MovieHostedVideoForm } from '../movie.form';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -17,8 +16,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
-  activeVideo = new MovieHostedVideoForm();
-  activeVideoIndex: number;
 
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
@@ -34,16 +31,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
-
-    if (!this.videoList.length) {
-      this.videoList.add({ ref: '' });
-    }
-    this.activeVideoIndex = 0;
-    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
-
-    this.sub = this.activeVideo.valueChanges.subscribe(value => {
-      this.videoList.at(this.activeVideoIndex).patchValue(value);
-    })
   }
 
   ngOnDestroy() {
@@ -77,32 +64,5 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   getPath(pathPart: string) {
     return `movies/${this.movieId}/promotional.videos/${pathPart}`;
-  }
-
-  addOtherVideo() {
-    this.videoList.add({ ref: '' });
-    this.activeVideoIndex = this.videoList.length - 1;
-    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
-    this.cdr.markForCheck();
-  }
-
-  selectOtherVideo(index: number) {
-    if (index < 0 || index >= this.videoList.length) return;
-
-    this.activeVideoIndex = index;
-    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
-    this.cdr.markForCheck();
-  }
-
-  deleteOtherVideo(index: number) {
-    if (index < 0 || index >= this.videoList.length) return;
-
-    this.videoList.removeAt(index);
-    if (!this.videoList.length) {
-      this.videoList.add({ ref: '' });
-    }
-    this.activeVideoIndex = 0;
-    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
-    this.cdr.markForCheck();
   }
 }
