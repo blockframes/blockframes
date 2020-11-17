@@ -1,15 +1,15 @@
-import { app, App, getOrgModuleAccess } from "../apps";
+import { app, App, getOrgModuleAccess } from "@blockframes/utils//apps";
 import { movieConfig } from './index-configs/movie-index.config';
 import { orgBaseConfig } from './index-configs/org-index.config';
 import { userBaseConfig } from './index-configs/user-index.config';
-import { setIndexConfiguration, clearIndex, hasAcceptedMovies, indexBuilder, algoliaClientObject } from './helper.utils';
+import { setIndexConfiguration, clearIndex, indexBuilder, algoliaClientObject, hasAcceptedMovies } from './helper.utils';
 import { loadAdminServices, getCollectionInBatches, getDocument } from '@blockframes/firebase-utils';
-import { OrganizationDocument, orgName, findOrgAppAccess } from '@blockfraes/organization/+state';
+import { OrganizationDocument, orgName, findOrgAppAccess } from '@blockframes/organization/+state';
 import { Campaign } from '@blockframes/campaign/+state'
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import { PublicUser } from '@blockframes/user/+state';
 import { AlgoliaRecordMovie, AlgoliaRecordOrganization, AlgoliaRecordUser } from "./algolia.interfaces";
-import { Language } from "../static-model";
+import { Language } from "@blockframes/utils/static-model";
 
 // ------------------------------------
 //           ORGANIZATIONS

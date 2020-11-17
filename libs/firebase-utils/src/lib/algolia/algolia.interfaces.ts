@@ -1,6 +1,6 @@
 import { algolia } from '@env';
-import { Genre, Language, StoreType, Territory } from '../static-model';
-import { Module } from '../apps';
+import { Genre, Language, StoreType, Territory } from '@blockframes/utils/static-model';
+import { Module } from '@blockframes/utils//apps';
 import { MovieRunningTime, MovieRelease } from '@blockframes/movie/+state/movie.firestore';
 
 export interface AlgoliaConfig {

@@ -1,4 +1,4 @@
-import { App } from "../../apps";
+import { App } from '@blockframes/utils/apps';
 import { AlgoliaConfig } from '../algolia.interfaces';
 
 const movieBaseConfig: AlgoliaConfig = {

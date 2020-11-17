@@ -1,13 +1,12 @@
 import { FormControl } from '@angular/forms';
 import algoliasearch, { IndexSettings } from 'algoliasearch';
-import { FormList, Validator } from '../form';
+import { FormList, Validator } from '@blockframes/utils/form';
 import { AlgoliaRecordUser } from './algolia.interfaces';
-import { OrganizationDocument } from '@blockframes/organization/+state';
 import * as functions from 'firebase-functions';
-import { app, modules } from '../apps';
-import * as admin from 'firebase-admin';
 import { mockConfigIfNeeded } from '@blockframes/firebase-utils';
+import { OrganizationDocument } from '@blockframes/organization/+state';
 import { algolia as algoliaClient, dev } from '@env';
+import * as firebase from 'firebase'
 
 export const searchClient = algoliasearch(algoliaClient.appId, algoliaClient.searchKey);
 
@@ -62,9 +61,9 @@ export function clearIndex(indexName: string, adminKey?: string) {
 }
 
 export async function hasAcceptedMovies(org: OrganizationDocument) {
-    const moviesColRef = await admin.firestore().collection('movies')
+    const moviesColRef = await firebase.firestore().collection('movies')
         .where('orgIds', 'array-contains', org.id)
         .where('storeConfig.status', '==', 'accepted').get();
     const movies = moviesColRef.docs.map(doc => doc.data());
-    return movies.some(movie => movie?.storeConfig?.status === 'accepted')
+    return movies.some(movie => movie?.storeConfig?.status === 'accepted');
 }
