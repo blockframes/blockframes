@@ -72,6 +72,6 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
  */
 export const sendFirstConnexionEmail = async (user: PublicUser): Promise<any> => {
   const mailRequest = await userFirstConnexion(user);
-  const from = await getSendgridFrom();
+  const from = await getSendgridFrom(user._meta.createdFrom);
   return sendMail(mailRequest, from);
 };

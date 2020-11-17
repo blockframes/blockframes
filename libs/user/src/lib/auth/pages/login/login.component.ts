@@ -6,6 +6,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { SignupForm } from '../../forms/signup.form';
 import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'auth-login-view',
@@ -26,7 +28,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private routerQuery: RouterQuery,
   ) { }
 
   ngOnInit() {
@@ -66,7 +69,8 @@ export class LoginComponent implements OnInit {
     }
     try {
       const { email, password, firstName, lastName } = signupForm.value;
-      await this.service.signup(email.trim(), password, { ctx: { firstName, lastName } });
+      const createdFrom = getCurrentApp(this.routerQuery);
+      await this.service.signup(email.trim(), password, { ctx: { firstName, lastName, _meta: { createdFrom } } });
       const privacyPolicy = await this.service.getPrivacyPolicy();
       await this.service.update({ privacyPolicy: privacyPolicy });
       // Reset page title to default
