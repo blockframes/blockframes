@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
+import { createAlgoliaUserForm } from '@blockframes/utils/algolia/helper.utils';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { Invitation, InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -42,7 +42,7 @@ export class UserComponent implements OnInit {
 
   separators = [ENTER, COMMA, SEMICOLON, SPACE];
   form = createAlgoliaUserForm(Validators.maxLength(50));
-  currentLimit$: Observable<{canSend: boolean, total: number}>;
+  currentLimit$: Observable<{ canSend: boolean, total: number }>;
   sending = new BehaviorSubject(false);
   hasLimit: boolean;
 
@@ -50,13 +50,13 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
-  ) {}
+  ) { }
 
   ngOnInit() {
 
     this.hasLimit = this.limit !== Infinity;
 
-    const existingInvitationNumber$ = this.invitationQuery.selectAll({filterBy: invitation => invitation.docId === this.docId}).pipe(
+    const existingInvitationNumber$ = this.invitationQuery.selectAll({ filterBy: invitation => invitation.docId === this.docId }).pipe(
       map(invitations => invitations.length)
     );
     const inFormInvitationNumber$ = this.form.valueChanges.pipe(
@@ -68,8 +68,8 @@ export class UserComponent implements OnInit {
       existingInvitationNumber$,
       inFormInvitationNumber$,
     ]).pipe(
-      map(([existing, current]) => ({canSend: existing + current <= this.limit, total: existing + current})),
-      startWith({canSend: false, total: -1}),
+      map(([existing, current]) => ({ canSend: existing + current <= this.limit, total: existing + current })),
+      startWith({ canSend: false, total: -1 }),
     )
   }
 

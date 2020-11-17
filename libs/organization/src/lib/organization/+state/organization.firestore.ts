@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
+import { OrgAppAccess, createOrgAppAccess, Module, app, modules } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
@@ -126,4 +126,8 @@ export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'publ
  */
 export function canAccessModule(module: Module, org: OrganizationBase<any>) {
   return app.some(a => org.appAccess[a]?.[module])
+}
+
+export function findOrgAppAccess(org: OrganizationDocument) {
+  return app.filter(a => modules.some(m => org.appAccess[a]?.[m]));
 }

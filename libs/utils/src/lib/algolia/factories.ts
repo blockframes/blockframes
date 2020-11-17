@@ -1,11 +1,15 @@
-import { app, App, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
+import { app, App, getOrgModuleAccess } from "../apps";
 import { movieConfig } from './index-configs/movie-index.config';
 import { orgBaseConfig } from './index-configs/org-index.config';
-import { setIndexConfiguration, clearIndex, hasAcceptedMovies, indexBuilder } from './helper.utils';
-import { loadAdminServices, getCollectionInBatches } from '@blockframes/firebase-utils';
-import { OrganizationDocument } from '@blockfraes/organization/+state/organization.firestore';
+import { userBaseConfig } from './index-configs/user-index.config';
+import { setIndexConfiguration, clearIndex, hasAcceptedMovies, indexBuilder, algoliaClientObject } from './helper.utils';
+import { loadAdminServices, getCollectionInBatches, getDocument } from '@blockframes/firebase-utils';
+import { OrganizationDocument, orgName, findOrgAppAccess } from '@blockfraes/organization/+state';
+import { Campaign } from '@blockframes/campaign/+state'
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
-import { algolia } from '@env';
+import { PublicUser } from '@blockframes/user/+state';
+import { AlgoliaRecordMovie, AlgoliaRecordOrganization, AlgoliaRecordUser } from "./algolia.interfaces";
+import { Language } from "../static-model";
 
 // ------------------------------------
 //           ORGANIZATIONS
@@ -17,8 +21,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
         await Promise.all(promises);
     } else {
 
-        await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], orgBaseConfig, process.env['ALGOLIA_API_KEY']);
-        await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
+        await setIndexConfiguration(algoliaClientObject.indexNameOrganizations[appConfig], orgBaseConfig, process.env['ALGOLIA_API_KEY']);
+        await clearIndex(algoliaClientObject.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
 
         const { db } = loadAdminServices();
         const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
@@ -50,8 +54,8 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
         // reset config, clear index and fill it up from the db (which is the only source of truth)
         const config = movieConfig(appConfig)
 
-        await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
-        await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
+        await setIndexConfiguration(algoliaClientObject.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
+        await clearIndex(algoliaClientObject.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
 
         const { db } = loadAdminServices();
         const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300);
@@ -103,8 +107,8 @@ export async function upgradeAlgoliaUsers() {
     // reset config, clear index and fill it up from the db (which is the only source of truth)
 
 
-    await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
-    await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
+    await setIndexConfiguration(algoliaClientObject.indexNameUsers, userBaseConfig, process.env['ALGOLIA_API_KEY']);
+    await clearIndex(algoliaClientObject.indexNameUsers, process.env['ALGOLIA_API_KEY']);
 
     const { db } = loadAdminServices();
     const usersIterator = getCollectionInBatches<PublicUser>(db.collection('users'), 'uid', 300)
@@ -123,7 +127,7 @@ export async function upgradeAlgoliaUsers() {
     console.log('Algolia Users index updated with success !');
 }
 export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string): Promise<any> {
-    if (!algolia.adminKey && !adminKey) {
+    if (!algoliaClientObject.adminKey && !adminKey) {
         console.warn('No algolia id set, assuming dev config: skipping');
         return Promise.resolve(true);
     }
@@ -141,7 +145,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     const orgAppAccess = findOrgAppAccess(org)
 
     // Update algolia's index
-    const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
+    const promises = orgAppAccess.map(appName => indexBuilder(algoliaClientObject.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
 
     return Promise.all(promises)
 }
@@ -155,7 +159,7 @@ export function storeSearchableMovie(
     organizationName: string,
     adminKey?: string
 ): Promise<any> {
-    if (!algolia.adminKey && !adminKey) {
+    if (!algoliaClientObject.adminKey && !adminKey) {
         console.warn('No algolia id set, assuming dev config: skipping');
         return Promise.resolve(true);
     }
@@ -181,20 +185,20 @@ export function storeSearchableMovie(
             languages: {
                 original: !!movie.originalLanguages ? movie.originalLanguages : [],
                 dubbed: !!movie.languages ?
-                    Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.dubbed) :
+                    Object.keys(movie.languages).filter(lang => movie.languages[lang]?.dubbed) as Language[] :
                     [],
                 subtitle: !!movie.languages ?
-                    Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.subtitle) :
+                    Object.keys(movie.languages).filter(lang => movie.languages[lang]?.subtitle) as Language[] :
                     [],
                 caption: !!movie.languages ?
-                    Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.caption) :
+                    Object.keys(movie.languages).filter(lang => movie.languages[lang]?.caption) as Language[] :
                     [],
             },
             status: !!movie.productionStatus ? movie.productionStatus : '',
             storeConfig: movie.storeConfig?.status || '',
             budget: movie.estimatedBudget || null,
             orgName: organizationName,
-            storeType: movie.storeConfig?.storeType || '',
+            storeType: movie.storeConfig?.storeType || null,
             originalLanguages: movie.originalLanguages,
             runningTime: {
                 status: movie.runningTime.status,
@@ -216,7 +220,7 @@ export function storeSearchableMovie(
 
         const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
 
-        const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord));
+        const promises = movieAppAccess.map(appName => indexBuilder(algoliaClientObject.indexNameMovies[appName], adminKey).saveObject(movieRecord));
 
         return Promise.all(promises)
 
@@ -232,7 +236,7 @@ export function storeSearchableMovie(
 // ------------------------------------
 
 export function storeSearchableUser(user: PublicUser, adminKey?: string): Promise<any> {
-    if (!algolia.adminKey && !adminKey) {
+    if (!algoliaClientObject.adminKey && !adminKey) {
         console.warn('No algolia id set, assuming dev config: skipping');
         return Promise.resolve(true);
     }
@@ -246,7 +250,7 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
             avatar: user.avatar ?? '',
         };
 
-        return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);
+        return indexBuilder(algoliaClientObject.indexNameUsers, adminKey).saveObject(userRecord);
     } catch (error) {
         console.error(`\n\n\tFailed to format the user ${user.uid} into an algolia record : skipping\n\n`);
         console.error(error);
