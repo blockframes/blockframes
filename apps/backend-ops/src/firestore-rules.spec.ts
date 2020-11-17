@@ -4,7 +4,9 @@ import { testFixture } from './fixtures/data';
 import fs from 'fs';
 import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 
-//type Firestore = ReturnType<typeof initFirestoreApp> //<-- does not work!
+type ExtractPromise<T> = T extends Promise<(infer I)> ? I : never;
+type PromiseFirestore = ReturnType<typeof initFirestoreApp>;
+type Firestore = ExtractPromise<PromiseFirestore>
 
 async function initFirestoreApp(projectId: string, rulePath: string, data: Record<string, 
                                   Object> = {}, auth?: TokenOptions) {
@@ -17,7 +19,6 @@ async function initFirestoreApp(projectId: string, rulePath: string, data: Recor
 
   return app.firestore();
 }
-
 
 /**
  * Helper function to setup Firestore DB Data
@@ -40,7 +41,7 @@ function setData(projectId: string, dataDB: Record<string, Object>) {
 
 describe('Blockframe Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-c8'});
@@ -57,7 +58,7 @@ describe('Blockframe Admin', () => {
 
 describe('General User', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -75,7 +76,7 @@ describe('Users Collection Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   const uid = 'uid-user2';
   const user = {uid, email: 'u2@cascade8.com', note: 'JestTestSet-User2'};
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -115,7 +116,7 @@ describe('Users Collection Rules Tests', () => {
 //TODO: 4190
 describe.skip('Notification Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -132,7 +133,7 @@ describe.skip('Notification Rules Tests', () => {
 //TODO: 4195
 describe.skip('Invitation Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -149,7 +150,7 @@ describe.skip('Invitation Rules Tests', () => {
 //TODO: 4197
 describe.skip('Organization Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -165,7 +166,7 @@ describe.skip('Organization Rules Tests', () => {
 //TODO: 4198
 describe.skip('Permission Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -181,7 +182,7 @@ describe.skip('Permission Rules Tests', () => {
 //TODO: 4199
 describe.skip('Movies Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -198,7 +199,7 @@ describe.skip('Movies Rules Tests', () => {
 //TODO: 4200
 describe.skip('Contracts Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
