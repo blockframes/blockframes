@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { PartyDetailsForm } from '@blockframes/contract/contract/form/contract.form';
 import { legalRoles, subLicensorRoles, contractStatus } from '@blockframes/utils/static-model';
-import { AlgoliaIndex } from '@blockframes/utils/algolia/algolia.interfaces';
+import { AlgoliaIndex } from '@blockframes/firebase-utils';
 
 interface PartyDialogData {
   title: string,
