@@ -1,14 +1,33 @@
 import { Firestore } from '@blockframes/firebase-utils';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { runChunks } from '../firebase-utils';
 
 export async function upgrade(db: Firestore) {
-    const orgsCol = await db.collection('orgs').get();
+  const orgs = await db.collection('orgs').get();
 
-    runChunks(orgsCol.docs, async orgDoc => {
-        const org = orgDoc.data();
-        delete org?.movieIds
-        await orgDoc.ref.set(org)
-    })
+  return runChunks(orgs.docs, async (doc) => {
+    const org = doc.data();
 
-    console.log('deleted movieIds from orgs collection');
+    const meta = createDocumentMeta();
+
+    const newData = {
+      ...org,
+    };
+
+    if (org.created) {
+      meta.createdAt = org.created;
+      delete newData.created;
+    }
+
+    if (org.updated) {
+      meta.updatedAt = org.updated;
+      delete newData.updated;
+    }
+
+    delete newData?.movieIds;
+
+    newData._meta = meta;
+    await doc.ref.set(newData);
+  });
+
 }

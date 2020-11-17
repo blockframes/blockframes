@@ -1,9 +1,9 @@
-export interface User {
-  uid: string;
+import { DocumentMeta } from "@blockframes/utils/models-meta";
+
+export interface User extends PublicUser {
   financing: {
     rank: string
   };
-  email: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -20,6 +20,7 @@ export interface User {
 
 /** A user interface with public information */
 export interface PublicUser {
+  _meta?: DocumentMeta<Date>;
   uid: string;
   email: string;
   avatar?: string;
