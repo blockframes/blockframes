@@ -12,7 +12,6 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 export {
   WishlistStatus,
   OrganizationDocument,
-  createOrganizationDocument,
   PLACEHOLDER_LOGO
 } from './organization.firestore';
 export { OrganizationStatus } from '@blockframes/utils/static-model/types';
@@ -33,16 +32,8 @@ export interface OrganizationForm {
 export function createOrganization(
   params: Partial<Organization> = {}
 ): Organization {
-  const org = createOrganizationBase(params) as Organization;
-
-  return {
-    ...org,
-    // Here, "created" & "updated" fields are Date objects
-    created: new Date(),
-    updated: new Date(),
-  }
+  return createOrganizationBase(params) as Organization;
 }
-
 /** Convert an organization object into a public organization */
 export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
   return {

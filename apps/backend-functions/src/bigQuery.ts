@@ -1,6 +1,6 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { MovieEventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics, EventsAnalytics, EventAnalytics, ScreeningEventDocument } from "./data/types";
+import { MovieEventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics, EventsAnalytics, EventAnalytics, ScreeningEventDocument, MovieDocument } from "./data/types";
 import { getDocument } from './data/internals';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
@@ -220,10 +220,12 @@ export const requestMovieAnalytics = async (
   }
   const uid = context.auth!.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
   // Security: only owner of the movie can load the data
-  if (movieIds.every(movieId => org.id === movieId)) {
+  if (movieIds.every(async movieId => {
+    const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
+    return movie.orgIds.includes(user.orgId);
+  })) {
     // Request bigQuery
     let [rows] = await executeQueryMovieAnalytics(queryMovieAnalytics, movieIds, daysPerRange);
     if (rows !== undefined && rows.length >= 0) {
