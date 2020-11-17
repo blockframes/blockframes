@@ -1,36 +1,28 @@
-﻿import { apps, assertFails, assertSucceeds, initializeTestApp, 
-        loadFirestoreRules, firestore } from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds, initializeTestApp,
+        loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
+import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 
-type Firestore = ReturnType<typeof initFirestoreApp>;
+type ExtractPromise<T> = T extends Promise<(infer I)> ? I : never;
+type PromiseFirestore = ReturnType<typeof initFirestoreApp>;
+type Firestore = ExtractPromise<PromiseFirestore>
 
-//TODO : Refactor initFirestoreApp to use better method to update firestore data
-//Issue : 4192
-const initFirestoreApp = (projectId: string, auth?: any) => {
+async function initFirestoreApp(projectId: string, rulePath: string, data: Record<string, 
+                                  Object> = {}, auth?: TokenOptions) {
   //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-  const app = initializeTestApp({
-    projectId,
-    auth
-  });
+  await setData(projectId, data);
+  const app = initializeTestApp({projectId, auth });
+  await loadFirestoreRules({ projectId, rules: fs.readFileSync(rulePath, "utf8") });
 
   return app.firestore();
 }
 
-/**
- * Helper function to setup Firestore DB Data
- */
-function setRules(projectId: string, rulePath: string) {
-  // Apply the firestore rules to the project
-  return loadFirestoreRules({
-    projectId,
-    rules: fs.readFileSync(rulePath, "utf8")
-  });
-}
-
-function setData(db: Firestore, dataDB: Record<string, Object>) {
+function setData(projectId: string, dataDB: Record<string, Object>) {
+  const app = initializeAdminApp({ projectId});
+  const db = app.firestore();
   // Write data to firestore app
   const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
   return Promise.all(promises);
@@ -41,10 +33,7 @@ describe('Blockframe Admin', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-c8'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-c8'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -61,10 +50,7 @@ describe('General User', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -82,10 +68,7 @@ describe('Users Collection Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -125,10 +108,7 @@ describe.skip('Notification Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -145,10 +125,7 @@ describe.skip('Invitation Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -165,10 +142,7 @@ describe.skip('Organization Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -184,10 +158,7 @@ describe.skip('Permission Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -203,10 +174,8 @@ describe.skip('Movies Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -222,10 +191,7 @@ describe.skip('Contracts Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -235,17 +201,14 @@ describe.skip('Contracts Rules Tests', () => {
   });
 });
 
-describe.only('Events Rules Tests', () => {
+describe('Events Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
   describe('With User in org', () => {
 
     beforeAll(async () => {
-      db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-      await setRules(projectId, 'firestore.test.rules');
-      await setData(db, testFixture);
-      await setRules(projectId, 'firestore.rules');
+      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
     });
 
     afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -301,10 +264,7 @@ describe.only('Events Rules Tests', () => {
   describe('With User not in org', () => {
 
     beforeAll(async () => {
-      db  = initFirestoreApp(projectId, {uid: 'uid-peeptom'});
-      await setRules(projectId, 'firestore.test.rules');
-      await setData(db, testFixture);
-      await setRules(projectId, 'firestore.rules');
+      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-peeptom'});
     });
 
     afterAll(() => Promise.all(apps().map(app => app.delete())));
