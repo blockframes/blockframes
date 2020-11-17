@@ -1,4 +1,5 @@
 ﻿import EventEditPage from './EventEditPage';
+import { TO } from '@blockframes/e2e/utils';
 
 export default class EventPage {
   constructor() {
@@ -40,8 +41,16 @@ export default class EventPage {
 
   createDetailedEvent(date: Date) {
     const day = date.getDay();
-    cy.get('div [class=cal-day-columns]').children().eq(day).find('mwl-calendar-week-view-hour-segment').first().click();
-    cy.get('button[test-id=more-details]').click();
+    if (day === 0) {
+      cy.get('button[test-id=arrow_forward]', {timeout: TO.PAGE_ELEMENT})
+        .click();
+      cy.wait(TO.ONE_SEC);
+    }
+    cy.get('div [class=cal-day-columns]').children().eq(day)
+      .find('mwl-calendar-week-view-hour-segment').first()
+      .click();
+    cy.get('button[test-id=more-details]')
+      .click();
     return new EventEditPage();
   }
 
