@@ -5,7 +5,7 @@ import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreati
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
 import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
-import { getDocument, getFromEmail } from './data/internals';
+import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
@@ -81,12 +81,7 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
-        /**
-         * @dev TODO (#2826) since there is now way to get the used app when this function is triggered,
-         * we cannot set the custom "from" here
-        */
-        await startAccountCreationEmailFlow({ email, firstName: u.firstName });
-
+        await startAccountCreationEmailFlow({ email, firstName: u.firstName, app: u._meta.createdFrom });
       }
       tx.update(userDocRef, { email, uid });
     } else {
@@ -201,8 +196,8 @@ export const sendDemoRequest = async (data: RequestDemoInformations): Promise<Re
   return data;
 }
 
-export const sendUserMail = async (data: any, context: CallableContext): Promise<any> => {
-  const { subject, message } = data;
+export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext): Promise<any> => {
+  const { subject, message, app } = data;
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
@@ -211,12 +206,9 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
     throw new Error('Subject and message are mandatory parameters for the "sendUserMail()" function');
   }
 
-  let from;
-  if (user.orgId) {
-    from = await getFromEmail(user.orgId);
-  }
+  const from = getSendgridFrom(app);
 
-  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message), from);
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
 
 
