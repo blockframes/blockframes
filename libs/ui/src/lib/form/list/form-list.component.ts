@@ -32,24 +32,12 @@ export class ItemRefDirective { }
 })
 export class FormListComponent<T> implements OnInit, OnDestroy {
 
+  layout = { top: 'column', bottom: 'column-reverse', left: 'row', right: 'row-reverse' };
+
   @Input() form: FormList<T>;
   @Input() buttonText = 'Add';
   @Input() saveButtonText = 'Save'
-  @Input() set listPosition(position: 'top' | 'bottom' | 'left' | 'right') {
-    switch (position) {
-      case 'top':
-        this._listPosition = 'column'
-        break;
-      case 'left':
-        this._listPosition = 'row'
-        break;
-      case 'right':
-        this._listPosition = 'row-reverse'
-        break;
-      default:
-        this._listPosition = 'column-reverse'
-    }
-  };
+  @Input() listPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -58,7 +46,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   formItem: FormEntity<EntityControl<T>, T>;
   activeIndex: number;
   activeValue: T
-  _listPosition = 'column';
 
   constructor(private cdr: ChangeDetectorRef) { }
 

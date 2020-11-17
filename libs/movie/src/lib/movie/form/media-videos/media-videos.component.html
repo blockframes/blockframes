@@ -37,7 +37,7 @@
           {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
         </ng-template>
         <ng-template formView let-activeForm>
-          <file-upload [form]="activeForm.ref" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
+          <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
             <h3 title>Upload Video</h3>
           </file-upload>
         </ng-template>

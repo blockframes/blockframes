@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { getFileNameFromPath } from '@blockframes/media/+state';
@@ -12,15 +12,13 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   styleUrls: ['./media-videos.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
+export class MovieFormMediaVideosComponent implements OnInit {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
 
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
-
-  private sub: Subscription;
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -31,10 +29,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   trackByIndex(index: number) { return index; }
