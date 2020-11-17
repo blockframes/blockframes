@@ -33,9 +33,9 @@ function setRules(projectId: string, rulePath: string) {
 
 function setData(projectId: string, dataDB: Record<string, Object>) {
   const app = initializeAdminApp({ projectId});
-  const dba = app.firestore();
+  const db = app.firestore();
   // Write data to firestore app
-  const promises = Object.entries(dataDB).map(([key, doc]) => dba.doc(key).set(doc));
+  const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
   return Promise.all(promises);
 }
 
