@@ -1,8 +1,5 @@
 import { EventContext } from 'firebase-functions';
-/**
- * Manage permission documents
- */
-import { db, functions } from './internals/firebase';
+import { db } from './internals/firebase';
 
 /**
  * When a user creates a permisssion for a document we index its id,

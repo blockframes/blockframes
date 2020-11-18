@@ -1,6 +1,5 @@
 export const production = false;
-export const dev = false;
-export const hmr = false; // hot-reloading: use true for local dev
+
 export const persistenceSettings = {
   synchronizeTabs: true
 };
@@ -8,7 +7,6 @@ export const persistenceSettings = {
 // Firebase
 // ========
 
-//base: https://blockframes-francois.firebaseapp.com
 export const appUrl = {
   content: 'https://blockframes-francois.web.app',
   market: 'https://blockframes-francois-festival.web.app',
@@ -16,16 +14,6 @@ export const appUrl = {
   crm: 'https://blockframes-francois-crm.web.app',
 };
 
-// Emulator
-export const emulatorConfig = {
-  functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: { 
-    host: 'localhost:8080', 
-    ssl: false 
-  }
-};
-
-// Here you must add your firebase config
 export const firebase = {
   apiKey: "AIzaSyD1qjU9feHzxAFg96L4VouE9_nt9nFGg0s",
   authDomain: "blockframes-francois.firebaseapp.com",
@@ -39,12 +27,10 @@ export const firebase = {
 
 // Algolia
 // =======
-// Here you must add your Algolia config if you have one
-// You can set up your Algolia config on this page: https://www.notion.so/cascade8/Algolia-1c7ac7f04d0b4981b4685f047c1a3b88
+
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  // indexNameOrganizations: 'francois_orgs',
   indexNameOrganizations: {
     festival: 'francois_festival_org',
     financiers: 'francois_financiers_org',
@@ -58,14 +44,34 @@ export const algolia = {
   indexNameUsers: 'francois_users'
 };
 
+// Support emails 
+// =======
+
+export const supportEmails = {
+  default: 'fguezengar@cascade8.com',
+  catalog: 'fguezengar+catalog@cascade8.com',
+  festival: 'fguezengar+festival@cascade8.com',
+  financiers: 'fguezengar+financiers@cascade8.com'
+}
+
+// Yandex 
+// =======
+
+export const yandexId = 1234;
+
+// Intercom
+// ========
+
+export const intercomId = '';
+
 // Ethereum
 // ========
-// Here you must add your Ethereum config if you have one
+
 export const network = 'goerli';
-export const mnemonic = '';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
+// TODO(issue#847): change the address
 export const contracts = {
   ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',
   testErc1077: '0x758011e12E57a81f93D1e59AdF8867463349A54d',
@@ -80,23 +86,20 @@ export const relayer = {
   factoryContract
 };
 
-// Functions
-// =========
-export const backupBucket = 'francois-backups';
-export const sendgridAPIKey = '';
-export const omdbApiKey = '';
-export const AFM_DISABLE = false;
-// This one is for Intercom. If you don't want to use Intercom you can put a null string
-export const intercomId = '';
-// For Yandex, put a random number
-export const yandexId = 1234;
-// Sentry can be null but it catch error we maybe don't see
-export const sentryDsn = '';
-export const sentryEnv = undefined;
+// OMDB
+// =======
 
+export const omdbApiKey = '4d1be897';
+
+// Sentry 
+// =======
+
+export const sentryEnv = undefined;
+export const sentryDsn = undefined;
 
 // Quorum
 // ========
+
 export const quorum = {
   archipelNode: {
     url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
@@ -118,18 +121,19 @@ export const quorum = {
   },
 }
 
-
 // BigQuery
 // ========
+
 export const bigQueryAnalyticsTable = 'blockframes-francois.analytics_229093027.events_';
 
 // Archipel Content OrgId
-// ======================
+// ========
+
 export const centralOrgID = "q8QyyHREqvLNtmh11ZLW";
 
+// Import / Export parameters
+// =======
 
-
-// Chunks base to run heavy calculation
+export const backupBucket = 'francois-backups';
 export const heavyChunkSize = 7;
-
 export const chunkSize = 15;

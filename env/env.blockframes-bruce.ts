@@ -1,14 +1,7 @@
 export const production = false;
-export const dev = false;
-export const hmr = false; // hot-reloading: use true for local dev
-
-// TODO issue#1146 AFM CODE
-// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
-export const AFM_DISABLE = true;
 
 export const persistenceSettings = {
-  // TODO : change to synchronizeTabs when available (angularFire 5.2)
-  experimentalTabSynchronization: true
+  synchronizeTabs: true
 };
 
 // Firebase
@@ -19,7 +12,7 @@ export const appUrl = {
   market: 'https://festival-blockframes-bruce.web.app',
   crm: 'https://crm-blockframes-bruce.web.app',
   financiers: 'https://financiers-blockframes-bruce.web.app',
-}
+};
 
 export const firebase = {
   apiKey: "AIzaSyDty3fra5v06b8R15JjDarwd-y9vP4DQIs",
@@ -30,7 +23,7 @@ export const firebase = {
   messagingSenderId: "308574859435",
   appId: "1:308574859435:web:6be97448e5508f5ab387ee",
   measurementId: "G-XXXXXXXXXX"
-}
+};
 
 // Algolia
 // =======
@@ -51,27 +44,34 @@ export const algolia = {
   indexNameUsers: 'bruce_users',
 };
 
+// Support emails 
+// =======
 
-// Yandex Metrika Id
-export const yandexId = 56105038;
+export const supportEmails = {
+  default: 'bdelorme@cascade8.com',
+  catalog: 'bdelorme+catalog@cascade8.com',
+  festival: 'bdelorme+festival@cascade8.com',
+  financiers: 'bdelorme+financiers@cascade8.com'
+}
+
+// Yandex 
+// =======
+
+export const yandexId = 1234;
 
 // Intercom
 // ========
-export const intercomId = 'srwfltp4';
+
+export const intercomId = '';
 
 // Ethereum
 // ========
 
 export const network = 'ropsten';
-export const mnemonic = '';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
-// OMDB
-// =======
-export const omdbApiKey = '4d1be897';
-
-// TODO : change the address
+// TODO(issue#847): change the address
 export const contracts = {
   ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',
   testErc1077: '0x758011e12E57a81f93D1e59AdF8867463349A54d',
@@ -86,18 +86,20 @@ export const relayer = {
   factoryContract
 };
 
-// Functions
-// =========
+// OMDB
+// =======
 
-export const backupBucket = 'bruce-backups';
-export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
+export const omdbApiKey = '4d1be897';
 
-// Sentry can be null but it catch error we maybe don't see
-export const sentryEnv = '';
-export const sentryDsn = '';
+// Sentry 
+// =======
+
+export const sentryEnv = undefined;
+export const sentryDsn = undefined;
 
 // Quorum
 // ========
+
 export const quorum = {
   archipelNode: {
     url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
@@ -121,10 +123,17 @@ export const quorum = {
 
 // BigQuery
 // ========
+
 export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
+
+// Archipel Content OrgId
+// ========
 
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
-export const heavyChunkSize = 7;
+// Import / Export parameters
+// =======
 
+export const backupBucket = 'bruce-backups';
+export const heavyChunkSize = 7;
 export const chunkSize = 15;

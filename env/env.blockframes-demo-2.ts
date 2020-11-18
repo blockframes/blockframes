@@ -21,6 +21,8 @@ export const firebase = {
   projectId: 'blockframes-demo-2',
   storageBucket: 'blockframes-demo-2.appspot.com',
   messagingSenderId: '185137976939'
+  // @TODO appId: "",
+  // @TODO measurementId: ""
 };
 
 // Algolia
