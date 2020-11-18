@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { AlgoliaRecordUser } from './algolia.interfaces';
+import { AlgoliaRecordUser, MovieIndexFilters } from './algolia.interfaces';
 import { FormList } from '../form/forms/list.form';
 import { Validator } from '../form/forms/types';
 
@@ -13,4 +13,17 @@ export function createAlgoliaUserForm(validators?: Validator) {
     }
     const factory = user => new FormControl(createAlogliaUser(user));
     return FormList.factory<AlgoliaRecordUser, FormControl>([], factory, validators)
+}
+
+
+export function parseFilters(filters: MovieIndexFilters, operator: 'OR ' | 'AND ' = 'OR '): string {
+    const filter = []
+    for (const key of Object.keys(filters)) {
+        if (typeof filters[key] === 'object') {
+            parseFilters(filters[key], operator)
+        } else {
+            filter.push(`${key} >= ${filters[key] ?? 0} `)
+        }
+    }
+    return filter.join(operator);
 }

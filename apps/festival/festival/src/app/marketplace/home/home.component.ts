@@ -46,7 +46,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.algoliaService.queryForMovies({ activePage: 0, limitResultsTo: 20, facets: { genres: 'action' } })
     this.dynTitle.setPageTitle('Home');
     this.sub = this.movieService.syncCollection().subscribe();
     const selectMovies = (status: Movie['productionStatus']) => {

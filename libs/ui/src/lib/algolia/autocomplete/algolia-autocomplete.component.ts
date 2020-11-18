@@ -17,7 +17,8 @@ import {
 import { Index } from 'algoliasearch';
 
 // Blockframes
-import { algoliaIndex, AlgoliaIndex, searchClient } from '@blockframes/utils/algolia/algolia.interfaces';
+import { algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia/algolia.interfaces';
+import { AlgoliaService } from '@blockframes/utils/algolia/algolia.service';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 // RxJs
@@ -107,7 +108,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(private algoliaService: AlgoliaService) { }
 
   ngOnInit() {
     // In case of facet search we know the result object will store the matched facets in the `value` field
@@ -115,10 +116,11 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       this.keyToDisplay = 'value';
     }
     if (this.index === 'user') {
-      this.indexSearch = searchClient.initIndex(algoliaIndex[this.index] as string);
+      this.indexSearch = this.algoliaService.userIndex;
+    } else if (this.index === 'org') {
+      this.indexSearch = this.algoliaService.orgIndex
     } else {
-      const app = this.routerQuery.getValue().state?.root.data.app;
-      this.indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
+      this.indexSearch = this.algoliaService.movieIndex;
     }
 
     // create search functions

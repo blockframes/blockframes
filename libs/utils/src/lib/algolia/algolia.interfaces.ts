@@ -19,47 +19,36 @@ export interface AlgoliaConfig {
     attributesForFaceting: string[];
 }
 
-export interface AlgoliaQuery {
+export interface AlgoliaQuery<T> {
     text?: string;
     limitResultsTo: number;
     activePage: number;
-    facets?: Partial<MovieIndexConfig>,
-    filters?: string
+    facets?: Partial<T>,
+    filters?: MovieIndexFilters
 }
 
-interface MovieIndexConfig {
+export interface MovieIndexConfig {
     genres: Genre,
-    languages: Record<keyof MovieLanguageSpecification, Language>,
+    languages: Partial<Record<keyof MovieLanguageSpecification, Language>>,
     originCountries: Territory,
     status: ProductionStatus,
     storeConfig: StoreStatus,
     storeType: StoreType,
-    'searchable(orgName)': string,
-    'filterOnly(budget)': string
 }
 
-interface MovieQuery extends AlgoliaQuery {
-    genre: string[]
-}
-
-interface OrgQuery extends AlgoliaQuery {
-    name: string
-}
-
-interface UserQuery extends AlgoliaQuery {
-    name: string
-}
-
-export interface AlgoliaQueries {
-    movie: MovieQuery,
-    orgs: OrgQuery,
-    users: UserQuery
+export interface MovieIndexFilters {
+    budget?: number,
+    minPledge?: number
 }
 
 /** A simple map to access the index name */
 export const algoliaIndex = {
     user: algolia.indexNameUsers,
-    org: algolia.indexNameOrganizations,
+    org: {
+        financiers: algolia.indexNameOrganizations.financiers,
+        festival: algolia.indexNameOrganizations.festival,
+        catalog: algolia.indexNameOrganizations.catalog
+    },
     movie: {
         financiers: algolia.indexNameMovies.financiers,
         catalog: algolia.indexNameMovies.catalog,

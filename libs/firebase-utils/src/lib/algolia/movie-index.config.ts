@@ -13,9 +13,6 @@ const movieBaseConfig: AlgoliaConfig = {
         // filters
         'filterOnly(budget)',
 
-        // searchable facets
-        'searchable(orgName)',
-
         // other facets
         'genres',
         'languages.original',
