@@ -35,7 +35,7 @@
 
             </ng-container>
             <ng-template #requestScreening>
-              {{ _invitation.fromUser | displayUser | async }} would like to attend {{ event.type }}
+              <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> would like to attend {{ event.type }}
               <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
               {{ event | eventRange }}
             </ng-template>
