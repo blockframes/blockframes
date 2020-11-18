@@ -7,6 +7,7 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import { getCollectionRef, getDocument } from './firebase-utils'
+import { resolve } from 'path';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -125,7 +126,7 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
   } catch (err) {
     // If service account is a path
     // tslint:disable-next-line: no-eval
-    return eval('require')(keyFile) as admin.ServiceAccount;
+    return eval('require')(resolve(keyFile)) as admin.ServiceAccount;
   }
 }
 
