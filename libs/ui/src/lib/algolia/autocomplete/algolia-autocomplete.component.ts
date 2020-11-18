@@ -13,11 +13,10 @@ import {
   ElementRef,
   OnDestroy
 } from '@angular/core';
-
 import { Index } from 'algoliasearch';
 
 // Blockframes
-import { algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia/algolia.interfaces';
+import {  AlgoliaIndex } from '@blockframes/utils/algolia/algolia.interfaces';
 import { AlgoliaService } from '@blockframes/utils/algolia/algolia.service';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
@@ -25,8 +24,6 @@ import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-
 
 @Component({
   selector: '[index] [keyToDisplay] algolia-autocomplete',
