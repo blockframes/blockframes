@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
+import { OverlayModule } from '@angular/cdk/overlay';
 import { CmsModule } from './cms.module';
 
 import { AppComponent } from './app.component';
@@ -20,6 +20,7 @@ import { firebase } from '@env';
     CmsModule,
     BrowserModule,
     BrowserAnimationsModule,
+    OverlayModule,
     HttpClientModule,
     AngularFireModule.initializeApp(firebase),
     AngularFirestoreModule,

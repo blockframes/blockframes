@@ -7,12 +7,7 @@ const routes: Routes = createRoutes({
   appName: 'cms',
   appsRoutes: [{
     path: '',
-    redirectTo: 'festival',
-    pathMatch: 'full'
-  },
-  {
-    path: 'festival',
-    loadChildren: () => import('./festival/festival.module').then(m => m.FestivalModule)
+    loadChildren: () => import('./shell/shell.module').then(m => m.ShellModule)
   }]
 });
 

@@ -1,0 +1,14 @@
+<mat-sidenav-container>
+  <mat-sidenav opened>
+    <mat-nav-list>
+      <ng-container *ngFor="let page of pages">
+        <a mat-list-item [routerLink]="page.path" routerLinkActive="active">
+          {{ page.label }}
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
