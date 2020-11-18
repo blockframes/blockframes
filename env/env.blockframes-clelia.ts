@@ -13,7 +13,6 @@ export const appUrl = {
   crm: 'https://crm-blockframes-clelia.web.app',
   financiers: 'https://financiers-blockframes-clelia.web.app',
 };
-
 export const firebase = {
   apiKey: "AIzaSyCkHd1eCnt-XRwZzbEViePI0IVQpphl0i4",
   authDomain: "blockframes-clelia.firebaseapp.com",
@@ -27,7 +26,6 @@ export const firebase = {
 
 // Algolia
 // =======
-
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
@@ -44,7 +42,7 @@ export const algolia = {
   indexNameUsers: 'clelia_users',
 };
 
-// Support emails 
+// Support emails
 // =======
 
 export const supportEmails = {
@@ -54,7 +52,7 @@ export const supportEmails = {
   financiers: 'cmandonnet+financiers@cascade8.com'
 }
 
-// Yandex 
+// Yandex
 // =======
 
 export const yandexId = 0;
@@ -77,7 +75,6 @@ export const contracts = {
   testErc1077: '0x758011e12E57a81f93D1e59AdF8867463349A54d',
   ensResolver: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96'
 };
-
 export const relayer = {
   registryAddress: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
@@ -91,7 +88,7 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry 
+// Sentry
 // =======
 
 export const sentryEnv = 'dev';

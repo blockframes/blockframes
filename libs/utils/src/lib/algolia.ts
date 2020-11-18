@@ -46,7 +46,8 @@ export interface AlgoliaUser {
   firstName: string,
   lastName: string,
   avatar: string,
-  objectID: string
+  objectID: string,
+  orgId: string
 }
 
 /**
@@ -137,4 +138,5 @@ export interface AlgoliaRecordUser extends AlgoliaRecord {
   firstName: string,
   lastName: string,
   avatar: string,
+  orgId: string
 }

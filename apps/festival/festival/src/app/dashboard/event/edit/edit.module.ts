@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { EditComponent } from './edit.component';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { FileSelectorModule } from '@blockframes/media/components/file-selector/file-selector.module';
-import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
 
 // Material
