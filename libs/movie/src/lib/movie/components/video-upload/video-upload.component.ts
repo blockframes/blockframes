@@ -39,7 +39,7 @@ export class MovieVideoUploadComponent implements OnInit {
   }
 
   public getPath(pathPart: string) {
-    return `movies/${this.movie.id}/promotional.videos/${pathPart}`;
+    return `movies/${this.movie.id}/promotional.videos.${pathPart}`;
   }
 
   public addOtherVideo() {

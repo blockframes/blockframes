@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { getFileNameFromPath } from '@blockframes/media/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { allowedFiles } from '@blockframes/utils/utils';
@@ -57,6 +56,6 @@ export class MovieFormMediaVideosComponent implements OnInit {
   }
 
   getPath(pathPart: string) {
-    return `movies/${this.movieId}/promotional.videos/${pathPart}`;
+    return `movies/${this.movieId}/promotional.videos.${pathPart}`;
   }
 }
