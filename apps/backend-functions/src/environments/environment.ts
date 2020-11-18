@@ -6,7 +6,6 @@
  * functions.
  */
 
-import { dev } from '@env';
 export {
   factoryContract,
   backupBucket,
@@ -16,6 +15,7 @@ export {
   sentryDsn,
   bigQueryAnalyticsTable,
   centralOrgID,
+  supportEmails,
 } from '@env';
 
 import { firebase } from '@env';
@@ -24,13 +24,6 @@ export const { storageBucket } = firebase;
 
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
-
-export const supportEmails: Record<string | 'default', string> = {
-  catalog: dev ? mockConfigIfNeeded('admin', 'email_catalog'): 'developers+catalog@cascade8.com',
-  festival: dev ? mockConfigIfNeeded('admin', 'email_festival'): 'developers+festival@cascade8.com',
-  financiers: dev ? mockConfigIfNeeded('admin', 'email_financiers'): 'developers+financiers@cascade8.com',
-  default: dev ? mockConfigIfNeeded('admin', 'email'): 'developers@cascade8.com'
-} as const;
 
 export const adminPassword = mockConfigIfNeeded('admin', 'password');
 
