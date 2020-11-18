@@ -3,7 +3,7 @@
   <!-- LIST -->
   <!---------->
 
-  <ng-container *ngIf="list$ | async | reverse:reverseList as list">
+  <ng-container *ngIf="list$ | async as list">
     <ng-container *ngIf="list.length">
       <mat-list class="surface">
         <mat-list-item *ngFor="let item of list; let index = index">

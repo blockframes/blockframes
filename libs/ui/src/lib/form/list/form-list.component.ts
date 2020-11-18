@@ -10,10 +10,11 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 // RxJs
-import { Observable } from 'rxjs';
-import { startWith, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { startWith, distinctUntilChanged, map } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
@@ -40,7 +41,9 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   @Input() saveButtonText = 'Save'
   @Input() listPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() @boolean autoAdd: boolean = false;
-  @Input() @boolean reverseList: boolean = false;
+  @Input() set reverseList(shouldReverse: boolean) {
+    this.reverseList$.next(coerceBooleanProperty(shouldReverse));
+  };
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -50,12 +53,17 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   activeIndex: number;
   activeValue: T
 
+  private reverseList$ = new BehaviorSubject(false);
+
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.list$ = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      distinctUntilChanged())
+    this.list$ = combineLatest([
+      this.form.valueChanges.pipe(startWith(this.form.value), distinctUntilChanged()),
+      this.reverseList$
+    ]).pipe(
+      map(([list, reverse]) => reverse ? list.reverse() : list)
+    )
 
     this.add();
   }

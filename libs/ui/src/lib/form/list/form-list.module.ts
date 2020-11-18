@@ -2,8 +2,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-// Pipe
-import { ReverseModule } from '@blockframes/utils/pipes/reverse.pipe';
 // Component
 import { FormListComponent, ItemRefDirective, FormViewDirective } from './form-list.component';
 // Material
@@ -16,8 +14,6 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     FlexLayoutModule,
-
-    ReverseModule,
 
     // Material
     MatListModule,
