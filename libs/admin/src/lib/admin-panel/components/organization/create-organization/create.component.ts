@@ -10,6 +10,7 @@ import { UserService } from '@blockframes/user/+state';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { getOrgAppAccess } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'organization-create',
@@ -66,7 +67,8 @@ export class OrganizationCreateComponent {
     }
 
     const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(this.form);
-    const orgId = await this.orgService.addOrganization(documentToUpdate, superAdmin);
+    const [firstApp] = getOrgAppAccess(documentToUpdate);
+    const orgId = await this.orgService.addOrganization(documentToUpdate, firstApp, superAdmin);
 
     this.router.navigate(['/c/o/admin/panel/organization/', orgId]);
     this.dialogRef.close();

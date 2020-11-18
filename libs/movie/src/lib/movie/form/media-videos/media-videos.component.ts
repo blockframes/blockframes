@@ -1,10 +1,10 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { getFileNameFromPath } from '@blockframes/media/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { allowedFiles } from '@blockframes/utils/utils';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { MovieHostedVideoForm } from '../movie.form';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -16,8 +16,6 @@ export class MovieFormMediaVideosComponent implements OnInit {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
-  currentOtherVideo: MovieHostedVideoForm;
-  selectedOtherVideo: number;
 
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
@@ -31,12 +29,6 @@ export class MovieFormMediaVideosComponent implements OnInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
-
-    if (!this.otherVideos.length) {
-      this.otherVideos.add({ ref: '' });
-    }
-    this.selectedOtherVideo = 0;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
   }
 
   trackByIndex(index: number) { return index; }
@@ -45,7 +37,7 @@ export class MovieFormMediaVideosComponent implements OnInit {
     return this.form.promotional.videos.screener.ref;
   }
 
-  get otherVideos() {
+  get videoList() {
     return this.form.promotional.videos.otherVideos;
   }
 
@@ -66,32 +58,5 @@ export class MovieFormMediaVideosComponent implements OnInit {
 
   getPath(pathPart: string) {
     return `movies/${this.movieId}/promotional.videos/${pathPart}`;
-  }
-
-  addOtherVideo() {
-    this.otherVideos.add({ ref: '' });
-    this.selectedOtherVideo = this.otherVideos.length - 1;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
-    this.cdr.markForCheck();
-  }
-
-  selectOtherVideo(index: number) {
-    if (index < 0 || index >= this.otherVideos.length) return;
-
-    this.selectedOtherVideo = index;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
-    this.cdr.markForCheck();
-  }
-
-  deleteOtherVideo(index: number) {
-    if (index < 0 || index >= this.otherVideos.length) return;
-
-    this.otherVideos.removeAt(index);
-    if (!this.otherVideos.length) {
-      this.otherVideos.add({ ref: '' });
-    }
-    this.selectedOtherVideo = 0;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
-    this.cdr.markForCheck();
   }
 }

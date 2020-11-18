@@ -21,7 +21,7 @@
     #auto="matAutocomplete"
     [displayWith]="displayFn.bind(this)"
   >
-    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="resolveValue(result, keyToDisplay)" (click)="selected(result)">
+    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 
       <!-- INJECTED CONTENT -->
       <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
@@ -52,7 +52,7 @@
       #auto="matAutocomplete"
       [displayWith]="displayFn.bind(this)"
     >
-      <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="resolveValue(result, keyToDisplay)" (click)="selected(result)">
+      <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 
         <!-- INJECTED RESULT -->
         <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>

@@ -2,8 +2,8 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { chunk } from "lodash";
 import * as env from '@env'
-import { tempUploadDir, privacies } from "@blockframes/utils/file-sanitizer";
 import type { File as GFile } from '@google-cloud/storage';
+import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
 
 export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
@@ -26,67 +26,29 @@ export function getCollection<T>(path: string): Promise<T[]> {
 
 /**
  *
- * @param filePath the storage path of the file
+ * @param fullPath the storage path of the file
  */
-export async function getDocAndPath(filePath: string | undefined) {
+export async function getDocAndPath(fullPath: string | undefined) {
   const db = admin.firestore();
 
-  if (!filePath) {
-    throw new Error('Upload Error : Undefined File Path');
-  }
+  const { collection, docPath, isTmp, privacy, field, filePath } = deconstructFilePath(fullPath)  
 
-  const filePathElements = filePath.split('/');
+  const doc = db.doc(docPath);
+  const snapshot = await doc.get();
 
-  if (filePathElements.length < 4) {
-    const error = `Upload Error : File Path ${filePath} is malformed.`;
-    const solution = 'It should at least contain 3 slash.';
-    const example = 'Example: public/collection/id/field/fileName';
-    throw new Error(`${error} ${solution}\n${example}`);
-  }
-
-  // remove tmp/
-  let isInTmpDir = false;
-  if (filePathElements[0] === tempUploadDir) {
-    filePathElements.shift();
-    filePath = filePathElements.join('/');
-    isInTmpDir = true;
-  }
-
-  let security;
-  // remove "protected/"" or "public/"
-  if (privacies.includes(filePathElements[0] as any)) {
-    security = filePathElements.shift();
-  }
-
-  const collection = filePathElements.shift();
-  const docId = filePathElements.shift();
-
-  if (!docId || !collection) {
-    throw new Error('Invalid path pattern');
-  }
-
-  // remove the file name at the end
-  // `filePathElements` is now only composed by the field to update
-  filePathElements.pop();
-
-  const doc = db.collection(collection).doc(docId);
-  const docSnapshot = await doc.get();
-
-  if (!docSnapshot.exists) {
+  if (!snapshot.exists) {
     throw new Error('File Path point to a firestore document that does not exists');
   }
-
-  const docData = docSnapshot.data();
-
-  const fieldToUpdate = filePathElements.join('.');
+  const docData = snapshot.data();
 
   return {
-    isInTmpDir,
-    security,
+    isTmp,
+    privacy,
     filePath,
     doc,
     docData,
-    fieldToUpdate,
+    field,
+    docPath,
     collection
   }
 }

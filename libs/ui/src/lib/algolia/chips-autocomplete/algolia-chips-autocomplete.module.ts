@@ -7,9 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
-import { ValueByPathModule } from '@blockframes/utils/pipes';
 import { AlgoliaAutocompleteModule } from '../autocomplete/algolia-autocomplete.module';
-
+import { DeepKeyPipeModule } from '@blockframes/utils/pipes/deep-key.pipe'
 
 // Material
 
@@ -24,7 +23,7 @@ import { AlgoliaAutocompleteModule } from '../autocomplete/algolia-autocomplete.
     CommonModule,
     ReactiveFormsModule,
     AlgoliaAutocompleteModule,
-    ValueByPathModule,
+    DeepKeyPipeModule,
 
     // Material
     MatFormFieldModule,

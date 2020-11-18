@@ -29,7 +29,7 @@ interface CarouselSection {
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  @HostBinding('test-id="content"') testId 
+  @HostBinding('test-id="content"') testId
 
   public sections: CarouselSection[];
   public orgs$: Observable<Organization[]>;
@@ -85,7 +85,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
     ];
 
-    this.orgs$ = this.organizationService
+    /* TODO 3498 */
+/*     this.orgs$ = this.organizationService
       .valueChanges(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
@@ -94,7 +95,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.featuredOrg$ = this.orgs$.pipe(
       map(orgs => orgs.filter(org => org.movieIds.length > 3)),
       map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
-    );
+    ); */
 
   }
 

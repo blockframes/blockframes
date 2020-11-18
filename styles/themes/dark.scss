@@ -111,8 +111,6 @@ $bf-dark-background: (
   disabled-button-toggle: #1C1F2E,
   unselected-chip:    #1F1F26,
   disabled-list-option: #1C1F2E,
-  // TODO remove this custom variable when last palette will be imported
-  beware: #F6A92C,
 );
 
 ////////////////
@@ -136,10 +134,6 @@ $bf-dark-foreground: (
   slider-min:       rgba(#000, 0.87),
   slider-off:       rgba(#000, 0.26),
   slider-off-active: rgba(#000, 0.38),
-
-  // Custom variables
-  blue-icon:    #9eb1ff,
-  dark-text:    #80818a,
 );
 
 //////////

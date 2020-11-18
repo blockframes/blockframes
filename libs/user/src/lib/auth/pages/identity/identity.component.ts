@@ -7,7 +7,8 @@ import { PasswordControl } from '@blockframes/utils/form/controls/password.contr
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, getAppName } from '@blockframes/utils/apps';
+import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
 
 @Component({
   selector: 'auth-identity',
@@ -18,6 +19,7 @@ import { getCurrentApp, getAppName } from '@blockframes/utils/apps';
 })
 export class IdentityComponent implements OnInit {
   public creating = false;
+  public app: App;
   public appName: string;
   public form = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -42,8 +44,8 @@ export class IdentityComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-    const app = getCurrentApp(this.routerQuery);
-    this.appName = getAppName(app).label;
+    this.app = getCurrentApp(this.routerQuery);
+    this.appName = getAppName(this.app).label;
   }
 
   public async update() {
@@ -59,6 +61,7 @@ export class IdentityComponent implements OnInit {
       );
       const privacyPolicy = await this.service.getPrivacyPolicy();
       await this.service.update({
+        _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName: this.form.get('firstName').value,
         lastName: this.form.get('lastName').value,
         privacyPolicy: privacyPolicy

@@ -15,7 +15,10 @@ import {
 } from '@angular/core';
 
 import { Index } from 'algoliasearch';
+
+// Blockframes
 import { algoliaIndex, AlgoliaIndex, searchClient } from '@blockframes/utils/algolia';
+import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -132,22 +135,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Helper function to dynamically access object value pointed by the `path` param, like the rxjs pluck function
-   * @param object usually the result object from Algolia
-   * @param path string representing the path to the value, usually `this.pathToValue` or `this.displayWithPath`
-   * @example
-   * const object = { main: { nested: { name: 'Joe' } } };
-   * const path = 'main.nested.name';
-   * this.resolve(result); // 'Joe'
-   */
-  public resolveValue(object: any, path: string) {
-    if (object) {
-      return path.split('.').reduce((prev, curr) => {
-        return prev ? prev[curr] : null
-      }, object)
-    }
-  }
 
   public selected(result: any) {
     this.selectionChange.emit(result);
@@ -166,7 +153,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     }
     const value = this.lastValue$.getValue();
     if (value) {
-      return this.resolveValue(value[0], this.keyToDisplay);
+      return getDeepValue(value[0], this.keyToDisplay);
     }
     return this.control.value;
   }

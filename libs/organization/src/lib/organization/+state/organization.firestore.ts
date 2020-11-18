@@ -4,6 +4,7 @@ import { Location, BankAccount, createLocation } from '@blockframes/utils/common
 import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
+import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 type Timestamp = firestore.Timestamp;
 
@@ -25,18 +26,16 @@ export interface OrgMedias {
 
 /** Document model of an Organization */
 interface OrganizationBase<D> extends PublicOrganization {
+  _meta?: DocumentMeta<D>;
   activity?: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
   bankAccounts?: BankAccount[]; // @TODO (#2692)
   cart: CatalogCart[];
-  created: D;
   description?: string;
   email: string;
   fiscalNumber: string;
   isBlockchainEnabled: boolean;
-  movieIds: string[];
-  updated: D;
   userIds: string[];
   status: OrganizationStatus;
   wishlist: WishlistBase<D>[];
@@ -69,17 +68,6 @@ export type WishlistStatus = 'pending' | 'sent';
 /** Default placeholder logo used when an Organization is created. */
 export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';
 
-/** A factory function that creates an OrganizationDocument. */
-export function createOrganizationDocument(
-  params: Partial<OrganizationDocument> = {}
-): OrganizationDocument {
-  const org = createOrganizationBase(params);
-  return {
-    ...org,
-    created: firestore.Timestamp.now(),
-    updated: firestore.Timestamp.now()
-  } as OrganizationDocument;
-}
 
 /** A factory function that creates an OrganizationDocument. */
 export function createOrganizationBase(
@@ -89,14 +77,11 @@ export function createOrganizationBase(
     id: !!params.id ? params.id : '',
     bankAccounts: [],
     cart: [],
-    created: new Date(),
     description: '',
     email: '',
     fiscalNumber: '',
     isBlockchainEnabled: false,
-    movieIds: [],
     status: 'pending',
-    updated: new Date(),
     userIds: [],
     wishlist: [],
     ...params,

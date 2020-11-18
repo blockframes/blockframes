@@ -44,10 +44,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
     for await (const orgs of orgsIterator) {
 
       for (const org of orgs) {
-        if (org.movieIds.length) {
-          if (await hasAcceptedMovies(org)) {
-            org['hasAcceptedMovies'] = true;
-          }
+        if (await hasAcceptedMovies(org)) {
+          org['hasAcceptedMovies'] = true;
         }
       }
 
@@ -81,10 +79,11 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
       const promises = movies.map(async movie => {
         try {
 
-          // TODO issue#2692
-          const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
+          const orgsDocs = await Promise.all(movie.orgIds.map(id => db.doc(`orgs/${id}`).get()))
 
-          if (querySnap.size === 0) {
+          const orgs = orgsDocs.map(doc => doc.data() as OrganizationDocument)
+
+          if (!orgs.length) {
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
@@ -93,14 +92,11 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
                throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
              } */
 
-          const org = (querySnap.docs[0].data() as OrganizationDocument);
+          const org = orgs[0];
           const organizationName = orgName(org);
 
           if (appConfig === 'financiers') {
             const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
-            if (campaign?.minPledge) {
-              movie['minPledge'] = campaign.minPledge;
-            }
             if (campaign?.minPledge) {
               movie['minPledge'] = campaign.minPledge;
             }

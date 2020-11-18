@@ -1,6 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 export type Theme = 'dark' | 'light';
 
@@ -9,7 +10,10 @@ export class ThemeService {
   _theme = new BehaviorSubject<Theme>(undefined);
   theme$ = this._theme.asObservable();
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private media: MediaMatcher
+  ) {
     this.document.body.classList.add('mat-app-background', 'mat-typography');
   }
 
@@ -37,7 +41,17 @@ export class ThemeService {
 
   /** Get the current value of the theme */
   initTheme(mode: Theme) {
-    const theme = isPlatformBrowser(PLATFORM_ID) ? localStorage.getItem('theme') as Theme || mode : mode;
-    this.setTheme(theme);
+    const isDarkMedia = this.media.matchMedia('(prefers-color-scheme: dark)');
+    let theme: Theme | undefined;
+    // @dev check: https://web.dev/prefers-color-scheme/#finding-out-if-dark-mode-is-supported-by-the-browser
+    if (isDarkMedia.media !== 'not all') {
+      isDarkMedia.onchange = ({ matches }) => this.setTheme(matches ? 'dark' : 'light');
+      theme = isDarkMedia.matches ? 'dark' : 'light';
+    }
+    if (!!localStorage) {
+      const fromStorage = localStorage.getItem('theme') as Theme;
+      if (fromStorage) theme = fromStorage;
+    }
+    this.setTheme(theme || mode);
   }
 }

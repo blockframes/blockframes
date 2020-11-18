@@ -5,15 +5,13 @@
 @import "~leaflet/dist/leaflet.css";
 
 .light-theme {
-  @include angular-material-theme($bf-light-theme);
+  @include angular-material-color($bf-light-theme);
   @include bf-material-theme($bf-light-theme);
   @include bf-world-map-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
   // every components inside of dashboard-navbar should be always in the dark theme
   #dashboard-navbar {
     background-color: mat-color($bf-dark-background, app-bar);
-    @include angular-material-theme($bf-dark-theme);
-    @include bf-material-theme($bf-dark-theme);
   }
 
   // Not supported yet by browser. Here for future support
@@ -21,7 +19,7 @@
 }
 
 .dark-theme {
-  @include angular-material-theme($bf-dark-theme);
+  @include angular-material-color($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
   @include bf-world-map-theme($bf-dark-theme);
   @include sat-datepicker-theme($bf-dark-theme);
@@ -31,7 +29,7 @@
 }
 
 .dark-contrast-theme {
-  @include angular-material-theme($bf-dark-contrast-theme);
+  @include angular-material-color($bf-dark-contrast-theme);
   @include bf-material-theme($bf-dark-contrast-theme);
   @include bf-world-map-theme($bf-dark-contrast-theme);
   @include sat-datepicker-theme($bf-dark-contrast-theme);

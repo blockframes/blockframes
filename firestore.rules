@@ -217,7 +217,8 @@ service cloud.firestore {
     function isAdminAllowedToUpdateOrg() {
       return isOrgAdmin(existingData().id)
       	&& isNotUpdatingField(['status'])
-        && isNotUpdatingField(['created'])
+        && isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
         && ( isNotUpdatingField(['appAccess']) || existingData().status == 'pending' )
         && isNotUpdatingId('id', existingData().id);
     }
@@ -228,7 +229,8 @@ service cloud.firestore {
       return isOrgMember(existingData().id)
       	&& isNotUpdatingField(['status'])
         && isNotUpdatingField(['userIds'])
-        && isNotUpdatingField(['created'])
+        && isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
         && isNotUpdatingField(['appAccess'])
         && isNotUpdatingField(['email'])
         && isNotUpdatingId('id', existingData().id);
