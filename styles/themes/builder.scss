@@ -83,8 +83,10 @@
     // font key is not standard angular theme, we've created font palette for each typography config except button & input
     font: $font
   );
+}
 
 
+@mixin mat-theme($theme) {
   @include mat-bf-button-theme($theme);
   @include mat-bf-card-theme($theme);
   @include mat-bf-chips-theme($theme);
@@ -108,24 +110,29 @@
   @include bf-missing-control-theme($theme);
   @include bf-tunnel-theme($theme);
   @include apex-chart-theme($theme);
-
+  
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
-  // Add css variables here when you need one
-  --primary: #{mat-color($primary, 500)};
-  --accent: #{mat-color($accent, 500)};
-  --warn: #{mat-color($warn, 500)};
-  --active: #5f6e8680;
-  // Background
-  --background-disabled-button: #{mat-color($background, disabled-button)};
-  --background-slider: #{mat-color($foreground, slider-min)};
-  --background-hover: #{mat-color($background, hover)};
-  --background-card: #{mat-color($background, card)};
-  --background: #{mat-color($background, background, 0.5)};
-  // Foreground
-  --foreground-divider: #{mat-color($foreground, divider)};
-  --foreground-text: #{mat-color($foreground, text)};
+  :root {
+    // Add css variables here when you need one
+    --primary: #{mat-color($primary, default)};
+    --primary-contract: #{mat-color($primary, default-contrast)};
+    --accent: #{mat-color($accent, default)};
+    --accent-contract: #{mat-color($accent, default-contrast)};
+    --warn: #{mat-color($warn, default)};
+    --warn-contract: #{mat-color($warn, default-contrast)};
+    --active: #5f6e8680;
+    // Background
+    --background-disabled-button: #{mat-color($background, disabled-button)};
+    --background-slider: #{mat-color($foreground, slider-min)};
+    --background-hover: #{mat-color($background, hover)};
+    --background-card: #{mat-color($background, card)};
+    --background: #{mat-color($background, background, 0.5)};
+    // Foreground
+    --foreground-divider: #{mat-color($foreground, divider)};
+    --foreground-text: #{mat-color($foreground, text)};
+  }
 }
