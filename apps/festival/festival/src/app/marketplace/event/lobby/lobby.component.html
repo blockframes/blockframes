@@ -4,26 +4,22 @@
   <article fxLayout="column" fxLayoutAlign="center center">
     <h1>Meeting Lobby</h1>
     <h2>{{event.title}}</h2>
-
-    <section *ngIf="track$ | async as track" fxLayout="row" fxLayoutAlign="center center">
+    <section *ngIf="(local$ | async) as local" fxLayout="row" fxLayoutAlign="center center">
 
       <meeting-video
         fxFlex="40%"
-        [video]="track.video"
-        [audio]="track.audio"
-        [name]="userName"
-        local
+        [attendee]="local"
       ></meeting-video>
 
       <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="40%">
         <div fxLayout="row" fxLayoutGap="32px">
-          <ng-container *ngIf="track.video as videoTrack">
+          <ng-container *ngIf="local.tracks.video as videoTrack">
             <button mat-fab color="primary" (click)="toggleLocalTrack('video')">
               <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
               <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
             </button>
           </ng-container>
-          <ng-container *ngIf="!track.video">
+          <ng-container *ngIf="!local.tracks.video">
             <span matTooltip="Your browser don't have the permission to access the camera">
               <button mat-fab disabled>
                 <mat-icon svgIcon="videocam"></mat-icon>
@@ -31,13 +27,13 @@
             </span>
           </ng-container>
 
-          <ng-container *ngIf="track.audio as audioTrack">
+          <ng-container *ngIf="local.tracks.audio as audioTrack">
             <button mat-fab color="primary" (click)="toggleLocalTrack('audio')">
               <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
               <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
             </button>
           </ng-container>
-          <ng-container *ngIf="!track.audio">
+          <ng-container *ngIf="!local.tracks.audio">
             <span matTooltip="Your browser don't have the permission to access the microphone">
               <button mat-fab disabled>
                 <mat-icon svgIcon="unmute"></mat-icon>

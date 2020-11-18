@@ -1,14 +1,13 @@
 
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
-import { pluck, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { EventService, Event } from '@blockframes/event/+state';
+import { Event, EventQuery } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { TrackKind, Tracks } from '@blockframes/event/components/meeting/+state/twilio.model';
+import { LocalAttendee, TrackKind, } from '@blockframes/event/components/meeting/+state/twilio.model';
+import { TwilioQuery } from '@blockframes/event/components/meeting/+state/twilio.query';
 
 @Component({
   selector: 'festival-lobby',
@@ -20,37 +19,23 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   public event$: Observable<Event>;
 
-  public track$ = new BehaviorSubject<Tracks>({video: undefined, audio: undefined});
-
-  public userName = `${this.authQuery.user.firstName} ${this.authQuery.user.lastName}`;
+  public local$: Observable<LocalAttendee>;
 
   constructor(
     private authQuery: AuthQuery,
-    private eventService: EventService,
-    private route: ActivatedRoute,
+    private eventQuery: EventQuery,
     private twilioService: TwilioService,
+    private twilioQuery: TwilioQuery,
   ) { }
 
   ngOnInit() {
-
-    this.event$ = this.route.params.pipe(
-      pluck('eventId'),
-      switchMap((eventId: string) => this.eventService.queryDocs(eventId)),
-    );
-
-    this.twilioService.getTrack('video').then(videoTrack => {
-      const { audio } = this.track$.getValue();
-      this.track$.next({video: videoTrack, audio});
-    });
-
-    this.twilioService.getTrack('audio').then(audioTrack => {
-      const { video } = this.track$.getValue();
-      this.track$.next({video, audio: audioTrack});
-    });
+    this.event$ = this.eventQuery.selectActive();
+    this.local$ = this.twilioQuery.selectLocal();
+    this.twilioService.initLocal(`${this.authQuery.user.firstName} ${this.authQuery.user.lastName}`);
   }
 
   ngOnDestroy() {
-    this.twilioService.cleanTrack();
+    this.twilioService.cleanLocal();
   }
 
   toggleLocalTrack(kind: TrackKind) {

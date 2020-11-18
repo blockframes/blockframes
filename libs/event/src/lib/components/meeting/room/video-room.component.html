@@ -1,0 +1,8 @@
+
+<p>VIDEO ROOM</p>
+
+<ng-container *ngIf="attendees$ | async as attendees">
+  <div *ngFor="let attendee of attendees">
+    <meeting-video [attendee]="attendee" ></meeting-video>
+  </div>
+</ng-container>
