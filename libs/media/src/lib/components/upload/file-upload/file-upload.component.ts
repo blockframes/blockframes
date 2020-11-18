@@ -18,9 +18,10 @@ import {
   Privacy,
 } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { HostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
+import { startWith, switchMap } from 'rxjs/operators';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -33,7 +34,13 @@ type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 export class FileUploadComponent implements OnInit, OnDestroy {
   /** firestore path */
   @Input() storagePath: string;
-  @Input() form: HostedMediaForm;
+  @Input() set form(form: HostedMediaForm) {
+    this._form.next(form);
+  };
+  get form() {
+    return this._form.getValue();
+  }
+
   @Input() filePrivacy: Privacy = 'public';
   @Input() set allowedFileType(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]
@@ -52,6 +59,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
   public localSize: string;
   public state: UploadState = 'waiting';
 
+  private _form = new BehaviorSubject<HostedMediaForm>(undefined);
   private sub: Subscription;
 
   constructor(
@@ -68,7 +76,9 @@ export class FileUploadComponent implements OnInit, OnDestroy {
       this.state = 'file';
     }
 
-    this.sub = this.form.valueChanges.subscribe((value: HostedMediaFormValue) => this.setState(value));
+    this.sub = this._form.asObservable().pipe(
+      switchMap(form => form.valueChanges.pipe(startWith(form.value)))
+    ).subscribe((value: HostedMediaFormValue) => this.setState(value));
   }
 
   ngOnDestroy() {

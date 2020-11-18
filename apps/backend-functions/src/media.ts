@@ -7,7 +7,7 @@ import { imgixToken } from './environments/environment';
 import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { getDocAndPath } from '@blockframes/firebase-utils';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
-import { createOrganizationBase, OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
+import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
 import { MovieDocument } from './data/types';
 import { uploadToJWPlayer } from './player';
