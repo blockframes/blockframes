@@ -23,7 +23,8 @@
     "clelia": "blockframes-clelia",
     "dajung": "blockframes-dajung",
     "remco": "blockframes-remco",
-    "sebastian": "blockframes-sebastian"
+    "sebastian": "blockframes-sebastian",
+    "samir": "blockframes-samir"
   },
   "targets": {
     "blockframes": {
@@ -239,6 +240,19 @@
         ],
         "crm": [
           "crm-blockframes-clelia"
+        ]
+      }
+    },
+    "blockframes-samir": {
+      "hosting": {
+        "festival": [
+          "festival-blockframes-samir"
+        ],
+        "catalog": [
+          "catalog-blockframes-samir"
+        ],
+        "crm": [
+          "crm-blockframes-samir"
         ]
       }
     },

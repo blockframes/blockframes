@@ -25,6 +25,7 @@
           <mat-card [ngClass]="{ disabled: status.disabled }">
             <img (click)="setValue(status.value)" [asset]="status.image" />
             <mat-radio-button [attr.test-id]= "'status' + (i + 1)" [value]="status.value" color="primary" [disabled]="status.disabled">
+              coucou
               {{status.name}}
             </mat-radio-button>
           </mat-card>
