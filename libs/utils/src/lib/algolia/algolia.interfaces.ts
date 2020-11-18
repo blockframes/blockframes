@@ -72,7 +72,7 @@ export interface AlgoliaSearch {
 
 /* MOVIE */
 
-export interface AlgoliaRecordMovie extends AlgoliaRecord {
+export interface AlgoliaMovie extends AlgoliaRecord {
     title: {
         international: string,
         original: string
@@ -87,8 +87,8 @@ export interface AlgoliaRecordMovie extends AlgoliaRecord {
         subtitle: Language[],
         caption: Language[]
     },
-    status: ProductionStatus,
-    storeConfig: StoreStatus,
+    status: ProductionStatus | string,
+    storeConfig: StoreStatus | string,
     budget: number,
     orgName: string,
     poster: string,
@@ -96,12 +96,12 @@ export interface AlgoliaRecordMovie extends AlgoliaRecord {
     originalLanguages: Language[],
     runningTime: MovieRunningTime,
     release: MovieRelease
-    storeType: StoreType,
+    storeType: StoreType | string,
 }
 
 /* ORGANIZATION */
 
-export interface AlgoliaRecordOrganization extends AlgoliaRecord {
+export interface AlgoliaOrganization extends AlgoliaRecord {
     name: string,
     appModule: Module[],
     country: Territory,
@@ -111,7 +111,7 @@ export interface AlgoliaRecordOrganization extends AlgoliaRecord {
 
 /* USER */
 
-export interface AlgoliaRecordUser extends AlgoliaRecord {
+export interface AlgoliaUser extends AlgoliaRecord {
     email: string,
     firstName: string,
     lastName: string,

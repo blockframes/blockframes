@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { parseFilters } from '@blockframes/utils/algolia';
 
 interface CarouselSection {
   title: string;
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    parseFilters({ runningTime: { budget: 2 } } as any)
     this.dynTitle.setPageTitle('Home');
     this.sub = this.movieService.syncCollection().subscribe();
     const selectMovies = (status: Movie['productionStatus']) => {

@@ -2,7 +2,7 @@
 // Blockframes
 import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form';
-import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/utils/algolia/algolia.interfaces';
+import { AlgoliaSearch, AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 // Utils
 import algoliasearch, { Index } from 'algoliasearch';
@@ -10,7 +10,7 @@ import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
 import { App } from '@blockframes/utils/apps';
 
-export interface OrganizationSearch extends AlgoliaSearch, Partial<AlgoliaRecordOrganization> {
+export interface OrganizationSearch extends AlgoliaSearch, Partial<AlgoliaOrganization> {
   country?: Territory,
 }
 

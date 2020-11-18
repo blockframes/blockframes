@@ -1,6 +1,6 @@
 
 import { App } from '@blockframes/utils/apps';
-import { AlgoliaConfig } from '@blockframes/utils/algolia/algolia.interfaces';
+import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
 const movieBaseConfig: AlgoliaConfig = {
     searchableAttributes: [

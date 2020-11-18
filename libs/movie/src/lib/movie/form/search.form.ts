@@ -6,7 +6,7 @@ import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/utils/algolia/algolia.interfaces';
+import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 
 export interface LanguagesSearch {
   original: Language[];

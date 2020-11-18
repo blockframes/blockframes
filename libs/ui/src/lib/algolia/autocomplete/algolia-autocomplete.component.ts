@@ -16,8 +16,7 @@ import {
 import { Index } from 'algoliasearch';
 
 // Blockframes
-import {  AlgoliaIndex } from '@blockframes/utils/algolia/algolia.interfaces';
-import { AlgoliaService } from '@blockframes/utils/algolia/algolia.service';
+import { AlgoliaIndex, AlgoliaService} from '@blockframes/utils/algolia';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 // RxJs
@@ -112,13 +111,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     if (!!this.facet.trim()) {
       this.keyToDisplay = 'value';
     }
-    if (this.index === 'user') {
-      this.indexSearch = this.algoliaService.userIndex;
-    } else if (this.index === 'org') {
-      this.indexSearch = this.algoliaService.orgIndex
-    } else {
-      this.indexSearch = this.algoliaService.movieIndex;
-    }
+
+    this.indexSearch = this.algoliaService.getIndex(this.index)
 
     // create search functions
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);

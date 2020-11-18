@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
-import { createAlgoliaUserForm } from '@blockframes/utils/algolia/helper.utils';
+import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';

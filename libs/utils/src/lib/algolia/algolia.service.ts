@@ -3,15 +3,15 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { App, getCurrentApp } from "../apps";
-import { algoliaIndex, AlgoliaQuery, MovieIndexConfig, } from "./algolia.interfaces";
+import { algoliaIndex, AlgoliaQuery, MovieIndexConfig, AlgoliaIndex } from "./algolia.interfaces";
 import { parseFilters } from './helper.utils';
 
 @Injectable({ providedIn: 'root' })
 export class AlgoliaService {
 
-    movieIndex: Index;
-    orgIndex: Index;
-    userIndex: Index;
+    private movieIndex: Index;
+    private orgIndex: Index;
+    private userIndex: Index;
     private appName: App;
 
     constructor(private routerQuery: RouterQuery) {
@@ -19,6 +19,14 @@ export class AlgoliaService {
         this.movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex.movie[this.appName])
         this.orgIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex.org[this.appName])
         this.userIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex.user[this.appName])
+    }
+
+    getIndex(index: AlgoliaIndex) {
+        switch (index) {
+            case 'movie': return this.movieIndex;
+            case 'user': return this.userIndex;
+            case 'org': return this.orgIndex;
+        }
     }
 
     queryMovies(query: AlgoliaQuery<MovieIndexConfig>) {

@@ -3,7 +3,7 @@ import { algolia as algoliaClient } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia/algolia.interfaces';
+import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
@@ -55,7 +55,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     return Promise.resolve(true);
   }
 
-  const orgRecord: AlgoliaRecordOrganization = {
+  const orgRecord: AlgoliaOrganization = {
     objectID: org.id,
     name: orgName(org),
     appModule: getOrgModuleAccess(org),
@@ -89,7 +89,7 @@ export function storeSearchableMovie(
 
   try {
 
-    const movieRecord: AlgoliaRecordMovie = {
+    const movieRecord: AlgoliaMovie = {
       objectID: movie.id,
 
       // searchable keys
@@ -108,13 +108,13 @@ export function storeSearchableMovie(
       languages: {
         original: !!movie.originalLanguages ? movie.originalLanguages : [],
         dubbed: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.dubbed) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang]?.dubbed) as Language[] :
           [],
         subtitle: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.subtitle) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang]?.subtitle) as Language[] :
           [],
         caption: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.caption) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang]?.caption) as Language[] :
           [],
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
@@ -165,13 +165,12 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
   }
 
   try {
-    const userRecord: AlgoliaRecordUser = {
+    const userRecord: AlgoliaUser = {
       objectID: user.uid,
       email: user.email,
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar ?? '',
-      orgId: user.orgId ?? ''
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);
