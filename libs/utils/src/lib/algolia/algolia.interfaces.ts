@@ -19,7 +19,7 @@ export interface AlgoliaQuery {
     text: string;
     limitResultsTo: number;
     activePage: number;
-    facets: MovieIndexConfig,
+    facets: Partial<MovieIndexConfig>,
     filters: string
 }
 

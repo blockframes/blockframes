@@ -18,9 +18,10 @@ export class AlgoliaService {
         this.movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex.movie[this.appName])
         this.orgIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex.org[this.appName])
         this.userIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex.user[this.appName])
+        this.queryForMovies({ text: '', limitResultsTo: 8, activePage: 0, facets: { genres: 'action' }, filters: '' })
     }
 
-    queryForMovies<T extends keyof AlgoliaQueries>(query: AlgoliaQuery) {
+    queryForMovies(query: AlgoliaQuery) {
         const facetFilters = Object.keys(query.facets).reduce((prev, cur) => {
             console.log(prev, cur)
             return query.facets[prev]
@@ -34,6 +35,6 @@ export class AlgoliaService {
         })
     }
 
-    queryForOrgs<T extends keyof AlgoliaQueries>(query: AlgoliaQuery) { }
-    queryForUsers<T extends keyof AlgoliaQueries>(query: AlgoliaQuery) { }
+    queryForOrgs(query: AlgoliaQuery) { }
+    queryForUsers(query: AlgoliaQuery) { }
 }
