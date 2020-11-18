@@ -10,16 +10,15 @@
           <!-- Invited to attendEvent -->
           <ng-container *ngIf="_invitation.mode === 'invitation'; else request">
             <ng-container *ngIf="event.type === 'meeting'; else inviteScreening">
-              
+
               <ng-container *ngIf="fromUser.$ | async as user">
-                <a [href]="'mailto:' + user.email">{{ user | displayName }}</a>
-                <span *ngIf="fromOrg.$ | async as org">( {{ org | orgName }} )</span> invited you to {{ event.type }} 
+                <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> invited you to {{ event.type }}
                 <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
               </ng-container>
-              
+
             </ng-container>
             <ng-template #inviteScreening>
-              ({{ _invitation.fromOrg | orgName }}) invited you to 
+              <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a> invited you to
               <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
               {{event | eventRange }}
             </ng-template>
@@ -29,16 +28,14 @@
             <ng-container *ngIf="event.type === 'meeting'; else requestScreening">
 
               <ng-container *ngIf="fromUser.$ | async as user">
-                <a [href]="'mailto:' + user.email">{{ user | displayName }}</a>
-                <span *ngIf="fromOrg.$ | async as org">( {{ org | orgName }} )</span> would like to attend {{ event.type }} 
+                <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> would like to attend {{ event.type }}
                 <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
                 {{ event | eventRange }}
               </ng-container>
 
             </ng-container>
             <ng-template #requestScreening>
-              {{ _invitation.fromUser | displayName }}
-              <span *ngIf="fromOrg.$ | async as org">( {{ org | orgName }} )</span> would like to attend {{ event.type }} 
+              <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> would like to attend {{ event.type }}
               <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
               {{ event | eventRange }}
             </ng-template>

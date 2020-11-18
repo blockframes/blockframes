@@ -39,32 +39,23 @@ export const heavyConfig: RuntimeOptions = {
 //--------------------------------
 
 /** Trigger: REST call to invite a list of users by email. */
-export const createUser = functions.https.onCall(logErrors(users.createUser));
+export const createUser = functions.https.onCall(skipInMaintenance(logErrors(users.createUser)));
 
 /**
  * Trigger: when user creates an account.
  *
  * We create a corresponding document in `users/userID`.
  */
-export const onUserCreate = functions.auth
-  .user()
-  .onCreate(logErrors(users.onUserCreate));
+export const onUserCreate = functions.auth.user().onCreate(skipInMaintenance(logErrors(users.onUserCreate)));
 
-export const onUserCreateDocument = onDocumentCreate(
-  '/users/{userID}',
-  users.onUserCreateDocument
-);
+export const onUserCreateDocument = onDocumentCreate('/users/{userID}', users.onUserCreateDocument);
 
-export const onUserUpdate = functions
-  .runWith(heavyConfig) // user update can potentially trigger images processing
+export const onUserUpdate = functions.runWith(heavyConfig) // user update can potentially trigger images processing
   .firestore.document('/users/{userID}')
   .onUpdate(skipInMaintenance(users.onUserUpdate));
 
 
-export const onUserDelete = onDocumentDelete(
-  '/users/{userID}',
-  users.onUserDelete
-);
+export const onUserDelete = onDocumentDelete('/users/{userID}', users.onUserDelete);
 
 /** Trigger: REST call to send a verify email to a user. */
 // @TODO (#2821)
@@ -72,33 +63,32 @@ export const onUserDelete = onDocumentDelete(
   .onCall(users.startVerifyEmailFlow);*/
 
 /** Trigger: REST call to send a reset password link to a user. */
-export const sendResetPasswordEmail = functions.https
-  .onCall(users.startResetPasswordEmail);
+export const sendResetPasswordEmail = functions.https.onCall(skipInMaintenance(users.startResetPasswordEmail));
 
 //--------------------------------
 //        Misc Management       //
 //--------------------------------
 
 /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
-export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
+export const sendUserContactMail = functions.https.onCall(skipInMaintenance(logErrors(users.sendUserMail)));
 
 /** Trigger: REST call to send a mail to an admin for demo request. */
-export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
+export const sendDemoRequest = functions.https.onCall(skipInMaintenance(logErrors(users.sendDemoRequest)));
 
 /** Trigger: REST call bigQuery with an array of movieIds to get their analytics. */
-export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.requestMovieAnalytics));
+export const getMovieAnalytics = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.requestMovieAnalytics)));
 
 /** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
-export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.requestEventAnalytics));
+export const getEventAnalytics = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.requestEventAnalytics)));
 
 /** Trigger: REST call bigQuery to fetch analytics active users */
-export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery.getAnalyticsActiveUsers));
+export const getAnalyticsActiveUsers = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.getAnalyticsActiveUsers)));
 
 //--------------------------------
 //      Player  Management      //
 //--------------------------------
 
-export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
+export const privateVideo = functions.https.onCall(skipInMaintenance(logErrors(getPrivateVideoUrl)));
 
 //--------------------------------
 //   Permissions  Management    //
@@ -111,36 +101,30 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
 );
 
 /** Trigger: when an user ask for a private media. */
-export const getMediaToken = functions.https.onCall(logErrors(_getMediaToken));
+export const getMediaToken = functions.https.onCall(skipInMaintenance(logErrors(_getMediaToken)));
 
 //--------------------------------
 //    Invitations Management    //
 //--------------------------------
 
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
-export const onInvitationUpdateEvent = onDocumentWrite(
-  'invitations/{invitationID}',
-  onInvitationWrite
-);
+export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
 
 //--------------------------------
 //    Events Management          //
 //--------------------------------
 
-export const onEventDeleteEvent = onDocumentDelete(
-  'events/{eventID}',
-  logErrors(onEventDelete)
-);
+export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', logErrors(onEventDelete));
 
 /** Trigger: REST call to invite a list of users by email. */
-export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUsers));
+export const inviteUsers = functions.https.onCall(skipInMaintenance(logErrors(invitations.inviteUsers)));
 
 //--------------------------------
 //      Twilio Access           //
 //--------------------------------
 
 /** Trigger: REST call to create the access token for connection to twilio */
-export const getAccessToken = functions.https.onCall(logErrors(getTwilioAccessToken));
+export const getAccessToken = functions.https.onCall(skipInMaintenance(logErrors(getTwilioAccessToken)));
 
 
 //--------------------------------
@@ -151,7 +135,7 @@ export const getAccessToken = functions.https.onCall(logErrors(getTwilioAccessTo
  * Creates notifications when an event is about to start
  */
 export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// every day at 4 AM
-  .onRun(_ => createNotificationsForEventsToStart());
+  .onRun(skipInMaintenance(_ => createNotificationsForEventsToStart()));
 
 //--------------------------------
 //       Movies Management      //
@@ -160,10 +144,7 @@ export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// e
 /**
  * Trigger: when a movie is created
  */
-export const onMovieCreateEvent = onDocumentCreate(
-  'movies/{movieId}',
-  onMovieCreate
-);
+export const onMovieCreateEvent = onDocumentCreate('movies/{movieId}', onMovieCreate);
 
 /**
  * Trigger: when a movie is updated
@@ -176,10 +157,7 @@ export const onMovieUpdateEvent = functions
 /**
  * Trigger: when a movie is deleted
  */
-export const onMovieDeleteEvent = onDocumentDelete(
-  'movies/{movieId}',
-  logErrors(onMovieDelete)
-)
+export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors(onMovieDelete))
 
 //------------------------------------------------
 //   Contracts & Contracts Version Management   //
@@ -188,10 +166,7 @@ export const onMovieDeleteEvent = onDocumentDelete(
 /**
  * Trigger: when a contract is created/updated/deleted
  */
-export const onContractWriteEvent = onDocumentWrite(
-  'contracts/{contractId}',
-  onContractWrite
-);
+export const onContractWriteEvent = onDocumentWrite('contracts/{contractId}', onContractWrite);
 
 //--------------------------------
 //       Apps Management        //
@@ -200,7 +175,7 @@ export const onContractWriteEvent = onDocumentWrite(
 /**
  * Trigger: when a blockframes admin changed an org app access and wants to notify admins.
  */
-export const onAccessToAppChanged = functions.https.onCall(accessToAppChanged);
+export const onAccessToAppChanged = functions.https.onCall(skipInMaintenance(accessToAppChanged));
 
 
 //--------------------------------
@@ -210,22 +185,19 @@ export const onAccessToAppChanged = functions.https.onCall(accessToAppChanged);
 /**
  * Trigger: when a blockframes admin wants to send an email.
  */
-export const sendMailAsAdmin = functions.https.onCall(_sendMailAsAdmin);
+export const sendMailAsAdmin = functions.https.onCall(skipInMaintenance(_sendMailAsAdmin));
 
 /**
  * Trigger: when a regular user wants to send an email.
  */
-export const sendMailWithTemplate = functions.https.onCall(_sendMailWithTemplate);
+export const sendMailWithTemplate = functions.https.onCall(skipInMaintenance(_sendMailWithTemplate));
 
 //--------------------------------
 //       Orgs Management        //
 //--------------------------------
 
 /** Trigger: when an organization is created. */
-export const onOrganizationCreateEvent = onDocumentCreate(
-  'orgs/{orgID}',
-  onOrganizationCreate
-);
+export const onOrganizationCreateEvent = onDocumentCreate('orgs/{orgID}', onOrganizationCreate);
 
 /** Trigger: when an organization is updated. */
 export const onOrganizationUpdateEvent = functions
@@ -234,10 +206,7 @@ export const onOrganizationUpdateEvent = functions
   .onUpdate(skipInMaintenance(logErrors(onOrganizationUpdate)));
 
 /** Trigger: when an organization is removed. */
-export const onOrganizationDeleteEvent = onDocumentDelete(
-  'orgs/{orgID}',
-  onOrganizationDelete
-);
+export const onOrganizationDeleteEvent = onDocumentDelete('orgs/{orgID}', onOrganizationDelete);
 
 //--------------------------------
 //      Files management        //
