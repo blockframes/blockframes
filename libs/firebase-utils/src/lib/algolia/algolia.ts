@@ -3,7 +3,7 @@ import { algolia as algoliaClient } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
+import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia/algolia.interfaces';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';

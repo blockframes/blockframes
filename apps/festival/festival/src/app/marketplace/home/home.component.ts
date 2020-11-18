@@ -5,7 +5,6 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostBinding } fr
 import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { AlgoliaService } from '@blockframes/utils/algolia/algolia.service';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
@@ -41,8 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private dynTitle: DynamicTitleService,
-    private algoliaService: AlgoliaService
+    private dynTitle: DynamicTitleService
   ) { }
 
   ngOnInit() {

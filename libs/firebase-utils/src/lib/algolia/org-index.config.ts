@@ -1,5 +1,5 @@
 
-import { AlgoliaConfig } from "../algolia.interfaces";
+import { AlgoliaConfig } from '@blockframes/utils/algolia/algolia.interfaces';
 
 export const orgBaseConfig: AlgoliaConfig = {
     searchableAttributes: ['name'],
