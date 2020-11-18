@@ -2,7 +2,8 @@ export const privacies = ['public', 'protected'] as const;
 export type Privacy = typeof privacies[number];
 export const tempUploadDir = 'tmp';
 
-export function deconstructFilePath(filePath: string | undefined) {
+export function deconstructFilePath(_filePath: string | undefined) {
+  let filePath = _filePath;
   if (!filePath) {
     throw new Error('Upload Error : Undefined File Path');
   }
@@ -18,7 +19,10 @@ export function deconstructFilePath(filePath: string | undefined) {
 
   const isTmp = segments[0] === tempUploadDir;
   // remove tmp/
-  if (isTmp) segments.shift();
+  if (isTmp) {
+    segments.shift();
+    filePath = filePath.slice(`${tempUploadDir}/`.length);
+  }
 
   // remove "protected/" or "public/"
   const privacy: Privacy = segments.shift() as Privacy;
@@ -45,6 +49,7 @@ export function deconstructFilePath(filePath: string | undefined) {
     isTmp,
     privacy,
     collection,
+    filePath,
     docPath,
     field
   }
