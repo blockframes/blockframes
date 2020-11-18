@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostBinding } fr
 
 // Blockframes
 import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { Organization } from '@blockframes/organization/+state';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { AlgoliaService } from '@blockframes/utils/algolia/algolia.service';
 
@@ -41,12 +41,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private organizationService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private algoliaService: AlgoliaService
   ) { }
 
   ngOnInit() {
+    this.algoliaService.queryForMovies({ activePage: 0, limitResultsTo: 20, facets: { genres: 'action' } })
     this.dynTitle.setPageTitle('Home');
     this.sub = this.movieService.syncCollection().subscribe();
     const selectMovies = (status: Movie['productionStatus']) => {

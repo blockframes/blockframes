@@ -20,11 +20,11 @@ export interface AlgoliaConfig {
 }
 
 export interface AlgoliaQuery {
-    text: string;
+    text?: string;
     limitResultsTo: number;
     activePage: number;
-    facets: Partial<MovieIndexConfig>,
-    filters: string
+    facets?: Partial<MovieIndexConfig>,
+    filters?: string
 }
 
 interface MovieIndexConfig {
