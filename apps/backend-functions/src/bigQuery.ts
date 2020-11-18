@@ -188,7 +188,7 @@ export const requestEventAnalytics = async (
       return getDocument<PublicUser>(`users/${row.userId}`);
     });
     const eventsUsers = await Promise.all(eventsUsersPromises);
-    const eventsUsersNotInOrg = eventsUsers.filter(u => !org.userIds.includes(u.uid));
+    const eventsUsersNotInOrg = eventsUsers.filter(u => !!u && !org.userIds.includes(u.uid));
     const userIdsNotInOrg = eventsUsersNotInOrg.map(u => u.uid);
     // Clean rows without users of the same org
     rows = rows.filter(row => userIdsNotInOrg.includes(row.userId));
