@@ -26,7 +26,7 @@
             <div fxLayout="column" fxLayoutGap="4px">
               <h6>{{ event.org | orgName }}</h6>
               <ng-container *ngIf="event.organizedBy as user">
-                <span>{{ user | userName | async }} | {{ user.position }}</span>
+                <span>{{ user | displayName }} | {{ user.position }}</span>
               </ng-container>
             </div>
           </div>

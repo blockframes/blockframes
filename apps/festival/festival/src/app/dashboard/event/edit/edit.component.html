@@ -50,7 +50,7 @@
             <mat-label>Organized By</mat-label>
             <mat-select formControlName="organizerId">
               <ng-container *ngFor="let member of members$ | async">
-                <mat-option [value]="member.uid">{{ member | userName | async }}</mat-option>
+                <mat-option [value]="member.uid">{{ member | displayName }}</mat-option>
               </ng-container>
             </mat-select>
           </mat-form-field>

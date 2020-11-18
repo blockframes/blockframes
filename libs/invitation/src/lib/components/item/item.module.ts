@@ -13,7 +13,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { EventFromInvitationPipeModule } from '@blockframes/invitation/pipes/event-from-invitation.pipe';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
-import { UserNameModule } from '@blockframes/utils/pipes/user-name.pipe';
+import { DisplayUserModule } from '@blockframes/utils/pipes/display-user.pipe';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -32,7 +32,7 @@ import { MatMenuModule } from '@angular/material/menu';
     EventLinkModule,
     RouterModule,
     OrgNameModule,
-    UserNameModule,
+    DisplayUserModule,
     DisplayNameModule,
     EventFromInvitationPipeModule,
     EventRangeModule,

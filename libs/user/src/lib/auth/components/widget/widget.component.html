@@ -2,7 +2,7 @@
   <ng-container *ngIf="(organization$ | async) as organization">
     <article fxLayout="row">
       <div class="user-info" fxLayout="column" fxLayoutAlign="center end">
-        <span class="mat-body-2">{{ user | userName | async }}</span>
+        <span class="mat-body-2">{{ user | displayName }}</span>
         <span class="mat-caption">{{ user.position }}</span>
       </div>
       <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">

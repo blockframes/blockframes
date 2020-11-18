@@ -18,7 +18,7 @@
       <ng-template let-user>
         <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
           <img [ref]="user.avatar" asset="profil_user.webp" alt="Profile">
-          <span *ngIf="user.firstName">{{ user | userName: true | async }}</span>
+          <span *ngIf="user.firstName">{{ user | displayUser | async }}</span>
           <span *ngIf="!user.firstName">{{ user.email }}</span>
         </div>
       </ng-template>

@@ -8,7 +8,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { AlgoliaChipsAutocompleteModule } from '@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
-import { UserNameModule } from '@blockframes/utils/pipes/user-name.pipe';
+import { DisplayUserModule } from '@blockframes/utils/pipes/display-user.pipe';
 
 // Material
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     AlgoliaChipsAutocompleteModule,
     DisplayNameModule,
     DeepKeyPipeModule,
-    UserNameModule,
+    DisplayUserModule,
     // Material
     MatProgressBarModule,
     MatIconModule,

@@ -30,7 +30,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   }
 
   public formatNotification(notification: Notification): Partial<Notification> {
-    const displayUserName = notification.user ? `${displayName(notification.user)}` : 'Someone';
+    const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
     const module = getCurrentModule(this.routerQuery.getValue().state.url);
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
@@ -194,7 +194,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         const org = await this.orgService.getValue(notification.user.orgId);
         subject = `${displayName(notification.user)} (${orgName(org)})`;
       }
-      else subject = `${displayName(notification.user)}`;
+      else subject = displayName(notification.user);
     } else if (notification.user && notification.user.email) {
       subject = notification.user.email;
     }

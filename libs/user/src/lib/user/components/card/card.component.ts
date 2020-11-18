@@ -8,7 +8,7 @@ import { displayName } from '@blockframes/utils/pipes/display-name.pipe';
 function createUserView(user: Partial<User>) {
   return {
     avatar: user.avatar,
-    name: `${displayName(user)}`,
+    name: displayName(user),
     position: user.position || '',
     email: user.email
   }

@@ -11,7 +11,6 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { UserNameModule } from '@blockframes/utils/pipes/user-name.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MatButtonModule} from '@angular/material/button';
@@ -26,7 +25,6 @@ import { MatButtonModule} from '@angular/material/button';
     MovieHeaderModule,
     GuestListModule,
     ImageReferenceModule,
-    UserNameModule,
     OrgNameModule,
     OrgChipModule,
     DisplayNameModule,
