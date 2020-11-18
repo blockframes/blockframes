@@ -6,7 +6,7 @@ import { Invitation, InvitationQuery, InvitationService } from '@blockframes/inv
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: '[docId] invitation-form-user',
