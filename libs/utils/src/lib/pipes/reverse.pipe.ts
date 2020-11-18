@@ -10,10 +10,10 @@ import { CommonModule } from '@angular/common';
 })
 export class ReversePipe implements PipeTransform {
 
-  transform(value) {
+  transform(value, reverse = true) {
     if (!value) return;
 
-    return value.reverse();
+    return reverse ? value.reverse() : value;
   }
 }
 

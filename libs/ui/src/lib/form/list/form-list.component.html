@@ -3,7 +3,7 @@
   <!-- LIST -->
   <!---------->
 
-  <ng-container *ngIf="list$ | async as list">
+  <ng-container *ngIf="list$ | async | reverse:reverseList as list">
     <ng-container *ngIf="list.length">
       <mat-list class="surface">
         <mat-list-item *ngFor="let item of list; let index = index">
@@ -33,10 +33,12 @@
   ​<div *ngIf="formItem">
     <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
     </ng-template>
-    <div fxLayout="row" fxLayoutAlign="space-between start">
-      <button test-id="row-cancel" mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
-        <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
-      </button>
+    <div fxLayout="row" [fxLayoutAlign]="autoAdd ? 'end start' : 'space-between start'">
+      <ng-container *ngIf="!autoAdd">
+        <button test-id="row-cancel" mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
+          <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
+        </button>
+      </ng-container>
       <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
         <mat-icon svgIcon="floppy"></mat-icon>
         <span>{{ saveButtonText }}</span>

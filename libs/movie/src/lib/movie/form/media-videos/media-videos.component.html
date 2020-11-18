@@ -32,7 +32,7 @@
     <section>
       <p>Upload other videos such as trailer, teaser, promotional clip, etc...</p>
 
-      <bf-form-list [form]="videoList" buttonText="Add a video" listPosition="bottom">
+      <bf-form-list [form]="videoList" buttonText="Add a video" listPosition="bottom" autoAdd reverseList>
         <ng-template itemRef let-video>
           {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
         </ng-template>

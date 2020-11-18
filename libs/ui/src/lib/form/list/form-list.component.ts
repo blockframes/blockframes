@@ -17,6 +17,7 @@ import { startWith, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: '[formView]' })
 export class FormViewDirective { }
@@ -38,6 +39,8 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   @Input() buttonText = 'Add';
   @Input() saveButtonText = 'Save'
   @Input() listPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
+  @Input() @boolean autoAdd: boolean = false;
+  @Input() @boolean reverseList: boolean = false;
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -82,6 +85,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       delete this.formItem;
       this.cdr.markForCheck();
     }
+    if (this.autoAdd) this.add()
   }
 
   edit(index: number) {
@@ -98,6 +102,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       delete this.activeValue;
     }
     delete this.formItem;
+    if (this.autoAdd) this.add()
   }
 
   remove(index: number) {
