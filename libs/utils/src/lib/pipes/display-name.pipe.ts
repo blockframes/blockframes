@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Person } from '../common-interfaces';
 
 export function titleCase(text: string) {
-  if (!text) return;
+  if (!text) return '';
   return text[0].toUpperCase() + text.substring(1);
 }
 
