@@ -17,7 +17,7 @@ import {
 import { Index } from 'algoliasearch';
 
 // Blockframes
-import { algoliaIndex, AlgoliaIndex, searchClient } from '@blockframes/utils/algolia';
+import { algoliaIndex, AlgoliaIndex, searchClient } from '@blockframes/utils/algolia/algolia.interfaces';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 // RxJs

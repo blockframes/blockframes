@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, Content
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
-import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
+import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia/algolia.interfaces';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';

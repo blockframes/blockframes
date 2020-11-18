@@ -10,6 +10,10 @@ import {
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Module } from '../apps';
 
+/* TODO MF, REMOVE WHEN TRANSITION IS DONE */
+import algoliasearch from 'algoliasearch'
+export const searchClient = algoliasearch(algolia.appId, algolia.searchKey)
+
 export interface AlgoliaConfig {
     searchableAttributes: string[];
     attributesForFaceting: string[];

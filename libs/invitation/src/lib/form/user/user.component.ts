@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
+import { createAlgoliaUserForm } from '@blockframes/utils/algolia/helper.utils';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { Invitation, InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';

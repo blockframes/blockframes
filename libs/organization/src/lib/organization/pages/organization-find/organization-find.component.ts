@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
-import { AlgoliaIndex } from '@blockframes/utils/algolia';
+import { AlgoliaIndex } from '@blockframes/utils/algolia/algolia.interfaces';
 
 @Component({
   selector: 'organization-find',
