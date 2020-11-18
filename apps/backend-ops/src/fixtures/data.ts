@@ -2,7 +2,9 @@
   //Permissions
   "permissions/O001" : {
     "roles": {
-      "uid-user2": 'member'
+      "uid-admin": 'admin',
+      "uid-user2": 'member',
+      "uid-super-admin": 'superAdmin'
     }
   },
 
@@ -13,8 +15,13 @@
     "canCreate": false
   },
   "permissions/O001/documentPermissions/MI-007": {
-     "canCreate": true
+     "canCreate": true,
+     "canDelete": true,
   },
+  "permissions/O001/documentPermissions/MI-0d7": {
+    "canDelete": true,
+    "ownerId": 'O001'
+  },  
   "permissions/O001/documentPermissions/MI-077": {
     "canUpdate": true,
     "canCreate": true,
@@ -27,6 +34,16 @@
   },
 
   //Users Collection
+  "users/uid-super-admin" : {
+    email: 'admin@cascade8.com',
+    uid: 'uid-super-admin',
+    orgId: 'O001'
+  },  
+  "users/uid-admin" : {
+    email: 'admin@cascade8.com',
+    uid: 'uid-admin',
+    orgId: 'O001'
+  },
   "users/uid-c8" : {
     email: 'c8@cascade8.com',
     uid: 'uid-c8' 
@@ -55,7 +72,12 @@
       "id": 'DR001'
     }
   },
-
+  "movies/MI-0d7": {
+    "id": 'MI-0d7',
+    "title": {
+      "original": 'UnitTest Eraser'
+    },
+  },
   "movies/MI-077": {
     "id": 'MI-077',
     "title": {

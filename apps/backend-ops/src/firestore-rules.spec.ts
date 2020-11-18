@@ -28,6 +28,23 @@ function setData(projectId: string, dataDB: Record<string, Object>) {
   return Promise.all(promises);
 }
 
+describe('Blockframe Super Admin', () => {
+  const projectId = `rules-spec-${Date.now()}`;
+  let db: Firestore;
+
+  beforeAll(async () => {
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-super-admin'});
+  });
+
+  afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+  test("super admin should be able to delete movie", async () => {
+    const usersRef = db.collection("users");
+    await assertSucceeds(usersRef.get());
+  });
+
+});
+
 describe('Blockframe Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
@@ -103,7 +120,7 @@ describe('Users Collection Rules Tests', () => {
 });
 
 //TODO: 4190
-describe.skip('Notification Rules Tests', () => {
+describe('Notification Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
@@ -218,16 +235,25 @@ describe('Movies Rules Tests', () => {
     });
 
     test("user valid org, with create permission for org should be able to create movie", async () => {
-      //const movieRef = db.doc(`movies/${newMovieTitle}`);
       const movieDetailsOther = {storeConfig: {status: 'draft'}}
       const newTitle =  {id: `${newMovieTitle}`};
       let createdMovie:any = {  ...newTitle, ...movieDetailsOther};
-      //await assertSucceeds(movieRef.set(createdMovie));
       const movieDoc = db.collection('movies').doc(newMovieTitle).set(createdMovie);
       await assertSucceeds(movieDoc)
     });
 
-    test.only("user valid org, updating unrestricted field should be able to update movie", async () => {
+    const fields = [
+      ["id", 'MI-0xx'],
+
+    ];
+    test.each(fields)("user valid org, updating restricted '%s' field shouldn't be able to update movie", async (fieldInput, value) => {
+      const movieRef = db.doc(`movies/${existMovieTitle}`);
+      const details = {};
+      details[fieldInput] = value;
+      await assertFails(movieRef.update(details));
+    });
+
+    test("user valid org, updating unrestricted field should be able to update movie", async () => {
       const movieRef = db.doc(`movies/${existMovieTitle}`);
       const movieDetailsOther = {notes: 'update in unit-test'}
       await assertSucceeds(movieRef.update(movieDetailsOther));
@@ -235,8 +261,24 @@ describe('Movies Rules Tests', () => {
 
   });
 
+  describe('User with admin role', () => {
+    const draftMovieTitle = 'MI-0d7';
+
+    beforeAll(async () => {
+      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-admin'});
+    });
+
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+    test("User with admin role in org should be able to delete movie", async () => {
+      const movieRef = db.doc(`movies/${draftMovieTitle}`);
+      await assertSucceeds(movieRef.delete());
+    });
+  });
+
   describe('With User not in org', () => {
     const newMovieTitle = 'MI-007'
+    const draftMovieTitle = 'MI-0d7'
     const newMovieDetails = {id: `${newMovieTitle}`};
 
     beforeAll(async () => {
@@ -255,7 +297,12 @@ describe('Movies Rules Tests', () => {
       await assertFails(movieRef.set(newMovieDetails));
     });
 
-  });  
+    test("user without valid org shouldn't be able to delete movie title", async () => {
+      const movieRef = db.doc(`movies/${draftMovieTitle}`);
+      await assertFails(movieRef.delete());
+    });
+
+  });
 
 });
 
