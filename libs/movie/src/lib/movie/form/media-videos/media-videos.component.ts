@@ -55,7 +55,7 @@ export class MovieFormMediaVideosComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  getPath(pathPart: string) {
+  getPath(pathPart: 'screener' | 'otherVideos') {
     return `movies/${this.movieId}/promotional.videos.${pathPart}`;
   }
 }
