@@ -1,14 +1,7 @@
 export const production = true;
-export const dev = false;
-export const hmr = false;
-
-// TODO issue#1146 AFM CODE
-// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
-export const AFM_DISABLE = false;
 
 export const persistenceSettings = {
-  // TODO(issue#846): change to synchronizeTabs when available (angularFire 5.2)
-  experimentalTabSynchronization: true
+  synchronizeTabs: true
 };
 
 // Firebase
@@ -18,6 +11,7 @@ export const appUrl = {
   content: 'https://demo5.archipelcontent.com',
   market: 'https://demo5.archipelmarket.com',
   crm: 'https://demo5.crm.blockframes.io',
+  financiers: 'https://blockframes-demo5-financiers.web.app',
 }
 
 export const firebase = {
@@ -27,6 +21,8 @@ export const firebase = {
   projectId: 'blockframes-demo-5',
   storageBucket: 'blockframes-demo-5.appspot.com',
   messagingSenderId: '671401949747'
+  // @TODO appId: "",
+  // @TODO measurementId: ""
 };
 
 // Algolia
@@ -35,30 +31,45 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameMovies: {
-    festival: 'demo5_festival_movies',
-    financiers: 'demo5_financiers_movies',
-    catalog: 'demo5_catalog_movies',
-  },
   indexNameOrganizations: {
     festival: 'demo5_festival_org',
     financiers: 'demo5_financiers_org',
     catalog: 'demo5_catalog_org'
   },
+  indexNameMovies: {
+    festival: 'demo5_festival_movies',
+    financiers: 'demo5_financiers_movies',
+    catalog: 'demo5_catalog_movies',
+  },
   indexNameUsers: 'demo5_users',
 };
+
+// Support emails
+// =======
+
+export const supportEmails = {
+  default: 'dev+demo5@blockframes.io', // redirect to => blockframes.dev@gmail.com
+  catalog: 'dev+demo5_catalog@blockframes.io',
+  festival: 'dev+demo5_festival@blockframes.io',
+  financiers: 'dev+demo5_financiers@blockframes.io'
+}
+
+// Yandex 
+// =======
+
+export const yandexId = 0;
+
+// Intercom
+// ========
+
+export const intercomId = 'srwfltp4';
 
 // Ethereum
 // ========
 
 export const network = 'goerli';
-export const mnemonic = ''; // defined in functions.config, see backend-functions/environments
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
-
-// OMDB
-// =======
-export const omdbApiKey = '4d1be897';
 
 // TODO(issue#847): change the address
 export const contracts = {
@@ -75,21 +86,53 @@ export const relayer = {
   factoryContract
 };
 
-// Functions
-// =========
+// OMDB
+// =======
 
-export const backupBucket = 'demo5-backups';
-export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
+export const omdbApiKey = '4d1be897';
 
+// Sentry 
+// =======
+
+export const sentryEnv = 'demo-5';
+export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
+
+// Quorum
+// ========
+
+export const quorum = {
+  archipelNode: {
+    url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'PJg4NoFMk73mGCbkJ7/griaiKfkbS+edhfjO5PzztQs=',
+    ethAddress: '0x7E5D163D7390A6068d44C8e2F3c2861B5133daa4',
+  },
+  pulsarlNode: {
+    url: 'https://e0rf4hbql8-e0zhtusyfh-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'fnF4IPKvDcmM9bgmEKHoYjNyXG6cXqJjv806RK1F5y8=',
+    ethAddress: '0x43c92D51ba8c0B83062F8116B036D6616ebe4746',
+  },
+  bankNode: {
+    url: 'https://e0rf4hbql8-e0jbt507aa-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'Tj879+7P6IgX2UJTOLtWx5IjrPlABb7HO//kNNbnt28=',
+    ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
+  },
+}
 
 // BigQuery
 // ========
 export const bigQueryAnalyticsTable = 'blockframes-demo-5.analytics_197180636.events_';
 
 // Archipel Content OrgId
-// ======================
+// ========
+
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
-export const heavyChunkSize = 15;
+// Import / Export parameters
+// =======
 
+export const backupBucket = 'demo5-backups';
+export const heavyChunkSize = 15;
 export const chunkSize = 30;
