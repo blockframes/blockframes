@@ -32,11 +32,42 @@ function setData(projectId: string, dataDB: Record<string, Object>) {
 }
 
 //TODO: Add test for checking maintenance rules
-describe('Blockframe In Maintenance', () => {
+describe.only('Blockframe In Maintenance', () => {
+  const projectId = `rules-spec-${Date.now()}`;
+  let db: Firestore;
 
+  beforeAll(async () => {
+    testFixture["_META/_MAINTENANCE"].endedAt = null;
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-super-admin'});
+  });
+
+  afterAll(() => { 
+    Promise.all(apps().map(app => app.delete()));
+    testFixture["_META/_MAINTENANCE"].endedAt = true;
+  });
+
+  test("In maintenance, super admin should be able to read MAINTENANCE doc", async () => {
+    const maintRef = db.doc("_META/_MAINTENANCE");
+    await assertSucceeds(maintRef.get());
+  });
+
+  test("In maintenance, even super admin shouldn't be able to read admin user", async () => {
+    const adminRef = db.doc("blockframesAdmin/uid-super-admin");
+    await assertFails(adminRef.get());
+  });
+
+  test("In maintenance, even super admin shouldn't be able to read a org", async () => {
+    const orgRef = db.doc("orgs/O001");
+    await assertFails(orgRef.get());
+  });
+
+  test("In maintenance, even super admin shouldn't be able to read all users", async () => {
+    const usersRef = db.collection("users");
+    await assertFails(usersRef.get());
+  });
 });
 
-describe('Blockframe Super Admin', () => {
+describe.only('Blockframe Super Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
@@ -46,7 +77,17 @@ describe('Blockframe Super Admin', () => {
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
 
-  test("super admin should be able to delete movie", async () => {
+  test("Super admin should be able to read admin user", async () => {
+    const adminRef = db.doc("blockframesAdmin/uid-super-admin");
+    await assertSucceeds(adminRef.get());
+  });
+
+  test("Super admin should be able be able to read a org", async () => {
+    const orgRef = db.doc("orgs/O001");
+    await assertSucceeds(orgRef.get());
+  });
+
+  test("super admin should be able to read all users", async () => {
     const usersRef = db.collection("users");
     await assertSucceeds(usersRef.get());
   });
