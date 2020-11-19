@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Organization, OrganizationQuery } from '../../+state';
 import { Observable } from 'rxjs';
-import { AFM_DISABLE } from '@env';
 import { User } from '@blockframes/auth/+state/auth.store';
 
 @Component({
@@ -14,14 +13,11 @@ import { User } from '@blockframes/auth/+state/auth.store';
 export class OrganizationWidgetComponent implements OnInit {
   public organization$: Observable<Organization>;
   public user$: Observable<User>;
-  public AFM_DISABLE: boolean;
 
   constructor(
     private query: OrganizationQuery,
     private auth: AuthQuery,
-  ) {
-    this.AFM_DISABLE = AFM_DISABLE;
-  }
+  ) { }
 
   ngOnInit() {
     this.user$ = this.auth.user$;

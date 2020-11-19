@@ -26,12 +26,12 @@ export function getCollection<T>(path: string): Promise<T[]> {
 
 /**
  *
- * @param filePath the storage path of the file
+ * @param fullPath the storage path of the file
  */
-export async function getDocAndPath(filePath: string | undefined) {
+export async function getDocAndPath(fullPath: string | undefined) {
   const db = admin.firestore();
 
-  const { collection, docPath, isTmp, privacy, field } = deconstructFilePath(filePath)  
+  const { collection, docPath, isTmp, privacy, field, filePath } = deconstructFilePath(fullPath)  
 
   const doc = db.doc(docPath);
   const snapshot = await doc.get();

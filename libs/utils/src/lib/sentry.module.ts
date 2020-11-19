@@ -2,6 +2,7 @@ import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
@@ -33,6 +34,7 @@ Sentry.init({
 });
 
 @NgModule({
+  imports: [MatSnackBarModule],
   providers: [{ provide: ErrorHandler, useClass: SentryErrorHandler }]
 })
-export class SentryModule {}
+export class SentryModule { }

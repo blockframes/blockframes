@@ -2,12 +2,11 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, Content
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
-import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
+import { AlgoliaIndex, AlgoliaService } from '@blockframes/utils/algolia';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Index } from 'algoliasearch';
 
 const Separators = {
@@ -84,7 +83,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(private algoliaService: AlgoliaService) { }
 
   ngOnInit() {
     this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
@@ -98,12 +97,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     }
 
     let indexSearch: Index;
-    if (this.index === 'user') {
-      indexSearch = searchClient.initIndex(algoliaIndex[this.index] as string);
-    } else {
-      const app = this.routerQuery.getValue().state?.root.data.app;
-      indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
-    }
+
+    indexSearch = this.algoliaService.getIndex(this.index)
 
     // create search functions
     const regularSearch = (text: string) => indexSearch.search({ query: text, facetFilters: this.getFilter() }).then(result => result.hits);

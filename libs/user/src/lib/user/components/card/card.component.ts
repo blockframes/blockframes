@@ -3,11 +3,12 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 // Interface
 import { User } from '@blockframes/auth/+state';
+import { displayName } from '@blockframes/utils/pipes/display-name.pipe';
 
 function createUserView(user: Partial<User>) {
   return {
     avatar: user.avatar,
-    name: `${user.firstName} ${user.lastName}`,
+    name: displayName(user),
     position: user.position || '',
     email: user.email
   }

@@ -96,7 +96,7 @@ export function createOrgFileStructure(orgId: string, orgName: string): Director
         multiple: true,
         docNameField: 'title',
         fileRefField: 'ref',
-        storagePath: `orgs/${orgId}/documents/notes`,
+        storagePath: `orgs/${orgId}/documents.notes`,
         privacy: 'protected',
         path: [0,0]
       },
@@ -199,6 +199,28 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             privacy: 'public',
             path: [index, 1, 3],
           },
+          {
+            name: 'Screener',
+            type: 'file',
+            multiple: false,
+            acceptedFileType: 'video',
+            docNameField: 'ref',
+            fileRefField: 'ref',
+            storagePath: `movies/${titleId}/promotional.videos.screener`,
+            privacy: 'protected',
+            path: [index, 1, 4]
+          },
+          {
+            name: 'Other Videos',
+            type: 'file',
+            acceptedFileType: 'video',
+            multiple: true,
+            docNameField: 'ref',
+            fileRefField: 'ref',
+            storagePath: `movies/${titleId}/promotional.videos.otherVideos`,
+            privacy: 'protected',
+            path: [index, 1, 5]
+          }
         ]
       },
       {
