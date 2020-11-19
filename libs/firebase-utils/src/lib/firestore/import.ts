@@ -3,14 +3,13 @@ import type { Bucket, File as GFile } from '@google-cloud/storage';
 import admin from 'firebase-admin';
 import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import { getLatestFile, runChunks } from '../firebase-utils';
-import { endMaintenance, setImportRunning, startMaintenance, triggerImportError } from '../maintenance';
+import { endMaintenance, startMaintenance } from '../maintenance';
 import { JsonlDbRecord } from '../util';
 import { clear } from './clear';
 
 const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
 
 export async function restoreFromBackupBucket(bucket: Bucket, db: FirebaseFirestore.Firestore, file?: string) {
-  await setImportRunning(true, db);
 
   let restoreFile: GFile;
 
@@ -31,15 +30,12 @@ export async function restoreFromBackupBucket(bucket: Bucket, db: FirebaseFirest
       console.log('Clearing the database');
       await clear(db);
       await importFirestoreFromGFile(restoreFile, db);
-      await setImportRunning(false, db);
     } catch (e) {
-      await triggerImportError(db);
       throw new Error(e);
     } finally {
       await endMaintenance(db);
     }
   } else {
-    await triggerImportError(db);
     throw new Error('Nothing to restore');
   }
 }
