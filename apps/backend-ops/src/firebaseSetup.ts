@@ -8,7 +8,7 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
-import { latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
+import { endMaintenance, latestAnonDbFilename, loadAdminServices, startMaintenance } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
@@ -106,12 +106,13 @@ export async function upgrade() {
     console.log('Skipping upgrade because migration is not required...');
     return;
   }
+  const { db, auth, storage } = loadAdminServices();
+  await startMaintenance(db);
 
   console.info('Preparing the database...');
   await migrate(true);
   console.info('Database ready for deploy!');
 
-  const { db, auth, storage } = loadAdminServices();
   console.info('Cleaning unused db data...');
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
@@ -130,4 +131,5 @@ export async function upgrade() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
+  await endMaintenance(db);
 }

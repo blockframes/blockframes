@@ -5,8 +5,6 @@
 import { backup, restore } from './admin';
 import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from "@blockframes/firebase-utils";
 import { last } from 'lodash';
-import { appUrl } from '@env';
-import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 
 export const VERSION_ZERO = 2;
 
@@ -51,7 +49,6 @@ export async function migrate(withBackup: boolean = true) {
   const { db, storage } = loadAdminServices();
 
   try {
-    await startMaintenance();
 
     const currentVersion = await loadDBVersion(db);
     const migrations = selectAndOrderMigrations(currentVersion);
@@ -91,7 +88,6 @@ export async function migrate(withBackup: boolean = true) {
       await backup();
       console.info('done with the backup post-migration');
     }
-    await endMaintenance();
     console.info('end the migration process...');
   }
 }

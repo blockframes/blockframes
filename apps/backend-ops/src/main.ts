@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { runShellCommand, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, runShellCommand, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
 import { prepareForTesting, restoreShortcut, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
@@ -35,6 +35,10 @@ async function runCommand() {
     return backup();
   } else if (cmd === 'restore') {
     return restoreShortcut();
+  } else if (cmd === 'startMaintenance') {
+    return startMaintenance();
+  } else if (cmd === 'endMaintenance') {
+    return endMaintenance();
   } else if (cmd === 'migrate') {
     return migrate();
   } else if (cmd === 'syncUsers') {

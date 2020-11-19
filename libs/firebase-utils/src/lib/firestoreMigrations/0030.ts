@@ -1,12 +1,10 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-import { startMaintenance, endMaintenance, } from '../maintenance';
 import { OldHostedMedia, createOldHostedMedia } from './old-types';
 
 const EMPTY_REF: OldHostedMedia = createOldHostedMedia();
 
 export async function upgrade(db: Firestore) {
-  await startMaintenance();
 
   console.log('//////////////');
   console.log('// [DB] Processing Users');
@@ -38,7 +36,6 @@ export async function upgrade(db: Firestore) {
 
   console.log('Updated movies.');
 
-  await endMaintenance();
 }
 
 /**
