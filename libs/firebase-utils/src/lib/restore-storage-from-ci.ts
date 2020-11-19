@@ -39,13 +39,12 @@ export async function restoreStorageFromCi(ciApp: admin.app.App) {
 
     console.log('Clearing your storage bucket:', firebase.storageBucket);
 
-    let cmd = `gsutil -m rm -r "gs://${firebase.storageBucket}/*"`;
+    let cmd = `gsutil -m -q rm -r "gs://${firebase.storageBucket}/*"`;
+    console.log('Running command:', cmd);
     catchErrors(() => process.stdout.write(execSync(cmd)));
 
-    console.log(
-      "Copying storage bucket from blockframe-ci to your local project's storage bucket..."
-    );
-    cmd = `gsutil -m cp -r gs://${CI_STORAGE_BACKUP}/${folderName}* gs://${firebase.storageBucket}`;
+    console.log("Copying storage bucket from blockframe-ci to your local project's storage bucket...");
+    cmd = `gsutil -m -q cp -r gs://${CI_STORAGE_BACKUP}/${folderName}* gs://${firebase.storageBucket}`;
     console.log('Running command:', cmd);
     catchErrors(() => process.stdout.write(execSync(cmd)));
   });
