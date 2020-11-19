@@ -20,8 +20,8 @@ export const firebase = {
   databaseURL: 'https://blockframes-demo-2.firebaseio.com',
   projectId: 'blockframes-demo-2',
   storageBucket: 'blockframes-demo-2.appspot.com',
-  messagingSenderId: '185137976939'
-  // @TODO appId: "",
+  messagingSenderId: '185137976939',
+  appId: "1:185137976939:web:4ba213cad937f749b7432e"
   // @TODO measurementId: ""
 };
 
@@ -44,7 +44,7 @@ export const algolia = {
   indexNameUsers: 'demo2_users',
 };
 
-// Support emails 
+// Support emails
 // =======
 
 export const supportEmails = {
@@ -54,7 +54,7 @@ export const supportEmails = {
   financiers: 'dev+demo2_financiers@blockframes.io'
 }
 
-// Yandex 
+// Yandex
 // =======
 
 export const yandexId = 0;
@@ -91,7 +91,7 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry 
+// Sentry
 // =======
 
 export const sentryEnv = 'demo-2';

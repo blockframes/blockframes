@@ -4,7 +4,6 @@ import 'firebase/firestore';
 export interface IMaintenanceDoc {
   endedAt: firebase.firestore.Timestamp
   startedAt: firebase.firestore.Timestamp
-  importRunning?: boolean;
 }
 
 /** Delay before considering the maintenance over */
