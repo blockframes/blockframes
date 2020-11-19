@@ -31,6 +31,11 @@ function setData(projectId: string, dataDB: Record<string, Object>) {
   return Promise.all(promises);
 }
 
+//TODO: Add test for checking maintenance rules
+describe('Blockframe In Maintenance', () => {
+
+});
+
 describe('Blockframe Super Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
