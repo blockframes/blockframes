@@ -12,7 +12,10 @@
     <span *ngIf="user.firstName" matLine>{{ user | displayUser | async }}</span>
     <span *ngIf="!user.firstName" matLine>{{ user.email }}</span>
     <span matLine>
-      <small class="mat-caption">{{ invitation.date | date: 'short' }}</small>
+      <small class="mat-caption">
+        {{ invitation.date | date: 'short' }} 
+        ({{ invitation.mode === 'request' ? 'Buyer request' : 'Sales agent invitation' }})
+      </small>
     </span>
   </mat-list-item>
 </ng-container>

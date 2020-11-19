@@ -59,7 +59,6 @@ export type EventDocument<Meta> = EventBase<Timestamp, Meta>;
 export type MeetingEventDocument = EventDocument<Meeting>;
 export type ScreeningEventDocument = EventDocument<Screening>;
 
-
 export interface EventAnalytics {
   event_name: AnalyticsEvents,
   hits: number,
@@ -68,7 +67,10 @@ export interface EventAnalytics {
   eventId: string,
   email: string,
   firstName: string,
-  lastName: string
+  lastName: string,
+  orgName?: string,
+  orgActivity?: string,
+  orgCountry?: string,
 }
 
 export interface EventsAnalytics {
