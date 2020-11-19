@@ -17,7 +17,8 @@ export class DeleteDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      document: string,
+      entity: string,
+      deletion?: string,
       onConfirm?: () => void
     },
     public dialogRef: MatDialogRef<DeleteDialogComponent>,
@@ -25,13 +26,13 @@ export class DeleteDialogComponent {
   ) {}
 
   public confirm() {
-    if (this.deleteConfirm.value === 'Delete' && this.deleteConfirm.valid) {
+    if (this.deleteConfirm.value !== 'DELETE' || this.deleteConfirm.invalid) {
+      this.snackbar.open(`You can\'t delete this ${this.data.entity}.`, 'close', { duration: 5000});
+      this.dialogRef.close(false);
+    }
+    if (this.deleteConfirm.value === 'DELETE' && this.deleteConfirm.valid) {
       this.data.onConfirm();
       this.dialogRef.close(true);
-    }
-    if (this.deleteConfirm.value !== 'Delete' || this.deleteConfirm.invalid) {
-      this.snackbar.open(`You can\'t delete this ${this.data.document}`, 'close', { duration: 5000});
-      this.dialogRef.close(false);
     }
   }
 

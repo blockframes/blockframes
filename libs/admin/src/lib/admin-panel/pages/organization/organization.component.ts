@@ -191,7 +191,8 @@ export class OrganizationComponent implements OnInit {
   public deleteOrg() {
     this.dialog.open(DeleteDialogComponent, {
       data: {
-        document: 'organization',
+        entity: 'organization',
+        deletion: 'You will also delete everything regarding this organization',
         onConfirm: () => {
           // this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted !', 'close', { duration: 5000});

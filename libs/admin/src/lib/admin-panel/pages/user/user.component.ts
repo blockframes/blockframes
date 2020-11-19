@@ -7,7 +7,7 @@ import { OrganizationService, Organization } from '@blockframes/organization/+st
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
-import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { DeleteDialogComponent } from '../../components/delete-dialog/delete-dialog.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -68,7 +68,7 @@ export class UserComponent implements OnInit {
       // get the users current permissions
       const permissions = await this.permissionService.getValue(this.originalOrgValue);
       const permission = permissions.roles[this.userId];
-      
+
       // remove user from org
       this.organizationService.removeMember(this.userId);
 
@@ -146,11 +146,10 @@ export class UserComponent implements OnInit {
       throw new Error('There must be at least one Super Admin in the organization.');
     }
 
-    this.dialog.open(ConfirmComponent, {
+    this.dialog.open(DeleteDialogComponent, {
       data: {
-        title: 'Are you sure you want to delete this user?',
-        question: 'this action is irreversible',
-        buttonName: 'Yes',
+        entity: 'user',
+        deletion: 'This user will be deleted from this organization',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });

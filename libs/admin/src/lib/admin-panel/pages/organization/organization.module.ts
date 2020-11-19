@@ -29,7 +29,6 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../../components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from '../../components/organization/forms/organization-form/organization-form.module';
 import { FileExplorerModule } from '@blockframes/media/components/file-explorer/file-explorer.module';
-import { DeleteDialogModule } from '../../components/delete-dialog/delete-dialog.module';
 
 @NgModule({
   imports: [
@@ -56,8 +55,7 @@ import { DeleteDialogModule } from '../../components/delete-dialog/delete-dialog
     OrgNameModule,
     GoToModule,
     AdminOrganizationFormModule,
-    FileExplorerModule,
-    DeleteDialogModule
+    FileExplorerModule
   ],
   declarations: [
     OrganizationComponent,
