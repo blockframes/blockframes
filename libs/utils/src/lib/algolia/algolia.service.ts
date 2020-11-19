@@ -3,11 +3,13 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { algolia } from '@env';
 import algoliasearch from 'algoliasearch';
 import { App, getCurrentApp } from "../apps";
-import { algoliaIndex, AlgoliaQueries, AlgoliaObject } from "./algolia.interfaces";
+import { algoliaIndex, AlgoliaObject, AlgoliaQueries } from "./algolia.interfaces";
 import { parseFilters, parseFacets } from './helper.utils';
 
 @Injectable({ providedIn: 'root' })
 export class AlgoliaService {
+
+    private indices = {}
 
     private appName: App;
 
@@ -16,14 +18,18 @@ export class AlgoliaService {
     }
 
     getIndex(name: 'movie' | 'org' | 'user') {
-        if (name === 'user') {
-            return algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name]);
-        } else {
-            return algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.appName]);
+        if (!this.indices[name]) {
+            if (name === 'user') {
+                this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name]);
+            } else {
+                this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.appName]);
+            }
         }
+        return this.indices[name];
+
     }
 
-    query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]) {
+    query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]): Promise<AlgoliaObject[K]> {
         return this.getIndex(name).search({
             query: config.text ?? '',
             hitsPerPage: config.limitResultsTo,

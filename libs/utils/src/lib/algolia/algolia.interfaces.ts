@@ -16,9 +16,9 @@ export interface AlgoliaConfig {
 }
 
 export interface AlgoliaQueries {
-    user: AlgoliaQuery<UserIndexConfig>;
-    movie: AlgoliaQuery<MovieIndexConfig>;
-    org: AlgoliaQuery<OrganizationIndexConfig>;
+    user: AlgoliaQuery<UserIndexConfig, unknown>;
+    movie: AlgoliaQuery<MovieIndexConfig, MovieIndexFilters>;
+    org: AlgoliaQuery<OrganizationIndexConfig, unknown>;
 }
 export interface AlgoliaObject {
     user: AlgoliaUser;
@@ -26,12 +26,12 @@ export interface AlgoliaObject {
     org: AlgoliaOrganization;
 }
 
-export interface AlgoliaQuery<T> {
+export interface AlgoliaQuery<T, C = unknown> {
     text?: string;
     limitResultsTo: number;
     activePage: number;
     facets?: Partial<T>,
-    filters?: MovieIndexFilters
+    filters?: Partial<C>
 }
 
 interface MovieIndexConfig {
