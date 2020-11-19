@@ -1,4 +1,4 @@
-rules_version = '2';
+﻿rules_version = '2';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///                                               DATABASE RULES                                        ///
@@ -317,23 +317,6 @@ service cloud.firestore {
 
     /// FUNCTIONS ///
 
-    function isAllowedToUpdateMovie2() {
-      return isOrgMember(userOrgId())
-        && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['_meta', 'createdBy'])
-        && isNotUpdatingField(['_meta', 'createdAt'])
-        && isNotUpdatingField(['_type'])
-        && ( isNotUpdatingField(['storeConfig','status'])
-          || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'accepted', 'draft'] )
-          || ( existingData().storeConfig.appAccess.catalog == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
-          || ( existingData().storeConfig.appAccess.financiers == true && incomingData().storeConfig.status in ['submitted','accepted', 'draft'] )
-        )
-        && isNotUpdatingField(['storeConfig','storeType'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
-        && orgCan('canUpdate', userOrgId(), existingData().id);
-    }
-
     function isAllowedToUpdateMovie() {
       return isOrgMember(userOrgId())
         && isNotUpdatingId('id', existingData().id)
@@ -501,12 +484,10 @@ service cloud.firestore {
 
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
-      return (getDocumentPermissions(orgId, docId).ownerId == orgId);
-      /*
       return (getDocumentPermissions(orgId, docId).ownerId == orgId)
         || (getDocumentPermissions(orgId, docId).admin == true)
         || (getDocumentPermissions(orgId, docId)[action] == true)
-        || (isOrgAdmin(orgId) && orgId == docId); */
+        || (isOrgAdmin(orgId) && orgId == docId);
     }
 
     // We check that the field is not sent or if field sent is equal to actual
