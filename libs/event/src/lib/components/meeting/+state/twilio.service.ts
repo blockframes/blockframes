@@ -60,12 +60,13 @@ export class TwilioService {
         createLocalVideoTrack().then(track => {
           const currentLocal = this.twilioQuery.localAttendee;
           this.twilioStore.update(currentLocal.id, entity => ({
+            ...entity,
             tracks: {
               video: track,
               audio: entity.tracks.audio,
             }
           }));
-        }).catch(e => {}) // browser denied audio permission : catch error to avoid breaking and do nothing
+        })
       );
     }
 
@@ -74,20 +75,24 @@ export class TwilioService {
         createLocalAudioTrack().then(track => {
           const currentLocal = this.twilioQuery.localAttendee;
           this.twilioStore.update(currentLocal.id, entity => ({
+            ...entity,
             tracks: {
               audio: track,
               video: entity.tracks.video,
             }
           }));
-        }).catch(e => {}) // browser denied video permission : catch error to avoid breaking and do nothing
+        })
       );
     }
 
-    return Promise.all(promises);
+    return (Promise as any).allSettled(promises);
   }
 
   cleanLocal() {
-    const cleanTrack = (track: LocalVideoTrack | LocalAudioTrack) => { track?.stop(); track?.removeAllListeners(); }
+    const cleanTrack = (track: LocalVideoTrack | LocalAudioTrack) => {
+      track?.stop();
+      track?.removeAllListeners();
+    }
 
     const local = this.twilioQuery.localAttendee;
     cleanTrack(local.tracks.video);
@@ -136,26 +141,22 @@ export class TwilioService {
 
         this.twilioStore.upsert(
           participant.sid,
-          entity => {
-            console.log('upserting', track.sid, track.kind);
+          (entity: RemoteAttendee) => {
             const remoteTracks: RemoteTracks = {
               video: null,
               audio: null,
             };
 
             if (Object.keys(entity).length > 0) {
-              remoteTracks.video = track.kind === 'video' ? track : (entity as RemoteAttendee).tracks.video;
-              remoteTracks.audio = track.kind === 'audio' ? track : (entity as RemoteAttendee).tracks.audio;
+              remoteTracks.video = track.kind === 'video' ? track : entity.tracks.video;
+              remoteTracks.audio = track.kind === 'audio' ? track : entity.tracks.audio;
             } else {
-              console.log('empty spaghetti');
               (remoteTracks[track.kind] as RemoteAudioTrack | RemoteVideoTrack) = track;
             }
 
-            console.log('->', remoteTracks);
             return { tracks: remoteTracks };
           },
           (id, entity) => {
-            console.log('ok we got', entity);
             return { id, kind: 'remote', userName: participant.identity, tracks: entity.tracks}
           },
         );
@@ -163,7 +164,6 @@ export class TwilioService {
     );
 
     this.room.on('participantDisconnected', (participant: RemoteParticipant) => {
-      console.log('bye', participant.identity);
       this.twilioStore.remove(participant.sid);
     });
   }

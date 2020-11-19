@@ -8,6 +8,7 @@ import { TwilioService } from '@blockframes/event/components/meeting/+state/twil
 import { AuthQuery } from '@blockframes/auth/+state';
 import { LocalAttendee, TrackKind, } from '@blockframes/event/components/meeting/+state/twilio.model';
 import { TwilioQuery } from '@blockframes/event/components/meeting/+state/twilio.query';
+import { displayName } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'festival-lobby',
@@ -31,7 +32,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.event$ = this.eventQuery.selectActive();
     this.local$ = this.twilioQuery.selectLocal();
-    this.twilioService.initLocal(`${this.authQuery.user.firstName} ${this.authQuery.user.lastName}`);
+    const name = displayName(this.authQuery.user, 'capitalize');
+    this.twilioService.initLocal(name);
   }
 
   ngOnDestroy() {

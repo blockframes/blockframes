@@ -1,0 +1,25 @@
+.video {
+  height: 80%;
+
+  div {
+    height: 100%;
+
+    meeting-video {
+      min-width: 33%;
+    }
+
+    &.row1 meeting-video {
+      height: 100%;
+    }
+    &.row2 meeting-video {
+      height: 50%;
+    }
+    &.row3 meeting-video {
+      height: 33%;
+    }
+  }
+
+}
+.controls {
+  height: 20%;
+}

@@ -1,16 +1,12 @@
 import { LocalAudioTrack, LocalVideoTrack, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
-export interface Tracks {
-  video: LocalVideoTrack | RemoteVideoTrack,
-  audio: LocalAudioTrack | RemoteAudioTrack,
-};
-
-export interface LocalTracks extends Tracks {
+export type Tracks = LocalTracks | RemoteTracks;
+export interface LocalTracks {
   video: LocalVideoTrack,
   audio: LocalAudioTrack,
 };
 
-export interface RemoteTracks extends Tracks {
+export interface RemoteTracks {
   video: RemoteVideoTrack,
   audio: RemoteAudioTrack,
 };
