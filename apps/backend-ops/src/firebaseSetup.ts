@@ -19,6 +19,8 @@ export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
   const { db, auth, storage, getCI } = loadAdminServices();
+  await startMaintenance(db);
+
   console.log('Fetching anonymized DB from blockframes-ci and uploading to local storage bucket...');
   const dbBackupPath = await copyAnonDbFromCi(storage, getCI());
   if (!dbBackupPath) throw Error('Unable to download Firestore backup from blockframes-ci bucket')
@@ -62,6 +64,7 @@ export async function prepareForTesting() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
+  await endMaintenance(db);
 }
 
 export async function prepareDb() {
