@@ -81,51 +81,26 @@ commands:
       - checkout_project
       - prepare_gcloud
       - run: cp $ENV_TS ./env/env.ts
-  deploy_except_firestore:
-    description: 'Run full deployment without deploying Firestore'
+  deploy:
+    description: 'Run full deployment'
     steps:
       - run:
           command: |
             npm run backend-ops displayCredentials &&
             npm run deploy:storage &&
+            npm run deploy:firestore &&
             npx nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions
-  lock_firestore_upgrade:
-    description: Deploy Firestore indexes & lock Firestore before running upgrade if required
-    steps:
-      - run:
-          command: |
-            npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            npm run deploy:firestore &&
-            npm run backend-ops upgrade
-  lock_firestore_prepare:
-    description: Deploy Firestore indexes & lock Firestore before preparing target project for testing
-    steps:
-      - run:
-          command: |
-            npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            npm run deploy:firestore &&
-            npm run backend-ops prepareForTesting
-  unlock_deploy_firestore:
-    description: 'Unlock Firestore'
-    steps:
-      - run:
-          command: |
-            npm run backend-ops restoreFirestoreRulesPostDeploy &&
-            npm run deploy:firestore:rules
-          when: always
   build_deploy_upgrade:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
-      - deploy_except_firestore
-      - lock_firestore_upgrade
-      - unlock_deploy_firestore
+      - deploy
+      - run: npm run backend-ops upgrade
       - slack/status
   build_deploy_prepare:
     description: 'Build & deploy project & prepare by loading test data'
     steps:
-      - deploy_except_firestore
-      - lock_firestore_prepare
-      - unlock_deploy_firestore
+      - deploy
+      - run: npm run backend-ops prepareForTesting
       - slack/status
   test_e2e_all:
     description: 'Run all e2e tests'

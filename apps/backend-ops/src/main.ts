@@ -10,7 +10,6 @@ import { disableMaintenanceMode, displayCredentials, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
-import { prepareFirestoreRulesPreDeploy, restoreFirestoreRulesPostDeploy } from './firestore-rules';
 import { backup } from './admin';
 import { selectEnvironment } from './select-environment';
 
@@ -22,10 +21,6 @@ async function runCommand() {
     return prepareForTesting();
   } else if (cmd === 'displayCredentials') {
     return displayCredentials();
-  } else if (cmd === 'prepareFirestoreRulesPreDeploy') {
-    return prepareFirestoreRulesPreDeploy();
-  } else if (cmd === 'restoreFirestoreRulesPostDeploy') {
-    return restoreFirestoreRulesPostDeploy();
   } else if (cmd === 'use') {
     return selectEnvironment(flags.pop());
   } else if (cmd === 'prepareDb') {

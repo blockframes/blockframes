@@ -171,6 +171,7 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar ?? '',
+      orgId: user.orgId ?? ''
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

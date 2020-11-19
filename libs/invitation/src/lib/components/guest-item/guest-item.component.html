@@ -9,7 +9,7 @@
       </ng-template>
       <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
     </div>
-    <span *ngIf="user.firstName" matLine>{{ user | displayName }}</span>
+    <span *ngIf="user.firstName" matLine>{{ user | displayUser | async }}</span>
     <span *ngIf="!user.firstName" matLine>{{ user.email }}</span>
     <span matLine>
       <small class="mat-caption">{{ invitation.date | date: 'short' }}</small>
