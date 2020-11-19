@@ -22,7 +22,7 @@ export const firebase = {
   storageBucket: 'blockframes-demo-3.appspot.com',
   messagingSenderId: '39302449355',
   appId: '1:39302449355:web:4e9f252e5274664881f34e',
-  // @TODO measurementId: ""
+  measurementId: 'G-XXXXXXXXXX' // @TODO #4214 measurementId: ""
 };
 
 // Algolia
