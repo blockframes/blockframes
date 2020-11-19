@@ -1,4 +1,3 @@
-import { algolia } from '@env';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { legalRoles, subLicensorRoles } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';

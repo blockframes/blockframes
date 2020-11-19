@@ -13,19 +13,16 @@ import {
   ElementRef,
   OnDestroy
 } from '@angular/core';
-
 import { Index } from 'algoliasearch';
 
 // Blockframes
-import { algoliaIndex, AlgoliaIndex, searchClient } from '@blockframes/utils/algolia';
+import { AlgoliaIndex, AlgoliaService} from '@blockframes/utils/algolia';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-
 
 @Component({
   selector: '[index] [keyToDisplay] algolia-autocomplete',
@@ -107,19 +104,15 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(private algoliaService: AlgoliaService) { }
 
   ngOnInit() {
     // In case of facet search we know the result object will store the matched facets in the `value` field
     if (!!this.facet.trim()) {
       this.keyToDisplay = 'value';
     }
-    if (this.index === 'user') {
-      this.indexSearch = searchClient.initIndex(algoliaIndex[this.index] as string);
-    } else {
-      const app = this.routerQuery.getValue().state?.root.data.app;
-      this.indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
-    }
+
+    this.indexSearch = this.algoliaService.getIndex(this.index)
 
     // create search functions
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
