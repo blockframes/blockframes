@@ -8,15 +8,22 @@ import {
     ProductionStatus
 } from '../static-model';
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
-import { Module } from '../apps';
-
-/* TODO MF, REMOVE WHEN TRANSITION IS DONE */
-import algoliasearch from 'algoliasearch'
-export const searchClient = algoliasearch(algolia.appId, algolia.searchKey)
+import { Module, ModuleAccess } from '../apps';
 
 export interface AlgoliaConfig {
     searchableAttributes: string[];
     attributesForFaceting: string[];
+}
+
+export interface AlgoliaQueries {
+    user: AlgoliaQuery<UserIndexConfig>;
+    movie: AlgoliaQuery<MovieIndexConfig>;
+    org: AlgoliaQuery<OrganizationIndexConfig>;
+}
+export interface AlgoliaObject {
+    user: AlgoliaUser;
+    movie: AlgoliaMovie;
+    org: AlgoliaOrganization;
 }
 
 export interface AlgoliaQuery<T> {
@@ -27,7 +34,7 @@ export interface AlgoliaQuery<T> {
     filters?: MovieIndexFilters
 }
 
-export interface MovieIndexConfig {
+interface MovieIndexConfig {
     genres: Genre,
     languages: Partial<Record<keyof MovieLanguageSpecification, Language>>,
     originCountries: Territory,
@@ -36,6 +43,19 @@ export interface MovieIndexConfig {
     storeType: StoreType,
 }
 
+interface OrganizationIndexConfig {
+    appModule: ModuleAccess,
+    name: string,
+    country: Territory,
+    isAccepted: boolean
+    hasAcceptedMovies: boolean;
+}
+
+interface UserIndexConfig {
+    email: string;
+    firstName: string;
+    lastName: string;
+}
 export interface MovieIndexFilters {
     budget?: number,
     minPledge?: number
