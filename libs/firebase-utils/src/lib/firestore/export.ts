@@ -1,10 +1,10 @@
 import { backupBucket } from '@env';
-import { Bucket } from "@google-cloud/storage";
-import admin from "firebase-admin";
 import { Writable } from "stream";
 import { Queue } from '../queue';
-import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
-import { JsonlDbRecord } from '../util';
+import { JsonlDbRecord, loadAdminServices } from '../util';
+import type { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
+import type { Bucket } from "@google-cloud/storage";
+import type { storage } from 'firebase-admin';
 
 export async function getBackupOutput(bucket: Bucket, name: string): Promise<Writable> {
   const blob = bucket.file(`${name}.jsonl`);
@@ -12,15 +12,12 @@ export async function getBackupOutput(bucket: Bucket, name: string): Promise<Wri
 }
 
 
-export async function getBackupBucket(): Promise<Bucket> {
-  // July 2020: There are conflicts between firebase-admin type & google-cloud/storage. We need to use "as any"
-  const bucket: Bucket = admin.storage().bucket(backupBucket) as any;
+export async function getBackupBucket(gcs?: storage.Storage): Promise<Bucket> {
+  const bucket: Bucket = (gcs || loadAdminServices().storage).bucket(backupBucket);
   const exists = await bucket.exists();
 
   // The api returns an array.
-  if (!exists[0]) {
-    await bucket.create();
-  }
+  if (!exists[0]) await bucket.create();
 
   return bucket;
 }

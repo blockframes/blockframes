@@ -1,11 +1,11 @@
-import { db, functions } from '../internals/firebase'
+import { db, functions, storage } from '../internals/firebase'
 import { exportFirestoreToBucket, getBackupBucket } from '@blockframes/firebase-utils';
-import { Bucket } from '@google-cloud/storage';
 import { enableDailyFirestoreBackup } from '../environments/environment'
 import { heavyConfig } from '../main';
+import type { Bucket } from '@google-cloud/storage';
 
 async function dailyBackupHandler() {
-  const bucket: Bucket = await getBackupBucket();
+  const bucket: Bucket = await getBackupBucket(storage);
   if (enableDailyFirestoreBackup) return exportFirestoreToBucket(db, bucket);
 
   const msg = 'Daily backup skipped due to non-production environment';
