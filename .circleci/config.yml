@@ -250,6 +250,7 @@ jobs:
     executor: blockframes-ci
     environment:
        PROJECT_ID: blockframes-demo-2
+       NG_CONFIG: ''
        ENV_TS: './env/env.blockframes-demo-2.ts'
     steps:
       - slack/notify:
@@ -260,6 +261,7 @@ jobs:
     executor: blockframes-ci
     environment:
        PROJECT_ID: blockframes-demo-3
+       NG_CONFIG: ''
        ENV_TS: './env/env.blockframes-demo-3.ts'
     steps:
       - slack/notify:

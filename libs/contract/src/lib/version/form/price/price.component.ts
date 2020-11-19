@@ -1,5 +1,4 @@
 // Blockframes
-import { algolia } from '@env';
 import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/contract-tunnel.component';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { Movie } from '@blockframes/movie/+state/movie.model';

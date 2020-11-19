@@ -199,6 +199,28 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             privacy: 'public',
             path: [index, 1, 3],
           },
+          {
+            name: 'Screener',
+            type: 'file',
+            multiple: false,
+            acceptedFileType: 'video',
+            docNameField: 'ref',
+            fileRefField: 'ref',
+            storagePath: `movies/${titleId}/promotional.videos.screener`,
+            privacy: 'protected',
+            path: [index, 1, 4]
+          },
+          {
+            name: 'Other Videos',
+            type: 'file',
+            acceptedFileType: 'video',
+            multiple: true,
+            docNameField: 'ref',
+            fileRefField: 'ref',
+            storagePath: `movies/${titleId}/promotional.videos.otherVideos`,
+            privacy: 'protected',
+            path: [index, 1, 5]
+          }
         ]
       },
       {

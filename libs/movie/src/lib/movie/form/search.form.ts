@@ -6,7 +6,7 @@ import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
+import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 
 export interface LanguagesSearch {
   original: Language[];
@@ -23,7 +23,7 @@ export interface MovieSearch extends AlgoliaSearch {
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;
-  sellers: AlgoliaRecordOrganization[];
+  sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
 }
 
@@ -71,7 +71,7 @@ function createMovieSearchControl(search: MovieSearch) {
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
-    sellers: FormList.factory<AlgoliaRecordOrganization>(search.sellers),
+    sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
   };
 }

@@ -166,6 +166,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
           form: mediaForm,
           privacy: this.activeDirectory.privacy,
           storagePath: this.activeDirectory.storagePath,
+          acceptedFileType: this.activeDirectory.acceptedFileType
         },
       });
     } else if (this.activeDirectory.type === 'image') {
@@ -174,7 +175,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
         data: {
           form: mediaForm,
           ratio: this.activeDirectory.ratio,
-          storagePath: this.activeDirectory.storagePath,
+          storagePath: this.activeDirectory.storagePath
         },
       });
     }
