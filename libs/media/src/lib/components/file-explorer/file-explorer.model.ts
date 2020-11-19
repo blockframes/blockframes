@@ -96,7 +96,7 @@ export function createOrgFileStructure(orgId: string, orgName: string): Director
         multiple: true,
         docNameField: 'title',
         fileRefField: 'ref',
-        storagePath: `orgs/${orgId}/documents/notes`,
+        storagePath: `orgs/${orgId}/documents.notes`,
         privacy: 'protected',
         path: [0,0]
       },

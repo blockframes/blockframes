@@ -1,17 +1,16 @@
 import algoliasearch, { IndexSettings } from 'algoliasearch';
-import { algolia as algoliaClient, dev } from '@env';
+import { algolia as algoliaClient } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
-import { mockConfigIfNeeded } from './firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
 export const algolia = {
   ...algoliaClient,
-  adminKey: dev ? mockConfigIfNeeded('algolia', 'api_key') : functions.config().algolia?.api_key
+  adminKey: functions.config().algolia?.api_key
 };
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
@@ -172,6 +171,7 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar ?? '',
+      orgId: user.orgId ?? ''
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

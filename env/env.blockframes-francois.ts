@@ -8,21 +8,21 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://catalog-blockframes-bruce.web.app',
-  market: 'https://festival-blockframes-bruce.web.app',
-  crm: 'https://crm-blockframes-bruce.web.app',
-  financiers: 'https://financiers-blockframes-bruce.web.app',
+  content: 'https://blockframes-francois.web.app',
+  market: 'https://blockframes-francois-festival.web.app',
+  financiers: 'https://blockframes-francois-financier.web.app',
+  crm: 'https://blockframes-francois-crm.web.app',
 };
 
 export const firebase = {
-  apiKey: "AIzaSyDty3fra5v06b8R15JjDarwd-y9vP4DQIs",
-  authDomain: "blockframes-bruce.firebaseapp.com",
-  databaseURL: "https://blockframes-bruce.firebaseio.com",
-  projectId: "blockframes-bruce",
-  storageBucket: "blockframes-bruce.appspot.com",
-  messagingSenderId: "308574859435",
-  appId: "1:308574859435:web:6be97448e5508f5ab387ee",
-  measurementId: "G-XXXXXXXXXX"
+  apiKey: "AIzaSyD1qjU9feHzxAFg96L4VouE9_nt9nFGg0s",
+  authDomain: "blockframes-francois.firebaseapp.com",
+  databaseURL: "https://blockframes-francois.firebaseio.com",
+  projectId: "blockframes-francois",
+  storageBucket: "blockframes-francois.appspot.com",
+  messagingSenderId: "309694417970",
+  appId: "1:309694417970:web:3e81f3430c9e0a5c",
+  measurementId: "G-FJK6DBB02R"
 };
 
 // Algolia
@@ -32,26 +32,26 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'bruce_festival_org',
-    financiers: 'bruce_financiers_org',
-    catalog: 'bruce_catalog_org'
+    festival: 'francois_festival_org',
+    financiers: 'francois_financiers_org',
+    catalog: 'francois_catalog_org'
   },
   indexNameMovies: {
-    festival: 'bruce_festival_movies',
-    financiers: 'bruce_financiers_movies',
-    catalog: 'bruce_catalog_movies',
+    festival: 'francois_festival_movies',
+    financiers: 'francois_financiers_movies',
+    catalog: 'francois_catalog_movies',
   },
-  indexNameUsers: 'bruce_users',
+  indexNameUsers: 'francois_users'
 };
 
 // Support emails 
 // =======
 
 export const supportEmails = {
-  default: 'bdelorme@cascade8.com',
-  catalog: 'bdelorme+catalog@cascade8.com',
-  festival: 'bdelorme+festival@cascade8.com',
-  financiers: 'bdelorme+financiers@cascade8.com'
+  default: 'fguezengar@cascade8.com',
+  catalog: 'fguezengar+catalog@cascade8.com',
+  festival: 'fguezengar+festival@cascade8.com',
+  financiers: 'fguezengar+financiers@cascade8.com'
 }
 
 // Yandex 
@@ -67,7 +67,7 @@ export const intercomId = '';
 // Ethereum
 // ========
 
-export const network = 'ropsten';
+export const network = 'goerli';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
@@ -124,7 +124,7 @@ export const quorum = {
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
+export const bigQueryAnalyticsTable = 'blockframes-francois.analytics_229093027.events_';
 
 // Archipel Content OrgId
 // ========
@@ -134,6 +134,6 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'bruce-backups';
+export const backupBucket = 'francois-backups';
 export const heavyChunkSize = 7;
 export const chunkSize = 15;

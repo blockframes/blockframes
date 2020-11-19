@@ -87,11 +87,6 @@ interface MovieRaw<D> {
   synopsis: string, //! required
   title: Title, //! required
   orgIds: string[]
-
-
-  // New Data
-  // financialCurrency: string,
-  // returnInvestment: MovieReturnInvestment
 }
 
 /** Document model of a Movie */
