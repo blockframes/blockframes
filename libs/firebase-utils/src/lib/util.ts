@@ -115,7 +115,7 @@ export function loadAdminServices(): AdminServices {
   };
 }
 
-export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
   try {
