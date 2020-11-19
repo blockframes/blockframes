@@ -18,5 +18,5 @@ export async function restore(file?: string) {
  */
 export async function backup() {
   const { db } = loadAdminServices();
-  exportFirestoreToBucket(db, await getBackupBucket());
+  await exportFirestoreToBucket(db, await getBackupBucket());
 }
