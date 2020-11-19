@@ -76,13 +76,13 @@ export const titleTunnelRoutes: Routes = [
         data: { animation: 7 },
       },
       {
-        path: 'available-materials',
-        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
+        path: 'technical-spec',
+        loadChildren: () => import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule),
         data: { animation: 8 },
       },
       {
-        path: 'technical-spec',
-        loadChildren: () => import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule),
+        path: 'available-materials',
+        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
         data: { animation: 9 },
       },
       {
