@@ -51,12 +51,9 @@ export async function selectEnvironment(projectId: string) {
   await getSAK(projectId);
   await runShellCommand(`firebase use ${projectId}`);
   await runShellCommand(`gcloud config set pass_credentials_to_gsutil true`);
-  await runShellCommand(
-    `gcloud auth activate-service-account --key-file=${process.env.GOOGLE_APPLICATION_CREDENTIALS}`
-  );
-
+  await runShellCommand(`gcloud auth activate-service-account --key-file=${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
   await runShellCommand(`gcloud config set project ${projectId}`);
-  console.log('Firebase project selected...');
+  console.log('Firebase project selected for firebase, gcloud & gsutil...');
   const localEnvFile = resolve(process.cwd(), 'env', 'env.ts');
   const targetEnvFile = resolve(process.cwd(), 'env', `env.${projectId}.ts`);
   copyFileSync(targetEnvFile, localEnvFile);

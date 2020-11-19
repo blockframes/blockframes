@@ -5,8 +5,6 @@ import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
-import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
-import { getCollectionRef, getDocument } from './firebase-utils'
 import { resolve } from 'path';
 
 /**

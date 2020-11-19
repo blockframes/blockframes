@@ -9,14 +9,14 @@ import { exportFirestoreToBucket, getBackupBucket, loadAdminServices, restoreFro
  * Trigger a firestore database restore operation for the given project
  */
 export async function restore(file?: string) {
-  const { db } = loadAdminServices();
-  await restoreFromBackupBucket(await getBackupBucket(), db, file);
+  const { db, storage } = loadAdminServices();
+  return restoreFromBackupBucket(await getBackupBucket(storage), db, file);
 }
 
 /**
  * Trigger a firestore database backup operation for the given project
  */
 export async function backup() {
-  const { db } = loadAdminServices();
-  exportFirestoreToBucket(db, await getBackupBucket());
+  const { db, storage } = loadAdminServices();
+  return exportFirestoreToBucket(db, await getBackupBucket(storage));
 }
