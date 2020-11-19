@@ -92,8 +92,10 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       }
       delete this.formItem;
       this.cdr.markForCheck();
+      
+      // TODO issue #4293
+      if (this.autoAdd) this.add();
     }
-    if (this.autoAdd) this.add()
   }
 
   edit(index: number) {
@@ -110,7 +112,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       delete this.activeValue;
     }
     delete this.formItem;
-    if (this.autoAdd) this.add()
   }
 
   remove(index: number) {
