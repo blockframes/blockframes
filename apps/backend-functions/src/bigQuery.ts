@@ -159,7 +159,7 @@ const createEventAnalytics = (result: any, user: PublicUser | undefined, org: Or
     email: user?.email,
     firstName: user?.firstName,
     lastName: user?.lastName,
-    orgName: org ? orgName(org) : '',
+    orgName: orgName(org),
     orgActivity: org?.activity,
     orgCountry: org?.addresses?.main.country,
   }
@@ -201,11 +201,7 @@ export const requestEventAnalytics = async (
     // Clean rows without users of the same org
     rows = rows.filter(row => userIdsNotInOrg.includes(row.userId));
 
-    const orgsPromises = eventsUsersNotInOrg.map(u => {
-      if (u.orgId) {
-        return getDocument<OrganizationDocument>(`orgs/${u.orgId}`);
-      }
-    });
+    const orgsPromises = eventsUsersNotInOrg.filter(u => !!u.orgId).map(u => getDocument<OrganizationDocument>(`orgs/${u.orgId}`));
     const eventsOrgs = await Promise.all(orgsPromises);
 
     return eventIds.map(eventId => {
