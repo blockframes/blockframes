@@ -31,13 +31,13 @@ function setData(projectId: string, dataDB: Record<string, Object>) {
   return Promise.all(promises);
 }
 
-describe('Blockframe In Maintenance', () => {
+describe.only('Blockframe In Maintenance', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
     testFixture["_META/_MAINTENANCE"].endedAt = null;
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-super-admin'});
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-bfAdmin'});
   });
 
   afterAll(() => { 
@@ -45,13 +45,13 @@ describe('Blockframe In Maintenance', () => {
     testFixture["_META/_MAINTENANCE"].endedAt = true;
   });
 
-  test("In maintenance, super admin should be able to read MAINTENANCE doc", async () => {
+  test("Everyone (incl. bf admin) should be able to read MAINTENANCE doc", async () => {
     const maintRef = db.doc("_META/_MAINTENANCE");
     await assertSucceeds(maintRef.get());
   });
 
   test("In maintenance, even super admin shouldn't be able to read admin user", async () => {
-    const adminRef = db.doc("blockframesAdmin/uid-super-admin");
+    const adminRef = db.doc("blockframesAdmin/uid-sAdmin");
     await assertFails(adminRef.get());
   });
 
@@ -66,33 +66,34 @@ describe('Blockframe In Maintenance', () => {
   });
 });
 
-describe('Blockframe Super Admin', () => {
+describe('Blockframe Not In Maintenance', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-super-admin'});
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-bfAdmin'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
 
-  test("Super admin should be able to read admin user", async () => {
-    const adminRef = db.doc("blockframesAdmin/uid-super-admin");
+  test("Blockframe admin should be able to read admin user", async () => {
+    const adminRef = db.doc("blockframesAdmin/uid-sAdmin");
     await assertSucceeds(adminRef.get());
   });
 
-  test("Super admin should be able be able to read a org", async () => {
+  test("Blockframe admin should be able be able to read a org", async () => {
     const orgRef = db.doc("orgs/O001");
     await assertSucceeds(orgRef.get());
   });
 
-  test("super admin should be able to read all users", async () => {
+  test("Blockframe admin should be able to read all users", async () => {
     const usersRef = db.collection("users");
     await assertSucceeds(usersRef.get());
   });
 
 });
 
+/*
 describe('Blockframe Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
@@ -109,6 +110,7 @@ describe('Blockframe Admin', () => {
   });
 
 });
+*/
 
 describe('General User', () => {
   const projectId = `rules-spec-${Date.now()}`;
@@ -304,8 +306,6 @@ describe('Movies Rules Tests', () => {
       await assertSucceeds(movieDoc)
     });
 
-    https://stackoverflow.com/questions/56800074/jest-each-name-access-object-key
-
     const details = {
       id: 'MI-0xx',
       _meta: {
@@ -314,13 +314,6 @@ describe('Movies Rules Tests', () => {
       },
       
     }
-
-    /*
-    const fields = [
-      ["id", 'MI-0xx'],
-      ["_meta", {createdBy: 'xxx'}],
-    ];
-    */
     test.each(Object.entries(details))("user valid org, updating restricted '%s' field shouldn't be able to update movie", async (key, value) => {
       const movieRef = db.doc(`movies/${existMovieTitle}`);
       const details = {};

@@ -1,4 +1,5 @@
-﻿export const testFixture = {
+﻿
+export const testFixture = {
   //META : maintenance, etc
   "_META/_MAINTENANCE": {
     "endedAt": true
@@ -9,7 +10,7 @@
     "roles": {
       "uid-admin": 'admin',
       "uid-user2": 'member',
-      "uid-super-admin": 'superAdmin'
+      "uid-sAdmin": 'superAdmin'
     }
   },
 
@@ -39,11 +40,15 @@
   },
 
   //Users Collection
-  "users/uid-super-admin" : {
+  "users/uid-bfAdmin" : {
+    email: 'bfadmin@cascade8.com',
+    uid: 'uid-bfAdmin'
+  },
+  "users/uid-sAdmin" : {
     email: 'admin@cascade8.com',
-    uid: 'uid-super-admin',
+    uid: 'uid-sAdmin',
     orgId: 'O001'
-  },  
+  },
   "users/uid-admin" : {
     email: 'admin@cascade8.com',
     uid: 'uid-admin',
@@ -64,7 +69,7 @@
   },
 
   //Blockframes Admin
-  "blockframesAdmin/uid-c8" : {
+  "blockframesAdmin/uid-bfAdmin" : {
   },
 
   //Movies

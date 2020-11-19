@@ -332,7 +332,7 @@ service cloud.firestore {
         && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
         && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
-    }    
+    }
 
     ////////////////////////////////
     // CONTRACTS RULES            //
