@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+// Materials
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // Components
 import { OrganizationComponent } from './organization.component';
@@ -27,6 +29,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../../components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from '../../components/organization/forms/organization-form/organization-form.module';
 import { FileExplorerModule } from '@blockframes/media/components/file-explorer/file-explorer.module';
+import { DeleteDialogModule } from '../../components/delete-dialog/delete-dialog.module';
 
 @NgModule({
   imports: [
@@ -40,6 +43,7 @@ import { FileExplorerModule } from '@blockframes/media/components/file-explorer/
     MatFormFieldModule,
     MatIconModule,
     MatCheckboxModule,
+    MatDialogModule,
     FlexLayoutModule,
     OrganizationDisplayModule,
     TableFilterModule,
@@ -53,6 +57,7 @@ import { FileExplorerModule } from '@blockframes/media/components/file-explorer/
     GoToModule,
     AdminOrganizationFormModule,
     FileExplorerModule,
+    DeleteDialogModule
   ],
   declarations: [
     OrganizationComponent,

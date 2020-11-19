@@ -1,0 +1,14 @@
+<section fxLayout="column">
+  <p>You are currently deleting this {{ data.document }} from Archipel, are you sure ?</p>
+  <span>If yes, please write 'Delete' inside the form above.</span>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Confirm delete</mat-label>
+    <input matInput type="text" [formControl]="deleteConfirm">
+  </mat-form-field>
+
+  <article fxLayout="row" fxLayoutAlign="space-evenly">
+    <button mat-stroked-button (click)="close()">Cancel</button>
+    <button mat-flat-button color="warn" (click)="confirm()">Delete</button>
+  </article>
+</section>
