@@ -3,6 +3,9 @@
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
 import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
+import { Movie } from '@blockframes/movie/+state'
+import { MovieAppAccess } from '@blockframes/utils/apps';
+import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
 
 type ExtractPromise<T> = T extends Promise<(infer I)> ? I : never;
 type PromiseFirestore = ReturnType<typeof initFirestoreApp>;
@@ -194,6 +197,11 @@ describe('Movies Rules Tests', () => {
     const newMovieTitle = 'MI-007';
     const existMovieTitle = 'MI-077';
     const newMovieDetails = {id: `${newMovieTitle}`};
+    const storeConfig = {
+      status: <StoreStatus>"draft",
+      storeType: <StoreType>"Library",
+      appAccess: <MovieAppAccess>{"festival": true }
+    }
 
     beforeAll(async () => {
       db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
@@ -213,43 +221,65 @@ describe('Movies Rules Tests', () => {
 
     test("user valid org, storestatus other than draft should not be able to create movie", async () => {
       const movieRef = db.doc(`movies/${newMovieTitle}`);
-      let createdMovie:any = { ...newMovieDetails, storeConfig: {}};
-      createdMovie.storeConfig['status'] = 'released';
+      const createdMovie:Partial<Movie> = {
+        id: newMovieTitle, 
+        storeConfig
+      };      
+      createdMovie.storeConfig['status'] = 'accepted';
       await assertFails(movieRef.set(createdMovie));
     });
 
     test("user valid org, without create permission for org should not be able to create movie", async () => {
       const newMovieTitleUnavailable = 'MI-000';
       const movieRef = db.doc(`movies/${newMovieTitleUnavailable}`);
-      let createdMovie:any = { ...newMovieDetails, storeConfig: {}};
-      createdMovie.storeConfig['status'] = 'draft';
+      const createdMovie:Partial<Movie> = {
+        id: newMovieTitleUnavailable, 
+        storeConfig
+      };
       await assertFails(movieRef.set(createdMovie));
     });
 
     test("user valid org, with create permission for org, invalid id should not be able to create movie", async () => {
+      const newMovieTitleUnavailable = 'MI-000';      
       const movieRef = db.doc(`movies/${newMovieTitle}`);
-      const movieDetails = {id: 'MI-000', storeConfig: {}}
-      let createdMovie:any = { ...newMovieDetails, ...movieDetails };
-      createdMovie.storeConfig['status'] = 'draft';
+      const createdMovie:Partial<Movie> = {
+        id: newMovieTitleUnavailable, 
+        storeConfig
+      };      
       await assertFails(movieRef.set(createdMovie));
     });
 
     test("user valid org, with create permission for org should be able to create movie", async () => {
-      const movieDetailsOther = {storeConfig: {status: 'draft'}}
       const newTitle =  {id: `${newMovieTitle}`};
-      let createdMovie:any = {  ...newTitle, ...movieDetailsOther};
+      const createdMovie:Partial<Movie> = {
+        id: newMovieTitle, 
+        //storeConfig
+      };
       const movieDoc = db.collection('movies').doc(newMovieTitle).set(createdMovie);
       await assertSucceeds(movieDoc)
     });
 
+    https://stackoverflow.com/questions/56800074/jest-each-name-access-object-key
+
+    const details = {
+      id: 'MI-0xx',
+      _meta: {
+        createdBy: '',
+        createdAt: ''
+      },
+      
+    }
+
+    /*
     const fields = [
       ["id", 'MI-0xx'],
-
+      ["_meta", {createdBy: 'xxx'}],
     ];
-    test.each(fields)("user valid org, updating restricted '%s' field shouldn't be able to update movie", async (fieldInput, value) => {
+    */
+    test.each(Object.entries(details))("user valid org, updating restricted '%s' field shouldn't be able to update movie", async (key, value) => {
       const movieRef = db.doc(`movies/${existMovieTitle}`);
       const details = {};
-      details[fieldInput] = value;
+      details[key] = value;
       await assertFails(movieRef.update(details));
     });
 
