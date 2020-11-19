@@ -45,7 +45,6 @@
     "format": "nx format:write",
     "format:write": "nx format:write",
     "format:check": "nx format:check",
-    "migrate:deploy-secrets": "ts-node -P tools/tsconfig.tools.json tools/scripts/migrate-bash-secrets.ts",
     "env:detect-service-account": "ts-node -P tools/tsconfig.tools.json tools/scripts/check-google-application-credentials.ts",
     "update": "nx update @nrwl/workspace",
     "update:check": "nx update",
