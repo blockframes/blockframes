@@ -4,7 +4,10 @@ import { EventAnalytics } from '@blockframes/event/+state/event.firestore';
 
 const columns = {
   name: 'Name',
-  email: 'Email Address'
+  email: 'Email Address',
+  orgName: 'Company Name',
+  orgActivity: 'Company Activity',
+  orgCountry: 'Country',
 };
 
 @Component({
@@ -15,7 +18,7 @@ const columns = {
 })
 export class EventAnalyticsComponent implements OnInit {
 
-  analytics : EventAnalytics[];
+  analytics: EventAnalytics[];
 
   @Input() eventId: string;
 

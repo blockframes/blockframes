@@ -6,6 +6,7 @@ import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
 import { omit } from 'lodash';
 import { db } from './internals/firebase';
+import { orgName } from "@blockframes/organization/+state/organization.firestore";
 
 const queryMovieAnalytics = `
   SELECT
@@ -142,18 +143,25 @@ const findByUserId = (users: PublicUser[], userId: string) => {
   return users.find(user => user.uid === userId);
 };
 
+const findByOrgId = (orgs: OrganizationDocument[], orgId: string) => {
+  return orgs.find(org => !!org && org.id === orgId);
+};
+
 /** Merge the movieIdPage field from bigquery with the movieId field when relevant. */
 const mergeMovieIdPageInMovieId = (rows: any[]) => {
   // Remove the movieIdPage because it's a detail of implementation of the query to BigQuery.
   return rows.map(row => omit({ ...row, movieId: row.movieIdPage || row.movieId }, 'movieIdPage'));
 };
 
-const createEventAnalytics = (result: any, user: PublicUser | undefined): EventAnalytics => {
+const createEventAnalytics = (result: any, user: PublicUser | undefined, org: OrganizationDocument | undefined): EventAnalytics => {
   return {
     ...result,
     email: user?.email,
     firstName: user?.firstName,
-    lastName: user?.lastName
+    lastName: user?.lastName,
+    orgName: orgName(org),
+    orgActivity: org?.activity,
+    orgCountry: org?.addresses?.main.country,
   }
 };
 
@@ -188,16 +196,20 @@ export const requestEventAnalytics = async (
       return getDocument<PublicUser>(`users/${row.userId}`);
     });
     const eventsUsers = await Promise.all(eventsUsersPromises);
-    const eventsUsersNotInOrg = eventsUsers.filter(u => !org.userIds.includes(u.uid));
+    const eventsUsersNotInOrg = eventsUsers.filter(u => !!u && !org.userIds.includes(u.uid));
     const userIdsNotInOrg = eventsUsersNotInOrg.map(u => u.uid);
     // Clean rows without users of the same org
     rows = rows.filter(row => userIdsNotInOrg.includes(row.userId));
+
+    const orgsPromises = eventsUsersNotInOrg.filter(u => !!u.orgId).map(u => getDocument<OrganizationDocument>(`orgs/${u.orgId}`));
+    const eventsOrgs = await Promise.all(orgsPromises);
 
     return eventIds.map(eventId => {
       const rowsEvents = rows.filter(row => row.eventId === eventId);
       const resultRows = rowsEvents.map(result => {
         const eventUser = findByUserId(eventsUsersNotInOrg, result.userId);
-        return createEventAnalytics(result, eventUser);
+        const eventOrg = findByOrgId(eventsOrgs, eventUser.orgId);
+        return createEventAnalytics(result, eventUser, eventOrg);
       });
       return {
         eventId,

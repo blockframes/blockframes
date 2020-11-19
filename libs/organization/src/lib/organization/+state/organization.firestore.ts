@@ -117,7 +117,11 @@ export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
 }
 
 export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'public') {
-  return org.denomination[type] || org.denomination.full;
+  if (!!org) {
+    return org.denomination[type] || org.denomination.full;
+  } else {
+    return '';
+  }
 }
 
 /**
