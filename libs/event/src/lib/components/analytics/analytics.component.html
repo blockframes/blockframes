@@ -19,6 +19,8 @@
             [columns]="columns"
             [source]="analytics">
             <ng-template colRef="name" let-name>{{ name | titlecase }}</ng-template>
+            <ng-template colRef="orgActivity" let-orgActivity>{{ orgActivity | toLabel: 'orgActivity' }}</ng-template>
+            <ng-template colRef="orgCountry" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}</ng-template>
           </bf-table-filter>
         </mat-card>
       </section>
