@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostBinding } fr
 
 // Blockframes
 import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { Organization } from '@blockframes/organization/+state';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 // RxJs
@@ -11,8 +11,8 @@ import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // env
-import { centralOrgID } from '@env';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { parseFilters } from '@blockframes/utils/algolia';
 
 interface CarouselSection {
   title: string;
@@ -41,11 +41,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private organizationService: OrganizationService,
-    private dynTitle: DynamicTitleService,
+    private dynTitle: DynamicTitleService
   ) { }
 
   ngOnInit() {
+    parseFilters({ runningTime: { budget: 2 } } as any)
     this.dynTitle.setPageTitle('Home');
     this.sub = this.movieService.syncCollection().subscribe();
     const selectMovies = (status: Movie['productionStatus']) => {
@@ -86,16 +86,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     ];
 
     /* TODO 3498 */
-/*     this.orgs$ = this.organizationService
-      .valueChanges(ref => ref
-        .where('appAccess.festival.dashboard', '==', true)
-        .where('status', '==', 'accepted'))
-      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
-
-    this.featuredOrg$ = this.orgs$.pipe(
-      map(orgs => orgs.filter(org => org.movieIds.length > 3)),
-      map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
-    ); */
+    /*     this.orgs$ = this.organizationService
+          .valueChanges(ref => ref
+            .where('appAccess.festival.dashboard', '==', true)
+            .where('status', '==', 'accepted'))
+          .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
+    
+        this.featuredOrg$ = this.orgs$.pipe(
+          map(orgs => orgs.filter(org => org.movieIds.length > 3)),
+          map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
+        ); */
 
   }
 
