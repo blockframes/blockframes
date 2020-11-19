@@ -2,26 +2,34 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person } from '../common-interfaces';
 
+export function titleCase(text: string) {
+  if (!text) return '';
+  return text[0].toUpperCase() + text.substring(1);
+}
+
+export function displayName(person: Person) {
+  return `${titleCase(person.firstName)} ${titleCase(person.lastName)}`;
+}
+
+/**
+ * This pipe display the firstname and lastname of the person;
+ * For an user, if you want to display organization name of the user also, use the displayUser pipe
+ */
 @Pipe({
   name: 'displayName'
 })
 export class DisplayNamePipe implements PipeTransform {
   transform(value: Person | Person[]): string {
-    const capitalize = (str: string) => str?.toUpperCase();
     if (Array.isArray(value)) {
       return value.map(person => {
         if (person?.firstName) {
-          const firstName = capitalize(person.firstName);
-          const lastName = capitalize(person.lastName);
-          return `${firstName} ${lastName}`;
+          return displayName(person);
         } else {
           return value;
         }
       }).join(', ');
     } else {
-      const firstName = capitalize(value.firstName);
-      const lastName = capitalize(value.lastName);
-      return `${firstName} ${lastName}`;
+      return displayName(value);
     }
   }
 }

@@ -8,21 +8,21 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://catalog-blockframes-bruce.web.app',
-  market: 'https://festival-blockframes-bruce.web.app',
-  crm: 'https://crm-blockframes-bruce.web.app',
-  financiers: 'https://financiers-blockframes-bruce.web.app',
+  content: 'https://blockframes-mano.web.app',
+  market: 'http://blockframes-mano-festival.web.app',
+  financiers: 'http://blockframes-mano-financiers.web.app',
+  crm: 'https://blockframes-mano-crm.web.app',
 };
 
 export const firebase = {
-  apiKey: "AIzaSyDty3fra5v06b8R15JjDarwd-y9vP4DQIs",
-  authDomain: "blockframes-bruce.firebaseapp.com",
-  databaseURL: "https://blockframes-bruce.firebaseio.com",
-  projectId: "blockframes-bruce",
-  storageBucket: "blockframes-bruce.appspot.com",
-  messagingSenderId: "308574859435",
-  appId: "1:308574859435:web:6be97448e5508f5ab387ee",
-  measurementId: "G-XXXXXXXXXX"
+  apiKey: "AIzaSyDAD0rQPfLCQcp-sX5MIwHJsRISnMKnDgU",
+  authDomain: "blockframes-mano.firebaseapp.com",
+  databaseURL: "https://blockframes-mano.firebaseio.com",
+  projectId: "blockframes-mano",
+  storageBucket: "blockframes-mano.appspot.com",
+  messagingSenderId: "260537474845",
+  appId: "1:260537474845:web:5328ccbb9a6fd91baf4bf4",
+  measurementId: "G-GDGR4R6KDY"
 };
 
 // Algolia
@@ -32,32 +32,32 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'bruce_festival_org',
-    financiers: 'bruce_financiers_org',
-    catalog: 'bruce_catalog_org'
+    festival: 'mano_festival_org',
+    financiers: 'mano_financiers_org',
+    catalog: 'mano_catalog_org'
   },
   indexNameMovies: {
-    festival: 'bruce_festival_movies',
-    financiers: 'bruce_financiers_movies',
-    catalog: 'bruce_catalog_movies',
+    festival: 'mano_festival_movies',
+    financiers: 'mano_financiers_movies',
+    catalog: 'mano_catalog_movies',
   },
-  indexNameUsers: 'bruce_users',
+  indexNameUsers: 'mano_users',
 };
 
 // Support emails 
 // =======
 
 export const supportEmails = {
-  default: 'bdelorme@cascade8.com',
-  catalog: 'bdelorme+catalog@cascade8.com',
-  festival: 'bdelorme+festival@cascade8.com',
-  financiers: 'bdelorme+financiers@cascade8.com'
+  default: 'mbangera@cascade8.com',
+  catalog: 'mbangera+catalog@cascade8.com',
+  festival: 'mbangera+festival@cascade8.com',
+  financiers: 'mbangera+financiers@cascade8.com'
 }
 
 // Yandex 
 // =======
 
-export const yandexId = 1234;
+export const yandexId = 0;
 
 // Intercom
 // ========
@@ -67,7 +67,7 @@ export const intercomId = '';
 // Ethereum
 // ========
 
-export const network = 'ropsten';
+export const network = 'goerli';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
@@ -95,7 +95,7 @@ export const omdbApiKey = '4d1be897';
 // =======
 
 export const sentryEnv = undefined;
-export const sentryDsn = undefined;
+export const sentryDsn = '';
 
 // Quorum
 // ========
@@ -134,6 +134,6 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'bruce-backups';
-export const heavyChunkSize = 7;
+export const backupBucket = 'mano-backups';
+export const heavyChunkSize = 2;
 export const chunkSize = 15;

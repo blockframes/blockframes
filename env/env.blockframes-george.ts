@@ -1,20 +1,8 @@
 export const production = false;
-export const dev = false;
-export const hmr = false; // hot-reloading: use true for local dev
-
-// TODO issue#1146 AFM CODE
-// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
-export const AFM_DISABLE = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true
 };
-
-// Analytics
-// =========
-
-export const sentryEnv = '';
-export const sentryDsn = '';
 
 // Firebase
 // ========
@@ -24,15 +12,6 @@ export const appUrl = {
   market: 'https://blockframes-george-festival.web.app',
   financiers: 'https://blockframes-george-financiers.web.app',
   crm: 'https://blockframes-george-crm.web.app',
-}
-
-//Local firebase emulator UI
-export const emulatorConfig = {
-  functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: {
-    host: 'localhost:8080',
-    ssl: false
-  }
 };
 
 export const firebase = {
@@ -52,30 +31,45 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
+  indexNameOrganizations: {
+    festival: 'george_festival_org',
+    financiers: 'george_financiers_org',
+    catalog: 'george_catalog_org'
+  },
   indexNameMovies: {
     festival: 'george_festival_movies',
     financiers: 'george_financiers_movies',
     catalog: 'george_catalog_movies',
   },
   indexNameUsers: 'george_users',
-  indexNameOrganizations: {
-    festival: 'george_festival_org',
-    financiers: 'george_financiers_org',
-    catalog: 'george_catalog_org'
-  },
 };
+
+// Support emails 
+// =======
+
+export const supportEmails = {
+  default: 'ggrigorian@cascade8.com',
+  catalog: 'ggrigorian+catalog@cascade8.com',
+  festival: 'ggrigorian+festival@cascade8.com',
+  financiers: 'ggrigorian+financiers@cascade8.com'
+}
+
+// Yandex 
+// =======
+
+export const yandexId = 0;
+
+// Intercom
+// ========
+
+export const intercomId = '';
 
 // Ethereum
 // ========
 
 export const network = 'goerli';
-export const mnemonic = '';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
-
-// OMDB
-// =======
-export const omdbApiKey = '4d1be897';
 
 // TODO(issue#847): change the address
 export const contracts = {
@@ -92,21 +86,20 @@ export const relayer = {
   factoryContract
 };
 
-// Functions
-// =========
+// OMDB
+// =======
 
-export const backupBucket = 'blockframes-george-backup';
-export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
+export const omdbApiKey = '4d1be897';
 
-// Yandex Metrika Id
-export const yandexId = 0;
+// Sentry 
+// =======
 
-// Intercom
-// ========
-export const intercomId = '';
+export const sentryEnv = undefined;
+export const sentryDsn = undefined;
 
 // Quorum
 // ========
+
 export const quorum = {
   archipelNode: {
     url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
@@ -130,12 +123,16 @@ export const quorum = {
 
 // BigQuery
 // ========
+
 export const bigQueryAnalyticsTable = 'blockframes-george.analytics_235781207.events_';
 
 // Archipel Content OrgId
-// ======================
+// ========
+
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+// Import / Export parameters
+// =======
 
+export const backupBucket = 'blockframes-george-backup';
 export const heavyChunkSize = 10;
-
 export const chunkSize = 25;

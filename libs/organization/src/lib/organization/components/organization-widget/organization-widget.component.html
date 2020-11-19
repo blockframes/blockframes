@@ -1,4 +1,4 @@
-<ng-container *ngIf="!AFM_DISABLE else AFM_DISABLED"> <!-- TODO #1146 -->
+<ng-container>
   <a mat-menu-item *ngIf="(organization$ | async) as organization;"
     [routerLink]="['o/organization/', organization.id]" routerLinkActive="active-list-item"
     test-id="manage-organization">
@@ -12,14 +12,6 @@
     <span>Organization members</span>
   </a>
 </ng-container>
-<ng-template #AFM_DISABLED>
-  <a mat-menu-item *ngIf="(organization$ | async) as organization; else: noOrg"
-    [routerLink]="['o/organization/', organization.id]" routerLinkActive="active-list-item"
-    test-id="manage-organization">
-    <mat-icon svgIcon="building"></mat-icon>
-    <span>Manage my organization</span>
-  </a>
-</ng-template>
 
 <ng-template #noOrg>
   <a mat-menu-item routerLink="o/organization/form">

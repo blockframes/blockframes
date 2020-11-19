@@ -1,0 +1,131 @@
+@mixin setTheme($theme) {
+
+  $primary: map-get($theme, 'primary');
+  $accent: map-get($theme, 'accent');
+  $warn: map-get($theme, 'warn');
+  $background: map-get($theme, 'background');
+  $foreground: map-get($theme, 'foreground');
+
+  ////////////////
+  // BACKGROUND //
+  ////////////////
+  $mat-background: (
+    app-bar: map-get($background, 700),
+    status-bar: map-get($background, 700),
+    background: map-get($background, 500),
+    disabled-button: map-get($background, 100),
+    hover: rgba(map-get($background, 500), 0.05),
+    card: map-get($background, 700),
+    dialog: map-get($background, 700),
+    raised-button: map-get($background, 700),
+    focused-button: map-get($background, 400),
+    selected-button: map-get($background, 400),
+    selected-disabled-button: map-get($background, 100),
+    disabled-button-toggle: map-get($background, 100),
+    unselected-chip: map-get($background, 400),
+    disabled-list-option: map-get($background, 400),
+    tooltip: rgba(map-get($background, 10), 0.9),
+  );
+
+
+  ////////////////
+  // FOREGROUND //
+  ////////////////
+  $mat-foreground: (
+    base: map-get($foreground, 500),
+    divider: map-get($foreground, 700),
+    dividers: map-get($foreground, 700),
+    disabled: map-get($foreground, 400),
+    disabled-text: map-get($foreground, 200),
+    disabled-button: map-get($foreground, 200),
+    elevation: rgba(map-get($background, 700), 0.12),
+    hint-text: map-get($foreground, 400),
+    secondary-text: map-get($foreground, 700),
+    icon: map-get($foreground, 700),
+    icons: map-get($foreground, 700),
+    slider-min: rgba(map-get($foreground, 900), 0.87),
+    slider-off: rgba(map-get($foreground, 900), 0.26),
+    slider-off-active: rgba(map-get($foreground, 900), 0.38),
+    text: map-get($foreground, 500),
+  );
+
+  //////////
+  // FONT //
+  //////////
+  $font: (
+    display-4: map-get($foreground, 300),
+    display-3: map-get($foreground, 900),
+    display-2: map-get($foreground, 500),
+    display-1: map-get($foreground, 400),
+    h1: map-get($foreground, 900),
+    h2: map-get($foreground, 700),
+    h3: map-get($foreground, 500),
+    h4: map-get($foreground, 300),
+    h5: map-get($foreground, 300),
+    h6: map-get($foreground, 400),
+    mat-body-1: map-get($foreground, 500),
+    mat-body-2: map-get($foreground, 700),
+    mat-caption: map-get($foreground, 500)
+  );
+
+
+  ///////////
+  // THEME //
+  ///////////
+  $mat-theme: (
+    // Standard
+    primary: mat-palette($primary, 500, 50, 700),
+    accent: mat-palette($accent, 500, 50, 700),
+    warn: mat-palette($warn, 500, 50, 700),
+    is-dark: map-get($theme, 'is-dark'),
+    foreground: $mat-foreground,
+    background: $mat-background,
+    // font key is not standard angular theme, we've created font palette for each typography config except button & input
+    font: $font
+  );
+
+
+  @include mat-bf-button-theme($theme);
+  @include mat-bf-card-theme($theme);
+  @include mat-bf-chips-theme($theme);
+  @include mat-bf-expansion-panel-theme($theme);
+  @include mat-bf-form-field-theme($theme);
+  @include mat-bf-list-theme($theme);
+  @include mat-bf-table-theme($theme);
+  @include mat-bf-toolbar-theme($theme);
+  @include mat-bf-button-toggle-theme($theme);
+  @include mat-bf-sidenav-theme($theme);
+  @include mat-bf-icon-theme($theme);
+  @include mat-bf-snack-bar-theme($theme);
+  @include mat-bf-dialog-theme($theme);
+  @include mat-bf-slider-theme($theme);
+  @include mat-bf-datepicker-theme($theme);
+  @include surface-theme($theme);
+  @include scroll-theme($theme);
+  @include bf-widget-theme($theme);
+  @include bf-color-font($theme);
+  @include bf-table-theme($theme);
+  @include bf-missing-control-theme($theme);
+  @include bf-tunnel-theme($theme);
+  @include apex-chart-theme($theme);
+
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  // Add css variables here when you need one
+  --primary: #{mat-color($primary, 500)};
+  --accent: #{mat-color($accent, 500)};
+  --warn: #{mat-color($warn, 500)};
+  --active: #5f6e8680;
+  // Background
+  --background-disabled-button: #{mat-color($background, disabled-button)};
+  --background-slider: #{mat-color($foreground, slider-min)};
+  --background-hover: #{mat-color($background, hover)};
+  --background-card: #{mat-color($background, card)};
+  --background: #{mat-color($background, background, 0.5)};
+  // Foreground
+  --foreground-divider: #{mat-color($foreground, divider)};
+  --foreground-text: #{mat-color($foreground, text)};
+}

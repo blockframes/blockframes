@@ -9,6 +9,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+
     ////////////////////////////////
     // Blockframes Administrators //
     ////////////////////////////////
@@ -18,11 +19,11 @@ service cloud.firestore {
     // blockframes admins can access ALL the db.
     // this overwrides every other rules.
     match /{document=**} {
-      allow read, write: if isBlockframesAdmin(userId());
+      allow read, write: if isBlockframesAdmin(userId()) && notInMaintenance();
     }
 
     match /blockframesAdmin/{userId} {
-      allow read: if ( userId() == userId || (isSignedIn() && isOrgMember(orgIdOf(userId))) );
+      allow read: if ( userId() == userId || (isSignedIn() && isOrgMember(orgIdOf(userId))) ) && notInMaintenance();
       allow write: if false;
     }
 
@@ -63,11 +64,11 @@ service cloud.firestore {
 
     match /users/{userId} {
       // TODO (#1359): We can read user data from the same organization as us until we got public users collection.
-    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(orgIdOf(userId())));
-    	allow update: if isOnlyUpdatingAllowedUserFields();
+    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(orgIdOf(userId()))) && notInMaintenance();
+    	allow update: if isOnlyUpdatingAllowedUserFields() && notInMaintenance();
     	allow create: if userId() == incomingData().uid
-        && isRequestFieldValueEqualTo(['uid'], userId);
-      allow delete: if userId() == existingData().uid;
+        && isRequestFieldValueEqualTo(['uid'], userId) && notInMaintenance();
+      allow delete: if userId() == existingData().uid && notInMaintenance();
     }
 
     // TODO (#1359): publicUser rules goes here.
@@ -90,8 +91,10 @@ service cloud.firestore {
     /// RULES ///
 
     match /notifications/{notificationId} {
-    	allow read: if userId() == existingData().toUserId;
-    	allow update: if isOnlyMarkingNofitifcationAsRead();
+    	allow read: if userId() == existingData().toUserId
+      && notInMaintenance();
+    	allow update: if isOnlyMarkingNofitifcationAsRead()
+      && notInMaintenance();
     	allow create, delete: if false;
     }
 
@@ -118,7 +121,8 @@ service cloud.firestore {
     /// RULES ///
 
     match /invitations/{invitationId} {
-    	allow read: if isAllowedToReadInvitation();
+    	allow read: if isAllowedToReadInvitation()
+        && notInMaintenance();
       allow create: if isInvitationCreator()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && ( incomingData().mode == 'request' || (
@@ -126,9 +130,12 @@ service cloud.firestore {
             || orgCan('isAdmin', userOrgId(), incomingData().docId) // user org is admin of docId
           )
         )
-        && isRequestFieldValueEqualToOrNotSetted(['id'], invitationId);
-    	allow update: if isOnlyChangingInvitationStatus();
-      allow delete: if isInvitationSender();
+        && isRequestFieldValueEqualToOrNotSetted(['id'], invitationId)
+        && notInMaintenance();
+    	allow update: if isOnlyChangingInvitationStatus()
+      && notInMaintenance();
+      allow delete: if isInvitationSender()
+        && notInMaintenance();
     }
 
     /// FUNCTIONS ///
@@ -193,18 +200,22 @@ service cloud.firestore {
 
     match /orgs/{orgId} {
       // @TODO #2650 #2692 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
-      allow read: if isSignedIn();
+      allow read: if isSignedIn()
+        && notInMaintenance();
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
-        && isRequestFieldValueEqualToOrNotSetted(['id'], orgId);
-      allow update: if isAdminAllowedToUpdateOrg() || isMemberAllowedToUpdateOrg();
-      allow delete: if isSuperAdmin(existingData().id);
+        && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
+        && notInMaintenance();
+      allow update: if (isAdminAllowedToUpdateOrg() || isMemberAllowedToUpdateOrg())
+        && notInMaintenance();
+      allow delete: if isSuperAdmin(existingData().id)
+        && notInMaintenance();
 
       match /carts/{cartId} {
-        allow read: if isOrgMember(orgId);
-        allow create: if isOrgMember(orgId);
-        allow update: if isOrgMember(orgId);
-        allow delete: if isOrgAdmin(userOrgId());
+        allow read: if isOrgMember(orgId) && notInMaintenance();
+        allow create: if isOrgMember(orgId) && notInMaintenance();
+        allow update: if isOrgMember(orgId) && notInMaintenance();
+        allow delete: if isOrgAdmin(userOrgId()) && notInMaintenance();
       }
 
 
@@ -242,19 +253,23 @@ service cloud.firestore {
     /// RULES ///
 
     match /permissions/{orgId} {
-    	allow read: if isOrgMember(existingData().id);
+    	allow read: if isOrgMember(existingData().id) && notInMaintenance();
       allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
-        && isCreatingOrganization(orgId);
+        && isCreatingOrganization(orgId)
+        && notInMaintenance();
 			allow update: if isOrgAdmin(existingData().id)
-      	&& isNotUpdatingId('id', existingData().id);
+      	&& isNotUpdatingId('id', existingData().id)
+        && notInMaintenance();
 
       match /documentPermissions/{docId} {
-        allow read: if isOrgMember(orgId);
+        allow read: if isOrgMember(orgId) && notInMaintenance();
         allow create: if isOrgMember(orgId)
           && isRequestFieldValueEqualToOrNotSetted(['id'], docId)
-          && isBrandNewDocument(docId);
+          && isBrandNewDocument(docId)
+          && notInMaintenance();
         allow update: if isOrgAdmin(orgId)
-          && isNotUpdatingId('id', existingData().id);
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance();
       }
     }
 
@@ -273,25 +288,30 @@ service cloud.firestore {
 
     match /movies/{movieId} {
     	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
-      allow read: if userHasValidOrg();
+      allow read: if userHasValidOrg() && notInMaintenance();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
       	&& isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
-        && canCreateNewPermissions(userOrgId(), movieId);
-      allow update: if isAllowedToUpdateMovie();
+        && canCreateNewPermissions(userOrgId(), movieId)
+        && notInMaintenance();
+      allow update: if isAllowedToUpdateMovie() && notInMaintenance();
       allow delete: if orgCan('canDelete', userOrgId(), existingData().id)
-      	&& isOrgAdmin(userOrgId());
+      	&& isOrgAdmin(userOrgId())
+        && notInMaintenance();
 
       match /distributionRights/{rightId} {
         // @TODO (#2606 #2049) We allow all distributionRights reads as we need it to search avails
-        allow read: if userHasValidOrg();
+        allow read: if userHasValidOrg() && notInMaintenance();
         allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
           && isRequestFieldValueEqualTo(['status'], 'draft')
+          && notInMaintenance();
         allow update: if isNotUpdatingId('id', existingData().id)
           && (isNotUpdatingField(['status']) || incomingData().status in ['draft', 'cart', 'undernegotiation'])
-          && isNotUpdatingField(['contractId']);
+          && isNotUpdatingField(['contractId'])
+          && notInMaintenance();
         allow delete: if orgCan('canDelete', userOrgId(), movieId)
-          && isOrgAdmin(userOrgId());
+          && isOrgAdmin(userOrgId())
+          && notInMaintenance();
       }
     }
 
@@ -338,24 +358,26 @@ service cloud.firestore {
     /// RULES ///
 
     match /contracts/{contractId} {
-    	allow read: if isParty() || orgCan('canRead', userOrgId(), existingData().id);
+    	allow read: if isParty() || orgCan('canRead', userOrgId(), existingData().id) && notInMaintenance();
       allow create: if canCreateNewPermissions(userOrgId(), contractId)
         && isRequestFieldValueEqualTo(['lastVersion', 'status'], 'draft')
-        && isRequestFieldValueEqualToOrNotSetted(['id'], contractId);
+        && isRequestFieldValueEqualToOrNotSetted(['id'], contractId)
+        && notInMaintenance();
       allow update: if orgCan('canUpdate', userOrgId(), existingData().id)
         && isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['type'])
-        && (isNotUpdatingField(['lastVersion', 'status']) || incomingData().lastVersion.status in ['submitted', 'draft', 'aborted']);
-      allow delete: if orgCan('canDelete', userOrgId(), existingData().id);
+        && (isNotUpdatingField(['lastVersion', 'status']) || incomingData().lastVersion.status in ['submitted', 'draft', 'aborted'])
+        && notInMaintenance();
+      allow delete: if orgCan('canDelete', userOrgId(), existingData().id) && notInMaintenance();
 
       match /versions/{versionId} {
-        allow read: if isContractParty(contractId) || orgCan('canRead', userOrgId(), contractId);
+        allow read: if (isContractParty(contractId) || orgCan('canRead', userOrgId(), contractId)) && notInMaintenance();
         allow write: if false;
       }
     }
 
     match /publicContracts/{publicContractId} {
-      allow read: if userHasValidOrg();
+      allow read: if userHasValidOrg() && notInMaintenance();
       allow write: if false;
     }
 
@@ -365,18 +387,20 @@ service cloud.firestore {
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow read: if userHasValidOrg();
+    	allow read: if userHasValidOrg() && notInMaintenance();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
-        && ( isRequestFieldValueEqualTo(['ownerId'], userId()) || isRequestFieldValueEqualTo(['ownerId'], userOrgId()) );
+        && ( isRequestFieldValueEqualTo(['ownerId'], userId()) || isRequestFieldValueEqualTo(['ownerId'], userOrgId()) )
+        && notInMaintenance();
       allow update: if userHasValidOrg()
         && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerId == userId() || existingData().ownerId == userOrgId() );
+        && ( existingData().ownerId == userId() || existingData().ownerId == userOrgId() )
+        && notInMaintenance();
       allow delete: if userHasValidOrg()
-        && (
-          existingData().ownerId == userId() // Current user is event owner
+        && ( existingData().ownerId == userId() // Current user is event owner
           || ( existingData().ownerId == userOrgId() && isOrgMember(userOrgId()) ) // Or Org of current user is the event owner and current user is isOrgMember
-        );
+        )
+        && notInMaintenance();
 		}
 
     ////////////////////////////////
@@ -385,8 +409,8 @@ service cloud.firestore {
 
     // note: campaign is using the movieId as id
     match /campaigns/{movieId} {
-      allow read: if isSignedIn();
-      allow write: if isOrgMember(incomingData().orgId) && orgCan('update', incomingData().orgId, movieId);
+      allow read: if isSignedIn() && notInMaintenance();
+      allow write: if isOrgMember(incomingData().orgId) && orgCan('update', incomingData().orgId, movieId) && notInMaintenance();
     }
 
 
@@ -521,6 +545,10 @@ service cloud.firestore {
       return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
         || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
         || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
+    }
+
+    function notInMaintenance() {
+      return get(/databases/$(database)/documents/_META/_MAINTENANCE).data['endedAt'] != null;
     }
 
   }

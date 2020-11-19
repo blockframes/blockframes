@@ -1,20 +1,8 @@
 ﻿export const production = true;
-export const dev = false;
-export const hmr = false;
-
-// TODO issue#1146 AFM CODE
-// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
-export const AFM_DISABLE = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true
 };
-
-// Analytics
-// =========
-
-export const sentryEnv = 'production';
-export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
 
 // Firebase
 // ========
@@ -24,15 +12,6 @@ export const appUrl = {
   market: 'https://archipelmarket.com',
   financiers: 'https://mediafinanciers.com',
   crm: 'https://crm.blockframes.io',
-}
-
-//Local firebase emulator UI
-export const emulatorConfig = {
-  functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: { 
-    host: 'localhost:8080', 
-    ssl: false 
-  }
 };
 
 export const firebase = {
@@ -65,17 +44,32 @@ export const algolia = {
   indexNameUsers: 'prod_users',
 };
 
+// Support emails 
+// =======
+
+export const supportEmails = {
+  default: 'team@cascade8.com',
+  catalog: 'support@archipelcontent.com',
+  festival: 'support@archipelmarket.com',
+  financiers: 'support@mediafinanciers.com'
+}
+
+// Yandex 
+// =======
+
+export const yandexId = 56105038;
+
+// Intercom
+// ========
+
+export const intercomId = 'srwfltp4';
+
 // Ethereum
 // ========
 
 export const network = 'goerli';
-export const mnemonic = ''; // defined in functions.config, see backend-functions/environments
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
-
-// OMDB
-// =======
-export const omdbApiKey = '4d1be897';
 
 // TODO(issue#847): change the address
 export const contracts = {
@@ -92,22 +86,20 @@ export const relayer = {
   factoryContract
 };
 
-// Functions
-// =========
+// OMDB
+// =======
 
-export const backupBucket = 'blockframes-backups';
-export const sendgridAPIKey = ''; // defined in functions.config, see backend-functions/environments
+export const omdbApiKey = '4d1be897';
 
+// Sentry 
+// =======
 
-// Yandex Metrika Id
-export const yandexId = 56105038;
-
-// Intercom
-// ========
-export const intercomId = 'srwfltp4';
+export const sentryEnv = 'production';
+export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
 
 // Quorum
 // ========
+
 export const quorum = {
   archipelNode: {
     url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
@@ -131,12 +123,17 @@ export const quorum = {
 
 // BigQuery
 // ========
+
 export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
 
 // Archipel Content OrgId
-// ======================
+// ========
+
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
-export const heavyChunkSize = 7;
+// Import / Export parameters
+// =======
 
+export const backupBucket = 'blockframes-backups';
+export const heavyChunkSize = 7;
 export const chunkSize = 15;

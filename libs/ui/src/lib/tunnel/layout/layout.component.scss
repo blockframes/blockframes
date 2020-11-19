@@ -12,12 +12,12 @@ tunnel-layout {
   mat-sidenav-container {
     flex: 1;
   }
-  
+
   mat-sidenav section {
     height: 100%;
     width: 100%;
     margin: 0;
-  
+
     mat-accordion {
       width: 100%;
       mat-expansion-panel {
@@ -28,17 +28,16 @@ tunnel-layout {
       }
     }
   }
-  
+
   mat-sidenav-content {
     padding: 40px 48px;
 
     main {
       height: auto;
-      min-height: 100%;
     }
 
     .footnote {
       margin-top: 50px;
-    }    
+    }
   }
 }

@@ -32,9 +32,12 @@ export class ItemRefDirective { }
 })
 export class FormListComponent<T> implements OnInit, OnDestroy {
 
+  layout = { top: 'column', bottom: 'column-reverse', left: 'row', right: 'row-reverse' };
+
   @Input() form: FormList<T>;
   @Input() buttonText = 'Add';
   @Input() saveButtonText = 'Save'
+  @Input() listPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -98,7 +101,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   remove(index: number) {
-    this.form.removeAt(this.activeIndex);
+    this.form.removeAt(index);
     if (this.activeIndex > index) {
       this.activeIndex--;
     }

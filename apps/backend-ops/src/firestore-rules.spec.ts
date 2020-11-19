@@ -1,4 +1,4 @@
-﻿import { apps, assertFails, assertSucceeds, initializeTestApp, 
+﻿import { apps, assertFails, assertSucceeds, initializeTestApp,
         loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
@@ -258,7 +258,6 @@ describe('Movies Rules Tests', () => {
       const movieDetailsOther = {notes: 'update in unit-test'}
       await assertSucceeds(movieRef.update(movieDetailsOther));
     });
-
   });
 
   describe('User with admin role', () => {

@@ -1,52 +1,54 @@
-<!---------->
-<!-- LIST -->
-<!---------->
+<section [fxLayout]="layout[listPosition]">
+  <!---------->
+  <!-- LIST -->
+  <!---------->
 
-<ng-container *ngIf="list$ | async as list">
-  <ng-container *ngIf="list.length">
-    <mat-list class="surface">
-      <mat-list-item *ngFor="let item of list; let index = index">
-        <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item }" matLine>
-        </ng-template>
-        <button mat-icon-button (click)="edit(index)">
-          <mat-icon svgIcon="pencil"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="remove(index)">
-          <mat-icon svgIcon="trash"></mat-icon>
-        </button>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-list>
+  <ng-container *ngIf="list$ | async as list">
+    <ng-container *ngIf="list.length">
+      <mat-list class="surface">
+        <mat-list-item *ngFor="let item of list; let index = index">
+          <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item }" matLine>
+          </ng-template>
+          <button mat-icon-button (click)="edit(index)">
+            <mat-icon svgIcon="pencil"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="remove(index)">
+            <mat-icon svgIcon="trash"></mat-icon>
+          </button>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
   </ng-container>
-</ng-container>
 
-<!-- Fallback if no template is provided for a column -->
-<ng-template #text let-content>
-  <p matLine>{{ content | json }}</p>
-</ng-template>
-​
-<!---------->
-<!-- VIEW -->
-<!---------->
-
-​<div *ngIf="formItem">
-  <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
+  <!-- Fallback if no template is provided for a column -->
+  <ng-template #text let-content>
+    <p matLine>{{ content | json }}</p>
   </ng-template>
-  <div fxLayout="row" fxLayoutAlign="space-between start">
-    <button test-id="row-cancel" mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
-      <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
-    </button>
-    <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
-      <mat-icon svgIcon="floppy"></mat-icon>
-      <span>{{ saveButtonText }}</span>
-    </button>
-  </div>
-</div>
+  ​
+  <!---------->
+  <!-- VIEW -->
+  <!---------->
 
-<footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
-  <mat-divider></mat-divider>
-  <span class="mat-caption text-primary">{{ buttonText }}</span>
-  <button test-id="list-save" mat-mini-fab color="primary" (click)="add()" [disabled]="formItem?.invalid && !formItem?.dirty">
-    <mat-icon svgIcon="add"></mat-icon>
-  </button>
-</footer>
+  ​<div *ngIf="formItem">
+    <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
+    </ng-template>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <button test-id="row-cancel" mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
+        <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
+      </button>
+      <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+        <mat-icon svgIcon="floppy"></mat-icon>
+        <span>{{ saveButtonText }}</span>
+      </button>
+    </div>
+  </div>
+
+  <footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
+    <mat-divider></mat-divider>
+    <span class="mat-caption text-primary">{{ buttonText }}</span>
+    <button test-id="list-save" mat-mini-fab color="primary" (click)="add()" [disabled]="formItem?.invalid && !formItem?.dirty">
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
+  </footer>
+</section>

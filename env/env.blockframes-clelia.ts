@@ -8,66 +8,64 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://catalog-blockframes-bruce.web.app',
-  market: 'https://festival-blockframes-bruce.web.app',
-  crm: 'https://crm-blockframes-bruce.web.app',
-  financiers: 'https://financiers-blockframes-bruce.web.app',
+  content: 'https://catalog-blockframes-clelia.web.app',
+  market: 'https://festival-blockframes-clelia.web.app',
+  crm: 'https://crm-blockframes-clelia.web.app',
+  financiers: 'https://financiers-blockframes-clelia.web.app',
 };
-
 export const firebase = {
-  apiKey: "AIzaSyDty3fra5v06b8R15JjDarwd-y9vP4DQIs",
-  authDomain: "blockframes-bruce.firebaseapp.com",
-  databaseURL: "https://blockframes-bruce.firebaseio.com",
-  projectId: "blockframes-bruce",
-  storageBucket: "blockframes-bruce.appspot.com",
-  messagingSenderId: "308574859435",
-  appId: "1:308574859435:web:6be97448e5508f5ab387ee",
-  measurementId: "G-XXXXXXXXXX"
+  apiKey: "AIzaSyCkHd1eCnt-XRwZzbEViePI0IVQpphl0i4",
+  authDomain: "blockframes-clelia.firebaseapp.com",
+  databaseURL: "https://blockframes-clelia.firebaseio.com",
+  projectId: "blockframes-clelia",
+  storageBucket: "blockframes-clelia.appspot.com",
+  messagingSenderId: "174404760121",
+  appId: "1:174404760121:web:e168a77a6d709a98",
+  measurementId: "G-M53WGKF7H3"
 };
 
 // Algolia
 // =======
-
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'bruce_festival_org',
-    financiers: 'bruce_financiers_org',
-    catalog: 'bruce_catalog_org'
+    catalog: 'clelia_catalog_orgs',
+    festival: 'clelia_festival_orgs',
+    financiers: 'clelia_financiers_orgs',
   },
   indexNameMovies: {
-    festival: 'bruce_festival_movies',
-    financiers: 'bruce_financiers_movies',
-    catalog: 'bruce_catalog_movies',
+    catalog: 'clelia_catalog_movies',
+    festival: 'clelia_festival_movies',
+    financiers: 'clelia_financiers_movies',
   },
-  indexNameUsers: 'bruce_users',
+  indexNameUsers: 'clelia_users',
 };
 
-// Support emails 
+// Support emails
 // =======
 
 export const supportEmails = {
-  default: 'bdelorme@cascade8.com',
-  catalog: 'bdelorme+catalog@cascade8.com',
-  festival: 'bdelorme+festival@cascade8.com',
-  financiers: 'bdelorme+financiers@cascade8.com'
+  default: 'cmandonnet@cascade8.com',
+  catalog: 'cmandonnet+catalog@cascade8.com',
+  festival: 'cmandonnet+festival@cascade8.com',
+  financiers: 'cmandonnet+financiers@cascade8.com'
 }
 
-// Yandex 
+// Yandex
 // =======
 
-export const yandexId = 1234;
+export const yandexId = 0;
 
 // Intercom
 // ========
 
-export const intercomId = '';
+export const intercomId = 'srwfltp4';
 
 // Ethereum
 // ========
 
-export const network = 'ropsten';
+export const network = 'goerli';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
@@ -77,7 +75,6 @@ export const contracts = {
   testErc1077: '0x758011e12E57a81f93D1e59AdF8867463349A54d',
   ensResolver: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96'
 };
-
 export const relayer = {
   registryAddress: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
@@ -91,11 +88,11 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry 
+// Sentry
 // =======
 
-export const sentryEnv = undefined;
-export const sentryDsn = undefined;
+export const sentryEnv = 'dev';
+export const sentryDsn = '';
 
 // Quorum
 // ========
@@ -124,7 +121,7 @@ export const quorum = {
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
+export const bigQueryAnalyticsTable = 'blockframes-clelia.analytics_224526935.events_';
 
 // Archipel Content OrgId
 // ========
@@ -134,6 +131,6 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'bruce-backups';
-export const heavyChunkSize = 7;
-export const chunkSize = 15;
+export const backupBucket = 'clelia-backups';
+export const heavyChunkSize = 10;
+export const chunkSize = 25;

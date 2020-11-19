@@ -1,20 +1,8 @@
 ﻿export const production = false;
-export const dev = false;
-export const hmr = false; // hot-reloading: use true for local dev
-
-// TODO issue#1146 AFM CODE
-// is AFM disable ? -> false, it means that AFM is enabled = some piece of code will be skipped
-export const AFM_DISABLE = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true
 };
-
-// Analytics
-// =========
-
-export const sentryEnv = undefined;
-export const sentryDsn = undefined;
 
 // Firebase
 // ========
@@ -25,15 +13,6 @@ export const appUrl = {
   financiers: 'http://blockframes-ci-financiers.web.app',
   crm: 'https://blockframes-ci-crm.web.app',
 }
-
-//Local firebase emulator UI
-export const emulatorConfig = {
-  functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: {
-    host: 'localhost:8080',
-    ssl: false
-  }
-};
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
@@ -65,17 +44,32 @@ export const algolia = {
   indexNameUsers: 'ci_users',
 };
 
+// Support emails 
+// =======
+
+export const supportEmails = {
+  default: 'dev+ci@blockframes.io', // redirect to => blockframes.dev@gmail.com
+  catalog: 'dev+ci_catalog@blockframes.io',
+  festival: 'dev+ci_festival@blockframes.io',
+  financiers: 'dev+ci_financiers@blockframes.io'
+}
+
+// Yandex 
+// =======
+
+export const yandexId = 0;
+
+// Intercom
+// ========
+
+export const intercomId = '';
+
 // Ethereum
 // ========
 
 export const network = 'goerli';
-export const mnemonic = '';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
-
-// OMDB
-// =======
-export const omdbApiKey = '4d1be897';
 
 // TODO(issue#847): change the address
 export const contracts = {
@@ -92,22 +86,20 @@ export const relayer = {
   factoryContract
 };
 
-// Functions
-// =========
+// OMDB
+// =======
 
-export const backupBucket = 'ci-backups-blockframes';
-export const sendgridAPIKey = '';
+export const omdbApiKey = '4d1be897';
 
+// Sentry 
+// =======
 
-// Yandex Metrika Id
-export const yandexId = 0;
-
-// Intercom
-// ========
-export const intercomId = '';
+export const sentryEnv = undefined;
+export const sentryDsn = undefined;
 
 // Quorum
 // ========
+
 export const quorum = {
   archipelNode: {
     url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
@@ -131,12 +123,17 @@ export const quorum = {
 
 // BigQuery
 // ========
+
 export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events_';
 
 // Archipel Content OrgId
-// ======================
+// ========
+
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
-export const heavyChunkSize = 15;
+// Import / Export parameters
+// =======
 
+export const backupBucket = 'ci-backups-blockframes';
+export const heavyChunkSize = 15;
 export const chunkSize = 30;
