@@ -1,4 +1,4 @@
-export const production = true;
+export const production = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true
@@ -8,22 +8,22 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://blockframes-demo-3.web.app',
-  market: 'https://festival-demo3-blockframes.web.app',
-  crm: 'https://crm-demo3-blockframes.web.app',
-  financiers: 'https://blockframes-demo3-financiers.web.app',
+  content: 'https://blockframes-pl-2.web.app',
+  market: 'https://blockframes-pl-2.web.app',
+  financiers: 'https://blockframes-pl-2.web.app',
+  crm: 'https://blockframes-pl-2.web.app',
 }
 
 export const firebase = {
-  apiKey: 'AIzaSyDuAWpaj0NVyMDWZURvl16IHsvJbVooXZ8',
-  authDomain: 'blockframes-demo-3.firebaseapp.com',
-  databaseURL: 'https://blockframes-demo-3.firebaseio.com',
-  projectId: 'blockframes-demo-3',
-  storageBucket: 'blockframes-demo-3.appspot.com',
-  messagingSenderId: '39302449355',
-  appId: '1:39302449355:web:4e9f252e5274664881f34e',
-  measurementId: 'G-XXXXXXXXXX' // @TODO #4214 measurementId: ""
-};
+  apiKey: "AIzaSyB7wrvLk8sdjPYGZ7-Tncc9vP8Pw28sO40",
+  authDomain: "blockframes-pl-2.firebaseapp.com",
+  databaseURL: "https://blockframes-pl-2.firebaseio.com",
+  projectId: "blockframes-pl-2",
+  storageBucket: "blockframes-pl-2.appspot.com",
+  messagingSenderId: "264024635102",
+  appId: "1:264024635102:web:995c5f1c3ecfa961c3f44f",
+  measurementId: "G-JP3DK3VKM4"
+}
 
 // Algolia
 // =======
@@ -32,29 +32,29 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'demo3_festival_org',
-    financiers: 'demo3_financiers_org',
-    catalog: 'demo3_catalog_org'
+    festival: 'pl_festival_org',
+    financiers: 'pl_financiers_org',
+    catalog: 'pl_catalog_org'
   },
   indexNameMovies: {
-    festival: 'demo3_festival_movies',
-    financiers: 'demo3_financiers_movies',
-    catalog: 'demo3_catalog_movies',
+    festival: 'pl_festival_movies',
+    financiers: 'pl_financiers_movies',
+    catalog: 'pl_catalog_movies',
   },
-  indexNameUsers: 'demo3_users',
+  indexNameUsers: 'pl_users',
 };
 
-// Support emails
+// Support emails 
 // =======
 
 export const supportEmails = {
-  default: 'dev+demo3@blockframes.io', // redirect to => blockframes.dev@gmail.com
-  catalog: 'dev+demo3_catalog@blockframes.io',
-  festival: 'dev+demo3_festival@blockframes.io',
-  financiers: 'dev+demo3_financiers@blockframes.io'
+  default: 'pldespaigne@cascade8.com',
+  catalog: 'pldespaigne+catalog@cascade8.com',
+  festival: 'pldespaigne+festival@cascade8.com',
+  financiers: 'pldespaigne+financiers@cascade8.com'
 }
 
-// Yandex
+// Yandex 
 // =======
 
 export const yandexId = 0;
@@ -91,11 +91,11 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry
+// Sentry 
 // =======
 
-export const sentryEnv = 'demo-3';
-export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
+export const sentryEnv = undefined;
+export const sentryDsn = undefined;
 
 // Quorum
 // ========
@@ -124,7 +124,7 @@ export const quorum = {
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-demo3.analytics_200039147.events_';
+export const bigQueryAnalyticsTable = 'blockframes-pl-2.analytics_198311281.events_';
 
 // Archipel Content OrgId
 // ========
@@ -134,6 +134,6 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'demo3-backups';
+export const backupBucket = 'pl-backups';
 export const heavyChunkSize = 15;
 export const chunkSize = 30;

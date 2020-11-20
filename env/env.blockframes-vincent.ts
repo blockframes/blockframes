@@ -1,4 +1,4 @@
-export const production = true;
+export const production = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true
@@ -8,21 +8,21 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://blockframes-demo-3.web.app',
-  market: 'https://festival-demo3-blockframes.web.app',
-  crm: 'https://crm-demo3-blockframes.web.app',
-  financiers: 'https://blockframes-demo3-financiers.web.app',
-}
+  content: 'https://catalog-blockframes-vincent.web.app',
+  market: 'https://festival-blockframes-vincent.web.app',
+  crm: 'https://crm-blockframes-vincent.web.app',
+  financiers: 'https://financiers-blockframes-vincent.web.app',
+};
 
 export const firebase = {
-  apiKey: 'AIzaSyDuAWpaj0NVyMDWZURvl16IHsvJbVooXZ8',
-  authDomain: 'blockframes-demo-3.firebaseapp.com',
-  databaseURL: 'https://blockframes-demo-3.firebaseio.com',
-  projectId: 'blockframes-demo-3',
-  storageBucket: 'blockframes-demo-3.appspot.com',
-  messagingSenderId: '39302449355',
-  appId: '1:39302449355:web:4e9f252e5274664881f34e',
-  measurementId: 'G-XXXXXXXXXX' // @TODO #4214 measurementId: ""
+  apiKey: "AIzaSyCA7YvLVF4GUScjaWk4hah3LvByAdL_Z5k",
+  authDomain: "blockframes-vincent.firebaseapp.com",
+  databaseURL: "https://blockframes-vincent.firebaseio.com",
+  projectId: "blockframes-vincent",
+  storageBucket: "blockframes-vincent.appspot.com",
+  messagingSenderId: "87423685971",
+  appId: "1:87423685971:web:154b9dbb018971ea",
+  measurementId: "G-XL5ENVWL8Z"
 };
 
 // Algolia
@@ -32,32 +32,32 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'demo3_festival_org',
-    financiers: 'demo3_financiers_org',
-    catalog: 'demo3_catalog_org'
+    festival: 'vincent_festival_org',
+    financiers: 'vincent_financiers_org',
+    catalog: 'vincent_catalog_org',
   },
   indexNameMovies: {
-    festival: 'demo3_festival_movies',
-    financiers: 'demo3_financiers_movies',
-    catalog: 'demo3_catalog_movies',
+    festival: 'vincent_festival_movies',
+    financiers: 'vincent_financiers_movies',
+    catalog: 'vincent_catalog_movies',
   },
-  indexNameUsers: 'demo3_users',
+  indexNameUsers: 'vincent_users',
 };
 
-// Support emails
+// Support emails 
 // =======
 
 export const supportEmails = {
-  default: 'dev+demo3@blockframes.io', // redirect to => blockframes.dev@gmail.com
-  catalog: 'dev+demo3_catalog@blockframes.io',
-  festival: 'dev+demo3_festival@blockframes.io',
-  financiers: 'dev+demo3_financiers@blockframes.io'
+  default: 'vchoukroun@cascade8.com',
+  catalog: 'vchoukroun+catalog@cascade8.com',
+  festival: 'vchoukroun+festival@cascade8.com',
+  financiers: 'vchoukroun+financiers@cascade8.com'
 }
 
-// Yandex
+// Yandex 
 // =======
 
-export const yandexId = 0;
+export const yandexId = 56105038;
 
 // Intercom
 // ========
@@ -67,7 +67,7 @@ export const intercomId = 'srwfltp4';
 // Ethereum
 // ========
 
-export const network = 'goerli';
+export const network = 'ropsten';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
@@ -91,11 +91,11 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry
+// Sentry 
 // =======
 
-export const sentryEnv = 'demo-3';
-export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
+export const sentryEnv = '';
+export const sentryDsn = '';
 
 // Quorum
 // ========
@@ -124,7 +124,7 @@ export const quorum = {
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-demo3.analytics_200039147.events_';
+export const bigQueryAnalyticsTable = 'blockframes-vincent.analytics_194475739.events_';
 
 // Archipel Content OrgId
 // ========
@@ -134,6 +134,6 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'demo3-backups';
-export const heavyChunkSize = 15;
-export const chunkSize = 30;
+export const backupBucket = 'vincent-backups';
+export const heavyChunkSize = 10;
+export const chunkSize = 25;
