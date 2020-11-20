@@ -40,8 +40,7 @@ export class ProfileViewComponent implements OnInit {
     this.dynTitle.setPageTitle(`
     ${this.authQuery.getValue().profile.lastName}
     ${this.authQuery.getValue().profile.firstName}`,
-      `${this.organizationQuery.getActive().denomination.full}`,
-      { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: true })
+      `${this.organizationQuery.getActive().denomination.full}`);
   }
 
   ngOnInit() {

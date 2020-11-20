@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
@@ -25,8 +25,8 @@ export class AuthService extends FireAuthService<AuthState> {
     private query: AuthQuery,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery,
-    public ngIntercom: Intercom,
-    private gdprService: GDPRService
+    private gdprService: GDPRService,
+    @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
   }
@@ -85,7 +85,7 @@ export class AuthService extends FireAuthService<AuthState> {
     localStorage.clear();
     localStorage.setItem('gdpr', gdpr);
 
-    this.ngIntercom.shutdown();
+    this.ngIntercom?.shutdown();
     sessionStorage.clear();
   }
 
@@ -148,7 +148,7 @@ export class AuthService extends FireAuthService<AuthState> {
     if (!intercom || !intercomId) return;
 
     this.db.doc<User>(`users/${userCredential.user.uid}`).valueChanges().pipe(take(1)).subscribe(user => {
-      this.ngIntercom.update(getIntercomOptions(user));
+      this.ngIntercom?.update(getIntercomOptions(user));
     });
   }
 }

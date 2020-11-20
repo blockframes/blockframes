@@ -1,4 +1,5 @@
-@import "../../../../styles/style.scss";
+/* You can add global styles to this file, and also import other style files */
+@import "../../../styles/style.scss";
 
 .light-theme {
   @include angular-material-color($bf-light-theme);
