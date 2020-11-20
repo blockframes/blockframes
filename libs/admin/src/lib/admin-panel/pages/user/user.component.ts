@@ -149,7 +149,7 @@ export class UserComponent implements OnInit {
     this.dialog.open(DeleteDialogComponent, {
       data: {
         entity: 'user',
-        deletion: 'This user will be deleted from this organization',
+        deletion: 'This user will be deleted from the application.',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });

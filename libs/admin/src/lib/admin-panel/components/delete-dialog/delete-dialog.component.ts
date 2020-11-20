@@ -26,13 +26,13 @@ export class DeleteDialogComponent {
   ) {}
 
   public confirm() {
-    if (this.deleteConfirm.value !== 'DELETE' || this.deleteConfirm.invalid) {
-      this.snackbar.open(`You can\'t delete this ${this.data.entity}.`, 'close', { duration: 5000});
-      this.dialogRef.close(false);
-    }
     if (this.deleteConfirm.value === 'DELETE' && this.deleteConfirm.valid) {
       this.data.onConfirm();
       this.dialogRef.close(true);
+    }
+    else {
+      this.snackbar.open(`You didn't entered the excepted value. You can\'t delete this ${this.data.entity}.`, 'close', { duration: 5000});
+      this.dialogRef.close(false);
     }
   }
 
