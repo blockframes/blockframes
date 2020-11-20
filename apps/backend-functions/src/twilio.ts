@@ -8,6 +8,7 @@ import { ErrorResultResponse } from "@blockframes/utils/utils";
 import { twilioApiKeySecret, twilioAccountSid, twilioApiKeySid } from './environments/environment';
 import { hasUserAcceptedEvent } from "./internals/invitations/meetings";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
+import { getUser } from "./internals/firebase";
 
 export interface RequestAccessToken {
   eventId: string,
@@ -24,16 +25,14 @@ export const getTwilioAccessToken = async (
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
 
-  if (!data.eventId) {
-    throw new Error(`No 'eventId' params, this parameter is mandatory !`);
-  }
-
   if (!context.auth) {
     throw new Error(`Unauthorized call !`);
   }
 
-  const userId = context.auth.uid;
-  const eventId = data.eventId;
+  const { eventId } = data;
+  if (!eventId) {
+    throw new Error(`No 'eventId' params, this parameter is mandatory !`);
+  }
 
   // Get meeting from firestore identify by eventId
   const event: EventDocument<Meeting> = await getDocument<EventDocument<Meeting>>(`events/${eventId}`);
@@ -68,15 +67,18 @@ export const getTwilioAccessToken = async (
   }
 
   // Check if user is owner or is invited to event
-  if (!(event.meta.organizerId === userId || await hasUserAcceptedEvent(context.auth.uid, eventId))) {
+  if (!(event.meta.organizerId === context.auth.uid || await hasUserAcceptedEvent(context.auth.uid, eventId))) {
     return {
       error: 'NOT_ACCEPTED',
       result: `You are not the owner of the event or you have not been invited to see this meeting`
     };
   }
 
+  const user = await getUser(context.auth.uid);
+  const identity = `${user.firstName[0].toUpperCase()}${user.firstName.substr(1).toLowerCase()} ${user.lastName[0].toUpperCase()}${user.lastName.substr(1).toLowerCase()}`;
+
   // Create access token with twilio global var et identity of the user as identity of token
-  const token = new AccessToken(twilioAccountSid, twilioApiKeySid, twilioApiKeySecret, {identity: userId});
+  const token = new AccessToken(twilioAccountSid, twilioApiKeySid, twilioApiKeySecret, { identity });
   // Create VideoGrant of room. RoomName is the EventId
   const videoGrant = new VideoGrant({room: eventId});
   // add Grant to token

@@ -43,7 +43,7 @@ export class TwilioService {
     return this.getAccessToken({ eventId }).toPromise<ErrorResultResponse>();
   }
 
-  initLocal(userName: string) {
+  async initLocal(userName: string) {
 
     const local: LocalAttendee = {
       id: 'local',
@@ -53,25 +53,27 @@ export class TwilioService {
     };
     this.twilioStore.upsert(local.id, local);
 
-    const promises: Promise<void>[] = [];
+    const promises: Promise<LocalVideoTrack | LocalAudioTrack>[] = [];
 
     if (!local.tracks.video) {
-      promises.push(
-        createLocalVideoTrack().then(track =>
-          this.twilioStore.update(local.id, (entity: LocalAttendee) => ({ tracks: { video: track, audio: entity.tracks.audio }}))
-        )
-      );
+      promises.push(createLocalVideoTrack().catch(e => null));
     }
 
     if (!local.tracks.audio) {
-      promises.push(
-        createLocalAudioTrack().then(track =>
-          this.twilioStore.update(local.id, (entity: LocalAttendee) => ({ tracks: { audio: track, video: entity.tracks.video }}))
-        )
-      );
+      promises.push(createLocalAudioTrack().catch(e => null));
     }
 
-    return (Promise as any).allSettled(promises);
+    const [ video, audio ] = await Promise.all(promises);
+
+    this.twilioStore.update(
+      local.id,
+      (entity: LocalAttendee) => ({
+        tracks: {
+          video: (video as LocalVideoTrack) ?? entity.tracks.video,
+          audio: (audio as LocalAudioTrack) ?? entity.tracks.audio,
+        }
+      })
+    );
   }
 
   cleanLocal() {
@@ -118,6 +120,21 @@ export class TwilioService {
 
     // Connect to Twilio room and register event listeners
     this.room = await connect(token, { name: eventId, tracks });
+
+    this.room.on('participantConnected', (participant: RemoteParticipant) => {
+      this.twilioStore.upsert(
+        participant.sid,
+        {
+          id: participant.sid,
+          kind: 'remote',
+          userName: participant.identity,
+          tracks: {
+            audio: null,
+            video: null,
+          }
+        }
+      );
+    });
 
     this.room.on(
       'trackSubscribed',

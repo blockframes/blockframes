@@ -29,7 +29,7 @@ export async function getUserMail(userId: string): Promise<string | undefined> {
 }
 
 /**
- * Gets the user email for the user corresponding to a given `uid`.
+ * Gets the user document corresponding to a given `uid`.
  * Throws if the user does not exists.
  */
 export async function getUser(userId: string): Promise<PublicUser> {
