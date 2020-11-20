@@ -14,35 +14,6 @@ const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
 };
 
-export async function setImportRunning(status: boolean, db?: FirebaseFirestore.Firestore) {
-  return maintenanceRef(db).set({ importRunning: status } as Partial<IMaintenanceDoc>, { merge: true });
-}
-
-export async function triggerImportError(db?: FirebaseFirestore.Firestore) {
-  return maintenanceRef(db).update({ 'importRunning': admin.firestore.FieldValue.delete() });
-}
-
-export async function isImportRunning(db: FirebaseFirestore.Firestore) {
-  const maintenanceSnapshot = await maintenanceRef(db).get();
-  const maintenanceDoc = maintenanceSnapshot.data() as IMaintenanceDoc;
-  return maintenanceDoc.importRunning;
-}
-
-export async function importComplete(db?: FirebaseFirestore.Firestore) {
-  if (!db) db = loadAdminServices().db;
-  let unsubscribe: () => void;
-  const p1 = new Promise((res, rej) => {
-    unsubscribe = maintenanceRef(db).onSnapshot((snap) => {
-      console.log('Listening for Firestore import completion...');
-      const maintenanceDoc = snap.data() as IMaintenanceDoc;
-      const isRunning = maintenanceDoc.importRunning ?? rej('importRunning not set on maintenance doc, an error may have occurred!');
-      if (isRunning === false) res();
-    });
-  });
-  const p2 = p1.then(unsubscribe);
-  return p2;
-}
-
 export async function startMaintenance(db?: FirebaseFirestore.Firestore) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) {
     console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');

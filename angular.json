@@ -284,11 +284,11 @@
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
             "assets": ["apps/backend-functions/src/package.json"],
+            "maxWorkers": 6,
             "buildLibsFromSource": true
           },
           "configurations": {
             "production": {
-              "maxWorkers": 2,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -304,7 +304,6 @@
               ]
             },
             "staging": {
-              "maxWorkers": 2,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -320,7 +319,6 @@
               ]
             },
             "ci": {
-              "maxWorkers": 2,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -336,7 +334,6 @@
               ]
             },
             "demo1": {
-              "maxWorkers": 2,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,

@@ -57,10 +57,8 @@ env/__ngcc_entry_points__.json
 # Secrets & Environment
 .env
 env/env.ts
-env/env.hugo.ts
 tools/credentials/*
 tools/fixtures/**
-secrets.sh
 
 # cache
 .cache
