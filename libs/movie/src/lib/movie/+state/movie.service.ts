@@ -49,12 +49,19 @@ export class MovieService extends CollectionService<MovieState> {
   async create(movieImported?: Movie): Promise<Movie> {
     const createdBy = this.authQuery.userId;
     const appName = getCurrentApp(this.routerQuery);
-    const orgId = this.orgQuery.getActiveId();
+    let orgIds = [];
+    if (!!movieImported.orgIds.length) {
+      orgIds = movieImported.orgIds;
+    } else {
+      const orgId = this.orgQuery.getActiveId();
+      orgIds.push(orgId);
+    }
+
     const movie = createMovie({
       _meta: createDocumentMeta({ createdBy }),
+      orgIds,
       ...movieImported
     });
-    movie.orgIds.push(orgId);
     movie.storeConfig = {
       ...createStoreConfig(),
       appAccess: createMovieAppAccess({ [appName]: true })
