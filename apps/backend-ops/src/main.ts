@@ -72,7 +72,7 @@ async function runCommand() {
       break;
     case 'migrate':
       if (!await isMigrationRequired()) {
-        console.log('Skipping upgrade because migration is not required...');
+        console.log('Skipping because there is no migration to run...');
         return;
       }
       await startMaintenance(db);
