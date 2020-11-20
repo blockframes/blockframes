@@ -93,13 +93,13 @@ describe('Blockframe Not In Maintenance', () => {
 
 });
 
-/*
-describe('Blockframe Admin', () => {
+
+describe('Org Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-c8'});
+    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-admin'});
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -110,7 +110,6 @@ describe('Blockframe Admin', () => {
   });
 
 });
-*/
 
 describe('General User', () => {
   const projectId = `rules-spec-${Date.now()}`;
@@ -241,9 +240,9 @@ describe('Movies Rules Tests', () => {
   let db: Firestore;
 
   describe('With User in org', () => {
-    const newMovieTitle = 'MI-007';
-    const existMovieTitle = 'MI-077';
-    const newMovieDetails = {id: `${newMovieTitle}`};
+    const newMovieId = 'MI-007';
+    const existMovieId = 'MI-077';
+    const newMovieDetails = {id: `${newMovieId}`};
     const storeConfig = {
       status: <StoreStatus>"draft",
       storeType: <StoreType>"Library",
@@ -267,9 +266,9 @@ describe('Movies Rules Tests', () => {
     });
 
     test("user valid org, storestatus other than draft should not be able to create movie", async () => {
-      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      const movieRef = db.doc(`movies/${newMovieId}`);
       const createdMovie:Partial<Movie> = {
-        id: newMovieTitle, 
+        id: newMovieId, 
         storeConfig
       };      
       createdMovie.storeConfig['status'] = 'accepted';
@@ -277,32 +276,32 @@ describe('Movies Rules Tests', () => {
     });
 
     test("user valid org, without create permission for org should not be able to create movie", async () => {
-      const newMovieTitleUnavailable = 'MI-000';
-      const movieRef = db.doc(`movies/${newMovieTitleUnavailable}`);
+      const newMovieTitleUnavailableId = 'MI-000';
+      const movieRef = db.doc(`movies/${newMovieTitleUnavailableId}`);
       const createdMovie:Partial<Movie> = {
-        id: newMovieTitleUnavailable, 
+        id: newMovieTitleUnavailableId, 
         storeConfig
       };
       await assertFails(movieRef.set(createdMovie));
     });
 
     test("user valid org, with create permission for org, invalid id should not be able to create movie", async () => {
-      const newMovieTitleUnavailable = 'MI-000';      
-      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      const newMovieTitleUnavailableId = 'MI-000';      
+      const movieRef = db.doc(`movies/${newMovieId}`);
       const createdMovie:Partial<Movie> = {
-        id: newMovieTitleUnavailable, 
+        id: newMovieTitleUnavailableId, 
         storeConfig
       };      
       await assertFails(movieRef.set(createdMovie));
     });
 
     test.skip("user valid org, with create permission for org should be able to create movie", async () => {
-      const newTitle =  {id: `${newMovieTitle}`};
+      const newTitle =  {id: `${newMovieId}`};
       const createdMovie:Partial<Movie> = {
-        id: newMovieTitle, 
+        id: newMovieId, 
         //storeConfig
       };
-      const movieDoc = db.collection('movies').doc(newMovieTitle).set(createdMovie);
+      const movieDoc = db.collection('movies').doc(newMovieId).set(createdMovie);
       await assertSucceeds(movieDoc)
     });
 
@@ -315,21 +314,21 @@ describe('Movies Rules Tests', () => {
       
     }
     test.each(Object.entries(details))("user valid org, updating restricted '%s' field shouldn't be able to update movie", async (key, value) => {
-      const movieRef = db.doc(`movies/${existMovieTitle}`);
+      const movieRef = db.doc(`movies/${existMovieId}`);
       const details = {};
       details[key] = value;
       await assertFails(movieRef.update(details));
     });
 
     test("user valid org, updating unrestricted field should be able to update movie", async () => {
-      const movieRef = db.doc(`movies/${existMovieTitle}`);
+      const movieRef = db.doc(`movies/${existMovieId}`);
       const movieDetailsOther = {notes: 'update in unit-test'}
       await assertSucceeds(movieRef.update(movieDetailsOther));
     });
   });
 
   describe('User with admin role', () => {
-    const draftMovieTitle = 'MI-0d7';
+    const draftMovieId = 'MI-0d7';
 
     beforeAll(async () => {
       db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-admin'});
@@ -338,15 +337,15 @@ describe('Movies Rules Tests', () => {
     afterAll(() => Promise.all(apps().map(app => app.delete())));
 
     test("User with admin role in org should be able to delete movie", async () => {
-      const movieRef = db.doc(`movies/${draftMovieTitle}`);
+      const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertSucceeds(movieRef.delete());
     });
   });
 
   describe('With User not in org', () => {
-    const newMovieTitle = 'MI-007'
-    const draftMovieTitle = 'MI-0d7'
-    const newMovieDetails = {id: `${newMovieTitle}`};
+    const newMovieId = 'MI-007'
+    const draftMovieId = 'MI-0d7'
+    const newMovieDetails = {id: `${newMovieId}`};
 
     beforeAll(async () => {
       db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-peeptom'});
@@ -360,12 +359,12 @@ describe('Movies Rules Tests', () => {
     });
 
     test("user without valid org shouldn't be able to create movie title", async () => {
-      const movieRef = db.doc(`movies/${newMovieTitle}`);
+      const movieRef = db.doc(`movies/${newMovieId}`);
       await assertFails(movieRef.set(newMovieDetails));
     });
 
     test("user without valid org shouldn't be able to delete movie title", async () => {
-      const movieRef = db.doc(`movies/${draftMovieTitle}`);
+      const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertFails(movieRef.delete());
     });
 
