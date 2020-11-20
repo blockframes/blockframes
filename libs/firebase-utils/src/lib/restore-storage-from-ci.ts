@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import { execSync } from 'child_process';
 import { catchErrors } from './util';
 
-const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
+export const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
 
 export async function restoreStorageFromCi(ciApp: admin.app.App) {
   if (

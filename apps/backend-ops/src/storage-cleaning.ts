@@ -3,10 +3,8 @@ import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';
-import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 
 export async function cleanStorage(bucket) {
-  await startMaintenance();
 
   const cleanMovieDirOutput = await cleanMovieDir(bucket);
   console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "public/movie" directory.`);
@@ -18,7 +16,6 @@ export async function cleanStorage(bucket) {
   console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "public/users" directory.`);
   const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
   console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "public/watermark" directory.`);
-  await endMaintenance();
 
   return true;
 }
@@ -26,7 +23,7 @@ export async function cleanStorage(bucket) {
 /**
  * Movie dir should not exists
  * @dev this should be usefull only once
- * @param bucket 
+ * @param bucket
  */
 export async function cleanMovieDir(bucket) {
   // Movie dir should not exists
@@ -77,7 +74,7 @@ export async function cleanMoviesDir(bucket) {
  * Revomes files at "orgs/" root,
  * files that have a too long name and
  * files that belongs to deleted orgs on DB.
- * @param bucket 
+ * @param bucket
  */
 export async function cleanOrgsDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'public/orgs/' }))[0];
@@ -124,7 +121,7 @@ export async function cleanUsersDir(bucket) {
 /**
  * watermark dir is not used anymore
  * watermarks are in public/users/${userId}/${userId}.svg
- * @param bucket 
+ * @param bucket
  */
 export async function cleanWatermarkDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'public/watermark/' }))[0];

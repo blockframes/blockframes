@@ -3,7 +3,6 @@ import type { Bucket, File as GFile } from '@google-cloud/storage';
 import admin from 'firebase-admin';
 import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import { getLatestFile, runChunks } from '../firebase-utils';
-import { endMaintenance, startMaintenance } from '../maintenance';
 import { JsonlDbRecord } from '../util';
 import { clear } from './clear';
 
@@ -24,17 +23,10 @@ export async function restoreFromBackupBucket(bucket: Bucket, db: FirebaseFirest
   const [fileExists] = await restoreFile.exists();
 
   if (fileExists) {
-    try {
-      console.log('Setting maintenance and activating import flag');
-      await startMaintenance(db);
-      console.log('Clearing the database');
-      await clear(db);
-      await importFirestoreFromGFile(restoreFile, db);
-    } catch (e) {
-      throw new Error(e);
-    } finally {
-      await endMaintenance(db);
-    }
+    console.log('Setting maintenance and activating import flag');
+    console.log('Clearing the database');
+    await clear(db);
+    await importFirestoreFromGFile(restoreFile, db);
   } else {
     throw new Error('Nothing to restore');
   }
@@ -57,7 +49,7 @@ export async function importFirestoreFromGFile(firestoreBackupFile: GFile, db: F
     lineReader.close();
   });
 
-  const lines: any[] = [];
+  const lines: string[] = [];
   lineReader.on('line', line => {
     lines.push(line);
   });
@@ -69,11 +61,11 @@ export async function importFirestoreFromGFile(firestoreBackupFile: GFile, db: F
   console.log(`Done processing: ${lines.length - 1} lines loaded`);
 }
 
-export async function importFirestoreBackup(jsonl: JsonlDbRecord[], db: FirebaseFirestore.Firestore) {
-  return runChunks( jsonl, async (line: any) => {
-      const stored: JsonlDbRecord = JSON.parse(line);
+export function importFirestoreBackup(jsonl: string[], db: FirebaseFirestore.Firestore) {
+  return runChunks( jsonl, (line: string) => {
+      const stored = JSON.parse(line) as JsonlDbRecord;
       if (stored.docPath !== '_META/_MAINTENANCE') {
-        await db.doc(stored.docPath).set(reEncodeObject(stored.content));
+        return db.doc(stored.docPath).set(reEncodeObject(stored.content));
       }
   }, 500, false);
 }
