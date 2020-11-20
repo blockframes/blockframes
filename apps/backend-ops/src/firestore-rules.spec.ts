@@ -31,7 +31,7 @@ function setData(projectId: string, dataDB: Record<string, Object>) {
   return Promise.all(promises);
 }
 
-describe.only('Blockframe In Maintenance', () => {
+describe('Blockframe In Maintenance', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
@@ -296,7 +296,7 @@ describe('Movies Rules Tests', () => {
       await assertFails(movieRef.set(createdMovie));
     });
 
-    test("user valid org, with create permission for org should be able to create movie", async () => {
+    test.skip("user valid org, with create permission for org should be able to create movie", async () => {
       const newTitle =  {id: `${newMovieTitle}`};
       const createdMovie:Partial<Movie> = {
         id: newMovieTitle, 
