@@ -6,7 +6,7 @@ warnMissingVars()
 
 import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
 import { migrate } from './migrations';
-import { disableMaintenanceMode, displayCredentials, showHelp } from './tools';
+import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
@@ -19,78 +19,100 @@ const [cmd, ...flags] = args;
 
 async function runCommand() {
   const { db } = loadAdminServices();
-  if (cmd === 'prepareForTesting') {
-    await startMaintenance(db);
-    const output = await prepareForTesting();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'displayCredentials') {
-    return displayCredentials();
-  } else if (cmd === 'use') {
-    return selectEnvironment(flags.pop());
-  } else if (cmd === 'prepareDb') {
-    await startMaintenance(db);
-    const output = await prepareDb();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'prepareStorage') {
-    await startMaintenance(db);
-    const output = await prepareStorage();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'generateFixtures') {
-    return generateFixtures();
-  } else if (cmd === 'upgrade') {
-    await startMaintenance(db);
-    const output = await upgrade();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'backup') {
-    return backup();
-  } else if (cmd === 'restore') {
-    await startMaintenance(db);
-    const output = await restore();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'startMaintenance') {
-    return startMaintenance();
-  } else if (cmd === 'endMaintenance') {
-    return endMaintenance();
-  } else if (cmd === 'healthCheck') {
-    return healthCheck();
-  } else if (cmd === 'migrate') {
-    await startMaintenance(db);
-    const output = await migrate();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'syncUsers') {
-    await startMaintenance(db);
-    const output = await syncUsers();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'printUsers') {
-    return printUsers();
-  } else if (cmd === 'clearUsers') {
-    await startMaintenance(db);
-    const output = await clearUsers();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'createUsers') {
-    await startMaintenance(db);
-    const output = await createUsers();
-    await endMaintenance(db);
-    return output;
-  } else if (cmd === 'generateWatermarks') {
-    return generateWatermarks();
-  } else if (cmd === 'upgradeAlgoliaOrgs') {
-    return upgradeAlgoliaOrgs();
-  } else if (cmd === 'upgradeAlgoliaMovies') {
-    return upgradeAlgoliaMovies();
-  } else if (cmd === 'upgradeAlgoliaUsers') {
-    return upgradeAlgoliaUsers();
-  } else {
-    showHelp();
-    return Promise.reject('Command not recognised');
+  switch (cmd) {
+    case 'prepareForTesting':
+      await startMaintenance(db);
+      await prepareForTesting();
+      await endMaintenance(db);
+      break;
+    case 'displayCredentials':
+      await displayCredentials();
+      break;
+    case 'use':
+      await selectEnvironment(flags.pop());
+      break;
+    case 'prepareDb':
+      await startMaintenance(db);
+      await prepareDb();
+      await endMaintenance(db);
+      break;
+    case 'prepareStorage':
+      await startMaintenance(db);
+      await prepareStorage();
+      await endMaintenance(db);
+      break;
+    case 'generateFixtures':
+      await generateFixtures();
+      break;
+    case 'upgrade':
+      if (!await isMigrationRequired()) {
+        console.log('Skipping upgrade because migration is not required...');
+        return;
+      }
+      await startMaintenance(db);
+      await upgrade();
+      await endMaintenance(db);
+      break;
+    case 'backup':
+      await backup();
+      break;
+    case 'restore':
+      await startMaintenance(db);
+      await restore();
+      await endMaintenance(db);
+      break;
+    case 'startMaintenance':
+      await startMaintenance();
+      break;
+    case 'endMaintenance':
+      await endMaintenance();
+      break;
+    case 'healthCheck':
+      await healthCheck();
+      break;
+    case 'migrate':
+      if (!await isMigrationRequired()) {
+        console.log('Skipping upgrade because migration is not required...');
+        return;
+      }
+      await startMaintenance(db);
+      await migrate();
+      await endMaintenance(db);
+      break;
+    case 'syncUsers':
+      await startMaintenance(db);
+      await syncUsers();
+      await endMaintenance(db);
+      break;
+    case 'printUsers':
+      await printUsers();
+      break;
+    case 'clearUsers':
+      await startMaintenance(db);
+      await clearUsers();
+      await endMaintenance(db);
+      break;
+    case 'createUsers':
+      await startMaintenance(db);
+      await createUsers();
+      await endMaintenance(db);
+      break;
+    case 'generateWatermarks':
+      await generateWatermarks();
+      break;
+    case 'upgradeAlgoliaOrgs':
+      await upgradeAlgoliaOrgs();
+      break;
+    case 'upgradeAlgoliaMovies':
+      await upgradeAlgoliaMovies();
+      break;
+    case 'upgradeAlgoliaUsers':
+      await upgradeAlgoliaUsers();
+      break;
+    default:
+      showHelp();
+      await Promise.reject('Command not recognised');
+      break;
   }
 }
 

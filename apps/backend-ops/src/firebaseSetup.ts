@@ -13,7 +13,6 @@ import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
-import { isMigrationRequired } from './tools';
 export const { storageBucket } = firebase;
 export { restore } from './admin';
 
@@ -99,10 +98,6 @@ export async function prepareStorage() {
 }
 
 export async function upgrade() {
-  if (!await isMigrationRequired()) {
-    console.log('Skipping upgrade because migration is not required...');
-    return;
-  }
   const { db, auth, storage } = loadAdminServices();
 
   console.info('Preparing the database...');
