@@ -14,6 +14,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { firebase } from '@env';
 
+import { FormFactoryModule } from 'ng-form-factory';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -27,6 +28,7 @@ import { firebase } from '@env';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFirePerformanceModule,
+    FormFactoryModule
   ],
   providers: [],
   bootstrap: [AppComponent],
