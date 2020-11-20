@@ -14,7 +14,7 @@ const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
 };
 
-export async function startMaintenance(db?: FirebaseFirestore.Firestore) {
+export function startMaintenance(db?: FirebaseFirestore.Firestore) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) {
     console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');
     return;
@@ -25,7 +25,7 @@ export async function startMaintenance(db?: FirebaseFirestore.Firestore) {
   );
 }
 
-export async function endMaintenance(db?: FirebaseFirestore.Firestore) {
+export function endMaintenance(db?: FirebaseFirestore.Firestore) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
   return maintenanceRef(db).set(
     {

@@ -1,10 +1,10 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { endMaintenance, runShellCommand, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, restoreShortcut, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
+import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -18,24 +18,40 @@ const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
 
 async function runCommand() {
+  const { db } = loadAdminServices();
   if (cmd === 'prepareForTesting') {
-    return prepareForTesting();
+    await startMaintenance(db);
+    const output = await prepareForTesting();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'displayCredentials') {
     return displayCredentials();
   } else if (cmd === 'use') {
     return selectEnvironment(flags.pop());
   } else if (cmd === 'prepareDb') {
-    return prepareDb();
+    await startMaintenance(db);
+    const output = await prepareDb();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'prepareStorage') {
-    return prepareStorage();
+    await startMaintenance(db);
+    const output = await prepareStorage();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'generateFixtures') {
     return generateFixtures();
   } else if (cmd === 'upgrade') {
-    return upgrade();
+    await startMaintenance(db);
+    const output = await upgrade();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'backup') {
     return backup();
   } else if (cmd === 'restore') {
-    return restoreShortcut();
+    await startMaintenance(db);
+    const output = await restore();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'startMaintenance') {
     return startMaintenance();
   } else if (cmd === 'endMaintenance') {
@@ -43,15 +59,27 @@ async function runCommand() {
   } else if (cmd === 'healthCheck') {
     return healthCheck();
   } else if (cmd === 'migrate') {
-    return migrate();
+    await startMaintenance(db);
+    const output = await migrate();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'syncUsers') {
-    return syncUsers();
+    await startMaintenance(db);
+    const output = await syncUsers();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'printUsers') {
     return printUsers();
   } else if (cmd === 'clearUsers') {
-    return clearUsers();
+    await startMaintenance(db);
+    const output = await clearUsers();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'createUsers') {
-    return createUsers();
+    await startMaintenance(db);
+    const output = await createUsers();
+    await endMaintenance(db);
+    return output;
   } else if (cmd === 'generateWatermarks') {
     return generateWatermarks();
   } else if (cmd === 'upgradeAlgoliaOrgs') {
