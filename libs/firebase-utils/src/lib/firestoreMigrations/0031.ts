@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { File as GFile } from '@google-cloud/storage';
-import { startMaintenance, endMaintenance } from '../maintenance';
 import { getDocument, runChunks } from '../firebase-utils';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
@@ -14,7 +13,6 @@ import {
 const EMPTY_REF = '';
 
 export async function upgrade(db: Firestore, storage: Storage) {
-  await startMaintenance();
 
   console.log('//////////////');
   console.log('// [DB] Processing Users');
@@ -71,7 +69,6 @@ export async function upgrade(db: Firestore, storage: Storage) {
   const cleanOrgsDirOutput = await cleanOrgsDir(bucket);
   console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "orgs" directory.`);
 
-  await endMaintenance();
 }
 
 /**

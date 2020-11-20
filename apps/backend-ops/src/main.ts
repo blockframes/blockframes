@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { runShellCommand, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, runShellCommand, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
 import { prepareForTesting, restoreShortcut, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
@@ -12,6 +12,7 @@ import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } fr
 import { generateFixtures } from './generate-fixtures';
 import { backup } from './admin';
 import { selectEnvironment } from './select-environment';
+import { healthCheck } from './health-check';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -35,6 +36,12 @@ async function runCommand() {
     return backup();
   } else if (cmd === 'restore') {
     return restoreShortcut();
+  } else if (cmd === 'startMaintenance') {
+    return startMaintenance();
+  } else if (cmd === 'endMaintenance') {
+    return endMaintenance();
+  } else if (cmd === 'healthCheck') {
+    return healthCheck();
   } else if (cmd === 'migrate') {
     return migrate();
   } else if (cmd === 'syncUsers') {

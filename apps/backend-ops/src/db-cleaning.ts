@@ -4,15 +4,7 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers, UserConfig } from './users';
-import {
-  Auth,
-  Firestore,
-  QueryDocumentSnapshot,
-  getDocument,
-  startMaintenance,
-  endMaintenance,
-  runChunks,
-} from '@blockframes/firebase-utils';
+import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks, } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 
 export const numberOfDaysToKeepNotifications = 14;
@@ -23,7 +15,6 @@ const EMPTY_MEDIA = '';
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
-  await startMaintenance();
   // Getting all collections we need to check
   const [
     notifications,
@@ -84,7 +75,6 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
   await cleanInvitations(invitations, existingIds);
   console.log('Cleaned invitations');
 
-  await endMaintenance();
   return true;
 }
 
