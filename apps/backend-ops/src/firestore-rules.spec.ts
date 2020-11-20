@@ -305,15 +305,18 @@ describe('Movies Rules Tests', () => {
       await assertSucceeds(movieDoc)
     });
 
-    const details = {
-      id: 'MI-0xx',
-      _meta: {
-        createdBy: '',
-        createdAt: ''
-      },
-      
-    }
-    test.each(Object.entries(details))("user valid org, updating restricted '%s' field shouldn't be able to update movie", async (key, value) => {
+    const fields:any = [
+      ["id", 'MI-0xx'],
+      ["_meta", { createdBy: ''}],
+      ["_meta", { createdAt: ''}],
+      ["_type", 'drama'],
+      ["storeConfig", { appAccess: {catalog: true}}],
+      ["storeConfig", { status: 'accepted'}], //<-- doesn't work??!!
+      ["storeConfig", { storeType: 'blah'}],
+      ["storeConfig", { appAccess: {festival: {}}}],
+    ]
+    test.each(fields)("user valid org, updating restricted '%s' field shouldn't be able to update movie", 
+        async (key, value) => {
       const movieRef = db.doc(`movies/${existMovieId}`);
       const details = {};
       details[key] = value;

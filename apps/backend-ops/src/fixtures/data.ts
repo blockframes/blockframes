@@ -93,6 +93,10 @@ export const testFixture = {
     "title": {
       "original": 'UnitTest'
     },
+    storeConfig: {
+      appAccess: {festival: true},
+      status: 'draft' 
+    },    
     "note": ''
   },
 
