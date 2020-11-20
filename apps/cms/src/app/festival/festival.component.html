@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav opened>
+  <mat-sidenav opened mode="side">
     <mat-nav-list>
       <ng-container *ngFor="let page of pages">
         <a mat-list-item [routerLink]="page.path" routerLinkActive="active">
@@ -9,6 +9,6 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <router-outlet></router-outlet>
+
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -10,7 +10,7 @@ const routes: Routes = createRoutes({
     loadChildren: () => import('./shell/shell.module').then(m => m.ShellModule)
   }]
 });
-console.log(routes);
+
 @NgModule({
   declarations: [],
   exports: [RouterModule],

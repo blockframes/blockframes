@@ -5,14 +5,7 @@ import { FestivalComponent } from './festival.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 
-const children: Route[] = [{
-  path: '',
-  redirectTo: 'home',
-  pathMatch: 'full'
-}, {
-  path: 'home',
-  loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
-}]
+const children: Route[] = []
 
 @NgModule({
   declarations: [FestivalComponent],
@@ -20,7 +13,7 @@ const children: Route[] = [{
     CommonModule,
     MatSidenavModule,
     MatListModule,
-    RouterModule.forChild([{ path: '', component: FestivalComponent, children }])
+    RouterModule.forChild([{ path: '', component: FestivalComponent }])
   ]
 })
 export class FestivalModule {}
