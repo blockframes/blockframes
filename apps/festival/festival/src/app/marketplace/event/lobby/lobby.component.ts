@@ -32,7 +32,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.event$ = this.eventQuery.selectActive();
     this.local$ = this.twilioQuery.selectLocal();
-    const name = displayName(this.authQuery.user, 'capitalize');
+    const name = displayName(this.authQuery.user);
     this.twilioService.initLocal(name);
   }
 

@@ -45,7 +45,7 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
     // this.attendees$ = this.twilioQuery.selectAll();
     this.attendees$ = this.twilioQuery.selectMultiple(9);
 
-    const name = displayName(this.authQuery.user, 'capitalize');
+    const name = displayName(this.authQuery.user);
     await this.twilioService.initLocal(name);
 
     this.twilioService.connect(this.eventId);

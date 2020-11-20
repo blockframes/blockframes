@@ -57,31 +57,17 @@ export class TwilioService {
 
     if (!local.tracks.video) {
       promises.push(
-        createLocalVideoTrack().then(track => {
-          const currentLocal = this.twilioQuery.localAttendee;
-          this.twilioStore.update(currentLocal.id, entity => ({
-            ...entity,
-            tracks: {
-              video: track,
-              audio: entity.tracks.audio,
-            }
-          }));
-        })
+        createLocalVideoTrack().then(track =>
+          this.twilioStore.update(local.id, (entity: LocalAttendee) => ({ tracks: { video: track, audio: entity.tracks.audio }}))
+        )
       );
     }
 
     if (!local.tracks.audio) {
       promises.push(
-        createLocalAudioTrack().then(track => {
-          const currentLocal = this.twilioQuery.localAttendee;
-          this.twilioStore.update(currentLocal.id, entity => ({
-            ...entity,
-            tracks: {
-              audio: track,
-              video: entity.tracks.video,
-            }
-          }));
-        })
+        createLocalAudioTrack().then(track =>
+          this.twilioStore.update(local.id, (entity: LocalAttendee) => ({ tracks: { audio: track, video: entity.tracks.video }}))
+        )
       );
     }
 
