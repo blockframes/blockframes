@@ -3,25 +3,47 @@
 }
 
 landing-header {
-  background-image: url("/assets/images/banner_header.png");
+  background-image: url("/assets/images/ACMbannerlanding.webp");
+
+  p.mat-display-2 {
+    margin-bottom: 24px;
+  }
+
+  span {
+    width: 50%;
+  }
+
   a {
-    margin-top: 80px;
+    width: fit-content;
+    margin-top: 24px;
+  }
+
+  .download-link {
+    margin-top: 16px;
   }
 }
 
 landing-content {
-  .join {
-    padding: 48px 0;
+  max-width: 1440px;
+
+  .showcase-illustrations {
+    max-width: 800px;
   }
 
   article {
+    margin-top: 24px;
     mat-card {
+      padding: 24px;
       width: 49%;
       margin-bottom: 24px;
       text-align: center;
       img {
         width: 150px;
       }
+    }
+
+    .buyer-card:last-child {
+      margin: 0 auto;
     }
   }
 }

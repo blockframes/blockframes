@@ -17,6 +17,7 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
   display: block;
   padding: calc(var(--toolbarHeight) + 100px) 60px 100px;;
   background-size: cover;
+  width: 100%
 }`]
 })
 export class LandingHeaderComponent { }

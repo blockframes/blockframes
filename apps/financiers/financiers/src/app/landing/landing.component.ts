@@ -7,64 +7,59 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingComponent {
-  public tabNames = ['Sales Agents', 'Buyers'];
+  public tabNames = ['Investors', 'Professional Content Financiers'];
 
   public tabTitle = [
     {
-      title: 'For Sales Agents.',
-      imgAsset: 'lp_dashboard_market_sales_agents.webp',
-      description: 'Showcase your line-up, get in touch with Buyers and manage meetings and screenings.'
+      title: 'For Investors',
+      imgAsset: 'seller_perspective.webp',
+      description: 'A reliable way to invest in top film & TV projects, backed by professional financiers. By sharing their investment, investors benefit from their expertise in dealmaking and content acquisition.'
     },
     {
-      title: 'For Buyers.',
-      imgAsset: 'lp_archipel_market_buyers.webp',
-      description: 'Explore a large library of films, get in touch with sales agents, plan meetings and watch screenings.'
+      title: 'For Professional',
+      imgAsset: 'buyer_perspective.webp',
+      description: 'Package the financing of your projects by connecting with high-capacity investors looking to invest in films and series.'
     }
   ]
 
   public sellerFeatures = [
     {
-      title: 'Showcase your company & film details',
-      imgAsset: 'showcase.webp',
-      description: 'Import your metadata and promotional elements easily and have your company and films showcased on the marketplace.'
+      title: 'Tag along with professional content financiers',
+      imgAsset: 'tag-along.svg',
+      description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. '
     },
     {
-      title: 'Manage your schedule',
-      imgAsset: 'calendar.webp',
-      description: 'Plan online meetings and book live screenings sessions on your calendar. Set privacy parameters and invite buyers to your events.'
+      title: 'Get access to prominent film companies and projects',
+      imgAsset: 'topfilms.svg',
+      description: 'Find the hottest projects selected by a pool of industry veterans and benefit from their knowledge of the industry.'
     },
     {
-      title: 'Match with buyers',
-      imgAsset: 'matching.webp',
-      description: 'Contact and get contacted by buyers, get requests to your screenings, and get notified when buyers show interest in your films.'
+      title: 'Learn about investing in the content industry',
+      imgAsset: 'knowledge.svg',
+      description: 'No experience needed. Discover why content is a profitable investment. Download our investment guide below.'
     },
     {
-      title: 'Track your films\' activity',
-      imgAsset: 'sales_statistics.webp',
-      description: 'Track your films’ activity on the platform, and get screening reports with detailed stats after each screening.'
+      title: 'Enjoy exclusive privileges',
+      imgAsset: 'exclusive-priviledges.svg',
+      description: 'Get perks and live the full experience of the content industry.'
     }
   ];
 
   public buyerFeatures = [
     {
-      title: 'Find the newest gems',
+      title: 'Access a new qualified investors network',
       imgAsset: 'gems.webp',
-      description: 'Explore a large library of films and find the content you\'re looking for in just a few clicks thanks to search and filter functions.'
+      description: 'Benefit from a selected pool of high- capacity investors coming from all around the world.'
     },
     {
-      title: 'Match with sales agents',
+      title: 'Increase your investment capacity',
       imgAsset: 'matching.webp',
-      description: 'Access their company information and contact details, get in touch with them. Explore their line ups and screening schedules and ask for invitations to their screenings.'
+      description: 'Share or refinance your investment ticket to complete your financing, access bigger projects and hedge your risk.'
     },
     {
-      title: 'Access detailed movies pages',
+      title: 'Take a fee on the money you raise',
       imgAsset: 'filmpage.webp',
-      description: 'Access each film\'s metadata, promotional elements and screening information.'
-    },
-    {
-      title: 'Plan meetings and watch screenings',
-      imgAsset: 'calendar.webp',
-      description: 'Plan online meetings with sales agents and watch film screenings at specific hours, just like in real live markets.'
+      description: 'Be rewarded for the financing you gather.'
     }
   ]
 }
