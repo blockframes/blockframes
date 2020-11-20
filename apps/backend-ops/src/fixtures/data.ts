@@ -1,9 +1,6 @@
 ﻿
+
 export const testFixture = {
-  //META : maintenance, etc
-  "_META/_MAINTENANCE": {
-    "endedAt": true
-  },
 
   //Permissions
   "permissions/O001" : {

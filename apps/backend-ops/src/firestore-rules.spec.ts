@@ -6,10 +6,20 @@ import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 import { Movie } from '@blockframes/movie/+state'
 import { MovieAppAccess } from '@blockframes/utils/apps';
 import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
+import {
+  META_COLLECTION_NAME,
+  MAINTENANCE_DOCUMENT_NAME
+} from '@blockframes/utils/maintenance';
+
+//Meta collection, for maintenance control.
+const metaDoc = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 
 type ExtractPromise<T> = T extends Promise<(infer I)> ? I : never;
 type PromiseFirestore = ReturnType<typeof initFirestoreApp>;
 type Firestore = ExtractPromise<PromiseFirestore>
+
+testFixture[metaDoc] = {};
+testFixture[metaDoc].endedAt = true;
 
 async function initFirestoreApp(projectId: string, rulePath: string, data: Record<string, 
                                   Object> = {}, auth?: TokenOptions) {
@@ -36,13 +46,13 @@ describe('Blockframe In Maintenance', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    testFixture["_META/_MAINTENANCE"].endedAt = null;
+    testFixture[metaDoc].endedAt = null;
     db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-bfAdmin'});
   });
 
   afterAll(() => { 
     Promise.all(apps().map(app => app.delete()));
-    testFixture["_META/_MAINTENANCE"].endedAt = true;
+    testFixture[metaDoc].endedAt = true;
   });
 
   test("Everyone (incl. bf admin) should be able to read MAINTENANCE doc", async () => {
@@ -50,17 +60,17 @@ describe('Blockframe In Maintenance', () => {
     await assertSucceeds(maintRef.get());
   });
 
-  test("In maintenance, even super admin shouldn't be able to read admin user", async () => {
-    const adminRef = db.doc("blockframesAdmin/uid-sAdmin");
+  test("In maintenance, even blockframe admin shouldn't be able to read admin user", async () => {
+    const adminRef = db.doc("blockframesAdmin/uid-bfAdmin");
     await assertFails(adminRef.get());
   });
 
-  test("In maintenance, even super admin shouldn't be able to read a org", async () => {
+  test("In maintenance, even blockframe admin shouldn't be able to read a org", async () => {
     const orgRef = db.doc("orgs/O001");
     await assertFails(orgRef.get());
   });
 
-  test("In maintenance, even super admin shouldn't be able to read all users", async () => {
+  test("In maintenance, even blockframe admin shouldn't be able to read all users", async () => {
     const usersRef = db.collection("users");
     await assertFails(usersRef.get());
   });
@@ -77,7 +87,7 @@ describe('Blockframe Not In Maintenance', () => {
   afterAll(() => Promise.all(apps().map(app => app.delete())));
 
   test("Blockframe admin should be able to read admin user", async () => {
-    const adminRef = db.doc("blockframesAdmin/uid-sAdmin");
+    const adminRef = db.doc("blockframesAdmin/uid-bfAdmin");
     await assertSucceeds(adminRef.get());
   });
 
@@ -104,7 +114,7 @@ describe('Org Admin', () => {
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
 
-  test("should allow blockframe admin to read", async () => {
+  test("should allow org admin to read", async () => {
     const usersRef = db.collection("users");
     await assertSucceeds(usersRef.get());
   });
@@ -242,7 +252,6 @@ describe('Movies Rules Tests', () => {
   describe('With User in org', () => {
     const newMovieId = 'MI-007';
     const existMovieId = 'MI-077';
-    const newMovieDetails = {id: `${newMovieId}`};
     const storeConfig = {
       status: <StoreStatus>"draft",
       storeType: <StoreType>"Library",
@@ -296,10 +305,8 @@ describe('Movies Rules Tests', () => {
     });
 
     test.skip("user valid org, with create permission for org should be able to create movie", async () => {
-      const newTitle =  {id: `${newMovieId}`};
       const createdMovie:Partial<Movie> = {
         id: newMovieId, 
-        //storeConfig
       };
       const movieDoc = db.collection('movies').doc(newMovieId).set(createdMovie);
       await assertSucceeds(movieDoc)
@@ -311,7 +318,7 @@ describe('Movies Rules Tests', () => {
       ["_meta", { createdAt: ''}],
       ["_type", 'drama'],
       ["storeConfig", { appAccess: {catalog: true}}],
-      ["storeConfig", { status: 'accepted'}], //<-- doesn't work??!!
+      ["storeConfig", { status: 'rejected'}], //<-- doesn't work??!!
       ["storeConfig", { storeType: 'blah'}],
       ["storeConfig", { appAccess: {festival: {}}}],
     ]
@@ -446,7 +453,6 @@ describe('Events Rules Tests', () => {
 
     test("user with valid org, ownerId as orgId should be able to delete event", async () => {
       const eventRef = db.doc("events/E007");
-      const eventDetails = {id: 'E007', ownerId: 'O001'};
       await assertSucceeds(eventRef.delete());
     });
   });
