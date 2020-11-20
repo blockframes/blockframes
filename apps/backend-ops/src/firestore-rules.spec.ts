@@ -56,7 +56,7 @@ describe('Blockframe In Maintenance', () => {
   });
 
   test("Everyone (incl. bf admin) should be able to read MAINTENANCE doc", async () => {
-    const maintRef = db.doc("_META/_MAINTENANCE");
+    const maintRef = db.doc(metaDoc);
     await assertSucceeds(maintRef.get());
   });
 
