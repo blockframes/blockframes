@@ -1,10 +1,11 @@
 <article fxLayout>
 
-    <aside class="dark-theme" id="dashboard-navbar">
+    <aside>
       <mat-selection-list [multiple]="false">
         <mat-list-option
           *ngFor="let directory of directories; let first = first; let index = index"
           [selected]="index === activeDirectory.path[0]"
+          [ngClass]="index === activeDirectory.path[0] ? 'selected' : 'not-selected'"
           (click)="goTo(directory.path)"
         >
           <mat-icon mat-list-icon [svgIcon]="first ? 'home' : 'film'"></mat-icon>

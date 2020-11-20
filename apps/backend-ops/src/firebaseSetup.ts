@@ -3,23 +3,21 @@
  *
  * This module provides functions to trigger a firestore restore and test user creations.
  */
-import { appUrl } from '@env';
 import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
-import { endMaintenance, latestAnonDbFilename, loadAdminServices, startMaintenance } from "@blockframes/firebase-utils";
+import { latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
-import { isMigrationRequired } from './tools';
 export const { storageBucket } = firebase;
+export { restore } from './admin';
 
 export async function prepareForTesting() {
   const { db, auth, storage, getCI } = loadAdminServices();
-  await startMaintenance(db);
 
   console.log('Fetching anonymized DB from blockframes-ci and uploading to local storage bucket...');
   const dbBackupPath = await copyAnonDbFromCi(storage, getCI());
@@ -64,13 +62,12 @@ export async function prepareForTesting() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
-  await endMaintenance(db);
 }
 
 export async function prepareDb() {
   const { db, auth } = loadAdminServices();
-  console.warn( 'This script only restores the DB - does NOT refresh Firebase Auth, Sync storage, generate fixtures.');
-  console.warn( 'Nor does this script check for a new/updated anonymized db from the ci environment - latest from storage backup used');
+  console.warn('This script only restores the DB - does NOT refresh Firebase Auth, Sync storage, generate fixtures.');
+  console.warn('Nor does this script check for a new/updated anonymized db from the ci environment - latest from storage backup used');
   console.log('Restoring latest db from storage...')
   await restore(latestAnonDbFilename);
   console.log('Anonymized DB restored. Migrating...');
@@ -100,17 +97,8 @@ export async function prepareStorage() {
   console.info('Watermarks generated!');
 }
 
-export async function restoreShortcut() {
-  return restore();
-}
-
 export async function upgrade() {
-  if (!await isMigrationRequired()) {
-    console.log('Skipping upgrade because migration is not required...');
-    return;
-  }
   const { db, auth, storage } = loadAdminServices();
-  await startMaintenance(db);
 
   console.info('Preparing the database...');
   await migrate(true);
@@ -133,6 +121,4 @@ export async function upgrade() {
   console.info('Generating watermarks...');
   await generateWatermarks();
   console.info('Watermarks generated!');
-
-  await endMaintenance(db);
 }
