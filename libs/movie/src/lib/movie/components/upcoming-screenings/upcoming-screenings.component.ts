@@ -22,12 +22,19 @@ import { OrganizationService } from '@blockframes/organization/+state';
 })
 export class UpcomingScreeningsComponent {
 
-  public sessionCtrl = new FormControl('first');
+  public sessions = {
+    0: 'first',
+    1: 'second',
+    2: 'third',
+    3: 'fourth',
+    4: 'fifth'
+  };
+  public sessionCtrl = new FormControl(0);
 
   public movie$ = this.query.selectActive();
 
   public screenings$ = this.eventService.filterScreeningsByMovieId(this.query.getActive().id).pipe(
-    map(screenings => screenings.sort(this.sortByDate)));
+    map(screenings => screenings.sort(this.sortByDate).slice(0, 5)));
 
   public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
 
@@ -41,7 +48,7 @@ export class UpcomingScreeningsComponent {
     private cdr: ChangeDetectorRef) { }
 
   askForInvitation(events: Event[]) {
-    const eventId = this.sessionCtrl.value === 'first' ? events[0].id : events[1].id;
+    const eventId = events[this.sessionCtrl.value].id;
     this.orgs$.pipe(take(1)).subscribe(orgs => {
       orgs.forEach(org => {
         this.invitationService.request('org', org.id).from('user').to('attendEvent', eventId)
