@@ -3,7 +3,11 @@
     <ng-template colRef="ref" let-item="item">
       <img [asset]="getFileRef(item) | fileTypeImage">
     </ng-template>
-    <ng-template colRef="name" let-item="item">{{ getTitleRef(item) | fileName }}</ng-template>
+    <ng-template colRef="name" let-item="item">
+      <span (click)="previewFile(getFileRef(item))">
+        {{ getTitleRef(item) | fileName }}
+      </span>
+    </ng-template>
     <ng-template colRef="actions" let-item="item">
       <button mat-button (click)="downloadFile(item)">
         <mat-icon svgIcon="download"></mat-icon>
