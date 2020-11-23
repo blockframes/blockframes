@@ -195,7 +195,7 @@ export class OrganizationComponent implements OnInit {
         warning: 'You will also delete everything regarding this organization',
         confirmationWord: 'delete',
         onConfirm: () => {
-          // this.organizationService.remove(this.orgId);
+          this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted !', 'close', { duration: 5000});
           this.router.navigate(['c/o/admin/panel/organizations']);
         }

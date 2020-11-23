@@ -8,7 +8,7 @@ import { difference } from 'lodash';
 import { db, getUser } from './internals/firebase';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
-import { OrganizationDocument, PublicUser, PermissionsDocument, MovieDocument } from './data/types';
+import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, modules, getAppName, getSendgridFrom } from '@blockframes/utils/apps';
@@ -200,10 +200,23 @@ export async function onOrganizationDelete(
 
   const org = orgSnapshot.data() as OrganizationDocument;
 
+  // Reset the orgId field on user document
+  for (const userId of org.userIds) {
+    const userSnapshot = await db.doc(`users/${userId}`).get();
+    const user = userSnapshot.data() as PublicUser;
+
+    await removeMemberPermissionsAndOrgId(user);
+  }
+
+  // Delete movie belonging to organization
+  const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
+  const moviesSnap = await movieCollectionRef.get();
+  moviesSnap.forEach(movie => db.doc(`movies/${movie.id}`).delete());
+
+  // Clean all media for the organization
   await cleanOrgMedias(org);
 
   const orgAppAccess = findOrgAppAccess(org)
-
   // Update algolia's index
   const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID));
 
