@@ -38,6 +38,19 @@
             </button>
           </span>
         </ng-container>
+    
+        <ng-container *ngIf="event.isOwner else notOwner">
+          <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
+        </ng-container>
+
+        <ng-template #notOwner>
+          <ng-container *ngIf="event.meta?.ownerIsPresent else ownerNotPresent">
+            <a mat-flat-button routerLink="../session" color="accent">Ask to join {{ event.type | titlecase }} Room</a>
+          </ng-container>
+          <ng-template #ownerNotPresent>
+            <a mat-flat-button disabled color="accent">Waiting for owner...</a>
+          </ng-template>
+        </ng-template>
       </div>
       <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
     </aside>

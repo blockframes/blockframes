@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService, Event } from '@blockframes/event/+state';
 import { pluck, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Screening } from '@blockframes/event/+state/event.firestore';
+import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 
@@ -13,13 +13,15 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
   styleUrls: ['./session.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionComponent implements OnInit {
+export class SessionComponent implements OnInit, OnDestroy {
 
   public event$: Observable<Event>;
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
   public screeningFileRef: string;
+
+  private eventId: string;
 
   constructor(
     private service: EventService,
@@ -32,6 +34,7 @@ export class SessionComponent implements OnInit {
       pluck('eventId'),
       switchMap((eventId: string) => this.service.queryDocs(eventId)),
       tap(async event => {
+        this.eventId = event.id;
         if (event.isOwner) {
           this.mediaContainerSize = '40%';
           this.visioContainerSize = '60%';
@@ -45,8 +48,21 @@ export class SessionComponent implements OnInit {
             const movie = await this.movieService.getValue(event.meta.titleId as string)
             this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
           }
+        } else if (event.type === 'meeting') {
+          if (event.isOwner) {
+            (event.meta as Meeting).ownerIsPresent = true;
+            await this.service.update(event.id, { meta: event.meta });
+          }
         }
       }),
     );
+  }
+
+  async ngOnDestroy() {
+    const event = await this.service.getValue(this.eventId);
+    if (event.isOwner && event.type === 'meeting') {
+      (event.meta as Meeting).ownerIsPresent = false;
+      await this.service.update(event.id, { meta: event.meta });
+    }
   }
 }
