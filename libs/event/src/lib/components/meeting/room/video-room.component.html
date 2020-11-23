@@ -1,8 +1,8 @@
 
 <section class="video">
   <ng-container *ngIf="attendees$ | async as attendees">
-    <div fxLayout="row wrap" [class]="getRowClass(attendees.length)" >
-      <meeting-video *ngFor="let attendee of attendees" fxFlex [attendee]="attendee"></meeting-video>
+    <div [gdColumns]="attendees.length | roomColumns" >
+      <meeting-video *ngFor="let attendee of attendees"  [attendee]="attendee"></meeting-video>
     </div>
   </ng-container>
 </section>

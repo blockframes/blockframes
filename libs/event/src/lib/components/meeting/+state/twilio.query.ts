@@ -19,20 +19,4 @@ export class TwilioQuery extends QueryEntity<TwilioState> {
   selectLocal() {
     return this.selectEntity('local') as Observable<LocalAttendee>;
   }
-
-  // TODO This is for debug purpose only, this should be deleted before merging
-  // TODO This functions just take all attendees and return it n times
-  selectMultiple(n: number) {
-    return this.selectAll().pipe(
-      map(attendees => {
-        const multiplied: Attendee[] = [];
-        attendees.forEach(attendee => {
-          for (let i = 0 ; i < n ; i++) {
-            multiplied.push(attendee);
-          }
-        });
-        return multiplied;
-      }),
-    );
-  }
 }

@@ -8,9 +8,10 @@ import { MeetingVideoRoomComponent } from './video-room.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RoomPipe } from './room.pipe';
 
 @NgModule({
-  declarations: [ MeetingVideoRoomComponent ],
+  declarations: [ MeetingVideoRoomComponent, RoomPipe ],
   imports: [
     CommonModule,
     FlexLayoutModule,

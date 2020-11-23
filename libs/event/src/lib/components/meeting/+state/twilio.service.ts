@@ -10,11 +10,11 @@ import {
   LocalAudioTrack,
   LocalVideoTrack,
   RemoteAudioTrack,
-  RemoteDataTrack,
   RemoteParticipant,
   RemoteTrackPublication,
   RemoteVideoTrack,
   Room,
+  RemoteTrack,
 } from 'twilio-video';
 
 import {
@@ -138,7 +138,7 @@ export class TwilioService {
 
     this.room.on(
       'trackSubscribed',
-      (track: (RemoteAudioTrack | RemoteVideoTrack | RemoteDataTrack), publication: RemoteTrackPublication, participant: RemoteParticipant) => {
+      (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
 
         if (track.kind === 'data') return;
 

@@ -40,10 +40,7 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
     this.local$ = this.twilioQuery.selectLocal();
 
-    // TODO this is for debug purpose only, it's meant to test multiple video even with only 1 local user
-    // TODO before merging this should be replaced with the commented line bellow
-    // this.attendees$ = this.twilioQuery.selectAll();
-    this.attendees$ = this.twilioQuery.selectMultiple(9);
+    this.attendees$ = this.twilioQuery.selectAll();
 
     const name = displayName(this.authQuery.user);
     await this.twilioService.initLocal(name);
@@ -61,9 +58,5 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
   quitMeeting() {
     this.twilioService.disconnect();
-  }
-
-  getRowClass(length: number) {
-    return `row${Math.ceil(length / 3)}`;
   }
 }
