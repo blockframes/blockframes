@@ -9,7 +9,7 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 })
 export class LandingComponent {
 
-  userRoles: RequestDemoRole[] = ['investor', 'financier']
+  public userRoles: RequestDemoRole[] = ['investor', 'financier']
 
   public tabNames = ['Investors', 'Professional Content Financiers'];
 
