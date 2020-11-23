@@ -2,8 +2,16 @@
   display: block;
 }
 
+$max-width: 1440px;
+
 landing-header {
   background-image: url("/assets/images/ACMbannerlanding.webp");
+  div {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    max-width: $max-width;
+  }
 
   p.mat-display-2 {
     margin-bottom: 24px;
@@ -24,10 +32,10 @@ landing-header {
 }
 
 landing-content {
-  max-width: 1440px;
+  max-width: $max-width;
 
   .showcase-illustrations {
-    max-width: 800px;
+    max-width: 700px;
   }
 
   article {
@@ -39,6 +47,7 @@ landing-content {
       text-align: center;
       img {
         width: 150px;
+        margin-bottom: 24px;
       }
     }
 
@@ -46,4 +55,8 @@ landing-content {
       margin: 0 auto;
     }
   }
+}
+
+.join {
+  margin-top: 80px;
 }

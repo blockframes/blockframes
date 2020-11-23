@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Input, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -61,7 +61,7 @@ export class LandingFooterComponent { }
 export class LandingShellComponent {
   public submitted = false;
 
-  public roles: RequestDemoRole[] = [
+  @Input() roles: RequestDemoRole[] = [
     'buyer',
     'seller',
     'other'

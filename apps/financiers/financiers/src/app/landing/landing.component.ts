@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { RequestDemoRole } from '@blockframes/utils/request-demo';
 
 @Component({
   selector: 'financiers-landing',
@@ -7,6 +8,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingComponent {
+
+  userRoles: RequestDemoRole[] = ['investor', 'financier']
+
   public tabNames = ['Investors', 'Professional Content Financiers'];
 
   public tabTitle = [
@@ -45,7 +49,7 @@ export class LandingComponent {
     }
   ];
 
-  public buyerFeatures = [
+  public financierFeatures = [
     {
       title: 'Access a new qualified investors network',
       imgAsset: 'gems.webp',

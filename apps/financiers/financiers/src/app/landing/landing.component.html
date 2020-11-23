@@ -1,21 +1,22 @@
-<landing-shell-page fxLayout="column" fxLayoutAlign="start center">
+<landing-shell-page fxLayout="column" fxLayoutAlign="start center" [roles]="userRoles">
 
   <landing-header fxLayout="column">
-    <h4>Welcome to Media Financiers</h4>
-    <p class="mat-display-2">The professional financing hub for films and TV series</p>
-    <p class="mat-body-1">Media Financiers enables private investors to co-produce exclusive films and TV series on the
-      same conditions
-      as top professional content financiers.</p>
-    <a mat-flat-button color="accent" routerLink="/auth/connexion">
-      <span>Join now</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </a>
-    <a mat-icon-button color="primary" href="assets/docs/film-industry.pdf" target="_blank" class="download-link">
-      <mat-icon svgIcon="download"></mat-icon>
-      <span>
-        Download cinema investing guide
-      </span>
-    </a>
+    <div class="headlines">
+      <h4>Welcome to Media Financiers</h4>
+      <p class="mat-display-2">The professional financing hub for films and TV series</p>
+      <p class="mat-body-1">Media Financiers enables private investors to co-produce exclusive films and TV series on
+        the same conditions as top professional content financiers.</p>
+      <a mat-flat-button color="accent" routerLink="/auth/connexion">
+        <span>Join now</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+      <a mat-button href="assets/docs/film-industry.pdf" target="_blank" class="download-link">
+        <mat-icon svgIcon="download"></mat-icon>
+        <span>
+          Download cinema investing guide
+        </span>
+      </a>
+    </div>
   </landing-header>
 
   <landing-content>
@@ -52,8 +53,8 @@
         </article>
         <h5>Features</h5>
         <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
-          <mat-card *ngFor="let feature of buyerFeatures" class="buyer-card">
-            <img [asset]="feature.imgAsset" alt="buyer feature image">
+          <mat-card *ngFor="let feature of financierFeatures" class="buyer-card">
+            <img [asset]="feature.imgAsset" alt="financiers feature image">
             <h3>{{ feature.title }}</h3>
             <p class="mat-caption">{{ feature.description }}</p>
           </mat-card>
@@ -65,6 +66,14 @@
       <a mat-flat-button color="accent" routerLink="/auth/connexion">
         <span>Sign up</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+
+      <h3>Want to know more about investing in the content industry?</h3>
+      <a mat-button href="assets/docs/film-industry.pdf" target="_blank" class="download-link">
+        <mat-icon svgIcon="download"></mat-icon>
+        <span>
+          Download cinema investing guide
+        </span>
       </a>
     </section>
 
