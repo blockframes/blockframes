@@ -7,6 +7,7 @@ $max-width: 1440px;
 landing-header {
   background-image: url("/assets/images/ACMbannerlanding.webp");
   div {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-self: center;
@@ -38,13 +39,24 @@ landing-content {
     max-width: 700px;
   }
 
+  h5 {
+    margin-top: 36px;
+  }
+
   article {
     margin-top: 24px;
     mat-card {
-      padding: 24px;
+      height: 350px;
+      display: flex;
+      flex-direction: column;
+      place-content: center center;
+      align-items: center;
+      padding: 24px 16px;
       width: 49%;
       margin-bottom: 24px;
-      text-align: center;
+      p {
+        text-align: center;
+      }
       img {
         width: 150px;
         margin-bottom: 24px;
@@ -54,6 +66,10 @@ landing-content {
     .buyer-card:last-child {
       margin: 0 auto;
     }
+  }
+
+  .description {
+    width: 60%;
   }
 }
 
