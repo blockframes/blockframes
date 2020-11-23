@@ -11,6 +11,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { ViewerDialogComponent } from '../../../dialog/file-viewer/viewer.component';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 // File explorer
@@ -128,5 +129,9 @@ export class MultipleFilesViewComponent implements OnInit {
 
   public getTitleRef(row: HostedMediaWithMetadata | MovieNote | string) {
     return typeof(row) === "string" ? row : row[this.activeDirectory.docNameField];
+  }
+
+  public previewFile(ref: string) {
+    this.dialog.open(ViewerDialogComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 }
