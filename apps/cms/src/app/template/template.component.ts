@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { FormGroupSchema, FormEntity, createForms } from 'ng-form-factory';
@@ -6,6 +6,7 @@ import { CmsTemplate, Section, templateSchema } from './template.model';
 import { CmsService, CmsParams } from '../cms.service'
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';
+import { switchMap } from 'rxjs/operators';
 
 const templateSections = {
   home: homeSection,
@@ -21,14 +22,14 @@ export class TemplateComponent implements OnInit, OnDestroy {
   private sub?: Subscription;
 
   types: string[] = [];
-  value: Partial<CmsTemplate> = {};
   factory?: any;
   form?: FormEntity<FormGroupSchema<CmsTemplate>>;
   schema?: FormGroupSchema<CmsTemplate>;
 
   constructor(
     private service: CmsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) { }
 
   get sections() {
@@ -36,12 +37,17 @@ export class TemplateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub = this.route.params.subscribe(params => {
+    this.sub = this.route.params.pipe(
+      switchMap(params => this.service.doc<CmsTemplate>(params))
+    ).subscribe(template => {
+      console.log({template});
+      const params = this.route.snapshot.params;
       const sections = templateSections[params.page];
       this.types = Object.keys(sections);
       this.factory = (section: Section) => sections[section._type];
-      this.schema = templateSchema(this.factory, this.value);
-      this.form = createForms(this.schema, this.value);
+      this.schema = templateSchema(this.factory, template);
+      this.form = createForms(this.schema, template);
+      this.cdr.markForCheck();
     });
   }
 
@@ -64,6 +70,10 @@ export class TemplateComponent implements OnInit, OnDestroy {
 
   add(_type: string, index?: number) {
     this.form?.get('sections').add({ _type }, index);
+  }
+
+  remove(index: number) {
+    this.form?.get('sections').removeAt(index);
   }
 
   save() {
