@@ -36,7 +36,7 @@ export class PageComponent implements OnInit {
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
       const sections = pageSections[params.page];
-      this.types = Object.keys(sections[params.page]);
+      this.types = Object.keys(sections);
       this.factory = (section: Section) => sections[section._type];
       this.schema = pageSchema(this.factory, this.value);
       this.form = createForms(this.schema, this.value);
