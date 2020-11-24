@@ -9,6 +9,7 @@ import {
 } from '../static-model';
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Module, ModuleAccess } from '../apps';
+import { PublicOrganization } from '@blockframes/organization/+state';
 
 export interface AlgoliaConfig {
     searchableAttributes: string[];
@@ -80,8 +81,15 @@ export type AlgoliaIndex = keyof typeof algoliaIndex;
 
 ///// TYPES //////
 
-interface AlgoliaRecord {
+export interface AlgoliaRecord<T> {
     objectID: string,
+    nbHits: number,
+    nbPages: number,
+    hits: T,
+    query: string,
+    params: string,
+    page: number,
+    hitsPerPage: number
 }
 
 export interface AlgoliaSearch {
@@ -90,9 +98,13 @@ export interface AlgoliaSearch {
     hitsPerPage: number;
 }
 
+interface AlgoliaDefaultProperty {
+    objectID: string;
+}
+
 /* MOVIE */
 
-export interface AlgoliaMovie extends AlgoliaRecord {
+export interface AlgoliaMovie extends AlgoliaDefaultProperty {
     title: {
         international: string,
         original: string
@@ -121,17 +133,18 @@ export interface AlgoliaMovie extends AlgoliaRecord {
 
 /* ORGANIZATION */
 
-export interface AlgoliaOrganization extends AlgoliaRecord {
+export interface AlgoliaOrganization extends AlgoliaDefaultProperty {
     name: string,
     appModule: Module[],
     country: Territory,
     isAccepted: boolean,
-    hasAcceptedMovies: boolean
+    hasAcceptedMovies: boolean,
+    denomination: PublicOrganization
 }
 
 /* USER */
 
-export interface AlgoliaUser extends AlgoliaRecord {
+export interface AlgoliaUser extends AlgoliaDefaultProperty {
     email: string,
     firstName: string,
     lastName: string,

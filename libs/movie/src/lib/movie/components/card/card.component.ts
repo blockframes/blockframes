@@ -27,4 +27,3 @@ export class CardComponent {
       : 'empty_poster.webp';
   }
 }
-

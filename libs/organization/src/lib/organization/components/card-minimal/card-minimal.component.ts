@@ -1,6 +1,16 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Organization } from '@blockframes/organization/+state';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+
+function parseOrg(org) {
+  /* Only the org from Algolia has the key `objectID` */
+  if (org?.objectID) {
+    return {
+      id: org.objectID,
+      logo: org.logo,
+      denomination: org.denomination
+    }
+  }
+  return org;
+}
 
 @Component({
   selector: '[org] org-card-minimal',
@@ -10,6 +20,10 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 })
 export class OrganizationCardMinimalComponent {
 
-  @Input() org: Organization;
-  
+  private _org;
+  get org() { return this._org }
+  @Input() set org(org) {
+    this._org = parseOrg(org);
+  };
+
 }
