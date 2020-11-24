@@ -268,6 +268,28 @@ jobs:
           message: 'Deploying to demo3...'
       - prepare_environment
       - build_deploy_prepare
+  deploy-to-demo4:
+    executor: blockframes-ci
+    environment:
+       PROJECT_ID: blockframes-demo-4
+       NG_CONFIG: ''
+       ENV_TS: './env/env.blockframes-demo-4.ts'
+    steps:
+      - slack/notify:
+          message: 'Deploying to demo4...'
+      - prepare_environment
+      - build_deploy_prepare
+  deploy-to-demo5:
+    executor: blockframes-ci
+    environment:
+       PROJECT_ID: blockframes-demo-5
+       NG_CONFIG: ''
+       ENV_TS: './env/env.blockframes-demo-5.ts'
+    steps:
+      - slack/notify:
+          message: 'Deploying to demo5...'
+      - prepare_environment
+      - build_deploy_prepare
   push-anon-db-to-ci:
     executor: blockframes-ci
     steps:
@@ -309,6 +331,16 @@ workflows:
             branches:
               only:
                 - demo1
+      - deploy-to-demo4:
+          filters:
+            branches:
+              only:
+                - demo4
+      - deploy-to-demo5:
+          filters:
+            branches:
+              only:
+                - demo5
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
