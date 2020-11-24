@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Route } from '@angular/router';
 
+// TODO: Uncomment before release -> Use for fast production
 // import { createRoutes } from '@blockframes/utils/routes/create-routes';
-
 // const routes: Route[] = createRoutes({
 //   appName: 'cms',
 //   appsRoutes: [{
