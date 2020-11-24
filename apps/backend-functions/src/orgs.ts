@@ -17,6 +17,7 @@ import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies } from '@blockframes/firebase-utils';
+import { removeAllSubcollections } from './utils';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -198,20 +199,45 @@ export async function onOrganizationDelete(
   context: EventContext
 ): Promise<any> {
 
+  const batch = db.batch();
   const org = orgSnapshot.data() as OrganizationDocument;
 
   // Reset the orgId field on user document
   for (const userId of org.userIds) {
     const userSnapshot = await db.doc(`users/${userId}`).get();
     const user = userSnapshot.data() as PublicUser;
-
     await removeMemberPermissionsAndOrgId(user);
   }
 
-  // Delete movie belonging to organization
+  // Delete movies belonging to organization and its sub-collection if there is
   const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
   const moviesSnap = await movieCollectionRef.get();
-  moviesSnap.forEach(movie => db.doc(`movies/${movie.id}`).delete());
+  moviesSnap.forEach(async movie => {
+    db.doc(`movies/${movie.id}`).delete()
+    await removeAllSubcollections(movie, batch);
+  });
+
+  // Delete all events where organization is involved
+  const eventsSnap = await db.collection('events').get();
+  eventsSnap.forEach(async event => {
+    const eventData = event.data();
+    if (eventData.ownerId === org.id) db.doc(`events/${eventData.id}`).delete();
+    if (eventData.meta?.organizerId === org.id) db.doc(`events/${eventData.id}`).delete();
+  })
+
+  // Delete all notifications where organization is involved
+  const notifsSnap = await db.collection('notifications').get();
+  notifsSnap.forEach(async notif => {
+    const notifData = notif.data();
+    if (notifData.organization?.id === org.id) db.doc(`notifications/${notifData.id}`).delete();
+  })
+
+  // Delete all invitations where organization is involved
+  const invitationsSnap = await db.collection('invitations').get();
+  invitationsSnap.forEach(async invit => {
+    const invitData = invit.data();
+    if (invitData.fromOrg?.id === org.id || invitData.toOrg?.id === org.id) db.doc(`invitations/${invitData.id}`).delete();
+  })
 
   // Clean all media for the organization
   await cleanOrgMedias(org);
