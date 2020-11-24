@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
 
+/* Definition
+mat-typography-level(
+  $font-size,
+  $line-height: $font-size,
+  $font-weight: 400,
+  $font-family: null,
+  $letter-spacing: normal
+)*/
+
+
 $bf-typography: mat-typography-config(
   $font-family: 'Montserrat, Helvetica Neue, sans-serif',
   $display-4: mat-typography-level(96px, 113px, 500, $letter-spacing: -1.5px),
@@ -19,5 +29,7 @@ $bf-typography: mat-typography-config(
 
 pre {
   font-family: mat-font-family($bf-typography);
-  font-size: mat-font-size($bf-typography, body-1);
+  font-size: mat-font-size($bf-typography, body-1); // Get size of body-1
 }
+
+// TODO : Create a builder for typography with two polices

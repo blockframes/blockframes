@@ -1,0 +1,15 @@
+<section fxLayout="column">
+  <p>{{ data.question }}</p>
+  <span class="mat-body-2 text-warn">{{ data.warning }}</span>
+  <span>If yes, please write '{{  data.confirmationWord | uppercase }}' inside the form below.</span>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Confirm action</mat-label>
+    <input matInput type="text" [formControl]="actionConfirm">
+  </mat-form-field>
+
+  <article fxLayout="row" fxLayoutAlign="space-evenly">
+    <button mat-stroked-button (click)="close()">Cancel</button>
+    <button mat-flat-button color="warn" (click)="confirm()">{{ data.confirmationWord | titlecase }}</button>
+  </article>
+</section>

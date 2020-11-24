@@ -44,14 +44,11 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
   ) {
     this.sub = this.routerQuery.select('state').subscribe(data => {
       if (data.url.includes('members')) {
-        this.dynTitle.setPageTitle('Members', `${this.query.getActive().denomination.full}`,
-          { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
+        this.dynTitle.setPageTitle('Members', `${this.query.getActive().denomination.full}`);
       } else if (data.url.includes('documents')) {
-        this.dynTitle.setPageTitle('Documents', `${this.query.getActive().denomination.full}`,
-          { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
+        this.dynTitle.setPageTitle('Documents', `${this.query.getActive().denomination.full}`);
       } else {
-        this.dynTitle.setPageTitle('Company details', `${this.query.getActive().denomination.full}`,
-          { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
+        this.dynTitle.setPageTitle('Company details', `${this.query.getActive().denomination.full}`);
       }
     })
   }
