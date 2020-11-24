@@ -5,12 +5,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
-  selector: 'admin-delete-dialog',
-  templateUrl: './delete-dialog.component.html',
-  styleUrls: ['./delete-dialog.component.scss'],
+  selector: 'admin-form-dialog',
+  templateUrl: './crm-form-dialog.component.html',
+  styleUrls: ['./crm-form-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeleteDialogComponent {
+export class CrmFormDialogComponent {
 
   public deleteConfirm = new FormControl('');
 
@@ -21,7 +21,7 @@ export class DeleteDialogComponent {
       deletion?: string,
       onConfirm?: () => void
     },
-    public dialogRef: MatDialogRef<DeleteDialogComponent>,
+    public dialogRef: MatDialogRef<CrmFormDialogComponent>,
     private snackbar: MatSnackBar
   ) {}
 

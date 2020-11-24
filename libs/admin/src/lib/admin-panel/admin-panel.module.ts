@@ -54,7 +54,7 @@ import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 import { InvitationsComponent } from './pages/invitations/invitations.component';
 import { OrganizationCreateComponent } from './components/organization/create-organization/create.component';
-import { DeleteDialogModule } from './components/delete-dialog/delete-dialog.module';
+import { CrmFormDialogModule } from './components/crm-form-dialog/crm-form-dialog.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -112,7 +112,7 @@ export const panelRoutes: Routes = [
     GoToModule,
     AdminOrganizationFormModule,
     MovieVideoUploadModule,
-    DeleteDialogModule
+    CrmFormDialogModule
   ],
   declarations: [
     MoviesComponent,

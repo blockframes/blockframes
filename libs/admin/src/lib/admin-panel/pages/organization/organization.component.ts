@@ -13,7 +13,7 @@ import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { DeleteDialogComponent } from '../../components/delete-dialog/delete-dialog.component';
+import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -189,7 +189,7 @@ export class OrganizationComponent implements OnInit {
   }
 
   public deleteOrg() {
-    this.dialog.open(DeleteDialogComponent, {
+    this.dialog.open(CrmFormDialogComponent, {
       data: {
         entity: 'organization',
         deletion: 'You will also delete everything regarding this organization',
