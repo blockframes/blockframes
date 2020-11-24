@@ -191,8 +191,9 @@ export class OrganizationComponent implements OnInit {
   public deleteOrg() {
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        entity: 'organization',
-        deletion: 'You will also delete everything regarding this organization',
+        question: 'You are currently deleting this organization from Archipel, are you sure ?',
+        warning: 'You will also delete everything regarding this organization',
+        confirmationWord: 'delete',
         onConfirm: () => {
           // this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted !', 'close', { duration: 5000});

@@ -12,13 +12,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CrmFormDialogComponent {
 
-  public deleteConfirm = new FormControl('');
+  public actionConfirm = new FormControl('');
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      entity: string,
-      deletion?: string,
+      question: string,
+      warning?: string,
+      confirmationWord: string,
       onConfirm?: () => void
     },
     public dialogRef: MatDialogRef<CrmFormDialogComponent>,
@@ -26,12 +27,12 @@ export class CrmFormDialogComponent {
   ) {}
 
   public confirm() {
-    if (this.deleteConfirm.value === 'DELETE' && this.deleteConfirm.valid) {
+    if (this.actionConfirm.value === this.data.confirmationWord.toUpperCase() && this.actionConfirm.valid) {
       this.data.onConfirm();
       this.dialogRef.close(true);
     }
     else {
-      this.snackbar.open(`You didn't entered the excepted value. You can\'t delete this ${this.data.entity}.`, 'close', { duration: 5000});
+      this.snackbar.open(`You didn't entered the excepted value. Action cancelled.`, 'close', { duration: 5000});
       this.dialogRef.close(false);
     }
   }

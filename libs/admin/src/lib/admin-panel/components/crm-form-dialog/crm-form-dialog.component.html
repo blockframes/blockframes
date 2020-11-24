@@ -1,15 +1,15 @@
 <section fxLayout="column">
-  <p>You are currently deleting this {{ data.entity }} from Archipel, are you sure ?</p>
-  <span class="mat-body-2 text-warn">{{ data.deletion }}</span>
-  <span>If yes, please write 'DELETE' inside the form below.</span>
+  <p>{{ data.question }}</p>
+  <span class="mat-body-2 text-warn">{{ data.warning }}</span>
+  <span>If yes, please write '{{  data.confirmationWord | uppercase }}' inside the form below.</span>
 
   <mat-form-field appearance="outline">
-    <mat-label>Confirm delete</mat-label>
-    <input matInput type="text" [formControl]="deleteConfirm">
+    <mat-label>Confirm action</mat-label>
+    <input matInput type="text" [formControl]="actionConfirm">
   </mat-form-field>
 
   <article fxLayout="row" fxLayoutAlign="space-evenly">
     <button mat-stroked-button (click)="close()">Cancel</button>
-    <button mat-flat-button color="warn" (click)="confirm()">Delete</button>
+    <button mat-flat-button color="warn" (click)="confirm()">{{ data.confirmationWord | titlecase }}</button>
   </article>
 </section>

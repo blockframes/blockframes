@@ -148,8 +148,9 @@ export class UserComponent implements OnInit {
 
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        entity: 'user',
-        deletion: 'This user will be deleted from the application.',
+        question: 'You are currently deleting this user from Archipel, are you sure ?',
+        warning: 'This user will be deleted from the application.',
+        confirmationWord: 'delete',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });
