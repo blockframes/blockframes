@@ -178,21 +178,89 @@ describe('Users Collection Rules Tests', () => {
 
 });
 
-//TODO: 4190
-describe('Notification Rules Tests', () => {
+describe.only('Notification Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
+  const existingNotif = 'notifications/001';
   let db: Firestore;
 
-  beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+  describe('With User not in TO field', () => {
+    beforeAll(async () => {
+      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+    });
+
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+    test("should not allow user to read notification if not marked to", async () => {
+      const notifRef = db.doc(existingNotif);
+      await assertFails(notifRef.get());
+    });
+
+    test("should not allow user to create notification", async () => {
+      const notifRef = db.doc(existingNotif);
+      await assertFails(notifRef.set({note: 'A notification'}));
+    });
+    
+    const fields:any = [
+      ["id", '001'],
+      ["toUserId", 'uid-002'],
+      ["isRead", true],
+    ]
+    test.each(fields)("updating restricted '%s' field shouldn't be able to update notification", 
+        async (key, value) => {
+      const notifRef = db.doc(existingNotif);
+      const details = {};
+      details[key] = value;
+      await assertFails(notifRef.update(details));
+    });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  describe('With User in TO field', () => {
+    beforeAll(async () => {
+      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-c8'});
+    });
 
-  test("should not allow user to create notification", async () => {
-    const notifRef = db.doc("notifications/001");
-    await assertFails(notifRef.set({note: 'A notification'}));
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+    test("should allow user to read notification", async () => {
+      const notifRef = db.doc("notifications/001");
+      await assertSucceeds(notifRef.get());
+    });
+
+    test("should not allow user to create notification", async () => {
+      const notifRef = db.doc("notifications/002");
+      await assertFails(notifRef.set({note: 'A notification', toUserId: "uid-c8"}));
+    });
+
+    const fields:any = [
+      ["id", '002'],
+      ["date", new Date()],
+      ["toUserId", 'uid-002'],
+      ["type", 'movie'],
+      ["docId", 'x-002'],
+      ["user", '002'],
+      ["organization", 'O-001'],
+      ["movies", 'M-001'],
+    ]
+    test.each(fields)("updating restricted '%s' field shouldn't be able to update notification", 
+        async (key, value) => {
+      const notifRef = db.doc(existingNotif);
+      const details = {};
+      details[key] = value;
+      await assertFails(notifRef.update(details));
+    });
+
+    test("User should be able to update 'isRead' field in notification", async () => {
+      const notifRef = db.doc(existingNotif);
+      const details = {isRead: true};
+      await assertSucceeds(notifRef.update(details));
+    });
+
+    test("should not allow user to delete notification", async () => {
+      const notifRef = db.doc("notifications/001");
+      await assertFails(notifRef.delete());
+    });
   });
+
 });
 
 //TODO: 4195
