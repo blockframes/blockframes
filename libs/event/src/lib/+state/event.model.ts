@@ -60,7 +60,6 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
     files: [],
     ownerIsPresent: false,
 
-    // TODO removed real-time shared state from firestore issue#3748
     selectedFile: '',
     controls: {},
 

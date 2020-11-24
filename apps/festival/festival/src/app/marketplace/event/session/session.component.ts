@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService, Event } from '@blockframes/event/+state';
 import { pluck, switchMap, tap } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public visioContainerSize: string;
   public screeningFileRef: string;
 
-  private eventId: string;
+  private event: Event;
 
   constructor(
     private service: EventService,
@@ -34,7 +34,7 @@ export class SessionComponent implements OnInit, OnDestroy {
       pluck('eventId'),
       switchMap((eventId: string) => this.service.queryDocs(eventId)),
       tap(async event => {
-        this.eventId = event.id;
+        this.event = event;
         if (event.isOwner) {
           this.mediaContainerSize = '40%';
           this.visioContainerSize = '60%';
@@ -58,11 +58,19 @@ export class SessionComponent implements OnInit, OnDestroy {
     );
   }
 
-  async ngOnDestroy() {
-    const event = await this.service.getValue(this.eventId);
-    if (event.isOwner && event.type === 'meeting') {
-      (event.meta as Meeting).ownerIsPresent = false;
-      await this.service.update(event.id, { meta: event.meta });
+  ngOnDestroy() {
+    this.ownerLeaves();
+  }
+
+  @HostListener('window:beforeunload')
+  async beforeUnloadHandler() {
+    this.ownerLeaves();
+  }
+
+  async ownerLeaves() {
+    if (this.event.isOwner && this.event.type === 'meeting') {
+      (this.event.meta as Meeting).ownerIsPresent = false;
+      this.service.update(this.event.id, { meta: this.event.meta });
     }
   }
 }
