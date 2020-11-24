@@ -46,8 +46,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.wishlistCount$ = this.orgQuery.selectActive().pipe(
-      map(org => org.wishlist.find(wishlist => wishlist.status === 'pending')),
-      map(wishlist => wishlist?.movieIds.length || 0)
+      map(org => org.wishlist?.length || 0)
     );
   }
 

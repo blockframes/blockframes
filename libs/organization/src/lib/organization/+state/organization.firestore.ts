@@ -38,7 +38,7 @@ interface OrganizationBase<D> extends PublicOrganization {
   isBlockchainEnabled: boolean;
   userIds: string[];
   status: OrganizationStatus;
-  wishlist: WishlistBase<D>[];
+  wishlist: string[]; // An array of movieIds
   documents?: OrgMedias;
 }
 
@@ -52,18 +52,6 @@ export interface AddressSet {
   office?: Location;
   // Other can be added here
 }
-
-export interface WishlistBase<D> {
-  status: WishlistStatus;
-  movieIds: string[];
-  sent?: D;
-  name?: string;
-}
-export interface WishlistDocument extends WishlistBase<Timestamp> { }
-
-export interface WishlistDocumentWithDates extends WishlistBase<Date> { }
-
-export type WishlistStatus = 'pending' | 'sent';
 
 /** Default placeholder logo used when an Organization is created. */
 export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';

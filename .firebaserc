@@ -188,6 +188,15 @@
       "hosting": {
         "catalog": [
           "blockframes-demo-4"
+        ],
+        "festival": [
+          "festival-demo-4-blockframes"
+        ],
+        "crm": [
+          "crm-demo-4-blockframes"
+        ],
+        "financiers": [
+          "blockframes-demo-4-financiers"
         ]
       }
     },
@@ -195,6 +204,15 @@
       "hosting": {
         "catalog": [
           "blockframes-demo-5"
+        ],
+        "festival": [
+          "festival-demo-5-blockframes"
+        ],
+        "crm": [
+          "crm-demo-5-blockframes"
+        ],
+        "financiers": [
+          "blockframes-demo-5-financiers"
         ]
       }
     },
