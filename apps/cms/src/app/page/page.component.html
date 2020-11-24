@@ -1,0 +1,7 @@
+<mat-nav-list>
+  <ng-container *ngFor="let template of templates$ | async">
+    <a mat-list-item [routerLink]="template.id">
+      {{ template.id }}
+    </a>
+  </ng-container>
+</mat-nav-list>

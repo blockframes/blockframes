@@ -1,0 +1,9 @@
+<form-text [form]="form.get('title')"></form-text>
+<mat-form-field>
+  <mat-label>Mode</mat-label>
+  <mat-select [formControl]="form.get('mode')">
+    <mat-option value="banner">Banner</mat-option>
+    <mat-option value="poster">Poster</mat-option>
+    <mat-option value="slider">slider</mat-option>
+  </mat-select>
+</mat-form-field>
