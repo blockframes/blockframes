@@ -6,4 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ShellComponent {}
+export class ShellComponent {
+  apps = ['festival'];
+}

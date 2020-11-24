@@ -85,6 +85,7 @@ export const icons = [
   { name: 'dark_mode', url: 'assets/icons/dark_mode.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
+  { name: 'drag_indicator', url: 'assets/icons/drag_indicator.svg' },
   { name: 'folder', url: 'assets/icons/folder.svg' },
   { name: 'gift', url: 'assets/icons/gift.svg' },
   { name: 'empty_status', url: 'assets/icons/empty_status.svg' },
