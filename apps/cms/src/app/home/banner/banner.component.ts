@@ -26,7 +26,7 @@ export const bannerSchema: FormGroupSchema<Banner> = {
 }
 
 @Component({
-  selector: 'builder-banner',
+  selector: 'form-banner',
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

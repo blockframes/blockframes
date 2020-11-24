@@ -11,8 +11,8 @@ export const sectionSchema = <S extends Section>(
   form: 'group',
   load,
   controls: {
-    _type: { form: 'control' },
     ...controls,
+    _type: { form: 'control' },
   } 
 })
 

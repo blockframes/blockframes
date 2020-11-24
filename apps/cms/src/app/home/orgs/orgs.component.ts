@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../page/page.model';
 
-interface OrgQuery {}
+interface OrgQueryParams {}
 
-interface Orgs extends Section {
+interface OrgsSection extends Section {
   title: string;
-  query: OrgQuery;
+  query: OrgQueryParams;
 }
 
-export const orgsSchema: FormGroupSchema<Orgs> = {
+export const orgsSchema: FormGroupSchema<OrgsSection> = {
   form: 'group',
   load: async () => import('./orgs.component').then(m => m.OrgsComponent),
   controls: {
@@ -20,7 +20,7 @@ export const orgsSchema: FormGroupSchema<Orgs> = {
 }
 
 @Component({
-  selector: 'builder-orgs',
+  selector: 'form-orgs',
   templateUrl: './orgs.component.html',
   styleUrls: ['./orgs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

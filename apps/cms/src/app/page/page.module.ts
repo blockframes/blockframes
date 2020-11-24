@@ -25,7 +25,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatIconModule,
     MatListModule,
     MatToolbarModule,
-    MatSelectModule, // Requires for lazy components
+    MatSelectModule, // Required for lazy components
     DragDropModule,
     RouterModule.forChild([{ path: '', component: PageComponent }])
   ]

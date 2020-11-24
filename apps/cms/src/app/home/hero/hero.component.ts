@@ -24,7 +24,7 @@ export const heroSchema: FormGroupSchema<Hero> = {
 }
 
 @Component({
-  selector: 'builder-hero',
+  selector: 'form-hero',
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../page/page.model';
 
-interface TitleQuery {}
+interface TitleQueryParams {}
 
-interface Titles extends Section {
+interface TitlesSection extends Section {
   title: string;
-  query: TitleQuery;
+  query: TitleQueryParams;
   mode: 'poster' | 'banner' | 'slider';
 }
 
-export const titlesSchema: FormGroupSchema<Titles> = {
+export const titlesSchema: FormGroupSchema<TitlesSection> = {
   form: 'group',
   load: async () => import('./titles.component').then(m => m.TitlesComponent),
   controls: {
@@ -22,7 +22,7 @@ export const titlesSchema: FormGroupSchema<Titles> = {
 }
 
 @Component({
-  selector: 'builder-titles',
+  selector: 'form-titles',
   templateUrl: './titles.component.html',
   styleUrls: ['./titles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
