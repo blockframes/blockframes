@@ -1,24 +1,34 @@
-﻿export const testFixture = {
+﻿
+
+export const testFixture = {
+
   //Permissions
   "permissions/O001" : {
-    "documentPermissions" : {
-      "D001" : {
-        "ownerId" : 'O001'
-      },
-      "MI-000": {
-        "canCreate": false
-      },
-      "MI-007": {
-        "canCreate": true
-      },
-      "MI-077": {
-        "canCreate": true,
-        "ownerId": 'O001'
-      }
-    },
     "roles": {
-      "uid-user2": 'member'
+      "uid-admin": 'admin',
+      "uid-user2": 'member',
+      "uid-sAdmin": 'superAdmin'
     }
+  },
+
+  "permissions/O001/documentPermissions/D001" : {
+    "ownerId" : 'O001'
+  },
+  "permissions/O001/documentPermissions/MI-000": {
+    "canCreate": false
+  },
+  "permissions/O001/documentPermissions/MI-007": {
+     "canCreate": true,
+     "canDelete": true,
+  },
+  "permissions/O001/documentPermissions/MI-0d7": {
+    "canDelete": true,
+    "ownerId": 'O001'
+  },  
+  "permissions/O001/documentPermissions/MI-077": {
+    "canUpdate": true,
+    "canCreate": true,
+    "ownerId": 'O001'
   },
 
   //Orgs
@@ -27,6 +37,20 @@
   },
 
   //Users Collection
+  "users/uid-bfAdmin" : {
+    email: 'bfadmin@cascade8.com',
+    uid: 'uid-bfAdmin'
+  },
+  "users/uid-sAdmin" : {
+    email: 'admin@cascade8.com',
+    uid: 'uid-sAdmin',
+    orgId: 'O001'
+  },
+  "users/uid-admin" : {
+    email: 'admin@cascade8.com',
+    uid: 'uid-admin',
+    orgId: 'O001'
+  },
   "users/uid-c8" : {
     email: 'c8@cascade8.com',
     uid: 'uid-c8' 
@@ -42,7 +66,35 @@
   },
 
   //Blockframes Admin
-  "blockframesAdmin/uid-c8" : {
+  "blockframesAdmin/uid-bfAdmin" : {
+  },
+
+  //Movies
+  "movies/M001": {
+    "id": 'M001',
+    "title": {
+      "original": 'UnitTest'
+    },
+    "distributionRights/DR001": {
+      "id": 'DR001'
+    }
+  },
+  "movies/MI-0d7": {
+    "id": 'MI-0d7',
+    "title": {
+      "original": 'UnitTest Eraser'
+    },
+  },
+  "movies/MI-077": {
+    "id": 'MI-077',
+    "title": {
+      "original": 'UnitTest'
+    },
+    storeConfig: {
+      appAccess: {festival: true},
+      status: 'draft' 
+    },    
+    "note": ''
   },
 
   "events/E001": {

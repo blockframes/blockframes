@@ -17,7 +17,8 @@ export const appName = {
   festival: 'Archipel Market',
   financiers: 'Media Financiers',
   blockframes: 'Blockframes',
-  crm: 'Blockframes CRM'
+  crm: 'Blockframes CRM',
+  cms: 'Blockframes CMS'
 };
 
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {

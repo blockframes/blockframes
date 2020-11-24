@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
@@ -13,6 +13,8 @@ import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { DeleteDialogComponent } from '../../components/delete-dialog/delete-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'admin-organization',
@@ -75,7 +77,9 @@ export class OrganizationComponent implements OnInit {
     private snackBar: MatSnackBar,
     private permissionService: PermissionsService,
     private invitationService: InvitationService,
-    private mediaService: MediaService
+    private mediaService: MediaService,
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   async ngOnInit() {
@@ -182,5 +186,19 @@ export class OrganizationComponent implements OnInit {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
+  }
+
+  public deleteOrg() {
+    this.dialog.open(DeleteDialogComponent, {
+      data: {
+        entity: 'organization',
+        deletion: 'You will also delete everything regarding this organization',
+        onConfirm: () => {
+          // this.organizationService.remove(this.orgId);
+          this.snackBar.open('Organization deleted !', 'close', { duration: 5000});
+          this.router.navigate(['c/o/admin/panel/organizations']);
+        }
+      }
+    })
   }
 }
