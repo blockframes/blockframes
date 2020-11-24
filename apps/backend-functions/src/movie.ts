@@ -108,7 +108,7 @@ export async function onMovieUpdate(
     }
     await storeSearchableMovie(after, orgName(creatorOrg));
     for (const app in after.storeConfig.appAccess) {
-      if (after.storeConfig.appAccess[app] && before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
+      if (after.storeConfig.appAccess[app] === false && before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
         await deleteObject(algolia.indexNameMovies[app], before.id);
       }
     }

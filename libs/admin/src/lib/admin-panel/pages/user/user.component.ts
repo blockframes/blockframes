@@ -7,7 +7,7 @@ import { OrganizationService, Organization } from '@blockframes/organization/+st
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
-import { DeleteDialogComponent } from '../../components/delete-dialog/delete-dialog.component';
+import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -146,10 +146,11 @@ export class UserComponent implements OnInit {
       throw new Error('There must be at least one Super Admin in the organization.');
     }
 
-    this.dialog.open(DeleteDialogComponent, {
+    this.dialog.open(CrmFormDialogComponent, {
       data: {
-        entity: 'user',
-        deletion: 'This user will be deleted from the application.',
+        question: 'You are currently deleting this user from Archipel, are you sure ?',
+        warning: 'This user will be deleted from the application.',
+        confirmationWord: 'delete',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });
