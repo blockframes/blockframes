@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormEntity, FormFactoryModule, FormGroupSchema } from 'ng-form-factory';
-import { Section } from '../../page/page.model';
+import { Section } from '../../template/template.model';
 import { TextFormModule, matText } from '../text';
 import { Link, LinkModule, linkSchema } from '../link/link.component';
 

@@ -22,12 +22,13 @@ export const sectionListSchema = (factory: any, value: Section[] = []): FormArra
   factory
 })
 
-export interface Page {
+export interface CmsTemplate {
+  id: string;
   title: string;
   sections: Section[]
 }
 
-export const pageSchema = (factory: any, value: any): FormGroupSchema<Page> => ({
+export const templateSchema = (factory: any, value: any): FormGroupSchema<CmsTemplate> => ({
   form: 'group',
   controls: {
     title: { form: 'control' },

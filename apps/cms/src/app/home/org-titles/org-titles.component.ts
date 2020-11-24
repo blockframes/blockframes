@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Section } from '../../page/page.model';
+import { Section } from '../../template/template.model';
 
 
 interface OrgTitle extends Section {
