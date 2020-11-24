@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../page/page.model';
 
-interface TitleQueryParams {}
+interface TitleQueryParams {
+  facets: string[];
+}
 
 interface TitlesSection extends Section {
   title: string;
