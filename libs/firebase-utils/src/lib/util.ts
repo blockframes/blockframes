@@ -130,8 +130,7 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
 
 export async function hasAcceptedMovies(org: OrganizationDocument) {
   const moviesColRef = await admin.firestore().collection('movies')
-    .where('orgIds', 'array-contains', org.id)
-    .where('storeConfig.status', '==', 'accepted').get();
+    .where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.storeConfig?.status === 'accepted')
 }
