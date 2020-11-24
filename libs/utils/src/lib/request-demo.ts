@@ -14,6 +14,8 @@ export interface RequestDemoInformations {
 export const requestDemoRole = {
   buyer: 'Buyer',
   seller: 'Seller',
+  investor: 'Investor',
+  financier: 'Financier',
   other: 'Other'
 } as const;
 

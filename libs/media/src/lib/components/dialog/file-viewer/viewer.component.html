@@ -1,0 +1,15 @@
+<ng-container [ngSwitch]="data.ref | fileType">
+  <ng-container *ngSwitchCase="'image'">
+    <img [ref]="data.ref" asset="no_titles.webp" />
+  </ng-container>
+  <ng-container *ngSwitchCase="'pdf'">
+    <media-pdf [ref]="data.ref"></media-pdf>
+  </ng-container>
+  <ng-container *ngSwitchCase="'video'">
+    <media-player [ref]="data.ref"></media-player>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <p>Sorry, we don't know how to display this file.</p>
+    <p>Currently supported file are: pdf, images, and videos</p>
+  </ng-container>
+</ng-container>
