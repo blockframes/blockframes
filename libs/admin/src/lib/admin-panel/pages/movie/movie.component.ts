@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin.form';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
@@ -8,6 +8,9 @@ import { storeType, storeStatus, staticModel } from '@blockframes/utils/static-m
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { app } from '@blockframes/utils/apps';
+import { DeleteDialogComponent } from '../../components/delete-dialog/delete-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'admin-movie',
@@ -44,10 +47,13 @@ export class MovieComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
+    private organizationService: OrganizationService,
     private distributionRightService: DistributionRightService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private router: Router,
   ) { }
 
   async ngOnInit() {
@@ -101,5 +107,27 @@ export class MovieComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
+  public deleteMovie() {
+    this.testWishlist(this.movieId)
+    this.dialog.open(DeleteDialogComponent, {
+      data: {
+        entity: 'movie',
+        deletion: 'You will also delete everything regarding this movies',
+        onConfirm: () => {
+          // this.organizationService.remove(this.orgId);
+          this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
+          this.router.navigate(['c/o/admin/panel/movies']);
+        }
+      }
+    })
+  }
+
+
+  public async testWishlist(movieId: string) {
+    const orgs = await    this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movieId));
+
+    console.log(orgs);
+
+  }
 
 }
