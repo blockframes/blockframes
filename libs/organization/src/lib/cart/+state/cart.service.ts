@@ -5,16 +5,8 @@ import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrency } from '@blockframes/utils/static-model/types';
-import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-
-const wishlistFactory = (movieId: string): Wishlist => {
-  return {
-    status: 'pending',
-    movieIds: [movieId]
-  };
-};
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/carts' })
@@ -23,7 +15,6 @@ export class CartService extends CollectionService<CartState> {
   constructor(
     private organizationQuery: OrganizationQuery,
     private organizationService: OrganizationService,
-    private functions: AngularFireFunctions,
     protected store: CartStore
   ) {
     super(store);
@@ -97,64 +88,19 @@ export class CartService extends CollectionService<CartState> {
     }
   }
 
-  //////////////////
-  /// WISHLIST STUFF
-  // @dev we can replace a lot of these functions by native Akita-ng-fire functions
-  // @see https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-  //////////////////
-
-  /**
-   *
-   * @param movieId
-   */
-  public async removeMovieFromWishlist(movieId: string): Promise<boolean | Error> {
-    const orgState = this.organizationQuery.getActive();
-    try {
-      const wishlist = orgState.wishlist.map(wish => {
-        if (wish.status === 'pending') {
-          return {
-            ...wish,
-            movieIds: wish.movieIds.filter(id => id !== movieId)
-          }
-        } else {
-          return wish;
-        }
-      });
-      await this.organizationService.update({ ...orgState, wishlist });
-      return true;
-    } catch (err) {
-      return err;
-    }
-  }
-
   /**
    *
    * @param movie
    */
   public async updateWishlist(movie: Movie) {
     const orgState = this.organizationQuery.getActive();
-    const pendingWishlist = this.organizationQuery
-      .getActive()
-      .wishlist.filter(wishlist => wishlist.status === 'pending');
-
-    if (!orgState.wishlist || orgState.wishlist.length <= 0) {
-      this.organizationService.update({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
-      // If the organization has sent wishlist but no pending
-    } else if (pendingWishlist.length === 0) {
-      this.organizationService.update({ ...orgState, wishlist: [...orgState.wishlist, wishlistFactory(movie.id)] });
+    let wishlist = [...orgState.wishlist] || [];
+    if (wishlist.includes(movie.id)) {
+      wishlist = orgState.wishlist.filter(id => id !== movie.id);
     } else {
-      const wishlist = orgState.wishlist.map(w => {
-        const wish = Object.assign({}, w);
-        if (wish.status === 'pending') {
-          if (wish.movieIds.includes(movie.id)) {
-            wish.movieIds = wish.movieIds.filter(id => id !== movie.id);
-          } else {
-            wish.movieIds = [...wish.movieIds, movie.id];
-          }
-        }
-        return wish;
-      });
-      this.organizationService.update({ ...orgState, wishlist });
+      wishlist.push(movie.id);
     }
+
+    this.organizationService.update({ ...orgState, wishlist });
   }
 }

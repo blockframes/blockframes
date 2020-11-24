@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { CartService } from '@blockframes/cart/+state/cart.service';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -49,8 +49,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.orgQuery.selectActive().pipe(
-      map(org => org.wishlist.find(wish => wish.status === 'pending')),
-      switchMap(org => this.movieService.valueChanges(org?.movieIds || []))
+      switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
     ).subscribe(allMovies => {
       // valueChanges returns all documents even if they don't exist - created issue for this on akita-ng-fire https://github.com/dappsnation/akita-ng-fire/issues/138
       const movies = allMovies.filter(movie => !!movie);
@@ -70,7 +69,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   public remove(movie: Movie, event: Event) {
     event.stopPropagation();
-    this.service.removeMovieFromWishlist(movie.id);
+    this.service.updateWishlist(movie);
     this.snackbar.open(
       `${movie.title.international} has been removed from your selection.`,
       'close',

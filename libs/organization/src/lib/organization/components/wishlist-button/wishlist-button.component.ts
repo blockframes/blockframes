@@ -1,17 +1,13 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// Rxjs
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 // Blockframes
 import { CartService } from '@blockframes/cart/+state/cart.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { MovieService } from '@blockframes/movie/+state';
+import { CartQuery } from '@blockframes/cart/+state/cart.query';
 
 @Directive({
   selector: 'wishlist-add-text [wishlistAddText]',
@@ -33,9 +29,7 @@ export class WishlistRemoveText { }
   styleUrls: ['./wishlist-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WishlistButtonComponent implements OnInit {
-
-  toggle$: Observable<boolean>;
+export class WishlistButtonComponent  {
 
   @Input() movieId: string;
 
@@ -46,20 +40,14 @@ export class WishlistButtonComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
-    private orgQuery: OrganizationQuery,
+    private cartQuery: CartQuery,
     private cartService: CartService,
     private analytics: FireAnalytics,
     private snackbar: MatSnackBar
   ) { }
 
-  ngOnInit() {
-    this.toggle$ = this.orgQuery.selectActive().pipe(
-      map(org => {
-        return org.wishlist
-          .filter(({ status }) => status === 'pending')
-          .some(({ movieIds }) => movieIds.includes(this.movieId));
-      })
-    );
+  public toggle$() {
+    return this.cartQuery.isAddedToWishlist(this.movieId);
   }
 
   public async addToWishlist(event?: Event) {

@@ -4,7 +4,6 @@ import { AuthQuery, User } from '@blockframes/auth/+state';
 import {
   Organization,
   createOrganization,
-  formatWishlistFromFirestore,
   OrganizationDocument
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
@@ -64,8 +63,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   formatFromFirestore(org: OrganizationDocument): Organization {
     return {
       ...org,
-     _meta: formatDocumentMetaFromFirestore(org._meta),
-      wishlist: formatWishlistFromFirestore(org.wishlist)
+     _meta: formatDocumentMetaFromFirestore(org._meta)
     };
   }
 
