@@ -821,7 +821,7 @@ export function createMovieOriginalRelease(
 //          LANGUAGES
 // ------------------------------
 
-export function createLanguageControl(
+function createLanguageControl(
   versionInfo: Partial<{ [language in Language]: MovieLanguageSpecification }>
 ) {
   const controls = {};

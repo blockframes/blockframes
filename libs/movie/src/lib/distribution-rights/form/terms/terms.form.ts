@@ -13,7 +13,7 @@ function createTermsControl(terms: Partial<Terms>) {
   };
 }
 
-export type DistributionRightTermsControl = ReturnType<typeof createTermsControl>;
+type DistributionRightTermsControl = ReturnType<typeof createTermsControl>;
 
 export class DistributionRightTermsForm extends FormEntity<DistributionRightTermsControl, Terms> {
   constructor(terms: Partial<Terms> = {}) {

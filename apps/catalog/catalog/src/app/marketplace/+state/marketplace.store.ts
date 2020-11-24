@@ -22,6 +22,6 @@ export class MarketplaceStore extends EntityStore<MarketplaceState> {
 
   /** Set an empty title cart. */
   addTitle(movieId: string) {
-    this.add({movieId, rights: []})
+    this.add({movieId, rights: []}) // @TODO check
   }
 }

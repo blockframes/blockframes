@@ -5,7 +5,7 @@ import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerrit
 import { DistributionRightService, DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
-import { TerritoryValue, Territory } from '@blockframes/utils/static-model';
+import { TerritoryValue, Territory, getISO3166TerritoryFromSlug } from '@blockframes/utils/static-model';
 import { arrayAdd } from '@datorama/akita';
 import { areTermsValid } from '@blockframes/distribution-rights/form/terms/terms.form';
 import { territories } from '@blockframes/utils/static-model';
@@ -20,10 +20,13 @@ import { getIsoA3bySlug, getSlugByIsoA3 } from '@blockframes/utils/static-model/
 export class MarketplaceMovieAvailsComponent {
   public availsForm: AvailsSearchForm = new AvailsSearchForm();
   public movie: Movie = this.movieQuery.getActive();
-  public territories = territories;
+  public territories = Object.keys(territories).map(k => ({
+    label: territories[k],
+    slug: k
+  }))
 
   /** List of world map territories */
-  public notLicensedTerritories: Territory[] = [];
+  public notLicensedTerritories: any[] = [];
   public rightsSoldTerritories: Territory[] = [];
   public availableTerritories: Territory[] = [];
 
@@ -38,11 +41,15 @@ export class MarketplaceMovieAvailsComponent {
     private marketplaceStore: MarketplaceStore,
     private marketplaceQuery: MarketplaceQuery,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+
+   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: Territory) {
-    const territorySlug = getSlugByIsoA3(territory['iso_a3']);
+    console.log('select');
+    const territorySlug = getSlugByIsoA3(territory['iso_a3']) as any;
+    
     this.availsForm.addTerritory(territorySlug);
   }
 
@@ -51,7 +58,7 @@ export class MarketplaceMovieAvailsComponent {
     return this.availsForm.territory.value.map(territorySlug => getIsoA3bySlug(territorySlug));
   }
 
-  public trackByTag(tag) {
+  public trackByTag(tag) { // ??
     return tag;
   }
 
@@ -64,7 +71,7 @@ export class MarketplaceMovieAvailsComponent {
       if (!this.availsForm.value.licenseType.length) {
         throw new Error('Please fill all the required fields (Terms and Media)');
       }
-
+      console.log(this.movie);
       this.availsForm.get('isActive').setValue(true);
       if (!this.movie.distributionRights) {
         throw new Error('Archipel Content got no mandate on this movie');
@@ -76,7 +83,8 @@ export class MarketplaceMovieAvailsComponent {
         right => !mandateRightIds.includes(right.id)
       );
 
-      this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateRights)
+      this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateRights).map(t => getISO3166TerritoryFromSlug(t));
+      console.log(this.notLicensedTerritories);
       this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateRights, filteredRights);
       this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateRights, filteredRights);
 
@@ -132,6 +140,7 @@ export class MarketplaceMovieAvailsComponent {
 
   /** Display the territories information in the tooltip */
   public dislpayTerritoryTooltip(territory: TerritoryValue, status: string) {
+    console.log('dislpayTerritoryTooltip');
     this.hoveredTerritory = { name: territory, status }
   }
 

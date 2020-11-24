@@ -55,7 +55,7 @@
     <div fxLayout="column" fxLayoutAlign="start space-between" class="checkbox-padding">
       <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" color="primary"
         [disabled]="availsForm.value.isActive">
-        {{  media | toLabel: 'medias' }}
+        {{  media  }}
       </mat-checkbox>
     </div>
   </mat-expansion-panel>

@@ -15,7 +15,7 @@ import { NativeDateModule } from '@angular/material/core'
 export class AvailsFilterComponent {
   @Input() availsForm: AvailsSearchForm;
 
-  public movieMedias: MediaValue[] = Object.keys(medias).map(key => medias[key]);
+  public movieMedias: MediaValue[] = Object.values(medias);
 
   /* Flags for the Territories chip input */
   public visibleTerritory = true;
@@ -41,6 +41,7 @@ export class AvailsFilterComponent {
 
   /** Check media or uncheck it if it's already in the array. */
   public checkMedia(media: MediaValue) {
+    console.log(media);
     if (this.movieMedias.includes(media)) {
       this.availsForm.checkMedia(media);
     }

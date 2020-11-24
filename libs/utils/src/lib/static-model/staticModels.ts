@@ -1,3 +1,6 @@
+import { getISO3166TerritoryFromSlug, getTerritorySlugFromGeoJson } from "./static-model";
+import { Territory } from "./types";
+
 // TODO issue#2582
 const models = {
   // TODO #2306 Cast_role / Producer_role / Crew_role are used now only in the import code, we need to rework the import to delete it completely
@@ -116,71 +119,20 @@ export const getCodeIfExists = <S extends Scope, code extends ExtractCode<S>>(
   return null as any;
 };
 
-
-/**
- * Returns the label corresponding to a slug (ie:code).
- * @dev Codes are used to store sanitized data in database
- * @param scope
- * @param slug
- */
-export const getLabelBySlug = (scope: Scope, slug: string) => {
-  const item = (models[scope] as any[]).find(i => i.slug === slug);
-  return item ? item.label : '';
-};
-
-/**
- * Returns the code corresponding to a slug (ie:code).
- * @param scope
- * @param slug
- */
-export const getCodeBySlug = (scope: Scope, slug: string) => {
-  const item = (models[scope] as any[]).find(i => i.slug === slug);
-  return item ? item.code : '';
-}
-
 /**
  * Returns the slug corresponding to a iso_a3.
  * @param iso_a3
  */
 export const getSlugByIsoA3 = (iso_a3: string) => {
-  const item = (models['TERRITORIES'] as any[]).find(i => i.iso_a3 === iso_a3);
-  return item ? item.slug : '';
+  return getTerritorySlugFromGeoJson(iso_a3);
 }
 
 /**
  * Returns the iso_a3 corresponding to a slug.
  * @param slug
  */
-export const getIsoA3bySlug = (slug: string) => {
-  const item = (models['TERRITORIES'] as any[]).find(i => i.slug === slug);
-  return item ? item.iso_a3 : '';
-}
-
-/** Check if the key is a slug of a scope */
-export const isInSlug = (scope: Scope, key: string) => {
-  return (models[scope] as any[]).map(({ slug }) => slug).includes(key);
+export const getIsoA3bySlug = (slug: Territory) => {
+  return getISO3166TerritoryFromSlug(slug)['iso-3'];
 }
 
 export default models;
-
-export interface SlugAndLabel {
-  label: string;
-  slug: string;
-}
-
-export interface CurrencyWithLabel {
-  label: string;
-  slug: string;
-  code: string;
-}
-
-/**
- * Check if data passed into array have at lease one item belonging to scope
- * @param array
- * @param scope
- * @param key
- * @deprecated unused
- */
-export function hasSlug<S extends Scope, code extends ExtractSlug<S>>(array: string[], scope: Scope, key: code): boolean {
-  return array.includes(getCodeIfExists(scope, key));
-}
