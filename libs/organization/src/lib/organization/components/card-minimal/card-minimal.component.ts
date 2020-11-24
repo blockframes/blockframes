@@ -5,7 +5,7 @@ function parseOrg(org) {
   if (org?.objectID) {
     return {
       id: org.objectID,
-      logo: org.logo,
+      logo: org.denomination.logo,
       denomination: org.denomination
     }
   }

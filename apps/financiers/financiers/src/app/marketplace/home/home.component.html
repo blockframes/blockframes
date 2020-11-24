@@ -56,8 +56,20 @@
     </div>
     <bf-carousel flex [min]="4">
       <ng-container *ngFor="let org of (orgs | async)?.hits">
-        <org-card-minimal [org]="org"></org-card-minimal>
+        <org-card-minimal [org]="org" carouselItem [col]="3"></org-card-minimal>
       </ng-container>
+    </bf-carousel>
+  </section>
+  <section>
+    <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+      <h1>Our Benefits</h1>
+    </div>
+    <bf-carousel flex [min]="2">
+      <mat-card *ngFor="let benefit of benefits" carouselItem [col]="6">
+        <img [asset]="benefit.imgAsset" type="logo" alt="benefit feature image">
+        <h3>{{ benefit.title }}</h3>
+        <p class="mat-body-1" [innerHTML]="benefit.description"></p>
+      </mat-card>
     </bf-carousel>
   </section>
 

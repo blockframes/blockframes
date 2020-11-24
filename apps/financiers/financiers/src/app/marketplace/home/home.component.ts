@@ -27,12 +27,37 @@ export class HomeComponent implements OnInit {
   public sections: CarouselSection[];
   public orgs: Promise<AlgoliaRecord<AlgoliaOrganization>>;
 
+  public benefits = [
+    {
+      title: 'Tag along with professional content financiers',
+      imgAsset: 'tag-along.svg',
+      description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. '
+    },
+    {
+      title: 'Get access to prominent film companies and projects',
+      imgAsset: 'topfilms.svg',
+      description: 'Find the hottest projects selected by a pool of industry veterans and benefit from their knowledge of the industry.'
+    },
+    {
+      title: 'Learn about investing in the content industry',
+      imgAsset: 'knowledge.svg',
+      description: `No experience needed. Discover why content is a profitable investment. 
+      <a href="assets/docs/film-industry.pdf" target="_blank"><u>Download our investment guide.</u></a>`
+    },
+    {
+      title: 'Enjoy exclusive privileges',
+      imgAsset: 'exclusive-priviledges.svg',
+      description: 'Get perks and live the full experience of the content industry.'
+    }
+  ];
+
+
   constructor(
     private algoliaService: AlgoliaService,
     private dynTitle: DynamicTitleService,
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.dynTitle.setPageTitle('Home');
     this.sections = [
       {
