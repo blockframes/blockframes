@@ -8,9 +8,9 @@ import { storeType, storeStatus, staticModel } from '@blockframes/utils/static-m
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { app } from '@blockframes/utils/apps';
-import { DeleteDialogComponent } from '../../components/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
 
 @Component({
   selector: 'admin-movie',
@@ -109,22 +109,23 @@ export class MovieComponent implements OnInit {
 
   public deleteMovie() {
     this.testWishlist(this.movieId)
-    this.dialog.open(DeleteDialogComponent, {
+    this.dialog.open(CrmFormDialogComponent, {
       data: {
-        entity: 'movie',
-        deletion: 'You will also delete everything regarding this movies',
+        question: 'You are about to delete this movie from Archipel, are you sure ?',
+        warning: 'Doing this will also delete everything regarding this movie',
+        confirmationWord: 'delete',
         onConfirm: () => {
           // this.organizationService.remove(this.orgId);
           this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/admin/panel/movies']);
         }
       }
-    })
+    });
   }
 
 
   public async testWishlist(movieId: string) {
-    const orgs = await    this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movieId));
+    const orgs = await this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movieId));
 
     console.log(orgs);
 
