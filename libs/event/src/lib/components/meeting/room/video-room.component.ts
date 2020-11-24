@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { displayName } from '@blockframes/utils/pipes/display-name.pipe'
+import { displayName } from '@blockframes/utils/utils'
 import { AuthQuery } from '@blockframes/auth/+state';
 import { EventQuery } from '@blockframes/event/+state';
 

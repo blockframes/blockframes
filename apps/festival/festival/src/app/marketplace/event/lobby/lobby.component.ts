@@ -8,7 +8,7 @@ import { TwilioService } from '@blockframes/event/components/meeting/+state/twil
 import { AuthQuery } from '@blockframes/auth/+state';
 import { LocalAttendee, TrackKind, } from '@blockframes/event/components/meeting/+state/twilio.model';
 import { TwilioQuery } from '@blockframes/event/components/meeting/+state/twilio.query';
-import { displayName } from '@blockframes/utils/pipes';
+import { displayName } from '@blockframes/utils/utils';
 
 @Component({
   selector: 'festival-lobby',
