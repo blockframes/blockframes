@@ -3,7 +3,7 @@ import { CallableContext } from "firebase-functions/lib/providers/https";
 
 import { getDocument } from "@blockframes/firebase-utils";
 import { EventDocument, Meeting } from "@blockframes/event/+state/event.firestore";
-import { ErrorResultResponse } from "@blockframes/utils/utils";
+import { ErrorResultResponse, displayName } from "@blockframes/utils/utils";
 
 import { twilioApiKeySecret, twilioAccountSid, twilioApiKeySid } from './environments/environment';
 import { hasUserAcceptedEvent } from "./internals/invitations/meetings";
@@ -75,7 +75,8 @@ export const getTwilioAccessToken = async (
   }
 
   const user = await getUser(context.auth.uid);
-  const identity = `${user.firstName[0].toUpperCase()}${user.firstName.substr(1).toLowerCase()} ${user.lastName[0].toUpperCase()}${user.lastName.substr(1).toLowerCase()}`;
+  // const identity = `${user.firstName[0].toUpperCase()}${user.firstName.substr(1).toLowerCase()} ${user.lastName[0].toUpperCase()}${user.lastName.substr(1).toLowerCase()}`;
+  const identity = displayName(user);
 
   // Create access token with twilio global var et identity of the user as identity of token
   const token = new AccessToken(twilioAccountSid, twilioApiKeySid, twilioApiKeySecret, { identity });
