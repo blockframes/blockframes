@@ -21,6 +21,7 @@ import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 
@@ -36,6 +37,7 @@ export class MovieService extends CollectionService<MovieState> {
     private functions: AngularFireFunctions,
     private query: MovieQuery,
     protected store: MovieStore,
+    private orgQuery: OrganizationQuery
   ) {
     super(store);
   }
@@ -47,8 +49,17 @@ export class MovieService extends CollectionService<MovieState> {
   async create(movieImported?: Movie): Promise<Movie> {
     const createdBy = this.authQuery.userId;
     const appName = getCurrentApp(this.routerQuery);
+    let orgIds = [];
+    if (!!movieImported.orgIds.length) {
+      orgIds = movieImported.orgIds;
+    } else {
+      const orgId = this.orgQuery.getActiveId();
+      orgIds.push(orgId);
+    }
+
     const movie = createMovie({
       _meta: createDocumentMeta({ createdBy }),
+      orgIds,
       ...movieImported
     });
     movie.storeConfig = {
