@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { FormGroupSchema, FormEntity, createForms } from 'ng-form-factory';
 import { Page, Section, pageSchema } from './page.model';
+import { CmsPageService, PageParams } from './page.service'
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';
 
@@ -26,6 +27,7 @@ export class PageComponent implements OnInit {
   schema?: FormGroupSchema<Page>;
 
   constructor(
+    private service: CmsPageService,
     private route: ActivatedRoute
   ) { }
 
@@ -64,4 +66,8 @@ export class PageComponent implements OnInit {
     this.form?.get('sections').add({ _type }, index);
   }
 
+  save(mode: PageParams['mode']) {
+    const params = { ...this.route.snapshot.params, mode } as PageParams;
+    this.service.save(this.form.value, params);
+  }
 }

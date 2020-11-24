@@ -1,7 +1,7 @@
 <mat-sidenav-container cdkDropListGroup>
   <mat-sidenav-content *ngIf="form">
     <mat-toolbar>
-      <button mat-icon-button>
+      <button mat-icon-button (click)="save('live')">
         <mat-icon svgIcon="floppy"></mat-icon>
       </button>
     </mat-toolbar>
