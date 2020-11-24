@@ -22,13 +22,8 @@ import { OrganizationService } from '@blockframes/organization/+state';
 })
 export class UpcomingScreeningsComponent {
 
-  public sessions = {
-    0: 'first',
-    1: 'second',
-    2: 'third',
-    3: 'fourth',
-    4: 'fifth'
-  };
+  public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
+
   public sessionCtrl = new FormControl(0);
 
   public movie$ = this.query.selectActive();
