@@ -293,9 +293,21 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     })
   });
 
-  //If 
+  //TODO: Publish the movie to market
   it('Publish the movie to the market', () => {
-    
+    //If mandatory fields are missing movie should not be published.
+
+
+    //After filling all required fields, movie can be published.
+
+  });
+
+  it('checks published movie is listed', () => {
+    //Search the movie
+
+
+    //After filling all required fields, movie can be published.
+
   });
 
 });
