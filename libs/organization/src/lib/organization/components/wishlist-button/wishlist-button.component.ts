@@ -1,13 +1,13 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
 import { CartService } from '@blockframes/cart/+state/cart.service';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { MovieService } from '@blockframes/movie/+state';
 import { CartQuery } from '@blockframes/cart/+state/cart.query';
+import { Observable } from 'rxjs';
 
 @Directive({
   selector: 'wishlist-add-text [wishlistAddText]',
@@ -29,7 +29,9 @@ export class WishlistRemoveText { }
   styleUrls: ['./wishlist-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WishlistButtonComponent  {
+export class WishlistButtonComponent implements OnInit {
+
+  toggle$: Observable<boolean>;
 
   @Input() movieId: string;
 
@@ -42,12 +44,11 @@ export class WishlistButtonComponent  {
     private movieService: MovieService,
     private cartQuery: CartQuery,
     private cartService: CartService,
-    private analytics: FireAnalytics,
     private snackbar: MatSnackBar
   ) { }
 
-  public toggle$() {
-    return this.cartQuery.isAddedToWishlist(this.movieId);
+  ngOnInit() {
+    this.toggle$ = this.cartQuery.isAddedToWishlist(this.movieId);
   }
 
   public async addToWishlist(event?: Event) {

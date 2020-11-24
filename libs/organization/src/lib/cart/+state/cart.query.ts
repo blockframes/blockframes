@@ -20,9 +20,7 @@ export class CartQuery extends QueryEntity<CartState, CatalogCart> {
   /** Checks if a movie is or is not in the organization wishlist. */
   public isAddedToWishlist(movieId: string): Observable<boolean> {
     return this.organizationQuery.selectActive().pipe(
-      map(org => {
-        return org.wishlist.includes(movieId);
-      })
+      map(org => org.wishlist.includes(movieId))
     );
   }
 }
