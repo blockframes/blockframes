@@ -49,31 +49,16 @@ export class TwilioService {
       id: 'local',
       kind: 'local',
       userName,
-      tracks: { video: null, audio: null }
+      tracks: {},
     };
     this.twilioStore.upsert(local.id, local);
 
-    const promises: Promise<LocalVideoTrack | LocalAudioTrack>[] = [];
+    const [ video, audio ] = await Promise.all([
+      createLocalVideoTrack().catch(e => null),
+      createLocalAudioTrack().catch(e => null)
+    ]) as [ LocalVideoTrack, LocalAudioTrack ];
 
-    if (!local.tracks.video) {
-      promises.push(createLocalVideoTrack().catch(e => null));
-    }
-
-    if (!local.tracks.audio) {
-      promises.push(createLocalAudioTrack().catch(e => null));
-    }
-
-    const [ video, audio ] = await Promise.all(promises);
-
-    this.twilioStore.update(
-      local.id,
-      (entity: LocalAttendee) => ({
-        tracks: {
-          video: (video as LocalVideoTrack) ?? entity.tracks.video,
-          audio: (audio as LocalAudioTrack) ?? entity.tracks.audio,
-        }
-      })
-    );
+    this.twilioStore.update(local.id, { tracks: { video, audio } });
   }
 
   cleanLocal() {
@@ -124,44 +109,19 @@ export class TwilioService {
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
       this.twilioStore.upsert(
         participant.sid,
-        {
-          id: participant.sid,
-          kind: 'remote',
-          userName: participant.identity,
-          tracks: {
-            audio: null,
-            video: null,
-          }
-        }
+        { id: participant.sid, kind: 'remote', userName: participant.identity, tracks: {} }
       );
     });
 
     this.room.on(
       'trackSubscribed',
       (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
-
         if (track.kind === 'data') return;
-
+        const remoteTracks: RemoteTracks = { [track.kind]: track };
         this.twilioStore.upsert(
           participant.sid,
-          (entity: RemoteAttendee) => {
-            const remoteTracks: RemoteTracks = {
-              video: null,
-              audio: null,
-            };
-
-            if (Object.keys(entity).length > 0) {
-              remoteTracks.video = track.kind === 'video' ? track : entity.tracks.video;
-              remoteTracks.audio = track.kind === 'audio' ? track : entity.tracks.audio;
-            } else {
-              (remoteTracks[track.kind] as RemoteAudioTrack | RemoteVideoTrack) = track;
-            }
-
-            return { tracks: remoteTracks };
-          },
-          (id, entity) => {
-            return { id, kind: 'remote', userName: participant.identity, tracks: entity.tracks}
-          },
+          (entity: RemoteAttendee) => ({ tracks: { ...entity.tracks, ...remoteTracks } }),
+          id => ({ id, kind: 'remote', userName: participant.identity, tracks: remoteTracks })
         );
       },
     );

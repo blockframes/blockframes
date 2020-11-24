@@ -22,7 +22,7 @@ p {
   }
 }
 
-section {
+.screening {
   height: 100%;
   width: 100%;
   text-align: center;
@@ -59,9 +59,28 @@ section {
 }
 
 .meeting {
+  height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+
   .meeting-container {
-    height: 60vh;
+    flex: 1;
+
+    display: flex;
+    align-items: stretch;
+
+    media-viewer {
+      width: 40%;
+    }
+    meeting-video-room {
+      width: 60%;
+    }
+  }
+
+  media-control {
+    display: flex;
+    justify-content: center;
   }
 }
 

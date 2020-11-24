@@ -2,13 +2,13 @@ import { LocalAudioTrack, LocalVideoTrack, RemoteAudioTrack, RemoteVideoTrack } 
 
 export type Tracks = LocalTracks | RemoteTracks;
 export interface LocalTracks {
-  video: LocalVideoTrack,
-  audio: LocalAudioTrack,
+  video?: LocalVideoTrack,
+  audio?: LocalAudioTrack,
 };
 
 export interface RemoteTracks {
-  video: RemoteVideoTrack,
-  audio: RemoteAudioTrack,
+  video?: RemoteVideoTrack,
+  audio?: RemoteAudioTrack,
 };
 
 export type TrackKind = keyof Tracks;

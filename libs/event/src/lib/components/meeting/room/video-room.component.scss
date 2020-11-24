@@ -1,11 +1,17 @@
-.video {
-  height: 80%;
-
-  div {
-    height: 100%;
-  }
-
+:host {
+  display: flex;
+  flex-direction: column;
 }
-.controls {
-  height: 20%;
+
+section {
+  flex: 1;
+}
+footer {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+
+  button {
+    margin: 0 8px;
+  }
 }
