@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { CartService } from '@blockframes/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
+import { CartQuery } from '@blockframes/cart/+state/cart.query';
 
 @Component({
   selector: '[movies] movie-display-list',
@@ -27,11 +27,11 @@ export class MovieDisplayListComponent {
   constructor(
     private cartService: CartService,
     private snackbar: MatSnackBar,
-    private catalogCartQuery: CatalogCartQuery,
+    private cartQuery: CartQuery,
   ) {}
 
   public toggle$(movieId: string) {
-    return this.catalogCartQuery.isAddedToWishlist(movieId);
+    return this.cartQuery.isAddedToWishlist(movieId);
   }
 
   public addToWishlist(movie: Movie, event: Event) {
