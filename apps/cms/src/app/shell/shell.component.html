@@ -1,1 +1,10 @@
-<router-outlet></router-outlet>
+<mat-toolbar>
+  <ng-container *ngFor="let app of apps">
+    <a mat-button [routerLink]="[app]" routerLinkActive="active">
+      {{ app }}
+    </a>
+  </ng-container>
+</mat-toolbar>
+<main>
+  <router-outlet></router-outlet>
+</main>

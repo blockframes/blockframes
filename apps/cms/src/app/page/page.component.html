@@ -1,0 +1,31 @@
+<mat-sidenav-container cdkDropListGroup>
+  <mat-sidenav-content *ngIf="form">
+    <mat-toolbar>
+      <button mat-icon-button>
+        <mat-icon svgIcon="floppy"></mat-icon>
+      </button>
+    </mat-toolbar>
+    <mat-accordion cdkDropList (cdkDropListDropped)="move($event)">
+      <ng-container *ngFor="let control of sections.controls; let i = index">
+        <mat-expansion-panel cdkDrag>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon class="handler" cdkDragHandle>drag_indicator</mat-icon>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ control.value._type }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <form-outlet [form]="control" [schema]="control.schema"></form-outlet>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </mat-sidenav-content>
+  <mat-sidenav opened mode="side" position="end">
+    <mat-action-list cdkDropList [cdkDropListData]="types">
+      <ng-container *ngFor="let type of types">
+        <button cdkDrag mat-list-item (click)="add(type)">{{ type }}</button>
+      </ng-container>
+    </mat-action-list>
+  </mat-sidenav>
+</mat-sidenav-container>

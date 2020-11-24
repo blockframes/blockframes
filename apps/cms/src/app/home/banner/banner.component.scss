@@ -1,9 +1,10 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  gap: 16px;
 }
 
-main {
-  flex: 1;
+header {
+  display: flex;
+  gap: 16px;
 }

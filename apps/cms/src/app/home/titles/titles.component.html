@@ -1,0 +1,14 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Mode</mat-label>
+    <mat-select formControlName="mode">
+      <mat-option value="banner">Banner</mat-option>
+      <mat-option value="poster">Poster</mat-option>
+      <mat-option value="slider">slider</mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>

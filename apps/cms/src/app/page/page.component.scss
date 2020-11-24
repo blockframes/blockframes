@@ -1,0 +1,28 @@
+:host {
+  height: 100%;
+  display: block;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav {
+  width: 250px;
+}
+
+mat-sidenav-content {
+  flex: 1;
+  mat-toolbar {
+    justify-content: flex-end;
+  }
+
+  mat-accordion {
+    display: block;
+    margin: 24px;
+  }
+}
+
+.handler {
+  cursor: grab;
+}
