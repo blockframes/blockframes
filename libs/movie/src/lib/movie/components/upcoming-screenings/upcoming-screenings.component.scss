@@ -11,8 +11,12 @@
   margin-bottom: 48px;
 }
 
-h3 {
+h3, h5 {
   text-transform: uppercase;
+}
+
+span.mat-body-1 {
+  text-align: center;
 }
 
 mat-divider {

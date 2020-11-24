@@ -10,6 +10,7 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
+import { UpcomingScreeningsModule } from '@blockframes/movie/components/upcoming-screenings/upcoming-screenings.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -63,6 +64,7 @@ const routes = [
     OrgChipModule,
     WishlistButtonModule,
     PromotionalLinksModule,
+    UpcomingScreeningsModule,
     // Material
     MatIconModule,
     MatButtonModule,
