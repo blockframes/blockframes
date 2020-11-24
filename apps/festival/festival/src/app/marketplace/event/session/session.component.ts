@@ -63,11 +63,11 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:beforeunload')
-  async beforeUnloadHandler() {
+  beforeUnloadHandler() {
     this.ownerLeaves();
   }
 
-  async ownerLeaves() {
+  ownerLeaves() {
     if (this.event.isOwner && this.event.type === 'meeting') {
       (this.event.meta as Meeting).ownerIsPresent = false;
       this.service.update(this.event.id, { meta: this.event.meta });
