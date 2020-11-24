@@ -56,10 +56,6 @@ export class WishlistButtonComponent  {
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
     this.cartService.updateWishlist(movie);
-    this.analytics.event('addedToWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.title.original
-    });
     this.snackbar.open(`${title} has been added to your wishlist.`, 'close', { duration: 2000 });
     this.added.emit(this.movieId)
   }
@@ -70,10 +66,6 @@ export class WishlistButtonComponent  {
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
     this.cartService.updateWishlist(movie);
-    this.analytics.event('removedFromWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.title.original
-    });
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
     this.removed.emit(this.movieId)
   }

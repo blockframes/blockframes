@@ -70,15 +70,8 @@ export class WishlistComponent implements OnInit, OnDestroy {
   public remove(movie: Movie, event: Event) {
     event.stopPropagation();
     this.service.updateWishlist(movie);
-    this.snackbar.open(
-      `${movie.title.international} has been removed from your selection.`,
-      'close',
-      { duration: 2000 }
-    );
-    this.analytics.event('removedFromWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.title.original
-    });
+    const title = movie.title.international;
+    this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
   ngOnDestroy() {
