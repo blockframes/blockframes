@@ -7,7 +7,6 @@ import { differenceBy } from 'lodash';
 import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
 import { Auth, UserRecord, upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
-import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 import * as env from '@env';
 import { User } from '@blockframes/user/types';
@@ -111,12 +110,10 @@ async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
  */
 export async function syncUsers(jsonl?: JsonlDbRecord[]): Promise<any> {
   const { auth, db } = loadAdminServices();
-  await startMaintenance();
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   await deleteAllUsers(auth);
   const createResult = await importAllUsers(auth, expectedUsers);
   console.log(createResult);
-  await endMaintenance();
 }
 
 export async function printUsers(): Promise<any> {
@@ -192,20 +189,15 @@ export async function createUsers(): Promise<any> {
 export async function generateWatermarks() {
   const { db, storage } = loadAdminServices();
   // activate maintenance to prevent cloud functions to trigger
-  let startedMaintenance = false;
-  if (!(await isInMaintenance(0))) {
-    startedMaintenance = true;
-    await startMaintenance();
+
+  const usersBatch = getCollectionInBatches<User>(db.collection('users'), 'uid')
+  for await (const users of usersBatch) {
+    await runChunks(
+      users,
+      (user: User) => upsertWatermark(user, storageBucket, storage),
+      env?.['heavyChunkSize'] ?? 10
+    );
   }
 
-  const users = await db.collection('users').get();
 
-  await runChunks(
-    users.docs,
-    (user) => upsertWatermark(user.data(), storageBucket, storage),
-    env?.['heavyChunkSize'] ?? 10
-  );
-
-  // deactivate maintenance
-  if (startedMaintenance) await endMaintenance();
 }

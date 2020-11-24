@@ -31,7 +31,7 @@ export function getCollection<T>(path: string): Promise<T[]> {
 export async function getDocAndPath(fullPath: string | undefined) {
   const db = admin.firestore();
 
-  const { collection, docPath, isTmp, privacy, field, filePath } = deconstructFilePath(fullPath)  
+  const { collection, docPath, isTmp, privacy, field, filePath } = deconstructFilePath(fullPath)
 
   const doc = db.doc(docPath);
   const snapshot = await doc.get();
@@ -53,14 +53,21 @@ export async function getDocAndPath(fullPath: string | undefined) {
   }
 }
 
-export async function runChunks(rows: any[], cb: any, rowsConcurrency?: number, verbose = true) {
+type AsyncReturnType<T extends (args: any) => Promise<any>> =
+  T extends (...args: any) => Promise<infer U> ? U
+  : T extends (...args: any) => infer U ? U
+  : any
+
+export async function runChunks<K, T extends (arg: K) => Promise<any>>(rows: K[], cb: T, rowsConcurrency?: number, verbose = true) {
   const chunks = chunk(rows, rowsConcurrency || env?.['chunkSize'] || 10);
+  const output: AsyncReturnType<T>[] = [];
   for (let i = 0; i < chunks.length; i++) {
     const c = chunks[i];
     if (verbose) { console.log(`Processing chunk ${i + 1}/${chunks.length}`); }
     const promises = c.map(cb);
-    await Promise.all(promises);
+    output.concat(await Promise.all(promises))
   }
+  return output;
 }
 
 /**

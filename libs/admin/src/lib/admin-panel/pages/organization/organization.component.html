@@ -9,6 +9,8 @@
         </mat-card-header>
       </organization-display>
 
+      <button mat-flat-button color="warn" (click)="deleteOrg()">Delete this org</button>
+
     </article>
     <article *ngIf="orgForm" fxLayout="column" class="main-article">
       <admin-organization-form [form]="orgForm" [orgId]="orgId"></admin-organization-form>

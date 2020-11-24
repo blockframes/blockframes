@@ -1,72 +1,24 @@
-import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 import { Subscription } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getAppName, appName, App } from '../apps';
+import { appName, App, getCurrentApp } from '../apps';
 
-type PageKey = App | 'crm' | 'blockframes';
+type PageKey = App | 'crm' | 'cms' | 'blockframes';
 
-const pages: Record<PageKey, any> = {
-  catalog: {
-    app: appName.catalog,
-    section: (section: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${section} ${suffix}`;
-    },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${titleName} - ${section} ${suffix}`;
-    }
-  },
-  blockframes: {
-    app: appName.blockframes,
-    section: (section: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${section} ${suffix}`;
-    },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${titleName} - ${section} ${suffix}`;
-    }
-  },
-  festival: {
-    app: appName.festival,
-    section: (section: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${section} ${suffix}`;
-    },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${titleName} - ${section} ${suffix}`;
-    }
-  },
-  financiers: {
-    app: appName.financiers,
-    section: (section: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${section} ${suffix}`;
-    },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${titleName} - ${section} ${suffix}`;
-    }
-  },
-  crm: {
-    app: appName.crm,
-    section: (section: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${section} ${suffix}`;
-    },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
-      const suffix = showAppName ? `- ${_appName}` : '';
-      return `${titleName} - ${section} ${suffix}`;
-    }
-  }
+function displaySection(section: string, showAppName: boolean, _appName: string) {
+  const suffix = showAppName ? `- ${_appName}` : '';
+  return `${section} ${suffix}`;
 }
+
+function displayEntityWithSection(section: string, titleName: string, showAppName: boolean, _appName: string) {
+  const suffix = showAppName ? `- ${_appName}` : '';
+  return `${titleName} - ${section} ${suffix}`;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DynamicTitleService implements OnDestroy {
-  private app: SlugAndLabel;
+  private app = getCurrentApp(this.routerQuery);
 
   private sub: Subscription;
 
@@ -76,13 +28,7 @@ export class DynamicTitleService implements OnDestroy {
    */
   private initTitle = '';
 
-  private pages: Record<string, any> = pages;
-
-  constructor(private title: Title, private routerQuery: RouterQuery) {
-    this.sub = this.routerQuery.select('state').subscribe(data => {
-      this.app = getAppName(data.root.data.app);
-    })
-  }
+  constructor(private title: Title, private routerQuery: RouterQuery) {}
 
 
   /**
@@ -93,22 +39,19 @@ export class DynamicTitleService implements OnDestroy {
    * but this name can be overwritten
    * @param config.showAppName determines if the app name should be shown in the tab, default is set to true
    */
-  public setPageTitle(section?: string, entityWithSection?: string, config = { appName: this.app, showAppName: true }) {
+  public setPageTitle(section?: string, entityWithSection?: string) {
+    const app = appName[this.app];
+    let title: string;
     if (entityWithSection && section) {
-      this.title.setTitle(this.pages[config.appName.slug].entityWithSection(entityWithSection, section, config.showAppName, config.appName.label));
-      if (!this.initTitle) {
-        this.initTitle = this.pages[config.appName.slug].entityWithSection(entityWithSection, section, config.showAppName, config.appName.label);
-      }
+      title = displayEntityWithSection(entityWithSection, section, true, app);
     } else if (section) {
-      this.title.setTitle(this.pages[config.appName.slug].section(section, config.showAppName, config.appName.label))
-      if (!this.initTitle) {
-        this.initTitle = this.pages[config.appName.slug].section(section, config.showAppName, config.appName.label)
-      }
+      title = displaySection(section, true, app);
     } else {
-      this.title.setTitle(this.pages[config.appName.slug].app)
-      if (!this.initTitle) {
-        this.initTitle = this.pages[config.appName.slug].app
-      }
+      title = app;
+    }
+    this.title.setTitle(title);
+    if (!this.initTitle) {
+      this.initTitle = title;
     }
   }
 

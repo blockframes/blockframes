@@ -421,7 +421,7 @@
             "buildLibsFromSource": true
           },
           "configurations": {
-            "demo1":{
+            "demo1": {
               "fileReplacements": [
                 {
                   "replace": "env/env.ts",
@@ -1814,6 +1814,95 @@
       "schematics": {
         "@nrwl/angular:component": {
           "style": "scss"
+        }
+      }
+    },
+    "cms": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/cms",
+      "sourceRoot": "apps/cms/src",
+      "prefix": "cms",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/cms",
+            "index": "apps/cms/src/index.html",
+            "main": "apps/cms/src/main.ts",
+            "polyfills": "apps/cms/src/polyfills.ts",
+            "tsConfig": "apps/cms/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/cms/src/favicon.ico",
+              "apps/cms/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/ui/src/lib/assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": ["apps/cms/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/cms/src/environments/environment.ts",
+                  "with": "apps/cms/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "cms:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "cms:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "cms:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/cms/tsconfig.app.json"],
+            "exclude": ["**/node_modules/**", "!apps/cms/**/*"]
+          }
         }
       }
     }

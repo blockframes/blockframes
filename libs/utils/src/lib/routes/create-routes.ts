@@ -17,6 +17,9 @@ interface RouteOptions {
 }
 
 export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
+  // Used for internal app
+  landing = landing || { path: '', redirectTo: 'c', pathMatch: 'full' };
+
   // We need to put the spread operator in a local variable to make build works on prod
   const children = [
     ...appsRoutes,

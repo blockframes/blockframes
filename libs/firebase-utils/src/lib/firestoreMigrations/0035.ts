@@ -1,6 +1,5 @@
 import { Firestore } from '../types';
 import { File as GFile } from '@google-cloud/storage';
-import { startMaintenance, endMaintenance } from '../maintenance';
 import { runChunks, getDocAndPath } from '../firebase-utils';
 import { firebase } from '@env';
 import { has, get } from 'lodash';
@@ -9,7 +8,6 @@ export const { storageBucket } = firebase;
 const EMPTY_REF = '';
 
 export async function upgrade(_: Firestore, storage: Storage) {
-  await startMaintenance();
 
   const bucket = storage.bucket(storageBucket);
   const files: GFile[] = (await bucket.getFiles())[0];
@@ -34,7 +32,6 @@ export async function upgrade(_: Firestore, storage: Storage) {
 
   });
 
-  await endMaintenance();
 }
 
 const changeResourceDirectory = async (
