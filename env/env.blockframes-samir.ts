@@ -135,5 +135,5 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 // =======
 ​
 export const backupBucket = 'samir-backups';
-export const heavyChunkSize = 10;
-export const chunkSize = 25;
+export const heavyChunkSize = 2;
+export const chunkSize = 15;
