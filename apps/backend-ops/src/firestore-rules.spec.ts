@@ -386,7 +386,7 @@ describe('Movies Rules Tests', () => {
       ["_meta", { createdAt: ''}],
       ["_type", 'drama'],
       ["storeConfig", { appAccess: {catalog: true}}],
-      ["storeConfig", { status: 'rejected'}], //<-- doesn't work??!!
+      ["storeConfig", { status: 'rejected'}],
       ["storeConfig", { storeType: 'blah'}],
       ["storeConfig", { appAccess: {festival: {}}}],
     ]
