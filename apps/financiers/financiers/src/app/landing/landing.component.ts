@@ -9,7 +9,9 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 })
 export class LandingComponent {
 
-  public userRoles: RequestDemoRole[] = ['investor', 'financier']
+  public userRoles: RequestDemoRole[] = ['investor', 'financier'];
+
+  public pdfLink = 'assets/docs/film-industry.pdf';
 
   public tabNames = ['Investors', 'Professional Content Financiers'];
 
@@ -40,7 +42,11 @@ export class LandingComponent {
     {
       title: 'Learn about investing in the content industry',
       imgAsset: 'knowledge.svg',
-      description: 'No experience needed. Discover why content is a profitable investment. Download our investment guide below.'
+      description: `No experience needed. \n Discover why content is a profitable investment.`,
+      link: {
+        href: this.pdfLink,
+        text: 'Download our investment guide.'
+      }
     },
     {
       title: 'Enjoy exclusive privileges',

@@ -9,7 +9,7 @@ import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
-import { displayName } from '@blockframes/utils/pipes/display-name.pipe';
+import { displayName } from '@blockframes/utils/utils';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 

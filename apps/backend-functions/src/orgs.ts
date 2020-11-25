@@ -184,6 +184,10 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     await Promise.all(promises)
   }
 
+  if (await hasAcceptedMovies(after)) {
+    after['hasAcceptedMovies'] = true;
+  }
+
   storeSearchableOrg(after)
 
   return Promise.resolve(true); // no-op by default

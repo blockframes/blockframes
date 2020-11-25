@@ -1,15 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person } from '../common-interfaces';
-
-export function titleCase(text: string) {
-  if (!text) return '';
-  return text[0].toUpperCase() + text.substring(1);
-}
-
-export function displayName(person: Person) {
-  return `${titleCase(person.firstName)} ${titleCase(person.lastName)}`;
-}
+import { displayName } from '../utils'
 
 /**
  * This pipe display the firstname and lastname of the person;

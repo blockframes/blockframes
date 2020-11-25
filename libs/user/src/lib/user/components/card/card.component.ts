@@ -3,7 +3,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 // Interface
 import { User } from '@blockframes/auth/+state';
-import { displayName } from '@blockframes/utils/pipes/display-name.pipe';
+import { displayName } from '@blockframes/utils/utils';
 
 function createUserView(user: Partial<User>) {
   return {
