@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
 import { LinkModule, Link, linkSchema } from '../link/link.component';
-import { matText } from '../text';
+import { TextFormModule, matText } from '../../forms/text';
 
 interface Hero extends Section {
   title: string;
@@ -33,10 +36,6 @@ export class HeroComponent {
   @Input() form?: FormEntity<typeof heroSchema>;
 }
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TextFormModule } from '../text';
 
 
 @NgModule({

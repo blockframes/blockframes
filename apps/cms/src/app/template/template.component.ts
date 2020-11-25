@@ -40,7 +40,6 @@ export class TemplateComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.pipe(
       switchMap(params => this.service.doc<CmsTemplate>(params))
     ).subscribe(template => {
-      console.log({template});
       const params = this.route.snapshot.params;
       const sections = templateSections[params.page];
       this.types = Object.keys(sections);

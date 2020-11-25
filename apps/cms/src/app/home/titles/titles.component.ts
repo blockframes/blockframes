@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
+import { Movie, MovieService } from '@blockframes/movie/+state';
 import { Section } from '../../template/template.model';
+import { TextFormModule, matText } from '../../forms/text';
+import { FormAutocompleteModule } from '../../forms/autocomplete';
 
 interface TitleQueryParams {
   facets: string[];
@@ -9,6 +18,7 @@ interface TitleQueryParams {
 interface TitlesSection extends Section {
   title: string;
   query: TitleQueryParams;
+  titleIds: string[];
   mode: 'poster' | 'banner' | 'slider';
 }
 
@@ -18,6 +28,7 @@ export const titlesSchema: FormGroupSchema<TitlesSection> = {
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
+    titleIds: { form: 'array', controls: [], factory: { form: 'control' }},
     query: { form: 'group', controls: {} },
     mode: { form: 'control' },
   },
@@ -31,15 +42,10 @@ export const titlesSchema: FormGroupSchema<TitlesSection> = {
 })
 export class TitlesComponent {
   @Input() form?: FormEntity<typeof titlesSchema>;
+  options$ = this.movieService.valueChanges();
+  displayLabel = (title?: Movie) => title?.title.international; 
+  constructor(private movieService: MovieService) {}
 }
-
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { TextFormModule, matText } from '../text';
 
 
 @NgModule({
@@ -49,8 +55,9 @@ import { TextFormModule, matText } from '../text';
     ReactiveFormsModule,
     OverlayModule,
     MatFormFieldModule,
-    TextFormModule,
     MatSelectModule,
+    FormAutocompleteModule,
+    TextFormModule,
   ]
 })
 export class TitlesModule { }

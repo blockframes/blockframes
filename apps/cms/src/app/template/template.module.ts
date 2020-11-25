@@ -11,6 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatListModule,
     MatToolbarModule,
     MatSelectModule, // Required for lazy components
+    MatAutocompleteModule, // Required for lazy components
     DragDropModule,
     RouterModule.forChild([{ path: '', component: TemplateComponent }])
   ]

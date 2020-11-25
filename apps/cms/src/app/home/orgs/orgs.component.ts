@@ -34,7 +34,7 @@ export class OrgsComponent {
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TextFormModule, matText } from '../text';
+import { TextFormModule, matText } from '../../forms/text';
 
 
 @NgModule({
