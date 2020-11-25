@@ -25,7 +25,8 @@
           Open discussion
         </button>
       </ng-container>
-      <a mat-button class="mat-caption" href="assets/docs/film-industry.pdf" target="_blank">Learn more about investing in cinema industry</a>
+      <a mat-button class="mat-caption" href="assets/docs/film-industry.pdf" target="_blank">Learn more about investing
+        in cinema industry</a>
     </section>
 
   </title-marketplace-shell>
@@ -33,36 +34,41 @@
 
   <!-- Contact partner -->
   <ng-template #dialogTemplate let-data>
-    <h2>How much would you like to invest in this project ?</h2>
+    <h2>What do you want to know about this project?</h2>
     <mat-dialog-content *ngIf="data.form as form">
-      <form [formGroup]="form" fxLayout="column" (ngSubmit)="sendEmail(form.value, movie.title.international, data.orgs)">
+      <form [formGroup]="form" fxLayout="column"
+        (ngSubmit)="sendEmail(form.value, movie.title.international, data.orgs)">
         <mat-form-field appearance="outline">
           <mat-label>Subject</mat-label>
           <mat-select formControlName="subject" required>
             <mat-option></mat-option>
-            <mat-option value="set">I’m all set. Ready to invest</mat-option>
-            <mat-option value="question">I have a question about the project</mat-option>
-            <mat-option value="other">Other</mat-option>
+            <mat-option value="main">Main</mat-option>
+            <mat-option value="artistic">Artistic</mat-option>
+            <mat-option value="artistic">Artistic</mat-option>
+            <mat-option value="additional">Additional</mat-option>
+            <mat-option value="financial">Financial</mat-option>
+            <mat-option value="investment">Investment</mat-option>
           </mat-select>
           <mat-error>Please select a subject</mat-error>
         </mat-form-field>
         <p class="mat-caption">
-          Please precise the amount you would like to invest.<br/>
+          Please precise the amount you would like to invest.<br />
           If you are not ready to provide us with such kind of information, just leave a message.
         </p>
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field fxFlex appearance="outline">
             <mat-label>From</mat-label>
-            <input type="number" matInput formControlName="from" min="0"/>
+            <input type="number" matInput formControlName="from" min="0" />
           </mat-form-field>
           <mat-form-field fxFlex appearance="outline">
             <mat-label>To</mat-label>
-            <input type="number" matInput formControlName="to" min="0"/>
+            <input type="number" matInput formControlName="to" min="0" />
           </mat-form-field>
         </div>
         <mat-form-field appearance="outline">
           <mat-label>Message</mat-label>
-          <textarea matInput formControlName="message" placeholder="Questions about cast, financing, investment conditions..." ></textarea>
+          <textarea matInput formControlName="message"
+            placeholder="Questions about cast, financing, investment conditions..."></textarea>
         </mat-form-field>
         <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="32px">
           <button type="submit" mat-stroked-button color="primary" [disabled]="form.invalid">

@@ -24,16 +24,12 @@
 
   <!-- Ready -->
   <section *ngSwitchCase="'ready'">
-    <ng-template
-      [ngTemplateOutlet]="onReadyTemplate || default"
-    ></ng-template>
+    <ng-template [ngTemplateOutlet]="onReadyTemplate || default"></ng-template>
   </section>
 
   <!-- File -->
   <section *ngSwitchCase="'file'">
-    <ng-template
-      [ngTemplateOutlet]="onFileTemplate || default"
-    ></ng-template>
+    <ng-template [ngTemplateOutlet]="onFileTemplate || default"></ng-template>
   </section>
 
 </ng-container>
