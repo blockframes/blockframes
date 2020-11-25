@@ -42,8 +42,11 @@ export class LandingComponent {
     {
       title: 'Learn about investing in the content industry',
       imgAsset: 'knowledge.svg',
-      description: `No experience needed. Discover why content is a profitable investment. 
-      <a href="${this.pdfLink}" target="_blank"><u>Download our investment guide.</u></a>`
+      description: `No experience needed. \n Discover why content is a profitable investment.`,
+      link: {
+        href: this.pdfLink,
+        text: 'Download our investment guide.'
+      }
     },
     {
       title: 'Enjoy exclusive privileges',

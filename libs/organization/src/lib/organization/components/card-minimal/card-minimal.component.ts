@@ -1,10 +1,8 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Organization } from '@blockframes/organization/+state';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 function parseOrg(org) {
   /* Only the org from Algolia has the key `objectID` */
-  if ((org as AlgoliaOrganization)?.objectID) {
+  if (org?.objectID) {
     const { denomination } = org.denomination
     return {
       id: org.objectID,
@@ -25,7 +23,7 @@ export class OrganizationCardMinimalComponent {
 
   private _org;
   get org() { return this._org }
-  @Input() set org(org: Organization | AlgoliaOrganization) {
+  @Input() set org(org) {
     this._org = parseOrg(org);
   };
 

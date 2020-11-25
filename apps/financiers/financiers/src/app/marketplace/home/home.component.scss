@@ -5,20 +5,16 @@
   flex-direction: column;
 }
 
-.logo {
-  height: 48px;
-}
-
-.detail {
-  margin: 24px 0px;
-}
-
 .banner {
   background-image: url("/assets/images/banner_empty.png");
   background-size: cover;
   padding: 40px 0px;
   margin-bottom: 80px;
   text-align: center;
+}
+
+.benefits {
+  white-space: pre;
 }
 
 bf-carousel {

@@ -68,7 +68,12 @@
       <mat-card *ngFor="let benefit of benefits" carouselItem [col]="6">
         <img [asset]="benefit.imgAsset" type="logo" alt="benefit feature image">
         <h3>{{ benefit.title }}</h3>
-        <p class="mat-body-1" [innerHTML]="benefit.description"></p>
+        <p class="mat-body-1 benefits">{{ benefit.description }}</p>
+        <a *ngIf="benefit?.link?.href" [href]="benefit.link.href" target="_blank">
+          <u>
+            {{ benefit.link.text }}
+          </u>
+        </a>
       </mat-card>
     </bf-carousel>
   </section>

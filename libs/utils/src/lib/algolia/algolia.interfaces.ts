@@ -85,7 +85,7 @@ export interface AlgoliaRecord<T> {
     objectID: string,
     nbHits: number,
     nbPages: number,
-    hits: T,
+    hits: T[],
     query: string,
     params: string,
     page: number,
