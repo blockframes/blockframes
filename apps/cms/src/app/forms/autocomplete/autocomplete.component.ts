@@ -3,20 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { FormOutlet, FormField, FormControlSchema, FormList } from 'ng-form-factory';
-import { Observable } from 'rxjs';
+import { FormField, FormList } from 'ng-form-factory';
+import { MatSelectSchema } from './autocomplete.schema';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatFormFieldSchema } from '../schema';
-
-
-type OptionMap<T> = T extends (infer I)[] 
-  ? Partial<Record<Extract<I, string>, any>>
-  : Partial<Record<Extract<T, string>, any>>;
-
-export interface MatSelectSchema<T> extends FormControlSchema<T>, MatFormFieldSchema<T> {
-  options: OptionMap<T> | T[];
-  multiple: boolean;
-}
 
 @Component({
   selector: 'form-autocomplete',
@@ -25,9 +15,16 @@ export interface MatSelectSchema<T> extends FormControlSchema<T>, MatFormFieldSc
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormAutocompleteComponent<T> {
+  private options$ = new BehaviorSubject(null);
   @Input() form?: FormField<T> | FormList<any, T>;
-  @Input() options?: T[] | Record<string, string>;
   @Input() displayLabel: <T>(key: string | T) => string;
+  @Input() 
+  set options(options: T[] | Record<string, string>) {
+    this.options$.next(options);
+  }
+  get options() {
+    return this.options$.getValue();
+  }
 
   filteredOptions: Observable<(string | T)[]>;
   control = new FormControl();
@@ -39,16 +36,16 @@ export class FormAutocompleteComponent<T> {
   }
 
   ngOnInit() {
-    this.filteredOptions = this.control.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this.filter(value))
-      );
+    this.filteredOptions = combineLatest([
+      this.control.valueChanges.pipe(startWith('')),
+      this.options$.asObservable().pipe(map(options => options || this.schema.options))
+    ]).pipe(
+      map(([value, options]) => this.filter(value, options))
+    );
   }
 
-  private filter(value: string): (T | string)[] {
+  private filter(value: string, options: T[] | Record<string, string>): (T | string)[] {
     const filterValue = value.toLowerCase();
-    const options = this.options || this.schema.options;
     if (!options) return [];
     if (Array.isArray(options)) {
       return options.filter(option => this.displayLabel(option).toLowerCase().includes(filterValue));
