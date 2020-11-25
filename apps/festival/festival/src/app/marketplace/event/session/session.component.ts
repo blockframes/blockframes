@@ -63,10 +63,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:beforeunload')
-  beforeUnloadHandler() {
-    this.ownerLeaves();
-  }
-
   ownerLeaves() {
     if (this.event.isOwner && this.event.type === 'meeting') {
       (this.event.meta as Meeting).ownerIsPresent = false;
