@@ -76,7 +76,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private snackbar: MatSnackBar,
     private sendgrid: SendgridService,
     public router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     const orgQueryFn = (movieId: string, ref: CollectionReference) => ref

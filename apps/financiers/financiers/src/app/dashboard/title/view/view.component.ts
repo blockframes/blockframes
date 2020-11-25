@@ -78,6 +78,6 @@ export class TitleViewComponent implements OnInit {
   async save() {
     this.dialogRef.close();
     await this.shell.getConfig('campaign').onSave({ publishing: false });
-    this.snackbar.open('The current amount has been updated.', null, { duration: 1000 });
+    this.snackbar.open('The funding status has been updated.', null, { duration: 1000 });
   }
 }
