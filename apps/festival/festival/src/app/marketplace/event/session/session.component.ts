@@ -62,7 +62,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.service.update(event.id, { meta });
           }
 
-          const requestUids = Object.keys(attendees).filter(uid => attendees[uid] === 'requesting');
+          const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
           const requests = await this.userService.getValue(requestUids);
           if (!!requests.length) {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
