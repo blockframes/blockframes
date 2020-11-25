@@ -43,7 +43,6 @@ export class GetParams implements PipeTransform {
 export class GetTitlesPipe implements PipeTransform {
   constructor(private service: MovieService) {}
   async transform(app: string) {
-    console.log('app', app);
     const queryFn = getTitlesQueryFn(app);
     const orgs = await this.service.getValue(queryFn);
     return toMap(orgs);

@@ -2,7 +2,7 @@
   <mat-form-field>
     <mat-label>{{ schema.label }}</mat-label>
     <mat-chip-list #chipList aria-label="Fruit selection">
-      <ng-container *ngFor="let key of form.value$ | async; let i = index">
+      <ng-container *ngFor="let key of form.value; let i = index">
         <mat-chip removable (removed)="remove(i)">
           <span>{{ displayLabel(options[key]) }}</span>
           <mat-icon matChipRemove svgIcon="close"></mat-icon>
