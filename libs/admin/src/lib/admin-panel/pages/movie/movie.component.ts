@@ -14,6 +14,8 @@ import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-for
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { DistributionRightDocumentWithDates } from '@blockframes/distribution-rights/+state/distribution-right.firestore';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'admin-movie',
@@ -52,9 +54,11 @@ export class MovieComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private organizationService: OrganizationService,
+    private permissionsService: PermissionsService,
     private eventService: EventService,
     private invitationService: InvitationService,
     private distributionRightService: DistributionRightService,
+    private contractService: ContractService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -114,7 +118,7 @@ export class MovieComponent implements OnInit {
   }
 
   public async deleteMovie() {
-    const simulation = await this.simulateDeletion(this.movieId);
+    const simulation = await this.simulateDeletion(this.movie);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         question: 'You are about to delete this movie from Archipel, are you sure ?',
@@ -130,21 +134,47 @@ export class MovieComponent implements OnInit {
     });
   }
 
-
-  private async simulateDeletion(movieId: string) { // get what will be delete. le vrai delete se fait coté backend
+  /**
+   * Used to see what will be deleted before actual removal
+   * @param movie 
+   */
+  private async simulateDeletion(movie: Movie) {
     const output: string[] = [];
-    output.push('1 document from movies collection will be removed');
+    output.push('1 movie will be removed.');
 
-    const whislists = await this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movieId));
-    output.push(`${whislists.length} items from org's wishlist will be removed`);
+    const whislists = await this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movie.id));
+    if (whislists.length) {
+      output.push(`${whislists.length} items from org's wishlist will be removed.`);
+    }
 
-    const events = await this.eventService.getValue(ref => ref.where('meta.titleId', '==', movieId));
-    output.push(`${events.length} documents from events collection will be removed`);
+    const events = await this.eventService.getValue(ref => ref.where('meta.titleId', '==', movie.id));
+    if (events.length) {
+      output.push(`${events.length} event(s) will be removed.`);
+    }
 
-    const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', events.map(e => e.id)));
-    output.push(`${invitations.length} invitations to events will be removed`);
+    const eventIds = events.map(e => e.id);
+    if (eventIds.length) {
+      const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', eventIds));
+      if (invitations.length) {
+        output.push(`${invitations.length} invitations to events will be removed.`);
+      }
+    }
 
-    output.push(`${this.rights.length} distribution rights will be removed`);
+    if (this.rights.length) {
+      output.push(`${this.rights.length} distribution rights will be removed.`);
+    }
+
+    const orgs = await this.organizationService.getValue(ref => ref.where('id', 'in', movie.orgIds));
+    const promises = orgs.map(o => this.permissionsService.getDocumentPermissions(movie.id, o.id));
+    const documentPermissions = await Promise.all(promises);
+    if (documentPermissions.length) {
+      output.push(`${documentPermissions.length} permission document will be removed.`);
+    }
+
+    const contracts = await this.contractService.getValue(ref => ref.where('titleIds', 'array-contains', movie.id));
+    if (contracts.length) {
+      output.push(`${contracts.length} contract will be updated.`);
+    }
 
     return output;
   }
