@@ -56,7 +56,7 @@ export class TwilioService {
     const [ video, audio ] = await Promise.all([
       createLocalVideoTrack().catch(e => null),
       createLocalAudioTrack().catch(e => null)
-    ]) as [ LocalVideoTrack, LocalAudioTrack ];
+    ]) as [ LocalVideoTrack | null, LocalAudioTrack | null ];
 
     this.twilioStore.update(local.id, { tracks: { video, audio } });
   }
