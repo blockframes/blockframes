@@ -3,6 +3,10 @@ import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
 import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { MatBottomSheet } from '@angular/material/bottom-sheet'
+import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
+import { UserService } from '@blockframes/user/+state/user.service';
 
 
 @Component({
@@ -15,6 +19,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   public event$: Observable<Event>;
   public showSession = true;
+  public ownerIsPresent = false;
   public mediaContainerSize: string;
   public visioContainerSize: string;
   public screeningFileRef: string;
@@ -25,7 +30,10 @@ export class SessionComponent implements OnInit, OnDestroy {
   constructor(
     private eventQuery: EventQuery,
     private service: EventService,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private authQuery: AuthQuery,
+    private bottomSheet: MatBottomSheet,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -42,12 +50,23 @@ export class SessionComponent implements OnInit, OnDestroy {
 
       if (event.type === 'screening') {
         if (!!(event.meta as Screening).titleId) {
-          const movie = await this.movieService.getValue(event.meta.titleId as string)
+          const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
       } else if (event.type === 'meeting') {
         if (event.isOwner) {
-          await this.service.update(event.id, (e: Event<Meeting>): Event<Meeting> => ({ ...e, meta: {...e.meta, ownerIsPresent: true } }))
+          const uid = this.authQuery.userId;
+          const attendees = (event.meta as Meeting).attendees;
+          if (attendees[uid] !== 'owner') {
+            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
+            this.service.update(event.id, { meta });
+          }
+
+          const requestUids = Object.keys(attendees).filter(uid => attendees[uid] === 'requesting');
+          const requests = await this.userService.getValue(requestUids);
+          if (!!requests.length) {
+            this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
+          }
         }
       }
     })
@@ -61,8 +80,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   @HostListener('window:beforeunload')
   ownerLeaves() {
     if (this.event.isOwner && this.event.type === 'meeting') {
-      (this.event.meta as Meeting).ownerIsPresent = false;
-      this.service.update(this.event.id, { meta: this.event.meta });
+      const meta: Meeting = { ...this.event.meta, attendees: {} };
+      this.service.update(this.event.id, { meta });
     }
   }
 }

@@ -377,7 +377,9 @@ service cloud.firestore {
         && notInMaintenance();
       allow update: if userHasValidOrg()
         && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerId == userId() || existingData().ownerId == userOrgId() )
+        && ( existingData().ownerId == userId() 
+          || existingData().ownerId == userOrgId() 
+          || isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting'))
         && notInMaintenance();
       allow delete: if userHasValidOrg()
         && ( existingData().ownerId == userId() // Current user is event owner

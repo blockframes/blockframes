@@ -7,11 +7,13 @@ type Timestamp = firestore.Timestamp;
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
 export type EventMeta = Meeting | Screening | {};
 
+export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied';
+
 export interface Meeting {
   organizerId: string;
   description: string;
   files: string[];
-  ownerIsPresent: boolean;
+  attendees: Record<string, AttendeeStatus>;
   selectedFile: string;
   controls: Record<string, MeetingMediaControl>
 }
