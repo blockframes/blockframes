@@ -14,19 +14,20 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormAutocompleteComponent<T> {
+export class FormAutocompleteComponent<T, O> {
   private options$ = new BehaviorSubject(null);
   @Input() form?: FormField<T> | FormList<any, T>;
-  @Input() displayLabel: <T>(key: string | T) => string;
+  @Input() displayLabel: (option: O) => string;
+  @Input() getValue: (option: O) => T;
   @Input() 
-  set options(options: T[] | Record<string, string>) {
+  set options(options: O[] | Record<string, O>) {
     this.options$.next(options);
   }
   get options() {
     return this.options$.getValue();
   }
 
-  filteredOptions: Observable<(string | T)[]>;
+  filteredOptions: Observable<(string | O)[]>;
   control = new FormControl();
 
   constructor() { }
@@ -44,13 +45,13 @@ export class FormAutocompleteComponent<T> {
     );
   }
 
-  private filter(value: string, options: T[] | Record<string, string>): (T | string)[] {
+  private filter(value: string, options: O[] | Record<string, O>): (O | string)[] {
     const filterValue = value.toLowerCase();
     if (!options) return [];
     if (Array.isArray(options)) {
       return options.filter(option => this.displayLabel(option).toLowerCase().includes(filterValue));
     } else {
-      return Object.keys(options).filter((key) => this.displayLabel(key).toLowerCase().includes(filterValue));
+      return Object.values(options).filter((v) => this.displayLabel(v).toLowerCase().includes(filterValue));
     }
   }
 }

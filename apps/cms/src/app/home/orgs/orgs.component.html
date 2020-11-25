@@ -1,1 +1,8 @@
 <form-text [form]="form.get('title')"></form-text>
+<article>
+  <form-autocomplete
+    [form]="form.get('orgIds')"
+    [options]="options$ | async"
+    [displayLabel]="displayLabel">
+  </form-autocomplete>
+</article>
