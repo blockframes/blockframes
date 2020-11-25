@@ -1,11 +1,10 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AudioTrack, VideoTrack } from 'twilio-video';
-import { TrackKind } from '../+state/twilio.model';
+import { Tracks, TrackKind, Attendee } from '../+state/twilio.model';
 
 @Component({
-  selector: '[video] [audio] meeting-video',
+  selector: '[attendee] meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,42 +12,25 @@ import { TrackKind } from '../+state/twilio.model';
 })
 export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
 
-  private _video: VideoTrack;
-  @Input() set video(value: VideoTrack | undefined) {
-    if (!!value) {
-      this._video = value;
+  @Input() set attendee(value: Attendee) {
+
+    this.name = value.userName;
+    this.local = value.kind === 'local';
+
+    if (!this.track.audio && !!value.tracks.audio) {
+      this.track.audio = value.tracks.audio;
+      this.setUpTracks('audio');
+    }
+
+    if (!this.track.video && !!value.tracks.video) {
+      this.track.video = value.tracks.video;
       this.setUpTracks('video');
     }
   }
 
-  private _audio: AudioTrack;
-  @Input() set audio(value: AudioTrack | undefined) {
-    if (!!value) {
-      this._audio = value;
-      this.setUpTracks('audio');
-    }
-  }
-
-  get track() {
-    return {
-      video: this._video,
-      audio: this._audio,
-    };
-  }
-
-  public _local: boolean;
-  @Input()
-  get local() { return this._local; }
-  /**
-   * The component is used to display the local user,
-   * the inner controls will be hidden since they should be handled by the service,
-   * the audio tag is disable to avoid echo
-   */
-  set local(value: boolean) {
-    this._local = coerceBooleanProperty(value);
-  }
-
-  @Input() name = 'Unknown User';
+  track: Tracks = { audio: null, video: null };
+  local = false;
+  name = 'Unknown User';
 
   localTrackState$ = {
     video: new BehaviorSubject<boolean>(true),

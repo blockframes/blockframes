@@ -391,6 +391,21 @@ service cloud.firestore {
       allow write: if isOrgMember(incomingData().orgId) && orgCan('update', incomingData().orgId, movieId) && notInMaintenance();
     }
 
+    ///////////////////////////
+    // CMS RULES             //
+    ///////////////////////////
+
+    // @todo(#4322): only admin should be able to modify
+    match /cms/{app} {
+      allow read: if true;
+      allow write: if true;
+      
+      match /{page}/{template} {
+        allow read: if true;
+      	allow write: if true;
+      }
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////
     ///                                  FUNCTIONS                                ///
