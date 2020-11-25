@@ -41,13 +41,13 @@ export class HomeComponent implements OnInit {
     {
       title: 'Learn about investing in the content industry',
       imgAsset: 'knowledge.svg',
-      description: `No experience needed. Discover why content is a profitable investment. 
+      description: `No experience needed. <br> Discover why content is a profitable investment. <br>
       <a href="assets/docs/film-industry.pdf" target="_blank"><u>Download our investment guide.</u></a>`
     },
     {
       title: 'Enjoy exclusive privileges',
       imgAsset: 'exclusive-priviledges.svg',
-      description: 'Get perks and live the full experience of the content industry.'
+      description: 'Get perks and live the full experience <br> of the content industry.'
     }
   ];
 

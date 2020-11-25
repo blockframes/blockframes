@@ -3,10 +3,11 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 function parseOrg(org) {
   /* Only the org from Algolia has the key `objectID` */
   if (org?.objectID) {
+    const { denomination } = org.denomination
     return {
       id: org.objectID,
       logo: org.denomination.logo,
-      denomination: org.denomination
+      denomination: denomination
     }
   }
   return org;

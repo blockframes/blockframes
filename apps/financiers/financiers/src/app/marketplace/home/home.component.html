@@ -2,9 +2,9 @@
   class="dark-contrast-theme">
 
   <h4>Welcome to Media Financiers</h4>
-  <h1 class="mat-display-2">The financing hub <br />for films and TV series</h1>
+  <h1 class="mat-display-2">The professional financing hub <br />for films and TV series</h1>
   <p>
-    Media Financiers enables private investors to coproduce films and TV series selected by top film financing firms,
+    Media Financiers enables private investors to co-produce films and TV series selected by top film financing firms,
     benefiting from their expertise in dealmaking and content acquisition to access top projects at best conditions.
   </p>
   <div class="actions" fxLayout="row" fxLayoutGap="24px">
@@ -46,25 +46,23 @@
       Download cinema investing guide
     </a>
   </section>
-  <ng-template *ngIf="(orgs | async)?.hits as hits">
-    <section *ngIf="hits.length">
-      <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-        <h1>Our Partners</h1>
-        <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
-          <span>See all</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
-        </a>
-      </div>
-      <bf-carousel flex [min]="4">
-        <ng-container *ngFor="let org of hits">
-          <org-card-minimal [org]="org" carouselItem [col]="3"></org-card-minimal>
-        </ng-container>
-      </bf-carousel>
-    </section>
-  </ng-template>
   <section>
     <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-      <h1>Our Benefits</h1>
+      <h1>Our Partners</h1>
+      <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </div>
+    <bf-carousel flex [min]="4">
+      <ng-container *ngFor="let org of (orgs | async)?.hits">
+        <org-card-minimal [org]="org" carouselItem [col]="3"></org-card-minimal>
+      </ng-container>
+    </bf-carousel>
+  </section>
+  <section>
+    <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+      <h1>Benefits</h1>
     </div>
     <bf-carousel flex [min]="2">
       <mat-card *ngFor="let benefit of benefits" carouselItem [col]="6">
