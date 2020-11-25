@@ -38,10 +38,13 @@
       </article>
       <mat-divider></mat-divider>
     </section>
-    <p class="mat-caption">
-      We kindly remind you that this <strong>information is confidential</strong> and should not be shared. <br>
-      Please check the platform's <strong>Legal Terms</strong> here for more information.
-    </p>
+    <div fxLayout fxLayoutGap="8px">
+      <mat-icon svgIcon="warning"></mat-icon>
+      <p class="mat-caption">
+        We kindly remind you that this <strong>information is confidential</strong> and should not be shared. <br>
+        Please check the platform's <strong>Legal Terms</strong> here for more information.
+      </p>
+    </div>
 
     <!-- Funding -->
     <section id="budget" *ngIf="campaign.fundings | apexFunding as options">
@@ -83,10 +86,13 @@
       </article>
       <mat-divider></mat-divider>
     </section>
-    <p class="mat-caption">
-      We kindly remind you that this <strong>information is confidential</strong> and should not be shared. <br>
-      Please check the platform's <strong>Legal Terms</strong> here for more information.
-    </p>
+    <div fxLayout fxLayoutGap="8px">
+      <mat-icon svgIcon="warning"></mat-icon>
+      <p class="mat-caption">
+        We kindly remind you that this <strong>information is confidential</strong> and should not be shared. <br>
+        Please check the platform's <strong>Legal Terms</strong> here for more information.
+      </p>
+    </div>
 
     <!-- Profits -->
     <section id="budget" *ngIf="campaign.profits | apexProfits as options">
@@ -120,10 +126,13 @@
           [dataLabels]="formatter.percent" [tooltip]="{y: formatter.percent}"></apx-chart>
       </article>
     </section>
-    <p class="mat-caption">
-      We kindly remind you that this <strong>information is confidential</strong> and should not be shared. <br>
-      Please check the platform's <strong>Legal Terms</strong> here for more information.
-    </p>
+    <div fxLayout fxLayoutGap="8px">
+      <mat-icon svgIcon="warning"></mat-icon>
+      <p class="mat-caption">
+        We kindly remind you that this <strong>information is confidential</strong> and should not be shared. <br>
+        Please check the platform's <strong>Legal Terms</strong> here for more information.
+      </p>
+    </div>
 
   </ng-container>
 </ng-container>
