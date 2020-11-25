@@ -11,8 +11,7 @@ export interface Meeting {
   organizerId: string;
   description: string;
   files: string[];
-
-  // TODO removed real-time shared state from firestore issue#3748
+  ownerIsPresent: boolean;
   selectedFile: string;
   controls: Record<string, MeetingMediaControl>
 }
