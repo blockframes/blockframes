@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
-
+import { FormAutocompleteModule, matSelect } from '../../forms/autocomplete';
+import { TextFormModule, matText } from '../../forms/text';
+import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
+import { map, switchMap } from 'rxjs/operators';
 
 interface OrgTitle extends Section {
   title: string;
@@ -17,7 +23,7 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
     description: matText({ label: 'description' }),
-    orgId: { form: 'control' },
+    orgId: matSelect<string>({ label: 'Org ID' }),
     movieIds: {
       form: 'array',
       controls: [],
@@ -25,6 +31,21 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
     }
   },
 }
+
+function getOrgQueryFn(app: string) {
+  const accepted = ['status', '==', 'accepted'];
+  const appAccess = [`appAccess.${app}.dashboard`, '==', true];
+  return ref => ref.where(...accepted).where(...appAccess);
+}
+
+function toMap(orgs: Organization[]) {
+  const record: Record<string, Organization> = {};
+  for (const org of orgs) {
+    record[org.id] = org;
+  }
+  return record;
+}
+
 
 @Component({
   selector: 'form-org-titles',
@@ -34,12 +55,20 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
 })
 export class OrgsComponent {
   @Input() form?: FormEntity<typeof orgTitleSchema>;
+  displayOrgLabel = (org?: Organization) => orgName(org); 
+  options$ = this.route.paramMap.pipe(
+    map(params => getOrgQueryFn(params.get('app'))),
+    switchMap(queryFn => this.service.valueChanges(queryFn)),
+    map(toMap)
+  );
+
+  constructor(
+    private service: OrganizationService,
+    private route: ActivatedRoute
+  ) {}
 }
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TextFormModule, matText } from '../../forms/text';
+
 
 
 @NgModule({
@@ -47,6 +76,7 @@ import { TextFormModule, matText } from '../../forms/text';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormAutocompleteModule,
     TextFormModule
   ]
 })

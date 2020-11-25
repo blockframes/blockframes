@@ -1,18 +1,15 @@
-<ng-container *ngIf="schema">
-  <mat-form-field>
-    <mat-label>{{ schema.label }}</mat-label>
-    <input matInput
-          [type]="schema.type"
-          [placeholder]="schema.placeholder"
-          [formControl]="control"
-          [matAutocomplete]="auto">
-    <mat-hint>{{ schema.hint }}</mat-hint>
-  </mat-form-field>
-  
-  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLabel.bind(this)">
-    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-      {{ displayLabel(option) }}
-    </mat-option>
-  </mat-autocomplete>
-</ng-container>
+<mat-form-field>
+  <mat-label>{{ schema.label }}</mat-label>
+  <input matInput
+        [type]="schema.type"
+        [placeholder]="schema.placeholder"
+        [formControl]="control"
+        [matAutocomplete]="auto">
+  <mat-hint>{{ schema.hint }}</mat-hint>
+</mat-form-field>
 
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWith.bind(this)" (optionSelected)="select($event)">
+  <mat-option *ngFor="let key of filteredOptions | async" [value]="key">
+    {{ displayLabel(options[key]) }}
+  </mat-option>
+</mat-autocomplete>

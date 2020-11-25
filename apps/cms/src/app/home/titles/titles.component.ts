@@ -6,11 +6,11 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Movie, MovieService } from '@blockframes/movie/+state';
+import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
 import { TextFormModule, matText } from '../../forms/text';
-import { FormAutocompleteModule, matMuliSelect } from '../../forms/autocomplete';
+import { FormChipsAutocompleteModule, matMuliSelect } from '../../forms/chips-autocomplete';
 import { map, switchMap } from 'rxjs/operators';
 
 interface TitleQueryParams {
@@ -42,6 +42,14 @@ function getQueryFn(app: string) {
   return ref => ref.where(...accepted).where(...appAccess);
 }
 
+function toMap(titles: Movie[]) {
+  const record: Record<string, Movie> = {};
+  for (const title of titles) {
+    record[title.id] = title;
+  }
+  return record;
+}
+
 @Component({
   selector: 'form-titles',
   templateUrl: './titles.component.html',
@@ -50,11 +58,15 @@ function getQueryFn(app: string) {
 })
 export class TitlesComponent {
   @Input() form?: FormEntity<typeof titlesSchema>;
-  displayLabel = (title?: Movie) => title?.title.international; 
+  displayLabel = (title?: Movie) => title?.title.international;
+  getValue = (title?: Movie) => title?.id;
+
   options$ = this.route.paramMap.pipe(
     map(params => getQueryFn(params.get('app'))),
     switchMap(queryFn => this.movieService.valueChanges(queryFn)),
+    map(toMap)
   );
+
   constructor(
     private movieService: MovieService,
     private route: ActivatedRoute
@@ -70,7 +82,7 @@ export class TitlesComponent {
     OverlayModule,
     MatFormFieldModule,
     MatSelectModule,
-    FormAutocompleteModule,
+    FormChipsAutocompleteModule,
     TextFormModule,
   ]
 })

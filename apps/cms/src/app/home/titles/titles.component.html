@@ -10,9 +10,10 @@
   </mat-form-field>
 </article>
 <article>
-  <form-autocomplete
+  <form-chips-autocomplete
     [form]="form.get('titleIds')"
     [options]="options$ | async"
+    [getValue]="getValue"
     [displayLabel]="displayLabel">
-  </form-autocomplete>
+  </form-chips-autocomplete>
 </article>

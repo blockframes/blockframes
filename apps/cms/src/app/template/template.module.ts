@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -26,9 +27,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatIconModule,
     MatListModule,
     MatToolbarModule,
+    DragDropModule,
     MatSelectModule, // Required for lazy components
     MatAutocompleteModule, // Required for lazy components
-    DragDropModule,
+    MatChipsModule, // Required for lazy components
     RouterModule.forChild([{ path: '', component: TemplateComponent }])
   ]
 })

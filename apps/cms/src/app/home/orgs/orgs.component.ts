@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
-import { FormAutocompleteModule, matMuliSelect } from '../../forms/autocomplete';
+import { FormChipsAutocompleteModule, matMuliSelect } from '../../forms/chips-autocomplete';
 import { Section } from '../../template/template.model';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -23,6 +23,14 @@ function getQueryFn(app: string) {
   const accepted = ['status', '==', 'accepted'];
   const appAccess = [`appAccess.${app}.dashboard`, '==', true];
   return ref => ref.where(...accepted).where(...appAccess);
+}
+
+function toMap(orgs: Organization[]) {
+  const record: Record<string, Organization> = {};
+  for (const org of orgs) {
+    record[org.id] = org;
+  }
+  return record;
 }
 
 
@@ -45,11 +53,15 @@ export const orgsSchema: FormGroupSchema<OrgsSection> = {
 })
 export class OrgsComponent {
   @Input() form?: FormEntity<typeof orgsSchema>;
-  displayLabel = (org?: Organization) => orgName(org); 
+  displayLabel = (org?: Organization) => orgName(org);
+  getValue = (org?: Organization) => org?.id;
+
   options$ = this.route.paramMap.pipe(
     map(params => getQueryFn(params.get('app'))),
     switchMap(queryFn => this.service.valueChanges(queryFn)),
+    map(toMap)
   );
+
   constructor(
     private service: OrganizationService,
     private route: ActivatedRoute
@@ -64,7 +76,7 @@ export class OrgsComponent {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormAutocompleteModule,
+    FormChipsAutocompleteModule,
     TextFormModule,
   ]
 })

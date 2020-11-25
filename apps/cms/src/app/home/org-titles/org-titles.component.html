@@ -1,2 +1,14 @@
-<form-text [form]="form.get('title')"></form-text>
-<form-text [form]="form.get('description')"></form-text>
+<article>
+  <form-text [form]="form.get('title')"></form-text>
+  <form-text [form]="form.get('description')"></form-text>
+</article>
+<article>
+  <form-autocomplete
+    [form]="form.get('orgId')"
+    [options]="options$ | async"
+    [displayLabel]="displayOrgLabel"
+  ></form-autocomplete>
+</article>
+<article *ngIf="form.get('orgId').value">
+  
+</article>

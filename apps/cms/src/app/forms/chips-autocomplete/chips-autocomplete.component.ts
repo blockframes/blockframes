@@ -4,24 +4,25 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
-import { FormField } from 'ng-form-factory';
-import { MatSelectSchema } from './autocomplete.schema';
+import { MatIconModule } from '@angular/material/icon';
+import { FormList } from 'ng-form-factory';
+import { MatMulitSelectSchema } from './chips-autocomplete.schema';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'form-autocomplete',
-  templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss'],
+  selector: 'form-chips-autocomplete',
+  templateUrl: './chips-autocomplete.component.html',
+  styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormAutocompleteComponent<T, O> {
+export class FormChipsAutocompleteComponent<T, O> {
   private options$ = new BehaviorSubject(null);
-  @Input() form?: FormField<T>;
+  @Input() form?: FormList<any, T>;
   @Input() displayLabel: (option: O) => string;
   @Input() getValue: (option: O) => T;
   @Input() 
-  set options(options: O[] | Record<string, O>) {
+  set options(options: Record<string, O>) {
     this.options$.next(options);
   }
   get options() {
@@ -29,12 +30,13 @@ export class FormAutocompleteComponent<T, O> {
   }
 
   filteredOptions: Observable<string[]>;
+  chips: T[] = [];
   control = new FormControl();
 
   constructor() { }
 
   get schema() {
-    return this.form.schema as MatSelectSchema<T>;
+    return this.form.schema as MatMulitSelectSchema<T>;
   }
 
   ngOnInit() {
@@ -55,27 +57,29 @@ export class FormAutocompleteComponent<T, O> {
     });
   }
 
-  displayWith(key: string) {
-    return this.displayLabel(this.options[key]);
+  remove(index: number) {
+    this.form.removeAt(index);
   }
 
-  select(event: MatAutocompleteSelectedEvent) {
-    const value = this.getValue(event.option.value);
-    this.form.setValue(value);
+  add(event: MatAutocompleteSelectedEvent) {
+    const option = this.options[event.option.value];
+    const value = this.getValue(option);
+    this.form.add(value);
     this.control.reset();
   }
 }
 
 
 @NgModule({
-  declarations: [FormAutocompleteComponent],
-  exports: [FormAutocompleteComponent],
+  declarations: [FormChipsAutocompleteComponent],
+  exports: [FormChipsAutocompleteComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule,
     MatChipsModule,
+    MatIconModule
   ]
 })
-export class FormAutocompleteModule { }
+export class FormChipsAutocompleteModule { }
