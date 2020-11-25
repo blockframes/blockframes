@@ -2,9 +2,9 @@
   class="dark-contrast-theme">
 
   <h4>Welcome to Media Financiers</h4>
-  <h1 class="mat-display-2">The financing hub <br />for films and TV series</h1>
+  <h1 class="mat-display-2">The professional financing hub <br />for films and TV series</h1>
   <p>
-    Media Financiers enables private investors to coproduce films and TV series selected by top film financing firms,
+    Media Financiers enables private investors to co-produce films and TV series selected by top film financing firms,
     benefiting from their expertise in dealmaking and content acquisition to access top projects at best conditions.
   </p>
   <div class="actions" fxLayout="row" fxLayoutGap="24px">
@@ -15,8 +15,8 @@
 
 <section fxLayout="column" fxLayoutGap="48px">
   <ng-container *ngFor="let section of sections; let i = index">
-    <ng-container *ngIf="section.movies$ | async as movies">
-      <article fxLayout="column" *ngIf="movies.length">
+    <ng-container *ngIf="section.movies | async as movies">
+      <article fxLayout="column">
         <div fxLayout="row" fxLayoutAlign="space-between start" flex>
           <h1>{{ section.title }}</h1>
           <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
@@ -25,10 +25,10 @@
           </a>
         </div>
         <bf-carousel flex [min]="4">
-          <ng-container *ngFor="let movie of section.movies$ | async">
-            <movie-card [movie]="movie" [size]="section.size" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
-              carouselItem>
-              <ng-container *ngIf="movie.id | getCampaign | async as campaign">
+          <ng-container *ngFor="let movie of movies.hits">
+            <movie-card [movie]="movie" [size]="section.size" [link]="['/c/o/marketplace/title', movie.objectID]"
+              [col]="3" carouselItem>
+              <ng-container *ngIf="movie.objectID | getCampaign | async as campaign">
                 <span matTooltip="Minimum investment amount">
                   {{ campaign.minPledge | currency : campaign.currency : 'symbol' : '1.0-0' }}
                 </span>
@@ -55,10 +55,26 @@
       </a>
     </div>
     <bf-carousel flex [min]="4">
-      <!-- /* TODO 3498 */ -->
-     <!--  <ng-container *ngFor="let org of orgs$ | async">
-        <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
-      </ng-container> -->
+      <ng-container *ngFor="let org of (orgs | async)?.hits">
+        <org-card-minimal [org]="org" carouselItem [col]="3"></org-card-minimal>
+      </ng-container>
+    </bf-carousel>
+  </section>
+  <section>
+    <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+      <h1>Benefits</h1>
+    </div>
+    <bf-carousel flex [min]="2">
+      <mat-card *ngFor="let benefit of benefits" carouselItem [col]="6">
+        <img [asset]="benefit.imgAsset" type="logo" alt="benefit feature image">
+        <h3>{{ benefit.title }}</h3>
+        <p class="mat-body-1 benefits">{{ benefit.description }}</p>
+        <a *ngIf="benefit?.link?.href" [href]="benefit.link.href" target="_blank">
+          <u>
+            {{ benefit.link.text }}
+          </u>
+        </a>
+      </mat-card>
     </bf-carousel>
   </section>
 

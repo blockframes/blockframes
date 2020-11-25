@@ -50,7 +50,7 @@ export class MovieService extends CollectionService<MovieState> {
     const createdBy = this.authQuery.userId;
     const appName = getCurrentApp(this.routerQuery);
     let orgIds = [];
-    if (!!movieImported.orgIds.length) {
+    if (!!movieImported?.orgIds.length) {
       orgIds = movieImported.orgIds;
     } else {
       const orgId = this.orgQuery.getActiveId();
