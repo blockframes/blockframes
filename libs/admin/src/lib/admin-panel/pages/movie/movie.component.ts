@@ -11,6 +11,9 @@ import { app } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
+import { EventService } from '@blockframes/event/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
+import { DistributionRightDocumentWithDates } from '@blockframes/distribution-rights/+state/distribution-right.firestore';
 
 @Component({
   selector: 'admin-movie',
@@ -28,6 +31,7 @@ export class MovieComponent implements OnInit {
   public staticConsts = staticModel;
   public rows: any[] = [];
   public app = app;
+  private rights: DistributionRightDocumentWithDates[] = [];
 
   public versionColumnsTable = {
     'id': 'Id',
@@ -48,6 +52,8 @@ export class MovieComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private organizationService: OrganizationService,
+    private eventService: EventService,
+    private invitationService: InvitationService,
     private distributionRightService: DistributionRightService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -62,8 +68,8 @@ export class MovieComponent implements OnInit {
     this.movieForm = new MovieAdminForm(this.movie);
     this.movieAppAccessForm = new MovieAppAccessAdminForm(this.movie);
 
-    const rights = await this.distributionRightService.getMovieDistributionRights(this.movieId)
-    this.rows = rights.map(d => ({ ...d, rightLink: { id: d.id, movieId: this.movieId } }));
+    this.rights = await this.distributionRightService.getMovieDistributionRights(this.movieId);
+    this.rows = this.rights.map(d => ({ ...d, rightLink: { id: d.id, movieId: this.movieId } }));
 
     this.cdRef.markForCheck();
   }
@@ -107,13 +113,14 @@ export class MovieComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public deleteMovie() {
-    this.testWishlist(this.movieId)
+  public async deleteMovie() {
+    const simulation = await this.simulateDeletion(this.movieId);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         question: 'You are about to delete this movie from Archipel, are you sure ?',
         warning: 'Doing this will also delete everything regarding this movie',
-        confirmationWord: 'delete',
+        simulation,
+        confirmationWord: 'DELETE',
         onConfirm: () => {
           // this.organizationService.remove(this.orgId);
           this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
@@ -124,11 +131,22 @@ export class MovieComponent implements OnInit {
   }
 
 
-  public async testWishlist(movieId: string) {
-    const orgs = await this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movieId));
+  private async simulateDeletion(movieId: string) { // get what will be delete. le vrai delete se fait coté backend
+    const output: string[] = [];
+    output.push('1 document from movies collection will be removed');
 
-    console.log(orgs);
+    const whislists = await this.organizationService.getValue(ref => ref.where('wishlist', 'array-contains', movieId));
+    output.push(`${whislists.length} items from org's wishlist will be removed`);
 
+    const events = await this.eventService.getValue(ref => ref.where('meta.titleId', '==', movieId));
+    output.push(`${events.length} documents from events collection will be removed`);
+
+    const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', events.map(e => e.id)));
+    output.push(`${invitations.length} invitations to events will be removed`);
+
+    output.push(`${this.rights.length} distribution rights will be removed`);
+
+    return output;
   }
 
 }
