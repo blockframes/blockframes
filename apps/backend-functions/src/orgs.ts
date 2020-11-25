@@ -211,40 +211,40 @@ export async function onOrganizationDelete(
   const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
   const moviesSnap = await movieCollectionRef.get();
   for(const movie of moviesSnap.docs) {
-    movie.ref.delete();
+    await movie.ref.delete();
   }
 
   // Delete all events where organization is involved
   const eventsOwnerIdCollectionRef = db.collection('events').where('ownerId', '==', org.id);
   const eventsOwnerIdSnap = await eventsOwnerIdCollectionRef.get();
   for (const event of eventsOwnerIdSnap.docs) {
-    event.ref.delete();
+    await event.ref.delete();
   }
 
   const eventsOrganizerIdCollectionRef = db.collection('events').where('meta.organizerId', '==', org.id);
   const eventsOrganizerIdSnap = await eventsOrganizerIdCollectionRef.get();
   for (const event of eventsOrganizerIdSnap.docs) {
-    event.ref.delete();
+    await event.ref.delete();
   }
 
   // Delete all notifications where organization is involved
   const notifsCollectionRef = db.collection('notifications').where('organization.id', '==', org.id);
   const notifsSnap = await notifsCollectionRef.get();
   for (const notif of notifsSnap.docs) {
-    notif.ref.delete();
+    await notif.ref.delete();
   }
 
   // Delete all invitations where organization is involved
   const invitationsFromOrgCollectionRef = db.collection('invitations').where('fromOrg.id', '==', org.id);
   const invitationsFromOrgSnap = await invitationsFromOrgCollectionRef.get();
   for (const invit of invitationsFromOrgSnap.docs) {
-    invit.ref.delete();
+    await invit.ref.delete();
   }
 
   const invitationsToOrgCollectionRef = db.collection('invitations').where('toOrg.id', '==', org.id);
   const invitationsToOrgSnap = await invitationsToOrgCollectionRef.get();
   for (const invit of invitationsToOrgSnap.docs) {
-    invit.ref.delete();
+    await invit.ref.delete();
   }
 
   // TODO CLEAN STORAGE
