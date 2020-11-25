@@ -64,7 +64,6 @@ export class FormChipsAutocompleteComponent<T, O> {
   add(event: MatAutocompleteSelectedEvent) {
     const option = this.options[event.option.value];
     const value = this.getValue(option);
-    console.log(this.form.value);
     this.form.add(value);
     this.control.reset('');
   }

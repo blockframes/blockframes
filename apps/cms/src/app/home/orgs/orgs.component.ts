@@ -4,10 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
+import { Organization, orgName } from '@blockframes/organization/+state';
 import { FormChipsAutocompleteModule, matMuliSelect } from '../../forms/chips-autocomplete';
 import { Section } from '../../template/template.model';
-import { map, switchMap } from 'rxjs/operators';
+import { HomePipesModule } from '../pipes';
 
 interface OrgQueryParams {
   facets: string[];
@@ -18,21 +18,6 @@ interface OrgsSection extends Section {
   query: OrgQueryParams;
   orgIds: string[];
 }
-
-function getQueryFn(app: string) {
-  const accepted = ['status', '==', 'accepted'];
-  const appAccess = [`appAccess.${app}.dashboard`, '==', true];
-  return ref => ref.where(...accepted).where(...appAccess);
-}
-
-function toMap(orgs: Organization[]) {
-  const record: Record<string, Organization> = {};
-  for (const org of orgs) {
-    record[org.id] = org;
-  }
-  return record;
-}
-
 
 export const orgsSchema: FormGroupSchema<OrgsSection> = {
   form: 'group',
@@ -56,16 +41,9 @@ export class OrgsComponent {
   displayLabel = (org?: Organization) => orgName(org);
   getValue = (org?: Organization) => org?.id;
 
-  options$ = this.route.paramMap.pipe(
-    map(params => getQueryFn(params.get('app'))),
-    switchMap(queryFn => this.service.valueChanges(queryFn)),
-    map(toMap)
-  );
+  params$ = this.route.paramMap;
 
-  constructor(
-    private service: OrganizationService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private route: ActivatedRoute) {}
 }
 
 
@@ -78,6 +56,7 @@ export class OrgsComponent {
     ReactiveFormsModule,
     FormChipsAutocompleteModule,
     TextFormModule,
+    HomePipesModule,
   ]
 })
 export class OrgsModule { }

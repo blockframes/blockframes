@@ -1,4 +1,4 @@
-import { NgModule, ChangeDetectionStrategy, Component, Input, PipeTransform, Pipe } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -7,9 +7,9 @@ import { Section } from '../../template/template.model';
 import { FormAutocompleteModule, matSelect } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule, matMuliSelect } from '../../forms/chips-autocomplete';
 import { TextFormModule, matText } from '../../forms/text';
-import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
-import { map } from 'rxjs/operators';
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Organization, orgName } from '@blockframes/organization/+state';
+import { Movie } from '@blockframes/movie/+state';
+import { HomePipesModule } from '../pipes';
 
 interface OrgTitle extends Section {
   title: string;
@@ -30,27 +30,6 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
   },
 }
 
-function getOrgQueryFn(app: string) {
-  const accepted = ['status', '==', 'accepted'];
-  const appAccess = [`appAccess.${app}.dashboard`, '==', true];
-  return ref => ref.where(...accepted).where(...appAccess);
-}
-
-function getMoviesQueryFn(app: string, orgId: string) {
-  const accepted = ['storeConfig.status', '==', 'accepted'];
-  const appAccess = [`storeConfig.appAccess.${app}`, '==', true];
-  const fromOrg = ['orgIds', 'array-contains', orgId];
-  return ref => ref.where(...accepted).where(...appAccess).where(...fromOrg);
-}
-
-function toMap<T extends { id: string }>(list: T[]) {
-  const record: Record<string, T> = {};
-  for (const item of list) {
-    record[item.id] = item;
-  }
-  return record;
-}
-
 type OrgTitleForm = FormEntity<typeof orgTitleSchema>;
 
 
@@ -63,9 +42,7 @@ type OrgTitleForm = FormEntity<typeof orgTitleSchema>;
 export class OrgsComponent {
   @Input() form: OrgTitleForm;
 
-  app$ = this.route.paramMap.pipe(
-    map(params => params.get('app'))
-  );
+  params$ = this.route.paramMap;
   
   displayOrgLabel = (org?: Organization) => orgName(org); 
   getOrgValue = (org?: Organization) => org?.id; 
@@ -80,47 +57,15 @@ export class OrgsComponent {
 }
 
 
-@Pipe({ name: 'getOrgs' })
-export class GetOrgsPipe implements PipeTransform {
-  constructor(private orgService: OrganizationService) {}
-  async transform(app: string) {
-    const queryFn = getOrgQueryFn(app);
-    const orgs = await this.orgService.getValue(queryFn);
-    return toMap(orgs);
-  }
-}
-
-@Pipe({ name: 'getOrgId' })
-export class GetOrgIdPipe implements PipeTransform {
-  transform(form: OrgTitleForm, orgs: Record<string, Organization>) {
-    return form.get('orgId').value$.pipe(
-      map(orgId => orgId in orgs ? orgId : null)
-    );
-  }
-}
-
-@Pipe({ name: 'getOrgTitle' })
-export class GetOrgTitlePipe implements PipeTransform {
-  constructor(private titleService: MovieService){}
-  transform(orgId: string, app: string) {
-    if (!orgId) return;
-    const queryFn = getMoviesQueryFn(app, orgId);
-    return this.titleService.valueChanges(queryFn).pipe(
-      map(toMap)
-    );
-  }
-}
-
-
-
 @NgModule({
-  declarations: [OrgsComponent, GetOrgsPipe, GetOrgIdPipe, GetOrgTitlePipe],
+  declarations: [OrgsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormAutocompleteModule,
     FormChipsAutocompleteModule,
-    TextFormModule
+    TextFormModule,
+    HomePipesModule,
   ]
 })
 export class OrgsModule { }
