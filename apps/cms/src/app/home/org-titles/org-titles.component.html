@@ -1,14 +1,25 @@
-<article>
-  <form-text [form]="form.get('title')"></form-text>
-  <form-text [form]="form.get('description')"></form-text>
-</article>
-<article>
-  <form-autocomplete
-    [form]="form.get('orgId')"
-    [options]="options$ | async"
-    [displayLabel]="displayOrgLabel"
-  ></form-autocomplete>
-</article>
-<article *ngIf="form.get('orgId').value">
-  
-</article>
+<ng-container *ngIf="app$ | async as app">
+  <article>
+    <form-text [form]="form.get('title')"></form-text>
+    <form-text [form]="form.get('description')"></form-text>
+  </article>
+  <ng-container *ngIf="app | getOrgs | async as orgs">
+    <article>
+      <form-autocomplete
+        [form]="form.get('orgId')"
+        [options]="orgs"
+        [getValue]="getOrgValue"
+        [displayLabel]="displayOrgLabel"
+        (change)="reset()"
+      ></form-autocomplete>
+    </article>
+    <article>
+      <form-chips-autocomplete
+        [form]="form.get('movieIds')"
+        [options]="form.get('orgId').value | getOrgTitle : app | async"
+        [getValue]="getTitleValue"
+        [displayLabel]="displayTitleLabel">
+      </form-chips-autocomplete>
+    </article>
+  </ng-container>
+</ng-container>

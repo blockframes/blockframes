@@ -17,15 +17,15 @@ import { startWith, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormChipsAutocompleteComponent<T, O> {
-  private options$ = new BehaviorSubject(null);
+  options$ = new BehaviorSubject(null);
   @Input() form?: FormList<any, T>;
   @Input() displayLabel: (option: O) => string;
   @Input() getValue: (option: O) => T;
   @Input() 
-  set options(options: Record<string, O>) {
+  private set options(options: Record<string, O>) {
     this.options$.next(options);
   }
-  get options() {
+  private get options() {
     return this.options$.getValue();
   }
 
@@ -64,8 +64,9 @@ export class FormChipsAutocompleteComponent<T, O> {
   add(event: MatAutocompleteSelectedEvent) {
     const option = this.options[event.option.value];
     const value = this.getValue(option);
+    console.log(this.form.value);
     this.form.add(value);
-    this.control.reset();
+    this.control.reset('');
   }
 }
 

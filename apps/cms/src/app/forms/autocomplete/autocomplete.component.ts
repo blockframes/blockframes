@@ -1,4 +1,4 @@
-import { Component, NgModule, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, NgModule, Input, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -16,12 +16,13 @@ import { startWith, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormAutocompleteComponent<T, O> {
-  private options$ = new BehaviorSubject(null);
-  @Input() form?: FormField<T>;
+  private options$ = new BehaviorSubject<Record<string, O>>(null);
+  @Output() change = new EventEmitter<string>();
+  @Input() form?: FormField<string>;
   @Input() displayLabel: (option: O) => string;
-  @Input() getValue: (option: O) => T;
+  @Input() getValue: (option: O) => string;
   @Input() 
-  set options(options: O[] | Record<string, O>) {
+  set options(options: Record<string, O>) {
     this.options$.next(options);
   }
   get options() {
@@ -40,7 +41,7 @@ export class FormAutocompleteComponent<T, O> {
   ngOnInit() {
     this.filteredOptions = combineLatest([
       this.control.valueChanges.pipe(startWith('')),
-      this.options$.asObservable().pipe(map(options => options || this.schema.options))
+      this.options$.asObservable()
     ]).pipe(
       map(([value, options]) => this.filter(value, options))
     );
@@ -55,15 +56,15 @@ export class FormAutocompleteComponent<T, O> {
     });
   }
 
-  displayWith(key: string) {
-    return this.displayLabel(this.options[key]);
+  onChange() {
+    this.change.emit(this.form.value);
   }
 
-  select(event: MatAutocompleteSelectedEvent) {
-    const value = this.getValue(event.option.value);
-    this.form.setValue(value);
-    this.control.reset();
+  displayWith(value: string) {
+    if (!value || !this.options) return '';
+    return this.displayLabel(this.options[value]);
   }
+
 }
 
 

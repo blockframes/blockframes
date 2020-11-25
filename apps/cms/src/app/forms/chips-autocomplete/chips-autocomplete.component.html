@@ -1,24 +1,26 @@
-<mat-form-field>
-  <mat-label>{{ schema.label }}</mat-label>
-  <mat-chip-list #chipList aria-label="Fruit selection">
-    <ng-container *ngFor="let key of form.value; let i = index">
-      <mat-chip removable (removed)="remove(i)">
-        <span>{{ displayLabel(options[key]) }}</span>
-        <mat-icon matChipRemove svgIcon="close"></mat-icon>
-      </mat-chip>
-    </ng-container>
-    <input matInput
-          [type]="schema.type"
-          [placeholder]="schema.placeholder"
-          [formControl]="control"
-          [matChipInputFor]="chipList"
-          [matAutocomplete]="auto" />
-  </mat-chip-list>
-  <mat-hint>{{ schema.hint }}</mat-hint>
-</mat-form-field>
-
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="add($event)">
-  <mat-option *ngFor="let key of filteredOptions | async" [value]="key">
-    {{ displayLabel(options[key]) }}
-  </mat-option>
-</mat-autocomplete>
+<ng-container *ngIf="options$ | async as options">
+  <mat-form-field>
+    <mat-label>{{ schema.label }}</mat-label>
+    <mat-chip-list #chipList aria-label="Fruit selection">
+      <ng-container *ngFor="let key of form.value$ | async; let i = index">
+        <mat-chip removable (removed)="remove(i)">
+          <span>{{ displayLabel(options[key]) }}</span>
+          <mat-icon matChipRemove svgIcon="close"></mat-icon>
+        </mat-chip>
+      </ng-container>
+      <input matInput
+            [type]="schema.type"
+            [placeholder]="schema.placeholder"
+            [formControl]="control"
+            [matChipInputFor]="chipList"
+            [matAutocomplete]="auto" />
+    </mat-chip-list>
+    <mat-hint>{{ schema.hint }}</mat-hint>
+  </mat-form-field>
+  
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="add($event)">
+    <mat-option *ngFor="let key of filteredOptions | async" [value]="key">
+      {{ displayLabel(options[key]) }}
+    </mat-option>
+  </mat-autocomplete>
+</ng-container>
