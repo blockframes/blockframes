@@ -1,57 +1,50 @@
 <ng-container *ngIf="(event$ | async) as event; else loading">
 
 
-  <article fxLayout="column" fxLayoutAlign="center center">
-    <h1>Meeting Lobby</h1>
-    <h2>{{event.title}}</h2>
+  <h1>Meeting Lobby</h1>
+  <h2>{{event.title}}</h2>
+  <section *ngIf="(local$ | async) as local">
 
-    <section *ngIf="track$ | async as track" fxLayout="row" fxLayoutAlign="center center">
+    <meeting-video [attendee]="local"></meeting-video>
 
-      <meeting-video
-        fxFlex="40%"
-        [video]="track.video"
-        [audio]="track.audio"
-        [name]="userName"
-        local
-      ></meeting-video>
-
-      <div fxLayout="column" fxLayoutAlign="space-around center" fxFlex="40%">
-        <div fxLayout="row" fxLayoutGap="32px">
-          <ng-container *ngIf="track.video as videoTrack">
-            <button mat-fab color="primary" (click)="toggleLocalTrack('video')">
-              <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
-              <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
+    <aside>
+      <div fxLayout="row" fxLayoutGap="32px">
+        <ng-container *ngIf="local.tracks.video as videoTrack">
+          <button mat-fab color="primary" (click)="toggleLocalTrack('video')">
+            <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
+            <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="!local.tracks.video">
+          <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
+          <span matTooltip="Your browser don't have the permission to access the camera">
+            <button mat-fab disabled>
+              <mat-icon svgIcon="videocam"></mat-icon>
             </button>
-          </ng-container>
-          <ng-container *ngIf="!track.video">
-            <span matTooltip="Your browser don't have the permission to access the camera">
-              <button mat-fab disabled>
-                <mat-icon svgIcon="videocam"></mat-icon>
-              </button>
-            </span>
-          </ng-container>
+          </span>
+        </ng-container>
 
-          <ng-container *ngIf="track.audio as audioTrack">
-            <button mat-fab color="primary" (click)="toggleLocalTrack('audio')">
-              <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
-              <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
+        <ng-container *ngIf="local.tracks.audio as audioTrack">
+          <button mat-fab color="primary" (click)="toggleLocalTrack('audio')">
+            <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
+            <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="!local.tracks.audio">
+          <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
+          <span matTooltip="Your browser don't have the permission to access the microphone">
+            <button mat-fab disabled>
+              <mat-icon svgIcon="unmute"></mat-icon>
             </button>
-          </ng-container>
-          <ng-container *ngIf="!track.audio">
-            <span matTooltip="Your browser don't have the permission to access the microphone">
-              <button mat-fab disabled>
-                <mat-icon svgIcon="unmute"></mat-icon>
-              </button>
-            </span>
-          </ng-container>
-        </div>
-        <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
+          </span>
+        </ng-container>
       </div>
+      <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
+    </aside>
 
-    </section>
+  </section>
 
-    <img asset="meeting.webp" alt="Meeting room">
-  </article>
+  <img asset="meeting.webp" alt="Meeting room">
 
 </ng-container>
 

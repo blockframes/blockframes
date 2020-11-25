@@ -46,6 +46,7 @@ export const icons = [
   { name: 'building', url: 'assets/icons/building.svg' },
   { name: 'CAD', url: 'assets/icons/CAD.svg' },
   { name: 'calendar', url: 'assets/icons/calendar.svg' },
+  { name: 'call_end', url: 'assets/icons/call_end.svg' },
   { name: 'campaign', url: 'assets/icons/campaign.svg' },
   { name: 'certificate', url: 'assets/icons/certificate.svg' },
   { name: 'check', url: 'assets/icons/check.svg' },

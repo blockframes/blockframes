@@ -1,6 +1,18 @@
+
+import { Person } from './common-interfaces';
+
 export interface ErrorResultResponse {
   error: string;
   result: any;
+}
+
+export function titleCase(text: string) {
+  if (!text) return '';
+  return text[0].toUpperCase() + text.substring(1);
+}
+
+export function displayName(person: Person) {
+  return `${titleCase(person.firstName)} ${titleCase(person.lastName)}`;
 }
 
 /**
