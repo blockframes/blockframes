@@ -47,9 +47,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
       } else if (event.type === 'meeting') {
         if (event.isOwner) {
-          const meta = {...event.meta} as Meeting
-          meta.ownerIsPresent = true;
-          await this.service.update(event.id, { meta });
+          await this.service.update(event.id, (e: Event<Meeting>): Event<Meeting> => ({ ...e, meta: {...e.meta, ownerIsPresent: true } }))
         }
       }
     })
