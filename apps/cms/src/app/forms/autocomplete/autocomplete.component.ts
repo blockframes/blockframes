@@ -1,4 +1,4 @@
-import { Component, NgModule, Input, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { Component, NgModule, Input, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -15,7 +15,7 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormAutocompleteComponent<T, O> {
+export class FormAutocompleteComponent<T, O> implements OnInit {
   private options$ = new BehaviorSubject<Record<string, O>>(null);
   @Output() change = new EventEmitter<string>();
   @Input() form?: FormField<string>;

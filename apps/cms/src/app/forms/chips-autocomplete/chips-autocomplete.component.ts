@@ -1,4 +1,4 @@
-import { Component, NgModule, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, NgModule, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -16,7 +16,7 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormChipsAutocompleteComponent<T, O> {
+export class FormChipsAutocompleteComponent<T, O> implements OnInit {
   options$ = new BehaviorSubject(null);
   @Input() form?: FormList<any, T>;
   @Input() displayLabel: (option: O) => string;

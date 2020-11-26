@@ -1,4 +1,8 @@
 :host {
   display: flex;
-  gap: 16px;
+}
+
+// Gap
+:host > *:not(:first-child) {
+  margin-left: 16px;
 }

@@ -1,0 +1,14 @@
+:host {
+  width: 100%;
+}
+div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Gap
+div > *:not(:first-child) {
+  margin-left: 16px;
+}
