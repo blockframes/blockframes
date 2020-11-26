@@ -7,8 +7,12 @@ import {
 } from '@blockframes/utils/maintenance';
 import { loadAdminServices } from './util';
 
+interface MaintenanceOptions {
+  checkMissingVars?: boolean,
+  db?: FirebaseFirestore.Firestore
+}
 
-const maintenanceRef = (db?: FirebaseFirestore.Firestore, checkMissingVars = true) => {
+const maintenanceRef = ({ db, checkMissingVars = true }: MaintenanceOptions) => {
   if (!db) db = loadAdminServices(checkMissingVars).db;
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
 };
@@ -18,7 +22,7 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
     console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');
     return;
   }
-  return maintenanceRef(db).set(
+  return maintenanceRef({ db }).set(
     { startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null },
     { merge: true }
   );
@@ -26,7 +30,7 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
 
 export function endMaintenance(db?: FirebaseFirestore.Firestore) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
-  return maintenanceRef(db).set(
+  return maintenanceRef({ db }).set(
     {
       endedAt: admin.firestore.FieldValue.serverTimestamp(),
       startedAt: null,
@@ -35,13 +39,13 @@ export function endMaintenance(db?: FirebaseFirestore.Firestore) {
   );
 }
 
- /**
-  * 
-  * @param db 
-  */
- async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise<boolean> {
+/**
+ * 
+ * @param db 
+ */
+async function isInMaintenance(): Promise<boolean> {
   try {
-    const ref = maintenanceRef(db, false);
+    const ref = maintenanceRef({ checkMissingVars: false });
     const doc = await ref.get();
 
     // if document doesn't exist, it means that there is something not normal,

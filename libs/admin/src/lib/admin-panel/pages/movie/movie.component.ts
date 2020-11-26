@@ -154,25 +154,22 @@ export class MovieComponent implements OnInit {
     }
 
     const eventIds = events.map(e => e.id);
-    if (eventIds.length) {
-      let i, j, subEventIds, invitationCount = 0;
-      for (i = 0, j = eventIds.length; i < j; i += chunk) {
-        subEventIds = eventIds.slice(i, i + chunk);
-        const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', subEventIds));
-        invitationCount += invitations.length;
-      }
 
-      if(invitationCount){
-        output.push(`${invitationCount} invitations to events will be removed.`);
-      }
+    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('docId', '==', e)));
+    const invitations = await Promise.all(invitationsPromises);
+    const invitationsCount = invitations.flat().length;
+
+    if (invitationsCount) {
+      output.push(`${invitationsCount} invitations to events will be removed.`);
     }
 
     if (this.rights.length) {
       output.push(`${this.rights.length} distribution rights will be removed.`);
     }
 
-    const orgs = await this.organizationService.getValue(ref => ref.where('id', 'in', movie.orgIds));
-    const promises = orgs.map(o => this.permissionsService.getDocumentPermissions(movie.id, o.id));
+    const orgPromises = movie.orgIds.map(o => this.organizationService.getValue(ref => ref.where('id', '==', o)));
+    const orgs = await Promise.all(orgPromises);
+    const promises = orgs.flat().map(o => this.permissionsService.getDocumentPermissions(movie.id, o.id));
     const documentPermissions = await Promise.all(promises);
     if (documentPermissions.length) {
       output.push(`${documentPermissions.length} permission document will be removed.`);

@@ -58,25 +58,21 @@ export async function onMovieDelete(
   events.docs.forEach(d => batch.delete(d.ref));
 
   // Delete invitations
-  const eventIds = events.docs.map(e => e.id);
-  if (eventIds.length) {
-    const chunk = 10; // max 10 items in "in" queries
-    let i, j, subEventIds;
-    for (i = 0, j = eventIds.length; i < j; i += chunk) {
-      subEventIds = eventIds.slice(i, i + chunk);
-      const invitations = await db.collection('invitations').where('docId', 'in', subEventIds).get();
-      invitations.docs.forEach(d => batch.delete(d.ref));
-    }
-  }
+  const invitationsPromises = events.docs.map(e => db.collection('invitations').where('docId', '==', e.id).get());
+  const _invitations = await Promise.all(invitationsPromises);
+  const invitations = _invitations.map(i => i.docs).flat();
+  invitations.forEach(d => batch.delete(d.ref));
 
   // Delete sub-collections (distribution rights)
   await removeAllSubcollections(snap, batch);
 
   // Delete permissions
-  const orgs = await db.collection('orgs').where('id', 'in', movie.orgIds).get();
-  const permissionsPromises = orgs.docs.map(async o => db.doc(`permissions/${o.id}/documentPermissions/${movie.id}`).get());
+  const orgsPromises = movie.orgIds.map(o => db.collection('orgs').where('id', '==', o).get());
+  const _orgs = await Promise.all(orgsPromises);
+  const orgs = _orgs.map(i => i.docs).flat();
+  const permissionsPromises = orgs.map(o => db.doc(`permissions/${o.id}/documentPermissions/${movie.id}`).get());
   const permissions = await Promise.all(permissionsPromises);
-  permissions.forEach(d => batch.delete(d.ref));
+  permissions.forEach(p => batch.delete(p.ref));
 
   // Update contracts
   const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
