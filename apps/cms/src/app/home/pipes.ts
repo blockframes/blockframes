@@ -1,25 +1,26 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import { QueryFn } from '@angular/fire/firestore';
 import { ParamMap } from '@angular/router';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 
-function getOrgQueryFn(app: string) {
-  const accepted = ['status', '==', 'accepted'];
-  const appAccess = [`appAccess.${app}.dashboard`, '==', true];
+function getOrgQueryFn(app: string): QueryFn {
+  const accepted = ['status', '==', 'accepted'] as const;
+  const appAccess = [`appAccess.${app}.dashboard`, '==', true] as const;
   return ref => ref.where(...accepted).where(...appAccess);
 }
 
-function getTitlesQueryFn(app: string) {
-  const accepted = ['storeConfig.status', '==', 'accepted'];
-  const appAccess = [`storeConfig.appAccess.${app}`, '==', true];
+function getTitlesQueryFn(app: string): QueryFn {
+  const accepted = ['storeConfig.status', '==', 'accepted'] as const;
+  const appAccess = [`storeConfig.appAccess.${app}`, '==', true] as const;
   return ref => ref.where(...accepted).where(...appAccess);
 }
 
-function getOrgTitlesQueryFn(app: string, orgId: string) {
-  const accepted = ['storeConfig.status', '==', 'accepted'];
-  const appAccess = [`storeConfig.appAccess.${app}`, '==', true];
-  const fromOrg = ['orgIds', 'array-contains', orgId];
+function getOrgTitlesQueryFn(app: string, orgId: string): QueryFn {
+  const accepted = ['storeConfig.status', '==', 'accepted'] as const;
+  const appAccess = [`storeConfig.appAccess.${app}`, '==', true] as const;
+  const fromOrg = ['orgIds', 'array-contains', orgId] as const;
   return ref => ref.where(...accepted).where(...appAccess).where(...fromOrg);
 }
 

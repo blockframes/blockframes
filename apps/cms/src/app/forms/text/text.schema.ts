@@ -6,12 +6,11 @@ export interface MatTextSchema extends FormControlSchema, MatFormFieldSchema<str
   size: 'short' | 'long';
 }
 
-export const matText = (params: Partial<MatTextSchema>): MatTextSchema => {
+export const matText = (params: Partial<MatTextSchema> = {}): MatTextSchema => {
   return {
     form: 'control',
     type: 'text',
     size: 'short',
-    load: () => import('./text.component').then(c => c.TextFormComponent),
-    ...(params || {})
+    ...params
   }
 }

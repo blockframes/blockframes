@@ -3,8 +3,8 @@ import { FormArraySchema, FormEntity, FormGroupSchema, FormList } from 'ng-form-
 import { matSelect } from '../select';
 import { matText } from '../text';
 
-export type QueryMethods =  'where' | 'orderBy';
-export const queryMethods: QueryMethods[] = ['where', 'orderBy'];
+export type QueryMethods = "where" | "orderBy" | "limit" | "limitToLast";
+export const queryMethods: QueryMethods[] = ['where', 'limit', 'limitToLast', 'orderBy'];
 export const methodSchema = matSelect<QueryMethods>({ label: 'Method', options: queryMethods });
 
 export interface CollectionQuery {
@@ -24,6 +24,8 @@ export interface WhereQuery extends CollectionQuery {
   condition: Conditions;
   value: string;
 }
+
+export const isWhereQuery = (query: CollectionQuery): query is WhereQuery => query.method === 'where';
 
 export type WhereQuerySchema = FormGroupSchema<WhereQuery>;
 export type WhereQueryForm = FormEntity<WhereQuerySchema>;
@@ -59,6 +61,22 @@ export const orderByQuerySchema: OrderByQuerySchema = {
   }
 }
 
+///////////
+// LIMIT //
+///////////
+export interface LimitQuery extends CollectionQuery {
+  limit: number
+}
+export type LimitQuerySchema = FormGroupSchema<LimitQuery>;
+export type LimitQueryForm = FormEntity<LimitQuerySchema>;
+
+export const limitQuerySchema: LimitQuerySchema = {
+  form: 'group',
+  controls: {
+    method: methodSchema,
+    limit: matText({ label: 'Amount', type: 'number' }),
+  }
+}
 
 
 ///////////
@@ -74,7 +92,9 @@ export type FirestoreQueryForm = FormList<FirestoreQuerySchema>;
 
 const collectionSchema = {
   where: whereQuerySchema,
-  orderBy: orderByQuerySchema
+  orderBy: orderByQuerySchema,
+  limit: limitQuerySchema,
+  limitToLast: limitQuerySchema,
 }
 
 export function firestoreQuery(params: Partial<FirestoreQuerySchema>): FirestoreQuerySchema {

@@ -10,14 +10,17 @@
       <form-text [form]="control.get('field')"></form-text>
       <form-select [form]="control.get('direction')"></form-select>
     </ng-container>
+    <ng-container *ngSwitchCase="'limit'">
+      <form-text [form]="control.get('limit')"></form-text>
+    </ng-container>
+    <ng-container *ngSwitchCase="'limitToLast'">
+      <form-text [form]="control.get('limit')"></form-text>
+    </ng-container>
   </div>
   <button mat-icon-button (click)="form.removeAt(i)" [disabled]="control.disabled">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
 </div>
 <footer>
-  <form-select [form]="method"></form-select>
-  <button mat-icon-button (click)="add()" [disabled]="form.disabled || method.pristine">
-    <mat-icon svgIcon="add"></mat-icon>
-  </button>
+  <form-select [form]="method" (change)="add($event)"></form-select>
 </footer>

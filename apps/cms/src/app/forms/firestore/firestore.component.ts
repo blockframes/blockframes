@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { createForms } from 'ng-form-factory';
-import { FirestoreQueryForm, methodSchema } from './firestore.schema';
+import { FirestoreQueryForm, methodSchema, isWhereQuery } from './firestore.schema';
 
 
 
@@ -20,7 +20,12 @@ export class FirestoreComponent {
 
   add() {
     const method = this.method.value;
-    this.form.add({ method });
+    const last = this.form.at(this.form.length - 1)?.value;
+    if (method === 'orderBy' && isWhereQuery(last)) {
+      this.form.add({ method, field: last.field } as any)
+    } else {
+      this.form.add({ method });
+    }
     this.method.reset();
   }
 }
