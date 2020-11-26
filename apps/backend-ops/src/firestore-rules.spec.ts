@@ -297,7 +297,6 @@ describe.skip('Organization Rules Tests', () => {
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test('test', async () => {});
 });
 
 //TODO: 4198
@@ -311,7 +310,6 @@ describe.skip('Permission Rules Tests', () => {
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test('test', async () => {});
 });
 
 describe('Movies Rules Tests', () => {
@@ -564,7 +562,5 @@ describe('Events Rules Tests', () => {
 
 //TODO: 4187
 describe.skip('Campaign Security Rules', () => {
-  beforeAll(async () => {});
 
-  test('should allow signed-in user to read', async () => {});
 });
