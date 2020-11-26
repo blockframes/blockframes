@@ -98,6 +98,8 @@ export async function onMovieUpdate(
 ): Promise<any> {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
+  if (!after) { return; }
+
   await cleanMovieMedias(before, after);
 
   const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);

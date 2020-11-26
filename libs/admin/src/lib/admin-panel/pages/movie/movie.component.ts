@@ -161,6 +161,10 @@ export class MovieComponent implements OnInit {
         const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', temparray));
         invitationCount += invitations.length;
       }
+
+      if(invitationCount){
+        output.push(`${invitationCount} invitations to events will be removed.`);
+      }
     }
 
     if (this.rights.length) {
