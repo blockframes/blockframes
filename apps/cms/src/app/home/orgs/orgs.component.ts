@@ -2,10 +2,11 @@ import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TextFormModule, matText } from '../../forms/text';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Organization, orgName } from '@blockframes/organization/+state';
-import { FormChipsAutocompleteModule, matMuliSelect } from '../../forms/chips-autocomplete';
+import { TextFormModule, matText } from '../../forms/text';
+import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
+import { matMultiSelect } from '../../forms/select';
 import { Section } from '../../template/template.model';
 import { HomePipesModule } from '../pipes';
 
@@ -25,7 +26,7 @@ export const orgsSchema: FormGroupSchema<OrgsSection> = {
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
-    orgIds: matMuliSelect<string>({ label: 'Org IDs' }),
+    orgIds: matMultiSelect<string>({ label: 'Org IDs' }),
     query: { form: 'group', controls: {} },
   },
 }

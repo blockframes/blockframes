@@ -5,7 +5,7 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormField } from 'ng-form-factory';
-import { MatSelectSchema } from './autocomplete.schema';
+import { MatSelectSchema } from '../select';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 

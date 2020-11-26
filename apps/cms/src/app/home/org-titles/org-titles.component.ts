@@ -4,9 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
-import { FormAutocompleteModule, matSelect } from '../../forms/autocomplete';
-import { FormChipsAutocompleteModule, matMuliSelect } from '../../forms/chips-autocomplete';
+import { FormAutocompleteModule } from '../../forms/autocomplete';
+import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { TextFormModule, matText } from '../../forms/text';
+import { matMultiSelect, matSelect } from '../../forms/select';
 import { Organization, orgName } from '@blockframes/organization/+state';
 import { Movie } from '@blockframes/movie/+state';
 import { HomePipesModule } from '../pipes';
@@ -26,7 +27,7 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
     title: matText({ label: 'title' }),
     description: matText({ label: 'description' }),
     orgId: matSelect({ label: 'Org ID' }),
-    movieIds: matMuliSelect({ label: 'Title IDS' })
+    movieIds: matMultiSelect({ label: 'Title IDS' })
   },
 }
 

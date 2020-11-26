@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { FormList } from 'ng-form-factory';
-import { MatMulitSelectSchema } from './chips-autocomplete.schema';
+import { MatMultiSelectSchema } from '../select';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
@@ -36,7 +36,7 @@ export class FormChipsAutocompleteComponent<T, O> implements OnInit {
   constructor() { }
 
   get schema() {
-    return this.form.schema as MatMulitSelectSchema<T>;
+    return this.form.schema as MatMultiSelectSchema<T>;
   }
 
   ngOnInit() {
