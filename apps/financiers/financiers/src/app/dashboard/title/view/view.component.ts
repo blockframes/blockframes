@@ -15,23 +15,23 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 const links: RouteDescription[] = [
   {
     path: 'main',
-    label: 'Main Information'
+    label: 'Main'
   },
   {
     path: 'production',
-    label: 'Production Information'
+    label: 'Production'
   },
   {
     path: 'artistic',
-    label: 'Artistic Information'
+    label: 'Artistic'
   },
   {
     path: 'additional',
-    label: 'Additional Information'
+    label: 'Additional'
   },
   {
     path: 'financing',
-    label: 'Financial Elements'
+    label: 'Financial'
   },
   {
     path: 'campaign',
