@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FirestoreQueryForm } from './firestore.schema';
+import { createForms } from 'ng-form-factory';
+import { FirestoreQueryForm, methodSchema } from './firestore.schema';
 
 
 
@@ -12,9 +13,15 @@ import { FirestoreQueryForm } from './firestore.schema';
 export class FirestoreComponent {
 
   @Input() form: FirestoreQueryForm;
-
+  method = createForms(methodSchema);
   get schema() {
     return this.form.schema;
+  }
+
+  add() {
+    const method = this.method.value;
+    this.form.add({ method });
+    this.method.reset();
   }
 }
 

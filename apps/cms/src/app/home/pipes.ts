@@ -2,7 +2,6 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { ParamMap } from '@angular/router';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { QueryParameters } from 'algoliasearch';
 import { map } from 'rxjs/operators';
 
 function getOrgQueryFn(app: string) {

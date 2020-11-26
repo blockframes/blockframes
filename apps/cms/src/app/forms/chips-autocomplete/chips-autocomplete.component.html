@@ -8,12 +8,12 @@
           <mat-icon matChipRemove svgIcon="close"></mat-icon>
         </mat-chip>
       </ng-container>
-      <input matInput
-            [type]="schema.type"
-            [placeholder]="schema.placeholder"
-            [formControl]="control"
-            [matChipInputFor]="chipList"
-            [matAutocomplete]="auto" />
+      <input matInput [disabled]="form.disabled"
+        [type]="schema.type"
+        [placeholder]="schema.placeholder"
+        [formControl]="control"
+        [matChipInputFor]="chipList"
+        [matAutocomplete]="auto"/>
     </mat-chip-list>
     <mat-hint>{{ schema.hint }}</mat-hint>
   </mat-form-field>

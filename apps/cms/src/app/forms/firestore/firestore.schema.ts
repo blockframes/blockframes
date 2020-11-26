@@ -1,27 +1,69 @@
+import { firestore } from 'firebase';
 import { FormArraySchema, FormEntity, FormGroupSchema, FormList } from 'ng-form-factory';
 import { matSelect } from '../select';
 import { matText } from '../text';
 
+export type QueryMethods =  'where' | 'orderBy';
+export const queryMethods: QueryMethods[] = ['where', 'orderBy'];
+export const methodSchema = matSelect<QueryMethods>({ label: 'Method', options: queryMethods });
+
 export interface CollectionQuery {
-  method: 'where' | 'orderBy';
-  field: string;
-  condition: '==' | '!=' | 'array-contains';
-  value: string;
+  method: QueryMethods;
 }
 
 export type CollectionQuerySchema = FormGroupSchema<CollectionQuery>;
 export type CollectionQueryForm = FormEntity<CollectionQuerySchema>;
 
-export const collectionQuerySchema: CollectionQuerySchema = {
+///////////
+// WHERE //
+///////////
+type Conditions = firestore.WhereFilterOp | '!=';
+const conditions: Conditions[] = ['==', '!=', 'array-contains', '<', '<=', '>', '>='];
+export interface WhereQuery extends CollectionQuery {
+  field: string;
+  condition: Conditions;
+  value: string;
+}
+
+export type WhereQuerySchema = FormGroupSchema<WhereQuery>;
+export type WhereQueryForm = FormEntity<WhereQuerySchema>;
+
+export const whereQuerySchema: WhereQuerySchema = {
   form: 'group',
   controls: {
-    method: matSelect({ label: 'Method', options: ['where', 'orderBy'] }),
+    method: methodSchema,
     field: matText({ label: 'Field' }),
-    condition: matSelect({ label: 'Condition', options: ['==', '!=', 'array-contains'] }),
+    condition: matSelect<Conditions>({ label: 'Condition', options: conditions }),
     value: matText({ label: 'Value' })
   }
 }
 
+/////////////
+// ORDERBY //
+/////////////
+type Direction = firestore.OrderByDirection;
+export interface OrderByQuery extends CollectionQuery {
+  field: string;
+  direction: Direction
+}
+
+export type OrderByQuerySchema = FormGroupSchema<OrderByQuery>;
+export type OrderByQueryForm = FormEntity<OrderByQuerySchema>;
+
+export const orderByQuerySchema: OrderByQuerySchema = {
+  form: 'group',
+  controls: {
+    method: methodSchema,
+    field: matText({ label: 'Field' }),
+    direction: matSelect<Direction>({ label: 'Direction', options: ['asc', 'desc']})
+  }
+}
+
+
+
+///////////
+// QUERY //
+///////////
 
 export type FirestoreQuery = CollectionQuery[];
 export interface FirestoreQuerySchema extends FormArraySchema<CollectionQuery> {
@@ -30,7 +72,10 @@ export interface FirestoreQuerySchema extends FormArraySchema<CollectionQuery> {
 
 export type FirestoreQueryForm = FormList<FirestoreQuerySchema>;
 
-
+const collectionSchema = {
+  where: whereQuerySchema,
+  orderBy: orderByQuerySchema
+}
 
 export function firestoreQuery(params: Partial<FirestoreQuerySchema>): FirestoreQuerySchema {
   return {
@@ -38,6 +83,6 @@ export function firestoreQuery(params: Partial<FirestoreQuerySchema>): Firestore
     ...params,
     form: 'array',
     controls: [],
-    factory: collectionQuerySchema,
+    factory: (query: CollectionQuery) => collectionSchema[query.method],
   }
 }

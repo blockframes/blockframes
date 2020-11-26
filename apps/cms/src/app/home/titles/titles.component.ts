@@ -44,6 +44,7 @@ export const titlesSchema: TitlesSchema = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitlesComponent {
+  private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<TitlesSchema>;
   params$ = this.route.paramMap;
   displayLabel = (title?: Movie) => title?.title.international;
@@ -51,7 +52,12 @@ export class TitlesComponent {
 
   constructor(private route: ActivatedRoute) {}
 
+  get queryMode() {
+    return this.mode || (this.form?.get('query').length ? 'query' : 'titleIds');
+  }
+
   select(event: MatRadioChange) {
+    this.mode = event.value;
     for (const key of ['titleIds', 'query'] as const) {
       event.value === key
         ? this.form?.get(key).enable()
