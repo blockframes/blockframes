@@ -60,6 +60,21 @@
           "destination": "/index.html"
         }
       ]
+    },
+    {
+      "target": "cms",
+      "public": "dist/apps/cms/",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     }
   ],
   "functions": {

@@ -5,5 +5,5 @@
 }
 
 main {
-  flex: 1;
+  height: calc(100% - var(--toolbarHeight));
 }

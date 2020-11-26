@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
-
+import { FormAutocompleteModule } from '../../forms/autocomplete';
+import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
+import { TextFormModule, matText } from '../../forms/text';
+import { matMultiSelect, matSelect } from '../../forms/select';
+import { Organization, orgName } from '@blockframes/organization/+state';
+import { Movie } from '@blockframes/movie/+state';
+import { HomePipesModule } from '../pipes';
 
 interface OrgTitle extends Section {
   title: string;
@@ -17,14 +26,13 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
     description: matText({ label: 'description' }),
-    orgId: { form: 'control' },
-    movieIds: {
-      form: 'array',
-      controls: [],
-      factory: () => ({ form: 'control' })
-    }
+    orgId: matSelect({ label: 'Org ID' }),
+    movieIds: matMultiSelect({ label: 'Title IDS' })
   },
 }
+
+type OrgTitleForm = FormEntity<typeof orgTitleSchema>;
+
 
 @Component({
   selector: 'form-org-titles',
@@ -33,13 +41,21 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgsComponent {
-  @Input() form?: FormEntity<typeof orgTitleSchema>;
-}
+  @Input() form: OrgTitleForm;
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TextFormModule, matText } from '../text';
+  params$ = this.route.paramMap;
+  
+  displayOrgLabel = (org?: Organization) => orgName(org); 
+  getOrgValue = (org?: Organization) => org?.id; 
+  displayTitleLabel = (title?: Movie) => title?.title.international;
+  getTitleValue = (title?: Movie) => title?.id;
+
+  constructor(private route: ActivatedRoute) {}
+
+  reset() {
+    this.form.get('movieIds').clear();
+  }
+}
 
 
 @NgModule({
@@ -47,7 +63,10 @@ import { TextFormModule, matText } from '../text';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TextFormModule
+    FormAutocompleteModule,
+    FormChipsAutocompleteModule,
+    TextFormModule,
+    HomePipesModule,
   ]
 })
 export class OrgsModule { }
