@@ -63,3 +63,26 @@ export const lineChartOptions = {
     }
   }
 };
+
+export const columnChartOptions = {
+  chart:{
+    height: 350,
+    type: "bar",
+    toolbar:{
+      show: false,
+      tools:{
+        zoom: false
+      }
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    show: true,
+    curve: 'smooth',
+    width: 2.5,
+  }
+
+}
+

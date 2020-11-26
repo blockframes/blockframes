@@ -20,16 +20,7 @@
       <mat-card-content fxLayout="column" fxLayoutAlign="center center">
         <ng-container [ngSwitch]="loadingState$ | async">
           <ng-container *ngSwitchCase="'success'">
-            <apx-chart
-              [series]="getLineChartSeries(info.eventName, info.title)"
-              [chart]="lineChartOptions.chart"
-              [xaxis]="getLineChartXaxis(info.eventName)"
-              [yaxis]="lineChartOptions.yaxis"
-              [dataLabels]="lineChartOptions.dataLabels"
-              [grid]="lineChartOptions.grid"
-              [stroke]="lineChartOptions.stroke"
-              [fill]="lineChartOptions.fill"
-            ></apx-chart>
+            <line-chart [chartInfo]="chartInfo"></line-chart>
           </ng-container>
           <ng-container *ngSwitchCase="'loading'">
             <mat-spinner diameter="48"></mat-spinner>

@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { lineChartOptions } from './default-chart-options';
 import { MovieQuery } from '../../+state';
 import { switchMap, map, startWith, delay } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
@@ -57,7 +56,6 @@ function toYMD(date: Date) {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class MovieAnalyticsChartComponent {
-  public lineChartOptions;
   public chartInfo = chartInfo;
   public filteredEvent;
   public chartData: any[] = [];
@@ -96,9 +94,7 @@ export class MovieAnalyticsChartComponent {
     }
   };
 
-  constructor(private movieQuery: MovieQuery) {
-    this.lineChartOptions = lineChartOptions;
-  }
+  constructor(private movieQuery: MovieQuery) { }
 
   refresh() {
     this.delayTime$.next(20000);
@@ -117,23 +113,6 @@ export class MovieAnalyticsChartComponent {
       y.push(sum);
     }
     return { x, y }
-  }
-
-  getLineChartSeries(eventName: MovieAnalyticsEventName, title: MovieAnalyticsTitle) {
-    const hits = this.chartData.find(chart => chart.eventName === eventName).y
-    return [{
-      name: title,
-      data: hits
-    }];
-  }
-
-  getLineChartXaxis(eventName: MovieAnalyticsEventName) {
-    return {
-      categories: this.chartData.find(chart => chart.eventName === eventName).x,
-      labels: { show: false },
-      axisBorder: { show: false },
-      axisTicks: { show: false }
-    };
   }
 
   totalHitsOnCurrentMonth(eventName: MovieAnalyticsEventName) {
