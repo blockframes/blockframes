@@ -73,14 +73,18 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ownerLeaves();
+    this.attendeeLeaves();
     this.sub.unsubscribe();
   }
 
   @HostListener('window:beforeunload')
-  ownerLeaves() {
+  attendeeLeaves() {
     if (this.event.isOwner && this.event.type === 'meeting') {
       const meta: Meeting = { ...this.event.meta, attendees: {} };
+      this.service.update(this.event.id, { meta });
+    } else if (this.event.type === 'meeting') {
+      const meta = { ...this.event.meta, attendees: {...this.event.meta.attendees} };
+      if (!!meta.attendees[this.authQuery.userId]) delete meta.attendees[this.authQuery.userId];
       this.service.update(this.event.id, { meta });
     }
   }
