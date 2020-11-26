@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormEntity, FormGroupSchema, FormFactoryModule } from 'ng-form-factory';
-import { matText } from '../text';
+import { TextFormModule, matText } from '../../forms/text';
 
 export interface Link {
   text: string;
@@ -26,13 +28,6 @@ export class LinkComponent {
   @Input() form?: FormEntity<typeof linkSchema>;
 }
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-
-
 
 @NgModule({
   declarations: [LinkComponent],
@@ -40,8 +35,7 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
+    TextFormModule,
     FormFactoryModule,
   ]
 })

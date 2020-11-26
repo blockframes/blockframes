@@ -1,0 +1,12 @@
+<div *ngFor="let control of form.controls; let i = index">
+  <form-select [form]="control.get('method')"></form-select>
+  <form-text [form]="control.get('field')"></form-text>
+  <form-select [form]="control.get('condition')"></form-select>
+  <form-text [form]="control.get('value')"></form-text>
+  <button mat-icon-button (click)="form.removeAt(i)">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</div>
+<button mat-icon-button (click)="form.add()">
+  <mat-icon svgIcon="add"></mat-icon>
+</button>

@@ -1,2 +1,25 @@
-<form-text [form]="form.get('title')"></form-text>
-<form-text [form]="form.get('description')"></form-text>
+<ng-container *ngIf="params$ | async | getParams:'app' as app">
+  <article>
+    <form-text [form]="form.get('title')"></form-text>
+    <form-text [form]="form.get('description')"></form-text>
+  </article>
+  <ng-container *ngIf="app | getOrgs | async as orgs">
+    <article>
+      <form-autocomplete
+        [form]="form.get('orgId')"
+        [options]="orgs"
+        [getValue]="getOrgValue"
+        [displayLabel]="displayOrgLabel"
+        (change)="reset()"
+      ></form-autocomplete>
+    </article>
+    <article>
+      <form-chips-autocomplete
+        [form]="form.get('movieIds')"
+        [options]="form.get('orgId').value | getOrgTitles : app | async"
+        [getValue]="getTitleValue"
+        [displayLabel]="displayTitleLabel">
+      </form-chips-autocomplete>
+    </article>
+  </ng-container>
+</ng-container>
