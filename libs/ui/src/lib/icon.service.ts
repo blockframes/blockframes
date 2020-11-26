@@ -147,14 +147,6 @@ export const icons = [
     url: 'assets/icons/logo_archipel_market_fill.svg'
   },
   {
-    name: 'logo_blockframes',
-    url: 'assets/icons/logo_blockframes.svg'
-  },
-  {
-    name: 'logo_blockframes_fill',
-    url: 'assets/icons/logo_blockframes_fill.svg'
-  },
-  {
     name: 'logo_media_financiers',
     url: 'assets/icons/logo_media_financiers.svg'
   },
