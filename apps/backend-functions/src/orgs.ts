@@ -204,10 +204,15 @@ export async function onOrganizationDelete(
   for (const userId of org.userIds) {
     const userSnapshot = await db.doc(`users/${userId}`).get();
     const user = userSnapshot.data() as PublicUser;
-    await removeMemberPermissionsAndOrgId(user);
+    await userSnapshot.ref.update({...user, orgId: null})
   }
 
-  // Delete movies belonging to organization and its sub-collection if there is
+  // Delete persmission document related to the organization
+  const permissionsDoc = db.doc(`permissions/${org.id}`);
+  const permissionsSnap = await permissionsDoc.get();
+  await permissionsSnap.ref.delete();
+
+  // Delete movies belonging to organization
   const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
   const moviesSnap = await movieCollectionRef.get();
   for(const movie of moviesSnap.docs) {
@@ -246,8 +251,6 @@ export async function onOrganizationDelete(
   for (const invit of invitationsToOrgSnap.docs) {
     await invit.ref.delete();
   }
-
-  // TODO CLEAN STORAGE
 
   // Clean all media for the organization
   await cleanOrgMedias(org);
