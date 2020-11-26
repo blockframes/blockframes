@@ -44,17 +44,47 @@ export async function onMovieDelete(
 
   const batch = db.batch();
 
-  // Delete sub-collections
+  // Clean wishlists
+  const wishlists = await db.collection('orgs').where('wishlist', 'array-contains', movie.id).get();
+  wishlists.docs.forEach(d => batch.delete(d.ref));
+
+  // Delete events
+  const events = await db.collection('events').where('meta.titleId', '==', movie.id).get();
+  events.docs.forEach(d => batch.delete(d.ref));
+
+  // Delete invitations
+  const eventIds = events.docs.map(e => e.id);
+  if (eventIds.length) {
+    const invitations = await db.collection('invitations').where('docId', 'in', eventIds).get();
+    invitations.docs.forEach(d => batch.delete(d.ref));
+  }
+
+  // Delete sub-collections (distribution rights)
   await removeAllSubcollections(snap, batch);
 
-  const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+  // Delete permissions
+  const orgs = await db.collection('orgs').where('id', 'in', movie.orgIds).get();
+  const permissionsPromises = orgs.docs.map(async o => db.doc(`permissions/${o.id}/documentPermissions/${movie.id}`).get());
+  const permissions = await Promise.all(permissionsPromises);
+  permissions.forEach(d => batch.delete(d.ref));
+
+  // Update contracts
+  const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
+  contracts.docs.forEach(c => {
+    const contract = c.data();
+    if (!!contract.lastVersion?.titles[movie.id]) {
+      delete contract.lastVersion.titles[movie.id];
+    }
+    batch.update(contract.ref, contract);
+  });
 
   // Update algolia's index
+  const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
   const promises = movieAppAccess.map(appName => deleteObject(algolia.indexNameMovies[appName], context.params.movieId));
 
   await Promise.all(promises)
 
-  console.log(`removed sub colletions of ${movie.id}`);
+  console.log(`Movie ${movie.id} removed`);
   return batch.commit();
 }
 

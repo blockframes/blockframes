@@ -125,8 +125,8 @@ export class MovieComponent implements OnInit {
         warning: 'Doing this will also delete everything regarding this movie',
         simulation,
         confirmationWord: 'DELETE',
-        onConfirm: () => {
-          // this.organizationService.remove(this.orgId);
+        onConfirm: async () => {
+          await this.movieService.remove(this.movie.id);
           this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/admin/panel/movies']);
         }
