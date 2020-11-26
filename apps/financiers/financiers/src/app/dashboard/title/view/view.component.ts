@@ -15,23 +15,23 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 const links: RouteDescription[] = [
   {
     path: 'main',
-    label: 'Main Information'
+    label: 'Main'
   },
   {
     path: 'production',
-    label: 'Production Information'
+    label: 'Production'
   },
   {
     path: 'artistic',
-    label: 'Artistic Information'
+    label: 'Artistic'
   },
   {
     path: 'additional',
-    label: 'Additional Information'
+    label: 'Additional'
   },
   {
     path: 'financing',
-    label: 'Financial Elements'
+    label: 'Financial'
   },
   {
     path: 'campaign',
@@ -78,6 +78,6 @@ export class TitleViewComponent implements OnInit {
   async save() {
     this.dialogRef.close();
     await this.shell.getConfig('campaign').onSave({ publishing: false });
-    this.snackbar.open('The current amount has been updated.', null, { duration: 1000 });
+    this.snackbar.open('The funding status has been updated.', null, { duration: 1000 });
   }
 }

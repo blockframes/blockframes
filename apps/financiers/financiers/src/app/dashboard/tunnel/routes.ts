@@ -3,22 +3,25 @@ import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { TunnelStep } from '@blockframes/ui/tunnel';
 
+const disclaimer = `We kindly remind you that all the following elements will appear on the marketplace once you submit your project. 
+Please make sure that you have the right to share this information with potential future investors.`
+
 const appSteps: TunnelStep[] = [{
   title: 'Financial Elements',
   icon: 'CAD',
   time: 10,
   routes: [
-    { path: 'budget', label: 'Budget' },
-    { path: 'fundings', label: 'Financing Plan' },
-    { path: 'profits', label: 'Return on Investment' },
+    { path: 'budget', label: 'Budget', disclaimer },
+    { path: 'fundings', label: 'Financing Plan', disclaimer },
+    { path: 'profits', label: 'Return on Investment', disclaimer },
   ],
 }, {
   title: 'Investment Campaign',
   icon: 'campaign',
   time: 10,
   routes: [
-    { path: 'proposal', label: 'Investment Proposal' },
-    { path: 'perks', label: 'Privileges' }
+    { path: 'proposal', label: 'Investment Proposal', disclaimer },
+    { path: 'perks', label: 'Privileges', disclaimer }
   ],
 }];
 

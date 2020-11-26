@@ -218,7 +218,7 @@ export const icons = [
   },
   { name: 'read', url: 'assets/icons/read.svg' },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
-  { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg'},
+  { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg' },
   { name: 'refuse', url: 'assets/icons/refuse.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
   { name: 'review', url: 'assets/icons/review.svg' },
@@ -282,6 +282,7 @@ export const icons = [
   { name: 'videocam_off', url: 'assets/icons/videocam_off.svg' },
   { name: 'volume', url: 'assets/icons/volume.svg' },
   { name: 'volume_off', url: 'assets/icons/volume_off.svg' },
+  { name: 'warning', url: 'assets/icons/warning.svg' }
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];
@@ -300,7 +301,7 @@ export class IconService {
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   init() {
     // Angular Material currently needs a workaround for server side rendering.

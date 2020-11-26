@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
+import { Organization, orgName } from '@blockframes/organization/+state';
+import { TextFormModule, matText } from '../../forms/text';
+import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
+import { matMultiSelect } from '../../forms/select';
 import { Section } from '../../template/template.model';
+import { HomePipesModule } from '../pipes';
 
 interface OrgQueryParams {
   facets: string[];
@@ -9,6 +17,7 @@ interface OrgQueryParams {
 interface OrgsSection extends Section {
   title: string;
   query: OrgQueryParams;
+  orgIds: string[];
 }
 
 export const orgsSchema: FormGroupSchema<OrgsSection> = {
@@ -17,6 +26,7 @@ export const orgsSchema: FormGroupSchema<OrgsSection> = {
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
+    orgIds: matMultiSelect<string>({ label: 'Org IDs' }),
     query: { form: 'group', controls: {} },
   },
 }
@@ -29,12 +39,15 @@ export const orgsSchema: FormGroupSchema<OrgsSection> = {
 })
 export class OrgsComponent {
   @Input() form?: FormEntity<typeof orgsSchema>;
+  params$ = this.route.paramMap;
+  displayLabel = (org?: Organization) => orgName(org);
+  getValue = (org?: Organization) => org?.id;
+
+
+  constructor(private route: ActivatedRoute) {}
 }
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TextFormModule, matText } from '../text';
+
 
 
 @NgModule({
@@ -42,7 +55,9 @@ import { TextFormModule, matText } from '../text';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormChipsAutocompleteModule,
     TextFormModule,
+    HomePipesModule,
   ]
 })
 export class OrgsModule { }

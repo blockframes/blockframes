@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormEntity, FormFactoryModule, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
-import { TextFormModule, matText } from '../text';
+import { TextFormModule, matText } from '../../forms/text';
 import { Link, LinkModule, linkSchema } from '../link/link.component';
 
 interface Banner extends Section {

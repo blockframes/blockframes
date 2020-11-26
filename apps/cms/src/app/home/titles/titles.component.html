@@ -1,9 +1,17 @@
-<form-text [form]="form.get('title')"></form-text>
-<mat-form-field>
-  <mat-label>Mode</mat-label>
-  <mat-select [formControl]="form.get('mode')">
-    <mat-option value="banner">Banner</mat-option>
-    <mat-option value="poster">Poster</mat-option>
-    <mat-option value="slider">slider</mat-option>
-  </mat-select>
-</mat-form-field>
+<ng-container *ngIf="(params$ | async | getParams:'app') as app">
+  <article>
+    <form-text [form]="form.get('title')"></form-text>
+    <form-select [form]="form.get('mode')"></form-select>
+  </article>
+  <article>
+    <form-chips-autocomplete
+      [form]="form.get('titleIds')"
+      [options]="app | getTitles | async"
+      [getValue]="getValue"
+      [displayLabel]="displayLabel">
+    </form-chips-autocomplete>
+  </article>
+  <article>
+    <form-firestore [form]="form.get('query')"></form-firestore>
+  </article>
+</ng-container>

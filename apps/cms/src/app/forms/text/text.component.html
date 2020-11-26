@@ -1,4 +1,4 @@
-<mat-form-field [appearance]="schema.appearance" [floatLabel]="schema.floatLabel" [hideRequiredMarker]="schema.hideRequiredMarker">
+<mat-form-field [floatLabel]="schema.floatLabel" [hideRequiredMarker]="schema.hideRequiredMarker">
   <ng-container *ngIf="schema.size === 'long' else short">
     <textarea matInput
       [formControl]="form"
