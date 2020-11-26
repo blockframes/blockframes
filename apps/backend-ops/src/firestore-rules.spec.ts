@@ -1,40 +1,47 @@
-﻿import { apps, assertFails, assertSucceeds, initializeTestApp,
-        loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
+﻿import {
+  apps,
+  assertFails,
+  assertSucceeds,
+  initializeTestApp,
+  loadFirestoreRules,
+  initializeAdminApp,
+} from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
 import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
-import { Movie } from '@blockframes/movie/+state'
+import { Movie } from '@blockframes/movie/+state';
 import { MovieAppAccess } from '@blockframes/utils/apps';
 import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
-import {
-  META_COLLECTION_NAME,
-  MAINTENANCE_DOCUMENT_NAME
-} from '@blockframes/utils/maintenance';
+import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
 
 //Meta collection, for maintenance control.
 const metaDoc = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 
-type ExtractPromise<T> = T extends Promise<(infer I)> ? I : never;
+type ExtractPromise<T> = T extends Promise<infer I> ? I : never;
 type PromiseFirestore = ReturnType<typeof initFirestoreApp>;
-type Firestore = ExtractPromise<PromiseFirestore>
+type Firestore = ExtractPromise<PromiseFirestore>;
 
 testFixture[metaDoc] = {};
 testFixture[metaDoc].endedAt = true;
 
-async function initFirestoreApp(projectId: string, rulePath: string, data: Record<string, 
-                                  Object> = {}, auth?: TokenOptions) {
+async function initFirestoreApp(
+  projectId: string,
+  rulePath: string,
+  data: Record<string, Object> = {},
+  auth?: TokenOptions
+) {
   //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
   await setData(projectId, data);
-  const app = initializeTestApp({projectId, auth });
-  await loadFirestoreRules({ projectId, rules: fs.readFileSync(rulePath, "utf8") });
+  const app = initializeTestApp({ projectId, auth });
+  await loadFirestoreRules({ projectId, rules: fs.readFileSync(rulePath, 'utf8') });
 
   return app.firestore();
 }
 
 function setData(projectId: string, dataDB: Record<string, Object>) {
-  const app = initializeAdminApp({ projectId});
+  const app = initializeAdminApp({ projectId });
   const db = app.firestore();
   // Write data to firestore app
   const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
@@ -47,31 +54,31 @@ describe('Blockframe In Maintenance', () => {
 
   beforeAll(async () => {
     testFixture[metaDoc].endedAt = null;
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-bfAdmin'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-bfAdmin' });
   });
 
-  afterAll(() => { 
-    Promise.all(apps().map(app => app.delete()));
+  afterAll(() => {
+    Promise.all(apps().map((app) => app.delete()));
     testFixture[metaDoc].endedAt = true;
   });
 
-  test("Everyone (incl. bf admin) should be able to read MAINTENANCE doc", async () => {
+  test('Everyone (incl. bf admin) should be able to read MAINTENANCE doc', async () => {
     const maintRef = db.doc(metaDoc);
     await assertSucceeds(maintRef.get());
   });
 
   test("In maintenance, even blockframe admin shouldn't be able to read admin user", async () => {
-    const adminRef = db.doc("blockframesAdmin/uid-bfAdmin");
+    const adminRef = db.doc('blockframesAdmin/uid-bfAdmin');
     await assertFails(adminRef.get());
   });
 
   test("In maintenance, even blockframe admin shouldn't be able to read a org", async () => {
-    const orgRef = db.doc("orgs/O001");
+    const orgRef = db.doc('orgs/O001');
     await assertFails(orgRef.get());
   });
 
   test("In maintenance, even blockframe admin shouldn't be able to read all users", async () => {
-    const usersRef = db.collection("users");
+    const usersRef = db.collection('users');
     await assertFails(usersRef.get());
   });
 });
@@ -81,44 +88,41 @@ describe('Blockframe Not In Maintenance', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-bfAdmin'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-bfAdmin' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("Blockframe admin should be able to read admin user", async () => {
-    const adminRef = db.doc("blockframesAdmin/uid-bfAdmin");
+  test('Blockframe admin should be able to read admin user', async () => {
+    const adminRef = db.doc('blockframesAdmin/uid-bfAdmin');
     await assertSucceeds(adminRef.get());
   });
 
-  test("Blockframe admin should be able be able to read a org", async () => {
-    const orgRef = db.doc("orgs/O001");
+  test('Blockframe admin should be able be able to read a org', async () => {
+    const orgRef = db.doc('orgs/O001');
     await assertSucceeds(orgRef.get());
   });
 
-  test("Blockframe admin should be able to read all users", async () => {
-    const usersRef = db.collection("users");
+  test('Blockframe admin should be able to read all users', async () => {
+    const usersRef = db.collection('users');
     await assertSucceeds(usersRef.get());
   });
-
 });
-
 
 describe('Org Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-admin'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("should allow org admin to read", async () => {
-    const usersRef = db.collection("users");
+  test('should allow org admin to read', async () => {
+    const usersRef = db.collection('users');
     await assertSucceeds(usersRef.get());
   });
-
 });
 
 describe('General User', () => {
@@ -126,141 +130,143 @@ describe('General User', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("should not allow user to write /blockframesAdmin/user", async () => {
-    const usersRef = db.doc("blockframesAdmin/007");
-    await assertFails(usersRef.set({uid: '007'}));
+  test('should not allow user to write /blockframesAdmin/user', async () => {
+    const usersRef = db.doc('blockframesAdmin/007');
+    await assertFails(usersRef.set({ uid: '007' }));
   });
 });
 
 describe('Users Collection Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   const uid = 'uid-user2';
-  const user = {uid, email: 'u2@cascade8.com', note: 'JestTestSet-User2'};
+  const user = { uid, email: 'u2@cascade8.com', note: 'JestTestSet-User2' };
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("should allow user to read own user doc (own uid)", async () => {
-    const usersRef = db.doc("users/uid-user2");
+  test('should allow user to read own user doc (own uid)', async () => {
+    const usersRef = db.doc('users/uid-user2');
     await assertSucceeds(usersRef.get({}));
   });
 
-  test("should allow user to delete own user doc (own uid)", async () => {
-    const usersRef = db.doc("users/uid-user2");
+  test('should allow user to delete own user doc (own uid)', async () => {
+    const usersRef = db.doc('users/uid-user2');
     await assertSucceeds(usersRef.delete());
   });
 
   test("shouldn't allow user to create own user doc (own uid)", async () => {
-    const usersRef = db.doc("users/uid-user2");
-    await assertFails(usersRef.set({email: 'u2@cascade8.com', note: 'JestTestSet-User2'}));
+    const usersRef = db.doc('users/uid-user2');
+    await assertFails(usersRef.set({ email: 'u2@cascade8.com', note: 'JestTestSet-User2' }));
   });
 
-  test("should allow user to create own user doc (own uid)", async () => {
+  test('should allow user to create own user doc (own uid)', async () => {
     const usersRef = db.doc(`users/${uid}`);
     await assertSucceeds(usersRef.set(user));
   });
 
-  test("should contain exact fields for own user docs", async () => {
+  test('should contain exact fields for own user docs', async () => {
     const usersRef = db.doc(`users/${uid}`);
     const expUserSnap = await usersRef.get();
     const expUser = await expUserSnap.data();
     expect(user).toEqual(expUser);
   });
-
 });
 
-describe.only('Notification Rules Tests', () => {
+describe('Notification Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   const existingNotif = 'notifications/001';
   let db: Firestore;
 
   describe('With User not in TO field', () => {
     beforeAll(async () => {
-      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
     });
 
-    afterAll(() => Promise.all(apps().map(app => app.delete())));
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test("should not allow user to read notification if not marked to", async () => {
+    test('should not allow user to read notification if not marked to', async () => {
       const notifRef = db.doc(existingNotif);
       await assertFails(notifRef.get());
     });
 
-    test("should not allow user to create notification", async () => {
+    test('should not allow user to create notification', async () => {
       const notifRef = db.doc(existingNotif);
-      await assertFails(notifRef.set({note: 'A notification'}));
+      await assertFails(notifRef.set({ note: 'A notification' }));
     });
-    
-    const fields:any = [
-      ["id", '001'],
-      ["toUserId", 'uid-002'],
-      ["isRead", true],
-    ]
-    test.each(fields)("updating restricted '%s' field shouldn't be able to update notification", 
-        async (key, value) => {
-      const notifRef = db.doc(existingNotif);
-      const details = {};
-      details[key] = value;
-      await assertFails(notifRef.update(details));
-    });
+
+    const fields: any = [
+      ['id', '001'],
+      ['toUserId', 'uid-002'],
+      ['isRead', true],
+    ];
+    test.each(fields)(
+      "updating restricted '%s' field shouldn't be able to update notification",
+      async (key, value) => {
+        const notifRef = db.doc(existingNotif);
+        const details = {};
+        details[key] = value;
+        await assertFails(notifRef.update(details));
+      }
+    );
   });
 
   describe('With User in TO field', () => {
     beforeAll(async () => {
-      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-c8'});
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8' });
     });
 
-    afterAll(() => Promise.all(apps().map(app => app.delete())));
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test("should allow user to read notification", async () => {
-      const notifRef = db.doc("notifications/001");
+    test('should allow user to read notification', async () => {
+      const notifRef = db.doc('notifications/001');
       await assertSucceeds(notifRef.get());
     });
 
-    test("should not allow user to create notification", async () => {
-      const notifRef = db.doc("notifications/002");
-      await assertFails(notifRef.set({note: 'A notification', toUserId: "uid-c8"}));
+    test('should not allow user to create notification', async () => {
+      const notifRef = db.doc('notifications/002');
+      await assertFails(notifRef.set({ note: 'A notification', toUserId: 'uid-c8' }));
     });
 
-    const fields:any = [
-      ["id", '002'],
-      ["date", new Date()],
-      ["toUserId", 'uid-002'],
-      ["type", 'movie'],
-      ["docId", 'x-002'],
-      ["user", '002'],
-      ["organization", 'O-001'],
-      ["movies", 'M-001'],
-    ]
-    test.each(fields)("updating restricted '%s' field shouldn't be able to update notification", 
-        async (key, value) => {
-      const notifRef = db.doc(existingNotif);
-      const details = {};
-      details[key] = value;
-      await assertFails(notifRef.update(details));
-    });
+    const fields: any = [
+      ['id', '002'],
+      ['date', new Date()],
+      ['toUserId', 'uid-002'],
+      ['type', 'movie'],
+      ['docId', 'x-002'],
+      ['user', '002'],
+      ['organization', 'O-001'],
+      ['movies', 'M-001'],
+    ];
+    test.each(fields)(
+      "updating restricted '%s' field shouldn't be able to update notification",
+      async (key, value) => {
+        const notifRef = db.doc(existingNotif);
+        const details = {};
+        details[key] = value;
+        await assertFails(notifRef.update(details));
+      }
+    );
 
     test("User should be able to update 'isRead' field in notification", async () => {
       const notifRef = db.doc(existingNotif);
-      const details = {isRead: true};
+      const details = { isRead: true };
       await assertSucceeds(notifRef.update(details));
     });
 
-    test("should not allow user to delete notification", async () => {
-      const notifRef = db.doc("notifications/001");
+    test('should not allow user to delete notification', async () => {
+      const notifRef = db.doc('notifications/001');
       await assertFails(notifRef.delete());
     });
   });
-
 });
 
 //TODO: 4195
@@ -269,14 +275,14 @@ describe.skip('Invitation Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("should not allow user to create ", async () => {
-    const notifRef = db.doc("invitations/001");
-    await assertFails(notifRef.set({note: 'A notification'}));
+  test('should not allow user to create ', async () => {
+    const notifRef = db.doc('invitations/001');
+    await assertFails(notifRef.set({ note: 'A notification' }));
   });
 });
 
@@ -286,14 +292,12 @@ describe.skip('Organization Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("test", async () => {
-
-  });
+  test('test', async () => {});
 });
 
 //TODO: 4198
@@ -302,16 +306,13 @@ describe.skip('Permission Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("test", async () => {
-
-  });
+  test('test', async () => {});
 });
-
 
 describe('Movies Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
@@ -321,87 +322,93 @@ describe('Movies Rules Tests', () => {
     const newMovieId = 'MI-007';
     const existMovieId = 'MI-077';
     const storeConfig = {
-      status: <StoreStatus>"draft",
-      storeType: <StoreType>"Library",
-      appAccess: <MovieAppAccess>{"festival": true }
-    }
+      status: <StoreStatus>'draft',
+      storeType: <StoreType>'Library',
+      appAccess: <MovieAppAccess>{ festival: true },
+    };
 
     beforeAll(async () => {
-      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
     });
 
-    afterAll(() => Promise.all(apps().map(app => app.delete())));
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test("user with valid org should be able to read movie title", async () => {
-      const movieRef = db.doc("movies/M001");
-      await assertSucceeds(movieRef.get());
+    describe('Read Movie', () => {
+      test('should be able to read movie', async () => {
+        const movieRef = db.doc('movies/M001');
+        await assertSucceeds(movieRef.get());
+      });
+
+      test('should be able to read movie distribution rights', async () => {
+        const movieDRRef = db.doc('movies/M001/distributionRights/DR001');
+        await assertSucceeds(movieDRRef.get());
+      });
     });
 
-    test("user with valid org should be able to read movie distribution rights", async () => {
-      const movieDRRef = db.doc("movies/M001/distributionRights/DR001");
-      await assertSucceeds(movieDRRef.get());
+    describe('Create Movie', () => {
+      test('storestatus other than draft should not be able', async () => {
+        const movieRef = db.doc(`movies/${newMovieId}`);
+        const createdMovie: Partial<Movie> = {
+          id: newMovieId,
+          storeConfig,
+        };
+        createdMovie.storeConfig['status'] = 'accepted';
+        await assertFails(movieRef.set(createdMovie));
+      });
+
+      test('without create permission for org should not be able', async () => {
+        const newMovieTitleUnavailableId = 'MI-000';
+        const movieRef = db.doc(`movies/${newMovieTitleUnavailableId}`);
+        const createdMovie: Partial<Movie> = {
+          id: newMovieTitleUnavailableId,
+          storeConfig,
+        };
+        await assertFails(movieRef.set(createdMovie));
+      });
+
+      test('with create permission for org, invalid id should not be able', async () => {
+        const newMovieTitleUnavailableId = 'MI-000';
+        const movieRef = db.doc(`movies/${newMovieId}`);
+        const createdMovie: Partial<Movie> = {
+          id: newMovieTitleUnavailableId,
+          storeConfig,
+        };
+        await assertFails(movieRef.set(createdMovie));
+      });
+
+      test('with create permission for org should be able', async () => {
+        const createdMovie: Partial<Movie> = {
+          id: newMovieId,
+          storeConfig: { status: <StoreStatus>'draft' } as any,
+        };
+        const movieDoc = db.collection('movies').doc(newMovieId).set(createdMovie);
+        await assertSucceeds(movieDoc);
+      });
     });
 
-    test("user valid org, storestatus other than draft should not be able to create movie", async () => {
-      const movieRef = db.doc(`movies/${newMovieId}`);
-      const createdMovie:Partial<Movie> = {
-        id: newMovieId, 
-        storeConfig
-      };      
-      createdMovie.storeConfig['status'] = 'accepted';
-      await assertFails(movieRef.set(createdMovie));
-    });
+    describe('Update Movie', () => {
+      const fields: any = [
+        ['id', 'MI-0xx'],
+        ['_meta', { createdBy: '' }],
+        ['_meta', { createdAt: '' }],
+        ['_type', 'drama'],
+        ['storeConfig', { appAccess: { catalog: true } }],
+        ['storeConfig', { status: 'rejected' }],
+        ['storeConfig', { storeType: 'blah' }],
+        ['storeConfig', { appAccess: { festival: {} } }],
+      ];
+      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
+        const movieRef = db.doc(`movies/${existMovieId}`);
+        const details = {};
+        details[key] = value;
+        await assertFails(movieRef.update(details));
+      });
 
-    test("user valid org, without create permission for org should not be able to create movie", async () => {
-      const newMovieTitleUnavailableId = 'MI-000';
-      const movieRef = db.doc(`movies/${newMovieTitleUnavailableId}`);
-      const createdMovie:Partial<Movie> = {
-        id: newMovieTitleUnavailableId, 
-        storeConfig
-      };
-      await assertFails(movieRef.set(createdMovie));
-    });
-
-    test("user valid org, with create permission for org, invalid id should not be able to create movie", async () => {
-      const newMovieTitleUnavailableId = 'MI-000';      
-      const movieRef = db.doc(`movies/${newMovieId}`);
-      const createdMovie:Partial<Movie> = {
-        id: newMovieTitleUnavailableId, 
-        storeConfig
-      };      
-      await assertFails(movieRef.set(createdMovie));
-    });
-
-    test.skip("user valid org, with create permission for org should be able to create movie", async () => {
-      const createdMovie:Partial<Movie> = {
-        id: newMovieId, 
-      };
-      const movieDoc = db.collection('movies').doc(newMovieId).set(createdMovie);
-      await assertSucceeds(movieDoc)
-    });
-
-    const fields:any = [
-      ["id", 'MI-0xx'],
-      ["_meta", { createdBy: ''}],
-      ["_meta", { createdAt: ''}],
-      ["_type", 'drama'],
-      ["storeConfig", { appAccess: {catalog: true}}],
-      ["storeConfig", { status: 'rejected'}],
-      ["storeConfig", { storeType: 'blah'}],
-      ["storeConfig", { appAccess: {festival: {}}}],
-    ]
-    test.each(fields)("user valid org, updating restricted '%s' field shouldn't be able to update movie", 
-        async (key, value) => {
-      const movieRef = db.doc(`movies/${existMovieId}`);
-      const details = {};
-      details[key] = value;
-      await assertFails(movieRef.update(details));
-    });
-
-    test("user valid org, updating unrestricted field should be able to update movie", async () => {
-      const movieRef = db.doc(`movies/${existMovieId}`);
-      const movieDetailsOther = {notes: 'update in unit-test'}
-      await assertSucceeds(movieRef.update(movieDetailsOther));
+      test('user valid org, updating unrestricted field should be able', async () => {
+        const movieRef = db.doc(`movies/${existMovieId}`);
+        const movieDetailsOther = { notes: 'update in unit-test' };
+        await assertSucceeds(movieRef.update(movieDetailsOther));
+      });
     });
   });
 
@@ -409,30 +416,32 @@ describe('Movies Rules Tests', () => {
     const draftMovieId = 'MI-0d7';
 
     beforeAll(async () => {
-      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-admin'});
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin' });
     });
 
-    afterAll(() => Promise.all(apps().map(app => app.delete())));
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test("User with admin role in org should be able to delete movie", async () => {
+    test('User with admin role in org should be able to delete movie', async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertSucceeds(movieRef.delete());
     });
   });
 
   describe('With User not in org', () => {
-    const newMovieId = 'MI-007'
-    const draftMovieId = 'MI-0d7'
-    const newMovieDetails = {id: `${newMovieId}`};
+    const newMovieId = 'MI-007';
+    const draftMovieId = 'MI-0d7';
+    const newMovieDetails = { id: `${newMovieId}` };
 
     beforeAll(async () => {
-      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-peeptom'});
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-peeptom',
+      });
     });
 
-    afterAll(() => Promise.all(apps().map(app => app.delete())));
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
     test("user without valid org shouldn't be able to read movie title", async () => {
-      const movieRef = db.doc("movies/M001");
+      const movieRef = db.doc('movies/M001');
       await assertFails(movieRef.get());
     });
 
@@ -445,9 +454,7 @@ describe('Movies Rules Tests', () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertFails(movieRef.delete());
     });
-
   });
-
 });
 
 //TODO: 4200
@@ -456,14 +463,12 @@ describe.skip('Contracts Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-  test("test", async () => {
-
-  });
+  test('test', async () => {});
 });
 
 describe('Events Rules Tests', () => {
@@ -471,102 +476,95 @@ describe('Events Rules Tests', () => {
   let db: Firestore;
 
   describe('With User in org', () => {
-
     beforeAll(async () => {
-      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-user2'});
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
     });
 
-    afterAll(() => Promise.all(apps().map(app => app.delete())));
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test("user with valid org should be able to read event", async () => {
-      const eventRef = db.doc("events/E001");
+    test('user with valid org should be able to read event', async () => {
+      const eventRef = db.doc('events/E001');
       await assertSucceeds(eventRef.get());
     });
 
     test("user with valid org, invalid event id shouldn't be able to create event", async () => {
-      const eventRef = db.doc("events/E007");
-      const eventDetails = {id: 'E077'};
+      const eventRef = db.doc('events/E007');
+      const eventDetails = { id: 'E077' };
       await assertFails(eventRef.set(eventDetails));
     });
 
     test("user with valid org, invalid ownerId shouldn't be able to create event", async () => {
-      const eventRef = db.doc("events/E007");
-      const eventDetails = {id: 'E007', ownerId: 'uid-007'};
+      const eventRef = db.doc('events/E007');
+      const eventDetails = { id: 'E007', ownerId: 'uid-007' };
       await assertFails(eventRef.set(eventDetails));
     });
 
-    test("user with valid org, ownerId as uid should be able to create event", async () => {
-      const eventRef = db.doc("events/E007");
-      const eventDetails = {id: 'E007', ownerId: 'uid-user2'};
+    test('user with valid org, ownerId as uid should be able to create event', async () => {
+      const eventRef = db.doc('events/E007');
+      const eventDetails = { id: 'E007', ownerId: 'uid-user2' };
       await assertSucceeds(eventRef.set(eventDetails));
     });
 
-    test("user with valid org, ownerId as orgId should be able to create event", async () => {
-      const eventRef = db.doc("events/E007");
-      const eventDetails = {id: 'E007', ownerId: 'O001'};
+    test('user with valid org, ownerId as orgId should be able to create event', async () => {
+      const eventRef = db.doc('events/E007');
+      const eventDetails = { id: 'E007', ownerId: 'O001' };
       await assertSucceeds(eventRef.set(eventDetails));
     });
 
     test("user with valid org, ownerId as orgId, modifying id shouldn't be able to update event", async () => {
-      const eventRef = db.doc("events/E007");
-      const eventDetails = {id: 'E008'};
+      const eventRef = db.doc('events/E007');
+      const eventDetails = { id: 'E008' };
       await assertFails(eventRef.update(eventDetails));
     });
 
-    test("user with valid org, ownerId as orgId should be able to update event", async () => {
-      const eventRef = db.doc("events/E007");
-      const eventDetails = {notes: 'Unit Test'};
+    test('user with valid org, ownerId as orgId should be able to update event', async () => {
+      const eventRef = db.doc('events/E007');
+      const eventDetails = { notes: 'Unit Test' };
       await assertSucceeds(eventRef.update(eventDetails));
     });
 
-    test("user with valid org, ownerId as orgId should be able to delete event", async () => {
-      const eventRef = db.doc("events/E007");
+    test('user with valid org, ownerId as orgId should be able to delete event', async () => {
+      const eventRef = db.doc('events/E007');
       await assertSucceeds(eventRef.delete());
     });
   });
 
   describe('With User not in org', () => {
-
     beforeAll(async () => {
-      db  = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {uid: 'uid-peeptom'});
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-peeptom',
+      });
     });
 
-    afterAll(() => Promise.all(apps().map(app => app.delete())));
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
     test("user without valid org shouldn't be able to read event", async () => {
-      const eventRef = db.doc("events/E001");
+      const eventRef = db.doc('events/E001');
       await assertFails(eventRef.get());
     });
 
     test("user without valid org shouldn't be able to create event", async () => {
-      const eventRef = db.doc("events/E007");
-      const eventDetails = {id: 'E007'};
+      const eventRef = db.doc('events/E007');
+      const eventDetails = { id: 'E007' };
       await assertFails(eventRef.set(eventDetails));
     });
 
     test("user without valid org shouldn't be able to update event", async () => {
-      const eventRef = db.doc("events/E001");
-      const eventDetails = {notes: 'Unit Test'};
+      const eventRef = db.doc('events/E001');
+      const eventDetails = { notes: 'Unit Test' };
       await assertFails(eventRef.update(eventDetails));
     });
 
     test("user without valid org shouldn't be able to delete event", async () => {
-      const eventRef = db.doc("events/E001");
+      const eventRef = db.doc('events/E001');
       await assertFails(eventRef.delete());
     });
   });
-
 });
 
 //TODO: 4187
 describe.skip('Campaign Security Rules', () => {
+  beforeAll(async () => {});
 
-  beforeAll(async () => {
-
-  });
-
-  test("should allow signed-in user to read", async () => {
-
-
-  });
+  test('should allow signed-in user to read', async () => {});
 });
