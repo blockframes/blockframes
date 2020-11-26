@@ -42,7 +42,7 @@ export class LandingComponent {
     {
       title: 'Learn about investing in the content industry',
       imgAsset: 'knowledge.svg',
-      description: `No experience needed. \n Discover why content is a profitable investment.`,
+      description: 'No experience needed. \n Discover why content is a profitable investment. \n',
       link: {
         href: this.pdfLink,
         text: 'Download our investment guide.'

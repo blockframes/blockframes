@@ -55,6 +55,8 @@
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 title>Film Poster</h3>
         </drop-cropper>
+        <span class="mat-caption">Please note that this document will be available for download on the
+          marketplace.</span>
       </article>
 
       <article>
@@ -66,6 +68,8 @@
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
           <h3 title>Film Banner Image</h3>
         </drop-cropper>
+        <span class="mat-caption">Please note that this document will be available for download on the
+          marketplace.</span>
       </article>
     </section>
 
@@ -146,7 +150,8 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input test-id="run-time" matInput type="number" name="runningTime" [formControl]="form.runningTime.get('time')" min="0" required  />
+          <input test-id="run-time" matInput type="number" name="runningTime"
+            [formControl]="form.runningTime.get('time')" min="0" required />
           <mat-hint>In minutes</mat-hint>
           <mat-error>
             Please specify your project's runtime.

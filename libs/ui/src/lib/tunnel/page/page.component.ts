@@ -9,9 +9,9 @@ import { TunnelLayoutComponent } from '../layout/layout.component';
 })
 
 export class TunnelPageComponent {
-  constructor(private layout: TunnelLayoutComponent) {}
+  constructor(private layout: TunnelLayoutComponent) { }
 
   get page() {
-    return this.layout.currenStep;
+    return this.layout.currentStep;
   }
 }

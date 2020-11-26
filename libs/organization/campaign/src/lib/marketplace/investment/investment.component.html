@@ -1,5 +1,5 @@
 <ng-container *ngIf="(campaign$ | async) as campaign;">
-  <h1>Investment Campaign</h1>
+  <h1>Investment conditions</h1>
 
   <section id="proposal" *ngIf="campaign | hasKeys: ['cap', 'minPledge']">
     <h2>Investment Proposal</h2>
@@ -25,4 +25,3 @@
   </section>
 
 </ng-container>
-

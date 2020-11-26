@@ -1,0 +1,12 @@
+article {
+  display: flex;
+}
+
+// Gap
+article > *:not(:first-child) {
+  margin-left: 16px;
+}
+
+form-chips-autocomplete {
+  width: 100%;
+}
