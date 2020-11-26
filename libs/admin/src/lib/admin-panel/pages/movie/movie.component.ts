@@ -155,10 +155,10 @@ export class MovieComponent implements OnInit {
 
     const eventIds = events.map(e => e.id);
     if (eventIds.length) {
-      let i, j, temparray, invitationCount = 0;
+      let i, j, subEventIds, invitationCount = 0;
       for (i = 0, j = eventIds.length; i < j; i += chunk) {
-        temparray = eventIds.slice(i, i + chunk);
-        const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', temparray));
+        subEventIds = eventIds.slice(i, i + chunk);
+        const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', subEventIds));
         invitationCount += invitations.length;
       }
 

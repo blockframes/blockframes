@@ -45,8 +45,13 @@ export async function onMovieDelete(
   const batch = db.batch();
 
   // Clean wishlists
-  const wishlists = await db.collection('orgs').where('wishlist', 'array-contains', movie.id).get();
-  wishlists.docs.forEach(d => batch.delete(d.ref));
+  const orgsWithWishlists = await db.collection('orgs').where('wishlist', 'array-contains', movie.id).get();
+
+  orgsWithWishlists.docs.forEach(o => {
+    const org = o.data();
+    org.wishlist = org.wishlist.filter(movieId => movieId !== movie.id);
+    batch.update(o.ref, org);
+  });
 
   // Delete events
   const events = await db.collection('events').where('meta.titleId', '==', movie.id).get();
@@ -56,10 +61,10 @@ export async function onMovieDelete(
   const eventIds = events.docs.map(e => e.id);
   if (eventIds.length) {
     const chunk = 10; // max 10 items in "in" queries
-    let i, j, temparray;
+    let i, j, subEventIds;
     for (i = 0, j = eventIds.length; i < j; i += chunk) {
-      temparray = eventIds.slice(i, i + chunk);
-      const invitations = await db.collection('invitations').where('docId', 'in', temparray).get();
+      subEventIds = eventIds.slice(i, i + chunk);
+      const invitations = await db.collection('invitations').where('docId', 'in', subEventIds).get();
       invitations.docs.forEach(d => batch.delete(d.ref));
     }
   }
