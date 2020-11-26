@@ -1,11 +1,19 @@
 
 <ng-container *ngIf="event.meta?.files?.length; else noFiles">
   <bf-carousel flex>
+
+    <button mat-button (click)="stop()" [disabled]="isSelected('')" carouselItem>
+      <div fxLayout="column" fxLayoutAlign="center center" matTooltip="Stop presenting file">
+        <mat-icon svgIcon="cross_circle"></mat-icon>
+        <span>Stop</span>
+      </div>
+    </button>
+
     <ng-container *ngFor="let file of event.meta.files">
       <button mat-button (click)="select(file)" [disabled]="isSelected(file)" carouselItem>
         <div fxLayout="column" fxLayoutAlign="center center" [matTooltip]="file | fileName">
           <img [asset]="file | fileTypeImage" alt="file type">
-          <span>{{file | fileName | maxLength: 15}}</span>
+          <span>{{file | fileName }}</span>
         </div>
       </button>
     </ng-container>

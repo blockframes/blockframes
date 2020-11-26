@@ -16,15 +16,18 @@ section {
   display: flex;
   align-items: stretch;
   width: 100%;
+  min-height: 50vh;
   margin-bottom: 64px;
 
-  meeting-video,
   aside {
     width: 50%;
+    margin-right: 64px;
     min-height: 300px;
   }
 
   meeting-video {
+    width: 50%;
+    margin-left: 64px;
     border-radius: 4px;
   }
 
@@ -42,5 +45,5 @@ section {
 }
 
 img {
-  width: 100%;
+  width: 70%;
 }
