@@ -1,6 +1,5 @@
 import * as admin from 'firebase-admin';
 import {
-  EIGHT_MINUTES_IN_MS,
   IMaintenanceDoc,
   MAINTENANCE_DOCUMENT_NAME,
   META_COLLECTION_NAME,
@@ -9,8 +8,8 @@ import {
 import { loadAdminServices } from './util';
 
 
-const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
-  if (!db) db = loadAdminServices().db;
+const maintenanceRef = (db?: FirebaseFirestore.Firestore, checkMissingVars = true) => {
+  if (!db) db = loadAdminServices(checkMissingVars).db;
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
 };
 
@@ -36,14 +35,13 @@ export function endMaintenance(db?: FirebaseFirestore.Firestore) {
   );
 }
 
-/**
- *
- * @param delay 8 min by default. This delay is a security to
- * be sure that every process is stopped before continuing
- */
-export async function isInMaintenance(delay = EIGHT_MINUTES_IN_MS, db?: FirebaseFirestore.Firestore): Promise<boolean> {
+ /**
+  * 
+  * @param db 
+  */
+ async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise<boolean> {
   try {
-    const ref = maintenanceRef(db);
+    const ref = maintenanceRef(db, false);
     const doc = await ref.get();
 
     // if document doesn't exist, it means that there is something not normal,
@@ -52,7 +50,7 @@ export async function isInMaintenance(delay = EIGHT_MINUTES_IN_MS, db?: Firebase
       return true;
     }
 
-    return _isInMaintenance(doc.data() as IMaintenanceDoc, delay);
+    return _isInMaintenance(doc.data() as IMaintenanceDoc, 0);
   } catch (e) {
     throw new Error(`Error while checking if app is in maintenance mode: ${e.message}`);
   }

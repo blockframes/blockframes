@@ -18,21 +18,10 @@ import { getPrivateVideoUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
-import { skipInMaintenance } from '@blockframes/firebase-utils';
-import { RuntimeOptions } from 'firebase-functions';
+import { skipInMaintenance } from 'libs/firebase-utils/src/lib/maintenance';
 import { getTwilioAccessToken } from './twilio';
+import { heavyConfig } from 'libs/firebase-utils/src/lib/firebase-utils';
 
-//--------------------------------
-//    Configuration             //
-//--------------------------------
-
-/**
- * Runtime options for heavy functions
- */
-export const heavyConfig: RuntimeOptions = {
-  timeoutSeconds: 300,
-  memory: '1GB',
-};
 
 //--------------------------------
 //    Users Management          //
