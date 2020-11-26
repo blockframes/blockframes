@@ -1,4 +1,8 @@
 article {
   display: flex;
-  gap: 16px;
+}
+
+// Gap
+article > *:not(:first-child) {
+  margin-left: 16px;
 }
