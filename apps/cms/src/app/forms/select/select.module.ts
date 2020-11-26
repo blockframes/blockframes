@@ -4,11 +4,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { SelectComponent, SelectOption } from './select.component';
+import { SelectComponent, SelectOptionDirection } from './select.component';
 
 @NgModule({
-  declarations: [SelectComponent, SelectOption],
-  exports: [SelectComponent, SelectOption],
+  declarations: [SelectComponent, SelectOptionDirection],
+  exports: [SelectComponent, SelectOptionDirection],
   imports: [
     CommonModule,
     ReactiveFormsModule,
