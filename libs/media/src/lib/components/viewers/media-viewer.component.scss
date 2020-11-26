@@ -1,4 +1,23 @@
 
+:host {
+  border: solid 1px var(--foreground-divider);
+  border-radius: 4px;
+  background-color: var(--background-card);
+}
+
+article {
+  text-align: center;
+  h3 {
+    margin-top: 16px;
+  }
+  img {
+    width: 250px;
+  }
+  p {
+    padding: 0 16px;
+  }
+}
+
 img {
   height: 100%;
   width: 100%;

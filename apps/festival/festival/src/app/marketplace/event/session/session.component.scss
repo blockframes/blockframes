@@ -65,8 +65,7 @@ p {
   flex-direction: column;
 
   .meeting-container {
-    flex: 1;
-
+    height: 60vh;
     display: flex;
     align-items: stretch;
 
@@ -81,6 +80,13 @@ p {
   media-control {
     display: flex;
     justify-content: center;
+  }
+
+  media-viewer,
+  meeting-video-room,
+  media-control,
+  event-meeting-media-list{
+    margin: 4px 14px;
   }
 }
 

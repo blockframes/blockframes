@@ -43,7 +43,10 @@
 
       </div>
       <ng-container *ngIf="event.isOwner">
-        <media-control [event]="event"></media-control>
+        <media-control
+          [event]="event"
+          *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
+        ></media-control>
         <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
       </ng-container>
       <img *ngIf="!event.isOwner" asset="meeting.webp" alt="Meeting room">

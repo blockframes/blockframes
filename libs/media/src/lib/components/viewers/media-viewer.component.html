@@ -11,17 +11,24 @@
       <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
     </ng-container>
     <ng-container *ngSwitchDefault>
-      <p>Sorry, we don't know how to display this file.</p>
-      <p>Currently supported file are: pdf, images, and videos</p>
+      <article>
+        <h3>Sorry</h3>
+        <img asset="no_titles.webp" alt="Flying saucer">
+        <p>We don't know how to display this file.</p>
+        <p class="mat-caption">Supported file are: pdf, images, and videos</p>
+      </article>
     </ng-container>
   </ng-container>
 </ng-container>
 <ng-template #noFile>
-  <p>No File Selected:</p>
-  <ng-container *ngIf="event.isOwner">
-    <p>you can select a file to display in the list below.</p>
-  </ng-container>
-  <ng-template #notOwner>
-    <p>when the meeting owner select a file to display it will appear here.</p>
-  </ng-template>
+  <article>
+    <h3>No File Selected</h3>
+    <img asset="moodboard.webp" alt="No files to display">
+    <ng-container *ngIf="event.isOwner; else notOwner">
+      <p>Select a file in the list below to display it to every attendees of this meeting.</p>
+    </ng-container>
+    <ng-template #notOwner>
+      <p>The meeting owner hasn't shared any file yet. When the meeting owner will share a file it will appear here</p>
+    </ng-template>
+  </article>
 </ng-template>
