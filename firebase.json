@@ -3,7 +3,11 @@
     {
       "target": "catalog",
       "public": "dist/apps/catalog/",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "redirects": [
         {
           "source": "/catalog/:path*",
@@ -25,7 +29,11 @@
     {
       "target": "festival",
       "public": "dist/apps/festival/browser",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "rewrites": [
         {
           "source": "/admin{,/**}",
@@ -40,11 +48,17 @@
     {
       "target": "financiers",
       "public": "dist/apps/financiers",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [{
-        "source": "**",
-        "destination": "/index.html"
-      }]
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     },
     {
       "target": "crm",
@@ -63,7 +77,9 @@
     }
   ],
   "functions": {
-    "predeploy": ["npx ts-node -P tools/tsconfig.tools.json tools/scripts/functions-pre-deploy.ts "],
+    "predeploy": [
+      "npx ts-node -P tools/tsconfig.tools.json tools/scripts/functions-pre-deploy.ts "
+    ],
     "source": "dist/apps/backend-functions/"
   },
   "firestore": {
@@ -72,5 +88,20 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
   }
 }
