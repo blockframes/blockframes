@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectFormModule } from '../select';
 import { TextFormModule } from '../text';
+import { TypedFieldModule } from '../typed-field';
 import { FirestoreComponent } from './firestore.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +17,8 @@ import { MatIconModule } from '@angular/material/icon';
     SelectFormModule,
     TextFormModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    TypedFieldModule
   ]
 })
 export class FirestoreFormModule { }
