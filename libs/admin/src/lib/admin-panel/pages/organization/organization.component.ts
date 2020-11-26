@@ -194,8 +194,8 @@ export class OrganizationComponent implements OnInit {
         question: 'You are currently deleting this organization from Archipel, are you sure ?',
         warning: 'You will also delete everything regarding this organization',
         confirmationWord: 'delete',
-        onConfirm: () => {
-          this.organizationService.remove(this.orgId);
+        onConfirm: async () => {
+          await this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted !', 'close', { duration: 5000});
           this.router.navigate(['c/o/admin/panel/organizations']);
         }

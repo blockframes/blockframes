@@ -252,6 +252,23 @@ export async function onOrganizationDelete(
     await invit.ref.delete();
   }
 
+  // Update all contracts where the organization belongs to partyIds array
+  const contractsCollectionRef = db.collection('contracts').where('partyIds', 'array-contains', org.id);
+  const contractsSnap = await contractsCollectionRef.get();
+
+  for (const contract of contractsSnap.docs) {
+    const contractData = contract.data();
+    console.log(contractData.partyIds);
+    for (const party of contractData.parties) {
+      if (party.party.orgId === org.id) {
+        const index = contractData.parties.indexOf(party);
+        contractData.parties.splice(index, 1);
+        await contract.ref.update({ parties: contractData.parties});
+      }
+    }
+  }
+
+
   // Clean all media for the organization
   await cleanOrgMedias(org);
 
