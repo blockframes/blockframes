@@ -1,2 +1,1 @@
-export * from './autocomplete.component';
-export * from './autocomplete.schema';
+export * from './autocomplete.module';

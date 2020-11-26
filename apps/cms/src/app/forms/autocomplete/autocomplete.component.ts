@@ -1,9 +1,5 @@
-import { Component, NgModule, Input, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Output, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
-import { MatChipsModule } from '@angular/material/chips';
+import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { FormField } from 'ng-form-factory';
 import { MatSelectSchema } from '../select';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -68,15 +64,3 @@ export class FormAutocompleteComponent<T, O> implements OnInit {
 }
 
 
-@NgModule({
-  declarations: [FormAutocompleteComponent],
-  exports: [FormAutocompleteComponent],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatInputModule,
-    MatChipsModule,
-  ]
-})
-export class FormAutocompleteModule { }

@@ -1,10 +1,6 @@
-import { Component, NgModule, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormList } from 'ng-form-factory';
 import { MatMultiSelectSchema } from '../select';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -69,17 +65,3 @@ export class FormChipsAutocompleteComponent<T, O> implements OnInit {
   }
 }
 
-
-@NgModule({
-  declarations: [FormChipsAutocompleteComponent],
-  exports: [FormChipsAutocompleteComponent],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatInputModule,
-    MatChipsModule,
-    MatIconModule
-  ]
-})
-export class FormChipsAutocompleteModule { }
