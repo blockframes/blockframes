@@ -55,8 +55,13 @@ export async function onMovieDelete(
   // Delete invitations
   const eventIds = events.docs.map(e => e.id);
   if (eventIds.length) {
-    const invitations = await db.collection('invitations').where('docId', 'in', eventIds).get();
-    invitations.docs.forEach(d => batch.delete(d.ref));
+    const chunk = 10; // max 10 items in "in" queries
+    let i, j, temparray;
+    for (i = 0, j = eventIds.length; i < j; i += chunk) {
+      temparray = eventIds.slice(i, i + chunk);
+      const invitations = await db.collection('invitations').where('docId', 'in', temparray).get();
+      invitations.docs.forEach(d => batch.delete(d.ref));
+    }
   }
 
   // Delete sub-collections (distribution rights)
@@ -75,7 +80,7 @@ export async function onMovieDelete(
     if (!!contract.lastVersion?.titles[movie.id]) {
       delete contract.lastVersion.titles[movie.id];
     }
-    batch.update(contract.ref, contract);
+    batch.update(c.ref, contract);
   });
 
   // Update algolia's index

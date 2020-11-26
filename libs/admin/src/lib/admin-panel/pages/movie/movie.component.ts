@@ -139,6 +139,7 @@ export class MovieComponent implements OnInit {
    * @param movie 
    */
   private async simulateDeletion(movie: Movie) {
+    const chunk = 10; // max 10 items in "in" queries
     const output: string[] = [];
     output.push('1 movie will be removed.');
 
@@ -154,9 +155,11 @@ export class MovieComponent implements OnInit {
 
     const eventIds = events.map(e => e.id);
     if (eventIds.length) {
-      const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', eventIds));
-      if (invitations.length) {
-        output.push(`${invitations.length} invitations to events will be removed.`);
+      let i, j, temparray, invitationCount = 0;
+      for (i = 0, j = eventIds.length; i < j; i += chunk) {
+        temparray = eventIds.slice(i, i + chunk);
+        const invitations = await this.invitationService.getValue(ref => ref.where('docId', 'in', temparray));
+        invitationCount += invitations.length;
       }
     }
 
