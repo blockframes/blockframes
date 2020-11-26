@@ -20,19 +20,19 @@ export class TitleViewComponent implements OnInit {
   navLinks: RouteDescription[] = [
     {
       path: 'main',
-      label: 'Main Information'
+      label: 'Main'
     },
     {
       path: 'artistic',
-      label: 'Artistic Information'
+      label: 'Artistic'
     },
     {
       path: 'production',
-      label: 'Production Information'
+      label: 'Production'
     },
     {
       path: 'additional',
-      label: 'Additional Information'
+      label: 'Additional'
     }
   ];
 
