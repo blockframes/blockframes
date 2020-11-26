@@ -3,8 +3,8 @@ import { FormField, FormList } from 'ng-form-factory';
 import { Options } from './select.schema';
 
 
-@Directive({ selector: 'option' })
-export class SelectOption {}
+@Directive({ selector: 'formOption' })
+export class SelectOptionDirection {}
 
 @Component({
   selector: 'form-select',
@@ -14,7 +14,7 @@ export class SelectOption {}
 })
 export class SelectComponent<T> {
   private _options: Options<T>;
-  @ContentChild(SelectOption) template?: TemplateRef<SelectOption>;
+  @ContentChild(SelectOptionDirection) template?: TemplateRef<SelectOptionDirection>;
   @Input() form: FormField<T> | FormList<any, T>;
   @Input()
   set options(options: Options<T>) {

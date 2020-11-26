@@ -39,10 +39,10 @@ export const orgsSchema: FormGroupSchema<OrgsSection> = {
 })
 export class OrgsComponent {
   @Input() form?: FormEntity<typeof orgsSchema>;
+  params$ = this.route.paramMap;
   displayLabel = (org?: Organization) => orgName(org);
   getValue = (org?: Organization) => org?.id;
 
-  params$ = this.route.paramMap;
 
   constructor(private route: ActivatedRoute) {}
 }

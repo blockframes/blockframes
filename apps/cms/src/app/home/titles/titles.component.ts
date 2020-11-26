@@ -44,10 +44,10 @@ export const titlesSchema: TitlesSchema = {
 })
 export class TitlesComponent {
   @Input() form?: FormEntity<TitlesSchema>;
+  params$ = this.route.paramMap;
   displayLabel = (title?: Movie) => title?.title.international;
   getValue = (title?: Movie) => title?.id;
 
-  params$ = this.route.paramMap;
 
   constructor(private route: ActivatedRoute) {}
 }
