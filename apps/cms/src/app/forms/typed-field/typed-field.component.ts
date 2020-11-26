@@ -33,7 +33,7 @@ const schema: FormGroupSchema<TypedField> = {
 })
 export class TypedFieldComponent implements ControlValueAccessor, OnInit {
   private sub?: Subscription;
-  form = createForms(schema);
+  form = createForms(schema, { type: 'string', value: '' });
 
   onChange: (v: string | number | boolean) => void = () => null;
   onTouched = () => null;
@@ -60,5 +60,7 @@ export class TypedFieldComponent implements ControlValueAccessor, OnInit {
   registerOnTouched(fn: any): void {
     this.onTouched = this.onTouched;
   }
-
+  setDisabledState(isDisabled: boolean): void {
+    isDisabled ? this.form.disable() : this.form.enable();
+  }
 }

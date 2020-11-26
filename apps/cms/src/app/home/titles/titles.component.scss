@@ -1,5 +1,6 @@
 article {
   display: flex;
+  margin-bottom: 16px;
 }
 
 // Gap
@@ -9,4 +10,8 @@ article > *:not(:first-child) {
 
 form-chips-autocomplete {
   width: 100%;
+}
+
+mat-radio {
+  margin-left: 16px;
 }

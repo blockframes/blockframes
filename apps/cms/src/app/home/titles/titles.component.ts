@@ -13,6 +13,7 @@ import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select';
 import { FirestoreFormModule, firestoreQuery, FirestoreQuery } from '../../forms/firestore';
 import { HomePipesModule } from '../pipes';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 interface TitlesSection extends Section {
   _type: 'titles',
@@ -48,8 +49,15 @@ export class TitlesComponent {
   displayLabel = (title?: Movie) => title?.title.international;
   getValue = (title?: Movie) => title?.id;
 
-
   constructor(private route: ActivatedRoute) {}
+
+  select(event: MatRadioChange) {
+    for (const key of ['titleIds', 'query'] as const) {
+      event.value === key
+        ? this.form?.get(key).enable()
+        : this.form?.get(key).disable();
+    }
+  }
 }
 
 
@@ -60,6 +68,7 @@ export class TitlesComponent {
     ReactiveFormsModule,
     OverlayModule,
     MatFormFieldModule,
+    MatRadioModule,
     SelectFormModule,
     FormChipsAutocompleteModule,
     TextFormModule,

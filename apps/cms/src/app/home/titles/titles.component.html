@@ -4,6 +4,13 @@
     <form-select [form]="form.get('mode')"></form-select>
   </article>
   <article>
+    <mat-radio-group (change)="select($event)">
+      <mat-radio-button value="titleIds">IDs</mat-radio-button>
+      <mat-radio-button value="query">Firestore Query</mat-radio-button>
+    </mat-radio-group>
+  </article>
+
+  <article>
     <form-chips-autocomplete
       [form]="form.get('titleIds')"
       [options]="app | getTitles | async"
