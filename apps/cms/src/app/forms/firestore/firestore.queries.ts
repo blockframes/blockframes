@@ -1,5 +1,5 @@
 // Prebuilt queries for titles form
-import { WhereQuery } from './firestore.schema';
+import { LimitQuery, WhereQuery } from './firestore.schema';
 import { App } from '@blockframes/utils/apps';
 
 const titleApproval: Record<App, 'accepted' | 'submitted'> = {
@@ -31,7 +31,7 @@ export function titlesFromOrg(orgId: string): WhereQuery[] {
   }]
 }
 
-export function orgsFromApp(app: App) {
+export function orgsFromApp(app: App): WhereQuery[] {
   return [{
     method: 'where',
     field: `appAccess.${app}.dashboard`,
@@ -43,4 +43,8 @@ export function orgsFromApp(app: App) {
     condition: '==',
     value: 'accepted'
   }];
+}
+
+export function limit(limit: number): LimitQuery {
+  return { method: 'limit', limit };
 }

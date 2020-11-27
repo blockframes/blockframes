@@ -8,7 +8,7 @@ import { TemplateParams } from '../template/template.model';
 export const sections = (params: TemplateParams) => ({
   banner: bannerSchema,
   titles: titlesSchema(params),
-  orgs: orgsSchema,
+  orgs: orgsSchema(params),
   hero: heroSchema,
   featureOrg: orgTitleSchema,
 });

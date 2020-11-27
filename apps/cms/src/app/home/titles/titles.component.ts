@@ -34,7 +34,7 @@ export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
     title: matText({ label: 'title' }),
     mode: matSelect({ label: 'Mode', options: ['poster', 'banner', 'slider'] }),
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
-    query: firestoreQuery({ collection: 'movies', value: titlesFromApp(params.app) }),
+    query: firestoreQuery({ collection: 'movies' }),
   },
   value: (value: TitlesSection) => ({
     _type: 'titles',

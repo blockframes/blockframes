@@ -53,7 +53,8 @@ export class FormAutocompleteComponent<T, O> implements OnInit {
   }
 
   onChange() {
-    this.change.emit(this.form.value);
+    const value = this.form.value;
+    this.change.emit(value in this.options ? value : null);
   }
 
   displayWith(value: string) {
