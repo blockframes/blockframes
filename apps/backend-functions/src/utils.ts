@@ -1,6 +1,5 @@
-import { db, functions } from './internals/firebase';
+import { db, functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
-import { skipInMaintenance } from '@blockframes/firebase-utils';
 export { ErrorResultResponse } from '@blockframes/utils/utils';
 
 ///////////////////////////////////

@@ -229,23 +229,17 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many events will be removed
-    const events = [];
     const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerId', '==', organization.id));
     const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerId', '==', organization.id));
-    events.push(ownerEvent);
-    events.push(organizerEvent);
-    const allEvents = events.reduce((array1, array2) => [...ownerEvent, ...organizerEvent]);
+    const allEvents = [...ownerEvent, ...organizerEvent]; 
     if (allEvents.length) {
       output.push(`${allEvents.length} event(s) will be cancelled or deleted.`)
     }
 
     // Calculate how many invitation will be removed
-    const invits = [];
     const invitFrom = await this.invitationService.getValue(ref => ref.where('fromOrg.id', '==', organization.id));
     const invitTo = await this.invitationService.getValue(ref => ref.where('toOrg.id', '==', organization.id));
-    invits.push(invitFrom);
-    invits.push(invitTo);
-    const allInvit = invits.reduce((array1, array2) => [...invitFrom, ...invitTo]);
+    const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`);
     }

@@ -271,11 +271,13 @@ export async function onOrganizationDelete(
   // Clean all media for the organization
   await cleanOrgMedias(org);
 
-  const orgAppAccess = findOrgAppAccess(org)
+  const orgAppAccess = findOrgAppAccess(org);
   // Update algolia's index
   const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID));
 
-  await Promise.all(promises)
+  await Promise.all(promises);
+
+  console.log(`Organization ${org.id} removed`);
 }
 
 export const accessToAppChanged = async (

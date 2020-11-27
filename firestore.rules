@@ -199,7 +199,6 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      // @TODO #2650 #2692 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
       allow read: if isSignedIn()
         && notInMaintenance();
     	allow create: if isSignedIn()
@@ -208,8 +207,7 @@ service cloud.firestore {
         && notInMaintenance();
       allow update: if (isAdminAllowedToUpdateOrg() || isMemberAllowedToUpdateOrg())
         && notInMaintenance();
-      allow delete: if isSuperAdmin(existingData().id)
-        && notInMaintenance();
+      allow delete: if false; // Allowed only to blockframesAdmin via CRM
 
       match /carts/{cartId} {
         allow read: if isOrgMember(orgId) && notInMaintenance();
@@ -217,7 +215,6 @@ service cloud.firestore {
         allow update: if isOrgMember(orgId) && notInMaintenance();
         allow delete: if isOrgAdmin(userOrgId()) && notInMaintenance();
       }
-
 
     }
 
@@ -295,9 +292,7 @@ service cloud.firestore {
         && canCreateNewPermissions(userOrgId(), movieId)
         && notInMaintenance();
       allow update: if isAllowedToUpdateMovie() && notInMaintenance();
-      allow delete: if orgCan('canDelete', userOrgId(), existingData().id)
-      	&& isOrgAdmin(userOrgId())
-        && notInMaintenance();
+      allow delete: if false; // @TODO (#4301) Allowed only to blockframesAdmin via CRM for now
 
       match /distributionRights/{rightId} {
         // @TODO (#2606 #2049) We allow all distributionRights reads as we need it to search avails

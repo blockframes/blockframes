@@ -4,6 +4,7 @@ import { chunk } from "lodash";
 import * as env from '@env'
 import type { File as GFile } from '@google-cloud/storage';
 import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
+import { RuntimeOptions } from 'firebase-functions';
 
 export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
@@ -93,3 +94,11 @@ export function getLatestFile(files: GFile[]) {
     )
     .pop();
 }
+
+/**
+ * Runtime options for heavy functions
+ */
+export const heavyConfig: RuntimeOptions = {
+  timeoutSeconds: 300,
+  memory: '1GB',
+};
