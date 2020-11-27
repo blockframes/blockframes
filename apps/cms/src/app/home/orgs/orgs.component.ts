@@ -41,15 +41,16 @@ export class OrgsComponent {
   private mode?: 'query' | 'orgIds';
   params$ = this.route.paramMap;
   @Input() form?: FormEntity<typeof orgsSchema>;
-  displayLabel = (org?: Organization) => orgName(org);
-  getValue = (org?: Organization) => org?.id;
-
+  
   orgs$ = this.params$.pipe(
     map(params => getOrgsQueryFn(params.get('app'))),
     switchMap(queryFn => this.service.valueChanges(queryFn)),
     map(toMap),
     shareReplay(1)
   );
+    
+  displayLabel = (org?: Organization) => orgName(org);
+  getValue = (org?: Organization) => org?.id;
 
   constructor(
     private route: ActivatedRoute,

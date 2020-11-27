@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, forwardRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { createForms, FormGroupSchema } from 'ng-form-factory';
 import { Subscription } from 'rxjs';
@@ -31,7 +31,7 @@ const schema: FormGroupSchema<TypedField> = {
     multi: true,
   }]
 })
-export class TypedFieldComponent implements ControlValueAccessor, OnInit {
+export class TypedFieldComponent implements ControlValueAccessor, OnInit, OnDestroy {
   private sub?: Subscription;
   form = createForms(schema, { type: 'string', value: '' });
 
