@@ -49,12 +49,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     );
   }
 
-  /** Triggered when you remove an organization that has just been created.. */
-  async onDelete() {
-    const { uid } = this.authQuery.user;
-    return this.db.doc(`users/${uid}`).update({ orgId: null });
-  }
-
   /**
    * This converts the OrganizationDocument into an Organization
    * @param org
