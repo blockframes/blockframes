@@ -7,6 +7,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -33,10 +34,11 @@ export class SessionComponent implements OnInit, OnDestroy {
       const meta: Meeting = { ...event.meta, attendees: {...event.meta.attendees} };
       if (event.isOwner) {
         meta.attendees = {};
+        this.service.update(event.id, { meta });
       } else if (!!meta.attendees[this.authQuery.userId]) {
         delete meta.attendees[this.authQuery.userId];
+        this.service.update(event.id, { meta });
       }
-      this.service.update(event.id, { meta });
     }
   }
 
@@ -46,7 +48,8 @@ export class SessionComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private authQuery: AuthQuery,
     private bottomSheet: MatBottomSheet,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -65,18 +68,29 @@ export class SessionComponent implements OnInit, OnDestroy {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
-      } else if (event.type === 'meeting' && event.isOwner) {
+      } else if (event.type === 'meeting') {
         const uid = this.authQuery.userId;
-        const attendees = (event.meta as Meeting).attendees;
-        if (attendees[uid] !== 'owner') {
-          const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
-          this.service.update(event.id, { meta });
-        }
+        if (event.isOwner) {
+          const attendees = (event.meta as Meeting).attendees;
+          if (attendees[uid] !== 'owner') {
+            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
+            this.service.update(event.id, { meta });
+          }
 
-        const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
-        const requests = await this.userService.getValue(requestUids);
-        if (!!requests.length) {
-          this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
+          const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
+          const requests = await this.userService.getValue(requestUids);
+          if (!!requests.length) {
+            this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
+          }
+        } else {
+          const userStatus = (event.meta as Meeting).attendees[uid];
+
+          if (!userStatus) { // meeting session is over
+            // TODO issue#4156 redirect to "Meeting is over" page when it will be implemented
+            this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);
+          } else if (userStatus !== 'accepted') { // user has been banned or something else
+            this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);
+          }
         }
       }
     })
