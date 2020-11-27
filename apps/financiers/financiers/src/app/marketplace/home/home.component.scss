@@ -14,7 +14,7 @@
 }
 
 .benefits {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 bf-carousel {
@@ -24,7 +24,7 @@ bf-carousel {
 header {
   padding: 100px 96px;
   margin-bottom: 80px;
-  background-image: url("/assets/images/ACMbannerlanding.png");
+  background-image: url("/assets/images/ACM_banner_landing.png");
   background-size: cover;
 
   h4 {
@@ -48,7 +48,7 @@ mat-card {
   height: 350px;
   display: flex;
   flex-direction: column;
-  place-content: center center;
+  place-content: center start;
   align-items: center;
   padding: 24px 16px;
   width: 49%;
@@ -58,7 +58,7 @@ mat-card {
   }
   img {
     width: 150px;
-    margin-bottom: 24px;
+    margin-bottom: 40px;
   }
 }
 

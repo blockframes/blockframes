@@ -34,7 +34,7 @@
         <h5>FEATURES</h5>
         <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
           <mat-card *ngFor="let feature of sellerFeatures">
-            <img [asset]="feature.imgAsset" type="logo" alt="seller feature image">
+            <img [asset]="feature.imgAsset" alt="seller feature image">
             <h3>{{ feature.title }}</h3>
             <p class="mat-body-1 features">{{ feature.description }}
               <a *ngIf="feature?.link?.href" [href]="feature.link.href" target="_blank">
