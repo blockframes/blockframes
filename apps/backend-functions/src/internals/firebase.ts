@@ -6,7 +6,7 @@ export const functions = region('europe-west1')
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 import { isInMaintenance } from '@blockframes/firebase-utils';
-import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
+import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 
 if (!admin.apps.length) {
   admin.initializeApp(config().firebase);
@@ -57,7 +57,7 @@ db.collection(META_COLLECTION_NAME)
   .onSnapshot(
     (snap) => {
       const maintenanceDoc = snap.data() as IMaintenanceDoc;
-      maintenanceActive = !maintenanceDoc.endedAt;
+      maintenanceActive = _isInMaintenance(maintenanceDoc);
     },
     // If there is an error, revert back to old method to prevent stuck functions
     () => (maintenanceActive = null)
