@@ -57,11 +57,6 @@ export async function onMovieDelete(
   const events = await db.collection('events').where('meta.titleId', '==', movie.id).get();
   events.docs.forEach(d => batch.delete(d.ref));
 
-  // Delete invitations
-  const invitationsPromises = events.docs.map(e => db.collection('invitations').where('docId', '==', e.id).get());
-  const _invitations = await Promise.all(invitationsPromises);
-  const invitations = _invitations.map(i => i.docs).flat();
-  invitations.forEach(d => batch.delete(d.ref));
 
   // Delete sub-collections (distribution rights)
   await removeAllSubcollections(snap, batch);
@@ -73,6 +68,12 @@ export async function onMovieDelete(
   const permissionsPromises = orgs.map(o => db.doc(`permissions/${o.id}/documentPermissions/${movie.id}`).get());
   const permissions = await Promise.all(permissionsPromises);
   permissions.forEach(p => batch.delete(p.ref));
+
+  // Delete notifications
+  const notifsCollectionRef = await db.collection('notifications').where('docId', '==', movie.id).get();
+  for (const doc of notifsCollectionRef.docs) {
+    batch.delete(doc.ref);
+  }
 
   // Update contracts
   const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
