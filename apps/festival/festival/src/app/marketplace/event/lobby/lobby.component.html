@@ -10,7 +10,12 @@
     <aside>
       <div fxLayout="row" fxLayoutGap="32px">
         <ng-container *ngIf="local.tracks.video as videoTrack">
-          <button mat-fab color="primary" (click)="toggleLocalTrack('video')">
+          <button
+            mat-fab
+            color="primary"
+            [matTooltip]="'Turn ' + (videoTrack.isEnabled ? 'off' : 'on') + ' camera'"
+            (click)="toggleLocalTrack('video')"
+          >
             <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
             <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
           </button>
@@ -25,7 +30,12 @@
         </ng-container>
 
         <ng-container *ngIf="local.tracks.audio as audioTrack">
-          <button mat-fab color="primary" (click)="toggleLocalTrack('audio')">
+          <button
+            mat-fab
+            color="primary"
+            [matTooltip]="'Turn ' + (audioTrack.isEnabled ? 'off' : 'on') + ' mic'"
+            (click)="toggleLocalTrack('audio')"
+          >
             <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
             <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
           </button>
@@ -39,18 +49,38 @@
           </span>
         </ng-container>
       </div>
-      <ng-container *ngIf="event.isOwner else notOwner">
-        <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
-      </ng-container>
 
-      <ng-template #notOwner>
-        <ng-container *ngIf="event.meta?.ownerIsPresent else ownerNotPresent">
-          <a mat-flat-button routerLink="../session" color="accent">Ask to join {{ event.type | titlecase }} Room</a>
+      <div fxLayout="column" fxLayoutAlign="end center" class="request">
+        <ng-container [ngSwitch]="attendeeStatus">
+
+          <ng-container *ngSwitchCase="'owner' || 'accepted'">
+            <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'requesting'">
+            <p>Waiting for request to be accepted...</p>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'denied'">
+            <p class="mat-error">Your request to join has been denied.</p>
+            <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join again</a>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            <ng-container *ngIf="ownerIsPresent else ownerNotPresent">
+              <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join {{ event.type | titlecase }} Room</a>
+            </ng-container>
+
+            <ng-template #ownerNotPresent>
+              <p>Waiting for owner to start the Meeting</p>
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </ng-template>
+
+          </ng-container>
         </ng-container>
-        <ng-template #ownerNotPresent>
-          <a mat-flat-button disabled color="accent">Waiting for organizer to start the meeting...</a>
-        </ng-template>
-      </ng-template>
+      </div>
+
     </aside>
 
   </section>

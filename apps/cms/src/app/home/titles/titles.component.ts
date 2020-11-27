@@ -4,15 +4,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
-import { Movie } from '@blockframes/movie/+state';
+import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Section } from '../../template/template.model';
+import { Section, TemplateParams } from '../../template/template.model';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select';
-import { FirestoreFormModule, firestoreQuery, FirestoreQuery } from '../../forms/firestore';
-import { HomePipesModule } from '../pipes';
+import { FirestoreFormModule, firestoreQuery, FirestoreQuery, titlesFromApp } from '../../forms/firestore';
+import { getTitlesQueryFn, toMap } from '../pipes';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 interface TitlesSection extends Section {
   _type: 'titles',
@@ -24,7 +26,7 @@ interface TitlesSection extends Section {
 
 type TitlesSchema = FormGroupSchema<TitlesSection>;
 
-export const titlesSchema: TitlesSchema = {
+export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   form: 'group',
   load: async () => import('./titles.component').then(m => m.TitlesComponent),
   controls: {
@@ -34,7 +36,12 @@ export const titlesSchema: TitlesSchema = {
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
     query: firestoreQuery({ collection: 'movies' }),
   },
-}
+  value: (value: TitlesSection) => ({
+    _type: 'titles',
+    query: titlesFromApp(params.app),
+    ...value
+  })
+})
 
 @Component({
   selector: 'form-titles',
@@ -43,13 +50,38 @@ export const titlesSchema: TitlesSchema = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitlesComponent {
+  private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<TitlesSchema>;
-  params$ = this.route.paramMap;
+  
+  
+  app$ = this.route.paramMap.pipe(map( p => p.get('app')));
+  titles$ = this.app$.pipe(
+    map(app => getTitlesQueryFn(app)),
+    switchMap(queryFn => this.service.valueChanges(queryFn)),
+    map(toMap),
+    shareReplay(1)
+  );
+
   displayLabel = (title?: Movie) => title?.title.international;
   getValue = (title?: Movie) => title?.id;
 
+  constructor(
+    private route: ActivatedRoute,
+    private service: MovieService,
+  ) {}
 
-  constructor(private route: ActivatedRoute) {}
+  get queryMode() {
+    return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
+  }
+
+  select(event: MatRadioChange) {
+    this.mode = event.value;
+    for (const key of ['titleIds', 'query'] as const) {
+      event.value === key
+        ? this.form?.get(key).enable()
+        : this.form?.get(key).disable();
+    }
+  }
 }
 
 
@@ -60,10 +92,10 @@ export class TitlesComponent {
     ReactiveFormsModule,
     OverlayModule,
     MatFormFieldModule,
+    MatRadioModule,
     SelectFormModule,
     FormChipsAutocompleteModule,
     TextFormModule,
-    HomePipesModule,
     FirestoreFormModule,
   ]
 })

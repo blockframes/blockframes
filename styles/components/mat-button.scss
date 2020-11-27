@@ -39,7 +39,7 @@
 
     &.mat-button-disabled {
       svg g, svg polygon, svg path {
-        fill: mat-color($background, disabled-button);
+        fill: mat-color($foreground, disabled-text);
       }
     }
   }

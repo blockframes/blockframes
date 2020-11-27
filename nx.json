@@ -9,10 +9,16 @@
   },
   "projects": {
     "ui": {
-      "tags": ["ui", "shared"]
+      "tags": [
+        "ui",
+        "shared"
+      ]
     },
     "utils": {
-      "tags": ["utils", "shared"]
+      "tags": [
+        "utils",
+        "shared"
+      ]
     },
     "contract": {
       "tags": []
@@ -24,10 +30,15 @@
       "tags": []
     },
     "ethers": {
-      "tags": ["ethereum", "smart-contract"]
+      "tags": [
+        "ethereum",
+        "smart-contract"
+      ]
     },
     "movie": {
-      "tags": ["movie"]
+      "tags": [
+        "movie"
+      ]
     },
     "organization": {
       "tags": []
@@ -39,26 +50,38 @@
       "tags": []
     },
     "notification": {
-      "tags": ["notification"]
+      "tags": [
+        "notification"
+      ]
     },
     "catalog": {
-      "tags": ["catalog"]
+      "tags": [
+        "catalog"
+      ]
     },
     "catalog-e2e": {
       "tags": []
     },
     "festival": {
-      "tags": ["festival"]
+      "tags": [
+        "festival"
+      ]
     },
     "festival-e2e": {
       "tags": [],
-      "implicitDependencies": ["festival"]
+      "implicitDependencies": [
+        "festival"
+      ]
     },
     "user": {
-      "tags": ["user"]
+      "tags": [
+        "user"
+      ]
     },
     "event": {
-      "tags": ["event"]
+      "tags": [
+        "event"
+      ]
     },
     "e2e": {
       "tags": []
@@ -73,11 +96,15 @@
       "tags": []
     },
     "crm": {
-      "tags": ["crm"]
+      "tags": [
+        "crm"
+      ]
     },
     "crm-e2e": {
       "tags": [],
-      "implicitDependencies": ["crm"]
+      "implicitDependencies": [
+        "crm"
+      ]
     },
     "testing": {
       "tags": []
@@ -93,7 +120,9 @@
     },
     "financiers-e2e": {
       "tags": [],
-      "implicitDependencies": ["financiers"]
+      "implicitDependencies": [
+        "financiers"
+      ]
     },
     "campaign": {
       "tags": []
@@ -106,7 +135,12 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e", "build-storybook"],
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
         "cacheDirectory": ".cache/nx"
       }
     }

@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { runChunks } from '@blockframes/firebase-utils';
-import  firebase  from '@firebase/testing';
 import { resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';

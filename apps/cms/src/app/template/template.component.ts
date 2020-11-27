@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRe
 import { ActivatedRoute } from '@angular/router';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { FormGroupSchema, FormEntity, createForms } from 'ng-form-factory';
-import { CmsTemplate, Section, templateSchema } from './template.model';
+import { CmsTemplate, Section, TemplateParams, templateSchema } from './template.model';
 import { CmsService, CmsParams } from '../cms.service'
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';
 import { switchMap } from 'rxjs/operators';
 
 const templateSections = {
-  home: homeSection,
+  home: (params: TemplateParams) => homeSection(params),
 }
 
 @Component({
@@ -39,12 +39,12 @@ export class TemplateComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.route.params.pipe(
       switchMap(params => this.service.doc<CmsTemplate>(params))
-    ).subscribe(template => {
-      const params = this.route.snapshot.params;
-      const sections = templateSections[params.page];
+    ).subscribe((template: Partial<CmsTemplate> = {}) => {
+      const params = this.route.snapshot.params as TemplateParams;
+      const sections = templateSections[params.page](params);
+      const factory = (section: Section) => sections[section._type];
       this.types = Object.keys(sections);
-      this.factory = (section: Section) => sections[section._type];
-      this.schema = templateSchema(this.factory, template);
+      this.schema = templateSchema(factory, template);
       this.form = createForms(this.schema, template);
       this.cdr.markForCheck();
     });

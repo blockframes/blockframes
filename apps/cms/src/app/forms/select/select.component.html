@@ -1,6 +1,6 @@
 <mat-form-field>
   <mat-label>{{ schema.label }}</mat-label>
-  <mat-select [formControl]="form" [multiple]="schema.multiple" >
+  <mat-select (selectionChange)="change.emit($event)" [formControl]="form" [multiple]="schema.multiple" >
     <!-- Array -->
     <ng-container *ngIf="isArray else isMap">
       <mat-option *ngFor="let option of schema.options" [value]="option">

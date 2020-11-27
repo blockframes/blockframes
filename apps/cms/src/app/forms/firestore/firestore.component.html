@@ -1,12 +1,33 @@
-<div *ngFor="let control of form.controls; let i = index">
-  <form-select [form]="control.get('method')"></form-select>
-  <form-text [form]="control.get('field')"></form-text>
-  <form-select [form]="control.get('condition')"></form-select>
-  <form-text [form]="control.get('value')"></form-text>
-  <button mat-icon-button (click)="form.removeAt(i)">
-    <mat-icon svgIcon="close"></mat-icon>
-  </button>
+<div cdkDropList  (cdkDropListDropped)="move($event)">
+  <ng-container *ngFor="let control of form.controls; let i = index">
+    <div class="row query" cdkDrag>
+      <div class="row">
+        <mat-icon class="handler" svgIcon="drag_indicator" cdkDragHandle></mat-icon>
+        <span>{{ control.get('method').value }}: </span>
+      </div>
+      <div class="row control" [ngSwitch]="control.get('method').value">
+        <ng-container *ngSwitchCase="'where'">
+          <form-text [form]="control.get('field')"></form-text>
+          <form-select [form]="control.get('condition')"></form-select>
+          <form-typed-field [formControl]="control.get('value')"></form-typed-field>
+        </ng-container>
+        <ng-container *ngSwitchCase="'orderBy'">
+          <form-text [form]="control.get('field')"></form-text>
+          <form-select [form]="control.get('direction')"></form-select>
+        </ng-container>
+        <ng-container *ngSwitchCase="'limit'">
+          <form-text [form]="control.get('limit')"></form-text>
+        </ng-container>
+        <ng-container *ngSwitchCase="'limitToLast'">
+          <form-text [form]="control.get('limit')"></form-text>
+        </ng-container>
+      </div>
+      <button mat-icon-button (click)="form.removeAt(i)" [disabled]="control.disabled">
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+    </div>
+  </ng-container>
 </div>
-<button mat-icon-button (click)="form.add()">
-  <mat-icon svgIcon="add"></mat-icon>
-</button>
+<footer>
+  <form-select [form]="method" (change)="add()"></form-select>
+</footer>

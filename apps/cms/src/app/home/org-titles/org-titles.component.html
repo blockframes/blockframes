@@ -10,16 +10,32 @@
         [options]="orgs"
         [getValue]="getOrgValue"
         [displayLabel]="displayOrgLabel"
-        (change)="reset()"
+        (change)="reset($event)"
       ></form-autocomplete>
     </article>
-    <article>
-      <form-chips-autocomplete
-        [form]="form.get('movieIds')"
-        [options]="form.get('orgId').value | getOrgTitles : app | async"
-        [getValue]="getTitleValue"
-        [displayLabel]="displayTitleLabel">
-      </form-chips-autocomplete>
-    </article>
+
+    <ng-container  *ngIf="form.get('orgId').value$ | async as orgId">
+      <article>
+        <mat-radio-group [value]="queryMode" (change)="select($event)">
+          <mat-radio-button value="titleIds">IDs</mat-radio-button>
+          <mat-radio-button value="query">Firestore Query</mat-radio-button>
+        </mat-radio-group>
+      </article>
+      
+      <article [ngSwitch]="queryMode">
+        <ng-container *ngSwitchCase="'titleIds'">
+          <form-chips-autocomplete
+            [form]="form.get('titleIds')"
+            [options]="orgId | getOrgTitles : app | async"
+            [getValue]="getTitleValue"
+            [displayLabel]="displayTitleLabel">
+          </form-chips-autocomplete>
+        </ng-container>
+      
+        <ng-container *ngSwitchCase="'query'">
+          <form-firestore [form]="form.get('query')"></form-firestore>
+        </ng-container>
+      </article>
+    </ng-container>
   </ng-container>
 </ng-container>

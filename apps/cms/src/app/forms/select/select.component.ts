@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, ContentChild, TemplateRef, Directive } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ContentChild, TemplateRef, Directive, EventEmitter, Output } from '@angular/core';
 import { FormField, FormList } from 'ng-form-factory';
-import { Options } from './select.schema';
+import { Options, MatSelectSchema, MatMultiSelectSchema } from './select.schema';
 
 
 @Directive({ selector: '[formOption]' })
@@ -15,7 +15,8 @@ export class SelectOptionDirective {}
 export class SelectComponent<T> {
   private _options: Options<T>;
   @ContentChild(SelectOptionDirective) template?: TemplateRef<SelectOptionDirective>;
-  @Input() form: FormField<T> | FormList<any, T>;
+  @Output() change = new EventEmitter<T>();
+  @Input() form: FormField<MatSelectSchema<T>, T> | FormList<MatMultiSelectSchema<T>, T>;
   @Input()
   set options(options: Options<T>) {
     if (options) this._options = options;

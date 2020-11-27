@@ -30,7 +30,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
   public isDeploying$ = new BehaviorSubject(false);
   public isPending$ = new BehaviorSubject(false);
   // TODO #1387
-  public feedbackImage = 'Fine_380.webp';
+  public feedbackImage = 'fine.webp';
   public feedbackTitle = 'Congratulation !';
 
   private key: Key;
@@ -66,7 +66,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
         + 'If you forget the password to this key, please delete it and use another one. '
         + 'If you do not have another key, contact an admin of your organization to recover your wallet. '
       );
-      this.feedbackImage = 'Delete_500.webp';
+      this.feedbackImage = 'delete.webp';
       this.feedbackTitle = 'Wrong Password :/';
       this.step = this.steps.end;
     }
@@ -80,7 +80,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
       }
     } catch(err) {
       console.warn('Some Blockchain transaction has failed : ', err);
-      this.feedbackImage = 'Delete_500.webp';
+      this.feedbackImage = 'delete.webp';
       this.feedbackTitle = 'The deploy of your wallet has failed :/';
       this.step = this.steps.end;
     } finally {
@@ -98,11 +98,11 @@ export class WalletSendTxTunnelComponent implements OnInit {
       const signedMetaTx = await this.walletService.prepareMetaTx(this.activeKey);
       await this.walletService.sendSignedMetaTx(this.key.ensDomain, signedMetaTx); // await to ensure tx has been mined (tx failure will throw)
       // TODO #1387
-      this.feedbackImage = 'Fine_380.webp';
+      this.feedbackImage = 'fine.webp';
       this.feedbackTitle = 'Congratulation !';
     } catch(err) {
       console.warn('Some Blockchain transaction has failed : ', err);
-      this.feedbackImage = 'Delete_500.webp';
+      this.feedbackImage = 'delete.webp';
       this.feedbackTitle = 'An error as occurred :/';
     } finally {
       this.isPending$.next(false);
