@@ -34,6 +34,12 @@
 
       </header>
 
+      <ng-container *ngIf="breadCrumbs.length > 1">
+        <button mat-icon-button (click)="goTo(breadCrumbs[breadCrumbs.length - 2].path)" matTooltip="Navigate back one step">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+        </button>
+      </ng-container>
+
       <mat-divider></mat-divider>
 
       <ng-container *ngIf="activeDirectory.type === 'directory' else fileDirectory">
