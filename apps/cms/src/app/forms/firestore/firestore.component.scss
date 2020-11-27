@@ -1,22 +1,28 @@
 :host {
   width: 100%;
 }
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
 .query {
   width: 100%;
-  display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .control {
   flex: 1;
-  display: flex;
-  align-items: center;
 }
 
 // Gap
-div > *:not(:first-child) {
+.control > *:not(:first-child), .query > *:not(:first-child) {
   margin-left: 16px;
+}
+
+.handler {
+  cursor: grab;
 }
 
 footer {

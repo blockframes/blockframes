@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { createForms } from 'ng-form-factory';
 import { FirestoreQueryForm, methodSchema, isWhereQuery } from './firestore.schema';
@@ -16,6 +17,10 @@ export class FirestoreComponent {
   method = createForms(methodSchema);
   get schema() {
     return this.form.schema;
+  }
+
+  move(event: CdkDragDrop<string[]>) {
+    this.form.move(event.previousIndex, event.currentIndex);
   }
 
   add() {

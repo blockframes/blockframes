@@ -5,26 +5,26 @@ import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 
-function getOrgQueryFn(app: string): QueryFn {
+export function getOrgsQueryFn(app: string): QueryFn {
   const accepted = ['status', '==', 'accepted'] as const;
   const appAccess = [`appAccess.${app}.dashboard`, '==', true] as const;
   return ref => ref.where(...accepted).where(...appAccess);
 }
 
-function getTitlesQueryFn(app: string): QueryFn {
+export function getTitlesQueryFn(app: string): QueryFn {
   const accepted = ['storeConfig.status', '==', 'accepted'] as const;
   const appAccess = [`storeConfig.appAccess.${app}`, '==', true] as const;
   return ref => ref.where(...accepted).where(...appAccess);
 }
 
-function getOrgTitlesQueryFn(app: string, orgId: string): QueryFn {
+export function getOrgTitlesQueryFn(app: string, orgId: string): QueryFn {
   const accepted = ['storeConfig.status', '==', 'accepted'] as const;
   const appAccess = [`storeConfig.appAccess.${app}`, '==', true] as const;
   const fromOrg = ['orgIds', 'array-contains', orgId] as const;
   return ref => ref.where(...accepted).where(...appAccess).where(...fromOrg);
 }
 
-function toMap<T extends { id: string }>(list: T[]) {
+export function toMap<T extends { id: string }>(list: T[]) {
   const record: Record<string, T> = {};
   for (const item of list) {
     record[item.id] = item;
@@ -54,7 +54,7 @@ export class GetTitlesPipe implements PipeTransform {
 export class GetOrgsPipe implements PipeTransform {
   constructor(private service: OrganizationService) {}
   async transform(app: string) {
-    const queryFn = getOrgQueryFn(app);
+    const queryFn = getOrgsQueryFn(app);
     const orgs = await this.service.getValue(queryFn);
     return toMap(orgs);
   }
