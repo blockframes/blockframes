@@ -12,6 +12,7 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 // Material
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -75,6 +76,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     this.movieService.getValue(fromOrg(this.org.id)).then(titlesRaw => {
       const currentApp: App = this.routerQuery.getData('app');
       const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
+      titles.sort((a, b) => sortMovieBy(a, b, 'Title'));
 
       titles.forEach((title, index) =>
         this.directories.push(createMovieFileStructure(title.id, title.title.international, index + 1)) // we do `index + 1` because `[0]` is the org
