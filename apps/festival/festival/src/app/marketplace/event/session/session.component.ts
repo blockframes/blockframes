@@ -24,8 +24,21 @@ export class SessionComponent implements OnInit, OnDestroy {
   public visioContainerSize: string;
   public screeningFileRef: string;
 
-  private event: Event;
   private sub: Subscription;
+
+  @HostListener('window:beforeunload')
+  attendeeLeaves() {
+    const event = this.eventQuery.getActive();
+    if (event.type === 'meeting') {
+      const meta: Meeting = { ...event.meta, attendees: {...event.meta.attendees} };
+      if (event.isOwner) {
+        meta.attendees = {};
+      } else if (!!meta.attendees[this.authQuery.userId]) {
+        delete meta.attendees[this.authQuery.userId];
+      }
+      this.service.update(event.id, { meta });
+    }
+  }
 
   constructor(
     private eventQuery: EventQuery,
@@ -39,7 +52,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.event$ = this.eventQuery.selectActive();
     this.sub = this.event$.subscribe(async event => {
-      this.event = event;
       if (event.isOwner) {
         this.mediaContainerSize = '40%';
         this.visioContainerSize = '60%';
@@ -73,18 +85,5 @@ export class SessionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.attendeeLeaves();
     this.sub.unsubscribe();
-  }
-
-  @HostListener('window:beforeunload')
-  attendeeLeaves() {
-    if (this.event.type === 'meeting') {
-      const meta: Meeting = { ...this.event.meta, attendees: {...this.event.meta.attendees} };
-      if (this.event.isOwner) {
-        meta.attendees = {};
-      } else if (!!meta.attendees[this.authQuery.userId]) {
-        delete meta.attendees[this.authQuery.userId];
-      }
-      this.service.update(this.event.id, { meta });
-    }
   }
 }
