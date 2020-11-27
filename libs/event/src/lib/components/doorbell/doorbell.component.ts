@@ -5,7 +5,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { PublicUser } from '@blockframes/user/+state/user.model';
 
 @Component({
-  selector: 'event-confirm-bottomSheet',
+  selector: 'event-doorbell',
   templateUrl: './doorbell.component.html',
   styleUrls: ['./doorbell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
