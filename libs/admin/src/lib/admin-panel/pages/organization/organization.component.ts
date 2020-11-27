@@ -231,7 +231,7 @@ export class OrganizationComponent implements OnInit {
     // Calculate how many events will be removed
     const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerId', '==', organization.id));
     const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerId', '==', organization.id));
-    const allEvents = [...ownerEvent, ...organizerEvent]); 
+    const allEvents = [...ownerEvent, ...organizerEvent]; 
     if (allEvents.length) {
       output.push(`${allEvents.length} event(s) will be cancelled or deleted.`)
     }
