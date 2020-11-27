@@ -83,9 +83,9 @@ export function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMedia
   return !!(form as HostedMediaWithMetadataForm).get('title');
 }
 
-export function createOrgFileStructure(orgId: string, orgName: string): Directory {
+export function createOrgFileStructure(orgId: string): Directory {
   return {
-    name: orgName,
+    name: 'Company Files',
     type: 'directory',
     path: [0],
     directories: [

@@ -65,7 +65,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // create org's folders & files
-    const orgFileStructure = createOrgFileStructure(this.org.id, this.org.denomination.full)
+    const orgFileStructure = createOrgFileStructure(this.org.id)
     this.directories.push(orgFileStructure);
 
     // set the org folder as active
