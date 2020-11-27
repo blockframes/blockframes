@@ -64,7 +64,7 @@ export async function onMovieDelete(
   // Delete permissions
   const orgsPromises = movie.orgIds.map(o => db.collection('orgs').where('id', '==', o).get());
   const _orgs = await Promise.all(orgsPromises);
-  let orgIds :string[]= [];
+  const orgIds :string[]= [];
   _orgs.forEach(snap => { snap.docs.forEach(d => orgIds.push(d.id))});
   const permissionsPromises = orgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`).get());
   const permissions = await Promise.all(permissionsPromises);
