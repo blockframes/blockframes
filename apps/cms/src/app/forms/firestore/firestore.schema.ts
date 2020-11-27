@@ -22,7 +22,7 @@ const conditions: Conditions[] = ['==', '!=', 'array-contains', '<', '<=', '>', 
 export interface WhereQuery extends CollectionQuery {
   field: string;
   condition: Conditions;
-  value: string;
+  value: string | boolean | number;
 }
 
 export const isWhereQuery = (query: CollectionQuery): query is WhereQuery => query.method === 'where';

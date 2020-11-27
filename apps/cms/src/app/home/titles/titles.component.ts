@@ -1,4 +1,4 @@
-import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -47,20 +47,23 @@ export const titlesSchema: TitlesSchema = {
 export class TitlesComponent {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<TitlesSchema>;
-  params$ = this.route.paramMap;
-  displayLabel = (title?: Movie) => title?.title.international;
-  getValue = (title?: Movie) => title?.id;
-
-  titles$ = this.params$.pipe(
-    map(params => getTitlesQueryFn(params.get('app'))),
+  
+  
+  app$ = this.route.paramMap.pipe(map( p => p.get('app')));
+  titles$ = this.app$.pipe(
+    map(app => getTitlesQueryFn(app)),
     switchMap(queryFn => this.service.valueChanges(queryFn)),
     map(toMap),
     shareReplay(1)
   );
 
+  displayLabel = (title?: Movie) => title?.title.international;
+  getValue = (title?: Movie) => title?.id;
+
   constructor(
     private route: ActivatedRoute,
     private service: MovieService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   get queryMode() {
