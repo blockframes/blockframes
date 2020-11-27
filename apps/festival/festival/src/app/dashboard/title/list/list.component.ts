@@ -50,7 +50,6 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(org => this.service.valueChanges(org.movieIds)),
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
-      filter(movies => !!movies.length),
       tap(movies => {
         movies.length ?
           this.dynTitle.setPageTitle('My titles') :
