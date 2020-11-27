@@ -139,7 +139,6 @@ export class MovieComponent implements OnInit {
    * @param movie 
    */
   private async simulateDeletion(movie: Movie) {
-    const chunk = 10; // max 10 items in "in" queries
     const output: string[] = [];
     output.push('1 movie will be removed.');
 
