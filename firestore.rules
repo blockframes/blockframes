@@ -377,7 +377,9 @@ service cloud.firestore {
         && notInMaintenance();
       allow update: if userHasValidOrg()
         && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerId == userId() || existingData().ownerId == userOrgId() )
+        && ( existingData().ownerId == userId() 
+          || existingData().ownerId == userOrgId() 
+          || ( (isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting') || isRemovingField(['meta', 'attendees', userId()])) && isOnlyChangingAttendeeStatus() ) )
         && notInMaintenance();
       allow delete: if userHasValidOrg()
         && ( existingData().ownerId == userId() // Current user is event owner
@@ -385,6 +387,22 @@ service cloud.firestore {
         )
         && notInMaintenance();
 		}
+
+    /// FUNCTIONS ///
+    function isOnlyChangingAttendeeStatus() {
+      return isNotUpdatingId('id', existingData().id)
+        && isNotUpdatingField(['allDay'])
+        && isNotUpdatingField(['end'])
+        && isNotUpdatingField(['isPrivate'])
+        && isNotUpdatingField(['ownerId'])
+        && isNotUpdatingField(['start'])
+        // && isNotUpdatingField(['title'])
+        // && isNotUpdatingField(['type'])
+        // && isNotUpdatingField(['meta', 'organizerId'])
+        // && isNotUpdatingField(['meta', 'titleId'])
+        // && isNotUpdatingField(['meta', 'controls'])
+        // && isNotUpdatingField(['meta', 'files']);
+    }
 
     ////////////////////////////////
     // CAMPAIGN RULES             //
@@ -557,6 +575,13 @@ service cloud.firestore {
       return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
         || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
         || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
+    }
+
+    // The field is removed
+    function isRemovingField(fieldArray) {
+      return ( existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) )
+        || ( existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) )
+        || ( existingData().keys().hasAll([fieldArray[0]]) && !incomingData().keys().hasAll([fieldArray[0]]) );
     }
 
     function notInMaintenance() {

@@ -14,6 +14,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
 import { MeetingMediaListModule } from '@blockframes/event/components/meeting/media-list/media-list.module';
 import { MeetingVideoRoomModule } from '@blockframes/event/components/meeting/room/video-room.module';
+import { DoorbellBottomSheetModule } from '@blockframes/event/components/doorbell/doorbell.module';
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +39,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     MediaControlModule,
     MediaViewerModule,
     MeetingVideoRoomModule,
+    DoorbellBottomSheetModule,
 
     // Materials
     MatButtonModule,

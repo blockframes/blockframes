@@ -49,18 +49,30 @@
           </span>
         </ng-container>
       </div>
-      <ng-container *ngIf="event.isOwner else notOwner">
-        <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
+
+      <ng-container [ngSwitch]="attendeeStatus">
+        <ng-container *ngSwitchCase="'owner' || 'accepted'">
+          <a mat-flat-button routerLink="../session" color="accent" class="request">Access {{ event.type | titlecase }} Room</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'requesting'">
+          <a mat-flat-button disabled color="accent" class="request">Waiting for request to be accepted...</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'denied'">
+          <div fxLayout="column" fxLayoutAlign="end center" class="request">
+            Your request to join has been denied.
+            <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join again</a>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <ng-container *ngIf="ownerIsPresent else ownerNotPresent">
+            <a mat-flat-button (click)="requestAccess()" color="accent" class="request">Ask to join {{ event.type | titlecase }} Room</a>
+          </ng-container>
+          <ng-template #ownerNotPresent>
+            <a mat-flat-button disabled color="accent" class="request">Waiting for owner...</a>
+          </ng-template>
+        </ng-container>
       </ng-container>
 
-      <ng-template #notOwner>
-        <ng-container *ngIf="event.meta?.ownerIsPresent else ownerNotPresent">
-          <a mat-flat-button routerLink="../session" color="accent">Ask to join {{ event.type | titlecase }} Room</a>
-        </ng-container>
-        <ng-template #ownerNotPresent>
-          <a mat-flat-button disabled color="accent">Waiting for organizer to start the meeting...</a>
-        </ng-template>
-      </ng-template>
     </aside>
 
   </section>
