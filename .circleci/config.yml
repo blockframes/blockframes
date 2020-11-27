@@ -302,7 +302,24 @@ jobs:
     steps:
       - prepare_gcloud
       - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
+  backup-prod-db:
+    executor: blockframes-ci
+    environment:
+        SERVICE_ACCOUNT: FIREBASE_PRODUCTION_SERVICE_ACCOUNT
+    steps:
+      - prepare_gcloud
+      - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
 workflows:
+  nightly-backup:
+    triggers:
+      - schedule:
+          cron: '0 0 * * *'
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
+      - backup-prod-db
   fetch-test-data-weekly:
     triggers:
       - schedule:

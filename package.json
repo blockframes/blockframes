@@ -2,7 +2,6 @@
   "name": "blockframes",
   "version": "0.0.2",
   "license": "MIT",
-  "main": "./main.js",
   "engines": {
     "node": "10"
   },
