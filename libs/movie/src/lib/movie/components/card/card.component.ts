@@ -2,9 +2,8 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '../../+state/movie.model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
-import { AlgoliaMovie } from '@blockframes/utils/algolia';
 
-function parseMovie(movie: Movie | AlgoliaMovie): Movie {
+function parseMovie(movie: Movie): Movie {
   if (movie['objectID']) {
     return {
       ...movie,
@@ -29,7 +28,7 @@ export class CardComponent {
   @Input() size: 'banner' | 'poster' | 'avatar';
   private _movie: Movie;
   get movie() { return this._movie }
-  @Input() set movie(value: Movie | AlgoliaMovie) {
+  @Input() set movie(value: Movie) {
     this._movie = parseMovie(value)
   }
   @Input() link: string | string[] = "..";
