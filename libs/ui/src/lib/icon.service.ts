@@ -154,14 +154,6 @@ export const icons = [
     name: 'logo_media_financiers_fill',
     url: 'assets/icons/logo_media_financiers_fill.svg'
   },
-  {
-    name: 'logo_storiesand_more',
-    url: 'assets/icons/logo_storiesand_more.svg'
-  },
-  {
-    name: 'logo_storiesand_more_fill',
-    url: 'assets/icons/logo_storiesand_more_fill.svg'
-  },
   { name: 'logout', url: 'assets/icons/log_out.svg' },
   {
     name: 'magnifying_glasses',

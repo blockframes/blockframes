@@ -4,8 +4,6 @@ import { FireAuthState, initialAuthState, RoleState } from 'akita-ng-fire';
 import { User } from '@blockframes/user/+state/user.firestore';
 
 export { User } from '@blockframes/user/+state/user.firestore';
-export const PLACEHOLDER_AVATAR = '/assets/logo/profile_avatar.svg';
-
 
 export interface Roles {
   blockframesAdmin: boolean;
