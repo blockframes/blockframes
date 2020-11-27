@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { LobbyComponent } from './lobby.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MeetingVideoModule } from '@blockframes/event/components/meeting/video/video.module';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { MeetingVideoModule } from '@blockframes/event/components/meeting/video/
     MeetingVideoModule,
 
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
