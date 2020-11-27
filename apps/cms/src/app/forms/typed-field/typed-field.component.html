@@ -1,0 +1,19 @@
+<form-select [form]="form.get('type')"></form-select>
+
+<mat-form-field>
+  <mat-label>Value</mat-label>
+  <ng-container [ngSwitch]="form.get('type').value">
+    <ng-container *ngSwitchCase="'string'">
+      <input matInput type="text" [formControl]="form.get('value')" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'number'">
+      <input matInput type="number" [formControl]="form.get('value')" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'boolean'">
+      <mat-select [formControl]="form.get('value')" >
+        <mat-option [value]="true">True</mat-option>
+        <mat-option [value]="false">False</mat-option>
+      </mat-select>
+    </ng-container>
+  </ng-container>
+</mat-form-field>

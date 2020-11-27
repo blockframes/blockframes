@@ -31,7 +31,7 @@ export class LandingComponent {
   public sellerFeatures = [
     {
       title: 'Tag along with professional content financiers',
-      imgAsset: 'tag-along.svg',
+      imgAsset: 'tag_along.svg',
       description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. '
     },
     {
@@ -50,7 +50,7 @@ export class LandingComponent {
     },
     {
       title: 'Enjoy exclusive privileges',
-      imgAsset: 'exclusive-priviledges.svg',
+      imgAsset: 'exclusive_priviledges.svg',
       description: 'Get perks and live the full experience of the content industry.'
     }
   ];

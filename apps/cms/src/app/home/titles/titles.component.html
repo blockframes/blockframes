@@ -1,17 +1,26 @@
-<ng-container *ngIf="(params$ | async | getParams:'app') as app">
-  <article>
-    <form-text [form]="form.get('title')"></form-text>
-    <form-select [form]="form.get('mode')"></form-select>
-  </article>
-  <article>
+<article>
+  <form-text [form]="form.get('title')"></form-text>
+  <form-select [form]="form.get('mode')"></form-select>
+</article>
+<article>
+  <mat-radio-group [value]="queryMode" (change)="select($event)">
+    <mat-radio-button value="titleIds">IDs</mat-radio-button>
+    <mat-radio-button value="query">Firestore Query</mat-radio-button>
+  </mat-radio-group>
+</article>
+
+<!-- get titles before avoid loading time -->
+<article [ngSwitch]="queryMode">
+  <ng-container *ngSwitchCase="'titleIds'">
     <form-chips-autocomplete
       [form]="form.get('titleIds')"
-      [options]="app | getTitles | async"
+      [options]="titles$ | async"
       [getValue]="getValue"
       [displayLabel]="displayLabel">
     </form-chips-autocomplete>
-  </article>
-  <article>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'query'">
     <form-firestore [form]="form.get('query')"></form-firestore>
-  </article>
-</ng-container>
+  </ng-container>
+</article>
