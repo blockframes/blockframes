@@ -12,8 +12,8 @@ interface MaintenanceOptions {
   db?: FirebaseFirestore.Firestore
 }
 
-const maintenanceRef = ({ db, checkMissingVars = true }: MaintenanceOptions) => {
-  if (!db) db = loadAdminServices(checkMissingVars).db;
+const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
+  if (!db) db = loadAdminServices().db;
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
 };
 
@@ -22,7 +22,7 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
     console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');
     return;
   }
-  return maintenanceRef({ db }).set(
+  return maintenanceRef(db).set(
     { startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null },
     { merge: true }
   );
@@ -30,7 +30,7 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
 
 export function endMaintenance(db?: FirebaseFirestore.Firestore) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
-  return maintenanceRef({ db }).set(
+  return maintenanceRef(db).set(
     {
       endedAt: admin.firestore.FieldValue.serverTimestamp(),
       startedAt: null,
@@ -39,13 +39,9 @@ export function endMaintenance(db?: FirebaseFirestore.Firestore) {
   );
 }
 
-/**
- * 
- * @param db 
- */
-async function isInMaintenance(): Promise<boolean> {
+export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise<boolean> {
   try {
-    const ref = maintenanceRef({ checkMissingVars: false });
+    const ref = maintenanceRef(db);
     const doc = await ref.get();
 
     // if document doesn't exist, it means that there is something not normal,
@@ -61,7 +57,3 @@ async function isInMaintenance(): Promise<boolean> {
 
 }
 
-export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
-  // return a new function that is the old function + a check that early exits when we are restoring.
-  return async (...args: Parameters<T>) => (await isInMaintenance()) ? Promise.resolve() : f(...args);
-};
