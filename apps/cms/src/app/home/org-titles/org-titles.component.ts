@@ -61,6 +61,11 @@ export class OrgsComponent {
     private route: ActivatedRoute,
   ) {}
 
+  get queryMode() {
+    return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
+  }
+
+
   reset(orgId: string) {
     if (typeof orgId === 'string') {
       this.form.get('titleIds').clear();
@@ -72,10 +77,6 @@ export class OrgsComponent {
         limit(4)
       ]);
     }
-  }
-
-  get queryMode() {
-    return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
   }
 
   select(event: MatRadioChange) {

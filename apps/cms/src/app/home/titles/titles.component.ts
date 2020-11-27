@@ -19,7 +19,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 interface TitlesSection extends Section {
   _type: 'titles',
   title: string;
-  mode: string; // 'poster' | 'banner' | 'slider';
+  mode: 'poster' | 'banner' | 'slider';
   titleIds: string[];
   query: FirestoreQuery;
 }
