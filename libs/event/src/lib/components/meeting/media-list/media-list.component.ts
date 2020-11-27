@@ -25,12 +25,14 @@ export class MeetingMediaListComponent {
   }
 
   select(file: string) {
-    this.event.meta.selectedFile = file;
-    this.eventService.update(this.event);
+    const meta = { ...this.event.meta };
+    meta.selectedFile = file;
+    this.eventService.update(this.event.id, { meta });
   }
 
   stop() {
-    this.event.meta.selectedFile = '';
-    this.eventService.update(this.event);
+    const meta = { ...this.event.meta };
+    meta.selectedFile = '';
+    this.eventService.update(this.event.id, { meta });
   }
 }
