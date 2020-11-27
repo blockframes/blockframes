@@ -82,9 +82,9 @@ export interface AdminServices {
 
 let ci: admin.app.App;
 
-export function loadAdminServices(checkMissingVars = true): AdminServices {
+export function loadAdminServices(): AdminServices {
   config();
-  if (checkMissingVars) { warnMissingVars() }
+  warnMissingVars();
 
   if (!admin.apps.length) {
     admin.initializeApp({

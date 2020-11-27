@@ -1,4 +1,4 @@
-import { functions } from './internals/firebase';
+import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
 import * as invitations from './invitation';
 import {
@@ -18,9 +18,8 @@ import { getPrivateVideoUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
-import { skipInMaintenance } from 'libs/firebase-utils/src/lib/maintenance';
 import { getTwilioAccessToken } from './twilio';
-import { heavyConfig } from 'libs/firebase-utils/src/lib/firebase-utils';
+import { heavyConfig } from '@blockframes/firebase-utils';
 
 
 //--------------------------------
