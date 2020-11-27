@@ -55,7 +55,12 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
     return true;
   }
 
-  canDeactivate(component: any, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState: RouterStateSnapshot): (boolean |Observable<boolean>) {
+  canDeactivate(
+    component: any,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState: RouterStateSnapshot
+  ): (boolean |Observable<boolean>) {
 
     // we don't show the confirm dialog if the user don't quit the event
     // i.e. if the user navigate  lobby <-> session
