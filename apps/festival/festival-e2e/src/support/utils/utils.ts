@@ -1,4 +1,4 @@
-import { LandingPage } from '../../support/pages/landing';
+﻿import { LandingPage } from '../../support/pages/landing';
 import { acceptCookie, signIn, selectAction, clickOnMenu } from '@blockframes/e2e/utils/functions';
 import { TO, User } from '@blockframes/e2e/utils';
 
@@ -24,10 +24,9 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   cy.log('->Click: Add New Title');
   cy.get('a[mattooltip="Add a new title"]', {timeout: TO.FIFTEEN_SEC})
     .click();
-  cy.wait(TO.THREE_SEC);
 
   cy.log('->Reach New Title Interstitial & start');
-  cy.wait(TO.ONE_SEC);
   cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
     .click();
+  cy.wait(TO.THREE_SEC);
 }

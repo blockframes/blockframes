@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 import { clearDataAndPrepareTest, setForm } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
@@ -226,7 +226,6 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Summary - Verification
   it('Fill all fields & navigate to Summary Page', () => {
-    cy.wait(TO.FIFTEEN_SEC);
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
       movieURL = url;
