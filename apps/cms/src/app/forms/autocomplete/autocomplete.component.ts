@@ -14,7 +14,7 @@ import { startWith, map } from 'rxjs/operators';
 export class FormAutocompleteComponent<T, O> implements OnInit {
   private options$ = new BehaviorSubject<Record<string, O>>(null);
   @Output() change = new EventEmitter<string>();
-  @Input() form?: FormField<string>;
+  @Input() form?: FormField<MatSelectSchema<string>>;
   @Input() displayLabel: (option: O) => string;
   @Input() getValue: (option: O) => string;
   @Input() 
@@ -31,7 +31,7 @@ export class FormAutocompleteComponent<T, O> implements OnInit {
   constructor() { }
 
   get schema() {
-    return this.form.schema as MatSelectSchema<T>;
+    return this.form.schema;
   }
 
   ngOnInit() {
@@ -53,7 +53,8 @@ export class FormAutocompleteComponent<T, O> implements OnInit {
   }
 
   onChange() {
-    this.change.emit(this.form.value);
+    const value = this.form.value;
+    this.change.emit(value in this.options ? value : null);
   }
 
   displayWith(value: string) {

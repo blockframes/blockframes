@@ -5,17 +5,18 @@ import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { matSelect } from '../select';
 
-const typeOptions = ['string', 'number', 'boolean'];
+type TypeOptions = 'string' | 'number' | 'boolean';
+const typeOptions: TypeOptions[] = ['string', 'number', 'boolean'];
 
 interface TypedField {
-  type: 'string' | 'number' | 'boolean';
+  type: TypeOptions;
   value: string | number | boolean;
 }
 
 const schema: FormGroupSchema<TypedField> = {
   form: 'group',
   controls: {
-    type: matSelect({ label: 'Type', options: typeOptions }),
+    type: matSelect<TypeOptions>({ label: 'Type', options: typeOptions }),
     value: { form: 'control' },
   }
 }
