@@ -122,7 +122,7 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
     path: [index],
     directories: [
       {
-        name: 'Main information',
+        name: 'Poster & Banner',
         type: 'directory',
         path: [index, 0],
         directories: [
