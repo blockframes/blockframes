@@ -1,4 +1,4 @@
-import { NgModule, ChangeDetectionStrategy, Component, Input, ChangeDetectorRef } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';

@@ -45,6 +45,6 @@ export function orgsFromApp(app: App): WhereQuery[] {
   }];
 }
 
-export function limit(limit: number): LimitQuery {
-  return { method: 'limit', limit };
+export function limit(amount: number): LimitQuery {
+  return { method: 'limit', limit: amount };
 }
