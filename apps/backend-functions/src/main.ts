@@ -19,7 +19,7 @@ import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailW
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken } from './twilio';
-import { heavyConfig } from 'libs/firebase-utils/src/lib/firebase-utils';
+import { heavyConfig } from '@blockframes/firebase-utils';
 
 
 //--------------------------------
