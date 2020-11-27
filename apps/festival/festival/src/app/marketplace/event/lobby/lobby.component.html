@@ -60,12 +60,12 @@
         <ng-container *ngSwitchCase="'denied'">
           <div fxLayout="column" fxLayoutAlign="end center" class="request">
             Your request to join has been denied.
-            <a mat-flat-button (click)="requestAccess(event)" color="accent">Ask to join again</a>
+            <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join again</a>
           </div>
         </ng-container>
         <ng-container *ngSwitchDefault>
           <ng-container *ngIf="ownerIsPresent else ownerNotPresent">
-            <a mat-flat-button (click)="requestAccess(event)" color="accent" class="request">Ask to join {{ event.type | titlecase }} Room</a>
+            <a mat-flat-button (click)="requestAccess()" color="accent" class="request">Ask to join {{ event.type | titlecase }} Room</a>
           </ng-container>
           <ng-template #ownerNotPresent>
             <a mat-flat-button disabled color="accent" class="request">Waiting for owner...</a>

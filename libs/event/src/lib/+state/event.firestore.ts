@@ -12,8 +12,8 @@ export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied';
 export interface Meeting {
   organizerId: string;
   description: string;
-  files: string[];
   attendees: Record<string, AttendeeStatus>;
+  files: string[];
   selectedFile: string;
   controls: Record<string, MeetingMediaControl>
 }

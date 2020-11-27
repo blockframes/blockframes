@@ -53,20 +53,18 @@ export class SessionComponent implements OnInit, OnDestroy {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
-      } else if (event.type === 'meeting') {
-        if (event.isOwner) {
-          const uid = this.authQuery.userId;
-          const attendees = (event.meta as Meeting).attendees;
-          if (attendees[uid] !== 'owner') {
-            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
-            this.service.update(event.id, { meta });
-          }
+      } else if (event.type === 'meeting' && event.isOwner) {
+        const uid = this.authQuery.userId;
+        const attendees = (event.meta as Meeting).attendees;
+        if (attendees[uid] !== 'owner') {
+          const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
+          this.service.update(event.id, { meta });
+        }
 
-          const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
-          const requests = await this.userService.getValue(requestUids);
-          if (!!requests.length) {
-            this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
-          }
+        const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
+        const requests = await this.userService.getValue(requestUids);
+        if (!!requests.length) {
+          this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
         }
       }
     })
@@ -79,12 +77,13 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   @HostListener('window:beforeunload')
   attendeeLeaves() {
-    if (this.event.isOwner && this.event.type === 'meeting') {
-      const meta: Meeting = { ...this.event.meta, attendees: {} };
-      this.service.update(this.event.id, { meta });
-    } else if (this.event.type === 'meeting') {
-      const meta = { ...this.event.meta, attendees: {...this.event.meta.attendees} };
-      if (!!meta.attendees[this.authQuery.userId]) delete meta.attendees[this.authQuery.userId];
+    if (this.event.type === 'meeting') {
+      const meta: Meeting = { ...this.event.meta, attendees: {...this.event.meta.attendees} };
+      if (this.event.isOwner) {
+        meta.attendees = {};
+      } else if (!!meta.attendees[this.authQuery.userId]) {
+        delete meta.attendees[this.authQuery.userId];
+      }
       this.service.update(this.event.id, { meta });
     }
   }

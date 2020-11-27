@@ -48,10 +48,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.sub = this.event$.subscribe(event => {
       if (event.type === 'meeting') {
         const attendees = (event.meta as Meeting).attendees;
-        const values = Object.keys(attendees).map(key => attendees[key]);
-        const uid = this.authQuery.userId;
-        this.ownerIsPresent = values.some(value => value === 'owner');
-        this.attendeeStatus = event.isOwner ? 'owner' : attendees[uid];
+        this.ownerIsPresent = Object.values(attendees).some(value => value === 'owner');
+        this.attendeeStatus = event.isOwner ? 'owner' : attendees[this.authQuery.userId];
         if (this.attendeeStatus === 'accepted') {
           this.router.navigate(['../', 'session'], { relativeTo: this.route });
         }
@@ -68,8 +66,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.twilioService.toggleTrack(kind);
   }
 
-  requestAccess(event: Event) {
+  requestAccess() {
     const uid = this.authQuery.userId;
+    const event = this.eventQuery.getActive();
     const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'requesting' }};
     this.eventService.update(event.id, { meta });
   }
