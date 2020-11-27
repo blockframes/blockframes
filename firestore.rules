@@ -507,9 +507,25 @@ service cloud.firestore {
 
     // We check that the field is not sent or if field sent is equal to actual
     function isNotUpdatingField(fieldArray) {
+      let size = fieldArray.size();
+			return ( size == 3 &&  isNotUpdatingFieldDepth3(fieldArray))
+        || ( size == 2 &&  isNotUpdatingFieldDepth2(fieldArray))
+        || ( size == 1 &&  isNotUpdatingFieldDepth1(fieldArray));
+    }
+
+    function isNotUpdatingFieldDepth3(fieldArray) {
 			return ( !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) ||  incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == existingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] )
         || ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
         || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+    }
+
+    function isNotUpdatingFieldDepth2(fieldArray) {
+			return ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
+        || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+    }
+
+    function isNotUpdatingFieldDepth1(fieldArray) {
+			return ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
     }
 
     // Checks that the user is not trying to change document id
