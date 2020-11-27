@@ -1,4 +1,4 @@
-import { NgModule, ChangeDetectionStrategy, Component, Input, ChangeDetectorRef } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -8,11 +8,11 @@ import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Section } from '../../template/template.model';
+import { Section, TemplateParams } from '../../template/template.model';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select';
-import { FirestoreFormModule, firestoreQuery, FirestoreQuery } from '../../forms/firestore';
+import { FirestoreFormModule, firestoreQuery, FirestoreQuery, titlesFromApp } from '../../forms/firestore';
 import { getTitlesQueryFn, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ interface TitlesSection extends Section {
 
 type TitlesSchema = FormGroupSchema<TitlesSection>;
 
-export const titlesSchema: TitlesSchema = {
+export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   form: 'group',
   load: async () => import('./titles.component').then(m => m.TitlesComponent),
   controls: {
@@ -36,7 +36,12 @@ export const titlesSchema: TitlesSchema = {
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
     query: firestoreQuery({ collection: 'movies' }),
   },
-}
+  value: (value: TitlesSection) => ({
+    _type: 'titles',
+    query: titlesFromApp(params.app),
+    ...value
+  })
+})
 
 @Component({
   selector: 'form-titles',
@@ -63,7 +68,6 @@ export class TitlesComponent {
   constructor(
     private route: ActivatedRoute,
     private service: MovieService,
-    private cdr: ChangeDetectorRef
   ) {}
 
   get queryMode() {

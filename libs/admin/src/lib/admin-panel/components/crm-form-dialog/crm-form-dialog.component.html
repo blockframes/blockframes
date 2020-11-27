@@ -3,6 +3,13 @@
   <span class="mat-body-2 text-warn">{{ data.warning }}</span>
   <span>If yes, please write '{{  data.confirmationWord | uppercase }}' inside the form below.</span>
 
+  <ng-container *ngIf="data.simulation?.length">
+    <strong>Simulation : </strong>
+    <ul>
+      <li *ngFor="let item of data.simulation">{{ item }}</li>
+    </ul>
+  </ng-container>
+
   <mat-form-field appearance="outline">
     <mat-label>Confirm action</mat-label>
     <input matInput type="text" [formControl]="actionConfirm">

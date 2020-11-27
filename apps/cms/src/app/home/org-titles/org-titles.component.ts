@@ -11,8 +11,9 @@ import { FormAutocompleteModule } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { TextFormModule, matText } from '../../forms/text';
 import { matMultiSelect, matSelect } from '../../forms/select';
-import { FirestoreFormModule, FirestoreQuery, firestoreQuery } from '../../forms/firestore';
+import { FirestoreFormModule, FirestoreQuery, firestoreQuery, titlesFromOrg, titlesFromApp, limit } from '../../forms/firestore';
 import { HomePipesModule } from '../pipes';
+import { App } from '@blockframes/utils/apps';
 
 interface OrgTitle extends Section {
   title: string;
@@ -56,14 +57,26 @@ export class OrgsComponent {
   displayTitleLabel = (title?: Movie) => title?.title.international;
   getTitleValue = (title?: Movie) => title?.id;
 
-  constructor(private route: ActivatedRoute) {}
-
-  reset() {
-    this.form.get('titleIds').clear();
-  }
+  constructor(
+    private route: ActivatedRoute,
+  ) {}
 
   get queryMode() {
     return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
+  }
+
+
+  reset(orgId: string) {
+    if (typeof orgId === 'string') {
+      this.form.get('titleIds').clear();
+      this.form.get('query').clear();
+      const app = this.route.snapshot.paramMap.get('app') as App;
+      this.form.get('query').add([
+        ...titlesFromApp(app),
+        ...titlesFromOrg(orgId),
+        limit(4)
+      ]);
+    }
   }
 
   select(event: MatRadioChange) {

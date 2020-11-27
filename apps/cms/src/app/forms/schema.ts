@@ -7,7 +7,6 @@ export interface MatFormFieldSchema<T> {
   placeholder?: string;
   errors?: Record<string, string>
   hint?: string;
-  value?: T
   /** Possible appearance styles for the form field. */
   appearance?: MatFormFieldAppearance;
   /** Whether the label for form-fields should by default float always, never, or auto (only when necessary). */

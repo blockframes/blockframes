@@ -9,18 +9,22 @@ import { Organization, OrganizationService, orgName } from '@blockframes/organiz
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { matMultiSelect } from '../../forms/select';
-import { Section } from '../../template/template.model';
+import { Section, TemplateParams } from '../../template/template.model';
 import { getOrgsQueryFn, toMap } from '../pipes';
-import { FirestoreFormModule, FirestoreQuery, firestoreQuery } from '../../forms/firestore';
+import { FirestoreFormModule, FirestoreQuery, firestoreQuery, orgsFromApp } from '../../forms/firestore';
 import { map,shareReplay,switchMap } from 'rxjs/operators';
 
 interface OrgsSection extends Section {
+  _type: 'orgs',
   title: string;
   orgIds: string[];
   query: FirestoreQuery;
 }
 
-export const orgsSchema: FormGroupSchema<OrgsSection> = {
+type OrgsSchema = FormGroupSchema<OrgsSection>;
+
+
+export const orgsSchema = (params: TemplateParams): OrgsSchema => ({
   form: 'group',
   load: async () => import('./orgs.component').then(m => m.OrgsComponent),
   controls: {
@@ -29,7 +33,12 @@ export const orgsSchema: FormGroupSchema<OrgsSection> = {
     orgIds: matMultiSelect<string>({ label: 'Org IDs' }),
     query: firestoreQuery({ collection: 'orgs' }),
   },
-}
+  value: (value: OrgsSection) => ({
+    _type: 'orgs',
+    query: orgsFromApp(params.app),
+    ...value
+  })
+});
 
 @Component({
   selector: 'form-orgs',
@@ -40,7 +49,7 @@ export const orgsSchema: FormGroupSchema<OrgsSection> = {
 export class OrgsComponent {
   private mode?: 'query' | 'orgIds';
   params$ = this.route.paramMap;
-  @Input() form?: FormEntity<typeof orgsSchema>;
+  @Input() form?: FormEntity<OrgsSchema>;
   
   orgs$ = this.params$.pipe(
     map(params => getOrgsQueryFn(params.get('app'))),
