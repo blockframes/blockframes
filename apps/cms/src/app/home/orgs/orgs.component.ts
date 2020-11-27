@@ -2,14 +2,15 @@ import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
+
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { matMultiSelect } from '../../forms/select';
 import { Section } from '../../template/template.model';
 import { getOrgsQueryFn, toMap } from '../pipes';
-import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FirestoreFormModule, FirestoreQuery, firestoreQuery } from '../../forms/firestore';
 import { map,shareReplay,switchMap } from 'rxjs/operators';
 
@@ -56,7 +57,7 @@ export class OrgsComponent {
   ) {}
 
   get queryMode() {
-    return this.mode || (this.form?.get('query').length ? 'query' : 'orgIds');
+    return this.mode || (this.form?.get('orgIds').length ? 'orgIds' : 'query');
   }
 
   select(event: MatRadioChange) {

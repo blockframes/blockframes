@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
@@ -13,7 +14,6 @@ import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select';
 import { FirestoreFormModule, firestoreQuery, FirestoreQuery } from '../../forms/firestore';
 import { getTitlesQueryFn, toMap } from '../pipes';
-import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 interface TitlesSection extends Section {
@@ -64,7 +64,7 @@ export class TitlesComponent {
   ) {}
 
   get queryMode() {
-    return this.mode || (this.form?.get('query').length ? 'query' : 'titleIds');
+    return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
   }
 
   select(event: MatRadioChange) {

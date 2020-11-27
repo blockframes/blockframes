@@ -3,20 +3,23 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { Organization, orgName } from '@blockframes/organization/+state';
+import { Movie } from '@blockframes/movie/+state';
 import { Section } from '../../template/template.model';
 import { FormAutocompleteModule } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { TextFormModule, matText } from '../../forms/text';
 import { matMultiSelect, matSelect } from '../../forms/select';
-import { Organization, orgName } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/movie/+state';
+import { FirestoreFormModule, FirestoreQuery, firestoreQuery } from '../../forms/firestore';
 import { HomePipesModule } from '../pipes';
 
 interface OrgTitle extends Section {
   title: string;
   description: string;
   orgId: string;
-  movieIds: string[];
+  titleIds: string[];
+  query: FirestoreQuery;
 }
 
 export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
@@ -27,7 +30,8 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
     title: matText({ label: 'title' }),
     description: matText({ label: 'description' }),
     orgId: matSelect({ label: 'Org ID' }),
-    movieIds: matMultiSelect({ label: 'Title IDS' })
+    titleIds: matMultiSelect({ label: 'Title IDS' }),
+    query: firestoreQuery({ collection: 'movies' })
   },
 }
 
@@ -41,6 +45,8 @@ type OrgTitleForm = FormEntity<typeof orgTitleSchema>;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgsComponent {
+  private mode?: 'query' | 'titleIds';
+
   @Input() form: OrgTitleForm;
 
   params$ = this.route.paramMap;
@@ -53,7 +59,20 @@ export class OrgsComponent {
   constructor(private route: ActivatedRoute) {}
 
   reset() {
-    this.form.get('movieIds').clear();
+    this.form.get('titleIds').clear();
+  }
+
+  get queryMode() {
+    return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
+  }
+
+  select(event: MatRadioChange) {
+    this.mode = event.value;
+    for (const key of ['titleIds', 'query'] as const) {
+      event.value === key
+        ? this.form?.get(key).enable()
+        : this.form?.get(key).disable();
+    }
   }
 }
 
@@ -67,6 +86,8 @@ export class OrgsComponent {
     FormChipsAutocompleteModule,
     TextFormModule,
     HomePipesModule,
+    MatRadioModule,
+    FirestoreFormModule
   ]
 })
 export class OrgsModule { }
