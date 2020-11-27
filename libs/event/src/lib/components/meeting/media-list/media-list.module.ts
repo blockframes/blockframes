@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [ MeetingMediaListComponent ],
@@ -34,6 +35,7 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
     MatButtonModule,
     MatCardModule,
     MatListModule,
+    MatIconModule,
   ],
   exports: [ MeetingMediaListComponent ],
 })
