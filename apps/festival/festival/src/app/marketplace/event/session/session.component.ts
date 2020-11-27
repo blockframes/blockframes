@@ -29,7 +29,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.event$ = this.eventQuery.selectActive();
+    this.event$ = this.service.queryDocs(this.eventQuery.getActiveId());
     this.sub = this.event$.subscribe(async event => {
       this.event = event;
       if (event.isOwner) {
