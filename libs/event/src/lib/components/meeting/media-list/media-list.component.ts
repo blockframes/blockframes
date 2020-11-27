@@ -28,4 +28,9 @@ export class MeetingMediaListComponent {
     this.event.meta.selectedFile = file;
     this.eventService.update(this.event);
   }
+
+  stop() {
+    this.event.meta.selectedFile = '';
+    this.eventService.update(this.event);
+  }
 }

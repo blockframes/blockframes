@@ -1,9 +1,26 @@
-<form-text [form]="form.get('title')"></form-text>
-<mat-form-field>
-  <mat-label>Mode</mat-label>
-  <mat-select [formControl]="form.get('mode')">
-    <mat-option value="banner">Banner</mat-option>
-    <mat-option value="poster">Poster</mat-option>
-    <mat-option value="slider">slider</mat-option>
-  </mat-select>
-</mat-form-field>
+<article>
+  <form-text [form]="form.get('title')"></form-text>
+  <form-select [form]="form.get('mode')"></form-select>
+</article>
+<article>
+  <mat-radio-group [value]="queryMode" (change)="select($event)">
+    <mat-radio-button value="titleIds">IDs</mat-radio-button>
+    <mat-radio-button value="query">Firestore Query</mat-radio-button>
+  </mat-radio-group>
+</article>
+
+<!-- get titles before avoid loading time -->
+<article [ngSwitch]="queryMode">
+  <ng-container *ngSwitchCase="'titleIds'">
+    <form-chips-autocomplete
+      [form]="form.get('titleIds')"
+      [options]="titles$ | async"
+      [getValue]="getValue"
+      [displayLabel]="displayLabel">
+    </form-chips-autocomplete>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'query'">
+    <form-firestore [form]="form.get('query')"></form-firestore>
+  </ng-container>
+</article>

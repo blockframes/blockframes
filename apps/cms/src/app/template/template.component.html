@@ -22,6 +22,10 @@
           <div class="form">
             <form-outlet [form]="control" [schema]="control.schema"></form-outlet>
           </div>
+          <mat-divider></mat-divider>
+          <footer>
+            <button mat-button color="warn" (click)="remove(i)">Delete</button>
+          </footer>
         </mat-expansion-panel>
       </ng-container>
     </mat-accordion>

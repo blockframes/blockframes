@@ -28,7 +28,7 @@
     <mat-nav-list *ngIf="org$ | async as org">
       <mat-divider></mat-divider>
       <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
-        <img matListAvatar [ref]="org.logo" asset="empty_organization_sidenav.webp" alt="Organization logo">
+        <img matListAvatar [ref]="org.logo" asset="empty_organization.webp" alt="Organization logo">
         <span mat-line>{{ org | orgName }}
           <small mat-line class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</small>
         </span>

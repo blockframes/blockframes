@@ -83,9 +83,9 @@ export function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMedia
   return !!(form as HostedMediaWithMetadataForm).get('title');
 }
 
-export function createOrgFileStructure(orgId: string, orgName: string): Directory {
+export function createOrgFileStructure(orgId: string): Directory {
   return {
-    name: orgName,
+    name: 'Company Files',
     type: 'directory',
     path: [0],
     directories: [
@@ -122,7 +122,7 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
     path: [index],
     directories: [
       {
-        name: 'Main information',
+        name: 'Poster & Banner',
         type: 'directory',
         path: [index, 0],
         directories: [
@@ -189,7 +189,7 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             path: [index, 1, 2],
           },
           {
-            name: 'Still Photo',
+            name: 'Images',
             type: 'image',
             multiple: true,
             docNameField: '',

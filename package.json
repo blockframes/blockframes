@@ -2,7 +2,6 @@
   "name": "blockframes",
   "version": "0.0.2",
   "license": "MIT",
-  "main": "./main.js",
   "engines": {
     "node": "10"
   },
@@ -150,12 +149,8 @@
     "@nrwl/express": "10.0.1",
     "@nrwl/jest": "10.0.1",
     "@nrwl/node": "10.0.1",
-    "@nrwl/storybook": "10.0.1",
     "@nrwl/workspace": "10.0.1",
     "@schematics/angular": "~10.0.0",
-    "@storybook/addon-knobs": "5.3.9",
-    "@storybook/angular": "5.3.9",
-    "@storybook/core": "^5.3.14",
     "@types/algoliasearch": "^3.30.16",
     "@types/events": "^3.0.0",
     "@types/express": "^4.17.6",

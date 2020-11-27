@@ -292,5 +292,5 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       })
     })
   });
-
+  
 });

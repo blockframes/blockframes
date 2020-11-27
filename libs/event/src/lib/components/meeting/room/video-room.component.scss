@@ -1,6 +1,10 @@
 :host {
   display: flex;
   flex-direction: column;
+  border: solid 1px var(--foreground-divider);
+  border-radius: 4px;
+  background-color: var(--background-card);
+  overflow: hidden;
 }
 
 section {

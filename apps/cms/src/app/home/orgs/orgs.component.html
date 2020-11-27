@@ -1,1 +1,23 @@
 <form-text [form]="form.get('title')"></form-text>
+<article>
+  <mat-radio-group [value]="queryMode" (change)="select($event)">
+    <mat-radio-button value="orgIds">IDs</mat-radio-button>
+    <mat-radio-button value="query">Firestore Query</mat-radio-button>
+  </mat-radio-group>
+</article>
+
+<article [ngSwitch]="queryMode">
+  <ng-container *ngSwitchCase="'orgIds'">
+    <form-chips-autocomplete
+      [form]="form.get('orgIds')"
+      [options]="orgs$ | async"
+      [getValue]="getValue"
+      [displayLabel]="displayLabel">
+    </form-chips-autocomplete>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'query'">
+    <form-firestore [form]="form.get('query')"></form-firestore>
+  </ng-container>
+</article>
+

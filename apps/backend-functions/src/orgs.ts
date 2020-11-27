@@ -8,7 +8,7 @@ import { difference } from 'lodash';
 import { db, getUser } from './internals/firebase';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
-import { OrganizationDocument, PublicUser, PermissionsDocument, MovieDocument } from './data/types';
+import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, modules, getAppName, getSendgridFrom } from '@blockframes/utils/apps';
@@ -200,10 +200,78 @@ export async function onOrganizationDelete(
 
   const org = orgSnapshot.data() as OrganizationDocument;
 
+  // Reset the orgId field on user document
+  for (const userId of org.userIds) {
+    const userSnapshot = await db.doc(`users/${userId}`).get();
+    const user = userSnapshot.data() as PublicUser;
+    await userSnapshot.ref.update({...user, orgId: null})
+  }
+
+  // Delete persmission document related to the organization
+  const permissionsDoc = db.doc(`permissions/${org.id}`);
+  const permissionsSnap = await permissionsDoc.get();
+  await permissionsSnap.ref.delete();
+
+  // Delete movies belonging to organization
+  const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
+  const moviesSnap = await movieCollectionRef.get();
+  for(const movie of moviesSnap.docs) {
+    await movie.ref.delete();
+  }
+
+  // Delete all events where organization is involved
+  const eventsOwnerIdCollectionRef = db.collection('events').where('ownerId', '==', org.id);
+  const eventsOwnerIdSnap = await eventsOwnerIdCollectionRef.get();
+  for (const event of eventsOwnerIdSnap.docs) {
+    await event.ref.delete();
+  }
+
+  const eventsOrganizerIdCollectionRef = db.collection('events').where('meta.organizerId', '==', org.id);
+  const eventsOrganizerIdSnap = await eventsOrganizerIdCollectionRef.get();
+  for (const event of eventsOrganizerIdSnap.docs) {
+    await event.ref.delete();
+  }
+
+  // Delete all notifications where organization is involved
+  const notifsCollectionRef = db.collection('notifications').where('organization.id', '==', org.id);
+  const notifsSnap = await notifsCollectionRef.get();
+  for (const notif of notifsSnap.docs) {
+    await notif.ref.delete();
+  }
+
+  // Delete all invitations where organization is involved
+  const invitationsFromOrgCollectionRef = db.collection('invitations').where('fromOrg.id', '==', org.id);
+  const invitationsFromOrgSnap = await invitationsFromOrgCollectionRef.get();
+  for (const invit of invitationsFromOrgSnap.docs) {
+    await invit.ref.delete();
+  }
+
+  const invitationsToOrgCollectionRef = db.collection('invitations').where('toOrg.id', '==', org.id);
+  const invitationsToOrgSnap = await invitationsToOrgCollectionRef.get();
+  for (const invit of invitationsToOrgSnap.docs) {
+    await invit.ref.delete();
+  }
+
+  // Update all contracts where the organization belongs to partyIds array
+  const contractsCollectionRef = db.collection('contracts').where('partyIds', 'array-contains', org.id);
+  const contractsSnap = await contractsCollectionRef.get();
+
+  for (const contract of contractsSnap.docs) {
+    const contractData = contract.data();
+    for (const party of contractData.parties) {
+      if (party.party.orgId === org.id) {
+        const index = contractData.parties.indexOf(party);
+        contractData.parties.splice(index, 1);
+        await contract.ref.update({ parties: contractData.parties});
+      }
+    }
+  }
+
+
+  // Clean all media for the organization
   await cleanOrgMedias(org);
 
   const orgAppAccess = findOrgAppAccess(org)
-
   // Update algolia's index
   const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID));
 

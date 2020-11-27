@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
 import { TunnelService } from '@blockframes/ui/tunnel';
-import { IconService } from '@blockframes/ui/icon-service';
+import { IconService } from '@blockframes/ui/icon.service';
 
 @Component({
   selector: 'festival-root',
