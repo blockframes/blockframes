@@ -57,9 +57,8 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
   return {
     organizerId: '',
     description: '',
+    attendees: {},
     files: [],
-    ownerIsPresent: false,
-
     selectedFile: '',
     controls: {},
 
