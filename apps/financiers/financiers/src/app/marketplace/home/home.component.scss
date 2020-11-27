@@ -48,7 +48,7 @@ mat-card {
   height: 350px;
   display: flex;
   flex-direction: column;
-  place-content: center center;
+  place-content: center start;
   align-items: center;
   padding: 24px 16px;
   width: 49%;
@@ -58,7 +58,7 @@ mat-card {
   }
   img {
     width: 150px;
-    margin-bottom: 24px;
+    margin-bottom: 40px;
   }
 }
 

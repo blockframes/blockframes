@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
     {
       title: 'Enjoy exclusive privileges',
       imgAsset: 'exclusive_priviledges.svg',
-      description: 'Get perks and live the full experience <br> of the content industry.'
+      description: 'Get perks and live the full experience  \n of the content industry.'
     }
   ];
 
