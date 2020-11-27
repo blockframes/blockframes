@@ -258,7 +258,6 @@ export async function onOrganizationDelete(
 
   for (const contract of contractsSnap.docs) {
     const contractData = contract.data();
-    console.log(contractData.partyIds);
     for (const party of contractData.parties) {
       if (party.party.orgId === org.id) {
         const index = contractData.parties.indexOf(party);
