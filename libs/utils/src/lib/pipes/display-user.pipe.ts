@@ -13,12 +13,16 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
   name: 'displayUser'
 })
 export class DisplayUserPipe implements PipeTransform {
-  constructor(private orgService: OrganizationService) {}
+  constructor(private orgService: OrganizationService) { }
 
   async transform(users: PublicUser | PublicUser[]) {
     const getUserName = async (user: PublicUser) => {
-      const org = await this.orgService.getValue(user.orgId);
-      return `${displayName(user)} (${orgName(org)})`;
+      if (!!user.orgId) {
+        const org = await this.orgService.getValue(user.orgId);
+        return `${displayName(user)} (${orgName(org)})`;
+      } else {
+        return displayName(user);
+      }
     }
 
     return Array.isArray(users) ? Promise.all(users.map(getUserName)) : getUserName(users);
