@@ -22,6 +22,7 @@
   },
   'permissions/O001/documentPermissions/MI-0d7': {
     canDelete: true,
+    canUpdate: true,
     ownerId: 'O001',
   },
   'permissions/O001/documentPermissions/MI-077': {
