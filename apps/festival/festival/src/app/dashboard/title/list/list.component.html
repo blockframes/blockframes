@@ -16,7 +16,7 @@
     <mat-card>
       <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">
-        <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
+        <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
         <ng-template colRef="view" let-movie="item">{{ movie | getViews | async }}</ng-template>
         <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
