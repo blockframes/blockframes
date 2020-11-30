@@ -57,7 +57,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   private url$ = this.routerQuery.select('state').pipe(map(({ url }) => url))
   public urlBynav$: Observable<[string, TunnelStep[]]>;
-  public currenStep: TunnelStepSnapshot;
+  public currentStep: TunnelStepSnapshot;
   public next: RouteDescription;
   public previous: RouteDescription;
   public ltMd$ = this.breakpointsService.ltMd;
@@ -92,7 +92,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   private getRoute() {
     const url = this.routerQuery.getValue().state.url;
-    this.currenStep = getStepSnapshot(this.steps, url);
+    this.currentStep = getStepSnapshot(this.steps, url);
     this.next = getPage(this.steps, url, 1);
     this.previous = getPage(this.steps, url, -1);
   }
@@ -105,5 +105,3 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 }
-
-

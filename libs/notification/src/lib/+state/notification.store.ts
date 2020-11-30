@@ -9,7 +9,7 @@ import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
-import { displayName } from '@blockframes/utils/pipes/display-name.pipe';
+import { displayName } from '@blockframes/utils/utils';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -70,14 +70,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${organizationName} submitted a contract.`,
-          placeholderUrl: 'Organization_250.webp', // TODO: ISSUE#2262
+          placeholderUrl: 'gears.webp',
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'contractInNegotiation':
         return {
           date: toDate(notification.date),
           message: `A new offer has been created.`,
-          placeholderUrl: 'WelcomeArchipelContent_500.webp', // TODO: ISSUE#2262
+          placeholderUrl: 'welcome_archipel_content.webp',
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieSubmitted':

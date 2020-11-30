@@ -15,6 +15,8 @@ import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EventService } from '@blockframes/event/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'admin-organization',
@@ -77,7 +79,9 @@ export class OrganizationComponent implements OnInit {
     private snackBar: MatSnackBar,
     private permissionService: PermissionsService,
     private invitationService: InvitationService,
+    private eventService: EventService,
     private mediaService: MediaService,
+    private contractService: ContractService,
     private dialog: MatDialog,
     private router: Router
   ) { }
@@ -188,18 +192,63 @@ export class OrganizationComponent implements OnInit {
     }
   }
 
-  public deleteOrg() {
+  public async deleteOrg() {
+    const simulation = await this.simulateDeletion(this.org);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         question: 'You are currently deleting this organization from Archipel, are you sure ?',
         warning: 'You will also delete everything regarding this organization',
+        simulation,
         confirmationWord: 'delete',
-        onConfirm: () => {
-          // this.organizationService.remove(this.orgId);
+        onConfirm: async () => {
+          await this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted !', 'close', { duration: 5000});
           this.router.navigate(['c/o/admin/panel/organizations']);
         }
       }
     })
+  }
+
+  /**
+   * Simulate how many others documents will be deleted if we delete this organization
+   * @param organization The organization that will be deleted
+   */
+  private async simulateDeletion(organization: Organization) {
+    const output: string[] = [];
+
+    // Calculate how many users will be remove from the org
+    const users = this.org.userIds;
+    if (users.length) {
+      output.push(`${users.length} user(s) will be erased from the organization.`);
+    }
+
+    // Calculate how many movie will be removed
+    const movies = await this.movieService.getValue(ref => ref.where('orgIds', 'array-contains', organization.id));
+    if (movies.length) {
+      output.push(`${movies.length} movie(s) will be deleted.`);
+    }
+
+    // Calculate how many events will be removed
+    const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerId', '==', organization.id));
+    const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerId', '==', organization.id));
+    const allEvents = [...ownerEvent, ...organizerEvent]; 
+    if (allEvents.length) {
+      output.push(`${allEvents.length} event(s) will be cancelled or deleted.`)
+    }
+
+    // Calculate how many invitation will be removed
+    const invitFrom = await this.invitationService.getValue(ref => ref.where('fromOrg.id', '==', organization.id));
+    const invitTo = await this.invitationService.getValue(ref => ref.where('toOrg.id', '==', organization.id));
+    const allInvit = [...invitFrom, ...invitTo];
+    if (allInvit.length) {
+      output.push(`${allInvit.length} invitation(s) will be removed.`);
+    }
+
+    // Calculate how many contracts will be updated
+    const contracts = await this.contractService.getValue(ref => ref.where('partyIds', 'array-contains', organization.id))
+    if (contracts.length) {
+      output.push(`${contracts.length} contract(s) will be updated.`)
+    }
+    return output;
   }
 }

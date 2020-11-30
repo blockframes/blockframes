@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
+import { EventGuard } from '@blockframes/event/guard/event.guard';
 import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
@@ -84,12 +85,14 @@ const routes: Routes = [{
           loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
         }, {
           path: 'session',
-          canActivate: [SessionGuard],
-          canDeactivate: [SessionGuard],
+          canActivate: [EventGuard, SessionGuard],
+          canDeactivate: [EventGuard],
           loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
         },
         {
           path: 'lobby',
+          canActivate: [EventGuard],
+          canDeactivate: [EventGuard],
           loadChildren: () => import('./event/lobby/lobby.module').then(m => m.LobbyModule),
         },
         ]

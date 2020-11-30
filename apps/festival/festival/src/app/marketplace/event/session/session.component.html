@@ -1,7 +1,7 @@
 <ng-container *ngIf="(event$ | async) as event; else loading">
   <ng-container [ngSwitch]="event.type">
     <!-- SCREENING TYPE -->
-    <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center">
+    <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center"  class="screening">
       <ng-container *ngIf="event.movie else noMovie">
         <ng-container *ngIf="showSession else showVideo">
           <article class="dark-contrast-theme screen" [bgRef]="event.movie.banner" bgAsset="empty_banner.webp">
@@ -34,27 +34,22 @@
     </section>
 
     <!-- MEETING TYPE -->
-    <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
+    <section *ngSwitchCase="'meeting'" class="meeting">
 
-      <h3 *ngIf="event.isOwner">You are the owner of this meeting</h3>
+      <div class="meeting-container">
 
-      <!-- WORK IN PROGRESS -->
-      <article fxLayout="column" class="meeting">
-        <div fxLayout="row" class="meeting-container">
-          <div [fxFlex]="mediaContainerSize">
-            <media-viewer [event]="event"></media-viewer>
-          </div>
-          <div [fxFlex]="visioContainerSize" class="visio">
-            VIDEO
-          </div>
-        </div>
-        <ng-container *ngIf="event.isOwner">
-          <media-control [event]="event"></media-control>
-          <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
-        </ng-container>
-      </article>
+        <media-viewer [event]="event" [style]="{width: mediaContainerSize}"></media-viewer>
+        <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
 
-      <img asset="meeting.webp" alt="Meeting room">
+      </div>
+      <ng-container *ngIf="event.isOwner">
+        <media-control
+          [event]="event"
+          *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
+        ></media-control>
+        <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
+      </ng-container>
+      <img *ngIf="!event.isOwner" asset="meeting.webp" alt="Meeting room">
 
     </section>
   </ng-container>

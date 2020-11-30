@@ -19,12 +19,13 @@ export class CrmFormDialogComponent {
     public data: {
       question: string,
       warning?: string,
+      simulation?: string[],
       confirmationWord: string,
       onConfirm?: () => void
     },
     public dialogRef: MatDialogRef<CrmFormDialogComponent>,
     private snackbar: MatSnackBar
-  ) {}
+  ) { }
 
   public confirm() {
     if (this.actionConfirm.value === this.data.confirmationWord.toUpperCase() && this.actionConfirm.valid) {
@@ -32,7 +33,7 @@ export class CrmFormDialogComponent {
       this.dialogRef.close(true);
     }
     else {
-      this.snackbar.open(`You didn't entered the excepted value. Action cancelled.`, 'close', { duration: 5000});
+      this.snackbar.open(`You didn't entered the excepted value. Action cancelled.`, 'close', { duration: 5000 });
       this.dialogRef.close(false);
     }
   }

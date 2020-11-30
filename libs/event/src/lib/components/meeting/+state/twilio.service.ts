@@ -1,73 +1,146 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { createLocalAudioTrack, createLocalVideoTrack } from 'twilio-video';
-import { TrackKind, Tracks } from './twilio.model';
+import { ErrorResultResponse } from '@blockframes/utils/utils';
+
+import {
+  createLocalAudioTrack,
+  createLocalVideoTrack,
+  connect,
+  LocalAudioTrack,
+  LocalVideoTrack,
+  RemoteAudioTrack,
+  RemoteParticipant,
+  RemoteTrackPublication,
+  RemoteVideoTrack,
+  Room,
+  RemoteTrack,
+} from 'twilio-video';
+
+import {
+  TrackKind,
+  RemoteTracks,
+  LocalAttendee,
+  RemoteAttendee,
+} from './twilio.model';
+import { TwilioQuery } from './twilio.query';
+import { TwilioStore } from './twilio.store';
 
 
 @Injectable({ providedIn: 'root' })
 export class TwilioService {
 
-  track: Tracks = {
-    video: null,
-    audio: null,
-  }
-
-  private token: string;
+  private room: Room;
   private getAccessToken = this.functions.httpsCallable('getAccessToken');
 
   constructor(
     private functions: AngularFireFunctions,
+    private twilioStore: TwilioStore,
+    private twilioQuery: TwilioQuery,
   ) { }
 
   getToken(eventId: string) {
-    return this.getAccessToken({ eventId }).toPromise();
+    return this.getAccessToken({ eventId }).toPromise<ErrorResultResponse>();
   }
 
-  async load<K extends TrackKind>(kind: K, createTrack: () => Promise<Tracks[K]>): Promise<Tracks[K]> {
-    if (!this.track[kind]) {
-      this.track[kind] = await createTrack().catch(e => null);
-    }
-    return this.track[kind];
+  async initLocal(userName: string) {
+
+    const local: LocalAttendee = {
+      id: 'local',
+      kind: 'local',
+      userName,
+      tracks: {},
+    };
+    this.twilioStore.upsert(local.id, local);
+
+    const [ video, audio ] = await Promise.all([
+      createLocalVideoTrack().catch(e => null),
+      createLocalAudioTrack().catch(e => null)
+    ]) as [ LocalVideoTrack | null, LocalAudioTrack | null ];
+
+    this.twilioStore.update(local.id, { tracks: { video, audio } });
   }
 
-  async getTrack(): Promise<Tracks>
-  async getTrack<K extends TrackKind>(kind: K): Promise<Tracks[K] | null>
-  async getTrack<K extends TrackKind>(kind?: K) {
-    if (!kind) {
-      const tracks: Tracks = { video: null, audio: null };
-      const videoTrackPromise = this.getTrack('video').then(track => tracks['video'] = track);
-      const audioTrackPromise = this.getTrack('audio').then(track => tracks['audio'] = track);
-      await Promise.all([videoTrackPromise, audioTrackPromise]);
-      return tracks;
-    } else if (kind === 'video') {
-      return this.load('video', createLocalVideoTrack);
-    } else if (kind === 'audio') {
-      return this.load('audio', createLocalAudioTrack);
+  cleanLocal() {
+    const cleanTrack = (track: LocalVideoTrack | LocalAudioTrack) => {
+      track?.stop();
+      track?.removeAllListeners();
     }
-  }
 
-  cleanTrack(kind?: TrackKind) {
-    if (!kind) {
-      this.cleanTrack('video');
-      this.cleanTrack('audio');
-    } else {
-      if (!!this.track[kind]) {
-        this.track[kind].stop();
-        this.track[kind].removeAllListeners();
-        this.track[kind] = null;
-      }
-    }
+    const local = this.twilioQuery.localAttendee;
+    cleanTrack(local.tracks.video);
+    cleanTrack(local.tracks.audio);
+
+    this.twilioStore.remove(local.id);
   }
 
   toggleTrack(kind: TrackKind) {
-    if (!this.track[kind]) return;
+    const track = this.twilioQuery.localAttendee.tracks[kind];
 
-    if (this.track[kind].isEnabled) {
-      this.track[kind].disable();
+    if (!track) return;
+
+    if (track.isEnabled) {
+      track.disable();
     } else {
-      this.track[kind].enable();
+      track.enable();
     }
+  }
+
+  async connect(eventId: string) {
+    if (!!this.room) return;
+
+    // Get Twilio token & ensure that there is no error
+    const response = await this.getToken(eventId);
+    if (response.error) {
+      throw new Error(`${response.error}: ${response.result}`);
+    }
+    const token = response.result;
+
+
+    const localTracks = this.twilioQuery.localAttendee.tracks;
+
+    const tracks: (LocalVideoTrack | LocalAudioTrack)[] = [];
+    if (!!localTracks.audio) tracks.push(localTracks.audio);
+    if (!!localTracks.video) tracks.push(localTracks.video);
+
+    // Connect to Twilio room and register event listeners
+    this.room = await connect(token, { name: eventId, tracks });
+
+    this.room.on('participantConnected', (participant: RemoteParticipant) => {
+      this.twilioStore.upsert(
+        participant.sid,
+        { id: participant.sid, kind: 'remote', userName: participant.identity, tracks: {} }
+      );
+    });
+
+    this.room.on(
+      'trackSubscribed',
+      (track: RemoteTrack, publication: RemoteTrackPublication, participant: RemoteParticipant) => {
+        if (track.kind === 'data') return;
+        const remoteTracks: RemoteTracks = { [track.kind]: track };
+        this.twilioStore.upsert(
+          participant.sid,
+          (entity: RemoteAttendee) => ({ tracks: { ...entity.tracks, ...remoteTracks } }),
+          id => ({ id, kind: 'remote', userName: participant.identity, tracks: remoteTracks })
+        );
+      },
+    );
+
+    this.room.on('participantDisconnected', (participant: RemoteParticipant) => {
+      this.twilioStore.remove(participant.sid);
+    });
+  }
+
+  disconnect() {
+    if (!this.room) return;
+
+    this.room.disconnect();
+    this.room.removeAllListeners();
+    this.room = null;
+
+    this.cleanLocal();
+
+    this.twilioStore.remove(); // delete all entities from the store
   }
 
 }

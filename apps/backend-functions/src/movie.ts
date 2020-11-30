@@ -44,17 +44,55 @@ export async function onMovieDelete(
 
   const batch = db.batch();
 
-  // Delete sub-collections
+  // Clean wishlists
+  const orgsWithWishlists = await db.collection('orgs').where('wishlist', 'array-contains', movie.id).get();
+
+  orgsWithWishlists.docs.forEach(o => {
+    const org = o.data();
+    org.wishlist = org.wishlist.filter(movieId => movieId !== movie.id);
+    batch.update(o.ref, org);
+  });
+
+  // Delete events
+  const events = await db.collection('events').where('meta.titleId', '==', movie.id).get();
+  events.docs.forEach(d => batch.delete(d.ref));
+
+
+  // Delete sub-collections (distribution rights)
   await removeAllSubcollections(snap, batch);
 
-  const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+  // Delete permissions
+  const orgsPromises = movie.orgIds.map(o => db.collection('orgs').where('id', '==', o).get());
+  const _orgs = await Promise.all(orgsPromises);
+  const orgIds :string[]= [];
+  _orgs.forEach(s => { s.docs.forEach(d => orgIds.push(d.id))});
+  const permissionsPromises = orgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`).get());
+  const permissions = await Promise.all(permissionsPromises);
+  permissions.forEach(p => batch.delete(p.ref));
+
+  // Delete notifications
+  const notifsCollectionRef = await db.collection('notifications').where('docId', '==', movie.id).get();
+  for (const doc of notifsCollectionRef.docs) {
+    batch.delete(doc.ref);
+  }
+
+  // Update contracts
+  const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
+  contracts.docs.forEach(c => {
+    const contract = c.data();
+    if (!!contract.lastVersion?.titles[movie.id]) {
+      delete contract.lastVersion.titles[movie.id];
+    }
+    batch.update(c.ref, contract);
+  });
 
   // Update algolia's index
+  const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
   const promises = movieAppAccess.map(appName => deleteObject(algolia.indexNameMovies[appName], context.params.movieId));
 
   await Promise.all(promises)
 
-  console.log(`removed sub colletions of ${movie.id}`);
+  console.log(`Movie ${movie.id} removed`);
   return batch.commit();
 }
 
@@ -63,6 +101,8 @@ export async function onMovieUpdate(
 ): Promise<any> {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
+  if (!after) { return; }
+
   await cleanMovieMedias(before, after);
 
   const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);

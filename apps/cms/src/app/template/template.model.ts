@@ -1,4 +1,11 @@
+import { App } from '@blockframes/utils/apps';
 import { FormArraySchema, FormGroupSchema } from 'ng-form-factory';
+
+export interface TemplateParams {
+  app: App,
+  page: string;
+  template: string;
+}
 
 export interface Section {
   _type: string;
@@ -18,8 +25,9 @@ export const sectionSchema = <S extends Section>(
 
 export const sectionListSchema = (factory: any, value: Section[] = []): FormArraySchema => ({
   form: 'array',
-  controls: value.map(v => factory(v)),
-  factory
+  controls: [],
+  factory,
+  value
 })
 
 export interface CmsTemplate {

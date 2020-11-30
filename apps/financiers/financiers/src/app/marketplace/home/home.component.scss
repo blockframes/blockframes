@@ -5,14 +5,6 @@
   flex-direction: column;
 }
 
-.logo {
-  height: 48px;
-}
-
-.detail {
-  margin: 24px 0px;
-}
-
 .banner {
   background-image: url("/assets/images/banner_empty.png");
   background-size: cover;
@@ -21,13 +13,8 @@
   text-align: center;
 }
 
-.movie-header-slider {
-  margin-top: 16px;
-}
-
-/* We need some extra padding because of the intercom button. It covers the slide arrows */
-section {
-  padding-bottom: 100px;
+.benefits {
+  white-space: pre-wrap;
 }
 
 bf-carousel {
@@ -37,7 +24,7 @@ bf-carousel {
 header {
   padding: 100px 96px;
   margin-bottom: 80px;
-  background-image: url("/assets/images/ACMbannerlanding.png");
+  background-image: url("/assets/images/ACM_banner_landing.png");
   background-size: cover;
 
   h4 {
@@ -54,6 +41,24 @@ header {
 
   .actions {
     margin-top: 24px;
+  }
+}
+
+mat-card {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  place-content: center start;
+  align-items: center;
+  padding: 24px 16px;
+  width: 49%;
+  margin-bottom: 24px;
+  p {
+    text-align: center;
+  }
+  img {
+    width: 150px;
+    margin-bottom: 40px;
   }
 }
 

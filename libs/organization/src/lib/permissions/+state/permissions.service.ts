@@ -35,6 +35,11 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
+  public async getDocumentPermissions(docId: string, orgId: string = this.organizationQuery.getActiveId()) {
+    const permissions = await this.db.doc(`permissions/${orgId}/documentPermissions/${docId}`).ref.get();
+    return createDocPermissions(permissions.data());
+  }
+
   /** Ensures that there is always at least one super Admin in the organization. */
   public hasLastSuperAdmin(permissions: PermissionsDocument, uid: string, role: UserRole) {
     if (role !== 'superAdmin' && permissions.roles[uid] === 'superAdmin') {

@@ -55,7 +55,7 @@ export class WishlistButtonComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
     const movie = await this.movieService.getValue(this.movieId);
-    const title = movie.title.international;
+    const title = movie.title?.international ?? movie.title.original;
     this.cartService.updateWishlist(movie);
     this.snackbar.open(`${title} has been added to your wishlist.`, 'close', { duration: 2000 });
     this.added.emit(this.movieId)

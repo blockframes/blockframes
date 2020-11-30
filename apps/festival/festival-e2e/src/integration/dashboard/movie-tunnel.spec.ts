@@ -292,10 +292,5 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       })
     })
   });
-
-  //If 
-  it('Publish the movie to the market', () => {
-    
-  });
-
+  
 });

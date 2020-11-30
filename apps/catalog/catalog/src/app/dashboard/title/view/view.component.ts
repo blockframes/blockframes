@@ -23,23 +23,23 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   navLinks: RouteDescription[] = [
     {
       path: 'activity',
-      label: 'Marketplace Activity'
+      label: 'Marketplace'
     },
     {
       path: 'main',
-      label: 'Main Information'
+      label: 'Main'
     },
     {
       path: 'artistic',
-      label: 'Artistic Information'
+      label: 'Artistic'
     },
     {
       path: 'production',
-      label: 'Production Information'
+      label: 'Production'
     },
     {
       path: 'additional',
-      label: 'Additional Information',
+      label: 'Additional',
     }
   ];
 

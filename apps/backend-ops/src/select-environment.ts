@@ -2,6 +2,7 @@ import { join, resolve } from 'path';
 import { copyFileSync } from 'fs';
 import { runShellCommand, getServiceAccountObj } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
+import { execSync } from 'child_process';
 
 const { readdir, readFile, writeFile } = promises;
 
@@ -34,7 +35,8 @@ async function getSAK(projectId: string) {
   });
   const dotenvLines = dotenvFile.split('\n');
   let GACLineFound = false;
-  const GACLine = `GOOGLE_APPLICATION_CREDENTIALS="${join('tools', 'credentials', SAK.fileName)}"`;
+  const SAKPath = join('tools', 'credentials', SAK.fileName);
+  const GACLine = `GOOGLE_APPLICATION_CREDENTIALS="${SAKPath}"`;
   function processEnvLine(line: string) {
     const envKey = line.split('=').shift();
     if (envKey === 'GOOGLE_APPLICATION_CREDENTIALS') {
@@ -45,14 +47,20 @@ async function getSAK(projectId: string) {
   const updatedEnvFile = dotenvLines.map(processEnvLine);
   if (!GACLineFound) updatedEnvFile.push('\n', GACLine, '\n');
   await writeFile(resolve(process.cwd(), '.env'), updatedEnvFile.join('\n'));
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = SAKPath;
+  console.log('.env file updated with:', GACLine)
 }
 
 export async function selectEnvironment(projectId: string) {
   await getSAK(projectId);
   await runShellCommand(`firebase use ${projectId}`);
   await runShellCommand(`gcloud config set pass_credentials_to_gsutil true`);
-  await runShellCommand(`gcloud auth activate-service-account --key-file=${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
-  await runShellCommand(`gcloud config set project ${projectId}`);
+
+  let output = execSync(`gcloud auth activate-service-account --key-file=${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
+  console.log(output.toString());
+  output = execSync(`gcloud config set project ${projectId}`);
+  console.log(output.toString());
+
   console.log('Firebase project selected for firebase, gcloud & gsutil...');
   const localEnvFile = resolve(process.cwd(), 'env', 'env.ts');
   const targetEnvFile = resolve(process.cwd(), 'env', `env.${projectId}.ts`);

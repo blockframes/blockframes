@@ -9,7 +9,9 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 })
 export class LandingComponent {
 
-  public userRoles: RequestDemoRole[] = ['investor', 'financier']
+  public userRoles: RequestDemoRole[] = ['investor', 'financier'];
+
+  public pdfLink = 'assets/docs/film-industry.pdf';
 
   public tabNames = ['Investors', 'Professional Content Financiers'];
 
@@ -29,7 +31,7 @@ export class LandingComponent {
   public sellerFeatures = [
     {
       title: 'Tag along with professional content financiers',
-      imgAsset: 'tag-along.svg',
+      imgAsset: 'tag_along.svg',
       description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. '
     },
     {
@@ -40,11 +42,15 @@ export class LandingComponent {
     {
       title: 'Learn about investing in the content industry',
       imgAsset: 'knowledge.svg',
-      description: 'No experience needed. Discover why content is a profitable investment. Download our investment guide below.'
+      description: 'No experience needed. \n Discover why content is a profitable investment. \n',
+      link: {
+        href: this.pdfLink,
+        text: 'Download our investment guide.'
+      }
     },
     {
       title: 'Enjoy exclusive privileges',
-      imgAsset: 'exclusive-priviledges.svg',
+      imgAsset: 'exclusive_priviledges.svg',
       description: 'Get perks and live the full experience of the content industry.'
     }
   ];

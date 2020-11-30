@@ -57,9 +57,8 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
   return {
     organizerId: '',
     description: '',
+    attendees: {},
     files: [],
-
-    // TODO removed real-time shared state from firestore issue#3748
     selectedFile: '',
     controls: {},
 
