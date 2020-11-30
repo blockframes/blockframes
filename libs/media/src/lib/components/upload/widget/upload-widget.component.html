@@ -36,9 +36,14 @@
                   <caption class="mat-caption"><em>Uploading</em></caption>
                 </ng-template>
 
-                <!-- Error -->
+                <!-- Canceled -->
                 <ng-template ngSwitchCase="canceled">
-                  <caption class="mat-caption canceled"><em>A problem has occurred!</em></caption>
+                  <caption class="mat-caption"><em>Upload canceled</em></caption>
+                </ng-template>
+
+                <!-- Error -->
+                <ng-template ngSwitchCase="error">
+                  <caption class="mat-caption error"><em>An error occured!</em></caption>
                 </ng-template>
               </div>
 
