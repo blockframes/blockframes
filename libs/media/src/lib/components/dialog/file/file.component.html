@@ -36,9 +36,8 @@
     <h3 title>Upload File</h3>
   </file-upload>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
+    <button mat-stroked-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
       <span>Add file</span>
-      <mat-icon svgIcon="send"></mat-icon>
     </button>
     <button mat-button (click)="cancel()">Cancel</button>
   </section>
