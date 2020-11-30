@@ -173,13 +173,6 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
         },
       });
     } else if (this.activeDirectory.type === 'image') {
-      if (isHostedMediaForm(mediaForm)) {
-        mediaForm.get('cropped').setValidators(Validators.requiredTrue);
-      } else if (isHostedMediaWithMetadataForm(mediaForm)) {
-        mediaForm.get('ref').get('cropped').setValidators(Validators.requiredTrue);
-      } else {
-        mediaForm.get('ref').get('cropped').setValidators(Validators.requiredTrue);
-      };
       dialog = this.dialog.open(ImageDialogComponent, {
         width: '60vw',
         data: {
