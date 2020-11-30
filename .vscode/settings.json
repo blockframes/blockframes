@@ -11,5 +11,6 @@
     "nodesmith",
     "twilio"
   ],
-  "editor.formatOnSave": false
+  "editor.formatOnSave": true,
+  "prettier.configPath": "./.prettierrc"
 }
