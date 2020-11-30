@@ -103,7 +103,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     }
     
     // -- Update movie & media -- //
-    await this.service.update(movie);
+    await this.service.upsert(movie);
     this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
   }
