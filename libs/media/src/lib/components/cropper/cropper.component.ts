@@ -168,6 +168,7 @@ export class CropperComponent implements OnInit {
       this.delete();
     } else {
       this.nextStep('crop');
+      this.form.patchValue({ cropped: false });
     }
 
   }
@@ -194,6 +195,7 @@ export class CropperComponent implements OnInit {
         ref: getStoragePath(this.storagePath, this.filePrivacy),
         blobOrFile: blob,
         fileName: fileName,
+        cropped: true
       })
       this.form.markAsDirty();
 
@@ -207,7 +209,7 @@ export class CropperComponent implements OnInit {
       this.croppedImage = '';
     }
 
-    this.form.patchValue({ ref: '' });
+    this.form.patchValue({ ref: '', cropped: false });
     this.form.markAsDirty();
 
     this.nextStep('drop');
