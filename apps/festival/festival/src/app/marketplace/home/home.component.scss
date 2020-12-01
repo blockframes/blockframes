@@ -9,12 +9,26 @@
   padding: 80px;
   background-size: cover;
   background-position: center;
+
+  h3 {
+    margin-bottom: 0;
+  }
+  .links {
+    margin-top: 24px;
+  }
 }
 
 .hero {
   padding: 40px;
   background-image: url("/assets/images/banner_empty.png");
   background-size: cover;
+
+  h1 {
+    margin-bottom: 0;
+  }
+  .links {
+    margin-top: 24px;
+  }
 }
 
 .titles, .orgs {
@@ -22,7 +36,7 @@
     padding: 24px;
   }
   article {
-    padding: 24px 0;
+    padding-bottom: 24px;
   }
 }
 

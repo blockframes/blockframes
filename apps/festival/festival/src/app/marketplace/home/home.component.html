@@ -7,7 +7,7 @@
           <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
           <h1 *ngIf="section.title">{{ section.title }}</h1>
           <p *ngIf="section.description">{{ section.description }}</p>
-          <div fxLayout fxLayoutGap="16px">
+          <div class="links" fxLayout fxLayoutGap="16px">
             <ng-container *ngFor="let link of section.links">
               <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
             </ng-container>
@@ -86,7 +86,7 @@
           <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
             <h1 *ngIf="section.title">{{ section.title }}</h1>
             <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
-            <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+            <div class="links" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
               <ng-container *ngFor="let link of section.links">
                 <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
               </ng-container>

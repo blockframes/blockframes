@@ -24,8 +24,7 @@ import {
   Inject,
   PLATFORM_ID,
   HostListener,
-  ChangeDetectorRef,
-  ViewChildren
+  ChangeDetectorRef
 } from '@angular/core';
 import { AnimationBuilder, animate, style } from '@angular/animations';
 import { ListKeyManager } from '@angular/cdk/a11y';

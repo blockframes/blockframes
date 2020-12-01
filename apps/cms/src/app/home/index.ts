@@ -10,5 +10,5 @@ export const sections = (params: TemplateParams) => ({
   titles: titlesSchema(params),
   orgs: orgsSchema(params),
   hero: heroSchema,
-  featureOrg: orgTitleSchema,
+  orgTitles: orgTitleSchema,
 });
