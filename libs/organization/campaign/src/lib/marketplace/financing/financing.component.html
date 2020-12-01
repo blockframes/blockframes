@@ -37,19 +37,20 @@
           [colors]="options.colors" [tooltip]="{y: formatter.currency(campaign)}"></apx-chart>
       </article>
       <mat-divider></mat-divider>
+      <div fxLayout fxLayoutGap="8px">
+        <mat-icon svgIcon="warning"></mat-icon>
+        <p class="mat-caption">
+          Disclaimer : These figures are estimations, based on calculations and assumptions from the professional
+          financier of
+          this project. They do not constitute a guaranteed level of profitability. Like all investments, investing in
+          content
+          bears inherent risks and may result in the loss of part or totality of the amount invested.
+          Media Financiers does not assume responsibility in the outcome of the investments made by the users through
+          this
+          platform.
+        </p>
+      </div>
     </section>
-    <div fxLayout fxLayoutGap="8px">
-      <mat-icon svgIcon="warning"></mat-icon>
-      <p class="mat-caption">
-        Disclaimer : These figures are estimations, based on calculations and assumptions from the professional
-        financier of
-        this project. They do not constitute a guaranteed level of profitability. Like all investments, investing in
-        content
-        bears inherent risks and may result in the loss of part or totality of the amount invested.
-        Media Financiers does not assume responsibility in the outcome of the investments made by the users through this
-        platform.
-      </p>
-    </div>
 
     <!-- Funding -->
     <section id="budget" *ngIf="campaign.fundings | apexFunding as options">
@@ -90,19 +91,17 @@
           [colors]="options.colors" [tooltip]="{y: formatter.currency(campaign)}"></apx-chart>
       </article>
       <mat-divider></mat-divider>
+      <div fxLayout fxLayoutGap="8px">
+        <mat-icon svgIcon="warning"></mat-icon>
+        <p class="mat-caption">
+          Disclaimer : These figures are estimations, based on calculations and assumptions from the professional
+          financier of this project. They do not constitute a guaranteed level of profitability. Like all investments,
+          investing in content bears inherent risks and may result in the loss of part or totality of the amount
+          invested. Media Financiers does not assume responsibility in the outcome of the investments made by the users
+          through this platform.
+        </p>
+      </div>
     </section>
-    <div fxLayout fxLayoutGap="8px">
-      <mat-icon svgIcon="warning"></mat-icon>
-      <p class="mat-caption">
-        Disclaimer : These figures are estimations, based on calculations and assumptions from the professional
-        financier of
-        this project. They do not constitute a guaranteed level of profitability. Like all investments, investing in
-        content
-        bears inherent risks and may result in the loss of part or totality of the amount invested.
-        Media Financiers does not assume responsibility in the outcome of the investments made by the users through this
-        platform.
-      </p>
-    </div>
 
     <!-- Profits -->
     <section id="budget" *ngIf="campaign.profits | apexProfits as options">
@@ -135,19 +134,21 @@
         <apx-chart [chart]="{ type: 'bar' }" [series]="options.series" [xaxis]="options.xAxis"
           [dataLabels]="formatter.percent" [tooltip]="{y: formatter.percent}"></apx-chart>
       </article>
+      <mat-divider></mat-divider>
+      <div fxLayout fxLayoutGap="8px">
+        <mat-icon svgIcon="warning"></mat-icon>
+        <p class="mat-caption">
+          Disclaimer : These figures are estimations, based on calculations and assumptions from the professional
+          financier of
+          this project. They do not constitute a guaranteed level of profitability. Like all investments, investing in
+          content
+          bears inherent risks and may result in the loss of part or totality of the amount invested.
+          Media Financiers does not assume responsibility in the outcome of the investments made by the users through
+          this
+          platform.
+        </p>
+      </div>
     </section>
-    <div fxLayout fxLayoutGap="8px">
-      <mat-icon svgIcon="warning"></mat-icon>
-      <p class="mat-caption">
-        Disclaimer : These figures are estimations, based on calculations and assumptions from the professional
-        financier of
-        this project. They do not constitute a guaranteed level of profitability. Like all investments, investing in
-        content
-        bears inherent risks and may result in the loss of part or totality of the amount invested.
-        Media Financiers does not assume responsibility in the outcome of the investments made by the users through this
-        platform.
-      </p>
-    </div>
 
   </ng-container>
 </ng-container>
