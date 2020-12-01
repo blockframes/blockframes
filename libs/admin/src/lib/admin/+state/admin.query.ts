@@ -16,23 +16,14 @@ export class AdminQuery extends Query<AdminState> {
   getLastConnexion(uid: string): Date {
     const userInfo = this.connectedUsers.find(u => u.uid === uid);
     if (userInfo && userInfo.lastConnexion) {
-      return stringToDate(userInfo.lastConnexion);
+      return userInfo.lastConnexion;
     }
   }
 
   getFirstConnexion(uid: string): Date {
     const userInfo = this.connectedUsers.find(u => u.uid === uid);
     if (userInfo && userInfo.firstConnexion) {
-      return stringToDate(userInfo.firstConnexion);
+      return userInfo.firstConnexion;
     }
   }
-}
-
-function stringToDate(_date: Date) {
-  const date = _date.toString();
-  const y = parseInt(date.substring(0, 4), 10);
-  const m = parseInt(date.substring(5, 6), 10);
-  const d = parseInt(date.substring(7, 8), 10);
-
-  return new Date(y, m - 1, d);
 }
