@@ -1,0 +1,9 @@
+
+<ng-container *ngIf="event$ | async as event">
+  <h1>Your Meeting Session is over</h1>
+  <h4>{{ duration | duration }}</h4>
+
+  <ng-container *ngIf="attendees$ | async as attendees">
+    <p *ngFor="let user of attendees">{{user.firstName}} {{user.lastName}}</p>
+  </ng-container>
+</ng-container>

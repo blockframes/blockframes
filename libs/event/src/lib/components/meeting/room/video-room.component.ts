@@ -9,6 +9,7 @@ import { EventQuery } from '@blockframes/event/+state';
 import { Attendee, LocalAttendee, TrackKind } from '../+state/twilio.model';
 import { TwilioService } from '../+state/twilio.service';
 import { TwilioQuery } from '../+state/twilio.query';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'meeting-video-room',
@@ -32,7 +33,9 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
     private authQuery: AuthQuery,
     private eventQuery: EventQuery,
     private twilioService: TwilioService,
-    private twilioQuery: TwilioQuery
+    private twilioQuery: TwilioQuery,
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   async ngOnInit() {
@@ -58,5 +61,6 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
   quitMeeting() {
     this.twilioService.disconnect();
+    this.router.navigate(['..', 'ended'], { relativeTo: this.route });
   }
 }
