@@ -32,7 +32,7 @@ export class LandingComponent {
     {
       title: 'Tag along with professional content financiers',
       imgAsset: 'tag_along.svg',
-      description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. '
+      description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise.'
     },
     {
       title: 'Get access to prominent film companies and projects',
