@@ -9,9 +9,6 @@
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
 import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
-import { Movie } from '@blockframes/movie/+state';
-import { MovieAppAccess } from '@blockframes/utils/apps';
-import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
 import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
 
 //Meta collection, for maintenance control.
@@ -24,6 +21,7 @@ type Firestore = ExtractPromise<PromiseFirestore>;
 testFixture[metaDoc] = {};
 testFixture[metaDoc].endedAt = true;
 
+//TODO: #4373 : Refactor init code to a lib
 async function initFirestoreApp(
   projectId: string,
   rulePath: string,
