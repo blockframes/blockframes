@@ -3,7 +3,7 @@
   <!-- Slides -->
   <ul class="slider-list" #slideList role="listbox"
     [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
-    <li *ngFor="let image of slides" role="option" class="slider-item" [style.max-height]="maxHeight">
+    <li *ngFor="let image of slides.changes | async" role="option" class="slider-item" [style.max-height]="maxHeight">
       <ng-template [ngTemplateOutlet]="image.templateRef"></ng-template>
     </li>
   </ul>

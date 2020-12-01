@@ -45,19 +45,20 @@
           <!-- Title Slider -->
           <ng-container *ngSwitchCase="'slider'">
             <bf-slider hideIndicators loop class="dark-contrast-theme">
-              <bf-slide *ngFor="let movie of section | queryTitles | async" overlayColor="gradient"
-                [image]="movie.banner">
-                <movie-slide [movie]="movie">
-                  <movie-slide-cta>
-                    <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
-                      More Details
-                    </a>
-                  </movie-slide-cta>
-                  <movie-slide-actions>
-                    <wishlist-button [movieId]="movie.id"></wishlist-button>
-                  </movie-slide-actions>
-                </movie-slide>
-              </bf-slide>
+              <ng-container *ngFor="let movie of section | queryTitles | async" >
+                <bf-slide overlayColor="gradient" [image]="movie.banner">
+                  <movie-slide [movie]="movie">
+                    <movie-slide-cta>
+                      <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
+                        More Details
+                      </a>
+                    </movie-slide-cta>
+                    <movie-slide-actions>
+                      <wishlist-button [movieId]="movie.id"></wishlist-button>
+                    </movie-slide-actions>
+                  </movie-slide>
+                </bf-slide>
+              </ng-container>
             </bf-slider>
           </ng-container>
         </article>
