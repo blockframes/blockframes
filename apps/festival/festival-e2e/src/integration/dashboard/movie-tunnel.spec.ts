@@ -299,7 +299,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
 
     //After filling all required fields, movie can be published.
-
+    
   });
 
   it('checks published movie is listed', () => {
