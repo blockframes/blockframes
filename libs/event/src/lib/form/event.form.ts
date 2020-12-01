@@ -10,7 +10,7 @@ export function createEventControl(params?: Partial<Event>) {
     id: new FormControl(event.id),
     isPrivate: new FormControl(event.isPrivate),
     ownerId: new FormControl(event.ownerId),
-    type: new FormControl(event.type),
+    type: new FormControl(event.type, Validators.required),
     title: new FormControl(event.title),
     start: new FormControl(event.start),
     end: new FormControl(event.end),
