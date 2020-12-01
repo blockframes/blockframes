@@ -9,7 +9,7 @@ section {
   border: solid 1px var(--foreground-divider);
   padding: 24px 16px;
 
-  button {
+  .manage-files-btn {
     width: 30%;
   }
 
@@ -17,5 +17,15 @@ section {
     width: 70%;
     text-align: center;
     margin: 32px auto;
+  }
+}
+
+.link {
+  mat-form-field {
+    display: block;
+  }
+
+  button {
+    margin-top: 20px;
   }
 }

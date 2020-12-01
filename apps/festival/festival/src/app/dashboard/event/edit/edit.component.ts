@@ -15,6 +15,8 @@ import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FileSelectorComponent } from '@blockframes/media/components/file-selector/file-selector.component';
+import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'festival-event-edit',
@@ -27,6 +29,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   private formSub: Subscription;
+  eventId: string;
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
@@ -45,6 +48,7 @@ export class EditComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit(): void {
@@ -68,6 +72,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))
     ).subscribe(event => {
+      this.eventId = event.id;
       this.type = event.type;
       this.form = new EventForm(event);
 
@@ -111,5 +116,11 @@ export class EditComponent implements OnInit, OnDestroy {
       this.files.patchAllValue(result);
       this.cdr.markForCheck();
     });
+  }
+
+  getLink() {
+    const app = getCurrentApp(this.routerQuery);
+    const url = applicationUrl[app];
+    return `${url}/c/o/marketplace/event/${this.eventId}/lobby`;
   }
 }

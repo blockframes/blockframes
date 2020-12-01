@@ -21,7 +21,7 @@ export class TermsConditionsComponent {
     private routerQuery: RouterQuery,
   ) {
     this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
-    const app = getCurrentApp(this.routerQuery);;
+    const app = getCurrentApp(this.routerQuery);
     this.appUrl = applicationUrl[app];
   }
 

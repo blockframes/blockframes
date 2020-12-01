@@ -46,6 +46,15 @@
       <ng-container *ngSwitchCase="'meeting'">
         <h2>Meeting</h2>
         <section [formGroup]="form.meta" fxLayout="column">
+          <div class="link" fxLayout>
+            <mat-form-field class="link" appearance="outline" fxFlex>
+              <mat-label>Link to video call</mat-label>
+              <input matInput type="text" disabled [value]="getLink()">
+            </mat-form-field>
+            <button mat-icon-button [cdkCopyToClipboard]="getLink()">
+              <mat-icon svgIcon="copy"></mat-icon>
+            </button>
+          </div>
           <mat-form-field appearance="outline">
             <mat-label>Organized By</mat-label>
             <mat-select formControlName="organizerId">
@@ -73,7 +82,7 @@
           </p>
 
           <div fxLayout="row" fxLayoutAlign="end">
-            <button mat-stroked-button color="primary" (click)="openFileSelector()">
+            <button class="manage-files-btn" mat-stroked-button color="primary" (click)="openFileSelector()">
               <mat-icon svgIcon="folder"></mat-icon>
               <span>Manage Files</span>
             </button>
