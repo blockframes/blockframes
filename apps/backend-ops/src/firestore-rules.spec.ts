@@ -296,7 +296,6 @@ describe.skip('Organization Rules Tests', () => {
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
-
 });
 
 //TODO: 4198
@@ -309,7 +308,6 @@ describe.skip('Permission Rules Tests', () => {
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
-
 });
 
 describe('Movies Rules Tests', () => {
@@ -419,9 +417,10 @@ describe('Movies Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('User with admin role in org should be able to delete movie', async () => {
+    //TODO #4301
+    test('should not be able to delete movie', async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
-      await assertSucceeds(movieRef.delete());
+      await assertFails(movieRef.delete());
     });
   });
 
@@ -558,9 +557,4 @@ describe('Events Rules Tests', () => {
       await assertFails(eventRef.delete());
     });
   });
-});
-
-//TODO: 4187
-describe.skip('Campaign Security Rules', () => {
-
 });
