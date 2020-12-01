@@ -31,7 +31,7 @@ export const orgsSchema = (params: TemplateParams): OrgsSchema => ({
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
-    link: matText({ label: 'See all Link' }),
+    link: matText({ label: 'See all Link', placeholder: '../organization' }),
     orgIds: matMultiSelect<string>({ label: 'Org IDs' }),
     query: firestoreQuery({ collection: 'orgs' }),
   },

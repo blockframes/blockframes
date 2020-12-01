@@ -33,8 +33,8 @@ export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'Title' }),
-    link: matText({ label: 'See all Link' }),
-    mode: matSelect({ label: 'Mode', options: ['poster', 'banner', 'slider'] }),
+    link: matText({ label: 'See all Link', placeholder: '../title' }),
+    mode: matSelect({ label: 'Mode', options: ['poster', 'banner', 'slider'], value: 'banner' }),
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
     query: firestoreQuery({ collection: 'movies' }),
   },
