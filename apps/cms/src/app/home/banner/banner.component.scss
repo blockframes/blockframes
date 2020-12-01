@@ -1,12 +1,12 @@
 :host {
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
 
 article {
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  margin-bottom: 16px;
 }
 
 .links {
@@ -14,6 +14,7 @@ article {
   flex-direction: column;
   align-items: flex-start;
 }
+
 .link {
   display: flex;
   justify-content: space-between;

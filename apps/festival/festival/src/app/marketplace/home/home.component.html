@@ -2,16 +2,18 @@
   <ng-container *ngFor="let section of page.sections">
     <ng-container [ngSwitch]="section._type">
       <!-- Banner -->
-      <header *ngSwitchCase="'banner'" class="banner dark-contrast-theme">
-        <h3>{{ section.subtitle }}</h3>
-        <h1>{{ section.title }}</h1>
-        <p>{{ section.description }}</p>
-        <div fxLayout fxLayoutGap="16px">
-          <ng-container *ngFor="let link of section.links">
-            <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
-          </ng-container>
-        </div>
-      </header>
+      <ng-container *ngSwitchCase="'banner'">
+        <header [bgRef]="section.background" bgAsset="banner.png" class="banner dark-contrast-theme">
+          <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
+          <h1 *ngIf="section.title">{{ section.title }}</h1>
+          <p *ngIf="section.description">{{ section.description }}</p>
+          <div fxLayout fxLayoutGap="16px">
+            <ng-container *ngFor="let link of section.links">
+              <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
+            </ng-container>
+          </div>
+        </header>
+      </ng-container>
       <!-- Titles -->
       <section *ngSwitchCase="'titles'" class="titles">
         <header fxLayout fxLayoutAlign="space-between center">
@@ -78,14 +80,19 @@
         </article>
       </section>
        <!-- Hero -->
-      <section *ngSwitchCase="'hero'" class="hero">
-        <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
-          <h1>{{ section.title }}</h1>
-          <ng-container *ngFor="let link of section.links">
-            <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
-          </ng-container>
-        </div>
-      </section>
+      <ng-container *ngSwitchCase="'hero'">
+        <section class="hero" bgAsset="hero.png" [bgRef]="section.background">
+          <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
+            <h1 *ngIf="section.title">{{ section.title }}</h1>
+            <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
+            <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+              <ng-container *ngFor="let link of section.links">
+                <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </section>
+      </ng-container>
     </ng-container>
   </ng-container>
 </ng-container>

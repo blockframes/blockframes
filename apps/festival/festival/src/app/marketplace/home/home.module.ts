@@ -17,6 +17,7 @@ import { MovieCardModule } from '@blockframes/movie/components/card/card.module'
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module';
 import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -31,6 +32,7 @@ import { HomeQueryTitlesPipe, HomeQueryOrgsPipe } from './home.pipe';
     FlexLayoutModule,
 
     // Blockframes
+    ImageReferenceModule,
     SliderModule,
     CarouselModule,
     MovieCardModule,
