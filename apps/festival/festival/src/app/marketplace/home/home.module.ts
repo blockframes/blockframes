@@ -20,10 +20,11 @@ import { OrganizationBannerModule } from '@blockframes/organization/components/b
 
 // Page
 import { HomeComponent } from './home.component';
+import { HomeQueryTitlesPipe, HomeQueryOrgsPipe } from './home.pipe';
 
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, HomeQueryTitlesPipe, HomeQueryOrgsPipe],
   imports: [
     CommonModule,
     RouterModule.forChild([{ path: '', component: HomeComponent }]),

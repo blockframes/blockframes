@@ -13,12 +13,19 @@ import { map } from 'rxjs/operators';
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { parseFilters } from '@blockframes/utils/algolia';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 interface CarouselSection {
   title: string;
   movieCount$: Observable<number>;
   movies$: Observable<Movie[]>;
   queryParams?: Record<string, string>;
+}
+
+interface PageSection {
+  sections: {
+    _type: string;
+  }
 }
 
 @Component({
@@ -35,13 +42,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   public orgs$: Observable<Organization[]>;
 
   public featuredOrg$: Observable<Organization>;
+  public page$: Observable<PageSection>;
 
   private sub: Subscription;
 
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private db: AngularFirestore
   ) { }
 
   ngOnInit() {
@@ -53,6 +62,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         filterBy: movie => movie.productionStatus === status && this.defaultFilter(movie)
       });
     }
+
+    this.page$ = this.db.doc<PageSection>('cms/festival/home/live').valueChanges();
+
     this.sections = [
       {
         title: 'New films',
