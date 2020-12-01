@@ -13,8 +13,8 @@
     <li>
       <strong>Development costs </strong>
       <missing-control [control]="budget.get('development')" [link]="link" fragment="budget">
-        <ng-template let-fees>
-          {{ fees | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
+        <ng-template let-costs>
+          {{ costs | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
@@ -45,8 +45,8 @@
     <li>
       <strong>Contingency </strong>
       <missing-control [control]="budget.get('contingency')" [link]="link" fragment="budget">
-        <ng-template let-others>
-          {{ others | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
+        <ng-template let-costs>
+          {{ costs | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
