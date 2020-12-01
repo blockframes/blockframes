@@ -185,7 +185,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar ?? '',
-      orgName: orgData ? orgData.denomination : {}
+      orgName: orgData ? orgName(orgData) : ''
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

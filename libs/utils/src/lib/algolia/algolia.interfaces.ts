@@ -9,7 +9,7 @@ import {
 } from '../static-model';
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Module, ModuleAccess } from '../apps';
-import { PublicOrganization, Denomination } from '@blockframes/organization/+state';
+import { PublicOrganization } from '@blockframes/organization/+state';
 
 export interface AlgoliaConfig {
     searchableAttributes: string[];
@@ -149,5 +149,5 @@ export interface AlgoliaUser extends AlgoliaDefaultProperty {
     firstName: string,
     lastName: string,
     avatar: string,
-    orgName: Denomination
+    orgName: string
 }

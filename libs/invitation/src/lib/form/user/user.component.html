@@ -19,7 +19,7 @@
         <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
           <img [ref]="user.avatar" asset="profil_user.webp" alt="Profile">
           <span *ngIf="user.firstName">{{ user.firstName && user.lastName | titlecase }}</span>
-          <span *ngIf="user.orgName.public || user.orgName.full">({{ user.orgName.public ? user.orgName.public : user.orgName.full }})</span>
+          <span *ngIf="user.orgName">({{ user.orgName }})</span>
           <span *ngIf="!user.firstName">{{ user.email }}</span>
         </div>
       </ng-template>
