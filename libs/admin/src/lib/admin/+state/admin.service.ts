@@ -17,8 +17,8 @@ export class AdminService {
       analytics: {
         connectedUsers: rows.map(r => ({
           uid: r.user_id,
-          firstConnexion: r.first_connexion,
-          lastConnexion: r.last_connexion,
+          firstConnexion: r.first_connexion.value,
+          lastConnexion: r.last_connexion.value,
           pageView: r.page_view,
         }))
       }
@@ -33,7 +33,7 @@ export class AdminService {
   /**
   * Send email from Google Firebase to reset password
   * @dev This is the "hard" reset password link, sent directly from Google.
-  * @param email 
+  * @param email
   */
   public sendPasswordResetEmail(email: string): Promise<void> {
     return this.auth.sendPasswordResetEmail(email);
