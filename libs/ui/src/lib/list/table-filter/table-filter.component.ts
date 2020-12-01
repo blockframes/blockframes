@@ -37,7 +37,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   @Input() @boolean clickable: boolean;
 
   // Name of the column headers
-  @Input() columns: Record<string, any>;
+  @Input() columns: Record<string, string | { value: string, disableSort: boolean }>;
   @Input() initialColumns: string[];
   @Input() link: string;
   @Input() showLoader = false;
@@ -92,5 +92,9 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  sortColumnDisabled(value: string | { value: string, disableSort: boolean }) {
+    return typeof value === 'string' ? false : value.disableSort;
   }
 }

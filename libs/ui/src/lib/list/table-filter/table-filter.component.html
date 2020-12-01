@@ -14,7 +14,7 @@
 
     <!-- You need to set the matColumnDef on the same ng-container as the ngFor or it fails -->
     <ng-container *ngFor="let column of columns | keyvalue" [matColumnDef]="column.key">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column.value }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="sortColumnDisabled(column.value)"> {{ column.value?.value || column.value }} </th>
       <td [ngClass]="{'clickable': clickable}" mat-cell *matCellDef="let row">
         <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
           <ng-template
@@ -59,7 +59,7 @@
   <widget-card>
     <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
       <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key" color="primary">
-        {{ column.value }}
+        {{ column.value?.value || column.value }}
       </mat-list-option>
     </mat-selection-list>
   </widget-card>

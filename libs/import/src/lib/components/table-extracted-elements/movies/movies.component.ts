@@ -166,7 +166,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   private async publish(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
     importState.movie.storeConfig.status = getMoviePublishStatus(this.currentApp); // @TODO (#2765)
-    await this.movieService.updateById(importState.movie.id, importState.movie);
+    await this.movieService.update(importState.movie.id, importState.movie);
     this.rows.data = data;
     return true;
   }
@@ -183,7 +183,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async updateMovie(importState: MovieImportState) {
-    await this.movieService.updateById(importState.movie.id, importState.movie)
+    await this.movieService.update(importState.movie.id, importState.movie)
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
   }
@@ -193,7 +193,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
       for (const importState of updates) {
         this.processedTitles++;
-        await this.movieService.updateById(importState.movie.id, importState.movie);
+        await this.movieService.update(importState.movie.id, importState.movie);
       }
       this.snackBar.open(`${this.processedTitles} movies updated!`, 'close', { duration: 3000 });
       this.processedTitles = 0;
