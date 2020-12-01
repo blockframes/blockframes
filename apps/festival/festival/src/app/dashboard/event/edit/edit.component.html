@@ -75,8 +75,9 @@
               maxlength="500"></textarea>
             <mat-hint>Limited to 500 characters.</mat-hint>
           </mat-form-field>
-
-          <h6>Files</h6>
+        </section>
+        <section>
+          <h6>My Files for this Meeting</h6>
           <p>
             Add the files you want to share during meeting.
             If you didn’t upload the needed files, please add them on <a routerLink="/c/o/dashboard/files">My Files</a> page.
@@ -109,6 +110,6 @@
     </ng-container>
   </event-edit>
   <ng-container *ngIf="isEventStarted()">
-    <event-analytics [eventId]="form.id.value"></event-analytics>
+    <!-- <event-analytics [eventId]="form.id.value"></event-analytics> -->
   </ng-container>
 </ng-container>
