@@ -19,6 +19,7 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 interface TitlesSection extends Section {
   _type: 'titles',
   title: string;
+  link: string;
   mode: 'poster' | 'banner' | 'slider';
   titleIds: string[];
   query: FirestoreQuery;
@@ -31,7 +32,8 @@ export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   load: async () => import('./titles.component').then(m => m.TitlesComponent),
   controls: {
     _type: { form: 'control' },
-    title: matText({ label: 'title' }),
+    title: matText({ label: 'Title' }),
+    link: matText({ label: 'See all Link' }),
     mode: matSelect({ label: 'Mode', options: ['poster', 'banner', 'slider'] }),
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
     query: firestoreQuery({ collection: 'movies' }),

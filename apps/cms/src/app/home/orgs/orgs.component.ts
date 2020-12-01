@@ -17,6 +17,7 @@ import { map,shareReplay,switchMap } from 'rxjs/operators';
 interface OrgsSection extends Section {
   _type: 'orgs',
   title: string;
+  link: string;
   orgIds: string[];
   query: FirestoreQuery;
 }
@@ -30,6 +31,7 @@ export const orgsSchema = (params: TemplateParams): OrgsSchema => ({
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
+    link: matText({ label: 'See all Link' }),
     orgIds: matMultiSelect<string>({ label: 'Org IDs' }),
     query: firestoreQuery({ collection: 'orgs' }),
   },
