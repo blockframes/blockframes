@@ -75,7 +75,6 @@ export class MovieService extends CollectionService<MovieState> {
   async onCreate(movie: Movie, { write }: WriteOptions) {
     // When a movie is created, we also create a permissions document for it.
     // Since movie can be created on behalf of another user (An admin from admin panel for example)
-    // We use createdBy attribute to fetch OrgId
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
     const ref = this.getRef(movie.id);
@@ -112,14 +111,6 @@ export class MovieService extends CollectionService<MovieState> {
       }),
       tap(analytics => this.store.analytics.upsertMany(analytics))
     );
-  }
-
-  public updateById(id: string, movie: any): Promise<void> {
-    // we don't want to keep orgId in our Movie object
-    if (movie.organization) delete movie.organization;
-    if (movie.stakeholders) delete movie.stakeholders;
-
-    return this.update(id, cleanModel(movie));
   }
 
   /**

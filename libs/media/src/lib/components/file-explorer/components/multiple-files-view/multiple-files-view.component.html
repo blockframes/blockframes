@@ -1,5 +1,5 @@
 <ng-container *ngIf="active$ | async | deepKey:getDeepPath(activeDirectory.storagePath) as data">
-  <bf-table-filter [source]="data | toArray" [columns]="columns" [initialColumns]="initialColumns">
+  <bf-table-filter [source]="data | toArray" [columns]="columns" [initialColumns]="initialColumns" (rowClick)="previewFile(getFileRef($event))" clickable>
     <ng-template colRef="ref" let-item="item">
       <img [asset]="getFileRef(item) | fileTypeImage">
     </ng-template>
@@ -9,13 +9,13 @@
       </span>
     </ng-template>
     <ng-template colRef="actions" let-item="item">
-      <button mat-button (click)="downloadFile(item)">
+      <button mat-button (click)="downloadFile(item, $event)">
         <mat-icon svgIcon="download"></mat-icon>
       </button>
-      <button mat-button (click)="editFile.emit(item)">
+      <button mat-button (click)="edit(item, $event)">
         <mat-icon svgIcon="pencil"></mat-icon>
       </button>
-      <button mat-button (click)="deleteFile(item)">
+      <button mat-button (click)="deleteFile(item, $event)">
         <mat-icon svgIcon="trash"></mat-icon>
       </button>
     </ng-template>

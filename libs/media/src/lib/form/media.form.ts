@@ -11,7 +11,8 @@ function createHostedMediaControl(ref: string) {
     oldRef: new FormControl(ref),
     ref: new FormControl(ref),
     blobOrFile: new FormControl(),
-    fileName: new FormControl(getFileNameFromPath(ref))
+    fileName: new FormControl(getFileNameFromPath(ref)),
+    cropped: new FormControl(false)
   }
 }
 
@@ -27,6 +28,7 @@ export class HostedMediaForm extends FormEntity<HostedMediaControl> {
   get ref() { return this.get('ref') }
   get blobOrFile() { return this.get('blobOrFile') }
   get fileName() { return this.get('fileName') }
+  get cropped() { return this.get('cropped') }
 
   markForDelete() {
     this.get('ref').patchValue('');

@@ -5,9 +5,8 @@
     <h3 title>Image</h3>
   </drop-cropper>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
+    <button mat-stroked-button color="primary" (click)="upload()" [disabled]="data.form.invalid">
       <span>Update</span>
-      <mat-icon svgIcon="send"></mat-icon>
     </button>
     <button mat-button (click)="cancel()">Cancel</button>
   </section>

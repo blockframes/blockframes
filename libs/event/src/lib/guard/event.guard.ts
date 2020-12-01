@@ -69,14 +69,20 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
       return true;
     }
 
-    const event = this.eventQuery.getActive();
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      data: {
-        title: 'Are you sure ?',
-        question: `You might not be able to come back to this ${event.type} as its access is time-limited.`,
-        buttonName: 'Yes',
-      }
-    })
-    return dialogRef.afterClosed();
+    // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
+    if(this.authQuery.userId === null) {
+      return true;
+    } else {
+      const event = this.eventQuery.getActive();
+      const dialogRef = this.dialog.open(ConfirmComponent, {
+        data: {
+          title: 'Are you sure ?',
+          question: `You might not be able to come back to this ${event.type} as its access is time-limited.`,
+          buttonName: 'Yes',
+        }
+      })
+      return dialogRef.afterClosed();
+    }
+
   }
 }
