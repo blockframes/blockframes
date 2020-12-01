@@ -16,6 +16,8 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { DistributionRightDocumentWithDates } from '@blockframes/distribution-rights/+state/distribution-right.firestore';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { ContractService } from '@blockframes/contract/contract/+state';
+import { CampaignService } from '@blockframes/campaign/+state';
+
 
 @Component({
   selector: 'admin-movie',
@@ -59,6 +61,7 @@ export class MovieComponent implements OnInit {
     private invitationService: InvitationService,
     private distributionRightService: DistributionRightService,
     private contractService: ContractService,
+    private campaignService: CampaignService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -89,7 +92,13 @@ export class MovieComponent implements OnInit {
     this.movie.productionStatus = this.movieForm.get('productionStatus').value;
     this.movie.internalRef = this.movieForm.get('internalRef').value;
 
-    await this.movieService.updateById(this.movieId, this.movie);
+    const hasCampaign = await this.campaignService.getValue(this.movieId);
+
+    if (hasCampaign && !this.movie?.campaignStarted && this.movie.storeConfig.status === 'accepted') {
+      this.movie.campaignStarted = new Date();
+    }
+
+    await this.movieService.update(this.movieId, this.movie);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
@@ -101,7 +110,7 @@ export class MovieComponent implements OnInit {
 
     this.movie.storeConfig.appAccess = this.movieAppAccessForm.value;
 
-    await this.movieService.updateById(this.movieId, this.movie);
+    await this.movieService.update(this.movieId, this.movie);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }

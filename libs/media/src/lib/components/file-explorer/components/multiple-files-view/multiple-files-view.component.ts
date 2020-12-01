@@ -27,9 +27,9 @@ import {
 } from '../../file-explorer.model';
 
 const columns = { 
-  ref: 'Type',
-  name: 'Document Name',
-  actions: 'Actions'
+  ref: { value: 'Type', disableSort: true },
+  main: { value: 'Document Name', disableSort: false },
+  actions: { value: 'Actions', disableSort: true } 
 };
 
 @Component({
