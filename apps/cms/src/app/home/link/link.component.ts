@@ -6,7 +6,7 @@ import { TextFormModule, matText } from '../../forms/text';
 
 export interface Link {
   text: string;
-  href: string;
+  path: string;
 }
 
 export const linkSchema: FormGroupSchema<Link> = {
@@ -14,7 +14,7 @@ export const linkSchema: FormGroupSchema<Link> = {
   load: () => import('./link.component').then(m => m.LinkComponent),
   controls: {
     text: matText({ label: 'text' }),
-    href: matText({ label: 'URL' }),
+    path: matText({ label: 'URL' }),
   }
 }
 

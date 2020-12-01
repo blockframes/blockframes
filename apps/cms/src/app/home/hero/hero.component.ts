@@ -6,12 +6,13 @@ import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
 import { LinkModule, Link, linkSchema } from '../link/link.component';
 import { TextFormModule, matText } from '../../forms/text';
+import { MatButtonModule } from '@angular/material/button';
 
 interface Hero extends Section {
   title: string;
   subtitle: string;
   background: string;
-  link: Link;
+  links: Link[];
 }
 
 export const heroSchema: FormGroupSchema<Hero> = {
@@ -22,7 +23,7 @@ export const heroSchema: FormGroupSchema<Hero> = {
     title: matText({ label: 'title' }),
     subtitle: matText({ label: 'subtitle' }),
     background: matText({ label: 'background' }),
-    link: linkSchema
+    links: {form: 'array', controls: [], factory: linkSchema }
   },
 }
 
@@ -34,6 +35,9 @@ export const heroSchema: FormGroupSchema<Hero> = {
 })
 export class HeroComponent {
   @Input() form?: FormEntity<typeof heroSchema>;
+  get links() {
+    return this.form.get('links');
+  }
 }
 
 
@@ -43,6 +47,7 @@ export class HeroComponent {
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatButtonModule,
     TextFormModule,
     LinkModule,
   ]

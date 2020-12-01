@@ -2,18 +2,17 @@
   <mat-label *ngIf="schema.label">{{ schema.label }}</mat-label>
 
   <ng-container *ngIf="schema.size === 'long' else short">
-    <textarea matInput
-      [formControl]="form"
-      [placeholder]="schema.placeholder">
-    </textarea>
+    <textarea matInput [formControl]="form" [placeholder]="schema.placeholder"></textarea>
   </ng-container>
 
   <ng-template #short>
-    <input matInput
-      [type]="schema.type"
-      [formControl]="form"
-      [placeholder]="schema.placeholder"
-    />
+    <!-- We need to set the type like that else type is not reflected on FormControl -->
+    <ng-container *ngIf="schema.type === 'number'">
+      <input matInput type="number" [formControl]="form" [placeholder]="schema.placeholder" />
+    </ng-container>
+    <ng-container *ngIf="schema.type === 'text'">
+      <input matInput type="text" [formControl]="form" [placeholder]="schema.placeholder"/>
+    </ng-container>
   </ng-template>
 
   <mat-hint *ngIf="schema.hint">{{ schema.hint }}</mat-hint>

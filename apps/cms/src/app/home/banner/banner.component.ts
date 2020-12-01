@@ -9,7 +9,7 @@ interface Banner extends Section {
   subtitle: string;
   description: string;
   background: string;
-  link: Link
+  links: Link[]
 }
 
 export const bannerSchema: FormGroupSchema<Banner> = {
@@ -21,7 +21,7 @@ export const bannerSchema: FormGroupSchema<Banner> = {
     subtitle: matText({ label: 'subtitle' }),
     description: matText({ label: 'description', size: 'long' }),
     background: matText({ label: 'background' }),
-    link: linkSchema
+    links: { form: 'array', controls: [], factory: linkSchema }
   },
 }
 
@@ -33,6 +33,10 @@ export const bannerSchema: FormGroupSchema<Banner> = {
 })
 export class BannerComponent {
   @Input() form?: FormEntity<typeof bannerSchema>;
+
+  get links() {
+    return this.form.get('links');
+  }
 }
 
 import { NgModule } from '@angular/core';
@@ -40,6 +44,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -51,6 +56,7 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     TextFormModule,
     LinkModule,
   ]

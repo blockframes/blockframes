@@ -2,8 +2,12 @@
   <form-text [form]="form.get('title')"></form-text>
   <form-text [form]="form.get('subtitle')"></form-text>
 </article>
+<span>CTA Links</span>
 <article>
-  <form-link [form]="form.get('link')"></form-link>
+  <ng-container *ngFor="let control of links.controls">
+    <form-link [form]="control"></form-link>
+  </ng-container>
+  <button mat-button (click)="links.add()">Add</button>
 </article>
 <article>
   <form-text [form]="form.get('background')"></form-text>

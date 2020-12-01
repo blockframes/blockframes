@@ -5,78 +5,99 @@
   flex-direction: column;
 }
 
-.detail {
-  margin: 24px 0px;
-}
-
-.upcoming-events-banner {
-  background-image: url("/assets/images/banner_empty.png");
-  background-size: cover;
-  padding: 40px 0px;
-  margin-bottom: 80px;
-}
-
-.movie-header-slider {
-  margin-top: 16px;
-}
-
-bf-slider {
-  margin-bottom: 80px;
-}
-
-/* We need some extra padding because of the intercom button. It covers the slide arrows */
-section {
-  padding-bottom: 100px;
-}
-
-bf-carousel {
-  margin-bottom: 80px;
-}
-
-.logo {
-  height: 48px;
-}
-
-header {
-  padding: 100px 96px;
-  margin-bottom: 80px;
+.banner {
+  padding: 80px;
   background-image: url("/assets/images/ACM_banner_landing.png");
   background-size: cover;
-  text-align: center;
-  border: none;
+}
 
-  h1.mat-display-2 {
-    margin-bottom: 30px;
-  }
+.hero {
+  padding: 40px;
+  background-image: url("/assets/images/banner_empty.png");
+  background-size: cover;
+}
 
-  p {
-    margin-bottom: 30px;
-    margin-left: 12px;
-    a {
-      border-bottom: 2px solid;
-      font-weight: bolder;
-    }
+.titles, .orgs {
+  header {
+    padding: 24px;
   }
-  h4 {
-    text-transform: uppercase;
-    margin-bottom: 0;
+  article {
+    padding: 24px 0;
   }
 }
 
+// .detail {
+//   margin: 24px 0px;
+// }
+
+// .upcoming-events-banner {
+//   background-image: url("/assets/images/banner_empty.png");
+//   background-size: cover;
+//   padding: 40px 0px;
+//   margin-bottom: 80px;
+// }
+
+// .movie-header-slider {
+//   margin-top: 16px;
+// }
+
+// bf-slider {
+//   margin-bottom: 80px;
+// }
+
+// /* We need some extra padding because of the intercom button. It covers the slide arrows */
+// section {
+//   padding-bottom: 100px;
+// }
+
+// bf-carousel {
+//   margin-bottom: 80px;
+// }
+
+// .logo {
+//   height: 48px;
+// }
+
+// header {
+//   padding: 100px 96px;
+//   margin-bottom: 80px;
+//   background-image: url("/assets/images/ACM_banner_landing.png");
+//   background-size: cover;
+//   text-align: center;
+//   border: none;
+
+//   h1.mat-display-2 {
+//     margin-bottom: 30px;
+//   }
+
+//   p {
+//     margin-bottom: 30px;
+//     margin-left: 12px;
+//     a {
+//       border-bottom: 2px solid;
+//       font-weight: bolder;
+//     }
+//   }
+//   h4 {
+//     text-transform: uppercase;
+//     margin-bottom: 0;
+//   }
+// }
+
 @include layout-bp(xs) {
-  header {
+  .banner {
     padding: 50px 0;
   }
 }
 
 @include layout-bp(sm) {
-  header {
+  .banner {
     padding: 20px;
   }
 }
 
 @include layout-bp(md) {
-  header {
+  .banner {
     padding: 20px;
   }
 }

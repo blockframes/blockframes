@@ -8,7 +8,10 @@
   </article>
   <span>Link</span>
   <article>
-    <form-link [form]="form.get('link')"></form-link>
+    <ng-container *ngFor="let controls of links.controls">
+      <form-link [form]="controls"></form-link>
+    </ng-container>
+    <button mat-button (click)="links.add()">Add</button>
   </article>
   <span>Background</span>
   <article>

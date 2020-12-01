@@ -1,33 +1,22 @@
-<header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" class="dark-contrast-theme">
-  <h4>Welcome to Archipel Market</h4>
-  <h1 class="mat-display-2">The ongoing<br /> film market</h1>
-  <p>Check out our <a routerLink="/c/o/marketplace/event">Upcoming screenings</a> or discover the platform’s projects
-    or companies:</p>
-  <div fxLayout="row" fxLayoutGap="24px">
-    <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the market today</a>
-    <a mat-stroked-button test-id="sales agent" routerLink="../organization">Who's on the market today</a>
-  </div>
-</header>
-
 <ng-container *ngIf="page$ | async as page">
   <ng-container *ngFor="let section of page.sections">
     <ng-container [ngSwitch]="section._type">
       <!-- Banner -->
-      <header *ngSwitchCase="'banner'">
+      <header *ngSwitchCase="'banner'" class="banner dark-contrast-theme">
         <h3>{{ section.subtitle }}</h3>
         <h1>{{ section.title }}</h1>
         <p>{{ section.description }}</p>
         <div fxLayout fxLayoutGap="16px">
           <ng-container *ngFor="let link of section.links">
-            <a mat-button [routerLink]="link.link">{{ link.text }}</a>
+            <a mat-button [routerLink]="link.path">{{ link.text }}</a>
           </ng-container>
         </div>
       </header>
       <!-- Titles -->
-      <section *ngSwitchCase="'titles'">
+      <section *ngSwitchCase="'titles'" class="titles">
         <header fxLayout fxLayoutAlign="space-between center">
           <h2>{{ section.title }}</h2>
-          <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
+          <a mat-button routerLink="organization" color="primary">
             <span>See all</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
@@ -37,8 +26,7 @@
           <ng-container *ngSwitchCase="'banner'">
             <bf-carousel flex>
               <ng-container *ngFor="let movie of section | queryTitles | async">
-                <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id" [col]="3"
-                  carouselItem>
+                <movie-card [movie]="movie" size="banner" [link]="['title', movie.id]" [col]="3" carouselItem>
                 </movie-card>
               </ng-container>
             </bf-carousel>
@@ -47,8 +35,7 @@
           <ng-container *ngSwitchCase="'poster'">
             <bf-carousel flex>
               <ng-container *ngFor="let movie of section | queryTitles | async">
-                <movie-card [movie]="movie" size="poster" [link]="'/c/o/marketplace/title/' + movie.id" [col]="3"
-                  carouselItem>
+                <movie-card [movie]="movie" size="poster" [link]="['title', movie.id]" [col]="3" carouselItem>
                 </movie-card>
               </ng-container>
             </bf-carousel>
@@ -60,7 +47,7 @@
                 [image]="movie.banner">
                 <movie-slide [movie]="movie">
                   <movie-slide-cta>
-                    <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]" class="detail">
+                    <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
                       More Details
                     </a>
                   </movie-slide-cta>
@@ -74,18 +61,31 @@
         </article>
       </section>
       <!-- Orgs -->
-      <section *ngSwitchCase="'orgs'">
-        <bf-carousel flex>
-          <ng-container *ngFor="let org of section | queryOrgs | async">
-            <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
-          </ng-container>
-        </bf-carousel>
+      <section *ngSwitchCase="'orgs'" class="orgs">
+        <header fxLayout fxLayoutAlign="space-between center">
+          <h2>{{ section.title }}</h2>
+          <a mat-button routerLink="organization" color="primary">
+            <span>See all</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
+        </header>
+        <article>
+          <bf-carousel flex>
+            <ng-container *ngFor="let org of section | queryOrgs | async">
+              <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
+            </ng-container>
+          </bf-carousel>
+        </article>
       </section>
        <!-- Hero -->
-      <section *ngSwitchCase="'hero'">
+      <section *ngSwitchCase="'hero'" class="hero">
         <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
           <h1>{{ section.title }}</h1>
-          <a mat-flat-button color="accent" routerLink="/c/o/marketplace/event">Check out Upcoming Screenings</a>
+          <ng-container *ngFor="let link of section.links">
+            <a mat-flat-button color="accent" [routerLink]="link.path">
+              {{ link.text }}
+            </a>
+          </ng-container>
         </div>
       </section>
     </ng-container>
@@ -95,6 +95,16 @@
 
 
 <ng-container *ngIf="false">
+  <header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" class="dark-contrast-theme">
+    <h4>Welcome to Archipel Market</h4>
+    <h1 class="mat-display-2">The ongoing<br /> film market</h1>
+    <p>Check out our <a routerLink="/c/o/marketplace/event">Upcoming screenings</a> or discover the platform’s projects
+      or companies:</p>
+    <div fxLayout="row" fxLayoutGap="24px">
+      <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the market today</a>
+      <a mat-stroked-button test-id="sales agent" routerLink="../organization">Who's on the market today</a>
+    </div>
+  </header>
   <section fxLayout="column" fxLayoutGap="48px">
 
     <ng-container *ngFor="let section of sections; let i = index">
