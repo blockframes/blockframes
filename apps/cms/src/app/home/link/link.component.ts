@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormEntity, FormGroupSchema, FormFactoryModule } from 'ng-form-factory';
 import { TextFormModule, matText } from '../../forms/text';
-
+import { SelectFormModule, matSelect } from '../../forms/select';
 export interface Link {
   text: string;
   path: string;
+  type: 'basic' | 'flat' | 'stroked';
+  color: 'primary' | 'accent' | 'warn' | '';
 }
 
 export const linkSchema: FormGroupSchema<Link> = {
@@ -15,6 +17,8 @@ export const linkSchema: FormGroupSchema<Link> = {
   controls: {
     text: matText({ label: 'text' }),
     path: matText({ label: 'URL' }),
+    type: matSelect({ label: 'Type', options: ['basic', 'flat', 'stroked'], value: 'basic' }),
+    color: matSelect({ label: 'Color', options: ['', 'primary', 'accent', 'warn'] })
   }
 }
 
@@ -36,6 +40,7 @@ export class LinkComponent {
     CommonModule,
     ReactiveFormsModule,
     TextFormModule,
+    SelectFormModule,
     FormFactoryModule,
   ]
 })

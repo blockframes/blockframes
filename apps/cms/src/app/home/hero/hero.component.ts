@@ -7,6 +7,7 @@ import { Section } from '../../template/template.model';
 import { LinkModule, Link, linkSchema } from '../link/link.component';
 import { TextFormModule, matText } from '../../forms/text';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 interface Hero extends Section {
   title: string;
@@ -48,6 +49,7 @@ export class HeroComponent {
     CommonModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatIconModule,
     TextFormModule,
     LinkModule,
   ]

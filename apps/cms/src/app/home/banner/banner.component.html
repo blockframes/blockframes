@@ -6,14 +6,19 @@
   <article>
     <form-text [form]="form.get('description')"></form-text>
   </article>
-  <span>Link</span>
-  <article>
-    <ng-container *ngFor="let controls of links.controls">
-      <form-link [form]="controls"></form-link>
+  <span>CTA Link</span>
+  <article class="links">
+    <ng-container *ngFor="let controls of links.controls; let i = index">
+      <div class="link">
+        <form-link [form]="controls"></form-link>
+        <button mat-icon-button (click)="links.removeAt(i)">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </div>
     </ng-container>
     <button mat-button (click)="links.add()">Add</button>
   </article>
-  <span>Background</span>
+  <span>Background Image</span>
   <article>
     <form-text [form]="form.get('background')"></form-text>
   </article>

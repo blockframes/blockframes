@@ -6,3 +6,9 @@ article {
 article > *:not(:first-child) {
   margin-left: 16px;
 }
+
+.link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

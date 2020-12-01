@@ -8,7 +8,7 @@
         <p>{{ section.description }}</p>
         <div fxLayout fxLayoutGap="16px">
           <ng-container *ngFor="let link of section.links">
-            <a mat-button [routerLink]="link.path">{{ link.text }}</a>
+            <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
           </ng-container>
         </div>
       </header>
@@ -82,9 +82,7 @@
         <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
           <h1>{{ section.title }}</h1>
           <ng-container *ngFor="let link of section.links">
-            <a mat-flat-button color="accent" [routerLink]="link.path">
-              {{ link.text }}
-            </a>
+            <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
           </ng-container>
         </div>
       </section>
@@ -92,6 +90,17 @@
   </ng-container>
 </ng-container>
 
+<ng-template #linkBtn let-link>
+  <ng-container *ngIf="link.type === 'basic'">
+    <a mat-button [color]="link.color" [routerLink]="link.path">{{ link.text }}</a>
+  </ng-container>
+  <ng-container *ngIf="link.type === 'flat'">
+    <a mat-flat-button [color]="link.color" [routerLink]="link.path">{{ link.text }}</a>
+  </ng-container>
+  <ng-container *ngIf="link.type === 'stroked'">
+    <a mat-stroked-button [color]="link.color" [routerLink]="link.path">{{ link.text }}</a>
+  </ng-container>
+</ng-template>
 
 
 <ng-container *ngIf="false">

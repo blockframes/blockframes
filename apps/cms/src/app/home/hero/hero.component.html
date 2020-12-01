@@ -4,11 +4,17 @@
 </article>
 <span>CTA Links</span>
 <article>
-  <ng-container *ngFor="let control of links.controls">
-    <form-link [form]="control"></form-link>
+  <ng-container *ngFor="let control of links.controls; let i = index">
+    <div class="link">
+      <form-link [form]="control"></form-link>
+      <button mat-icon-button (click)="links.removeAt(i)">
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+    </div>
   </ng-container>
   <button mat-button (click)="links.add()">Add</button>
 </article>
+<span>Background Image</span>
 <article>
   <form-text [form]="form.get('background')"></form-text>
 </article>

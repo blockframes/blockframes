@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FormEntity, FormFactoryModule, FormGroupSchema } from 'ng-form-factory';
 import { Section } from '../../template/template.model';
 import { TextFormModule, matText } from '../../forms/text';
 import { Link, LinkModule, linkSchema } from '../link/link.component';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 interface Banner extends Section {
   title: string;
   subtitle: string;
@@ -39,14 +44,6 @@ export class BannerComponent {
   }
 }
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-
-
 
 @NgModule({
   declarations: [BannerComponent],
@@ -57,6 +54,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
     TextFormModule,
     LinkModule,
   ]
