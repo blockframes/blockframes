@@ -44,10 +44,10 @@
 
       <ng-container *ngIf="activeDirectory.type === 'directory' else fileDirectory">
         <mat-selection-list [multiple]="false">
-          <mat-list-option *ngFor="let directory of activeDirectory.directories" (click)="goTo(directory.path)" >
-            <mat-icon *ngIf="directory.type === 'directory' || directory.multiple" mat-list-icon svgIcon="folder"></mat-icon>
-            <mat-icon *ngIf="directory.type === 'file' && !directory.multiple" mat-list-icon svgIcon="document"></mat-icon>
-            <mat-icon *ngIf="directory.type === 'image' && !directory.multiple" mat-list-icon svgIcon="picture"></mat-icon>
+          <mat-list-option *ngFor="let directory of activeDirectory.directories" (click)="goTo(directory.path)">
+            <mat-icon [matBadge]="directory.hasFile" matBadgeSize="small" *ngIf="directory.type === 'directory' || directory.multiple" mat-list-icon svgIcon="folder"></mat-icon>
+            <mat-icon [matBadge]="directory.hasFile ? '✔' : ''" matBadgeSize="small" *ngIf="directory.type === 'file' && !directory.multiple" mat-list-icon svgIcon="document"></mat-icon>
+            <mat-icon [matBadge]="directory.hasFile ? '✔' : ''" matBadgeSize="small" *ngIf="directory.type === 'image' && !directory.multiple" mat-list-icon svgIcon="picture"></mat-icon>
             <span mat-line>{{ directory.name }}</span>
           </mat-list-option>
         </mat-selection-list>
