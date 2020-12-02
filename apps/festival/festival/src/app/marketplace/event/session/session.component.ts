@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostListener } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
-import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { AttendeeStatus, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
@@ -33,10 +33,12 @@ export class SessionComponent implements OnInit, OnDestroy {
     if (event.type === 'meeting') {
       const meta: Meeting = { ...event.meta, attendees: {...event.meta.attendees} };
       if (event.isOwner) {
-        meta.attendees = {};
+        const newAttendees: Record<string, AttendeeStatus> = {};
+        Object.keys(meta.attendees).forEach(uid => newAttendees[uid] = 'ended');
+        meta.attendees = newAttendees;
         this.service.update(event.id, { meta });
       } else if (!!meta.attendees[this.authQuery.userId]) {
-        delete meta.attendees[this.authQuery.userId];
+        meta.attendees[this.authQuery.userId] = 'ended';
         this.service.update(event.id, { meta });
       }
     }
@@ -53,6 +55,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.service.startLocalSession();
     this.event$ = this.service.queryDocs(this.eventQuery.getActiveId());
     this.sub = this.event$.subscribe(async event => {
       if (event.isOwner) {
@@ -86,8 +89,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           const userStatus = (event.meta as Meeting).attendees[uid];
 
           if (!userStatus) { // meeting session is over
-            // TODO issue#4156 redirect to "Meeting is over" page when it will be implemented
-            this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);
+            this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/ended`);
           } else if (userStatus !== 'accepted') { // user has been banned or something else
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);
           }

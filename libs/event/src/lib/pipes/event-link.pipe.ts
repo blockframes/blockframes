@@ -16,7 +16,8 @@ export class EventLinkPipe implements PipeTransform {
     }
     if (module === 'marketplace') {
       const inSession = eventStarted && !eventEnded;
-      return inSession ? [prefix, event.id, 'session'] : [prefix, event.id];
+      const page = event.type === 'meeting' ? 'lobby': 'session';
+      return inSession ? [prefix, event.id, page] : [prefix, event.id];
     }
   }
 }
