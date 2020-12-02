@@ -21,11 +21,11 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 
 // Page
 import { HomeComponent } from './home.component';
-import { HomeQueryTitlesPipe, HomeQueryOrgsPipe } from './home.pipe';
+import { HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe } from './home.pipe';
 
 
 @NgModule({
-  declarations: [HomeComponent, HomeQueryTitlesPipe, HomeQueryOrgsPipe],
+  declarations: [HomeComponent, HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe],
   imports: [
     CommonModule,
     RouterModule.forChild([{ path: '', component: HomeComponent }]),

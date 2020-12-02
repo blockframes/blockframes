@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CollectionReference, Query, QueryFn } from '@angular/fire/firestore';
+import { Query, QueryFn } from '@angular/fire/firestore';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 
@@ -32,7 +32,6 @@ export class HomeQueryTitlesPipe implements PipeTransform {
   }
 }
 
-
 @Pipe({ name: 'queryOrgs' })
 export class HomeQueryOrgsPipe implements PipeTransform {
   constructor(private service: OrganizationService) {}
@@ -42,5 +41,13 @@ export class HomeQueryOrgsPipe implements PipeTransform {
     } else {
       return this.service.valueChanges(section.orgIds);
     }
+  }
+}
+
+@Pipe({ name: 'getOrg' })
+export class HomeGetOrgPipe implements PipeTransform {
+  constructor(private service: OrganizationService) {}
+  transform(orgId: string) {
+    return this.service.valueChanges(orgId);
   }
 }
