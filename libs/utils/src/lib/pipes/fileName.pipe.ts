@@ -4,7 +4,7 @@ import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { getFileExtension } from '../file-sanitizer';
-import { extensionToType } from '../utils';
+import { extensionToType, titleCase } from '../utils';
 
 @Pipe({ name: 'fileName' })
 export class FileNamePipe implements PipeTransform {
@@ -45,7 +45,7 @@ export class FilePathPipe implements PipeTransform {
     const docId = arrayedRef[2];
     const fileName = arrayedRef.pop();
     const subFolders = arrayedRef.pop();
-    const folder = subFolders.split('.').pop();
+    const folder = getFileTypeTitle(subFolders.split('.').pop());
 
     let docName = docId;
     if (collection === 'movies') {
@@ -114,26 +114,30 @@ export class FileTypeImagePipe implements PipeTransform {
   }
 }
 
+export const getFileTypeTitle = (folder: string) => {
+  switch (folder) {
+    case 'notes':
+      return 'Note'
+    case 'still_photo':
+      return 'Image' 
+    case 'otherVideos':
+      return 'Video'
+    case 'presentation_deck':
+      return 'Presentation deck'
+    default:
+      return titleCase(folder);
+  }
+}
+
 @Pipe({ name: 'fileTypeTitle' })
 export class FileTypeTitlePipe implements PipeTransform {
   transform(filePath: string) {
     const segments = filePath.split('/')
     segments.pop();
     const field = segments.pop();
-    const name = field.split('.').pop();
+    const folder = field.split('.').pop();
 
-    switch (name) {
-      case 'notes':
-        return 'note'
-      case 'still_photo':
-        return 'image' 
-      case 'otherVideos':
-        return 'video'
-      case 'presentation_deck':
-        return 'presentation deck'
-      default:
-        return name;
-    }
+    return getFileTypeTitle(folder);
   }
 }
 
