@@ -12,6 +12,9 @@
   h3 {
     margin-bottom: 0;
   }
+  p {
+    width: 50%;
+  }
   .links {
     margin-top: 24px;
   }
@@ -38,19 +41,17 @@
 }
 
 .org-titles {
-  .description {
-    text-align: justify;
-  }
+  background-color: var(--background-card);
 }
 
 
 @include layout-bp(gt-sm) {
-  movie-slide {
+  .banner, movie-slide {
     padding: 80px;
   }
 }
 @include layout-bp(lt-md) {
-  movie-slide {
+  .banner, movie-slide {
     padding: 24px;
   }
 }

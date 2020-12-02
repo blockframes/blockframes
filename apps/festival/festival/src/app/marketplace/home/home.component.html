@@ -1,105 +1,114 @@
 <ng-container *ngIf="page$ | async as page">
   <ng-container *ngFor="let section of page.sections">
-    <ng-container [ngSwitch]="section._type">
-      <!-- Banner -->
-      <ng-container *ngSwitchCase="'banner'">
-        <header [bgRef]="section.background" bgAsset="banner.png" class="banner dark-contrast-theme">
-          <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
-          <h1 *ngIf="section.title">{{ section.title }}</h1>
-          <p *ngIf="section.description">{{ section.description }}</p>
-          <div class="links" fxLayout fxLayoutGap="16px">
-            <ng-container *ngFor="let link of section.links">
-              <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
-            </ng-container>
-          </div>
-        </header>
-      </ng-container>
-      <!-- Titles -->
-      <section *ngSwitchCase="'titles'" class="titles">
-        <header fxLayout fxLayoutAlign="space-between center">
-          <h2>{{ section.title }}</h2>
-          <a mat-button [routerLink]="section.link || '../title'" color="primary">
-            <span>See all</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
-        </header>
-        <bf-carousel flex>
-          <ng-container *ngFor="let movie of section | queryTitles | async">
-            <movie-card [movie]="movie" [size]="section.mode" [link]="['title', movie.id]" [col]="3" carouselItem>
-            </movie-card>
-          </ng-container>
-        </bf-carousel>
-      </section>
-      <!-- Slider -->
-      <section *ngSwitchCase="'slider'" class="slider">
-        <bf-slider hideIndicators loop class="dark-contrast-theme">
-          <ng-container *ngFor="let movie of section | queryTitles | async" >
-            <bf-slide overlayColor="gradient" [image]="movie.banner">
-              <movie-slide [movie]="movie">
-                <movie-slide-cta>
-                  <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
-                    More Details
-                  </a>
-                </movie-slide-cta>
-                <movie-slide-actions>
-                  <wishlist-button [movieId]="movie.id"></wishlist-button>
-                </movie-slide-actions>
-              </movie-slide>
-            </bf-slide>
-          </ng-container>
-        </bf-slider>
-      </section>
-      <!-- Orgs -->
-      <section *ngSwitchCase="'orgs'" class="orgs">
-        <header fxLayout fxLayoutAlign="space-between center">
-          <h2>{{ section.title }}</h2>
-          <a mat-button [routerLink]="section.link || '../organization'" color="primary">
-            <span>See all</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
-        </header>
-        <article>
-          <bf-carousel flex>
-            <ng-container *ngFor="let org of section | queryOrgs | async">
-              <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
-            </ng-container>
-          </bf-carousel>
-        </article>
-      </section>
-      <!-- Hero -->
-      <ng-container *ngSwitchCase="'hero'">
-        <section class="hero" bgAsset="hero.png" [bgRef]="section.background">
-          <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
-            <h1 *ngIf="section.title">{{ section.title }}</h1>
-            <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
-            <div class="links" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
-              <ng-container *ngFor="let link of section.links">
-                <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
-              </ng-container>
-            </div>
-          </div>
-        </section>
-      </ng-container>
-      <!-- Org Titles -->
-      <ng-container *ngSwitchCase="'orgTitles'">
-        <section class="org-titles">
-          <header fxLayout fxLayoutAlign="space-between center">
-            <h2>{{ section.title }}</h2>
-            <a mat-button [routerLink]="section.link || '../organization'" color="primary">
-              <span>See all</span>
-              <mat-icon svgIcon="arrow_forward"></mat-icon>
-            </a>
-          </header>
-          <org-banner [org]="section.orgId | getOrg | async" [titles]="section | queryTitles | async">
-            <p class="description">{{ section.description }}</p>
-          </org-banner>
-        </section>
-      </ng-container>
-    </ng-container>
+    <ng-container *ngTemplateOutlet="templates[section._type]; context: {$implicit: section}"></ng-container>
   </ng-container>
 </ng-container>
 
+<!-- Banner -->
+<ng-template #banner let-section>
+  <header [bgRef]="section.background" bgAsset="banner.png" class="banner dark-contrast-theme">
+    <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
+    <h1 *ngIf="section.title">{{ section.title }}</h1>
+    <p *ngIf="section.description">{{ section.description }}</p>
+    <div class="links" fxLayout fxLayoutGap="16px">
+      <ng-container *ngFor="let link of section.links">
+        <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
+      </ng-container>
+    </div>
+  </header>
+</ng-template>
 
+<!-- Hero -->
+<ng-template #hero let-section>
+  <section class="hero" bgAsset="hero.png" [bgRef]="section.background">
+    <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
+      <h1 *ngIf="section.title">{{ section.title }}</h1>
+      <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
+      <div class="links" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
+        <ng-container *ngFor="let link of section.links">
+          <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</ng-template>
+
+<!-- Titles -->
+<ng-template #titles let-section>
+  <section class="titles">
+    <header fxLayout fxLayoutAlign="space-between center">
+      <h2>{{ section.title }}</h2>
+      <a mat-button [routerLink]="section.link || '../title'" color="primary">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+    <bf-carousel flex>
+      <ng-container *ngFor="let movie of section | queryTitles | async">
+        <movie-card [movie]="movie" [size]="section.mode" [link]="['title', movie.id]" [col]="3" carouselItem>
+        </movie-card>
+      </ng-container>
+    </bf-carousel>
+  </section>
+</ng-template>
+
+<!-- Orgs -->
+<ng-template #orgs let-section>
+  <section class="orgs">
+    <header fxLayout fxLayoutAlign="space-between center">
+      <h2>{{ section.title }}</h2>
+      <a mat-button [routerLink]="section.link || '../organization'" color="primary">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+    <article>
+      <bf-carousel flex>
+        <ng-container *ngFor="let org of section | queryOrgs | async">
+          <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
+        </ng-container>
+      </bf-carousel>
+    </article>
+  </section>
+</ng-template>
+
+<!-- Slider -->
+<ng-template #slider let-section>
+  <section class="slider">
+    <bf-slider hideIndicators loop class="dark-contrast-theme">
+      <ng-container *ngFor="let movie of section | queryTitles | async" >
+        <bf-slide overlayColor="gradient" [image]="movie.banner">
+          <movie-slide [movie]="movie">
+            <movie-slide-cta>
+              <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
+                More Details
+              </a>
+            </movie-slide-cta>
+            <movie-slide-actions>
+              <wishlist-button [movieId]="movie.id"></wishlist-button>
+            </movie-slide-actions>
+          </movie-slide>
+        </bf-slide>
+      </ng-container>
+    </bf-slider>
+  </section>
+</ng-template>
+
+<!-- Org Titles -->
+<ng-template #orgTitles let-section>
+  <section class="org-titles">
+    <header fxLayout fxLayoutAlign="space-between center">
+      <h2>{{ section.title }}</h2>
+      <a mat-button [routerLink]="section.link || '../organization'" color="primary">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+    <org-banner [org]="section.orgId | getOrg | async" [titles]="section | queryTitles | async">
+      <p class="description">{{ section.description }}</p>
+    </org-banner>
+  </section>
+</ng-template>
 
 
 
