@@ -14,7 +14,7 @@
         <ng-container *ngIf="orgFiles.length; else noOrgFiles">
           <mat-list-item *ngFor="let file of orgFiles">
             <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
-            <div mat-line [matTooltip]="file.path | fileName">{{ file.path | fileTypeTitle }} - {{file.path | fileName}}</div>
+            <div mat-line [matTooltip]="file.path | fileName">{{ file.path | fileFolder }} - {{file.path | fileName}}</div>
             <button mat-icon-button (click)="toggleSelect(file.path)">
               <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
               <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>
@@ -46,7 +46,7 @@
           <ng-container *ngIf="moviesFiles[movie.id].length; else noMovieFiles">
             <mat-list-item *ngFor="let file of moviesFiles[movie.id]">
               <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
-              <div mat-line [matTooltip]="file.path | fileName">{{ file.path | fileTypeTitle }} - {{file.path | fileName}}</div>
+              <div mat-line [matTooltip]="file.path | fileName">{{ file.path | fileFolder }} - {{file.path | fileName}}</div>
               <button mat-icon-button (click)="toggleSelect(file.path)">
                 <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
                 <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>

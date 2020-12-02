@@ -45,7 +45,7 @@ export class FilePathPipe implements PipeTransform {
     const docId = arrayedRef[2];
     const fileName = arrayedRef.pop();
     const subFolders = arrayedRef.pop();
-    const folder = getFileTypeTitle(subFolders.split('.').pop());
+    const folder = getFileFolder(subFolders.split('.').pop());
 
     let docName = docId;
     if (collection === 'movies') {
@@ -114,7 +114,7 @@ export class FileTypeImagePipe implements PipeTransform {
   }
 }
 
-export const getFileTypeTitle = (folder: string) => {
+export const getFileFolder = (folder: string) => {
   switch (folder) {
     case 'notes':
       return 'Note'
@@ -129,20 +129,25 @@ export const getFileTypeTitle = (folder: string) => {
   }
 }
 
-@Pipe({ name: 'fileTypeTitle' })
-export class FileTypeTitlePipe implements PipeTransform {
+/**
+ * Returns the name of the folder where the file is stored
+ * e.g. orgs/id/documents.notes/abc.pdf => Note
+ * movie/promotional/screener/abc.mp4 => Screener
+ */
+@Pipe({ name: 'fileFolder' })
+export class FileFolderPipe implements PipeTransform {
   transform(filePath: string) {
     const segments = filePath.split('/')
     segments.pop();
     const field = segments.pop();
     const folder = field.split('.').pop();
 
-    return getFileTypeTitle(folder);
+    return getFileFolder(folder);
   }
 }
 
 @NgModule({
-  exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileTypeTitlePipe],
-  declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileTypeTitlePipe],
+  exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe],
+  declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe],
 })
 export class FileNameModule { }
