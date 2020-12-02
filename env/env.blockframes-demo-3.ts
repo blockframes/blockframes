@@ -1,4 +1,4 @@
-export const production = true;
+export const production = false;
 
 export const persistenceSettings = {
   synchronizeTabs: true
