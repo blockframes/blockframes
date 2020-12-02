@@ -20,6 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [EditComponent],
@@ -32,6 +33,7 @@ import { MatDividerModule } from '@angular/material/divider';
     DisplayNameModule,
     FileSelectorModule,
     FileNameModule,
+    ClipboardModule,
 
     // Material
     MatProgressSpinnerModule,
