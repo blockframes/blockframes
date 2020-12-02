@@ -6,7 +6,7 @@
 
 <form [formGroup]="form" fxLayout="column">
   <mat-form-field fxFlex appearance="outline">
-    <mat-label>Type</mat-label>
+    <mat-label>Select a meeting type</mat-label>
     <mat-select required formControlName="type">
       <ng-container *ngFor="let type of types">
         <mat-option [value]="type">{{ type | titlecase }}</mat-option>
@@ -31,8 +31,8 @@
     </mat-form-field>
   </div>
 
-  <mat-checkbox formControlName="allDay" color="primary">All day</mat-checkbox>
-  <mat-checkbox formControlName="isPrivate" color="primary">Private</mat-checkbox>
+  <mat-slide-toggle formControlName="allDay" color="primary">All day</mat-slide-toggle>
+  <mat-slide-toggle formControlName="isPrivate" color="primary">Private</mat-slide-toggle>
 </form>
 
 <footer fxLayout fxLayoutAlign="end center"  fxLayoutGap="16px">
