@@ -114,8 +114,31 @@ export class FileTypeImagePipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'fileTypeTitle' })
+export class FileTypeTitlePipe implements PipeTransform {
+  transform(filePath: string) {
+    const segments = filePath.split('/')
+    segments.pop();
+    const field = segments.pop();
+    const name = field.split('.').pop();
+
+    switch (name) {
+      case 'notes':
+        return 'note'
+      case 'still_photo':
+        return 'image' 
+      case 'otherVideos':
+        return 'video'
+      case 'presentation_deck':
+        return 'presentation deck'
+      default:
+        return name;
+    }
+  }
+}
+
 @NgModule({
-  exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe],
-  declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe],
+  exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileTypeTitlePipe],
+  declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileTypeTitlePipe],
 })
 export class FileNameModule { }
