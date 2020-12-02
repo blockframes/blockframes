@@ -126,9 +126,6 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
       const userData = userSnap.data() as PublicUser;
       await storeSearchableUser(userData);
     }
-    // Normally, we can't change the name of the organization, but an admin can change it directly on database or on CRM
-    // I let a warning to be aware of this update inside the logs functions
-    //! When users will be able to change their org's name, we have to take care of the org ENS name
     console.warn('Organization\'s name has been updated, be careful !');
   }
 
