@@ -23,45 +23,31 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </header>
-        <article [ngSwitch]="section.mode">
-          <!-- Title Banner -->
-          <ng-container *ngSwitchCase="'banner'">
-            <bf-carousel flex>
-              <ng-container *ngFor="let movie of section | queryTitles | async">
-                <movie-card [movie]="movie" size="banner" [link]="['title', movie.id]" [col]="3" carouselItem>
-                </movie-card>
-              </ng-container>
-            </bf-carousel>
+        <bf-carousel flex>
+          <ng-container *ngFor="let movie of section | queryTitles | async">
+            <movie-card [movie]="movie" [size]="section.mode" [link]="['title', movie.id]" [col]="3" carouselItem>
+            </movie-card>
           </ng-container>
-          <!-- Title Poster -->
-          <ng-container *ngSwitchCase="'poster'">
-            <bf-carousel flex>
-              <ng-container *ngFor="let movie of section | queryTitles | async">
-                <movie-card [movie]="movie" size="poster" [link]="['title', movie.id]" [col]="3" carouselItem>
-                </movie-card>
-              </ng-container>
-            </bf-carousel>
+        </bf-carousel>
+      </section>
+      <!-- Slider -->
+      <section *ngSwitchCase="'slider'" class="slider">
+        <bf-slider hideIndicators loop class="dark-contrast-theme">
+          <ng-container *ngFor="let movie of section | queryTitles | async" >
+            <bf-slide overlayColor="gradient" [image]="movie.banner">
+              <movie-slide [movie]="movie">
+                <movie-slide-cta>
+                  <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
+                    More Details
+                  </a>
+                </movie-slide-cta>
+                <movie-slide-actions>
+                  <wishlist-button [movieId]="movie.id"></wishlist-button>
+                </movie-slide-actions>
+              </movie-slide>
+            </bf-slide>
           </ng-container>
-          <!-- Title Slider -->
-          <ng-container *ngSwitchCase="'slider'">
-            <bf-slider hideIndicators loop class="dark-contrast-theme">
-              <ng-container *ngFor="let movie of section | queryTitles | async" >
-                <bf-slide overlayColor="gradient" [image]="movie.banner">
-                  <movie-slide [movie]="movie">
-                    <movie-slide-cta>
-                      <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
-                        More Details
-                      </a>
-                    </movie-slide-cta>
-                    <movie-slide-actions>
-                      <wishlist-button [movieId]="movie.id"></wishlist-button>
-                    </movie-slide-actions>
-                  </movie-slide>
-                </bf-slide>
-              </ng-container>
-            </bf-slider>
-          </ng-container>
-        </article>
+        </bf-slider>
       </section>
       <!-- Orgs -->
       <section *ngSwitchCase="'orgs'" class="orgs">
