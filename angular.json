@@ -532,7 +532,7 @@
               "apps/catalog/catalog/src/manifest.webmanifest",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -786,7 +786,7 @@
               "apps/festival/festival/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -1280,7 +1280,7 @@
               "apps/crm/crm/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -1611,7 +1611,7 @@
               "apps/financiers/financiers/src/manifest.webmanifest",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -1876,7 +1876,7 @@
               "apps/cms/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
