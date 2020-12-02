@@ -10,15 +10,12 @@ img {
   border-radius: 50%;
 }
 
-article {
-  width: calc(50% - (24px / 2));
-}
-
 .org-info {
-  flex: 1;
+  width: 45%;
 }
 
 .titles {
+  width: 50%;
   padding: 24px;
 
   movie-card {
@@ -31,30 +28,43 @@ article {
 @include layout-bp(gt-md) {
   img {
     width: 180px;
+    height: 180px;
   }
 }
 
 @include layout-bp(md) {
+
   img {
     width: 140px;
+    height: 140px;
   }
 }
 
 @include layout-bp(sm) {
+
   img {
     width: 100px;
+    height: 100px;
   }
 }
 
 @include layout-bp(xs) {
+
   img {
     width: 80px;
+    height: 80px;
   }
 }
 
 
-@include layout-bp(lt-sm) {
-  article {
+@include layout-bp(lt-md) {
+  :host {
+    flex-direction: column;
+  }
+  .org-info {
+    width: 80%;
+  }
+  .titles {
     width: 100%;
   }
 }

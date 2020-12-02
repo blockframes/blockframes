@@ -6,7 +6,6 @@
 }
 
 .banner {
-  padding: 80px;
   background-size: cover;
   background-position: center;
 
@@ -45,20 +44,13 @@
 }
 
 
-@include layout-bp(xs) {
-  .banner {
-    padding: 50px 0;
+@include layout-bp(gt-sm) {
+  movie-slide {
+    padding: 80px;
   }
 }
-
-@include layout-bp(sm) {
-  .banner {
-    padding: 20px;
-  }
-}
-
-@include layout-bp(md) {
-  .banner {
-    padding: 20px;
+@include layout-bp(lt-md) {
+  movie-slide {
+    padding: 24px;
   }
 }
