@@ -6,7 +6,7 @@
 
 <form [formGroup]="form" fxLayout="column">
   <mat-form-field fxFlex appearance="outline">
-    <mat-label>Select a meeting type</mat-label>
+    <mat-label>Select event type</mat-label>
     <mat-select required formControlName="type">
       <ng-container *ngFor="let type of types">
         <mat-option [value]="type">{{ type | titlecase }}</mat-option>
