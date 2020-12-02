@@ -8,14 +8,19 @@ import { extensionToType, titleCase } from '../utils';
 
 @Pipe({ name: 'fileName' })
 export class FileNamePipe implements PipeTransform {
-  transform(file: string) {
-    if (!file) return '';
-    if (typeof file !== 'string') {
-      console.warn('UNEXPECTED FILE', file);
+
+  /**
+   * Returns the name of the file
+   * e.g. org/id/logo/abc.jpg => 'abc.jpg'
+   */
+  transform(filePath: string) {
+    if (!filePath) return '';
+    if (typeof filePath !== 'string') {
+      console.warn('UNEXPECTED FILE', filePath);
       console.warn('This pipe require a string as input');
       return '';
     }
-    const arrayedRef = file.split('/');
+    const arrayedRef = filePath.split('/');
     return arrayedRef.pop();
   }
 }
@@ -29,15 +34,19 @@ export class FilePathPipe implements PipeTransform {
     private userService: UserService,
   ) {}
 
-  async transform(file: string, separator = '/') {
-    if (typeof file !== 'string') {
-      console.warn('UNEXPECTED FILE', file);
+  /**
+   * Returns a readable version of the file path
+   * e.g. org/id/documents.notes/abc.jpg => 'Organization > Cascade8 > Note > abc.jpg'
+   */
+  async transform(filePath: string, separator = '/') {
+    if (typeof filePath !== 'string') {
+      console.warn('UNEXPECTED FILE', filePath);
       console.warn('This pipe require a string as input');
       return '';
     }
-    const arrayedRef = file.split('/');
+    const arrayedRef = filePath.split('/');
     if (arrayedRef.length < 5) {
-      console.warn('MALFORMED FILE PATH', file);
+      console.warn('MALFORMED FILE PATH', filePath);
       console.warn('Path should be formed of <privacy>/<collection>/<ID>/<folders>/<fileName>');
       return '';
     }
@@ -70,14 +79,19 @@ export class FilePathPipe implements PipeTransform {
   name: 'fileType'
 })
 export class FileTypePipe implements PipeTransform {
-  transform(file: string) {
-    if (typeof file !== 'string') {
-      console.warn('UNEXPECTED FILE', file);
+
+  /**
+   * Returns the type of the file
+   * e.g. abc.jpg => 'image'
+   */
+  transform(fileName: string) {
+    if (typeof fileName !== 'string') {
+      console.warn('UNEXPECTED FILE', fileName);
       console.warn('This pipe require a string as input');
       return 'unknown';
     }
 
-    const extension = getFileExtension(file);
+    const extension = getFileExtension(fileName);
     return extensionToType(extension);
   }
 }
@@ -86,15 +100,20 @@ export class FileTypePipe implements PipeTransform {
   name: 'fileTypeImage'
 })
 export class FileTypeImagePipe implements PipeTransform {
-  transform(file: string, kind: 'image' | 'icon' = 'image'): string {
 
-    if (typeof file !== 'string') {
-      console.warn('UNEXPECTED FILE', file);
+  /**
+   * Returns the image or icon path for type of file
+   * e.g. abc.jpg => 'image.webp' for image or 'picture' for icon
+   */
+  transform(fileName: string, kind: 'image' | 'icon' = 'image'): string {
+
+    if (typeof fileName !== 'string') {
+      console.warn('UNEXPECTED FILE', fileName);
       console.warn('This pipe require a string as input');
       return kind === 'image' ? 'image.webp' : 'document';
     }
 
-    const extension = getFileExtension(file);
+    const extension = getFileExtension(fileName);
     const type = extensionToType(extension);
 
     switch (type) {
@@ -129,13 +148,14 @@ export const getFileFolder = (folder: string) => {
   }
 }
 
-/**
- * Returns the name of the folder where the file is stored
- * e.g. orgs/id/documents.notes/abc.pdf => Note
- * movie/promotional/screener/abc.mp4 => Screener
- */
 @Pipe({ name: 'fileFolder' })
 export class FileFolderPipe implements PipeTransform {
+  
+  /**
+   * Returns the name of the folder where the file is stored
+   * e.g. orgs/id/documents.notes/abc.pdf => 'Note'
+   * movie/promotional/screener/abc.mp4 => 'Screener'
+   */
   transform(filePath: string) {
     const segments = filePath.split('/')
     segments.pop();
