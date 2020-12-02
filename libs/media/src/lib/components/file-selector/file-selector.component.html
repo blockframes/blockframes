@@ -72,6 +72,6 @@
         <button mat-icon-button (click)="toggleSelect(file)"><mat-icon svgIcon="cross"></mat-icon></button>
       </mat-list-item>
     </mat-list>
-    <button mat-raised-button color="primary" (click)="closeDialog()">Add Files</button>
+    <button mat-raised-button color="primary" (click)="closeDialog()" [disabled]="!selectedFiles.length">Add Files</button>
   </aside>
 </section>
