@@ -7,11 +7,13 @@
 
   <ng-template #short>
     <!-- We need to set the type like that else type is not reflected on FormControl -->
-    <ng-container *ngIf="schema.type === 'number'">
-      <input matInput type="number" [formControl]="form" [placeholder]="schema.placeholder" />
-    </ng-container>
-    <ng-container *ngIf="schema.type === 'text'">
-      <input matInput type="text" [formControl]="form" [placeholder]="schema.placeholder"/>
+    <ng-container [ngSwitch]="schema.type">
+      <ng-container *ngSwitchCase="'number'">
+        <input matInput type="number" [formControl]="form" [placeholder]="schema.placeholder" />
+      </ng-container>
+      <ng-container *ngSwitchCase="'text'">
+        <input matInput type="text" [formControl]="form" [placeholder]="schema.placeholder"/>
+      </ng-container>
     </ng-container>
   </ng-template>
 

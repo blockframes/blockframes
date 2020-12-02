@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 // RxJs
 import { Observable } from 'rxjs';
 
@@ -19,7 +19,7 @@ interface PageSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('banner') banner?: TemplateRef<any>;
   @ViewChild('hero') hero?: TemplateRef<any>;
   @ViewChild('titles') titles?: TemplateRef<any>;

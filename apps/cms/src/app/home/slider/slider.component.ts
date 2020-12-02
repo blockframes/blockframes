@@ -1,4 +1,4 @@
-import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +19,7 @@ import { Movie, MovieService } from '@blockframes/movie/+state';
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SliderComponent {
+export class SliderComponent implements OnInit {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<SliderSchema>;
   
