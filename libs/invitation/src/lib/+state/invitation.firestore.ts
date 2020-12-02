@@ -27,10 +27,10 @@ export interface InvitationBase<D> {
   toOrg?: PublicOrganization,
   toUser?: PublicUser,
   /**
-   * @dev Can be a titleId or a eventId for example.
+   * @dev Can only be an eventId.
    * If empty, the invitation is about Organization and we use directly fromOrg.id
    */
-  docId?: string;
+  docId?: string; // @TODO (#4377) rename to eventId
   message?: string;
 }
 
