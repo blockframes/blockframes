@@ -63,9 +63,9 @@
 
     </mat-tab>
   </mat-tab-group>
-  <aside fxLayout="column" fxLayoutAlign="space-between">
+  <aside fxLayout="column">
     <h4>Selected Files ({{selectedFiles.length}})</h4>
-    <mat-list>
+    <mat-list fxFlex>
       <mat-list-item *ngFor="let file of selectedFiles">
         <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage : 'icon'"></mat-icon>
         <div mat-line [matTooltip]="file | fileName">{{file | fileName}}</div>
