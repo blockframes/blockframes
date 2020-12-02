@@ -1,20 +1,32 @@
 @import '~@angular/flex-layout/mq';
 
 :host {
-  display: block;
-}
-
-header {
-  margin: 0 var(--layout-margin);
-}
-
-section {
-  margin-left: var(--layout-margin);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 24px;
 }
 
 img {
   border-radius: 50%;
 }
+
+article {
+  width: calc(50% - (24px / 2));
+}
+
+.org-info {
+  flex: 1;
+}
+
+.titles {
+  padding: 24px;
+
+  movie-card {
+    width: calc(50% - 24px);
+    padding-bottom: 24px;
+  }
+}
+
 
 @include layout-bp(gt-md) {
   img {
@@ -40,24 +52,9 @@ img {
   }
 }
 
-article {
-  width: 50%;
-}
 
 @include layout-bp(lt-sm) {
   article {
     width: 100%;
   }
-}
-
-.org-image {
-  margin-right: 24px;
-}
-
-.org-name {
-  margin-bottom: 0px;
-}
-
-movie-card {
-  width: calc(50% - 24px);
 }

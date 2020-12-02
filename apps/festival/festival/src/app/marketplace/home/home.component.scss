@@ -38,6 +38,12 @@
   }
 }
 
+.org-titles {
+  .description {
+    text-align: justify;
+  }
+}
+
 
 @include layout-bp(xs) {
   .banner {

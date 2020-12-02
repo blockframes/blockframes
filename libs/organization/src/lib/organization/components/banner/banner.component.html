@@ -1,20 +1,17 @@
-<section fxLayout fxLayout.lt-sm="column" *ngIf="org">
-  <article class="org-info">
-    <div fxLayoutAlign="start center">
-      <a matRipple [routerLink]="['../organization', org.id]" class="org-image">
-        <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
-      </a>
-      <div>
-        <p class="org-name">{{ org | orgName }}</p>
-        <p class="mat-caption">{{ (org | orgMovies | async | filterBy:filterMovie).length }} films</p>
-      </div>
+<article class="org-info" *ngIf="org">
+  <div fxLayoutAlign="start center">
+    <a matRipple [routerLink]="['../organization', org.id]" class="org-image">
+      <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
+    </a>
+    <div>
+      <p class="org-name">{{ org | orgName }}</p>
     </div>
-    <ng-content select="p.description"></ng-content>
-  </article>
+  </div>
+  <ng-content select="p.description"></ng-content>
+</article>
 
-  <article fxLayout="row wrap" fxLayoutGap="24px">
-    <ng-container *ngFor="let title of titles | slice:0:4">
-      <movie-card [movie]="title" size="banner" [link]="['title', title.id]"></movie-card>
-    </ng-container>
-  </article>
-</section>
+<article class="titles" fxLayout="row wrap" fxLayoutGap="24px">
+  <ng-container *ngFor="let title of titles | slice:0:4">
+    <movie-card [movie]="title" size="banner" [link]="['title', title.id]"></movie-card>
+  </ng-container>
+</article>

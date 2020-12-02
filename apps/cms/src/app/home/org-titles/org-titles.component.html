@@ -1,8 +1,8 @@
 <ng-container *ngIf="params$ | async | getParams:'app' as app">
-  <article>
+  <header>
     <form-text [form]="form.get('title')"></form-text>
     <form-text [form]="form.get('description')"></form-text>
-  </article>
+  </header>
   <ng-container *ngIf="app | getOrgs | async as orgs">
     <article>
       <form-autocomplete
