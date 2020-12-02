@@ -95,6 +95,11 @@ const routes: Routes = [{
           canDeactivate: [EventGuard],
           loadChildren: () => import('./event/lobby/lobby.module').then(m => m.LobbyModule),
         },
+        {
+          path: 'ended',
+          canActivate: [EventGuard],
+          loadChildren: () => import('./event/ended/meeting-ended.module').then(m => m.MeetingEndedModule),
+        },
         ]
       }]
     },
