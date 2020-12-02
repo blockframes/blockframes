@@ -15,6 +15,6 @@
 
 <article class="titles" fxLayout="row wrap" fxLayoutGap="24px">
   <ng-container *ngFor="let title of titles | slice:0:4">
-    <movie-card [movie]="title" size="banner" [link]="['title', title.id]"></movie-card>
+    <movie-card [movie]="title" size="banner" [link]="['../title', title.id]"></movie-card>
   </ng-container>
 </article>
