@@ -118,12 +118,13 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   const promises: Promise<any>[] = [];
 
-  // if name, email or avatar has changed : update algolia record
+  // if name, email, avatar or orgId has changed : update algolia record
   if (
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar !== after.avatar
+    before.avatar !== after.avatar ||
+    before.orgId !== after.orgId
   ) {
     promises.push(storeSearchableUser(after));
   }
