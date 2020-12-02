@@ -9,13 +9,23 @@ section {
   border: solid 1px var(--foreground-divider);
   padding: 24px 16px;
 
-  button {
-    width: 30%;
+  .manage-files-btn {
+    margin-bottom: 16px;
   }
 
   p.no-files {
     width: 70%;
     text-align: center;
     margin: 32px auto;
+  }
+}
+
+.link {
+  mat-form-field {
+    display: block;
+  }
+
+  button {
+    margin-top: 20px;
   }
 }

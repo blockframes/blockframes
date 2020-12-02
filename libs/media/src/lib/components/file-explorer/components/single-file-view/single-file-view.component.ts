@@ -68,8 +68,12 @@ export class SingleFileViewComponent implements OnInit {
     }
     this.mediaService.uploadMedias(mediasToUpload);
 
-    if (!mediasToUpload[0].blobOrFile) {
+    if (mediasToUpload.some(media => !!media.blobOrFile)) {
+      this.activeDirectory.hasFile = true;
+    }
+    if (mediasToUpload.some(media => !media.ref && !!media.oldRef)) {
       this.snackBar.open('File deleted', 'close', { duration: 5000 });
+      this.activeDirectory.hasFile = false;
     }
   }
 
