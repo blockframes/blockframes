@@ -1,5 +1,5 @@
 <article class="org-info" *ngIf="org">
-  <div fxLayoutAlign="start center">
+  <header fxLayoutAlign="start center">
     <a matRipple [routerLink]="['../organization', org.id]" class="org-image">
       <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
     </a>
@@ -9,7 +9,7 @@
         <p class="mat-caption">{{ orgMovies.length }} films</p>
       </ng-container>
     </div>
-  </div>
+  </header>
   <ng-content select="p.description"></ng-content>
 </article>
 
