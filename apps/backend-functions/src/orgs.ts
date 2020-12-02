@@ -16,7 +16,7 @@ import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganiza
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -118,8 +118,18 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   }
 
   // Update algolia's index
-  if (before.denomination.full !== after.denomination.full) {
-    throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
+  if (before.denomination.full !== after.denomination.full
+  || before.denomination.public !== after.denomination.public) {
+    after.userIds.forEach(async userId => {
+      const userDocRef = db.doc(`users/${userId}`);
+      const userSnap = await userDocRef.get();
+      const userData = userSnap.data() as PublicUser;
+      await storeSearchableUser(userData);
+    })
+    // Normally, we can't change the name of the organization, but an admin can change it directly on database or on CRM
+    // I let a warning to be aware of this update inside the logs functions
+    //! When users will be able to change their org's name, we have to take care of the org ENS name
+    console.warn('Organization\'s name has been updated, be careful !');
   }
 
   await cleanOrgMedias(before, after);
