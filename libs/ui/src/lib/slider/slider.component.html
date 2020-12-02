@@ -3,18 +3,20 @@
   <!-- Slides -->
   <ul class="slider-list" #slideList role="listbox"
     [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
-    <li *ngFor="let image of slides" role="option" class="slider-item" [style.max-height]="maxHeight">
+    <li *ngFor="let image of slides.changes | async" role="option" class="slider-item" [style.max-height]="maxHeight">
       <ng-template [ngTemplateOutlet]="image.templateRef"></ng-template>
     </li>
   </ul>
 
   <!-- Arrows -->
-  <ng-container *ngIf="!hideArrows">
-    <mat-icon [svgIcon]="arrowBack" mat-ripple (click)="previous()" *ngIf="loop || currentIndex !== 0"
-      tabindex="-1" class="previous"></mat-icon>
-    <mat-icon [svgIcon]="arrowForward" mat-ripple (click)="next()"
-      *ngIf="loop || currentIndex !== slides.length - 1" tabindex="-1" class="next"></mat-icon>
-  </ng-container>
+  <div *ngIf="!hideArrows" class="arrows" fxLayout fxLayoutGap="16px">
+    <button mat-icon-button (click)="previous()" *ngIf="loop || currentIndex !== 0">
+      <mat-icon [svgIcon]="arrowBack" tabindex="-1"></mat-icon>
+    </button>
+    <button mat-icon-button (click)="next()" *ngIf="loop || currentIndex !== slides.length - 1" >
+      <mat-icon [svgIcon]="arrowForward" tabindex="-1"></mat-icon>
+    </button>
+  </div>
 
   <!-- Indicator -->
   <span *ngIf="!hideIndicators" class="slider-indicators" tabindex="-1"

@@ -1,16 +1,24 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Organization } from '../+state';
-import { fromOrg, MovieService } from '@blockframes/movie/+state';
-import { map } from 'rxjs/operators';
+import { MovieService } from '@blockframes/movie/+state';
+import { QueryFn } from '@angular/fire/firestore';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Pipe({ name: 'orgMovies', pure: true })
 export class OrgMoviesPipe implements PipeTransform {
-  constructor(private movieService: MovieService) { }
+  constructor(private routerQuery: RouterQuery, private movieService: MovieService) { }
 
-  transform(org: Organization, from: number = 0, to?: number) {
-    return this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => {
-      return to ? movies.splice(from, to) : movies.splice(from, movies.length)
-    }));
+  transform(orgId: string, limit?: number) {
+    const appName = getCurrentApp(this.routerQuery);
+    const query: QueryFn = ref => ref
+      .where(`storeConfig.appAccess.${appName}`, '==', true)
+      .where(`storeConfig.status`, '==', 'accepted')
+      .where('orgIds', 'array-contains', orgId);
+    if (limit) {
+      return this.movieService.valueChanges(ref => query(ref).limit(limit));
+    } else {
+      return this.movieService.valueChanges(query);
+    }
   }
 }
 

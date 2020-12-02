@@ -22,14 +22,6 @@
         flex-shrink: 0;
     }
 
-    mat-icon {
-        position: absolute;
-        z-index: 1;
-        outline: none;
-        cursor: pointer;
-        border-radius: 50%;
-    }
-
     &-indicators {
         display: flex;
         position: absolute;
@@ -39,22 +31,13 @@
         transform: translateX(-50%);
         outline: none;
     }
-
-    button {
-        margin: 0 20px;
-        width: 1rem;
-        height: 1rem;
-    }
 }
 
-.previous {
-    right: 60px;
-    bottom: 30px;
-}
-
-.next {
-    right: 0px;
-    bottom: 30px;
+.arrows {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  z-index: 1;
 }
 
 /// Margin needs to be overriden because in the global

@@ -1,4 +1,4 @@
-import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +19,8 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 interface TitlesSection extends Section {
   _type: 'titles',
   title: string;
-  mode: 'poster' | 'banner' | 'slider';
+  link: string;
+  mode: 'poster' | 'banner';
   titleIds: string[];
   query: FirestoreQuery;
 }
@@ -31,8 +32,9 @@ export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   load: async () => import('./titles.component').then(m => m.TitlesComponent),
   controls: {
     _type: { form: 'control' },
-    title: matText({ label: 'title' }),
-    mode: matSelect({ label: 'Mode', options: ['poster', 'banner', 'slider'] }),
+    title: matText({ label: 'Title' }),
+    link: matText({ label: 'See all Link', placeholder: '../title' }),
+    mode: matSelect({ label: 'Mode', options: ['poster', 'banner'], value: 'banner' }),
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
     query: firestoreQuery({ collection: 'movies' }),
   },
@@ -49,7 +51,7 @@ export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
   styleUrls: ['./titles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitlesComponent {
+export class TitlesComponent implements OnInit {
   private mode?: 'query' | 'titleIds';
   @Input() form?: FormEntity<TitlesSchema>;
   
@@ -74,13 +76,21 @@ export class TitlesComponent {
     return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
   }
 
-  select(event: MatRadioChange) {
-    this.mode = event.value;
+  private selectForm() {
     for (const key of ['titleIds', 'query'] as const) {
-      event.value === key
+      this.queryMode === key
         ? this.form?.get(key).enable()
         : this.form?.get(key).disable();
     }
+  }
+
+  ngOnInit() {
+    this.selectForm();
+  }
+
+  select(event: MatRadioChange) {
+    this.mode = event.value;
+    this.selectForm();
   }
 }
 

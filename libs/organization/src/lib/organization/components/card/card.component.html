@@ -25,7 +25,7 @@
       <mat-icon svgIcon="film"></mat-icon>
     </ng-template>
     <!-- We want to use slice to be sure to have 3 elements/placeholders -->
-    <div class="tab-content" *ngIf="org | orgMovies:0:3 | async as movies">
+    <div class="tab-content" *ngIf="org.id | orgMovies:3 | async as movies">
       <p class="mat-caption">{{ movies[0]?.title.international || "-"}}</p>
       <p class="mat-caption">{{ movies[1]?.title.international || "-"}}</p>
       <p class="mat-caption">{{ movies[2]?.title.international || "-"}}</p>

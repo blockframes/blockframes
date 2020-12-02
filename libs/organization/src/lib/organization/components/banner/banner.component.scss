@@ -1,63 +1,70 @@
 @import '~@angular/flex-layout/mq';
 
 :host {
-  display: block;
-}
-
-header {
-  margin: 0 var(--layout-margin);
-}
-
-section {
-  margin-left: var(--layout-margin);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 24px;
 }
 
 img {
   border-radius: 50%;
 }
 
+.org-info {
+  width: 45%;
+}
+
+.titles {
+  width: 50%;
+  padding: 24px;
+
+  movie-card {
+    width: calc(50% - 24px);
+    padding-bottom: 24px;
+  }
+}
+
+
 @include layout-bp(gt-md) {
   img {
     width: 180px;
+    height: 180px;
   }
 }
 
 @include layout-bp(md) {
+
   img {
     width: 140px;
+    height: 140px;
   }
 }
 
 @include layout-bp(sm) {
+
   img {
     width: 100px;
+    height: 100px;
   }
 }
 
 @include layout-bp(xs) {
+
   img {
     width: 80px;
+    height: 80px;
   }
 }
 
-article {
-  width: 50%;
-}
 
-@include layout-bp(lt-sm) {
-  article {
+@include layout-bp(lt-md) {
+  :host {
+    flex-direction: column;
+  }
+  .org-info {
+    width: 80%;
+  }
+  .titles {
     width: 100%;
   }
-}
-
-.org-image {
-  margin-right: 24px;
-}
-
-.org-name {
-  margin-bottom: 0px;
-}
-
-movie-card {
-  width: calc(50% - 24px);
 }

@@ -1,16 +1,27 @@
 <ng-container *ngIf="form">
   <article>
-    <form-text [form]="form.get('title')"></form-text>
     <form-text [form]="form.get('subtitle')"></form-text>
+    <form-text [form]="form.get('title')"></form-text>
   </article>
   <article>
     <form-text [form]="form.get('description')"></form-text>
   </article>
-  <span>Link</span>
-  <article>
-    <form-link [form]="form.get('link')"></form-link>
+  <h5>CTA Link</h5>
+  <article class="links">
+    <ng-container *ngFor="let controls of links.controls; let i = index">
+      <div class="link">
+        <form-link [form]="controls"></form-link>
+        <button mat-icon-button (click)="links.removeAt(i)">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </div>
+    </ng-container>
+    <button mat-button (click)="links.add()">
+      <mat-icon svgIcon="add"></mat-icon>
+      <span>Add Link</span>
+    </button>
   </article>
-  <span>Background</span>
+  <h5>Background Image</h5>
   <article>
     <form-text [form]="form.get('background')"></form-text>
   </article>

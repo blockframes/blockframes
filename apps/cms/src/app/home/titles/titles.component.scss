@@ -1,11 +1,11 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
 article {
   display: flex;
   margin-bottom: 16px;
-}
-
-// Gap
-article > *:not(:first-child) {
-  margin-left: 16px;
 }
 
 form-chips-autocomplete {
