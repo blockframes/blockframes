@@ -447,19 +447,29 @@ export class ViewExtractedMoviesComponent implements OnInit {
             if (dateParts && dateParts.length === 4) {
               date = new Date(`${dateParts[3]}-${dateParts[2]}-${dateParts[1]}`);
             }
-            const originalRelease = createMovieOriginalRelease({ date });
-            const country = getKeyIfExists('territories', originalReleaseParts[0]);
-            if (country) {
-              originalRelease.country = country;
+            if (!!date) {
+              const originalRelease = createMovieOriginalRelease({ date });
+              const country = getKeyIfExists('territories', originalReleaseParts[0]);
+              if (country) {
+                originalRelease.country = country;
+              }
+
+              const media = getKeyIfExists('medias', originalReleaseParts[1]);
+              if (media) {
+                originalRelease.media = media;
+              }
+
+              movie.originalRelease.push(originalRelease);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'originCountryReleaseDate',
+                name: 'Original releases',
+                reason: `Invalid date`,
+                hint: 'Edit corresponding sheet field.'
+              });
             }
 
-            const media = getKeyIfExists('medias', originalReleaseParts[1]);
-            if (media) {
-              originalRelease.media = media;
-            }
-
-
-            movie.originalRelease.push(originalRelease);
           });
         }
 
