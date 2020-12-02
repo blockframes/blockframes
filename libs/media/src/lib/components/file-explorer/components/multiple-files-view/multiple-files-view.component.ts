@@ -110,6 +110,7 @@ export class MultipleFilesViewComponent implements OnInit {
 
           if (index > -1) {
             formList.removeAt(index);
+            this.activeDirectory.hasFile = formList.length;
             const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(form);
             if (collection === 'movies') {
               documentToUpdate.id = id;

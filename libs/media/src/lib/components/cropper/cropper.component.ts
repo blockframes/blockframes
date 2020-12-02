@@ -209,7 +209,7 @@ export class CropperComponent implements OnInit {
       this.croppedImage = '';
     }
 
-    this.form.patchValue({ ref: '', cropped: false });
+    this.form.patchValue({ ref: '', blobOrFile: undefined });
     this.form.markAsDirty();
 
     this.nextStep('drop');

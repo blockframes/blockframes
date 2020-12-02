@@ -67,7 +67,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // create org's folders & files
-    const orgFileStructure = createOrgFileStructure(this.org.id)
+    const orgFileStructure = createOrgFileStructure(this.org);
     this.directories.push(orgFileStructure);
 
     // set the org folder as active
@@ -80,7 +80,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
       titles.sort((a, b) => sortMovieBy(a, b, 'Title'));
 
       titles.forEach((title, index) =>
-        this.directories.push(createMovieFileStructure(title.id, title.title.international, index + 1)) // we do `index + 1` because `[0]` is the org
+        this.directories.push(createMovieFileStructure(title, index + 1)) // we do `index + 1` because `[0]` is the org
       );
       this.cdr.markForCheck();
     });
@@ -183,7 +183,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
       });
     }
 
-    // on dialog close update teh corresponding document & upload the file if needed
+    // on dialog close update the corresponding document & upload the file if needed
     this.dialogSubscription = dialog.afterClosed().subscribe(async result => {
       if (!!result) {
         if (this.activeDirectory.type === 'directory') return;
@@ -197,6 +197,13 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
         } else {
           this.dialogSubscription.unsubscribe();
           throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
+        }
+        const mediaIndex = mediasToUpload.findIndex(media => !!media.blobOrFile);
+        if (mediaIndex > -1) {
+          // oldRef is not set if it's a new upload and therefore a new file is added
+          if (!mediasToUpload[mediaIndex].oldRef && typeof this.activeDirectory.hasFile === 'number') {
+            this.activeDirectory.hasFile++
+          }
         }
         this.mediaService.uploadMedias(mediasToUpload);
       }
