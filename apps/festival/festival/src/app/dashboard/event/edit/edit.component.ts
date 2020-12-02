@@ -29,7 +29,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   private formSub: Subscription;
-  eventId: string;
+  link: string;
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
@@ -72,7 +72,10 @@ export class EditComponent implements OnInit, OnDestroy {
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))
     ).subscribe(event => {
-      this.eventId = event.id;
+      const app = getCurrentApp(this.routerQuery);
+      const url = applicationUrl[app];
+      this.link = `${url}/c/o/marketplace/event/${event.id}/lobby`;
+ 
       this.type = event.type;
       this.form = new EventForm(event);
 
@@ -116,11 +119,5 @@ export class EditComponent implements OnInit, OnDestroy {
       this.files.patchAllValue(result);
       this.cdr.markForCheck();
     });
-  }
-
-  getLink() {
-    const app = getCurrentApp(this.routerQuery);
-    const url = applicationUrl[app];
-    return `${url}/c/o/marketplace/event/${this.eventId}/lobby`;
   }
 }

@@ -49,9 +49,9 @@
           <div class="link" fxLayout>
             <mat-form-field class="link" appearance="outline" fxFlex>
               <mat-label>Link to video call</mat-label>
-              <input matInput type="text" disabled [value]="getLink()">
+              <input matInput type="text" disabled [value]="link">
             </mat-form-field>
-            <button mat-icon-button [cdkCopyToClipboard]="getLink()">
+            <button mat-icon-button [cdkCopyToClipboard]="link">
               <mat-icon svgIcon="copy"></mat-icon>
             </button>
           </div>
@@ -110,6 +110,6 @@
     </ng-container>
   </event-edit>
   <ng-container *ngIf="isEventStarted()">
-    <!-- <event-analytics [eventId]="form.id.value"></event-analytics> -->
+    <event-analytics [eventId]="form.id.value"></event-analytics>
   </ng-container>
 </ng-container>
