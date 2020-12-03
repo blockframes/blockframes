@@ -4,8 +4,9 @@ import { ChangeDetectionStrategy, Component, HostListener, Inject, OnDestroy, On
 import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '@blockframes/media/+state/media.model';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { ViewerDialogComponent } from '../dialog/file-viewer/viewer.component';
 
 @Component({
   selector: 'media-file-selector',
@@ -25,6 +26,7 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
   constructor(
     private orgQuery: OrganizationQuery,
     private movieService: MovieService,
+    private dialog: MatDialog,
     private dialogRef: MatDialogRef<FileSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) private data: { selectedFiles: string[] }
   ) { }
@@ -92,6 +94,10 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
 
       }
     }
+  }
+
+  previewFile(ref: string) {
+    this.dialog.open(ViewerDialogComponent, { data: { ref }, width: '70vw', height: '70vh' })
   }
 
   closeDialog() {
