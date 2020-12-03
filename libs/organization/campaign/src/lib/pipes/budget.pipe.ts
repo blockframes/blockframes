@@ -5,8 +5,8 @@ import { Budget } from '../+state';
 @Pipe({ name: 'budget' })
 export class BudgetPipe implements PipeTransform {
   transform(budget: Budget): number {
-    const { castCost, others, postProdCost, producerFees, shootCost } = budget;
-    return [castCost, others, postProdCost, producerFees, shootCost]
+    const { development, shooting, postProduction, administration, contingency } = budget;
+    return [development, shooting, postProduction, administration, contingency]
       .reduce((sum, value) => value ? sum + value : sum, 0);
   }
 }

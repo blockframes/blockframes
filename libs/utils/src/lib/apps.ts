@@ -19,7 +19,7 @@ export const appName = {
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM',
   cms: 'Blockframes CMS'
-};
+}
 
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
@@ -157,4 +157,3 @@ export function getSendgridFrom(a?: App): EmailJSON {
     return sendgridEmailsFrom[a] || sendgridEmailsFrom.default;
   }
 }
-

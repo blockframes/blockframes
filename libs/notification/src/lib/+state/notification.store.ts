@@ -7,7 +7,7 @@ import { Event } from '@blockframes/event/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentModule } from '@blockframes/utils/apps';
+import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 
@@ -20,6 +20,9 @@ const initialState = {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'notifications' })
 export class NotificationStore extends EntityStore<NotificationState, Notification> {
+
+  private appName;
+
   constructor(
     private movieQuery: MovieQuery,
     private firestore: AngularFirestore,
@@ -27,6 +30,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     private orgService: OrganizationService
   ) {
     super(initialState);
+    this.appName = appName[getCurrentApp(this.routerQuery)]
   }
 
   public formatNotification(notification: Notification): Partial<Notification> {
@@ -36,7 +40,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'organizationAcceptedByArchipelContent':
         return {
           date: toDate(notification.date),
-          message: 'Your organization was accepted by the Archipel team.',
+          message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,

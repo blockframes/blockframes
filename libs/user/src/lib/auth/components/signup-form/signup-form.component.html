@@ -29,7 +29,7 @@
       <password-confirm formControlName="password"></password-confirm>
 
       <auth-accept-conditions [control]="signupForm.get('termsOfUseChecked')">
-        <span conditionText>I hereby accept Archipel Market</span>
+        <span conditionText>I hereby accept the Terms and Conditions.</span>
         <span conditionLink>Terms and Conditions</span>
         <ng-template authConditions>
           <auth-terms-conditions></auth-terms-conditions>
@@ -45,8 +45,10 @@
       </auth-accept-conditions>
 
       <div fxLayout="column" fxLayoutAlign="center center">
-        <button class="submit" type="submit" mat-flat-button color="accent" [disabled]="signupForm.invalid">Sign up</button>
-        <button id="tosignin" type="button" color="primary" mat-button (click)="opened.emit()">I already have an account</button>
+        <button class="submit" type="submit" mat-flat-button color="accent" [disabled]="signupForm.invalid">Sign
+          up</button>
+        <button id="tosignin" type="button" color="primary" mat-button (click)="opened.emit()">I already have an
+          account</button>
       </div>
     </form>
   </mat-card>
