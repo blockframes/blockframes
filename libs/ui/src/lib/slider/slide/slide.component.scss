@@ -9,13 +9,14 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  @include frame();
+  height: fit-content;
+  // @include frame();
 
-  &-overlay {
-    @include frame();
-  }
+  // &-overlay {
+  //   @include frame();
+  // }
 
-  &-content {
-    @include frame(1);
-  }
+  // &-content {
+  //   @include frame(1);
+  // }
 }

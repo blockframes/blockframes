@@ -1,9 +1,7 @@
 <ng-template>
   <div class="slide" [bgRef]="image" bgAsset="empty_slider.webp">
-    <div class="slide-content">
+    <div class="slide-content" [style.background]="overlayColor">
       <ng-content></ng-content>
-    </div>
-    <div *ngIf="!hideOverlay" class="slide-overlay" [style.background]="overlayColor">
     </div>
   </div>
 </ng-template>
