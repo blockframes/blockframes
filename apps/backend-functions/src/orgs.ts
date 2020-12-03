@@ -145,7 +145,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
     const urlToUse = await getAppUrl(after);
-    const from = await getFromEmail(after);
+    const from = await getOrgAppKey(after);
     await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), from);
 
     // Send a notification to the creator of the organization
@@ -293,7 +293,7 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const from = await getFromEmail(orgId);
+  const from = await getOrgAppKey(orgId);
   const appKey = await getOrgAppKey(orgId);
   const appName = getAppName(appKey);
   const appUrl = await getAppUrl(orgId);

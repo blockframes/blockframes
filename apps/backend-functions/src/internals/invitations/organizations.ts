@@ -13,7 +13,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds, getDocument, getAppUrl, getFromEmail } from '../../data/internals';
+import { getAdminIds, getDocument, getAppUrl, getOrgAppKey } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
@@ -69,7 +69,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
   const adminIds = await getAdminIds(organizationId);
   const adminEmails = await Promise.all(adminIds.map(id => getUserMail(id)));
-  const from = await getFromEmail(organizationId);
+  const from = await getOrgAppKey(organizationId);
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
     .map(adminEmail => userJoinedYourOrganization(adminEmail!, userEmail!))
@@ -108,7 +108,7 @@ async function onRequestFromUserToJoinOrgCreate({
   }
 
   const adminIds = await getAdminIds(toOrg.id);
-  const from = await getFromEmail(toOrg.id);
+  const from = await getOrgAppKey(toOrg.id);
 
   const admins = await Promise.all(adminIds.map(u => getUser(u)));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
@@ -144,7 +144,7 @@ async function onRequestFromUserToJoinOrgAccept({
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
-  const from = await getFromEmail(toOrg.id);
+  const from = await getOrgAppKey(toOrg.id);
   const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
   await sendMailFromTemplate(template, from);
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
