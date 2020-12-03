@@ -30,6 +30,49 @@
 @include mat-core();
 
 
+@function getContrast($theme) {
+  $primary: map-get($theme, 'primary');
+  $accent: map-get($theme, 'accent');
+
+  $primary-contrast: (
+    200: mat-color($primary, 100),
+    500: mat-color($primary, 400),
+    800: mat-color($primary, 700),
+    contrast: (
+      200: mat-color(map-get($primary, contrast), 100),
+      500: mat-color(map-get($primary, contrast), 400),
+      800: mat-color(map-get($primary, contrast), 700),
+    )
+  );
+  $accent-contrast: (
+    200: mat-color($accent, 100),
+    500: mat-color($accent, 400),
+    800: mat-color($accent, 700),
+    contrast: (
+      200: mat-color(map-get($accent, contrast), 100),
+      500: mat-color(map-get($accent, contrast), 400),
+      800: mat-color(map-get($accent, contrast), 700),
+    )
+  );
+
+  $foreground-contrast: (
+		900: #ffffff,
+		800: #ffffff,
+		700: #ffffff,
+		600: #ffffff,
+		500: #ffffff
+  );
+  @return (
+    is-dark: map-get($theme, 'is-dark'),
+    primary: $primary-contrast,
+    accent: $accent-contrast,
+    warn: map-get($theme, 'warn'),
+    background: map-get($theme, 'background'),
+    foreground: $foreground-contrast,
+  );
+}
+
+
 @function getTheme($theme) {
 
   $primary: map-get($theme, 'primary');
@@ -46,7 +89,7 @@
     status-bar: map-get($background, 800),
     background: map-get($background, 900),
     disabled-button: map-get($background, 500),
-    hover: rgba(map-get($background, 500), 0.05),
+    hover: rgba(map-get($foreground, 600), 0.1),
     card: map-get($background, 700),
     dialog: map-get($background, 700),
     raised-button: map-get($background, 600),
@@ -78,32 +121,6 @@
     slider-min: map-get($foreground, 700),
     slider-off: rgba(map-get($foreground, 700), 0.26),
     slider-off-active: rgba(map-get($foreground, 700), 0.38),
-  );
-
-  $foreground-contrast: (
-    900: #FFFFFF,
-    800: #FFFFFF,
-    700: #FFFFFF,
-    600: #FFFFFF,
-    500: #FFFFFF,
-  );
-
-  $mat-foreground-contrast: (
-    base: map-get($primary, 200),
-    divider: map-get($foreground-contrast, 500),
-    dividers: map-get($foreground-contrast, 500),
-    disabled: map-get($foreground-contrast, 500),
-    disabled-button: map-get($foreground-contrast, 200),
-    disabled-text: map-get($foreground-contrast, 500),
-    elevation: rgba(map-get($background, 700), 0.12),
-    hint-text: map-get($foreground-contrast, 600),
-    secondary-text: map-get($foreground-contrast, 700),
-    icon: map-get($foreground-contrast, 800),
-    icons: map-get($foreground-contrast, 800),
-    text: map-get($foreground-contrast, 800),
-    slider-min: map-get($foreground-contrast, 700),
-    slider-off: rgba(map-get($foreground-contrast, 700), 0.26),
-    slider-off-active: rgba(map-get($foreground-contrast, 700), 0.38),
   );
 
   //////////
@@ -139,24 +156,11 @@
     font: $font,
   );
   
-  $mat-theme-contrast: (
-    // Standard
-    primary: mat-palette($primary, 500, 200, 800),
-    accent: mat-palette($accent, 500, 200, 800),
-    warn: mat-palette($warn, 500),
-    is-dark: map-get($theme, 'is-dark'),
-    foreground: $mat-foreground-contrast,
-    background: $mat-background,
-    font: $font,
-  );
 
-  @return (
-    default: $mat-theme,
-    contrast: mat-theme-contrast,
-  );
+  @return $mat-theme;
 }
 
-@mixin set-theme($theme) {
+@mixin mat-theme($theme) {
   @include angular-material-color($theme);
   @include mat-bf-button-theme($theme);
   @include mat-bf-card-theme($theme);
@@ -188,32 +192,24 @@
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
-  :root {
-    // Add css variables here when you need one
-    --primary: #{mat-color($primary, default)};
-    --primary-contract: #{mat-color($primary, default-contrast)};
-    --accent: #{mat-color($accent, default)};
-    --accent-contract: #{mat-color($accent, default-contrast)};
-    --warn: #{mat-color($warn, default)};
-    --warn-contract: #{mat-color($warn, default-contrast)};
-    --active: #5f6e8680;
-    // Background
-    --background-disabled-button: #{mat-color($background, disabled-button)};
-    --background-slider: #{mat-color($foreground, slider-min)};
-    --background-hover: #{mat-color($background, hover)};
-    --background-card: #{mat-color($background, card)};
-    --background: #{mat-color($background, background, 0.5)};
-    // Foreground
-    --foreground-divider: #{mat-color($foreground, divider)};
-    --foreground-text: #{mat-color($foreground, text)};
-  }
-}
 
-@mixin mat-theme($themes) {
-  @include set-theme(map-get($themes, default));
-  .high-contrast {
-    @include set-theme(map-get($themes, contrast));
-  }
+  // Add css variables here when you need one
+  --primary: #{mat-color($primary, default)};
+  --primary-contract: #{mat-color($primary, default-contrast)};
+  --accent: #{mat-color($accent, default)};
+  --accent-contract: #{mat-color($accent, default-contrast)};
+  --warn: #{mat-color($warn, default)};
+  --warn-contract: #{mat-color($warn, default-contrast)};
+  --active: #5f6e8680;
+  // Background
+  --background-disabled-button: #{mat-color($background, disabled-button)};
+  --background-slider: #{mat-color($foreground, slider-min)};
+  --background-hover: #{mat-color($background, hover)};
+  --background-card: #{mat-color($background, card)};
+  --background: #{mat-color($background, background, 0.5)};
+  // Foreground
+  --foreground-divider: #{mat-color($foreground, divider)};
+  --foreground-text: #{mat-color($foreground, text)};
 
 }
 
