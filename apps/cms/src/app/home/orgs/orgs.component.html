@@ -1,4 +1,7 @@
-<form-text [form]="form.get('title')"></form-text>
+<header>
+  <form-text [form]="form.get('title')"></form-text>
+  <form-text [form]="form.get('link')"></form-text>
+</header>
 <article>
   <mat-radio-group [value]="queryMode" (change)="select($event)">
     <mat-radio-button value="orgIds">IDs</mat-radio-button>

@@ -1,4 +1,4 @@
-import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgModule, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -17,6 +17,7 @@ import { map,shareReplay,switchMap } from 'rxjs/operators';
 interface OrgsSection extends Section {
   _type: 'orgs',
   title: string;
+  link: string;
   orgIds: string[];
   query: FirestoreQuery;
 }
@@ -30,6 +31,7 @@ export const orgsSchema = (params: TemplateParams): OrgsSchema => ({
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
+    link: matText({ label: 'See all Link', placeholder: '../organization' }),
     orgIds: matMultiSelect<string>({ label: 'Org IDs' }),
     query: firestoreQuery({ collection: 'orgs' }),
   },
@@ -46,7 +48,7 @@ export const orgsSchema = (params: TemplateParams): OrgsSchema => ({
   styleUrls: ['./orgs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrgsComponent {
+export class OrgsComponent implements OnInit {
   private mode?: 'query' | 'orgIds';
   params$ = this.route.paramMap;
   @Input() form?: FormEntity<OrgsSchema>;
@@ -70,13 +72,21 @@ export class OrgsComponent {
     return this.mode || (this.form?.get('orgIds').length ? 'orgIds' : 'query');
   }
 
-  select(event: MatRadioChange) {
-    this.mode = event.value;
+  private selectForm() {
     for (const key of ['orgIds', 'query'] as const) {
-      event.value === key
+      this.queryMode === key
         ? this.form?.get(key).enable()
         : this.form?.get(key).disable();
     }
+  }
+
+  ngOnInit() {
+    this.selectForm();
+  }
+
+  select(event: MatRadioChange) {
+    this.mode = event.value;
+    this.selectForm();
   }
 }
 

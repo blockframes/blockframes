@@ -14,9 +14,10 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <mat-icon class="handler" svgIcon="drag_indicator" cdkDragHandle></mat-icon>
+              <span>{{ control.value._type }}</span>
             </mat-panel-title>
             <mat-panel-description>
-              {{ control.value._type }}
+              {{ control.value['title'] || '' }}
             </mat-panel-description>
           </mat-expansion-panel-header>
           <div class="form">

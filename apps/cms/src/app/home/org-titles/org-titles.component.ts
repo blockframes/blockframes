@@ -29,7 +29,7 @@ export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
-    description: matText({ label: 'description' }),
+    description: matText({ label: 'description', size: 'long' }),
     orgId: matSelect({ label: 'Org ID' }),
     titleIds: matMultiSelect({ label: 'Title IDS' }),
     query: firestoreQuery({ collection: 'movies' })

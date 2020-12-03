@@ -25,10 +25,7 @@ export class EventCreateComponent {
     this.types = data.types;
   }
 
-  /**
-   * @param redirect If true should redirect to the event page
-   */
-  async createAndRedirect(redirect: boolean) {
+  async createAndRedirect() {
     const event = this.form.value;
     event.ownerId = this.orgQuery.getActiveId();
     if (event.type === 'meeting') {
@@ -38,6 +35,6 @@ export class EventCreateComponent {
       event.start.setHours(0,0,0);
       event.end.setHours(23,59,59);
     }
-    this.dialogRef.close({ event, redirect });
+    this.dialogRef.close({ event });
   }
 }
