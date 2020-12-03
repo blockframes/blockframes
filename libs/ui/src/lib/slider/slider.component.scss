@@ -11,13 +11,11 @@ ul {
   padding: 0;
   list-style: none;
   display: flex;
-  // position: relative;
 }
 
 li {
   width: 100%;
   display: flex;
-  // position: relative;
   flex-shrink: 0;
 }
 
@@ -48,46 +46,4 @@ img {
 // style scss there is a default margin setted
 span {
     margin: 0;
-}
-
-
-
-
-
-
-.slider {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  outline: none;
-
-  &-list {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    position: relative;
-  }
-
-  &-item {
-    width: 100%;
-    // TODO #2440
-    height: 600px;
-    display: flex;
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .indicator {
-    position: absolute;
-    bottom: 40px;
-    z-index: 1;
-    left: 50%;
-    outline: none;
-    button {
-      width: 16px;
-      height: 16px;
-    }
-  }
 }
