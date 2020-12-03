@@ -44,29 +44,25 @@ enum Direction {
   selector: 'bf-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'tabIndex': '0'
+  },
 })
 export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewInit, Slider {
 
   //////////////////
   // Public Vars //
   ////////////////
-
-  public theme: string;
-
   public listKeyManager: ListKeyManager<SlideComponent>;
 
   /////////////
   // Inputs //
   ///////////
-
-  @Input() timing: Slider['timing'] = `250ms ${Easing.easeInCirc}`;
-
+  @Input() @boolean hideIndicators: Slider['hideIndicators'] = false;
+  @Input() @boolean hideArrows: Slider['hideArrows'] = false;
+  @Input() timing: Slider['timing'] = `400ms ${Easing.easeInOutSine}`;
   @Input() ratio: Slider['ratio'] = '16:9';
-
-  @Input() arrowBack: Slider['arrowBack'] = 'arrow_back';
-
-  @Input() arrowForward: Slider['arrowForward'] = 'arrow_forward'
 
   // Milliseconds
   @Input()
@@ -74,29 +70,11 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     this.interval$.next(value)
   };
 
-  @Input() @boolean hideIndicators: Slider['hideIndicators'] = false;
-
-  @Input() @boolean hideArrows: Slider['hideArrows'] = false;
-
   @Input()
   get slideDirection() { return this._slideDirection }
   set slideDirection(value: Slider['slideDirection']) {
     this.slideDirection$.next(value);
     this._slideDirection = value;
-  }
-
-  @Input()
-  get maxWidth() { return this._maxWidth }
-  set maxWidth(value: Slider['maxWidth']) {
-    this._maxWidth = value;
-    this.maxWidth$.next();
-  }
-
-  @Input() 
-  get maxHeight() { return this._maxHeight }
-  set maxHeight(value: Slider['maxHeight']) {
-    this._maxHeight = value;
-    this.maxHeight$.next();
   }
 
   @Input() @boolean swipe: Slider['swipe'] = false;
@@ -128,12 +106,6 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   private timer$: Observable<number>;
   private timerStop$ = new Subject<never>();
 
-  private _maxWidth = 'auto';
-  private maxWidth$ = new Subject<never>();
-
-  private _maxHeight = 'auto';
-  private maxHeight$ = new Subject<never>();
-
   private _slideDirection: Slider['slideDirection'] = 'ltr';
   private slideDirection$ = new Subject<Slider['slideDirection']>();
 
@@ -149,21 +121,15 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   @ContentChildren(SlideComponent, { descendants: true }) slides: QueryList<SlideComponent>;
 
-  @ViewChild('wrapper') private slideWrapper: ElementRef<HTMLDivElement>;
-
   @ViewChild('slideList') private slideList: ElementRef<HTMLUListElement>;
 
   constructor(
-    private themeService: ThemeService,
+    @Inject(PLATFORM_ID) private platformId,
     private animationBuilder: AnimationBuilder,
     private renderer: Renderer2,
-    @Inject(PLATFORM_ID) private platformId,
-    private cdr: ChangeDetectorRef
-  ) {
-    this.themeService.theme$.pipe(takeUntil(this.destroy$)).subscribe(theme => {
-      this.theme = theme
-    })
-  }
+    private cdr: ChangeDetectorRef,
+    private slideWrapper: ElementRef
+  ) {}
 
   ngAfterViewInit() {
     this.calculateRatio();
@@ -173,13 +139,6 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
       this.resetTimer(value);
       this.startTimer(this.autoplay);
     });
-
-    this.maxWidth$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.slideTo(0));
-
-    // TODO #2440
-    this.maxHeight$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.slideTo(0))
 
     this.loop$.pipe(takeUntil(this.destroy$)).
       subscribe(value => this.listKeyManager.withWrap(value));
