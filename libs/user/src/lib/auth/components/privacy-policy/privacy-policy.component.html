@@ -406,7 +406,7 @@
       </mat-card>
     </section>
   </ng-container>
-  <ng-container ngSwitchCase="catalog">
+  <ng-container *ngSwitchCase="'catalog'">
     <header>
       <a mat-icon-button (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
@@ -701,7 +701,7 @@
       </mat-card>
     </section>
   </ng-container>
-  <ng-container ngSwitchCase="financiers">
+  <ng-container *ngSwitchCase="'financiers'">
     <header>
       <a mat-icon-button (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
@@ -711,7 +711,7 @@
     <section fxLayout="row" fxLayoutAlign="center">
       <mat-card>
         <mat-card-content>
-  
+
           <article>
             <p>
               MEDIA FINANCIERS (edited by the company CASCADE 8, whose registered office is 4 rue de la République 69001
@@ -724,7 +724,7 @@
             </p>
             <article>
               <h3>Table of Contents</h3>
-  
+
               <ol>
                 <li>Definitions used in this Policy</li>
                 <li>Data protection principles we follow</li>
@@ -738,7 +738,7 @@
                 <li>Contact information</li>
               </ol>
             </article>
-  
+
           </article>
           <article>
             <h3>1. Definitions</h3>
@@ -828,22 +828,22 @@
               • perform Our Service;
               • enhance your user experience;
               • fulfil an obligation under law or contract;
-  
+
               We use your Personal Data on legitimate grounds and/or with your consent.
               On the grounds of entering into a contract or fulfilling contractual obligations, we process your Personal
               Data for the following purposes:
               • to identify you;
               • to promote our Service.
-  
+
               On the ground of legitimate interest, we process your Personal Data for the following purposes:
               • to administer and analyse our Site activity in order to improve the quality, variety, and availability
               of
               Services offered/provided;
-  
+
               With your consent we process your Personal Data for the following purposes:
               • to provide Our service,
               • for other purposes we have asked your consent for.
-  
+
               We Process your Personal Data in order to fulfil obligation rising from law and/or use your Personal Data
               for options provided by law.
               We reserve the right to anonymize Personal Data gathered and to use any such data. We will use data
@@ -866,7 +866,7 @@
               partners in order to either make providing the Service to you possible or to enhance your user experience.
               We share your data with:
               Our partners:
-  
+
               Firebase -Authentication (Google Ireland Limited)
               Firebase – Authentication is a service provided by Google Ireland limited
               Personal data collected: id, email address, password, creation account date, last connection date,
@@ -881,7 +881,7 @@
               Personal Data collected: id, name, surname, email address, Ip address, browser, device, OS, pages visited,
               time spent visiting each page, click on page elements, cookies.
               Place of processing: United States – Privacy Policy.
-  
+
               Google Tag Manager (Google Ireland Limited)
               Google Tag Manager is a service provided by Google Ireland limited
               Personal data collected: id, name, surname, email address, Ip address, browser, device, OS, pages visited,
@@ -902,23 +902,23 @@
               Personal data collected: id, name, surname, email address, Ip address, browser, device, OS, pages visited,
               time spent visiting each page, click on page elements, cookies.
               Place of processing: United States – Privacy Policy.
-  
+
               Sendgrid (Twilio, Inc.)
               Sendgrid is a service provided by Twilio Inc.
               Personal Data collected: id, name, surname, email address.
               Place of processing: United States – Privacy Policy.
-  
+
               Algolia (Algolia, Inc.)
               Algolia is a service provided by Algolia Inc.
               Personal Data collected: id, name, surname, email address, avatar, function, phone number.
               Place of processing: United States – Privacy Policy.
-  
+
               JWPlayer (Longtail Ad Solutions, Inc.)
               JWPlayer is a service provided by Longtail Ad Solutions, Inc.
               Personal Data collected: id, name surname, browser, device, OS, bandwidth, video player loading, click on
               video player, video player viewing time.
               Place of processing: United States – Privacy Policy.
-  
+
               Sentry (Functional Software Inc.)
               Sentry is a service provided by Functional Software Inc.
               Personal Data collected: id, name, surname, email address, IP address, browser, device, OS.
@@ -927,12 +927,12 @@
               Stripe is a service provided by Stripe, Inc.
               Personal Data collected: id, name, surname, email address, IP address, browser, device, OS.
               Place of processing: United States – Privacy Policy.
-  
+
               Jitsi meet (8x8, Inc.)
               Jitsi meet is a service provided by 8x8, Inc.
               Personal Data collected: Name, surname, email address, avatar, IP address.
               Place of processing: United States – Privacy Policy.
-  
+
               We only work with partners who are able to ensure adequate level of protection to your Personal Data. We
               disclose your Personal Data to third parties or public officials when we are legally obliged to do so. We
               might disclose your Personal Data to third parties if you have consented to it or if there are other legal

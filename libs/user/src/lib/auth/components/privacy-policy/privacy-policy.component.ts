@@ -12,7 +12,7 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 export class PrivacyPolicyComponent {
   appName: string;
   constructor(private location: Location, private routerQuery: RouterQuery) {
-    this.appName = getCurrentApp(this.routerQuery);;
+    this.appName = getCurrentApp(this.routerQuery);
   }
 
   goBack() {
