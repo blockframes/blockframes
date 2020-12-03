@@ -85,14 +85,13 @@ async function onInvitationToAnEventCreate({
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
     const appName = getAppName(appKey);
-    const from = getSendgridFrom(appKey);
 
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending invitation email for an event (${docId}) from ${senderName} to : ${recipient.email}`);
           const templateInvitation = invitationToEventFromOrg(recipient, senderName, appName.label, event.title, link, urlToUse);
-          return sendMailFromTemplate(templateInvitation, from);
+          return sendMailFromTemplate(templateInvitation, appKey);
         }))
       case 'request':
       default:
@@ -105,7 +104,6 @@ async function onInvitationToAnEventCreate({
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
     const appName = getAppName(appKey);
-    const from = getSendgridFrom(appKey);
 
     switch (mode) {
       case 'invitation':
@@ -126,7 +124,7 @@ async function onInvitationToAnEventCreate({
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
           const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), appName.label, recipient, event.title, link, urlToUse);
-          return sendMailFromTemplate(templateRequest, from);
+          return sendMailFromTemplate(templateRequest, appKey);
         }))
     }
   } else {

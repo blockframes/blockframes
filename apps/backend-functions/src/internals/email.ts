@@ -8,6 +8,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db } from './firebase';
 import { App, getSendgridFrom, AppMailSetting, getAppLogo, getAppName } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
+import { appUrl } from "@env";
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
@@ -26,11 +27,11 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
 }
 
 export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App) {
-  // TODO here insert appSettings to send appName and appLogo to every template
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appLogo =  getAppLogo(app);
-  const appMailSettings: AppMailSetting = { name: label, logo: appLogo }
+  const appLink = appUrl[app];
+  const appMailSettings: AppMailSetting = { name: label, logo: appLogo, url: appLink }
   const msg: MailDataRequired = {
     from,
     to,
@@ -109,7 +110,7 @@ export const sendMailWithTemplate = async (
   }
 
   try {
-    await sendMailFromTemplate(data.request, getSendgridFrom(data.app));
+    await sendMailFromTemplate(data.request, data.app);
     return { error: '', result: 'OK' };
   } catch (error) {
     return {

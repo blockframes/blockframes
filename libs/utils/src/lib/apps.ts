@@ -36,11 +36,10 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
-// TODO use base64 picture to send logo of the app
 export const appLogo = {
-  catalog: `https://${appUrl.content}/assets/logo/dark/archipel_content_logo.svg`,
-  festival: `https://${appUrl.market}/assets/logo/dark/logo_archipel_market_outline.svg`,
-  financiers: `https://${appUrl.financiers}/assets/logo/dark/logo_media_financiers.svg`,
+  catalog: `${appUrl.content}/assets/logo/dark/archipel_content_logo.svg`,
+  festival: `${appUrl.market}/assets/logo/dark/logo_archipel_market_outline.svg`,
+  financiers: `${appUrl.financiers}/assets/logo/dark/logo_media_financiers.svg`,
 };
 export type AppLogo = keyof typeof appLogo;
 export type AppLogoValue = typeof appLogo[AppLogo];

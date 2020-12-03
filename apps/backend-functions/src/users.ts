@@ -31,7 +31,6 @@ export const startVerifyEmailFlow = async (data: any) => {
 
 export const startAccountCreationEmailFlow = async (data: any) => {
   const { email, app, firstName } = data;
-  const from = getSendgridFrom(app);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
@@ -40,7 +39,7 @@ export const startAccountCreationEmailFlow = async (data: any) => {
   try {
     const verifyLink = await admin.auth().generateEmailVerificationLink(email);
     const template = accountCreationEmail(email, verifyLink, firstName);
-    await sendMailFromTemplate(template, from);
+    await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending account creation email : ${e.message}`);
   }
@@ -49,7 +48,6 @@ export const startAccountCreationEmailFlow = async (data: any) => {
 
 export const startResetPasswordEmail = async (data: any) => {
   const { email, app } = data;
-  const from = getSendgridFrom(app);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendResetPassword()" function');
@@ -58,7 +56,7 @@ export const startResetPasswordEmail = async (data: any) => {
   try {
     const resetLink = await admin.auth().generatePasswordResetLink(email);
     const template = userResetPassword(email, resetLink);
-    await sendMailFromTemplate(template, from);
+    await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending reset password email : ${e.message}`);
   }
@@ -233,11 +231,10 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
   const newUser = await createUserFromEmail(email);
 
   const urlToUse = applicationUrl[app];
-  const from = getSendgridFrom(app);
 
   const templateId = templateIds.user.credentials.joinOrganization[app];
   const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
-  await sendMailFromTemplate(template, from);
+  await sendMailFromTemplate(template, app);
 
   // We don't have the time to wait for the trigger onUserCreate,
   // So we create it here first.
