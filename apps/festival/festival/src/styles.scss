@@ -1,34 +1,99 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../../../../styles/style.scss";
+@import "../../../../styles/themes/builder.scss";
 
-.light-theme {
-  @include angular-material-color($bf-light-theme);
-  @include sat-datepicker-theme($bf-light-theme);
-  @include bf-material-theme($bf-light-theme);
-  @include bf-calendar-theme($bf-light-theme);
-  // every components inside of dashboard-navbar should be always in the dark theme
-  #dashboard-navbar {
-    background-color: mat-color($bf-dark-background, app-bar);
-  }
+$dark-theme: (
+  is-dark: true,
+  primary: (
+    200: #cfd8ff,
+    500: #9eb1ff,
+    800: #8298ff,
+    contrast: (
+      200: #24374e,
+      500: #f9f8ff,
+      800: #f9f8ff,
+    )
+  ),
+  accent: (
+    200: #ffb7b0,
+    500: #ff6e61,
+    800: #FF5145,
+    contrast: (
+      200: #272A44,
+      500: #f9f8ff,
+      800: #f9f8ff,
+    )
+  ),
+  warn: (
+    500: #ff3f33,
+    contrast: (
+      500: #FFFFFF
+    )
+  ),
+  background: (
+    900: #010314,
+    800: #06081C,
+    700: #121424,
+    600: #06081C,
+    500: #1F1F26,
+    contrast: (
+      900: #BBC3E7,
+      800: #BBC3E7,
+      700: #BBC3E7,
+      600: #06081C,
+      500: #1F1F26,
+    )
+  ),
+  foreground: (
+    900: #f9f8ff,
+    800: #BBC3E7,
+    700: #9CA3C4,
+    600: #666B81,
+    500: #272A44,
+    contrast: (
+      900: #FFFFFF,
+      800: #FFFFFF,
+      700: #FFFFFF,
+      600: #FFFFFF,
+      500: #FFFFFF,
+    )
+  )
+);
 
-  // Not supported yet by browser. Here for future support
-  scrollbar-color: light;
-}
+// @include bf-calendar-theme($theme);
+
+// .light-theme {
+//   @include angular-material-color($bf-light-theme);
+//   @include sat-datepicker-theme($bf-light-theme);
+//   @include bf-material-theme($bf-light-theme);
+//   @include bf-calendar-theme($bf-light-theme);
+//   // every components inside of dashboard-navbar should be always in the dark theme
+//   #dashboard-navbar {
+//     background-color: mat-color($bf-dark-background, app-bar);
+//   }
+
+//   // Not supported yet by browser. Here for future support
+//   scrollbar-color: light;
+// }
 
 .dark-theme {
-  @include angular-material-color($bf-dark-theme);
-  @include sat-datepicker-theme($bf-dark-theme);
-  @include bf-material-theme($bf-dark-theme);
-  @include bf-calendar-theme($bf-dark-theme);
+  
+  $mat-theme: getTheme($dark-theme);
+  @include mat-theme($mat-theme);
+
+  // @include angular-material-color($bf-dark-theme);
+  // @include sat-datepicker-theme($bf-dark-theme);
+  // @include bf-material-theme($bf-dark-theme);
+  // @include bf-calendar-theme($bf-dark-theme);
 
   // Not supported yet by browser. Here for future support
   scrollbar-color: dark;
 }
 
-.dark-contrast-theme {
-  @include angular-material-color($bf-dark-contrast-theme);
-  @include bf-material-theme($bf-dark-contrast-theme);
+// .dark-contrast-theme {
+//   @include angular-material-color($bf-dark-contrast-theme);
+//   @include bf-material-theme($bf-dark-contrast-theme);
 
-  // Not supported yet by browser. Here for future support
-  scrollbar-color: dark;
-}
+//   // Not supported yet by browser. Here for future support
+//   scrollbar-color: dark;
+// }
