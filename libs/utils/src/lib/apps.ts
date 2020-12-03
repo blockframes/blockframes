@@ -26,8 +26,7 @@ export const appName = {
   crm: 'Blockframes CRM',
   cms: 'Blockframes CMS'
 };
-export type AppName = keyof typeof appName;
-export type AppNameValue = typeof appName[AppName];
+type AppNameValue = typeof appName[App];
 
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
@@ -41,8 +40,8 @@ export const appLogo = {
   festival: `${appUrl.market}/assets/logo/dark/logo_archipel_market_outline.svg`,
   financiers: `${appUrl.financiers}/assets/logo/dark/logo_media_financiers.svg`,
 };
-export type AppLogo = keyof typeof appLogo;
-export type AppLogoValue = typeof appLogo[AppLogo];
+type AppLogo = keyof typeof appLogo;
+type AppLogoValue = typeof appLogo[AppLogo];
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
@@ -95,10 +94,6 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
 
 export function getAppName(slug: App) {
   return { slug, label: appName[slug] };
-}
-
-export function getAppLogo(slug: App) {
-  return appLogo[slug];
 }
 
 /**

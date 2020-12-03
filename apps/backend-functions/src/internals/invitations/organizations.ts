@@ -69,11 +69,11 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
   const adminIds = await getAdminIds(organizationId);
   const adminEmails = await Promise.all(adminIds.map(id => getUserMail(id)));
-  const from = await getOrgAppKey(organizationId);
+  const app = await getOrgAppKey(organizationId);
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
     .map(adminEmail => userJoinedYourOrganization(adminEmail!, userEmail!))
-    .map(template => sendMailFromTemplate(template, from));
+    .map(template => sendMailFromTemplate(template, app));
 
   return Promise.all(adminEmailPromises);
 }
@@ -108,14 +108,14 @@ async function onRequestFromUserToJoinOrgCreate({
   }
 
   const adminIds = await getAdminIds(toOrg.id);
-  const from = await getOrgAppKey(toOrg.id);
+  const app = await getOrgAppKey(toOrg.id);
 
   const admins = await Promise.all(adminIds.map(u => getUser(u)));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
   const template = userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!);
-  await sendMailFromTemplate(template, from);
+  await sendMailFromTemplate(template, app);
 
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
@@ -128,7 +128,7 @@ async function onRequestFromUserToJoinOrgCreate({
       userFirstname: userData.firstName!,
       userLastname: userData.lastName!
     }, urlToUse))
-      .map(tpl => sendMailFromTemplate(tpl, from))
+      .map(tpl => sendMailFromTemplate(tpl, app))
   );
 }
 
@@ -144,9 +144,9 @@ async function onRequestFromUserToJoinOrgAccept({
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
-  const from = await getOrgAppKey(toOrg.id);
+  const app = await getOrgAppKey(toOrg.id);
   const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
-  await sendMailFromTemplate(template, from);
+  await sendMailFromTemplate(template, app);
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
 
