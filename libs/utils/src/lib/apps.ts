@@ -38,9 +38,9 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
 
 // TODO use base64 picture to send logo of the app
 export const appLogo = {
-  catalog: 'https://www.galaxietransmedia.fr/wp-content/uploads/2018/05/lezard-9.jpg',
-  festival: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5QjCbyuweMF7M8hwXgIuuzCnBCAI7oxmyIA&usqp=CAU',
-  financiers: 'https://www.nationalgeographic.com/content/dam/animals/pictures/hero/reptiles-hero.adapt.1900.1.jpg',
+  catalog: `https://${appUrl.content}/assets/logo/dark/archipel_content_logo.svg`,
+  festival: `https://${appUrl.market}/assets/logo/dark/logo_archipel_market_outline.svg`,
+  financiers: `https://${appUrl.financiers}/assets/logo/dark/logo_media_financiers.svg`,
 };
 export type AppLogo = keyof typeof appLogo;
 export type AppLogoValue = typeof appLogo[AppLogo];
