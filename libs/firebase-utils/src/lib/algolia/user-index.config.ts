@@ -5,6 +5,7 @@ export const userBaseConfig: AlgoliaConfig = {
         'email',
         'firstName',
         'lastName',
+        'orgName'
     ],
     attributesForFaceting: [
         'email'

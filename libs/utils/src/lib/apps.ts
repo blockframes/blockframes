@@ -6,6 +6,12 @@ import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
+export interface AppMailSetting {
+  name: AppNameValue,
+  logo: AppLogoValue,
+  url?: string,
+}
+
 export const app = ['catalog', 'festival', 'financiers'] as const;
 export type App = typeof app[number];
 
@@ -19,7 +25,9 @@ export const appName = {
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM',
   cms: 'Blockframes CMS'
-}
+};
+export type AppName = keyof typeof appName;
+export type AppNameValue = typeof appName[AppName];
 
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
@@ -27,6 +35,15 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
+
+// TODO use base64 picture to send logo of the app
+export const appLogo = {
+  catalog: 'https://www.galaxietransmedia.fr/wp-content/uploads/2018/05/lezard-9.jpg',
+  festival: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5QjCbyuweMF7M8hwXgIuuzCnBCAI7oxmyIA&usqp=CAU',
+  financiers: 'https://www.nationalgeographic.com/content/dam/animals/pictures/hero/reptiles-hero.adapt.1900.1.jpg',
+};
+export type AppLogo = keyof typeof appLogo;
+export type AppLogoValue = typeof appLogo[AppLogo];
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
@@ -79,6 +96,10 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
 
 export function getAppName(slug: App) {
   return { slug, label: appName[slug] };
+}
+
+export function getAppLogo(slug: App) {
+  return appLogo[slug];
 }
 
 /**
