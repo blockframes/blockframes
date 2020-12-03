@@ -39,7 +39,7 @@ export default class EventPage {
     cy.get('[svgicon="arrow_back"]').click();
   }
 
-  createDetailedEvent(date: Date) {
+  createDetailedEvent(date: Date, eventType: string = 'Screening') {
     const day = date.getDay();
     if (day === 0) {
       cy.get('button[test-id=arrow_forward]', {timeout: TO.PAGE_ELEMENT})
@@ -49,6 +49,12 @@ export default class EventPage {
     cy.get('div [class=cal-day-columns]').children().eq(day)
       .find('mwl-calendar-week-view-hour-segment').first()
       .click();
+    cy.get('mat-select[test-id="event-type"]', {timeout: TO.PAGE_ELEMENT})
+      .first()
+      .click({force: true});
+    cy.get('mat-option', {timeout: TO.PAGE_ELEMENT})
+      .contains(eventType).click({force: true}); 
+
     cy.get('button[test-id=more-details]')
       .click();
     return new EventEditPage();

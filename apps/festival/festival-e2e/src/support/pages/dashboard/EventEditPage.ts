@@ -26,7 +26,9 @@ export default class EventEditPage {
   }
 
   uncheckPrivate() {
-    cy.get('event-edit mat-checkbox[test-id=event-private]').find('input').uncheck({ force: true });
+    //cy.get('event-edit mat-checkbox[test-id=event-private]').find('input').uncheck({ force: true });
+    cy.get('event-edit mat-slide-toggle[test-id=event-private]')
+      .click({ force: true });
   }
 
   selectMovie(movieName: string) {
