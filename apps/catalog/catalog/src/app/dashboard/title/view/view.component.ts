@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Subscription } from 'rxjs';
@@ -17,7 +16,6 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
 export class TitleViewComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
-  public getLabelBySlug = getLabelBySlug;
   private sub: Subscription;
 
   navLinks: RouteDescription[] = [
