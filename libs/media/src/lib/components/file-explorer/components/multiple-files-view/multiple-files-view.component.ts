@@ -28,7 +28,7 @@ import {
 
 const columns = { 
   ref: { value: 'Type', disableSort: true },
-  main: { value: 'Document Name', disableSort: false },
+  name: { value: 'Document Name', disableSort: false },
   actions: { value: 'Actions', disableSort: true } 
 };
 

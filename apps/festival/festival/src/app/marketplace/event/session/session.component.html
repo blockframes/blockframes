@@ -38,7 +38,9 @@
 
       <div class="meeting-container">
 
-        <media-viewer [event]="event" [style]="{width: mediaContainerSize}"></media-viewer>
+        <ng-container *ngIf="!!event.meta.selectedFile">
+          <media-viewer [event]="event" [style]="{width: mediaContainerSize}"></media-viewer>
+        </ng-container>
         <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
 
       </div>

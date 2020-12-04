@@ -125,6 +125,7 @@ export async function upgradeAlgoliaUsers() {
       'email',
       'firstName',
       'lastName',
+      'orgName'
     ],
     attributesForFaceting: [
       'email'

@@ -149,4 +149,5 @@ export interface AlgoliaUser extends AlgoliaDefaultProperty {
     firstName: string,
     lastName: string,
     avatar: string,
-} 
+    orgName: string
+}
