@@ -16,6 +16,7 @@ export class MediaViewerComponent {
   @Input() event: Event<Meeting>;
 
   stop() {
+    if (!this.event.isOwner) return;
     const meta = { ...this.event.meta };
     meta.selectedFile = '';
     this.eventService.update(this.event.id, { meta });

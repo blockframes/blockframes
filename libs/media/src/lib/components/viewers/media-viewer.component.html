@@ -23,11 +23,13 @@
       </ng-container>
     </ng-container>
   </article>
-  <article class="stop" fxLayout="column" fxLayoutAlign="center center">
-    <mat-divider></mat-divider>
-    <button mat-button (click)="stop()">
-      <mat-icon svgIcon="cross_circle"></mat-icon>
-      <span>Stop Sharing</span>
-    </button>
-  </article>
+  <ng-container *ngIf="event.isOwner">
+    <article class="stop" fxLayout="column" fxLayoutAlign="center center">
+      <mat-divider></mat-divider>
+      <button mat-button (click)="stop()">
+        <mat-icon svgIcon="cross_circle"></mat-icon>
+        <span>Stop Sharing</span>
+      </button>
+    </article>
+  </ng-container>
 </section>
