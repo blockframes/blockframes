@@ -7,6 +7,7 @@ import { EditComponent } from './edit.component';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { FileSelectorModule } from '@blockframes/media/components/file-selector/file-selector.module';
 import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
+import { MediaViewerModule } from '@blockframes/media/components/dialog/file-viewer/viewer.module';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';
@@ -34,6 +35,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     FileSelectorModule,
     FileNameModule,
     ClipboardModule,
+    MediaViewerModule,
 
     // Material
     MatProgressSpinnerModule,

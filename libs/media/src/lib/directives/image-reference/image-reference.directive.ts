@@ -14,10 +14,10 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
 
-  private parameters: ImageParameters = {
+  private parameters = new BehaviorSubject<ImageParameters>({
     auto: 'compress,format',
     fit: 'crop',
-  };
+  });
 
   private asset$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');
@@ -54,6 +54,10 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
    * Default value is `'images'`
    */
   @Input() type: 'images' | 'logo' = 'images';
+
+  @Input() set ratio(ar: string) {
+    this.parameters.next({ ...this.parameters.getValue(), ar });
+  }
 
   /**
    * The placeholder asset to display.
@@ -103,13 +107,13 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
     this.sub = combineLatest([
       this.asset$,
       this.ref$.pipe(delayWhen(() => timer(_delay))),
+      this.parameters.asObservable(),
       theme$,
-    ]).subscribe(async ([asset, ref, theme]) => {
+    ]).subscribe(async ([asset, ref, params, theme]) => {
 
       if (!!ref && typeof ref === 'string') {
-
         // ref
-        this.srcset = await this.mediaService.generateImageSrcset(ref, this.parameters);
+        this.srcset = await this.mediaService.generateImageSrcset(ref, params);
 
         this.src = this.srcset.split(' ')[0];
 

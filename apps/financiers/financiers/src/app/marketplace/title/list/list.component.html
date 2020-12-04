@@ -3,7 +3,8 @@
   <!-- App Bar Search -->
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm">
-      <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Search for titles, directors, keywords, ...">
+      <input type="text" formControlName="query" [value]="searchForm.query.value"
+        placeholder="Search for titles, directors, keywords, ...">
     </form>
   </list-page-app-bar>
 
@@ -27,9 +28,9 @@
   <list-filter>
 
     <ng-template filter label="Partners" [form]="searchForm.sellers">
-      <algolia-chips-autocomplete index="org" displayWithPath="name"
-        [filters]="['appModule:dashboard']" [form]="searchForm.sellers"
-        label="Search for a Partners" placeholder="Organization name"></algolia-chips-autocomplete>
+      <algolia-chips-autocomplete index="org" displayWithPath="name" [filters]="['appModule:dashboard']"
+        [form]="searchForm.sellers" label="Search for a Partners" placeholder="Organization name">
+      </algolia-chips-autocomplete>
     </ng-template>
 
     <ng-template filter label="Genres" [form]="searchForm.genres">
@@ -60,6 +61,10 @@
     <ng-template filter label="Budget" [form]="searchForm.minBudget">
       <filter-budget fxLayout="column" [form]="searchForm.minBudget"></filter-budget>
     </ng-template>
+
+    <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
+      <mat-icon svgIcon="refresh_filters"></mat-icon>
+    </button>
 
   </list-filter>
 

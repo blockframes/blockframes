@@ -10,6 +10,8 @@ export interface ImageParameters {
   auto?: string;
   /** resize behavior : https://docs.imgix.com/apis/url/size/fit */
   fit?: 'clamp' | 'clip' | 'crop' | 'facearea' | 'fill' | 'fillmax' | 'max' | 'min' | 'scale';
+  /** aspect ratio https://docs.imgix.com/apis/rendering/size/ar */
+  ar?: string;
   /** image width : https://docs.imgix.com/apis/url/size/w */
   w?: number;
   /** image height : https://docs.imgix.com/apis/url/size/h */
