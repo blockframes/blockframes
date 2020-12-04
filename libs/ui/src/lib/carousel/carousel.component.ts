@@ -92,7 +92,6 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
       startWith(direction === 'right'),
       // offset can have tiny numbers when visually it is 0 - therefore we check if the offset is small enough to hide buttons
       map(_ => this.scrollable.measureScrollOffset(direction) > 3),
-      tap(_ => console.log("123", _)),
       tap(_ => this.ngZone.run(() => this.cdr.detectChanges())))
   }
 
