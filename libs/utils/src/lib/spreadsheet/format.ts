@@ -1,4 +1,10 @@
-import { createMovieOriginalRelease, createPrize, Movie, populateMovieLanguageSpecification } from "@blockframes/movie/+state/movie.model";
+import {
+  createBoxOffice,
+  createMovieOriginalRelease,
+  createPrize,
+  Movie,
+  populateMovieLanguageSpecification
+} from "@blockframes/movie/+state/movie.model";
 import { MovieImportState } from "libs/import/src/lib/import-utils";
 import { createCredit, createFilmography, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
@@ -261,4 +267,51 @@ export function formatCredits(credits: { lastName: string, firstName: string, ro
     }
     return credit;
   });
+}
+
+export function formatReleaseYear(year: string, status: string, movie: Movie, state: MovieImportState) {
+  if (!isNaN(Number(year))) {
+    movie.release.year = parseInt(year, 10);
+  }
+
+  const screeningStatus = getKeyIfExists('screeningStatus', status);
+  if (screeningStatus) {
+    movie.release.status = screeningStatus;
+  }
+}
+
+export function formatBoxOffice(boxoffice: { territory: string, unit: string, value: string }[], state: MovieImportState) {
+  return boxoffice.filter(b => b.territory).map(b => {
+    const territory = getKeyIfExists('territories', b.territory);
+    const unit = getKeyIfExists('unitBox', b.unit);
+    if (!!territory) {
+      if (!!unit) {
+        const boxoffice = createBoxOffice(
+          {
+            unit,
+            value: b.value ? parseInt(b.value, 10) : 0,
+            territory
+          }
+        );
+        return boxoffice;
+      } else {
+        state.errors.push({
+          type: 'warning',
+          field: 'movie.boxOffice',
+          name: 'Box office',
+          reason: `Could not parse box office unit : ${b.unit}`,
+          hint: 'Edit corresponding sheet field.'
+        });
+      }
+    } else {
+      state.errors.push({
+        type: 'warning',
+        field: 'movie.boxOffice',
+        name: 'Box office',
+        reason: `Could not parse box office territory : ${b.territory}`,
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+  }).filter(b => !!b);
+
 }

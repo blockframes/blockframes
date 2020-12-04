@@ -7,6 +7,7 @@ import { Intercom } from 'ng-intercom';
 // import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
+  formatBoxOffice,
   formatContentType,
   formatCredits,
   formatGenres,
@@ -15,6 +16,7 @@ import {
   formatOriginCountries,
   formatPrizes,
   formatProductionStatus,
+  formatReleaseYear,
   formatRunningTime,
   formatStakeholders
 } from '@blockframes/utils/spreadsheet/format';
@@ -44,97 +46,117 @@ const fields = {
     multiLine: false,
     index: 4
   },
+  releaseYear: {
+    multiLine: false,
+    index: 5
+  },
+  releaseYearStatus: {
+    multiLine: false,
+    index: 6
+  },
   directors: {
     multiLine: true,
     fields: {
-      firstName: 5,
-      lastName: 6,
-      filmography: 7,
+      firstName: 7,
+      lastName: 8,
+      filmography: 9,
     }
   },
   originCountries: {
     multiLine: true,
-    index: 8
+    index: 10
   },
   stakeholders: {
     multiLine: true,
     fields: {
-      displayName: 9,
-      role: 10,
-      country: 11,
+      displayName: 11,
+      role: 12,
+      country: 13,
     }
   },
   originalRelease: {
     multiLine: true,
     fields: {
-      country: 12,
-      media: 13,
-      date: 14,
+      country: 14,
+      media: 15,
+      date: 16,
     }
   },
   originalLanguages: {
     multiLine: true,
-    index: 15
+    index: 17
   },
   genres: {
     multiLine: true,
-    index: 16
+    index: 18
   },
   customGenres: {
     multiLine: true,
-    index: 17
+    index: 19
   },
   runningTime: {
     multiLine: false,
-    index: 18
+    index: 20
   },
   runningTimeStatus: {
     multiLine: false,
-    index: 19
+    index: 21
   },
   cast: {
     multiLine: true,
     fields: {
-      firstName: 20,
-      lastName: 21,
-      status: 22,
+      firstName: 22,
+      lastName: 23,
+      status: 24,
     }
   },
   prizes: {
     multiLine: true,
     fields: {
-      name: 23,
-      year: 24,
-      prize: 25,
-      premiere: 26,
+      name: 25,
+      year: 26,
+      prize: 27,
+      premiere: 28,
     }
   },
   synopsis: {
     multiLine: false,
-    index: 27
+    index: 29
   },
   keyAssets: {
     multiLine: false,
-    index: 28
+    index: 30
   },
   keywords: {
     multiLine: false,
-    index: 29
+    index: 31
   },
   producers: {
     multiLine: true,
     fields: {
-      firstName: 30,
-      lastName: 31,
-      role: 32,
+      firstName: 32,
+      lastName: 33,
+      role: 34,
     }
   },
   crew: {
     multiLine: true,
     fields: {
-      firstName: 33,
-      lastName: 34,
-      role: 35,
+      firstName: 35,
+      lastName: 36,
+      role: 37,
+    }
+  },
+  budgetRange: {
+    multiLine: false,
+    index: 38
+  },
+  boxoffice: {
+    multiLine: true,
+    fields: {
+      territory: 39,
+      unit: 40,
+      value: 41,
     }
   }
 };
@@ -226,6 +248,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // PRODUCTION STATUS
       formatProductionStatus(this.mapping.productionStatus, movie, importErrors);
 
+      // RELEASE YER
+      formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie, importErrors);
+
       // PRODUCTION COMPANIES (Production Companie(s))
       formatStakeholders(this.mapping.stakeholders, movie, importErrors);
 
@@ -261,6 +286,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
       // CREW 
       movie.crew = formatCredits(this.mapping.crew, 'crewRoles') as Crew[];
+
+      // BOX OFFICE
+      movie.boxOffice = formatBoxOffice(this.mapping.boxoffice, importErrors);
 
       console.log(movie);
       ///////////////
