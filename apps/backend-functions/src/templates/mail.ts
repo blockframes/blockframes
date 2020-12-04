@@ -95,10 +95,13 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   return { to: email, templateId: templateIds.request.joinOrganization.pending, data };
 }
 
+// TODO #4206 Update and delete the appLabel parameter
+// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Email to let org admin knows that his/her organization has access to a new app */
-export function organizationAppAccessChanged(admin: PublicUser, url: string): EmailTemplateRequest {
+export function organizationAppAccessChanged(admin: PublicUser, appLabel: string, url: string): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
+    appName: appLabel,
     url
   }
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
@@ -134,10 +137,13 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
   return { to: request.adminEmail, templateId: templateIds.request.joinOrganization.created, data };
 }
 
+// TODO #4206 Update and delete the appLabel parameter
+// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Generates an email for user invited by an organization to an event. */
 export function invitationToEventFromOrg(
   recipient: EmailRecipient,
   orgDenomination: string,
+  appLabel: string,
   eventId: string,
   link: string,
   url: string = appUrl.market
@@ -145,16 +151,20 @@ export function invitationToEventFromOrg(
   const data = {
     userFirstName: recipient.name,
     orgName: orgDenomination,
+    appName: appLabel,
     eventName: eventId,
     pageURL: `${url}/${link}`
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
 
+// TODO #4206 Update and delete the appLabel parameter
+// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Generates an email for user requesting to attend an event. */
 export function requestToAttendEventFromUser(
   fromUserFirstname: string,
   fromUserOrgName: string,
+  appLabel: string,
   recipient: EmailRecipient,
   eventTitle: string,
   link: string,
@@ -164,6 +174,7 @@ export function requestToAttendEventFromUser(
     adminFirstName: recipient.name,
     userFirstName: fromUserFirstname,
     orgName: fromUserOrgName,
+    appName: appLabel,
     eventName: eventTitle,
     pageURL: `${url}/${link}`
   };

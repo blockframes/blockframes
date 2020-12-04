@@ -294,10 +294,12 @@ export const accessToAppChanged = async (
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const appKey = await getOrgAppKey(orgId);
+  const appName = getAppName(appKey);
   const appUrl = await getAppUrl(orgId);
 
   await Promise.all(admins.map(admin => {
-    const template = organizationAppAccessChanged(admin, appUrl);
+    // TODO #4206 Update and delete the appLabel parameter
+    const template = organizationAppAccessChanged(admin, appName.label, appUrl);
     return sendMailFromTemplate(template, appKey)
   }));
 

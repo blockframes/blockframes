@@ -84,12 +84,14 @@ async function onInvitationToAnEventCreate({
     const senderName = orgName(org);
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
+    const appName = getAppName(appKey);
 
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending invitation email for an event (${docId}) from ${senderName} to : ${recipient.email}`);
-          const templateInvitation = invitationToEventFromOrg(recipient, senderName, event.title, link, urlToUse);
+          // TODO #4206 Update and delete the appLabel parameter
+          const templateInvitation = invitationToEventFromOrg(recipient, senderName, appName.label, event.title, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, appKey);
         }))
       case 'request':
@@ -102,6 +104,7 @@ async function onInvitationToAnEventCreate({
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
+    const appName = getAppName(appKey);
 
     switch (mode) {
       case 'invitation':
@@ -121,7 +124,8 @@ async function onInvitationToAnEventCreate({
 
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), recipient, event.title, link, urlToUse);
+          // TODO #4206 Update and delete the appLabel parameter
+          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), appName.label, recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, appKey);
         }))
     }
