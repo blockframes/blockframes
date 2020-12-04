@@ -126,10 +126,10 @@ export const deleteMedia = async (ref: string): Promise<void> => {
 
   const [exists] = await file.exists();
   if (!exists) {
-    throw new Error('Upload Error : File does not exists in the storage');
+    console.log(`Upload Error : File "${ref}" does not exists in the storage`);
+  } else {
+    await file.delete();
   }
-
-  await file.delete();
 }
 
 async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean> {
