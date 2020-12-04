@@ -58,7 +58,10 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.service.startLocalSession();
     this.event$ = this.service.queryDocs(this.eventQuery.getActiveId());
     this.sub = this.event$.subscribe(async event => {
-      if (event.isOwner) {
+      const fileSelected = !!event?.meta?.selectedFile;
+      if (!fileSelected) {
+        this.visioContainerSize = '100%';
+      } else if (event.isOwner) {
         this.mediaContainerSize = '40%';
         this.visioContainerSize = '60%';
       } else {

@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
+import { FileSelectorComponent } from '@blockframes/media/components/file-selector/file-selector.component';
 import { Event, EventService } from '@blockframes/event/+state';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
-import { EventForm, MeetingForm } from '@blockframes/event/form/event.form';
+import { MatDialog } from '@angular/material/dialog';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: '[event] event-meeting-media-list',
@@ -17,6 +19,7 @@ export class MeetingMediaListComponent {
   @Input() event: Event<Meeting>;
 
   constructor(
+    private dialog: MatDialog,
     private eventService: EventService
   ) { }
 
@@ -34,5 +37,20 @@ export class MeetingMediaListComponent {
     const meta = { ...this.event.meta };
     meta.selectedFile = '';
     this.eventService.update(this.event.id, { meta });
+  }
+
+  openFileSelector() {
+    this.dialog.open(FileSelectorComponent, {
+      width: '80%',
+      height: '80%',
+      disableClose: true,
+      data: {
+        selectedFiles: this.event.meta.files,
+      }
+    }).afterClosed().pipe(take(1)).subscribe(result => {
+      const meta = { ...this.event.meta };
+      meta.files = result;
+      this.eventService.update(this.event.id, { meta })
+    });
   }
 }

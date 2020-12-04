@@ -5,21 +5,25 @@
   background-color: var(--background-card);
 }
 
-article {
-  text-align: center;
-  h3 {
-    margin-top: 16px;
-  }
-  img {
-    width: 250px;
-  }
-  p {
-    padding: 0 16px;
-  }
-}
-
-img {
+section {
   height: 100%;
-  width: 100%;
-  object-fit: contain;
+
+  .file {
+    overflow: hidden;
+  }
+
+  .stop {
+    margin: 6px;
+
+    mat-divider {
+      width: 60%;
+      margin-bottom: 6px;
+    }
+  }
+  
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
 }
