@@ -18,6 +18,10 @@ section {
     text-align: center;
     margin: 32px auto;
   }
+
+  mat-list-item {
+    cursor: pointer;
+  }
 }
 
 .link {

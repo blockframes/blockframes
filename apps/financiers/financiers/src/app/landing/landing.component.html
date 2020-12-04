@@ -1,7 +1,7 @@
 <landing-shell-page fxLayout="column" fxLayoutAlign="start center" [roles]="userRoles">
 
-  <landing-header fxLayout="column">
-    <div class="headlines">
+  <landing-header fxLayout="column" fxFlex="100%">
+    <div>
       <h4>Welcome to Media Financiers</h4>
       <p class="mat-display-2">The professional financing hub <br /> for films and TV series</p>
       <p class="mat-body-1">Media Financiers enables private investors to co-produce exclusive films and TV series
@@ -31,7 +31,7 @@
             <p class="mat-body-1 description">{{ tabTitle[0].description }}</p>
           </div>
         </article>
-        <h5>FEATURES</h5>
+        <h5>Benefits</h5>
         <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
           <mat-card *ngFor="let feature of sellerFeatures">
             <img [asset]="feature.imgAsset" alt="seller feature image">
@@ -52,7 +52,7 @@
             <p class="mat-body-1 description">{{ tabTitle[1].description }}</p>
           </div>
         </article>
-        <h5>FEATURES</h5>
+        <h5>Benefits</h5>
         <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
           <mat-card *ngFor="let feature of financierFeatures" class="buyer-card">
             <img [asset]="feature.imgAsset" alt="financiers feature image">
@@ -73,7 +73,7 @@
       <a mat-button [href]="pdfLink" target="_blank" class="download-link">
         <mat-icon svgIcon="download"></mat-icon>
         <span>
-          Download cinema investing guide
+          Download cinema investing guide.
         </span>
       </a>
     </section>

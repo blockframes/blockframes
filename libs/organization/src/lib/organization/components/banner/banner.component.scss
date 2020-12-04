@@ -6,12 +6,20 @@
   padding: 0 24px;
 }
 
-img {
-  border-radius: 50%;
-}
+
 
 .org-info {
   width: 45%;
+  header {
+    margin-bottom: 24px;
+  }
+  a {
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+  img {
+    border-radius: 50%;
+  }
 }
 
 .titles {
@@ -27,16 +35,16 @@ img {
 
 @include layout-bp(gt-md) {
   img {
-    width: 180px;
-    height: 180px;
+    width: 150px;
+    height: 150px;
   }
 }
 
 @include layout-bp(md) {
 
   img {
-    width: 140px;
-    height: 140px;
+    width: 120px;
+    height: 120px;
   }
 }
 

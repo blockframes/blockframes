@@ -13,11 +13,9 @@ export interface Slider {
     hideIndicators: boolean;
 
     /** Appearance */
-    maxWidth: string;
-    maxHeight: string;
+    // maxWidth: string;
+    // maxHeight: string;
     ratio: '1:1' | '16:9' | '4:3' | '3:2' | '8:5';
     loop: boolean;
-    slideDirection: 'ltr' | 'rtl',
-    arrowBack: string;
-    arrowForward: string;
+    slideDirection: 'ltr' | 'rtl'
 }

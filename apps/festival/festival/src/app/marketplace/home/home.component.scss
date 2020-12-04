@@ -44,11 +44,15 @@
   background-color: var(--background-card);
 }
 
+movie-slide {
+  height: 700px;
+}
 
 @include layout-bp(gt-sm) {
   .banner, movie-slide {
     padding: 80px;
   }
+
 }
 @include layout-bp(lt-md) {
   .banner, movie-slide {

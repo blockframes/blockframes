@@ -75,12 +75,12 @@
 <!-- Slider -->
 <ng-template #slider let-section>
   <section class="slider">
-    <bf-slider hideIndicators loop class="dark-contrast-theme">
+    <bf-slider loop class="dark-contrast-theme">
       <ng-container *ngFor="let movie of section | queryTitles | async" >
         <bf-slide overlayColor="gradient" [image]="movie.banner">
           <movie-slide [movie]="movie">
             <movie-slide-cta>
-              <a mat-flat-button color="primary" [routerLink]="['title', movie.id]" class="detail">
+              <a mat-flat-button color="primary" [routerLink]="['../title', movie.id]" class="detail">
                 More Details
               </a>
             </movie-slide-cta>

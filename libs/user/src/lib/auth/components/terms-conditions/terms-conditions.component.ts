@@ -15,16 +15,17 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 export class TermsConditionsComponent implements OnInit {
   section$: Observable<'dashboard' | 'marketplace'>;
   appUrl: string;
+  appName: string;
 
   constructor(
     private location: Location,
     private routerQuery: RouterQuery,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
-    const app = getCurrentApp(this.routerQuery);
-    this.appUrl = applicationUrl[app];
+    this.appName = getCurrentApp(this.routerQuery);
+    this.appUrl = applicationUrl[this.appName];
   }
 
   goBack() {

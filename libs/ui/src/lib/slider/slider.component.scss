@@ -1,36 +1,38 @@
-.slider {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    outline: none;
+:host {
+  display: block;
+  position: relative;
+  overflow-x: hidden;
+  outline: none;
+}
 
-    &-list {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        display: flex;
-        position: relative;
-    }
+ul {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
 
-    &-item {
-        width: 100%;
-        // TODO #2440
-        height: 600px;
-        display: flex;
-        position: relative;
-        flex-shrink: 0;
-    }
+li {
+  width: 100%;
+  display: flex;
+  flex-shrink: 0;
+}
 
-    &-indicators {
-        display: flex;
-        position: absolute;
-        bottom: 15px;
-        z-index: 1;
-        left: 50%;
-        transform: translateX(-50%);
-        outline: none;
-    }
+img {
+  width: 100%;
+}
+
+.indicator {
+  position: absolute;
+  bottom: 40px;
+  z-index: 1;
+  left: 50%;
+  outline: none;
+  button {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .arrows {

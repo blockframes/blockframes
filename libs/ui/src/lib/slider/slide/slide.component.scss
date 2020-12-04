@@ -1,21 +1,6 @@
-@mixin frame($z-index: auto) {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: $z-index;
-}
-
 .slide {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  @include frame();
-
-  &-overlay {
-    @include frame();
-  }
-
-  &-content {
-    @include frame(1);
-  }
+  height: fit-content;
 }

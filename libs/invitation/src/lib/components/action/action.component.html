@@ -18,24 +18,30 @@
     <div class="status" [ngSwitch]="invit.status">
       <span class="primary" *ngSwitchCase="'accepted'">Accepted</span>
       <span class="warn" *ngSwitchCase="'declined'">Declined</span>
-      <span *ngSwitchCase="'pending'">Pending</span>
+      <span *ngSwitchCase="'pending'">Your request has been sent to the organizer. We're waiting for them to let you in.</span>
     </div>
   </ng-template>
 </ng-container>
 
 <ng-template #noInvitation>
   <!-- TODO : Use ng-content here -->
-  <button test-id="invitation-request" mat-button (click)="request(event)">
-    <mat-icon svgIcon="calendar"></mat-icon>
+  <section fxLayout="column">
     <ng-container [ngSwitch]="event | eventTime">
       <ng-container  *ngSwitchCase="'early'">
-        <span *ngIf="event.isPrivate">Ask for Invitation</span>
-        <span *ngIf="!event.isPrivate">Add to my calendar</span>
+        <button test-id="invitation-request" mat-button (click)="request(event)">
+          <mat-icon svgIcon="calendar"></mat-icon>
+          <span *ngIf="event.isPrivate">Ask for Invitation</span>
+          <span *ngIf="!event.isPrivate">Add to my calendar</span>
+        </button>
       </ng-container>
       <ng-container *ngSwitchCase="'onTime'">
-        <span *ngIf="event.isPrivate">Session has already started, request access</span>
-        <span *ngIf="!event.isPrivate">Access event</span>
+        <p>This event has already started.</p>
+        <button test-id="invitation-request" mat-button (click)="request(event)">
+          <mat-icon svgIcon="calendar"></mat-icon>
+          <span *ngIf="event.isPrivate">Request access</span>
+          <span *ngIf="!event.isPrivate">Access event</span>
+        </button>
       </ng-container>
     </ng-container>
-  </button>
+  </section>
 </ng-template>

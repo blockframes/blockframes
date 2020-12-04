@@ -70,12 +70,12 @@
       <missing-control [control]="shootingLocations" [link]="link" fragment="shooting-locations">
         <ng-template let-shooting>
           <ng-container *ngFor="let location of shooting">
-            <li>
-              {{ location.country | toLabel: 'territories' }} - {{ location.cities.join(', ') | titlecase }}
-            </li>
-          </ng-container>
-        </ng-template>
-      </missing-control>
+    <li>
+      {{ location.country | toLabel: 'territories' }} - {{ location.cities.join(', ') | titlecase }}
+    </li>
+    </ng-container>
+    </ng-template>
+    </missing-control>
     </li>
     <li>
       <strong>Expected Premiere </strong>

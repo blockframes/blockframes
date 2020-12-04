@@ -11,42 +11,42 @@
       <span>{{ budget.value | budget | currency: form.getCurrency() : 'symbol' : '1.0-0' }}</span>
     </li>
     <li>
-      <strong>Producer's Fees </strong>
-      <missing-control [control]="budget.get('producerFees')" [link]="link" fragment="budget">
-        <ng-template let-fees>
-          {{ fees | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
+      <strong>Development costs </strong>
+      <missing-control [control]="budget.get('development')" [link]="link" fragment="budget">
+        <ng-template let-costs>
+          {{ costs | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
     <li>
-      <strong>Cast Cost </strong>
-      <missing-control [control]="budget.get('castCost')" [link]="link" fragment="budget">
+      <strong>Shooting costs </strong>
+      <missing-control [control]="budget.get('shooting')" [link]="link" fragment="budget">
         <ng-template let-cost>
           {{ cost | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
     <li>
-      <strong>Shoot Cost </strong>
-      <missing-control [control]="budget.get('shootCost')" [link]="link" fragment="budget">
+      <strong>Post production </strong>
+      <missing-control [control]="budget.get('postProduction')" [link]="link" fragment="budget">
         <ng-template let-cost>
           {{ cost | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
     <li>
-      <strong>Post-Production Cost </strong>
-      <missing-control [control]="budget.get('postProdCost')" [link]="link" fragment="budget">
+      <strong>Administration </strong>
+      <missing-control [control]="budget.get('administration')" [link]="link" fragment="budget">
         <ng-template let-cost>
           {{ cost | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
     <li>
-      <strong>Others Charges </strong>
-      <missing-control [control]="budget.get('others')" [link]="link" fragment="budget">
-        <ng-template let-others>
-          {{ others | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
+      <strong>Contingency </strong>
+      <missing-control [control]="budget.get('contingency')" [link]="link" fragment="budget">
+        <ng-template let-costs>
+          {{ costs | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
