@@ -474,8 +474,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
         }
       }
 
-      console.log(movie);
-
       ///////////////
       // VALIDATION
       ///////////////
