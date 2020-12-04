@@ -45,6 +45,7 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
 
   private subRight: Subscription;
   private subLeft: Subscription;
+  private itemsSub: Subscription;
 
   private currentPosition: number;
 
@@ -72,6 +73,7 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
 
   ngAfterContentInit() {
     this.amount$ = this.items.changes.pipe(startWith(this.items), map(items => items.length));
+    this.itemsSub = this.items.changes.subscribe(_ => this.showForward = !!this.scrollable.measureScrollOffset('right'));
   }
 
   scrollTo(direction: 'left' | 'right') {
@@ -86,14 +88,15 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   onScrolling(direction: 'right' | 'left') {
     return this.scrollable.elementScrolled().pipe(
       debounceTime(50),
-      map(_ => !!this.scrollable.measureScrollOffset(direction)),
       distinctUntilChanged(),
       startWith(direction === 'right'),
+      map(_ => !!Math.round(this.scrollable.measureScrollOffset(direction))),
       tap(_ => this.ngZone.run(() => this.cdr.detectChanges())))
   }
 
   ngOnDestroy() {
     if (this.subLeft) this.subLeft.unsubscribe();
     if (this.subRight) this.subRight.unsubscribe();
+    if (this.itemsSub) this.itemsSub.unsubscribe();
   }
 }
