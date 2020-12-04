@@ -59,8 +59,8 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
     this.twilioService.toggleTrack(kind);
   }
 
-  quitMeeting() {
-    this.twilioService.disconnect();
-    this.router.navigate(['..', 'ended'], { relativeTo: this.route });
+  async quitMeeting() {
+    const hasConfirmed = await this.router.navigate(['..', 'ended'], { relativeTo: this.route });
+    if (hasConfirmed) this.twilioService.disconnect();
   }
 }
