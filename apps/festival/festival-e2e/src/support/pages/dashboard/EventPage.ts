@@ -29,9 +29,7 @@ export default class EventPage {
     cy.log(`createEvent : {${eventTitle}}`);
     const event: EventEditPage = this.createDetailedEvent(eventDate);
     event.addEventTitle(eventTitle);
-    if (isPublic) {
-      event.uncheckPrivate();
-    }
+    event.uncheckPrivate(isPublic);
 
     event.selectMovie(screeningName);
 
