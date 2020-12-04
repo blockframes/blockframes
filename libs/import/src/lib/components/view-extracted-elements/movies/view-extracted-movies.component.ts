@@ -7,162 +7,262 @@ import { Intercom } from 'ng-intercom';
 // import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
+  formatAvailableLanguages,
   formatBoxOffice,
+  formatCertifications,
   formatContentType,
   formatCredits,
+  formatDistributionRights,
   formatGenres,
   formatOriginalLanguages,
   formatOriginalRelease,
   formatOriginCountries,
   formatPrizes,
   formatProductionStatus,
+  formatRatings,
   formatReleaseYear,
+  formatReview,
   formatRunningTime,
+  formatSingleValue,
   formatStakeholders
 } from '@blockframes/utils/spreadsheet/format';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { MovieImportState } from '../../../import-utils';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { UserService } from '@blockframes/user/+state';
 
-
+let index = 0;
 const fields = {
   internationalTitle: {
     multiLine: false,
-    index: 0
+    index: index++
   },
   originalTitle: {
     multiLine: false,
-    index: 1
+    index: index++
   },
   internalRef: {
     multiLine: false,
-    index: 2
+    index: index++
   },
   contentType: {
     multiLine: false,
-    index: 3
+    index: index++
   },
   productionStatus: {
     multiLine: false,
-    index: 4
+    index: index++
   },
   releaseYear: {
     multiLine: false,
-    index: 5
+    index: index++
   },
   releaseYearStatus: {
     multiLine: false,
-    index: 6
+    index: index++
   },
   directors: {
     multiLine: true,
     fields: {
-      firstName: 7,
-      lastName: 8,
-      filmography: 9,
+      firstName: index++,
+      lastName: index++,
+      filmography: index++,
     }
   },
   originCountries: {
     multiLine: true,
-    index: 10
+    index: index++
   },
   stakeholders: {
     multiLine: true,
     fields: {
-      displayName: 11,
-      role: 12,
-      country: 13,
+      displayName: index++,
+      role: index++,
+      country: index++,
     }
   },
   originalRelease: {
     multiLine: true,
     fields: {
-      country: 14,
-      media: 15,
-      date: 16,
+      country: index++,
+      media: index++,
+      date: index++,
     }
   },
   originalLanguages: {
     multiLine: true,
-    index: 17
+    index: index++
   },
   genres: {
     multiLine: true,
-    index: 18
+    index: index++
   },
   customGenres: {
     multiLine: true,
-    index: 19
+    index: index++
   },
   runningTime: {
     multiLine: false,
-    index: 20
+    index: index++
   },
   runningTimeStatus: {
     multiLine: false,
-    index: 21
+    index: index++
   },
   cast: {
     multiLine: true,
     fields: {
-      firstName: 22,
-      lastName: 23,
-      status: 24,
+      firstName: index++,
+      lastName: index++,
+      status: index++,
     }
   },
   prizes: {
     multiLine: true,
     fields: {
-      name: 25,
-      year: 26,
-      prize: 27,
-      premiere: 28,
+      name: index++,
+      year: index++,
+      prize: index++,
+      premiere: index++,
     }
   },
   synopsis: {
     multiLine: false,
-    index: 29
+    index: index++
   },
   keyAssets: {
     multiLine: false,
-    index: 30
+    index: index++
   },
   keywords: {
     multiLine: false,
-    index: 31
+    index: index++
   },
   producers: {
     multiLine: true,
     fields: {
-      firstName: 32,
-      lastName: 33,
-      role: 34,
+      firstName: index++,
+      lastName: index++,
+      role: index++,
     }
   },
   crew: {
     multiLine: true,
     fields: {
-      firstName: 35,
-      lastName: 36,
-      role: 37,
+      firstName: index++,
+      lastName: index++,
+      role: index++,
     }
   },
   budgetRange: {
     multiLine: false,
-    index: 38
+    index: index++
   },
   boxoffice: {
     multiLine: true,
     fields: {
-      territory: 39,
-      unit: 40,
-      value: 41,
+      territory: index++,
+      unit: index++,
+      value: index++,
     }
-  }
+  },
+  certifications: {
+    multiLine: true,
+    index: index++
+  },
+  ratings: {
+    multiLine: true,
+    fields: {
+      country: index++,
+      value: index++,
+    }
+  },
+  reviews: {
+    multiLine: true,
+    fields: {
+      revue: index++,
+      link: index++,
+      quote: index++,
+    }
+  },
+  color: {
+    multiLine: false,
+    index: index++
+  },
+  format: {
+    multiLine: false,
+    index: index++
+  },
+  formatQuality: {
+    multiLine: false,
+    index: index++
+  },
+  soundFormat: {
+    multiLine: false,
+    index: index++
+  },
+  isOriginalVersionAvailable: {
+    multiLine: false,
+    index: index++
+  },
+  languages: {
+    multiLine: true,
+    fields: {
+      language: index++,
+      dubbed: index++,
+      subtitle: index++,
+      caption: index++,
+    }
+  },
+  screenerLink: {
+    multiLine: false,
+    index: index++
+  },
+  promoReelLink: {
+    multiLine: false,
+    index: index++
+  },
+  trailerLink: {
+    multiLine: false,
+    index: index++
+  },
+  pitchTeaserLink: {
+    multiLine: false,
+    index: index++
+  },
+  //////////////////
+  // FESTIVAL FIELDS
+  //////////////////
+  territoriesSold: {
+    multiLine: false,
+    index: index++
+  },
+  territoriesExcluded: {
+    multiLine: false,
+    index: index++
+  },
+  //////////////////
+  // ADMIN FIELDS
+  //////////////////
+  scoring: {
+    multiLine: false,
+    index: index++
+  },
+  storeType: {
+    multiLine: false,
+    index: index++
+  },
+  storeStatus: {
+    multiLine: false,
+    index: index++
+  },
+  ownerId: {
+    multiLine: false,
+    index: index++
+  },
 };
 
 type fieldsKey = keyof typeof fields;
-
 
 @Component({
   selector: 'import-view-extracted-movies',
@@ -186,11 +286,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
   constructor(
     @Optional() private intercom: Intercom,
     private movieService: MovieService,
-    // private imageUploader: ImageUploader, TODO issue #3091
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
+    private dynTitle: DynamicTitleService,
     private userService: UserService,
-    private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -203,12 +302,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
 
-    // @TODO #3816 remmove "publish to market place" il manque les images => status draft uniquement
-    // @TODO missing release year | status
     let i = 0;
     this.currentRows = sheetTab.rows.slice(i, i + this.dedicatedLinesPerTitle);
     while (this.currentRows.length) {
-
       Object.keys(fields).forEach(k => {
         this.mapping[k] = this.getFieldContent(fields[k]);
       })
@@ -248,8 +344,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // PRODUCTION STATUS
       formatProductionStatus(this.mapping.productionStatus, movie, importErrors);
 
-      // RELEASE YER
-      formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie, importErrors);
+      // RELEASE YEAR
+      formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie);
 
       // PRODUCTION COMPANIES (Production Companie(s))
       formatStakeholders(this.mapping.stakeholders, movie, importErrors);
@@ -258,7 +354,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       movie.originalRelease = formatOriginalRelease(this.mapping.originalRelease, importErrors);
 
       // LANGUAGES (Original Language(s))
-      formatOriginalLanguages(this.mapping.originalLanguages, movie, importErrors);
+      movie.originalLanguages = formatOriginalLanguages(this.mapping.originalLanguages, importErrors);
 
       // GENRES (Genres)
       formatGenres(this.mapping.genres, this.mapping.customGenres, movie, importErrors);
@@ -287,10 +383,99 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // CREW 
       movie.crew = formatCredits(this.mapping.crew, 'crewRoles') as Crew[];
 
+      // BUDGET RANGE
+      formatSingleValue(this.mapping.budgetRange, 'budgetRange', 'estimatedBudget', movie);
+
       // BOX OFFICE
       movie.boxOffice = formatBoxOffice(this.mapping.boxoffice, importErrors);
 
+      // QUALIFICATIONS (certifications)
+      movie.certifications = formatCertifications(this.mapping.certifications, importErrors);
+
+      // RATINS
+      movie.rating = formatRatings(this.mapping.ratings, importErrors);
+
+      // FILM REVIEW
+      movie.review = formatReview(this.mapping.reviews);
+
+      // COLOR
+      formatSingleValue(this.mapping.color, 'colors', 'color', movie);
+
+      // FORMAT
+      formatSingleValue(this.mapping.format, 'movieFormat', 'format', movie);
+
+      // FORMAT QUALITY
+      formatSingleValue(this.mapping.formatQuality, 'movieFormatQuality', 'formatQuality', movie);
+
+      // SOUND QUALITY
+      formatSingleValue(this.mapping.soundFormat, 'soundFormat', 'soundFormat', movie);
+
+      // ORIGINAL VERSION
+      movie.isOriginalVersionAvailable = this.mapping.isOriginalVersionAvailable === 'yes' ? true : false;
+
+      // LANGUAGES (Available versions(s))
+      formatAvailableLanguages(this.mapping.languages, movie, importErrors);
+
+      // SCREENER LINK
+      if (this.mapping.screenerLink) {
+        movie.promotional.screener_link = this.mapping.screenerLink;
+      }
+
+      // PROMO REEL LINK
+      if (this.mapping.promoReelLink) {
+        movie.promotional.promo_reel_link = this.mapping.promoReelLink;
+      }
+
+      // TRAILER LINK
+      if (this.mapping.trailerLink) {
+        movie.promotional.trailer_link = this.mapping.trailerLink;
+      }
+
+      // PITCH TEASER LINK
+      if (this.mapping.pitchTeaserLink) {
+        movie.promotional.teaser_link = this.mapping.pitchTeaserLink;
+      }
+
+      //////////////////
+      // FESTIVAL FIELDS
+      //////////////////
+
+      formatDistributionRights(this.mapping.territoriesSold, this.mapping.territoriesExcluded, importErrors);
+
+      //////////////////
+      // ADMIN FIELDS
+      //////////////////
+
+      if (this.isUserBlockframesAdmin) {
+        // SCORING (Scoring)
+        formatSingleValue(this.mapping.scoring, 'scoring', 'scoring', movie);
+
+        // STORE TYPE
+        formatSingleValue(this.mapping.storeType, 'storeType', 'storeConfig.storeType', movie);
+
+        // MOVIE STATUS
+        formatSingleValue(this.mapping.storeStatus, 'storeStatus', 'storeConfig.status', movie);
+
+        // USER ID (to override who is creating this title)
+        if (this.mapping.ownerId) {
+          movie._meta = createDocumentMeta();
+          const userExists = await this.userService.userExists(this.mapping.ownerId);
+          if (userExists) {
+            movie._meta.createdBy = this.mapping.ownerId;
+          } else {
+            importErrors.errors.push({
+              type: 'error',
+              field: 'movie._meta.createdBy',
+              name: 'Movie owned id',
+              reason: `User Id specified for movie admin does not exists "${this.mapping.ownerId}"`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
+        }
+      }
+
       console.log(movie);
+
       ///////////////
       // VALIDATION
       ///////////////
@@ -340,17 +525,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
         hint: 'Edit corresponding sheet field.'
       });
     }
-
-    // TODO issue #3091
-    // if (!movie.poster) {
-    //   errors.push({
-    //     type: 'error',
-    //     field: 'poster',
-    //     name: 'Poster',
-    //     reason: 'Required field is missing',
-    //     hint: 'Add poster URL in corresponding column.'
-    //   });
-    // }
 
     //////////////////
     // OPTIONAL FIELDS
@@ -564,7 +738,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
           Object.keys(fieldConfig.fields).forEach(k => {
             const value = r[fieldConfig.fields[k]];
             if (value) {
-              obj[k] = isNaN(value) ? value.trim() : value;
+              obj[k] = isNaN(value) ? value.trim() : value.toString();
             } else {
               obj[k] = '';
             }
@@ -575,7 +749,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         return this.currentRows.map(r => {
           const value = r[fieldConfig.index];
           if (value) {
-            return isNaN(value) ? value.trim() : value;
+            return isNaN(value) ? value.trim() : value.toString();
           } else {
             return '';
           }
@@ -585,7 +759,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       if (this.currentRows.length) {
         const value = this.currentRows[0][fieldConfig.index];
         if (value) {
-          return isNaN(value) ? value.trim() : value;
+          return isNaN(value) ? value.trim() : value.toString();
         } else {
           return '';
         }

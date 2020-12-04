@@ -1,6 +1,9 @@
+import { createDistributionRight } from "@blockframes/distribution-rights/+state/distribution-right.model";
 import {
   createBoxOffice,
   createMovieOriginalRelease,
+  createMovieRating,
+  createMovieReview,
   createPrize,
   Movie,
   populateMovieLanguageSpecification
@@ -8,6 +11,7 @@ import {
 import { MovieImportState } from "libs/import/src/lib/import-utils";
 import { createCredit, createFilmography, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
+import { TerritoryValue } from "../static-model";
 import { Scope } from "../static-model/static-model";
 
 const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/;
@@ -207,11 +211,10 @@ export function formatOriginCountries(originCountries: string[], state: MovieImp
   }).filter(c => !!c);
 }
 
-export function formatOriginalLanguages(originalLanguages: string[], movie: Movie, state: MovieImportState) {
-  movie.originalLanguages = originalLanguages.map(l => {
+export function formatOriginalLanguages(originalLanguages: string[], state: MovieImportState) {
+  return originalLanguages.map(l => {
     const language = getKeyIfExists('languages', l);
     if (language) {
-      populateMovieLanguageSpecification(movie.languages, language, 'original', true);
       return language;
     } else {
       state.errors.push({
@@ -269,7 +272,7 @@ export function formatCredits(credits: { lastName: string, firstName: string, ro
   });
 }
 
-export function formatReleaseYear(year: string, status: string, movie: Movie, state: MovieImportState) {
+export function formatReleaseYear(year: string, status: string, movie: Movie) {
   if (!isNaN(Number(year))) {
     movie.release.year = parseInt(year, 10);
   }
@@ -314,4 +317,131 @@ export function formatBoxOffice(boxoffice: { territory: string, unit: string, va
     }
   }).filter(b => !!b);
 
+}
+
+export function formatCertifications(certifications: string[], state: MovieImportState) {
+  return certifications.filter(c => !!c).map(c => {
+    const certification = getKeyIfExists('certifications', c);
+    if (!!certification) {
+      return certification;
+    } else {
+      state.errors.push({
+        type: 'warning',
+        field: 'certifications',
+        name: 'Certifications',
+        reason: `${c} not found in certifications list`,
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+  }).filter(b => !!b);
+}
+
+export function formatRatings(ratings: { country: string, value: string }[], state: MovieImportState) {
+  return ratings.filter(r => !!r.value && !!r.country).map(r => {
+    const country = getKeyIfExists('territories', r.country);
+    const movieRating = createMovieRating({ value: r.value });
+    if (!!country) {
+      movieRating.country = country;
+      return movieRating;
+    } else {
+      state.errors.push({
+        type: 'warning',
+        field: 'rating',
+        name: 'Movie rating',
+        reason: `Could not parse rating territory : ${r.country}`,
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+  }).filter(b => !!b);
+
+}
+
+export function formatReview(reviews: { revue: string, link: string, quote: string }[]) {
+  return reviews.filter(r => !!r.revue).map(r => {
+    return createMovieReview({
+      journalName: r.revue,
+      revueLink: r.link,
+      criticQuote: r.quote
+    })
+  }).filter(r => !!r);
+}
+
+export function formatSingleValue(value: string, scope: Scope, path: string, movie: Movie) {
+  if(!!value){
+    const key = getKeyIfExists(scope, value);
+    if (!!key) {
+      const pathParts = path.split('.');
+      if (pathParts.length === 1) {
+        movie[pathParts[0]] = key;
+      } else if (pathParts.length === 2) {
+        movie[pathParts[0]][pathParts[1]] = key;
+      }
+    }
+  }
+}
+
+export function formatAvailableLanguages(versions: { language: string, dubbed: string, subtitle: string, caption: string }[], movie: Movie, state: MovieImportState) {
+  versions.filter(v => !!v.language).forEach(v => {
+    const language = getKeyIfExists('languages', v.language);
+    if (language) {
+      populateMovieLanguageSpecification(movie.languages, language, 'dubbed', v.dubbed === 'yes' ? true : false);
+      populateMovieLanguageSpecification(movie.languages, language, 'subtitle', v.subtitle === 'yes' ? true : false);
+      populateMovieLanguageSpecification(movie.languages, language, 'caption', v.caption === 'yes' ? true : false);
+    } else {
+      state.errors.push({
+        type: 'warning',
+        field: 'movie.languages',
+        name: 'Available version(s)',
+        reason: `${v.language} not found in languages list`,
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+  });
+}
+
+export function formatDistributionRights(territories: string, territoriesExcluded: string, state: MovieImportState) {
+  // Here we need to create 'lite' version of distribution deals with only the reserved territories.
+  // This feature is used on festival app.
+  const separator = ';';
+  const distributionRight = createDistributionRight();
+  // TERRITORIES
+  if (territories) {
+    distributionRight.territory = [];
+    territories.split(separator).forEach((c: TerritoryValue) => {
+      const territory = getKeyIfExists('territories', c);
+      if (territory) {
+        distributionRight.territory.push(territory);
+      } else {
+        state.errors.push({
+          type: 'error',
+          field: 'territories',
+          name: 'Territories sold',
+          reason: `${c} not found in territories list`,
+          hint: 'Edit corresponding sheet field.'
+        });
+      }
+    });
+  }
+
+  // TERRITORIES EXCLUDED
+  if (territoriesExcluded) {
+    distributionRight.territoryExcluded = [];
+    territoriesExcluded.split(separator).forEach((c: TerritoryValue) => {
+      const territory = getKeyIfExists('territories', c);
+      if (territory) {
+        distributionRight.territoryExcluded.push(territory);
+      } else {
+        state.errors.push({
+          type: 'error',
+          field: 'territories excluded',
+          name: 'Territories excluded',
+          reason: `${c} not found in territories list`,
+          hint: 'Edit corresponding sheet field.'
+        });
+      }
+    });
+  }
+
+  // We keep it for save in the next component
+  state.distributionRights = [distributionRight];
 }
