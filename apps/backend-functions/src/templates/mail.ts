@@ -95,10 +95,10 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   return { to: email, templateId: templateIds.request.joinOrganization.pending, data };
 }
 
-export function organizationAppAccessChanged(admin: PublicUser, appLabel: string, url: string): EmailTemplateRequest {
+/** Email to let org admin knows that his/her organization has access to a new app */
+export function organizationAppAccessChanged(admin: PublicUser, url: string): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
-    appName: appLabel,
     url
   }
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
@@ -138,7 +138,6 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
 export function invitationToEventFromOrg(
   recipient: EmailRecipient,
   orgDenomination: string,
-  appLabel: string,
   eventId: string,
   link: string,
   url: string = appUrl.market
@@ -146,7 +145,6 @@ export function invitationToEventFromOrg(
   const data = {
     userFirstName: recipient.name,
     orgName: orgDenomination,
-    appName: appLabel,
     eventName: eventId,
     pageURL: `${url}/${link}`
   };
@@ -157,7 +155,6 @@ export function invitationToEventFromOrg(
 export function requestToAttendEventFromUser(
   fromUserFirstname: string,
   fromUserOrgName: string,
-  appLabel: string,
   recipient: EmailRecipient,
   eventTitle: string,
   link: string,
@@ -167,7 +164,6 @@ export function requestToAttendEventFromUser(
     adminFirstName: recipient.name,
     userFirstName: fromUserFirstname,
     orgName: fromUserOrgName,
-    appName: appLabel,
     eventName: eventTitle,
     pageURL: `${url}/${link}`
   };
