@@ -13,6 +13,8 @@ import { MovieDocument } from './data/types';
 import { uploadToJWPlayer } from './player';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { storage } from 'firebase-functions';
+import { Meeting } from '@blockframes/event/+state/event.firestore';
+import { isUserInvitedToEvent } from './internals/invitations/events';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
@@ -97,18 +99,18 @@ export async function linkFile(data: storage.ObjectMetadata) {
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
  * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
  */
-export const getMediaToken = async (data: { ref: string, parametersSet: ImageParameters[] }, context: CallableContext): Promise<string[]> => {
+export const getMediaToken = async (data: { ref: string, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  const canAccess = await isAllowedToAccessMedia(data.ref, context.auth.uid);
+  const canAccess = await isAllowedToAccessMedia(data.ref, context.auth.uid, data.eventId);
   if (!canAccess) {
     throw new Error('Permission denied. User is not allowed');
   }
 
   return data.parametersSet.map((p: ImageParameters) => {
     const params = formatParameters(p);
-    let toSign = `${imgixToken}${data.ref}`;
+    let toSign = `${imgixToken}${encodeURI(data.ref)}`;
 
     if (!!params) {
       toSign = `${toSign}?${params}`;
@@ -132,7 +134,7 @@ export const deleteMedia = async (ref: string): Promise<void> => {
   await file.delete();
 }
 
-async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean> {
+async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string): Promise<boolean> {
   const pathInfo = getPathInfo(ref);
   const db = admin.firestore();
 
@@ -143,21 +145,63 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
   const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
   if (blockframesAdmin.exists) { return true; }
 
+  let canAccess = false;
   switch (pathInfo.collection) {
     case 'users':
-      return pathInfo.docId === uid;
+      canAccess = pathInfo.docId === uid;
+      break;
     case 'orgs':
       if (!userDoc.orgId) { return false; }
-      return pathInfo.docId === userDoc.orgId;
+      canAccess = pathInfo.docId === userDoc.orgId;
+      break;
     case 'movies':
       if (!userDoc.orgId) { return false; }
       const moviesCol = await db.collection('movies').where('orgIds', 'array-contains', userDoc.orgId).get();
       const movies = moviesCol.docs.map(doc => doc.data());
       const orgIds = movies.map(m => m.orgIds)
-      return orgIds.some(id => pathInfo.docId === id);
+      canAccess = orgIds.some(id => pathInfo.docId === id);
+      break;
     default:
-      return false;
+      canAccess = false;
+      break;
   }
+
+  // use is not currently authorized,
+  // but he might be invited to an event where the file is shared
+  if (!canAccess && !!eventId) {
+    const eventRef = db.collection('events').doc(eventId);
+    const eventSnap = await eventRef.get();
+
+    if (eventSnap.exists) {
+
+      const eventData = eventSnap.data()!;
+
+      // if event is a Meeting and has the file
+      if (eventData.type === 'meeting') {
+
+        // event.meta.files store the raw refs, but the ref in the function params
+        // has been transformed by the front, so we must apply the same transformations
+        // if we want to be able to match ref & files
+        const match = (eventData.meta as Meeting).files.some(file => {
+
+          if (file.startsWith('/')) file = file.substr(1); // remove leading '/' if exists
+          const fileParts = file.split('/');
+          fileParts.shift(); // remove privacy
+          let normalizedFile = fileParts.join('/');
+          if (!normalizedFile.startsWith('/')) normalizedFile = `/${normalizedFile}`; // put back a leading '/'
+
+          return normalizedFile === ref;
+        })
+
+        if (match) {
+          // check if user is invited
+          canAccess = await isUserInvitedToEvent(uid, eventId);
+        }
+      }
+    }
+  }
+
+  return canAccess;
 }
 
 interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
