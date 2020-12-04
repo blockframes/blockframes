@@ -23,11 +23,11 @@ export interface Campaign {
 
 
 export interface Budget {
-  castCost?: number,
-  others?: number,
-  postProdCost?: number,
-  producerFees?: number,
-  shootCost?: number,
+  development?: number,
+  shooting?: number,
+  postProduction?: number,
+  administration?: number,
+  contingency?: number,
 }
 
 export interface Funding {
