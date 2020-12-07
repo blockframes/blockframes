@@ -11,6 +11,7 @@ import { TO } from '@blockframes/e2e/utils';
  * Note : 'Production Status' debug should be set to true
  */
 const debug_mode = false;
+const debugMovieId = 'suO5krBr1pPOUc0BRkIV';
 
 const getStepsToSkip = (movie:any) => {
   if (movie.productionStatus.status5) {
@@ -221,11 +222,11 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
   it('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');
-    signInAndNavigateToMain(users[0]);
+    signInAndNavigateToMain(users[0], debugMovieId);
   });
 
   //Summary - Verification
-  it('Fill all fields & navigate to Summary Page', () => {
+  it.skip('Fill all fields & navigate to Summary Page', () => {
     cy.wait(TO.FIFTEEN_SEC);
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
@@ -274,6 +275,9 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Verify Summary sheet fields are correct
   it('Verify fields in Summary Page', () => {
+    if (debugMovieId) {
+
+    }
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary & Submission');
 
