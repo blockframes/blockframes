@@ -1,5 +1,5 @@
 
-<section fxLayout="column" fxLayoutAlign="space-between" [class]="event.isOwner ? 'owner' : ''">
+<section fxLayout="column" fxLayoutAlign="space-between" [ngClass]="{ owner: event.isOwner }">
   <ng-container *ngIf="!!event.meta.selectedFile">
     <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
       <ng-container *ngSwitchCase="'image'">
