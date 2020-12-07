@@ -1,4 +1,4 @@
-<h1>Edit Image</h1>
+<h2>Edit Image</h2>
 <mat-divider></mat-divider>
 <form [formGroup]="data.form" fxLayout="column" fxLayoutGap="24px">
   <drop-cropper [ratio]="data.ratio" [storagePath]="data.storagePath" [form]="data.form">
@@ -8,6 +8,6 @@
     <button mat-stroked-button color="primary" (click)="upload()" [disabled]="data.form.invalid">
       <span>Update</span>
     </button>
-    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-button (click)="cancel()" color="primary">Cancel</button>
   </section>
 </form>

@@ -7,7 +7,8 @@ import { isHostedMediaForm } from '../../file-explorer/file-explorer.model';
 
 @Component({
   selector: 'image-dialog',
-  templateUrl: 'image.component.html'
+  templateUrl: 'image.component.html',
+  styleUrls: ['./image.component.scss']
 })
 export class ImageDialogComponent implements OnInit {
 
