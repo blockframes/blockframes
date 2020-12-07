@@ -21,7 +21,6 @@ export class PdfViewerComponent {
   get ref() { return this._ref; }
   @Input() set ref(value: string) {
     this._ref = value;
-    this.generatePdfUrl();
   }
 
   private _control: MeetingPdfControl;
@@ -40,6 +39,7 @@ export class PdfViewerComponent {
 
   pdfUrl$ = new BehaviorSubject('');
   loading$ = new BehaviorSubject(true);
+  fetching$ = new BehaviorSubject(false);
 
   /** Keep track of wether the player is in full screen or not.
    * We cannot trust the `toggleFullScreen()` function for that because
@@ -60,6 +60,7 @@ export class PdfViewerComponent {
       this.pdfUrl$.next('');
       this.loading$.next(true);
     } else {
+      this.fetching$.next(true);
       const param: ImageParameters = {
         page: this.control.currentPage,
         auto: 'compress,format'
@@ -67,6 +68,7 @@ export class PdfViewerComponent {
       const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
       this.pdfUrl$.next(url);
       this.loading$.next(false);
+      this.fetching$.next(false);
     }
   }
 
