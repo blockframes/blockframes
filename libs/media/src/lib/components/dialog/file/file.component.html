@@ -1,4 +1,4 @@
-<h1>Add File</h1>
+<h2>Add File</h2>
 <mat-divider></mat-divider>
 <form [formGroup]="data.form" fxLayout="column" fxLayoutGap="24px">
 
@@ -39,6 +39,6 @@
     <button mat-stroked-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
       <span>Add file</span>
     </button>
-    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-button (click)="cancel()" color="primary">Cancel</button>
   </section>
 </form>

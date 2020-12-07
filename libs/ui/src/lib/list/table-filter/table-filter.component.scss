@@ -45,3 +45,9 @@ widget-card {
   max-width: 500px;
   overflow: auto;
 }
+
+// Name your column 'main' in order to make it span the full width of the column
+.mat-column-main {
+  width: 100%;
+  padding-left: 24px;
+}
