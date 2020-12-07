@@ -1,5 +1,5 @@
 
-interface Consents<D> {
+export interface Consents<D> {
   access: Access<D>[],
   id: string, // Id of consents document should be the orgId or uId
   share: Share<D>[]
