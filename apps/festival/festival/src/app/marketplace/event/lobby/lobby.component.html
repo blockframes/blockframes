@@ -22,7 +22,7 @@
         </ng-container>
         <ng-container *ngIf="!local.tracks.video">
           <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
-          <span matTooltip="Your browser don't have the permission to access the camera">
+          <span matTooltip="Your browser doesn't allow us to access your camera. To activate it, please change your browser preferences.">
             <button mat-fab disabled>
               <mat-icon svgIcon="videocam"></mat-icon>
             </button>
@@ -42,7 +42,7 @@
         </ng-container>
         <ng-container *ngIf="!local.tracks.audio">
           <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
-          <span matTooltip="Your browser don't have the permission to access the microphone">
+          <span matTooltip="Your browser doesn't allow us to access your microphone. To activate it, please change your browser preferences.">
             <button mat-fab disabled>
               <mat-icon svgIcon="unmute"></mat-icon>
             </button>

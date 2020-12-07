@@ -31,6 +31,13 @@ export class PdfViewerComponent {
     this.generatePdfUrl();
   }
 
+  private _eventId: string;
+  get eventId() { return this._eventId; }
+  @Input() set eventId(value: string) {
+    this._eventId = value;
+    this.generatePdfUrl();
+  }
+
   pdfUrl$ = new BehaviorSubject('');
   loading$ = new BehaviorSubject(true);
 
@@ -57,7 +64,7 @@ export class PdfViewerComponent {
         page: this.control.currentPage,
         auto: 'compress,format'
       }
-      const url = await this.mediaService.generateImgIxUrl(this.ref, param);
+      const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
       this.pdfUrl$.next(url);
       this.loading$.next(false);
     }

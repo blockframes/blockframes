@@ -6,6 +6,12 @@ import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
+export interface AppMailSetting {
+  name: AppNameValue,
+  logo: AppLogoValue,
+  url?: string,
+}
+
 export const app = ['catalog', 'festival', 'financiers'] as const;
 export type App = typeof app[number];
 
@@ -19,7 +25,8 @@ export const appName = {
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM',
   cms: 'Blockframes CMS'
-}
+};
+type AppNameValue = typeof appName[App];
 
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
@@ -27,6 +34,15 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
+
+// TODO #4206 Use PNG logo, Gmail doesn't support SVG picture
+export const appLogo = {
+  catalog: `${appUrl.content}/assets/logo/dark/archipel_content_logo.svg`,
+  festival: `${appUrl.market}/assets/logo/dark/logo_archipel_market_outline.svg`,
+  financiers: `${appUrl.financiers}/assets/logo/dark/logo_media_financiers.svg`,
+};
+type AppLogo = keyof typeof appLogo;
+type AppLogoValue = typeof appLogo[AppLogo];
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;

@@ -242,6 +242,9 @@
         ],
         "crm": [
           "crm-blockframes-clelia"
+        ],
+        "financiers": [
+          "financiers-blockframes-clelia"
         ]
       }
     },

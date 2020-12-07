@@ -95,6 +95,9 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   return { to: email, templateId: templateIds.request.joinOrganization.pending, data };
 }
 
+// TODO #4206 Update and delete the appLabel parameter
+// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
+/** Email to let org admin knows that his/her organization has access to a new app */
 export function organizationAppAccessChanged(admin: PublicUser, appLabel: string, url: string): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
@@ -134,6 +137,8 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
   return { to: request.adminEmail, templateId: templateIds.request.joinOrganization.created, data };
 }
 
+// TODO #4206 Update and delete the appLabel parameter
+// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Generates an email for user invited by an organization to an event. */
 export function invitationToEventFromOrg(
   recipient: EmailRecipient,
@@ -153,6 +158,8 @@ export function invitationToEventFromOrg(
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
 
+// TODO #4206 Update and delete the appLabel parameter
+// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Generates an email for user requesting to attend an event. */
 export function requestToAttendEventFromUser(
   fromUserFirstname: string,
