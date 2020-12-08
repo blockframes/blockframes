@@ -6,24 +6,16 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
-import { Movie, MovieService } from '@blockframes/movie/+state';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Section, TemplateParams } from '../../template/template.model';
+import { Movie, MovieService } from '@blockframes/movie/+state';
+import { TitlesSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select';
-import { FirestoreFormModule, firestoreQuery, FirestoreQuery, titlesFromApp } from '../../forms/firestore';
+import { FirestoreFormModule, firestoreQuery, titlesFromApp } from '../../forms/firestore';
 import { getTitlesQueryFn, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
-interface TitlesSection extends Section {
-  _type: 'titles',
-  title: string;
-  link: string;
-  mode: 'poster' | 'banner';
-  titleIds: string[];
-  query: FirestoreQuery;
-}
 
 type TitlesSchema = FormGroupSchema<TitlesSection>;
 

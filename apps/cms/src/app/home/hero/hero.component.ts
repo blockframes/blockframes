@@ -1,22 +1,15 @@
 import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { HeroSection } from '@blockframes/admin/cms';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Section } from '../../template/template.model';
-import { LinkModule, Link, linkSchema } from '../link/link.component';
+import { LinkModule, linkSchema } from '../../forms/link';
 import { TextFormModule, matText } from '../../forms/text';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-interface Hero extends Section {
-  title: string;
-  description: string;
-  background: string;
-  links: Link[];
-}
 
-export const heroSchema: FormGroupSchema<Hero> = {
+export const heroSchema: FormGroupSchema<HeroSection> = {
   form: 'group',
   load: async () => import('./hero.component').then(m => m.HeroComponent),
   controls: {
