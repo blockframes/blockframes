@@ -89,7 +89,7 @@ commands:
             npm run backend-ops displayCredentials &&
             npm run deploy:storage &&
             npm run deploy:firestore &&
-            npx nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions
+            npx nx run-many --target=deploy --projects=festival,catalog,crm,cms,financiers,backend-functions
   build_deploy_upgrade:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
