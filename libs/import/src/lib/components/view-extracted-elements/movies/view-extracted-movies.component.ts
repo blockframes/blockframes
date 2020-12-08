@@ -282,7 +282,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
   public currentRows = [];
 
   private mapping = {} as Record<fieldsKey, any>;
-
+// @TODO #3816 faire les differents templates ( + financiers + add  link to admin panel)
+ 
   constructor(
     @Optional() private intercom: Intercom,
     private movieService: MovieService,
