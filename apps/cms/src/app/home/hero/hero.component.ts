@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 interface Hero extends Section {
   title: string;
-  subtitle: string;
+  description: string;
   background: string;
   links: Link[];
 }
@@ -21,9 +21,9 @@ export const heroSchema: FormGroupSchema<Hero> = {
   load: async () => import('./hero.component').then(m => m.HeroComponent),
   controls: {
     _type: { form: 'control' },
-    title: matText({ label: 'title' }),
-    subtitle: matText({ label: 'subtitle' }),
-    background: matText({ label: 'background' }),
+    title: matText({ label: 'Title' }),
+    description: matText({ label: 'Description', size: 'long' }),
+    background: matText({ label: 'Background Image' }),
     links: {form: 'array', controls: [], factory: linkSchema }
   },
 }
