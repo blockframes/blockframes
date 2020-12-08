@@ -37,9 +37,9 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
 
 // TODO #4206 Use PNG logo, Gmail doesn't support SVG picture
 export const appLogo = {
-  catalog: `${appUrl.content}/assets/logo/dark/archipel_content_logo.svg`,
-  festival: `${appUrl.market}/assets/logo/dark/logo_archipel_market_outline.svg`,
-  financiers: `${appUrl.financiers}/assets/logo/dark/logo_media_financiers.svg`,
+  catalog: `${appUrl.content}/assets/logo/light/content-primary-blue.png`,
+  festival: `${appUrl.market}/assets/logo/light/market-primary-blue.png`,
+  financiers: `${appUrl.financiers}/assets/logo/light/mf-primary-blue.png`,
 };
 type AppLogo = keyof typeof appLogo;
 type AppLogoValue = typeof appLogo[AppLogo];
