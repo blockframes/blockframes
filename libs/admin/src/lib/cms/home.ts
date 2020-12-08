@@ -2,6 +2,7 @@ import { Section } from "./template";
 import { FirestoreQuery, Link } from './utils';
 
 export interface BannerSection extends Section {
+  _type: 'banner',
   title: string;
   subtitle: string;
   description: string;
@@ -10,6 +11,7 @@ export interface BannerSection extends Section {
 }
 
 export interface HeroSection extends Section {
+  _type: 'hero',
   title: string;
   description: string;
   background: string;
@@ -17,6 +19,7 @@ export interface HeroSection extends Section {
 }
 
 export interface OrgTitlesSection extends Section {
+  _type: 'orgTitles',
   title: string;
   description: string;
   orgId: string;

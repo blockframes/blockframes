@@ -1,9 +1,9 @@
 import { App } from '@blockframes/utils/apps';
 
-export interface CmsTemplate {
+export interface CmsTemplate<S extends Section = Section> {
   id: string;
   title: string;
-  sections: Section[]
+  sections: S[]
 }
 
 export interface TemplateParams {
