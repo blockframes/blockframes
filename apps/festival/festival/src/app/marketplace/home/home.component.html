@@ -23,7 +23,7 @@
   <section class="hero" bgAsset="hero.png" [bgRef]="section.background">
     <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
       <h1 *ngIf="section.title">{{ section.title }}</h1>
-      <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
+      <p *ngIf="section.description">{{ section.description }}</p>
       <div class="links" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
         <ng-container *ngFor="let link of section.links">
           <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>

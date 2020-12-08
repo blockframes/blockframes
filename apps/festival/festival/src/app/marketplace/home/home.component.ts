@@ -6,12 +6,9 @@ import { Observable } from 'rxjs';
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { CmsTemplate, HomeSection } from '@blockframes/admin/cms';
 
-interface PageSection {
-  sections: {
-    _type: string;
-  }
-}
+type CmsPage = CmsTemplate<HomeSection>;
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -28,7 +25,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('orgTitles') orgTitles?: TemplateRef<any>;
 
   @HostBinding('test-id="content"') testId
-  public page$: Observable<PageSection>;
+  public page$: Observable<CmsPage>;
   public templates: Record<string, TemplateRef<any>> = {};
 
   constructor(
@@ -38,7 +35,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.page$ = this.db.doc<PageSection>('cms/festival/home/live').valueChanges();
+    this.page$ = this.db.doc<CmsPage>('cms/festival/home/live').valueChanges();
   }
 
   ngAfterViewInit() {
