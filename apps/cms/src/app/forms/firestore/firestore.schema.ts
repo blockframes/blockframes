@@ -1,5 +1,5 @@
 import { FormArraySchema, FormEntity, FormGroupSchema, FormList } from 'ng-form-factory';
-import { QueryMethods, CollectionQuery, Conditions, WhereQuery, Direction, OrderByQuery, LimitQuery, FirestoreQuery } from '@blockframes/admin/cms';
+import { QueryMethods, CollectionQuery, Conditions, WhereQuery, Direction, OrderByQuery, LimitQuery } from '@blockframes/admin/cms';
 import { matSelect } from '../select';
 import { matText } from '../text';
 

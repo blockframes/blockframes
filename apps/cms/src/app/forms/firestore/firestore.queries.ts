@@ -1,5 +1,5 @@
 // Prebuilt queries for titles form
-import { LimitQuery, WhereQuery } from './firestore.schema';
+import { LimitQuery, WhereQuery } from '@blockframes/admin/cms';
 import { App } from '@blockframes/utils/apps';
 
 export function titlesFromApp(app: App): WhereQuery[] {
