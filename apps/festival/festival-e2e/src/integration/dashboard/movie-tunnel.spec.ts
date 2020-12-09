@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, setForm } from '@blockframes/e2e/utils/functions';
+import { acceptCookie, clearDataAndPrepareTest, clickOnMenu, setForm } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { TO } from '@blockframes/e2e/utils';
@@ -154,8 +154,8 @@ const Movie = {
 }
 
 let val:any = Movie.mainInfo;
-val['info-runtime'] = `${val['status']} - ${val['run-time']}min`;
-val['dir-info1'] = `${val['first-name']}${val['last-name']} (${val['director-category']}) ${val['director-desc']}`;
+val['info-runtime'] = `${val['run-time']} min (${val['status']})`;
+val['dir-info1'] = `${val['first-name']} ${val['last-name']} (${val['director-category']}) ${val['director-desc']}`;
 
 val = Movie.production;
 val['prod-co-summary'] = `${val['production-country']} ${val['production-company-name']}`;
@@ -219,8 +219,14 @@ const MovieFormSummary = [
 ];
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
+  beforeEach(() => {
+    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/suO5krBr1pPOUc0BRkIV/summary');
+    cy.visit('http://localhost:4200/c/o/dashboard/title/suO5krBr1pPOUc0BRkIV/main');
+    acceptCookie();
+  });
+
   // Log in and create a new movie
-  it('User logs in, can navigate to add new title page', () => {
+  it.skip('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');
     signInAndNavigateToMain(users[0], debugMovieId);
   });
@@ -275,9 +281,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Verify Summary sheet fields are correct
   it('Verify fields in Summary Page', () => {
-    if (debugMovieId) {
 
-    }
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary & Submission');
 
@@ -297,21 +301,38 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     })
   });
 
-  //TODO: Publish the movie to market
   it('Publish the movie to the market', () => {
-    //If mandatory fields are missing movie should not be published.
-
-
     //After filling all required fields, movie can be published.
+    cy.log('[Summary Page]: Publish the movie');
+    cy.get('button[test-id=publish]')
+      .click();
     
+    cy.log('Reach Festival Title View Page');
+    cy.get('festival-dashboard-title-view h1', {timeout: TO.PAGE_LOAD})
+      .contains(Movie.mainInfo["international-title"]);
   });
 
-  it('checks published movie is listed', () => {
-    //Search the movie
+  it.only('checks published movie is listed', () => {
+    cy.log('Navigate to My Titles page');
+    cy.get(`festival-dashboard button[test-id="menu"]`, {timeout: TO.PAGE_ELEMENT})
+      .first().click();
+    clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
+    cy.wait(TO.WAIT_1SEC);
+    //clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
+    //cy.wait(TO.WAIT_1SEC);
 
+    cy.get('festival-dashboard-title-list h1', {timeout: TO.PAGE_LOAD})
+      .contains('My Titles');
+    
+    //Search the movie
+    cy.get('input[test-id="filter-input"]', {timeout: TO.PAGE_LOAD})
+      .type(Movie.mainInfo["international-title"]);
 
     //After filling all required fields, movie can be published.
-
+    cy.get('table').should(($tr) => {
+      const $tds = $tr.find('td') // find all the tds
+      expect($tds.children.eq(0)).to.contain('jacobs')
+    });
   });
 
 });

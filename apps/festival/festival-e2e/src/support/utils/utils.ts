@@ -14,8 +14,6 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
   cy.get('festival-marketplace', {timeout: TO.PAGE_LOAD});
   acceptCookie();
 
-
-
   // Navigate to movie-tunnel-main
   cy.log('Click sidemenu to reach Add New Title');
   clickOnMenu(['festival-marketplace', 'festival-dashboard'], 'menu', 'dashboard/home');
@@ -24,9 +22,10 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
   cy.wait(TO.WAIT_1SEC);
 
   if (debugMovieId !== '') {
-    const path = '../c/o/dashboard/tunnel/movie/' + debugMovieId + 'summary';
-    //cy.visit(path);
-    window.location.href = path;
+    cy.log('Check :', debugMovieId);
+    const path = 'c/o/dashboard/tunnel/movie/' + debugMovieId + 'summary';
+    cy.visit(path);
+    //window.location.href = path;
     cy.wait(TO.THREE_SEC);
     return;
   }
