@@ -8,8 +8,8 @@
 .banner {
   background-size: cover;
   background-position: center;
-
-  h3 {
+  
+  h4 {
     margin-bottom: 0;
   }
   p {
@@ -24,6 +24,7 @@
   padding: 40px;
   background-image: url("/assets/images/banner_empty.png");
   background-size: cover;
+  min-height: 236px;
 
   h1 {
     margin-bottom: 0;
@@ -33,11 +34,16 @@
   }
 }
 
-.titles, .orgs, .org-titles {
-  padding-bottom: 24px;
+.cards {
+  padding: 48px 0;
   header {
-    padding: 24px;
+    margin: 8px 24px;
   }
+}
+
+// two consecutive list of cards (titles, orgs, org-titles) should not cumulate their paddings
+.cards + .cards {
+  padding-top: 0;
 }
 
 .org-titles {
