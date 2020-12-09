@@ -98,7 +98,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
       map(([local, global]) => local || global)
     );
 
-    const obs$: Array<Observable<any>> = [this.asset$, this.parameters, theme$]
+    const obs$: Observable<any>[] = [this.asset$, this.parameters, theme$]
 
     let _delay = 0;
     if (this.ref$.value) {
