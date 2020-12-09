@@ -28,7 +28,7 @@ mat-sidenav-content {
     overflow: auto;
 
     .page {
-      min-height: calc(100% - 140px); /** 140px : bf-footer height **/
+      min-height: calc(100% - 140px); /** 140px : bf-footer height . This will need an update if footer height is changed **/
     }
   }
 }
