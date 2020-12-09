@@ -329,9 +329,15 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       .type(Movie.mainInfo["international-title"]);
 
     //After filling all required fields, movie can be published.
-    cy.get('table').should(($tr) => {
-      const $tds = $tr.find('td') // find all the tds
-      expect($tds.children.eq(0)).to.contain('jacobs')
+    cy.get('table tr').each(($e, index, $list) => {
+      //const $tds = $tr.find('td') // find all the tds
+      //expect($tds.children.eq(0)).to.contain('jacobs')
+      console.log($e);
+      console.log(cy.wrap($e));
+      let row = cy.wrap($e);
+      row.get('td:nth-child(1)').contains(Movie.mainInfo["international-title"]);
+      row.get('td:nth-child(5)').contains('Draft');
+      cy.debug();
     });
   });
 
