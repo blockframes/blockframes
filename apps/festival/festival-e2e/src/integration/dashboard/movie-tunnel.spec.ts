@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 import { acceptCookie, clearDataAndPrepareTest, clickOnMenu, setForm } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
@@ -251,8 +251,6 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       console.log("movie :", url);
     });
 
-    cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
-
     const skipSteps = getStepsToSkip(Movie);
 
     testSteps.forEach(step => {
@@ -292,7 +290,6 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Verify Summary sheet fields are correct
   it('Verify fields in Summary Page', () => {
-
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary & Submission');
 

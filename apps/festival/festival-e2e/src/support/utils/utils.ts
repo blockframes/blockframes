@@ -36,7 +36,8 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
   cy.wait(TO.THREE_SEC);
 
   cy.log('->Reach New Title Interstitial & start');
-  cy.wait(TO.ONE_SEC);
   cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
     .click();
+  cy.wait(TO.ONE_SEC);
+  cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 }
