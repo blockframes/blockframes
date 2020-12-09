@@ -11,7 +11,6 @@ import { TO } from '@blockframes/e2e/utils';
  * Note : 'Production Status' debug should be set to true
  */
 const debug_mode = false;
-const debugMovieId = 'suO5krBr1pPOUc0BRkIV';
 
 const getStepsToSkip = (movie:any) => {
   if (movie.productionStatus.status5) {
@@ -218,21 +217,33 @@ const MovieFormSummary = [
     input: Movie.techSpec, debug: false },
 ];
 
-describe('User can navigate to the movie tunnel pages start and main.', () => {
-  beforeEach(() => {
-    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/suO5krBr1pPOUc0BRkIV/summary');
-    cy.visit('http://localhost:4200/c/o/dashboard/title/suO5krBr1pPOUc0BRkIV/main');
-    acceptCookie();
-  });
+const debugMovieId = '';
+/**
+ * debugMovieTitle : Helper function to test a movie title for any step
+ *    Within any test call it like this: debugMovieTitle(titleId, 'summary')
+ * @param id : movie doc ID
+ * @param loc : tunnel path (main / summary / etc) to debug.
+ */
+const debugMovieTitle = (id: string, loc: string) => {
+  cy.log('Check movie:', id);
 
+  //GoTo movie loc (summary, main ..)
+  const path = 'http://localhost:4200/c/o/dashboard/tunnel/movie/' + debugMovieId + loc;
+
+  cy.visit(path, {timeout: TO.VSLOW_UPDATE});
+  cy.wait(TO.SLOW_OP);
+  acceptCookie();
+}
+
+describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
-  it.skip('User logs in, can navigate to add new title page', () => {
+  it('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');
     signInAndNavigateToMain(users[0], debugMovieId);
   });
 
   //Summary - Verification
-  it.skip('Fill all fields & navigate to Summary Page', () => {
+  it('Fill all fields & navigate to Summary Page', () => {
     cy.wait(TO.FIFTEEN_SEC);
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
@@ -302,6 +313,9 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   });
 
   it('Publish the movie to the market', () => {
+    //Note : to debug only publish you can uncomment the following:
+    //debugMovieTitle(debugMovieId, 'summary');
+
     //After filling all required fields, movie can be published.
     cy.log('[Summary Page]: Publish the movie');
     cy.get('button[test-id=publish]')
@@ -312,14 +326,12 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       .contains(Movie.mainInfo["international-title"]);
   });
 
-  it.only('checks published movie is listed', () => {
+  it('checks published movie is listed', () => {
     cy.log('Navigate to My Titles page');
     cy.get(`festival-dashboard button[test-id="menu"]`, {timeout: TO.PAGE_ELEMENT})
       .first().click();
     clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
     cy.wait(TO.WAIT_1SEC);
-    //clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
-    //cy.wait(TO.WAIT_1SEC);
 
     cy.get('festival-dashboard-title-list h1', {timeout: TO.PAGE_LOAD})
       .contains('My Titles');
@@ -329,15 +341,10 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       .type(Movie.mainInfo["international-title"]);
 
     //After filling all required fields, movie can be published.
-    cy.get('table tr').each(($e, index, $list) => {
-      //const $tds = $tr.find('td') // find all the tds
-      //expect($tds.children.eq(0)).to.contain('jacobs')
-      console.log($e);
-      console.log(cy.wrap($e));
+    cy.get('table tr').each(($e) => {
       let row = cy.wrap($e);
       row.get('td:nth-child(1)').contains(Movie.mainInfo["international-title"]);
-      row.get('td:nth-child(5)').contains('Draft');
-      cy.debug();
+      row.get('td:nth-child(5)').contains('Accepted');
     });
   });
 
