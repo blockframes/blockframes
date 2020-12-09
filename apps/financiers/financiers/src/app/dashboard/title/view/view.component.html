@@ -27,7 +27,7 @@
           <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
           <mat-error *ngIf="form.hasError('receivedOverflow')">
             Your funding status should be lower than your needed investment
-            ({{ form.get('cap').value | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
+            ({{ form.get('cap').value ? form.get('cap').value: 0 | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
           </mat-error>
         </mat-form-field>
 
