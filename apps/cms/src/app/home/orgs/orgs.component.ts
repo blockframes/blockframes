@@ -6,21 +6,14 @@ import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
+import { OrgsSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { matMultiSelect } from '../../forms/select';
-import { Section, TemplateParams } from '../../template/template.model';
 import { getOrgsQueryFn, toMap } from '../pipes';
-import { FirestoreFormModule, FirestoreQuery, firestoreQuery, orgsFromApp } from '../../forms/firestore';
+import { FirestoreFormModule, firestoreQuery, orgsFromApp } from '../../forms/firestore';
 import { map,shareReplay,switchMap } from 'rxjs/operators';
 
-interface OrgsSection extends Section {
-  _type: 'orgs',
-  title: string;
-  link: string;
-  orgIds: string[];
-  query: FirestoreQuery;
-}
 
 type OrgsSchema = FormGroupSchema<OrgsSection>;
 

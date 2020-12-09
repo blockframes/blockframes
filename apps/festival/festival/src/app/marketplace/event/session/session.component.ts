@@ -91,7 +91,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         } else {
           const userStatus = (event.meta as Meeting).attendees[uid];
 
-          if (!userStatus) { // meeting session is over
+          if (!userStatus || userStatus === 'ended') { // meeting session is over
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/ended`);
           } else if (userStatus !== 'accepted') { // user has been banned or something else
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);

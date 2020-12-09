@@ -11,6 +11,7 @@ import { MediaViewerComponent } from './media-viewer.component';
 import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
 import { VideoViewerComponent } from './video-viewer/video-viewer.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
     FlexLayoutModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatButtonModule,
     MatIconModule,
     MatDividerModule,

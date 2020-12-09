@@ -45,6 +45,9 @@
         ],
         "financiers": [
           "blockframes-financiers"
+        ],
+        "cms": [
+          "blockframes-cms"
         ]
       }
     },
@@ -61,6 +64,9 @@
         ],
         "financiers": [
           "blockframes-ci-financiers"
+        ],
+        "cms": [
+          "blockframes-ci-cms"
         ]
       }
     },
@@ -84,6 +90,9 @@
         ],
         "financiers": [
           "staging-blockframes-financiers"
+        ],
+        "cms": [
+          "staging-blockframes-cms"
         ]
       }
     },
@@ -152,6 +161,9 @@
         ],
         "financiers": [
           "blockframes-demo1-financiers"
+        ],
+        "cms": [
+          "blockframes-demo1-cms"
         ]
       }
     },
@@ -168,6 +180,9 @@
         ],
         "financiers": [
           "blockframes-demo2-financiers"
+        ],
+        "cms": [
+          "blockframes-demo2-cms"
         ]
       }
     },
@@ -184,6 +199,9 @@
         ],
         "financiers": [
           "blockframes-demo3-financiers"
+        ],
+        "cms": [
+          "blockframes-demo3-cms"
         ]
       }
     },
@@ -200,6 +218,9 @@
         ],
         "financiers": [
           "blockframes-demo-4-financiers"
+        ],
+        "cms": [
+          "blockframes-demo-4-cms"
         ]
       }
     },
@@ -216,6 +237,9 @@
         ],
         "financiers": [
           "blockframes-demo-5-financiers"
+        ],
+        "cms": [
+          "blockframes-demo-5-cms"
         ]
       }
     },
