@@ -7,27 +7,30 @@
         initial investment. Please fill in the ROI estimations for each scenario:
       </p>
 
-      <form [formGroup]="form.get('profits')" id="profits" fxLayout="column">
+      <form [formGroup]="profits" id="profits" fxLayout="column">
         <mat-form-field appearance="outline">
           <mat-label>Low</mat-label>
-          <input type="number" matInput formControlName="low" min="0" />
+          <input type="number" matInput formControlName="low" min="0" [errorStateMatcher]="errorMatcher"/>
           <mat-icon matSuffix svgIcon="percent"></mat-icon>
           <mat-hint>ROI in the worst case scenario</mat-hint>
-          <mat-error *ngIf="form.hasError('min', 'profits.low')">Only positive number are allow.</mat-error>
+          <mat-error *ngIf="profits.hasError('min', 'low')">Only positive numbers are allowed.</mat-error>
+          <mat-error *ngIf="profits.hasError('lowOverMedium')">The "low" scenario value should be lower the "medium" one</mat-error>
+          <mat-error *ngIf="profits.hasError('lowOverHigh')">The "low" scenario value should be lower the "high" one</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Medium</mat-label>
-          <input type="number" matInput formControlName="medium" min="0" />
+          <input type="number" matInput formControlName="medium" min="0" [errorStateMatcher]="errorMatcher"/>
           <mat-icon matSuffix svgIcon="percent"></mat-icon>
           <mat-hint>Target ROI</mat-hint>
-          <mat-error *ngIf="form.hasError('min', 'profits.medium')">Only positive number are allow.</mat-error>
+          <mat-error *ngIf="profits.hasError('min', 'medium')">Only positive numbers are allowed.</mat-error>
+          <mat-error *ngIf="profits.hasError('mediumOverHigh')">The "medium" scenario value should be lower the "high" one</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>High</mat-label>
-          <input type="number" matInput formControlName="high" min="0" />
+          <input type="number" matInput formControlName="high" min="0" [errorStateMatcher]="errorMatcher"/>
           <mat-icon matSuffix svgIcon="percent"></mat-icon>
           <mat-hint>ROI in the best case scenario</mat-hint>
-          <mat-error *ngIf="form.hasError('min', 'profits.high')">Only positive number are allow.</mat-error>
+          <mat-error *ngIf="profits.hasError('min', 'high')">Only positive numbers are allowed.</mat-error>
         </mat-form-field>
       </form>
     </section>

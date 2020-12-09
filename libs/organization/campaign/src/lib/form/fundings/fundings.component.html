@@ -37,7 +37,7 @@
                 <mat-label>Amount</mat-label>
                 <input type="number" matInput formControlName="amount" min="0"/>
                 <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
-                <mat-error *ngIf="fundinForm.hasError('min', 'amount')">Only positive number are allow.</mat-error>
+                <mat-error *ngIf="fundinForm.hasError('min', 'amount')">Only positive numbers are allowed.</mat-error>
               </mat-form-field>
   
               <mat-form-field fxFlex appearance="outline">

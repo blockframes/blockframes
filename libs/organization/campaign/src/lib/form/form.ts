@@ -27,6 +27,16 @@ export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
   }
 };
 
+function compareProfits(form: FormGroup): ValidationErrors | null {
+  const { low, medium, high } = form?.value;
+  const errors = {};
+  if (low && medium && low > medium) errors['lowOverMedium'] = true;
+  if (low && high && low > high) errors['lowOverHigh'] = true;
+  if (medium && high && medium > high) errors['mediumOverHigh'] = true;
+  return Object.keys(errors).length ? errors : null;
+}
+
+
 //////////
 // PERK //
 //////////
@@ -113,7 +123,7 @@ function createCampaignControls(value?: Partial<Campaign>) {
       low: new FormControl(campaign.profits.low, Validators.min(0)),
       medium: new FormControl(campaign.profits.medium, Validators.min(0)),
       high: new FormControl(campaign.profits.high, Validators.min(0)),
-    }),
+    }, compareProfits),
     perks: FormList.factory(
       campaign.perks,
       (perk?: Partial<Perk>) => new PerkForm(perk),
