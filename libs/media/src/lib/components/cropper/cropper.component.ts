@@ -121,7 +121,11 @@ export class CropperComponent implements OnInit {
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
     $event.preventDefault();
-    this.filesSelected($event.dataTransfer.files);
+    if (!!$event.dataTransfer.files.length) {
+      this.filesSelected($event.dataTransfer.files);
+    } else {
+      this.resetState();
+    }
   }
 
   @HostListener('dragover', ['$event'])
@@ -133,6 +137,10 @@ export class CropperComponent implements OnInit {
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
+    this.resetState();
+  }
+
+  private resetState() {
     if (!!this.form.blobOrFile.value || (!!this.form.ref?.value)) {
       this.nextStep('show');
     } else {
