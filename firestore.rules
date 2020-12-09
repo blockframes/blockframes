@@ -423,10 +423,9 @@ service cloud.firestore {
     // CMS RULES             //
     ///////////////////////////
 
-    // @todo(#4322): only admin should be able to modify
     match /cms/{app} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isBlockframesAdmin(userId());
 
       match /{page}/{template} {
         allow read: if true;
