@@ -5,6 +5,8 @@
 .table-container {
   overflow: auto;
   width: 100%;
+  /* Firefox scrollbar */
+  scrollbar-color: var(--primary) var(--active);
 }
 
 table {

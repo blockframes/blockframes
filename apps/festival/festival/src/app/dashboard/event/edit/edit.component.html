@@ -51,7 +51,7 @@
               <mat-label>Link to video call</mat-label>
               <input matInput type="text" disabled [value]="link">
             </mat-form-field>
-            <button mat-icon-button [cdkCopyToClipboard]="link">
+            <button mat-icon-button [cdkCopyToClipboard]="link" matTooltip="Copy the link">
               <mat-icon svgIcon="copy"></mat-icon>
             </button>
           </div>
@@ -105,7 +105,7 @@
             </mat-list>
           </ng-container>
           <ng-template #empty>
-            <p class="no-files">There no selected files yet. Click on the button above to add some files.</p>
+            <p class="no-files">There is no selected files yet. Click on the button above to add some files.</p>
           </ng-template>
 
         </section>
