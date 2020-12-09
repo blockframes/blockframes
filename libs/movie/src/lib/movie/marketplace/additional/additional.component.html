@@ -96,7 +96,8 @@
             <b>{{ language.key | toLabel: 'languages' }}: </b>
             <mat-chip-list>
               <ng-container *ngFor="let version of language.value | keyvalue">
-                <mat-chip *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}</mat-chip>
+                <mat-chip disableRipple *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}
+                </mat-chip>
               </ng-container>
             </mat-chip-list>
           </div>
@@ -113,7 +114,7 @@
       <h5>Target audience</h5>
       <mat-chip-list fxLayout="row" fxLayoutGap="8px">
         <ng-container *ngFor="let target of movie.audience.targets">
-          <mat-chip>{{ target }}</mat-chip>
+          <mat-chip disableRipple>{{ target }}</mat-chip>
         </ng-container>
       </mat-chip-list>
     </article>
@@ -121,7 +122,7 @@
       <h5>Social responsability goals</h5>
       <mat-chip-list fxLayout="row" fxLayoutGap="8px">
         <ng-container *ngFor="let goal of movie.audience.goals">
-          <mat-chip>{{ goal | toLabel: 'socialGoals' }}</mat-chip>
+          <mat-chip disableRipple>{{ goal | toLabel: 'socialGoals' }}</mat-chip>
         </ng-container>
       </mat-chip-list>
     </article>

@@ -33,7 +33,8 @@
 
         <footer fxLayout fxLayoutAlign="space-between center">
           <button mat-stroked-button mat-dialog-close type="reset" color="primary">Cancel</button>
-          <button mat-flat-button type="submit" color="primary" [disabled]="form.invalid">Save</button>
+          <button mat-flat-button type="submit" color="primary"
+            [disabled]="form.invalid || form.get('received').value < 0">Save</button>
         </footer>
       </form>
     </ng-container>
