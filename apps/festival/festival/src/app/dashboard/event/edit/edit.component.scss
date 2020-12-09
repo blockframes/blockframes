@@ -13,6 +13,11 @@ section {
     margin-bottom: 16px;
   }
 
+  a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
   p.no-files {
     width: 70%;
     text-align: center;

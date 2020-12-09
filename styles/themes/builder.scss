@@ -111,7 +111,7 @@
     dividers: map-get($foreground, 500),
     disabled: map-get($foreground, 500),
     disabled-button: map-get($foreground, 200),
-    disabled-text: map-get($foreground, 500),
+    disabled-text: map-get($foreground, 600),
     elevation: rgba(map-get($background, 700), 0.12),
     hint-text: map-get($foreground, 600),
     secondary-text: map-get($foreground, 700),
@@ -155,7 +155,7 @@
     background: $mat-background,
     font: $font,
   );
-  
+
 
   @return $mat-theme;
 }
@@ -186,7 +186,7 @@
   @include bf-tunnel-theme($theme);
   @include apex-chart-theme($theme);
 
-    
+
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
