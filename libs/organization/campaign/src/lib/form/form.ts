@@ -104,6 +104,7 @@ export class BudgetForm extends FormEntity<BudgetFormControl> {
 
 function createCampaignControls(value?: Partial<Campaign>) {
   const campaign = createCampaign(value);
+  console.log(campaign);
   return {
     currency: new FormStaticValue(campaign.currency, 'movieCurrencies', [Validators.required]),
     cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
