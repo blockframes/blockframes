@@ -22,10 +22,12 @@ export class MarketplaceMovieViewComponent implements OnInit {
     path: 'finance',
     label: 'Financing Conditions'
   },
-  {
-    path: 'avails',
-    label: 'Avails'
-  }];
+  // TODO 4368 Uncomment and reactivate this section when we relaunch Archipel Content
+  // {
+  //   path: 'avails',
+  //   label: 'Avails'
+  // }
+];
 
   promoLinks = [
     'promo_reel_link',
