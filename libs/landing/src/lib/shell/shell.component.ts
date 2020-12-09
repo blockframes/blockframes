@@ -98,7 +98,7 @@ export class LandingShellComponent {
       const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
 
       this.sendDemoRequest(information);
-      this.snackBar.open('Your request has been sent !', 'close', { duration: 2000 });
+      this.snackBar.open('Your request has been sent!', 'close', { duration: 2000 });
       this.submitted = true;
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
