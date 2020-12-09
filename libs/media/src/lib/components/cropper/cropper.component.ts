@@ -164,7 +164,7 @@ export class CropperComponent implements OnInit {
 
     const isFileTypeValid = this.types && this.types.includes(fileType);
     if (!isFileTypeValid) {
-      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 1000 });
+      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
       this.delete();
     } else {
       this.nextStep('crop');
