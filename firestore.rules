@@ -429,7 +429,7 @@ service cloud.firestore {
 
       match /{page}/{template} {
         allow read: if true;
-      	allow write: if true;
+      	allow write: if isBlockframesAdmin(userId());
       }
     }
 
