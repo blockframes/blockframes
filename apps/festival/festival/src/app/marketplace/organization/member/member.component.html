@@ -12,7 +12,7 @@
   </article>
   <article *ngIf="org.email">
     <h5>Email Address</h5>
-    <p>{{ org.email }}</p>
+    <a [href]="'mailto:' + org.email">{{ org.email }}</a>
   </article>
 </section>
 
