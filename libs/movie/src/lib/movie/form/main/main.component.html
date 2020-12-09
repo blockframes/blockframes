@@ -104,7 +104,7 @@
       </article>
 
       <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="territories"
-        placeholder="Enter Country/ies of Origin" [withoutValues]="['world']">
+        placeholder="Enter Country/ies of Origin" [withoutValues]="['world']" uniqueValues>
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
         <mat-hint>
@@ -113,7 +113,7 @@
       </chips-autocomplete>
 
       <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="languages"
-        placeholder="Enter Original Language(s)" [withoutValues]="['all']">
+        placeholder="Enter Original Language(s)" [withoutValues]="['all']" uniqueValues>
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
         <mat-hint>
@@ -122,7 +122,7 @@
       </chips-autocomplete>
 
       <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)"
-        [withoutValues]="['']">
+        [withoutValues]="['']" uniqueValues>
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
