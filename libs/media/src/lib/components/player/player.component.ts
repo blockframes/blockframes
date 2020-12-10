@@ -9,6 +9,7 @@ import { loadJWPlayerScript } from '@blockframes/utils/utils';
 declare const jwplayer: Function;
 
 @Component({
+  // ! Warning if you change the selector, be sure to also change it in the .scss
   selector: '[ref] media-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],

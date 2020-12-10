@@ -18,7 +18,6 @@ article {
   section {
     width: 100%;
     padding: 0;
-    height: fit-content;
 
     header {
       margin: 8px;
@@ -37,6 +36,10 @@ article {
       button {
         flex-shrink: 0;
       }
+    }
+
+    .back_btn {
+      margin-bottom: 24px;
     }
   }
 }

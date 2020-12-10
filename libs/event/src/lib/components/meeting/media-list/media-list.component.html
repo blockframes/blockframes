@@ -18,7 +18,7 @@
     <ng-container *ngFor="let file of event.meta.files">
       <button mat-button (click)="select(file)" [disabled]="isSelected(file)" carouselItem>
         <div fxLayout="column" fxLayoutAlign="center center" matTooltip="Share on screen">
-          <img [asset]="file | fileTypeImage" alt="file type">
+          <mat-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
           <span>{{file | fileName }}</span>
         </div>
       </button>

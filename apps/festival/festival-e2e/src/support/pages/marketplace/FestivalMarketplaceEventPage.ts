@@ -1,5 +1,6 @@
 ﻿import FestivalMarketplaceScreeningPage from "./FestivalMarketplaceScreeningPage";
 import FestivalScreeningPage from "./FestivalScreeningPage";
+import { TO } from "@blockframes/e2e/utils";
 
 export default class FestivalMarketplaceEventPage {
   constructor() {
@@ -12,7 +13,10 @@ export default class FestivalMarketplaceEventPage {
   }
 
   clickJoinScreening() {
-    cy.get('festival-event-view a[test-id=event-room]').click();
+    cy.log('Going for screening: (festival-event-view a[test-id=event-room])');
+    cy.get('festival-event-view a[test-id=event-room]', {timeout: TO.PAGE_ELEMENT})
+      .click();
+    cy.wait(TO.WAIT_1SEC);
     return new FestivalMarketplaceScreeningPage();
   }
 
