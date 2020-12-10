@@ -12,7 +12,7 @@
     <mat-tab label="Organization Files">
       <mat-action-list>
         <ng-container *ngIf="orgFiles.length; else noOrgFiles">
-          <button mat-list-item *ngFor="let file of orgFiles" (click)="previewFile(file.path)" >
+          <button mat-list-item *ngFor="let file of orgFiles" (click)="previewFile($event, file.path)" >
             <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
             <p [matTooltip]="file.path | fileName">
               {{ file.path | fileFolder }} - {{file.path | fileName}}
@@ -46,7 +46,7 @@
         <mat-divider></mat-divider>
         <mat-action-list>
           <ng-container *ngIf="moviesFiles[movie.id].length; else noMovieFiles">
-            <button mat-list-item *ngFor="let file of moviesFiles[movie.id]" (click)="previewFile(file.path)">
+            <button mat-list-item *ngFor="let file of moviesFiles[movie.id]" (click)="previewFile($event, file.path)">
               <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
               <p mat-line [matTooltip]="file.path | fileName" >
                 {{ file.path | fileFolder }} - {{file.path | fileName}}
