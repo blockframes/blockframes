@@ -57,7 +57,7 @@ db.collection(META_COLLECTION_NAME)
   .onSnapshot(
     (snap) => {
       const maintenanceDoc = snap.data() as IMaintenanceDoc;
-      maintenanceActive = _isInMaintenance(maintenanceDoc);
+      maintenanceActive = _isInMaintenance(maintenanceDoc, 0);
     },
     // If there is an error, revert back to old method to prevent stuck functions
     () => (maintenanceActive = null)

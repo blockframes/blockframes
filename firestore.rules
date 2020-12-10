@@ -372,9 +372,17 @@ service cloud.firestore {
         && notInMaintenance();
       allow update: if userHasValidOrg()
         && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerId == userId() 
-          || existingData().ownerId == userOrgId() 
-          || ( (isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting') || isRemovingField(['meta', 'attendees', userId()])) && isOnlyChangingAttendeeStatus() ) )
+        && ( existingData().ownerId == userId()
+          || existingData().ownerId == userOrgId()
+          || (
+            (
+              isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting')
+              || isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'ended')
+              || isRemovingField(['meta', 'attendees', userId()])
+            )
+            && isOnlyChangingAttendeeStatus()
+          )
+        )
         && notInMaintenance();
       allow delete: if userHasValidOrg()
         && ( existingData().ownerId == userId() // Current user is event owner
@@ -406,7 +414,9 @@ service cloud.firestore {
     // note: campaign is using the movieId as id
     match /campaigns/{movieId} {
       allow read: if isSignedIn() && notInMaintenance();
-      allow write: if isOrgMember(incomingData().orgId) && orgCan('update', incomingData().orgId, movieId) && notInMaintenance();
+      allow write: if isOrgMember(incomingData().orgId) 
+                  && orgCan('canUpdate', incomingData().orgId, movieId) 
+                  && notInMaintenance();
     }
 
     ///////////////////////////
@@ -417,7 +427,7 @@ service cloud.firestore {
     match /cms/{app} {
       allow read: if true;
       allow write: if true;
-      
+
       match /{page}/{template} {
         allow read: if true;
       	allow write: if true;

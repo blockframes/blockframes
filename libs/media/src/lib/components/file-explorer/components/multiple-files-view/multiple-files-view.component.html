@@ -3,21 +3,23 @@
     <ng-template colRef="ref" let-item="item">
       <img [asset]="getFileRef(item) | fileTypeImage">
     </ng-template>
-    <ng-template colRef="name" let-item="item">
+    <ng-template colRef="main" let-item="item">
       <span (click)="previewFile(getFileRef(item))">
         {{ getTitleRef(item) | fileName }}
       </span>
     </ng-template>
     <ng-template colRef="actions" let-item="item">
-      <button mat-button (click)="downloadFile(item, $event)">
-        <mat-icon svgIcon="download"></mat-icon>
-      </button>
-      <button mat-button (click)="edit(item, $event)">
-        <mat-icon svgIcon="pencil"></mat-icon>
-      </button>
-      <button mat-button (click)="deleteFile(item, $event)">
-        <mat-icon svgIcon="trash"></mat-icon>
-      </button>
+      <section fxLayout="row" fxLayoutGap="12px">
+        <button mat-icon-button (click)="downloadFile(item, $event)">
+          <mat-icon svgIcon="download"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="edit(item, $event)">
+          <mat-icon svgIcon="pencil"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteFile(item, $event)">
+          <mat-icon svgIcon="trash"></mat-icon>
+        </button>
+      </section>
     </ng-template>
   </bf-table-filter>
 </ng-container>

@@ -1,18 +1,19 @@
 <section fxLayout="column" fxLayoutAlign="center center">
   <h1>Join the Community</h1>
   <p class="community mat-body-1">
-    It seems to be your first time using one of the Archipel applications.<br/>
-    To create your account, we need to make sure that you’re attached to a company.<br/>
+    It seems to be your first time here.<br />
+    To create your account, we need to make sure that you’re attached to a company.<br />
     Please choose an option below:
   </p>
-  <mat-radio-group [formControl]="link" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+  <mat-radio-group [formControl]="link" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center"
+    fxLayoutGap="20px">
     <!-- Create Org -->
     <mat-card matRipple (click)="link.setValue('create')" fxLayout="column" fxLayoutAlign="center center">
       <img asset="add_organization.webp">
-      <mat-radio-button value="create" ><b>Create your Organization</b></mat-radio-button>
+      <mat-radio-button value="create"><b>Create your Organization</b></mat-radio-button>
       <p>
         My company doesn't have a page yet.
-      <br/>
+        <br />
         Let's create one and invite members!
       </p>
     </mat-card>
@@ -22,7 +23,7 @@
       <mat-radio-button value="find"><b>Find your Organization</b></mat-radio-button>
       <p>
         My company page has already been created.
-        <br/>
+        <br />
         Let's look for it.
       </p>
     </mat-card>

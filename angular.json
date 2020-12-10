@@ -532,7 +532,7 @@
               "apps/catalog/catalog/src/manifest.webmanifest",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -786,7 +786,7 @@
               "apps/festival/festival/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -1280,7 +1280,7 @@
               "apps/crm/crm/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -1611,7 +1611,7 @@
               "apps/financiers/financiers/src/manifest.webmanifest",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -1876,7 +1876,7 @@
               "apps/cms/src/assets",
               {
                 "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
+                "input": "./assets",
                 "output": "./assets"
               }
             ],
@@ -1888,6 +1888,10 @@
           "configurations": {
             "production": {
               "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes.ts"
+                },
                 {
                   "replace": "apps/cms/src/environments/environment.ts",
                   "with": "apps/cms/src/environments/environment.prod.ts"
@@ -1943,6 +1947,18 @@
               "**/node_modules/**",
               "!apps/cms/**/*"
             ]
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build cms --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:cms"
+            ],
+            "parallel": false,
+            "color": true
           }
         }
       }

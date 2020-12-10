@@ -1,4 +1,10 @@
 
+<section fxLayout fxLayoutAlign="space-between">
+  <h3>Your Files</h3>
+  <button mat-mini-fab color="primary" matTooltip="Add a file" (click)="openFileSelector()">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</section>
 <ng-container *ngIf="event.meta?.files?.length; else noFiles">
   <bf-carousel flex>
 
@@ -11,7 +17,7 @@
 
     <ng-container *ngFor="let file of event.meta.files">
       <button mat-button (click)="select(file)" [disabled]="isSelected(file)" carouselItem>
-        <div fxLayout="column" fxLayoutAlign="center center" [matTooltip]="file | fileName">
+        <div fxLayout="column" fxLayoutAlign="center center" matTooltip="Share on screen">
           <img [asset]="file | fileTypeImage" alt="file type">
           <span>{{file | fileName }}</span>
         </div>
@@ -22,4 +28,3 @@
 <ng-template #noFiles>
   <p>There is no files in this meeting.</p>
 </ng-template>
-<p>Go to the <a [routerLink]="['/c/o/dashboard/event', event.id, 'edit']">edit page</a> to add more files.</p>

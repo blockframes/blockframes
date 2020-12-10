@@ -142,4 +142,9 @@ export class EventService extends CollectionService<EventState> {
       }
     })))
   }
+
+  /** Just save local time so we will be able to compute session duration at the end */
+  public startLocalSession() {
+    this.store.update(state => ({ localSessionStart: Date.now() }));
+  }
 }

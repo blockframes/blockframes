@@ -2,19 +2,18 @@ import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormEntity, FormGroupSchema, FormFactoryModule } from 'ng-form-factory';
+import { Link } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
-
-export interface Link {
-  text: string;
-  href: string;
-}
+import { SelectFormModule, matSelect } from '../../forms/select';
 
 export const linkSchema: FormGroupSchema<Link> = {
   form: 'group',
   load: () => import('./link.component').then(m => m.LinkComponent),
   controls: {
     text: matText({ label: 'text' }),
-    href: matText({ label: 'URL' }),
+    path: matText({ label: 'URL' }),
+    type: matSelect({ label: 'Type', options: ['basic', 'flat', 'stroked'], value: 'basic' }),
+    color: matSelect({ label: 'Color', options: ['', 'primary', 'accent', 'warn'] })
   }
 }
 
@@ -36,6 +35,7 @@ export class LinkComponent {
     CommonModule,
     ReactiveFormsModule,
     TextFormModule,
+    SelectFormModule,
     FormFactoryModule,
   ]
 })

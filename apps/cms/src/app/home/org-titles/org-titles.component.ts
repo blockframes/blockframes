@@ -6,30 +6,23 @@ import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { Organization, orgName } from '@blockframes/organization/+state';
 import { Movie } from '@blockframes/movie/+state';
-import { Section } from '../../template/template.model';
+import { OrgTitlesSection } from '@blockframes/admin/cms';
 import { FormAutocompleteModule } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { TextFormModule, matText } from '../../forms/text';
 import { matMultiSelect, matSelect } from '../../forms/select';
-import { FirestoreFormModule, FirestoreQuery, firestoreQuery, titlesFromOrg, titlesFromApp, limit } from '../../forms/firestore';
+import { FirestoreFormModule, firestoreQuery, titlesFromOrg, titlesFromApp, limit } from '../../forms/firestore';
 import { HomePipesModule } from '../pipes';
 import { App } from '@blockframes/utils/apps';
 
-interface OrgTitle extends Section {
-  title: string;
-  description: string;
-  orgId: string;
-  titleIds: string[];
-  query: FirestoreQuery;
-}
 
-export const orgTitleSchema: FormGroupSchema<OrgTitle> = {
+export const orgTitleSchema: FormGroupSchema<OrgTitlesSection> = {
   form: 'group',
   load: async () => import('./org-titles.component').then(m => m.OrgsComponent),
   controls: {
     _type: { form: 'control' },
     title: matText({ label: 'title' }),
-    description: matText({ label: 'description' }),
+    description: matText({ label: 'description', size: 'long' }),
     orgId: matSelect({ label: 'Org ID' }),
     titleIds: matMultiSelect({ label: 'Title IDS' }),
     query: firestoreQuery({ collection: 'movies' })

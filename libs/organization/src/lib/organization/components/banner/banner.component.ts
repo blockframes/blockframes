@@ -10,7 +10,6 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 })
 export class OrganizationBannerComponent {
 
-  @Input() org: Organization;
-
-  filterMovie = (movie: Movie) => movie.storeConfig.status === 'accepted' && movie.storeConfig.appAccess.festival;
+  @Input() org?: Organization;
+  @Input() titles: Movie[] = [];
 }

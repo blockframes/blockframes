@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'form-text',
   templateUrl: './text.component.html',
+  styles: ['mat-form-field { display: block; }'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextFormComponent implements FormOutlet {

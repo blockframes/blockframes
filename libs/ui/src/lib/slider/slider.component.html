@@ -1,25 +1,26 @@
-<div class="slider" tabindex="0" [style.max-width]="maxWidth" #wrapper>
+<!-- Slides -->
+<ul #slideList role="listbox">
+  <li *ngFor="let slide of slides.changes | async" role="option">
+    <ng-template [ngTemplateOutlet]="slide.templateRef"></ng-template>
+  </li>
+</ul>
 
-  <!-- Slides -->
-  <ul class="slider-list" #slideList role="listbox"
-    [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
-    <li *ngFor="let image of slides" role="option" class="slider-item" [style.max-height]="maxHeight">
-      <ng-template [ngTemplateOutlet]="image.templateRef"></ng-template>
-    </li>
-  </ul>
-
-  <!-- Arrows -->
-  <ng-container *ngIf="!hideArrows">
-    <mat-icon [svgIcon]="arrowBack" mat-ripple (click)="previous()" *ngIf="loop || currentIndex !== 0"
-      tabindex="-1" class="previous"></mat-icon>
-    <mat-icon [svgIcon]="arrowForward" mat-ripple (click)="next()"
-      *ngIf="loop || currentIndex !== slides.length - 1" tabindex="-1" class="next"></mat-icon>
-  </ng-container>
-
-  <!-- Indicator -->
-  <span *ngIf="!hideIndicators" class="slider-indicators" tabindex="-1"
-    [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
-    <button *ngFor="let slide of slides; let i = index" type="button" tabindex="-1" mat-mini-fab
-      [disabled]="i === currentIndex" (click)="slideTo(i)"></button>
-  </span>
+<!-- Arrows -->
+<div *ngIf="!hideArrows" class="arrows" fxLayout fxLayoutGap="16px">
+  <button mat-icon-button (click)="previous()" *ngIf="loop || currentIndex !== 0">
+    <mat-icon svgIcon="arrow_back" tabindex="-1"></mat-icon>
+  </button>
+  <button mat-icon-button (click)="next()" *ngIf="loop || currentIndex !== slides.length - 1" >
+    <mat-icon svgIcon="arrow_forward" tabindex="-1"></mat-icon>
+  </button>
 </div>
+
+<!-- Indicator -->
+<ng-container *ngIf="!hideIndicators">
+  <div class="indicator" fxLayout fxLayoutGap="8px">
+    <ng-container *ngFor="let slide of slides; let i = index">
+      <button  mat-mini-fab tabindex="-1" [disabled]="i === currentIndex" (click)="slideTo(i)"></button>
+    </ng-container>
+  </div>
+</ng-container>
+

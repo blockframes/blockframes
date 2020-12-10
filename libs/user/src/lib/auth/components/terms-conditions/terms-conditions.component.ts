@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -12,17 +12,20 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
   styleUrls: ['./terms-conditions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TermsConditionsComponent {
+export class TermsConditionsComponent implements OnInit {
   section$: Observable<'dashboard' | 'marketplace'>;
   appUrl: string;
+  appName: string;
 
   constructor(
     private location: Location,
     private routerQuery: RouterQuery,
-  ) {
+  ) { }
+
+  ngOnInit() {
     this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
-    const app = getCurrentApp(this.routerQuery);;
-    this.appUrl = applicationUrl[app];
+    this.appName = getCurrentApp(this.routerQuery);
+    this.appUrl = applicationUrl[this.appName];
   }
 
   goBack() {

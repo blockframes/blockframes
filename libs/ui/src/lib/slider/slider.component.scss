@@ -1,60 +1,45 @@
-.slider {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    outline: none;
-
-    &-list {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        display: flex;
-        position: relative;
-    }
-
-    &-item {
-        width: 100%;
-        // TODO #2440
-        height: 600px;
-        display: flex;
-        position: relative;
-        flex-shrink: 0;
-    }
-
-    mat-icon {
-        position: absolute;
-        z-index: 1;
-        outline: none;
-        cursor: pointer;
-        border-radius: 50%;
-    }
-
-    &-indicators {
-        display: flex;
-        position: absolute;
-        bottom: 15px;
-        z-index: 1;
-        left: 50%;
-        transform: translateX(-50%);
-        outline: none;
-    }
-
-    button {
-        margin: 0 20px;
-        width: 1rem;
-        height: 1rem;
-    }
+:host {
+  display: block;
+  position: relative;
+  overflow-x: hidden;
+  outline: none;
 }
 
-.previous {
-    right: 60px;
-    bottom: 30px;
+ul {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
 }
 
-.next {
-    right: 0px;
-    bottom: 30px;
+li {
+  width: 100%;
+  display: flex;
+  flex-shrink: 0;
+}
+
+img {
+  width: 100%;
+}
+
+.indicator {
+  position: absolute;
+  bottom: 40px;
+  z-index: 1;
+  left: 50%;
+  outline: none;
+  button {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.arrows {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  z-index: 1;
 }
 
 /// Margin needs to be overriden because in the global

@@ -1,12 +1,6 @@
 // Prebuilt queries for titles form
-import { LimitQuery, WhereQuery } from './firestore.schema';
+import { LimitQuery, WhereQuery } from '@blockframes/admin/cms';
 import { App } from '@blockframes/utils/apps';
-
-const titleApproval: Record<App, 'accepted' | 'submitted'> = {
-  catalog: 'accepted',
-  festival: 'submitted',
-  financiers: 'accepted',
-}
 
 export function titlesFromApp(app: App): WhereQuery[] {
   return [{
@@ -18,7 +12,7 @@ export function titlesFromApp(app: App): WhereQuery[] {
     method: 'where',
     field: `storeConfig.status`,
     condition: '==',
-    value: titleApproval[app]
+    value: 'accepted'
   }];
 }
 

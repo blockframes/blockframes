@@ -7,7 +7,7 @@ type Timestamp = firestore.Timestamp;
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
 export type EventMeta = Meeting | Screening | {};
 
-export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied';
+export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
 
 export interface Meeting {
   organizerId: string;

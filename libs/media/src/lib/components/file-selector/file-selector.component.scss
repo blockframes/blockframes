@@ -18,7 +18,11 @@
     mat-tab-group {
       width: 60%;
       mat-list {
-        margin-left: 42px;
+        margin-left: 12px;
+
+        .clickable {
+          cursor: pointer;
+        }
       }
     }
 

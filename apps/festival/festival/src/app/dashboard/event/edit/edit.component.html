@@ -46,6 +46,15 @@
       <ng-container *ngSwitchCase="'meeting'">
         <h2>Meeting</h2>
         <section [formGroup]="form.meta" fxLayout="column">
+          <div class="link" fxLayout>
+            <mat-form-field class="link" appearance="outline" fxFlex>
+              <mat-label>Link to video call</mat-label>
+              <input matInput type="text" disabled [value]="link">
+            </mat-form-field>
+            <button mat-icon-button [cdkCopyToClipboard]="link">
+              <mat-icon svgIcon="copy"></mat-icon>
+            </button>
+          </div>
           <mat-form-field appearance="outline">
             <mat-label>Organized By</mat-label>
             <mat-select formControlName="organizerId">
@@ -53,6 +62,7 @@
                 <mat-option [value]="member.uid">{{ member | displayName }}</mat-option>
               </ng-container>
             </mat-select>
+            <mat-hint>This person will be the one displayed in the invitations sent to buyers.</mat-hint>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Description</mat-label>
@@ -65,17 +75,18 @@
               maxlength="500"></textarea>
             <mat-hint>Limited to 500 characters.</mat-hint>
           </mat-form-field>
-
-          <h6>Files</h6>
+        </section>
+        <section>
+          <h6>My Files for this Meeting</h6>
           <p>
-            Add the files you want to share during meeting.
-            If you didn’t upload the needed files, please add them on <a routerLink="/c/o/dashboard/files">My Files</a> page.
+            Add the files you'll want to share during the meeting.
+            If you can't find the files you're looking for, you can upload them directly in <a routerLink="/c/o/dashboard/files">My Files</a> page.
           </p>
 
-          <div fxLayout="row" fxLayoutAlign="end">
-            <button mat-stroked-button color="primary" (click)="openFileSelector()">
+          <div fxLayout="row">
+            <button class="manage-files-btn" mat-stroked-button color="primary" (click)="openFileSelector()">
               <mat-icon svgIcon="folder"></mat-icon>
-              <span>Manage Files</span>
+              <span>Attach the files you want to share during the meeting</span>
             </button>
           </div>
 
@@ -84,14 +95,17 @@
 
           <ng-container *ngIf="!!files.value.length; else empty">
             <mat-list>
-              <mat-list-item *ngFor="let file of files.value">
+              <mat-list-item *ngFor="let file of files.value; let i = index" (click)="previewFile(file)">
                 <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
-                <span>{{file | filePath: ' > ' | async}}</span>
+                <div mat-line>{{file | filePath: ' > ' | async}}</div>
+                <button mat-icon-button (click)="removeSelectedFile(i, $event)">
+                  <mat-icon svgIcon="trash" color="primary"></mat-icon>
+                </button>
               </mat-list-item>
             </mat-list>
           </ng-container>
           <ng-template #empty>
-            <p class="no-files">There no selected files yet. Click on the "Manage Files" button above to add some files.</p>
+            <p class="no-files">There no selected files yet. Click on the button above to add some files.</p>
           </ng-template>
 
         </section>

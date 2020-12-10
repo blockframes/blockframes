@@ -1,11 +1,11 @@
 <header fxFlex fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center"
-  class="dark-contrast-theme">
+  class="dark-contrast-theme" fxFlex="100%">
 
   <h4>Welcome to Media Financiers</h4>
   <h1 class="mat-display-2">The professional financing hub <br />for films and TV series</h1>
   <p>
-    Media Financiers enables private investors to co-produce films and TV series selected by top film financing firms,
-    benefiting from their expertise in dealmaking and content acquisition to access top projects at best conditions.
+    Media Financiers enables private investors to co-produce exclusive films and TV series in the same conditions as top
+    professional content financiers.
   </p>
   <div class="actions" fxLayout="row" fxLayoutGap="24px">
     <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the platform today</a>
@@ -41,14 +41,14 @@
   </ng-container>
   <!-- Banner -->
   <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px" class="banner dark-contrast-theme">
-    <h1>Do you want to learn more <br />about investing in the film industry ?</h1>
+    <h1>Want to know more about investing <br /> in the content industry?</h1>
     <a mat-flat-button color="accent" href="assets/docs/film-industry.pdf" target="_blank">
-      Download cinema investing guide
+      Download our investment guide.
     </a>
   </section>
   <section>
     <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-      <h1>Our Partners</h1>
+      <h1>Professional Financiers</h1>
       <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
         <span>See all</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -62,7 +62,7 @@
   </section>
   <section>
     <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-      <h1>Benefits</h1>
+      <h1>What's in it for you?</h1>
     </div>
     <bf-carousel flex [min]="2">
       <mat-card *ngFor="let benefit of benefits" carouselItem [col]="6">

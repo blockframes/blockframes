@@ -3,8 +3,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { createForms } from 'ng-form-factory';
 import { FirestoreQueryForm, methodSchema, isWhereQuery } from './firestore.schema';
 
-
-
 @Component({
   selector: 'form-firestore',
   templateUrl: './firestore.component.html',
