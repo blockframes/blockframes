@@ -106,7 +106,7 @@
   // FOREGROUND //
   ////////////////
   $mat-foreground: (
-    base: map-get($primary, 200),
+    base: rgba(map-get($primary, 200), 0.5),
     divider: map-get($foreground, 500),
     dividers: map-get($foreground, 500),
     disabled: map-get($foreground, 500),
@@ -210,6 +210,7 @@
   // Foreground
   --foreground-divider: #{mat-color($foreground, divider)};
   --foreground-text: #{mat-color($foreground, text)};
+  --foreground-base: #{mat-color($foreground, base)};
 
 }
 
