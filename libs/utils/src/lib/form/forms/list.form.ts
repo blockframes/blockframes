@@ -98,7 +98,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   }
 
   /**
-   * Add, remove and update controls to match the value
+   * Add, remove and update controles to match the value
    * @note this method is specific from FormList and is not part and Angular FormArray interface
    */
   patchAllValue(
@@ -109,17 +109,30 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     } = {}
   ) {
     value.forEach((newValue, index) => {
-      this.setControl(index, this.createControl(newValue));
-      // If there is more value than form controls, remove it.
-      while (this.length > value.length) {
-        this.removeAt(this.length - 1);
+      // If there is a form already patch it
+      if (this.at(index)) {
+        if (this.at(index).hasOwnProperty('patchAllValue')) {
+          this.at(index)['patchAllValue'](newValue, {
+            onlySelf: true,
+            emitEvent: options.emitEvent
+          });
+        } else {
+          this.setControl(index, this.createControl(newValue));
+        }
+        // else create one
+      } else {
+        this.setControl(index, this.createControl(newValue));
       }
-    })
+    });
+    // If there is more value than form controls, remove it.
+    while (this.length > value.length) {
+      this.removeAt(this.length - 1);
+    }
   }
 
   /**
    *
-   * @note This method was previously overridden. If you want set the exact value (add, edit & remove) use patchAllValue
+   * @note This method was previously overrided. If you want set the exacte value (add, edit & remove) use patchAllValue
    */
   patchValue(
     value: Partial<T>[],
