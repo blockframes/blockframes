@@ -244,7 +244,10 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Summary - Verification
   it('Fill all fields & navigate to Summary Page', () => {
-    cy.wait(TO.FIFTEEN_SEC);
+    cy.wait(TO.FIFTY_MS);
+    cy.get('h1', {timeout: TO.VSLOW_UPDATE})
+      .contains('Production Status');
+
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
       movieURL = url;

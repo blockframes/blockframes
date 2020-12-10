@@ -39,5 +39,4 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
   cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
     .click();
   cy.wait(TO.ONE_SEC);
-  cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 }
