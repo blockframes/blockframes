@@ -3,7 +3,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
 
 const appLogos: Record<App | 'crm', string> = {
-  catalog: 'LogoArchipelContentPrimary.svg',
+  catalog: 'archipel_content_logo.svg',
   festival: 'logo_archipel_market_outline.svg',
   financiers: 'logo_media_financiers.svg',
   crm: 'logo_archipel_market_outline.svg' // @TODO (#3081) change logo

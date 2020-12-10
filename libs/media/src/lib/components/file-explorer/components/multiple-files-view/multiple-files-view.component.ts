@@ -27,9 +27,9 @@ import {
 } from '../../file-explorer.model';
 
 const columns = { 
-  ref: 'Type',
-  name: 'Document Name',
-  actions: 'Actions'
+  ref: { value: 'Type', disableSort: true },
+  main: { value: 'Document Name', disableSort: false },
+  actions: { value: 'Actions', disableSort: true } 
 };
 
 @Component({
@@ -69,7 +69,13 @@ export class MultipleFilesViewComponent implements OnInit {
     }
   }
 
-  public deleteFile(row: HostedMediaWithMetadata | MovieNote | string) {
+  edit(row: HostedMediaWithMetadata | MovieNote | string, event: Event) {
+    event.stopPropagation();
+    this.editFile.emit(row);
+  }
+
+  public deleteFile(row: HostedMediaWithMetadata | MovieNote | string, event: Event) {
+    event.stopPropagation();
     this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Are you sure you want to delete this file?',
@@ -104,6 +110,7 @@ export class MultipleFilesViewComponent implements OnInit {
 
           if (index > -1) {
             formList.removeAt(index);
+            this.activeDirectory.hasFile = formList.length;
             const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(form);
             if (collection === 'movies') {
               documentToUpdate.id = id;
@@ -117,7 +124,8 @@ export class MultipleFilesViewComponent implements OnInit {
     });
   }
 
-  public async downloadFile(item: Partial<HostedMediaWithMetadata | OrganizationDocumentWithDates>) {
+  public async downloadFile(item: Partial<HostedMediaWithMetadata | OrganizationDocumentWithDates>, event: Event) {
+    event.stopPropagation();
     const ref = item[this.activeDirectory.fileRefField];
     const url = await this.mediaService.generateImgIxUrl(ref);
     window.open(url);

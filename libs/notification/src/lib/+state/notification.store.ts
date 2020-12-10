@@ -7,9 +7,9 @@ import { Event } from '@blockframes/event/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentModule } from '@blockframes/utils/apps';
+import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
-import { displayName } from '@blockframes/utils/pipes/display-name.pipe';
+import { displayName } from '@blockframes/utils/utils';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -20,6 +20,9 @@ const initialState = {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'notifications' })
 export class NotificationStore extends EntityStore<NotificationState, Notification> {
+
+  private appName;
+
   constructor(
     private movieQuery: MovieQuery,
     private firestore: AngularFirestore,
@@ -27,6 +30,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     private orgService: OrganizationService
   ) {
     super(initialState);
+    this.appName = appName[getCurrentApp(this.routerQuery)]
   }
 
   public formatNotification(notification: Notification): Partial<Notification> {
@@ -36,7 +40,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'organizationAcceptedByArchipelContent':
         return {
           date: toDate(notification.date),
-          message: 'Your organization was accepted by the Archipel team.',
+          message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
@@ -70,14 +74,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${organizationName} submitted a contract.`,
-          placeholderUrl: 'Organization_250.webp', // TODO: ISSUE#2262
+          placeholderUrl: 'gears.webp',
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'contractInNegotiation':
         return {
           date: toDate(notification.date),
           message: `A new offer has been created.`,
-          placeholderUrl: 'WelcomeArchipelContent_500.webp', // TODO: ISSUE#2262
+          placeholderUrl: 'welcome_archipel_content.webp',
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieSubmitted':

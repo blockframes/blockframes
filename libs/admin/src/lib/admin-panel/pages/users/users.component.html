@@ -32,10 +32,10 @@
       <ng-template #noOrgCountry>--</ng-template>
     </ng-template>
     <ng-template colRef="firstConnexion" let-firstConnexion>
-      {{ firstConnexion | date }}
+      {{ firstConnexion | date: 'mediumDate' }}
     </ng-template>
     <ng-template colRef="lastConnexion" let-lastConnexion>
-      {{ lastConnexion | date }}
+      {{ lastConnexion | date: 'mediumDate' }}
     </ng-template>
     <ng-template colRef="org.addresses.main.country" let-country>
       {{ country ? country : '--' }}

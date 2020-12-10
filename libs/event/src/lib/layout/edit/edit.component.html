@@ -1,4 +1,4 @@
-<ng-template pageBar>
+﻿<ng-template pageBar>
   <header fxLayout fxLayoutAlign="space-between center">
     <a mat-icon-button routerLink="../..">
       <mat-icon svgIcon="arrow_back"></mat-icon>
@@ -37,8 +37,8 @@
         </mat-form-field>
       </div>
 
-      <mat-checkbox formControlName="isPrivate" color="primary" test-id="event-private">Private</mat-checkbox>
-      <mat-checkbox test-id="all-day" formControlName="allDay" color="primary">All day</mat-checkbox>
+      <mat-slide-toggle test-id="event-private" formControlName="isPrivate" color="primary">Private</mat-slide-toggle>
+      <mat-slide-toggle test-id="all-day" formControlName="allDay" color="primary">All day</mat-slide-toggle>
 
     </mat-card>
 

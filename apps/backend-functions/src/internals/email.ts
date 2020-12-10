@@ -6,8 +6,9 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db } from './firebase';
-import { App, getSendgridFrom } from '@blockframes/utils/apps';
+import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
+import { appUrl } from "@env";
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
@@ -25,12 +26,17 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: EmailJSON = getSendgridFrom()) {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App) {
+  const from: EmailJSON = getSendgridFrom(app);
+  const { label } = getAppName(app);
+  const appLogoLink =  appLogo[app];
+  const appLink = appUrl[app];
+  const appMailSettings: AppMailSetting = { name: label, logo: appLogoLink, url: appLink }
   const msg: MailDataRequired = {
     from,
     to,
     templateId,
-    dynamicTemplateData: data,
+    dynamicTemplateData: { ...data, app: appMailSettings },
   };
 
   return send(msg);
@@ -59,7 +65,7 @@ function send(msg: MailDataRequired) {
  * @param data
  *  Request:  subject, text and to email
  *  App: the from email that will be used as sender (optional)
- * @param context 
+ * @param context
  */
 export const sendMailAsAdmin = async (
   data: { request: EmailRequest, from?: EmailJSON },
@@ -86,10 +92,10 @@ export const sendMailAsAdmin = async (
 
 /**
  * Http callabable function to send an email with template.
- * @param data 
+ * @param data
  *  Request:  template id with expected variables and to email
  *  App: the app from which the call to this function was made (optional)
- * @param context 
+ * @param context
  */
 export const sendMailWithTemplate = async (
   data: { request: EmailTemplateRequest, app?: App },
@@ -104,7 +110,7 @@ export const sendMailWithTemplate = async (
   }
 
   try {
-    await sendMailFromTemplate(data.request, getSendgridFrom(data.app));
+    await sendMailFromTemplate(data.request, data.app);
     return { error: '', result: 'OK' };
   } catch (error) {
     return {
@@ -116,8 +122,8 @@ export const sendMailWithTemplate = async (
 
 /**
  * Check if current user is allowed to use this template id for sending email
- * @param templateId 
- * @param uid 
+ * @param templateId
+ * @param uid
  */
 function isAllowedToUseTemplate(templateId: string, uid: string) {
   // @TODO #4085

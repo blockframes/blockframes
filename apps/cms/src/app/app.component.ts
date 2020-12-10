@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
-import { IconService } from '@blockframes/ui/icon-service';
+import { IconService } from '@blockframes/ui/icon.service';
 
 @Component({
   selector: 'cms-root',

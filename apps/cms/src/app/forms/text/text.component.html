@@ -1,0 +1,25 @@
+<mat-form-field [floatLabel]="schema.floatLabel" [hideRequiredMarker]="schema.hideRequiredMarker">
+  <mat-label *ngIf="schema.label">{{ schema.label }}</mat-label>
+
+  <ng-container *ngIf="schema.size === 'long' else short">
+    <textarea matInput [formControl]="form" [placeholder]="schema.placeholder"></textarea>
+  </ng-container>
+
+  <ng-template #short>
+    <!-- We need to set the type like that else type is not reflected on FormControl -->
+    <ng-container [ngSwitch]="schema.type">
+      <ng-container *ngSwitchCase="'number'">
+        <input matInput type="number" [formControl]="form" [placeholder]="schema.placeholder" />
+      </ng-container>
+      <ng-container *ngSwitchCase="'text'">
+        <input matInput type="text" [formControl]="form" [placeholder]="schema.placeholder"/>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+
+  <mat-hint *ngIf="schema.hint">{{ schema.hint }}</mat-hint>
+
+  <mat-error *ngIf="form.invalid">
+    {{ getErrorMsg() }}
+  </mat-error>
+</mat-form-field>

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
@@ -67,8 +68,12 @@ export class SingleFileViewComponent implements OnInit {
     }
     this.mediaService.uploadMedias(mediasToUpload);
 
-    if (!mediasToUpload[0].blobOrFile) {
+    if (mediasToUpload.some(media => !!media.blobOrFile)) {
+      this.activeDirectory.hasFile = true;
+    }
+    if (mediasToUpload.some(media => !media.ref && !!media.oldRef)) {
       this.snackBar.open('File deleted', 'close', { duration: 5000 });
+      this.activeDirectory.hasFile = false;
     }
   }
 
@@ -80,7 +85,10 @@ export class SingleFileViewComponent implements OnInit {
     } else {
       form = this.activeForm.controls[this.activeDirectory.fileRefField];
     }
-    return isHostedMediaForm(form) ? form : form.controls.ref;
+    form = isHostedMediaForm(form) ? form : form.controls.ref;
+    if (this.activeDirectory.type === 'image') {
+      form.get('cropped').setValidators(Validators.requiredTrue);
+    }
+    return form;
   }
-
 }

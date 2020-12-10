@@ -7,6 +7,7 @@ import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser } from '@blockframes/uti
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import * as admin from 'firebase-admin';
 
 export const algolia = {
   ...algoliaClient,
@@ -61,7 +62,13 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
-    hasAcceptedMovies: org['hasAcceptedMovies'] ?? false
+    hasAcceptedMovies: org['hasAcceptedMovies'] ?? false,
+    denomination: {
+      denomination: org.denomination,
+      id: org.id,
+      logo: org.logo
+    }
+
   };
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
@@ -158,19 +165,27 @@ export function storeSearchableMovie(
 //                USERS
 // ------------------------------------
 
-export function storeSearchableUser(user: PublicUser, adminKey?: string): Promise<any> {
+export async function storeSearchableUser(user: PublicUser, adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
 
   try {
+    let orgData;
+    if(!!user.orgId) {
+      const db = admin.firestore();
+      const org = await db.doc(`orgs/${user.orgId}`).get();
+      orgData = org.data();
+    }
+
     const userRecord: AlgoliaUser = {
       objectID: user.uid,
       email: user.email,
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar ?? '',
+      orgName: orgData ? orgName(orgData) : ''
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

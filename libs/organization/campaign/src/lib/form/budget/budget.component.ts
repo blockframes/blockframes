@@ -17,7 +17,7 @@ export class CampaignFormBudgetComponent implements OnInit {
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
-  ) { 
+  ) {
     this.dynTitle.setPageTitle('Estimated budget')
   }
 

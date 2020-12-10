@@ -1,14 +1,16 @@
 
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { pluck, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
-import { EventService, Event } from '@blockframes/event/+state';
+import { Event, EventQuery, EventService } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { TrackKind, Tracks } from '@blockframes/event/components/meeting/+state/twilio.model';
+import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
+import { TwilioQuery } from '@blockframes/event/components/meeting/+state/twilio.query';
+import { displayName } from '@blockframes/utils/utils';
+import { AttendeeStatus, Meeting } from '@blockframes/event/+state/event.firestore';
 
 @Component({
   selector: 'festival-lobby',
@@ -20,40 +22,54 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   public event$: Observable<Event>;
 
-  public track$ = new BehaviorSubject<Tracks>({video: undefined, audio: undefined});
+  public local$: Observable<LocalAttendee>;
 
-  public userName = `${this.authQuery.user.firstName} ${this.authQuery.user.lastName}`;
+  public ownerIsPresent = false;
+  public attendeeStatus: AttendeeStatus;
+
+  private sub: Subscription;
 
   constructor(
     private authQuery: AuthQuery,
+    private eventQuery: EventQuery,
     private eventService: EventService,
     private route: ActivatedRoute,
+    private router: Router,
     private twilioService: TwilioService,
+    private twilioQuery: TwilioQuery,
   ) { }
 
   ngOnInit() {
+    this.event$ = this.eventQuery.selectActive();
+    this.local$ = this.twilioQuery.selectLocal();
+    const name = displayName(this.authQuery.user);
+    this.twilioService.initLocal(name);
 
-    this.event$ = this.route.params.pipe(
-      pluck('eventId'),
-      switchMap((eventId: string) => this.eventService.queryDocs(eventId)),
-    );
-
-    this.twilioService.getTrack('video').then(videoTrack => {
-      const { audio } = this.track$.getValue();
-      this.track$.next({video: videoTrack, audio});
-    });
-
-    this.twilioService.getTrack('audio').then(audioTrack => {
-      const { video } = this.track$.getValue();
-      this.track$.next({video, audio: audioTrack});
-    });
+    this.sub = this.event$.subscribe(event => {
+      if (event.type === 'meeting') {
+        const attendees = (event.meta as Meeting).attendees;
+        this.ownerIsPresent = Object.values(attendees).some(value => value === 'owner');
+        this.attendeeStatus = event.isOwner ? 'owner' : attendees[this.authQuery.userId];
+        if (this.attendeeStatus === 'accepted') {
+          this.router.navigate(['../', 'session'], { relativeTo: this.route });
+        }
+      }
+    })
   }
 
   ngOnDestroy() {
-    this.twilioService.cleanTrack();
+    this.twilioService.cleanLocal();
+    this.sub.unsubscribe();
   }
 
   toggleLocalTrack(kind: TrackKind) {
     this.twilioService.toggleTrack(kind);
+  }
+
+  requestAccess() {
+    const uid = this.authQuery.userId;
+    const event = this.eventQuery.getActive();
+    const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'requesting' }};
+    this.eventService.update(event.id, { meta });
   }
 }

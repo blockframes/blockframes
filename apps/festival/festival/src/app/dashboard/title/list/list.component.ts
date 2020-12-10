@@ -9,7 +9,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 const columns = {
-  title: 'Title',
+  'title.international': 'Title',
   view: '# Views',
   directors: 'Director(s)',
   productionStatus: 'Production Status',
@@ -24,7 +24,7 @@ const columns = {
 })
 export class ListComponent implements OnInit, OnDestroy {
   columns = columns;
-  initialColumns = ['title', 'view', 'directors', 'productionStatus', 'storeConfig.status'];
+  initialColumns = ['title.international', 'view', 'directors', 'productionStatus', 'storeConfig.status'];
   titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));

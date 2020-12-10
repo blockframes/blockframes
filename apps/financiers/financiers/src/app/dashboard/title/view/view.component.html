@@ -5,27 +5,29 @@
 
   <title-dashboard-shell [routes]="navLinks">
     <ng-container *ngIf="movie.storeConfig.status === 'accepted'">
-      <button mat-stroked-button color="primary" (click)="openDialog()">Update current amount</button>
+      <button mat-stroked-button color="primary" (click)="openDialog()">Update funding status</button>
     </ng-container>
   </title-dashboard-shell>
 
   <ng-template #dialogTemplate let-data>
     <ng-container *ngIf="data.form as form">
       <header>
-        <h2>Update current amount</h2>
+        <h2>Update Funding Status</h2>
         <p class="mat-caption">
-          Please update regulary your current amount to provide your investors<br/>
+          Please update regulary your funding status to provide your investors<br />
           with up to date information. The currency is the same as you’ve chosen for your project.
         </p>
       </header>
       <form fxLayout="column" fxLayoutGap="8px" [formGroup]="form" (ngSubmit)="save()">
         <!-- Received -->
         <mat-form-field appearance="outline">
-          <mat-label>Current Amount</mat-label>
-          <input type="number" matInput formControlName="received" [errorStateMatcher]="data.errorMatcher" min="0" required />
+          <mat-label>Funding Status</mat-label>
+          <input type="number" matInput formControlName="received" [errorStateMatcher]="data.errorMatcher" min="0"
+            required />
           <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
           <mat-error *ngIf="form.hasError('receivedOverflow')">
-            Your current amount should be lower than your needed investment ({{ form.get('cap').value | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
+            Your funding status should be lower than your needed investment
+            ({{ form.get('cap').value | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
           </mat-error>
         </mat-form-field>
 

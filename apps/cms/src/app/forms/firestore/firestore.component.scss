@@ -1,0 +1,31 @@
+:host {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.query {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.control {
+  flex: 1;
+}
+
+// Gap
+.control > *:not(:first-child), .query > *:not(:first-child) {
+  margin-left: 16px;
+}
+
+.handler {
+  cursor: grab;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+}

@@ -86,7 +86,8 @@ interface MovieRaw<D> {
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
-  orgIds: string[]
+  orgIds: string[] //! required
+  campaignStarted: D
 }
 
 /** Document model of a Movie */

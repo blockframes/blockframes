@@ -1,0 +1,17 @@
+article {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -347,5 +347,4 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       row.get('td:nth-child(5)').contains('Accepted');
     });
   });
-
 });

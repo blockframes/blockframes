@@ -1,6 +1,36 @@
 
-img {
+:host {
+  border: solid 1px var(--foreground-divider);
+  border-radius: 4px;
+  background-color: var(--background-card);
+}
+
+section {
   height: 100%;
-  width: 100%;
-  object-fit: contain;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  article {
+    max-height: 15%;
+    padding: 8px;
+    mat-divider {
+      width: 60%;
+      margin-bottom: 6px;
+    }
+    button {
+      padding: 0;
+    }
+  }
+}
+
+section.owner {
+  event-pdf-viewer,
+  event-video-viewer,
+  img {
+    max-height: 85%;
+  }
 }

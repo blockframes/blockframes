@@ -91,6 +91,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     estimatedBudget: null,
     orgIds: [],
     ...params,
+    campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
     banner: params.banner ?? '',
     audience: createAudienceGoals(params.audience),
     languages: createLanguageKey(params.languages ? params.languages : {}),
@@ -352,7 +353,7 @@ export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
 export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
   return {
     screener: createHostedVideo(params?.screener),
-    otherVideos: params?.otherVideos?.map(video => createHostedVideo(video)),
+    otherVideos: params?.otherVideos?.map(video => createHostedVideo(video)) || [],
     ...params,
   }
 }

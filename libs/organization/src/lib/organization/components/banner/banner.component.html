@@ -1,27 +1,20 @@
-<header fxLayout fxLayoutAlign="space-between start">
-  <h1>{{ org | orgName }}</h1>
-  <a mat-button [routerLink]="['/c/o/marketplace/organization/', org.id]" color="primary">
-    <span>See all ({{ (org | orgMovies | async | filterBy:filterMovie).length }})</span>
-    <mat-icon svgIcon="arrow_forward"></mat-icon>
-  </a>
-</header>
-<section fxLayout fxLayout.lt-sm="column">
-  <article class="org-info">
-    <div fxLayoutAlign="start center">
-      <a matRipple [routerLink]="['/c/o/marketplace/organization/', org.id]" class="org-image">
-        <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
-      </a>
-      <div>
-        <p class="org-name">{{ org | orgName }}</p>
-        <p class="mat-caption">{{ (org | orgMovies | async | filterBy:filterMovie).length }} films</p>
-      </div>
+<article class="org-info" *ngIf="org">
+  <header fxLayoutAlign="start center">
+    <a matRipple [routerLink]="['../organization', org.id]" class="org-image">
+      <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
+    </a>
+    <div>
+      <p class="org-name">{{ org | orgName }}</p>
+      <ng-container *ngIf="org.id | orgMovies | async as orgMovies">
+        <p class="mat-caption">{{ orgMovies.length }} films</p>
+      </ng-container>
     </div>
-    <!-- TODO add detailed company description -->
-  </article>
+  </header>
+  <ng-content select="p.description"></ng-content>
+</article>
 
-  <article fxLayout="row wrap" fxLayoutGap="24px">
-    <ng-container *ngFor="let movie of org | orgMovies:0:4 | async">
-      <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id"></movie-card>
-    </ng-container>
-  </article>
-</section>
+<article class="titles" fxLayout="row wrap" fxLayoutGap="24px">
+  <ng-container *ngFor="let title of titles | slice:0:4">
+    <movie-card [movie]="title" size="banner" [link]="['../title', title.id]"></movie-card>
+  </ng-container>
+</article>

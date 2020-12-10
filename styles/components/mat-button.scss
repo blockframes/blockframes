@@ -38,8 +38,9 @@
     }
 
     &.mat-button-disabled {
+      color: mat-color($foreground, disabled-text);
       svg g, svg polygon, svg path {
-        fill: mat-color($background, disabled-button);
+        fill: mat-color($foreground, disabled-text);
       }
     }
   }
@@ -105,7 +106,7 @@
     padding: 0 20px;
   }
 
-  .mat-stroked-button:not([disabled]) {
+  .mat-stroked-button:not(.mat-button-disabled) {
     border-radius: 26px;
     border-color: mat-color($foreground, divider);
     &.mat-primary {

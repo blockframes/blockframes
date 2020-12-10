@@ -1,25 +1,14 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostBinding } from '@angular/core';
-
-// Blockframes
-import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
-import { Organization } from '@blockframes/organization/+state';
-import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 // RxJs
-import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { parseFilters } from '@blockframes/utils/algolia';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { CmsTemplate, HomeSection } from '@blockframes/admin/cms';
 
-interface CarouselSection {
-  title: string;
-  movieCount$: Observable<number>;
-  movies$: Observable<Movie[]>;
-  queryParams?: Record<string, string>;
-}
+type CmsPage = CmsTemplate<HomeSection>;
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -27,84 +16,36 @@ interface CarouselSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit {
+  @ViewChild('banner') banner?: TemplateRef<any>;
+  @ViewChild('hero') hero?: TemplateRef<any>;
+  @ViewChild('titles') titles?: TemplateRef<any>;
+  @ViewChild('slider') slider?: TemplateRef<any>;
+  @ViewChild('orgs') orgs?: TemplateRef<any>;
+  @ViewChild('orgTitles') orgTitles?: TemplateRef<any>;
 
   @HostBinding('test-id="content"') testId
-
-  public sections: CarouselSection[];
-  public orgs$: Observable<Organization[]>;
-
-  public featuredOrg$: Observable<Organization>;
-
-  private sub: Subscription;
+  public page$: Observable<CmsPage>;
+  public templates: Record<string, TemplateRef<any>> = {};
 
   constructor(
-    private movieService: MovieService,
-    private movieQuery: MovieQuery,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private db: AngularFirestore
   ) { }
 
   ngOnInit() {
-    parseFilters({ runningTime: { budget: 2 } } as any)
     this.dynTitle.setPageTitle('Home');
-    this.sub = this.movieService.syncCollection().subscribe();
-    const selectMovies = (status: Movie['productionStatus']) => {
-      return this.movieQuery.selectAll({
-        filterBy: movie => movie.productionStatus === status && this.defaultFilter(movie)
-      });
+    this.page$ = this.db.doc<CmsPage>('cms/festival/home/live').valueChanges();
+  }
+
+  ngAfterViewInit() {
+    this.templates = {
+      banner: this.banner,
+      hero: this.hero,
+      titles: this.titles,
+      slider: this.slider,
+      orgs: this.orgs,
+      orgTitles: this.orgTitles,
     }
-    this.sections = [
-      {
-        title: 'New films',
-        movieCount$: this.movieQuery.selectAll({ filterBy: movie => this.defaultFilter(movie) }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({ filterBy: movie => this.defaultFilter(movie) }).pipe(
-          map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year'))),
-        )
-      },
-      {
-        title: 'In production',
-        movieCount$: this.movieQuery.selectAll({
-          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') && this.defaultFilter(movie)
-        }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({
-          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') && this.defaultFilter(movie)
-        }),
-        queryParams: { productionStatus: 'shooting,post_production' }
-      },
-      {
-        title: 'Completed films',
-        movieCount$: selectMovies('finished').pipe(map(movies => movies.length)),
-        movies$: selectMovies('finished'),
-        queryParams: { productionStatus: 'finished' }
-      },
-      {
-        title: 'In development',
-        movieCount$: selectMovies('development').pipe(map(movies => movies.length)),
-        movies$: selectMovies('development'),
-        queryParams: { productionStatus: 'development' }
-      },
-    ];
-
-    /* TODO 3498 */
-    /*     this.orgs$ = this.organizationService
-          .valueChanges(ref => ref
-            .where('appAccess.festival.dashboard', '==', true)
-            .where('status', '==', 'accepted'))
-          .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
-    
-        this.featuredOrg$ = this.orgs$.pipe(
-          map(orgs => orgs.filter(org => org.movieIds.length > 3)),
-          map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
-        ); */
-
-  }
-
-  defaultFilter(movie: Movie) {
-    return movie.storeConfig.appAccess.festival
-      && movie.storeConfig.status === "accepted";
-  }
-
-  ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
   }
 }

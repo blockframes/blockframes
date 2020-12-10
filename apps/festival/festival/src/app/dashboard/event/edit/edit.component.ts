@@ -15,6 +15,9 @@ import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FileSelectorComponent } from '@blockframes/media/components/file-selector/file-selector.component';
+import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ViewerDialogComponent } from '@blockframes/media/components/dialog/file-viewer/viewer.component';
 
 @Component({
   selector: 'festival-event-edit',
@@ -27,6 +30,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   private formSub: Subscription;
+  link: string;
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
@@ -45,6 +49,7 @@ export class EditComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit(): void {
@@ -68,6 +73,10 @@ export class EditComponent implements OnInit, OnDestroy {
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))
     ).subscribe(event => {
+      const app = getCurrentApp(this.routerQuery);
+      const url = applicationUrl[app];
+      this.link = `${url}/c/o/marketplace/event/${event.id}/lobby`;
+ 
       this.type = event.type;
       this.form = new EventForm(event);
 
@@ -97,6 +106,15 @@ export class EditComponent implements OnInit, OnDestroy {
 
   get files() {
     return (this.form.meta as MeetingForm).get('files');
+  }
+
+  removeSelectedFile(index: number, $event: Event) {
+    $event.stopPropagation();
+    this.files.removeAt(index);
+  }
+  
+  previewFile(ref: string) {
+    this.dialog.open(ViewerDialogComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 
   openFileSelector() {

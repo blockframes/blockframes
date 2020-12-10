@@ -4,8 +4,9 @@
     <section id="currency">
       <h3>Currency</h3>
       <p class="mat-body-2 ">Please choose the currency that will be applied to your project</p>
-      
-      <static-select class="currency" scope="movieCurrencies" [only]="['USD', 'EUR', 'GBP']" [control]="form.get('currency')" required>
+
+      <static-select class="currency" scope="movieCurrencies" [only]="['USD', 'EUR', 'GBP']"
+        [control]="form.get('currency')" required>
         <mat-label>Currency</mat-label>
         <ng-template let-currency>
           <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
@@ -14,51 +15,51 @@
         </ng-template>
       </static-select>
     </section>
-    
+
     <mat-divider></mat-divider>
 
     <section id="budget" fxLayout="column">
       <h3>Budget</h3>
 
       <mat-form-field appearance="outline">
-        <mat-label>Producer's Fees</mat-label>
-        <input matInput type="number" [formControl]="budget.get('producerFees')" required />
+        <mat-label>Development costs (underlying rights, script, pre-production etc)</mat-label>
+        <input matInput type="number" [formControl]="budget.get('development')" required />
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
-        <mat-error *ngIf="budget.hasError('required', 'producerFees')">Please provide the producer's fees.</mat-error>
+        <mat-error *ngIf="budget.hasError('required', 'development')">Please provide the producer's fees.</mat-error>
 
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Cast Cost</mat-label>
-        <input matInput type="number" [formControl]="budget.get('castCost')" required />
+        <mat-label>Shooting costs (director, cast, location, make-up, costume, cameras etc)</mat-label>
+        <input matInput type="number" [formControl]="budget.get('shooting')" required />
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
-        <mat-error *ngIf="budget.hasError('required', 'castCost')">Please provide the Cast cost.</mat-error>
+        <mat-error *ngIf="budget.hasError('required', 'shooting')">Please provide the Cast cost.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Shoot Cost</mat-label>
-        <input matInput type="number" [formControl]="budget.get('shootCost')" required />
+        <mat-label>Post production (music, sound, editing, vfx etc)</mat-label>
+        <input matInput type="number" [formControl]="budget.get('postProduction')" required />
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
-        <mat-error *ngIf="budget.hasError('required', 'shootCost')">Please provide the Shoot cost.</mat-error>
+        <mat-error *ngIf="budget.hasError('required', 'postProduction')">Please provide the Shoot cost.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Post-Production Cost</mat-label>
-        <input matInput type="number" [formControl]="budget.get('postProdCost')" required />
+        <mat-label>Administration (legal fees, insurance fees, banking fees)</mat-label>
+        <input matInput type="number" [formControl]="budget.get('administration')" required />
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
-        <mat-error *ngIf="budget.hasError('required', 'postProdCost')">Please provide the Post-Production cost.</mat-error>
+        <mat-error *ngIf="budget.hasError('required', 'administration')">Please provide the Post-Production cost.
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Other Charges</mat-label>
-        <input matInput type="number" [formControl]="budget.get('others')" />
-        <mat-hint>Other charges include insurance, research screenings, general expense...</mat-hint>
+        <mat-label>Contingency, producer fees, overheads</mat-label>
+        <input matInput type="number" [formControl]="budget.get('contingency')" />
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
       </mat-form-field>
-  
+
       <p class="mat-body-2 total">
         <b>
-          Your total estimated budget is :
+          Your total estimated budget is:
           {{ budget.value | budget | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </b>
       </p>
@@ -66,20 +67,21 @@
 
     <mat-divider></mat-divider>
 
-    <section id="file" >
+    <section id="file" fxLayout="column">
       <h3 fxLayout fxLayoutAlign="start center">
         <mat-icon svgIcon="upload"></mat-icon>
         <span>Upload document</span>
       </h3>
       <p>
         Please <b>upload your total estimated budget</b>
-        <br/>
+        <br />
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
       <file-upload [form]="form.get('files').get('budget')" [storagePath]="storagePath" allowedFileType="pdf">
         <h3 title>Upload File</h3>
       </file-upload>
       <span class="mat-caption">Upload a complete document.</span>
+      <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
   </ng-container>
 </tunnel-page>

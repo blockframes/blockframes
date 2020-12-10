@@ -1,713 +1,1265 @@
-<ng-container *ngIf="'festival' | app; else catalog">
-  <header>
-    <div class="go-back" (click)="goBack()">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </div>
-    <h1>TERMS AND CONDITIONS OF USE OF ARCHIPEL MARKET</h1>
-  </header>
+<ng-container [ngSwitch]="appName">
+  <ng-container *ngSwitchCase="'festival'">
+    <header>
+      <div class="go-back" (click)="goBack()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </div>
+      <h1>TERMS AND CONDITIONS OF USE OF ARCHIPEL MARKET</h1>
+    </header>
 
-  <section fxLayout="row" fxLayoutAlign="center">
-    <mat-card>
-      <mat-card-content>
-        <article>
-          <h3>1 – Purpose - Definitions</h3>
-          <p>
-            The present Terms and Conditions of Use (hereinafter the (“<strong>T&Cs</strong>”) detail the rights and obligations of CASCADE 8, 
-            whose registered office is 4 rue de la République 69001 Lyon, France, registered under the Commercial Registry of Lyon 
-            under number 847 756 764 (hereinafter referred to as “<strong>CASCADE 8</strong>”) and of all users of the ARCHIPEL MARKET service 
-            (hereinafter referred as the “<strong>Service</strong>”). User of the Service may be a duly organized company whose activity is to produce 
-            and/or sell film rights (hereinafter the “<strong>Seller</strong>”) or to acquire film rights (hereinafter the “<strong>Buyer</strong>”).
-            The Service is an online platform that enables Sellers to present their portfolio of films available for sale and to publish 
-            content relating to those films. The Service enables a connection between Sellers on the one hand, and Buyers on the 
-            other hand. The Service does not allow to purchase film rights online. The Service is accessible on the website 
-            <a [href]="appUrl">{{ appUrl }}</a> (hereinafter referred to as the “<strong>Website</strong>”).<br/> 
-            The term “<strong>User Seller</strong>” refers to a natural person who has a Member profile, Administrator profile or Super Administrator 
-            profile attached to a Seller as defined in article 3.<br/>
-            The term “<strong>User Buyer</strong>” refers to a natural person who has a Member profile, Administrator profile or Super Administrator 
-            profile attached to a Buyer as defined in article 4.<br/>
-            The term “<strong>User</strong>” refers to, indistinctively, a User Seller and/ or a User Buyer.<br/>
-            The term “<strong>You/Your</strong>” refers to the User who is currently reading the T&Cs.<br/>
-            The term “<strong>Screening</strong>” refers to the screening event managed by Sellers.<br/>
-          </p>
-        </article>
+    <section fxLayout="row" fxLayoutAlign="center">
+      <mat-card>
+        <mat-card-content>
+          <article>
+            <h3>1 – Purpose - Definitions</h3>
+            <p>
+              The present Terms and Conditions of Use (hereinafter the (“<strong>T&Cs</strong>”) detail the rights and
+              obligations of CASCADE 8,
+              whose registered office is 4 rue de la République 69001 Lyon, France, registered under the Commercial
+              Registry of Lyon
+              under number 847 756 764 (hereinafter referred to as “<strong>CASCADE 8</strong>”) and of all users of the
+              ARCHIPEL MARKET service
+              (hereinafter referred as the “<strong>Service</strong>”). User of the Service may be a duly organized
+              company whose activity is to produce
+              and/or sell film rights (hereinafter the “<strong>Seller</strong>”) or to acquire film rights (hereinafter
+              the “<strong>Buyer</strong>”).
+              The Service is an online platform that enables Sellers to present their portfolio of films available for
+              sale and to publish
+              content relating to those films. The Service enables a connection between Sellers on the one hand, and
+              Buyers on the
+              other hand. The Service does not allow to purchase film rights online. The Service is accessible on the
+              website
+              <a [href]="appUrl">{{ appUrl }}</a> (hereinafter referred to as the “<strong>Website</strong>”).<br />
+              The term “<strong>User Seller</strong>” refers to a natural person who has a Member profile, Administrator
+              profile or Super Administrator
+              profile attached to a Seller as defined in article 3.<br />
+              The term “<strong>User Buyer</strong>” refers to a natural person who has a Member profile, Administrator
+              profile or Super Administrator
+              profile attached to a Buyer as defined in article 4.<br />
+              The term “<strong>User</strong>” refers to, indistinctively, a User Seller and/ or a User Buyer.<br />
+              The term “<strong>You/Your</strong>” refers to the User who is currently reading the T&Cs.<br />
+              The term “<strong>Screening</strong>” refers to the screening event managed by Sellers.<br />
+            </p>
+          </article>
 
-        <article>
-          <h3>2 – Creating and closing a profile – Acceptance of the T&Cs</h3>
-          <p>To use the Service, You must create Your own profile.</p>
-          <h4>2.1. If You are a User Seller</h4>
-          <p>
-            As a User Seller, You must complete all mandatory information, notably regarding Your first name, surname, email address. 
-          </p>
-          <p>
-            Your profile has to be linked with the profile of the seller you are a member of (“Your Seller”). To do so, You have to 
-            create Your profile on the Service, verify if Your Seller already has a profile by researching its name into the search field. 
-            If Your Seller already exists, You can send a request to Your Seller to be accepted as a member. Once Your Seller has 
-            accepted Your request, You will be identified as a User Seller. 
-          </p>
-          <p>
-            If Your Seller does not already exist, You shall create Your Seller’s profile.
-          </p>
-          <p>
-            The profile of any Seller has to be completed with the following mandatory information: Seller’s name and company 
-            activity. When You are registering a profile for a Seller, You represent and warrant that You have the authority to legally 
-            bind that Seller. When creating Your profile, You undertake to provide accurate, current and updated information during 
-            the registration process and keep Your profile page information up-to-date at all times. As a Seller, You shall choose 
-            between different levels of Service on the Website. Your choice of level of Service will determine the accessible features, 
-            as described in article 3.
-          </p>
+          <article>
+            <h3>2 – Creating and closing a profile – Acceptance of the T&Cs</h3>
+            <p>To use the Service, You must create Your own profile.</p>
+            <h4>2.1. If You are a User Seller</h4>
+            <p>
+              As a User Seller, You must complete all mandatory information, notably regarding Your first name, surname,
+              email address.
+            </p>
+            <p>
+              Your profile has to be linked with the profile of the seller you are a member of (“Your Seller”). To do
+              so,
+              You have to
+              create Your profile on the Service, verify if Your Seller already has a profile by researching its name
+              into
+              the search field.
+              If Your Seller already exists, You can send a request to Your Seller to be accepted as a member. Once Your
+              Seller has
+              accepted Your request, You will be identified as a User Seller.
+            </p>
+            <p>
+              If Your Seller does not already exist, You shall create Your Seller’s profile.
+            </p>
+            <p>
+              The profile of any Seller has to be completed with the following mandatory information: Seller’s name and
+              company
+              activity. When You are registering a profile for a Seller, You represent and warrant that You have the
+              authority to legally
+              bind that Seller. When creating Your profile, You undertake to provide accurate, current and updated
+              information during
+              the registration process and keep Your profile page information up-to-date at all times. As a Seller, You
+              shall choose
+              between different levels of Service on the Website. Your choice of level of Service will determine the
+              accessible features,
+              as described in article 3.
+            </p>
 
-          <h4>2.2. If You are a User Buyer</h4>
-          <p>
-            As a User Buyer, You must complete all mandatory information, notably regarding Your first name, surname, email address.
-          </p>
-          <p>
-            Your profile has to be linked with the profile of the Buyer you are a member of (“Your Buyer”). To do so, You have to 
-            create Your profile on the Service, verify if Your Buyer already has a profile by researching its name into the search field. 
-            If Your Buyer already exists, You can send a request to Your Buyer to be accepted as a member. Once Your Buyer has 
-            accepted Your request, You will be identified as a User Buyer. 
-          </p>
-          <p>
-            If Your Buyer does not already exist, You shall create Your Buyer’s profile.
-          </p>
-          <p>
-            The profile of any Buyer has to be completed with the following mandatory information: Buyer’s name and company 
-            activity. When You are registering a profile for a Buyer, You represent and warrant that You have the authority to legally 
-            bind that Buyer. You can also indicate your preferences (genre, territories, etc.). When creating Your profile, You 
-            undertake to provide accurate, current and updated information during the registration process and keep Your profile 
-            page information up-to-date at all times. On Your profile page, You can indicate Your purchase preferences regarding films.  
-          </p>
+            <h4>2.2. If You are a User Buyer</h4>
+            <p>
+              As a User Buyer, You must complete all mandatory information, notably regarding Your first name, surname,
+              email address.
+            </p>
+            <p>
+              Your profile has to be linked with the profile of the Buyer you are a member of (“Your Buyer”). To do so,
+              You have to
+              create Your profile on the Service, verify if Your Buyer already has a profile by researching its name
+              into
+              the search field.
+              If Your Buyer already exists, You can send a request to Your Buyer to be accepted as a member. Once Your
+              Buyer has
+              accepted Your request, You will be identified as a User Buyer.
+            </p>
+            <p>
+              If Your Buyer does not already exist, You shall create Your Buyer’s profile.
+            </p>
+            <p>
+              The profile of any Buyer has to be completed with the following mandatory information: Buyer’s name and
+              company
+              activity. When You are registering a profile for a Buyer, You represent and warrant that You have the
+              authority to legally
+              bind that Buyer. You can also indicate your preferences (genre, territories, etc.). When creating Your
+              profile, You
+              undertake to provide accurate, current and updated information during the registration process and keep
+              Your
+              profile
+              page information up-to-date at all times. On Your profile page, You can indicate Your purchase preferences
+              regarding films.
+            </p>
 
-          <h4>2.3. Miscellaneous</h4>
-          <p>
-            Creation of a profile implies full acceptance of the present T&Cs, which is confirmed by clicking on “I hereby accept 
-            Archipel Market’s Terms & Conditions.” when creating a profile. The T&Cs are made available to any User when creating 
-            a profile, before finalising the profile and the aforementioned acceptance. You can print or save the T&Cs after reading 
-            them. CASCADE 8 reserves the right to change the T&Cs at any time. In this case CASCADE 8 will inform any User 
-            when connecting itself to the Website for the first time after the modification of the T&Cs. Any User will have then to 
-            confirm its acceptance of the new T&Cs in order to access to the Service. Users who accept the T&Cs subject to 
-            reservations, or do not accept the T&Cs, cannot access the Website or use the Service.  Any User can decide to close 
-            its profile at any time by clicking on “Delete my profile”. If a Seller decides to close its own profile, all Users’ profiles 
-            attached to it will be automatically closed by CASCADE 8 at the same time. 
-          </p>
+            <h4>2.3. Miscellaneous</h4>
+            <p>
+              Creation of a profile implies full acceptance of the present T&Cs, which is confirmed by clicking on “I
+              hereby accept
+              Archipel Market’s Terms & Conditions.” when creating a profile. The T&Cs are made available to any User
+              when
+              creating
+              a profile, before finalising the profile and the aforementioned acceptance. You can print or save the T&Cs
+              after reading
+              them. CASCADE 8 reserves the right to change the T&Cs at any time. In this case CASCADE 8 will inform any
+              User
+              when connecting itself to the Website for the first time after the modification of the T&Cs. Any User will
+              have then to
+              confirm its acceptance of the new T&Cs in order to access to the Service. Users who accept the T&Cs
+              subject
+              to
+              reservations, or do not accept the T&Cs, cannot access the Website or use the Service. Any User can decide
+              to close
+              its profile at any time by clicking on “Delete my profile”. If a Seller decides to close its own profile,
+              all Users’ profiles
+              attached to it will be automatically closed by CASCADE 8 at the same time.
+            </p>
 
-          <p>
-            CASCADE 8 reserves the right to close or suspend the profile of any User who is in breach of its commitments under the 
-            T&Cs. In the event of suspension or closing, it is impossible for the User to access his profile, without prejudice to any 
-            other damages that CASCADE 8 may claim. 
-          </p>
-          <p>
-            Furthermore, CASCADE 8 reserves the right to close or suspend the profile of any Seller or Buyer in the event that no 
-            User is attached to it as a member.
-          </p>
-          <p>  
-            By accepting the T&Cs, You hereby authorize CASCADE 8 to publish information on the Website, such as Your name, 
-            surname, contact details, photo, logo, in order to perform the Service and allow other Users to contact You.
-          </p>
-        </article>
+            <p>
+              CASCADE 8 reserves the right to close or suspend the profile of any User who is in breach of its
+              commitments
+              under the
+              T&Cs. In the event of suspension or closing, it is impossible for the User to access his profile, without
+              prejudice to any
+              other damages that CASCADE 8 may claim.
+            </p>
+            <p>
+              Furthermore, CASCADE 8 reserves the right to close or suspend the profile of any Seller or Buyer in the
+              event that no
+              User is attached to it as a member.
+            </p>
+            <p>
+              By accepting the T&Cs, You hereby authorize CASCADE 8 to publish information on the Website, such as Your
+              name,
+              surname, contact details, photo, logo, in order to perform the Service and allow other Users to contact
+              You.
+            </p>
+          </article>
 
-        <article>
-          <h3>3 – Specific terms applicable to User Sellers</h3>
-          <p>
-            As a User Seller, You may access and modify Your Seller profile, Your films listing and film pages available on the 
-            Service (hereinafter designated respectively as “<strong>Films Listing</strong>” and “<strong>Film Page(s)</strong>”). You may attach the promotional 
-            materials of each film from the Seller’s Films Listing on the respective Film. A Film Page may have the following 
-            information and content: film poster, production year, director name, teaser, videos, pictures, production information, and 
-            any other information the Seller wishes to provide (hereinafter designated as “<strong>Content</strong>”).<br/>
-            When creating a Film Page, You must provide all information requested by CASCADE 8. You are responsible for keeping all Film Pages and Content up-to-date at all times.
-          </p>
-          <p>
-            As a User Seller, You have different usage rights depending on Your profile:
-          </p>
-          <ul>
-            <li>You may have a “Member Profile”: You can access and modify all Content and information attached to Your
-              Seller.</li>
-            <li>You may have an “Administrator Profile”: You have the same rights as a Member Profile and You may add or
-              delete any Member Profile of Your Seller.</li>
-            <li>You may have a “Super Administrator Profile”: You have the same rights as an Administrator Profile and
-              You may add or delete any Administrator Profile.</li>
-          </ul>
-          <p>Depending on the level of Service chosen, You will access to different features as described on the
-            Website.
-          </p>
-        </article>
+          <article>
+            <h3>3 – Specific terms applicable to User Sellers</h3>
+            <p>
+              As a User Seller, You may access and modify Your Seller profile, Your films listing and film pages
+              available
+              on the
+              Service (hereinafter designated respectively as “<strong>Films Listing</strong>” and “<strong>Film
+                Page(s)</strong>”). You may attach the promotional
+              materials of each film from the Seller’s Films Listing on the respective Film. A Film Page may have the
+              following
+              information and content: film poster, production year, director name, teaser, videos, pictures, production
+              information, and
+              any other information the Seller wishes to provide (hereinafter designated as
+              “<strong>Content</strong>”).<br />
+              When creating a Film Page, You must provide all information requested by CASCADE 8. You are responsible
+              for
+              keeping all Film Pages and Content up-to-date at all times.
+            </p>
+            <p>
+              As a User Seller, You have different usage rights depending on Your profile:
+            </p>
+            <ul>
+              <li>You may have a “Member Profile”: You can access and modify all Content and information attached to
+                Your
+                Seller.</li>
+              <li>You may have an “Administrator Profile”: You have the same rights as a Member Profile and You may add
+                or
+                delete any Member Profile of Your Seller.</li>
+              <li>You may have a “Super Administrator Profile”: You have the same rights as an Administrator Profile and
+                You may add or delete any Administrator Profile.</li>
+            </ul>
+            <p>Depending on the level of Service chosen, You will access to different features as described on the
+              Website.
+            </p>
+          </article>
 
-        <article>
-          <h3>4 – Specific terms applicable to User Buyers</h3>
-          <p>As a User Buyer, You can:</p>
-          <ul>
-            <li>Access to Your profile,</li>
-            <li>Access the profile of Your Buyer,</li>
-            <li>Access to a library of films,</li>
-            <li>Access to Film Pages with metadata, promotional elements, downloadable images as made available by the applicable Seller,</li>
-            <li>Access to Sellers’ profiles with contact details (name, emails, position),</li>
-            <li>Search and filter Content (based on the information made available by the applicable Seller),</li>
-            <li>Add content to a wishlist,</li>
-            <li>Ability to interact with a CASCADE 8 team member (In-app messaging),</li>
-            <li>Receive notifications (via emails and/or SMS at the Users' election),</li>
-            <li>Partially manage Your personal schedule (add events to personal calendar),</li>
-            <li>Access live Screenings during specific time frames, with personal watermarks,</li>
-            <li>Get access to a list of all upcoming Screenings</li>
-            <li>Access Screenings open to public,</li>
-            <li>Request access to Screenings closed to public (private Screenings).</li>
-          </ul>
-          <p>All these features are subject to change and evolution.<br/>
-          All Contents and Screenings are subject to the Sellers.
-          </p>
+          <article>
+            <h3>4 – Specific terms applicable to User Buyers</h3>
+            <p>As a User Buyer, You can:</p>
+            <ul>
+              <li>Access to Your profile,</li>
+              <li>Access the profile of Your Buyer,</li>
+              <li>Access to a library of films,</li>
+              <li>Access to Film Pages with metadata, promotional elements, downloadable images as made available by the
+                applicable Seller,</li>
+              <li>Access to Sellers’ profiles with contact details (name, emails, position),</li>
+              <li>Search and filter Content (based on the information made available by the applicable Seller),</li>
+              <li>Add content to a wishlist,</li>
+              <li>Ability to interact with a CASCADE 8 team member (In-app messaging),</li>
+              <li>Receive notifications (via emails and/or SMS at the Users' election),</li>
+              <li>Partially manage Your personal schedule (add events to personal calendar),</li>
+              <li>Access live Screenings during specific time frames, with personal watermarks,</li>
+              <li>Get access to a list of all upcoming Screenings</li>
+              <li>Access Screenings open to public,</li>
+              <li>Request access to Screenings closed to public (private Screenings).</li>
+            </ul>
+            <p>All these features are subject to change and evolution.<br />
+              All Contents and Screenings are subject to the Sellers.
+            </p>
 
-          <p>
-            As a User Buyer, You have different usage rights depending on Your profile:
-          </p>
-          <ul>
-            <li>You may have a “Member Profile”: You can access and modify all Content and information attached to Your Buyer.</li>
-            <li>You may have an “Administrator Profile”: You have the same rights as a Member Profile and You may add or delete any Member Profile of Your Buyer.</li>
-            <li>You may have a “Super Administrator Profile”: You have the same rights as an Administrator Profile and You may add or delete any Administrator Profile.</li>
-          </ul>
-        </article>
+            <p>
+              As a User Buyer, You have different usage rights depending on Your profile:
+            </p>
+            <ul>
+              <li>You may have a “Member Profile”: You can access and modify all Content and information attached to
+                Your
+                Buyer.</li>
+              <li>You may have an “Administrator Profile”: You have the same rights as a Member Profile and You may add
+                or
+                delete any Member Profile of Your Buyer.</li>
+              <li>You may have a “Super Administrator Profile”: You have the same rights as an Administrator Profile and
+                You may add or delete any Administrator Profile.</li>
+            </ul>
+          </article>
 
-        <article>
-          <h3>5 - Obligations and liability of CASCADE 8</h3>
-          <p>
-            CASCADE 8 shall use reasonable endeavours to allow Your access to the Service 7 days / 7 and 24 hours / 24.
-            You agree that CASCADE 8 cannot be held liable for any unavailability of the Website and / or the Service
-            due to technical hazards linked to the internet,
-            a force majeure event, the internet connection of a User or its equipment,
-            the maintenance operations required for the smooth functioning of the Website and / or the Service, or the
-            interruption of access to the Website or Service to protect any profiles from a virus attack.
-            CASCADE 8 undertakes to implement the technical means at its disposal to maintain as long as possible the
-            integrity and security of the Service and Website and the confidentiality of Users’ personal data.
-            However, there is no guarantee that the Service is free from errors, bugs, flaws or defects and / or that no
-            intrusion or fraudulent maintenance by a third party of a User’s profile or illicit data extraction will
-            occur.
-            CASCADE 8 cannot be held liable for any damage to a third party or User resulting from the breach or
-            non-compliance by another User with one of its obligations under the hereby T&Cs.
-            As a consequence, in the event of action or a claim by a third party against CASCADE 8,
-            CASCADE 8 may institute proceedings against any User who, by failing to respect its commitments under the
-            hereby T&Cs,
-            is the cause of the action or claim by the aforementioned third party against CASCADE 8.
-            In no way is CASCADE 8 responsible for legal interactions and / or commercial relationship that will be
-            created between Sellers, Buyers after their Users or aside their use of the Service.
-          </p>
-        </article>
+          <article>
+            <h3>5 - Obligations and liability of CASCADE 8</h3>
+            <p>
+              CASCADE 8 shall use reasonable endeavours to allow Your access to the Service 7 days / 7 and 24 hours /
+              24.
+              You agree that CASCADE 8 cannot be held liable for any unavailability of the Website and / or the Service
+              due to technical hazards linked to the internet,
+              a force majeure event, the internet connection of a User or its equipment,
+              the maintenance operations required for the smooth functioning of the Website and / or the Service, or the
+              interruption of access to the Website or Service to protect any profiles from a virus attack.
+              CASCADE 8 undertakes to implement the technical means at its disposal to maintain as long as possible the
+              integrity and security of the Service and Website and the confidentiality of Users’ personal data.
+              However, there is no guarantee that the Service is free from errors, bugs, flaws or defects and / or that
+              no
+              intrusion or fraudulent maintenance by a third party of a User’s profile or illicit data extraction will
+              occur.
+              CASCADE 8 cannot be held liable for any damage to a third party or User resulting from the breach or
+              non-compliance by another User with one of its obligations under the hereby T&Cs.
+              As a consequence, in the event of action or a claim by a third party against CASCADE 8,
+              CASCADE 8 may institute proceedings against any User who, by failing to respect its commitments under the
+              hereby T&Cs,
+              is the cause of the action or claim by the aforementioned third party against CASCADE 8.
+              In no way is CASCADE 8 responsible for legal interactions and / or commercial relationship that will be
+              created between Sellers, Buyers after their Users or aside their use of the Service.
+            </p>
+          </article>
 
-        <article>
-          <h3>6 - Obligations and liability of the User</h3>
-          <p>
-            You are responsible for keeping Your username and password confidential and for the use that is made of Your profile. 
-            You must take all of the usual precautions to regularly change Your password. In the event of loss or discovery of an 
-            intrusion into Your profile, You must immediately change Your password and follow the security procedure on the Website 
-            to recover Your username or password. You must immediately notify CASCADE 8 if You know or have any reason to 
-            suspect that Your username and password have been lost, stolen, misappropriated, or otherwise compromised or in 
-            case of any actual or suspected unauthorized use of Your profile. You are liable for any and all activities conducted 
-            through Your profile. It is the User’s responsibility to make sure that its equipment and internet connection are sufficient 
-            to access the Website. All Users acknowledge that any action likely to interrupt the Service, limit its availability or prevent 
-            its continuity, is prohibited. CASCADE 8 is entitled to take action against the concerned User for any intrusion or 
-            attempted intrusion into the Website and / or Service, hijacking of data, infringement of the security and / or of 
-            authentication measures of the Service, and more generally any breach of the hereby T&Cs. If You discover abuse or a 
-            breach of the commitments of the T&Cs by any User, You undertake to immediately notify CASCADE 8 by email at the 
-            following address: team@cascade8.com<br/>
-            CASCADE 8 may organize Q&A sessions at the end of a Screening. You duly authorize CASCADE 8 to register Your 
-            image and voice as they appear in the Q&A sessions in which You take part, to use and replay it on each Film Page 
-            available on the Website and to use it in any media and format and for any purpose including, without limitation, 
-            campaigns, events and advertising, and promotional material of the applicable Film. You expressly accept that the 
-            content of such videos and photos may be combined with other images, texts, graphics, videos, audio files and audio-visual 
-            works, and that it may be cut, altered or modified. Accordingly, You declare that CASCADE 8 shall be the exclusive 
-            owner for the maximum legal term of all rights to exploit the above-referred images, including the rights to reproduce, 
-            distribute, transform and communicate to the public, for their use in any known or unknown media and/or format, or if 
-            such ownership is not permitted by law, grant to CASCADE 8 an irrevocable free license to use it for the same purpose.
-          </p>
-        </article>
+          <article>
+            <h3>6 - Obligations and liability of the User</h3>
+            <p>
+              You are responsible for keeping Your username and password confidential and for the use that is made of
+              Your
+              profile.
+              You must take all of the usual precautions to regularly change Your password. In the event of loss or
+              discovery of an
+              intrusion into Your profile, You must immediately change Your password and follow the security procedure
+              on
+              the Website
+              to recover Your username or password. You must immediately notify CASCADE 8 if You know or have any reason
+              to
+              suspect that Your username and password have been lost, stolen, misappropriated, or otherwise compromised
+              or
+              in
+              case of any actual or suspected unauthorized use of Your profile. You are liable for any and all
+              activities
+              conducted
+              through Your profile. It is the User’s responsibility to make sure that its equipment and internet
+              connection are sufficient
+              to access the Website. All Users acknowledge that any action likely to interrupt the Service, limit its
+              availability or prevent
+              its continuity, is prohibited. CASCADE 8 is entitled to take action against the concerned User for any
+              intrusion or
+              attempted intrusion into the Website and / or Service, hijacking of data, infringement of the security and
+              /
+              or of
+              authentication measures of the Service, and more generally any breach of the hereby T&Cs. If You discover
+              abuse or a
+              breach of the commitments of the T&Cs by any User, You undertake to immediately notify CASCADE 8 by email
+              at
+              the
+              following address: team@cascade8.com<br />
+              CASCADE 8 may organize Q&A sessions at the end of a Screening. You duly authorize CASCADE 8 to register
+              Your
+              image and voice as they appear in the Q&A sessions in which You take part, to use and replay it on each
+              Film
+              Page
+              available on the Website and to use it in any media and format and for any purpose including, without
+              limitation,
+              campaigns, events and advertising, and promotional material of the applicable Film. You expressly accept
+              that the
+              content of such videos and photos may be combined with other images, texts, graphics, videos, audio files
+              and audio-visual
+              works, and that it may be cut, altered or modified. Accordingly, You declare that CASCADE 8 shall be the
+              exclusive
+              owner for the maximum legal term of all rights to exploit the above-referred images, including the rights
+              to
+              reproduce,
+              distribute, transform and communicate to the public, for their use in any known or unknown media and/or
+              format, or if
+              such ownership is not permitted by law, grant to CASCADE 8 an irrevocable free license to use it for the
+              same purpose.
+            </p>
+          </article>
 
-        <article>
-          <h3>7 - Intellectual property - Content</h3>
-          <p>
-            The Service, its features, the Website, and all of their components are and will remain the full property of CASCADE 8
-            , including any related intellectual property rights. CASCADE 8 grants the User a limited, personal, non-transferable and 
-            non-exclusive license to use the Service for the User’s personal needs as necessary for their professional activities, 
-            through the Website on any mobile device or computer. Any other use is expressly excluded.
-          </p>
-          <p>
-            By creating, uploading, posting or otherwise making available any Content on the Website, notably Film Pages, You 
-            grant to CASCADE 8 a non-exclusive, worldwide, royalty-free, irrevocable license, for the full term of their 
-            protection under author’s rights law, to access, store, copy, modify, distribute, edit, publish, transmit and 
-            otherwise exploit in any manner, on the Service, such Content, and more generally to provide and /or promote 
-            the Service and the Website, in any media.
-          </p>
-          <p>
-            You are solely responsible for all Content that You make available on, or through, the Website. Accordingly, You 
-            represent and warrant that: (i) You either are the sole and exclusive owner of all Content that You make available on, or 
-            through, the Website, or You have all rights, licenses, consents and releases that are necessary to grant to CASCADE8 
-            the rights to such Content, as contemplated under these T&amp;Cs; (ii) neither the Content nor Your posting, uploading, 
-            publication, or CASCADE 8's use of the Content (or any portion thereof) as contemplated under these T&Cs infringe, 
-            misappropriate or violate a third party's patent, copyright, trademark, trade secret, moral rights, image’s rights, or other 
-            proprietary or intellectual property rights, or rights of publicity or privacy, or results in the violation of any applicable law 
-            or regulation.
-          </p>
-          <p>
-            You will not post, upload, publish, submit or transmit any Content that: (i) is fraudulent, false, misleading (directly or by 
-            omission or failure to update information) or deceptive; (ii) is defamatory, libellous, obscene, pornographic, vulgar or 
-            offensive; (iii) promotes discrimination, bigotry, racism, hatred, harassment or harm against any individual or group; (iv) 
-            is violent or threatening or promotes violence or actions that are threatening to any other person or animal; (v) promotes 
-            illegal or harmful activities or substances; or (vi) violates the hereby T&Cs. CASCADE 8 may, without prior notice, remove 
-            or disable access to any Content that CASCADE 8 finds to be in violation of applicable law, these T&Cs or otherwise 
-            may be harmful or objectionable to CASCADE 8, its Users, third parties, or property.
-          </p>
-        </article>
+          <article>
+            <h3>7 - Intellectual property - Content</h3>
+            <p>
+              The Service, its features, the Website, and all of their components are and will remain the full property
+              of
+              CASCADE 8
+              , including any related intellectual property rights. CASCADE 8 grants the User a limited, personal,
+              non-transferable and
+              non-exclusive license to use the Service for the User’s personal needs as necessary for their professional
+              activities,
+              through the Website on any mobile device or computer. Any other use is expressly excluded.
+            </p>
+            <p>
+              By creating, uploading, posting or otherwise making available any Content on the Website, notably Film
+              Pages, You
+              grant to CASCADE 8 a non-exclusive, worldwide, royalty-free, irrevocable license, for the full term of
+              their
+              protection under author’s rights law, to access, store, copy, modify, distribute, edit, publish, transmit
+              and
+              otherwise exploit in any manner, on the Service, such Content, and more generally to provide and /or
+              promote
+              the Service and the Website, in any media.
+            </p>
+            <p>
+              You are solely responsible for all Content that You make available on, or through, the Website.
+              Accordingly,
+              You
+              represent and warrant that: (i) You either are the sole and exclusive owner of all Content that You make
+              available on, or
+              through, the Website, or You have all rights, licenses, consents and releases that are necessary to grant
+              to
+              CASCADE8
+              the rights to such Content, as contemplated under these T&amp;Cs; (ii) neither the Content nor Your
+              posting,
+              uploading,
+              publication, or CASCADE 8's use of the Content (or any portion thereof) as contemplated under these T&Cs
+              infringe,
+              misappropriate or violate a third party's patent, copyright, trademark, trade secret, moral rights,
+              image’s
+              rights, or other
+              proprietary or intellectual property rights, or rights of publicity or privacy, or results in the
+              violation
+              of any applicable law
+              or regulation.
+            </p>
+            <p>
+              You will not post, upload, publish, submit or transmit any Content that: (i) is fraudulent, false,
+              misleading (directly or by
+              omission or failure to update information) or deceptive; (ii) is defamatory, libellous, obscene,
+              pornographic, vulgar or
+              offensive; (iii) promotes discrimination, bigotry, racism, hatred, harassment or harm against any
+              individual
+              or group; (iv)
+              is violent or threatening or promotes violence or actions that are threatening to any other person or
+              animal; (v) promotes
+              illegal or harmful activities or substances; or (vi) violates the hereby T&Cs. CASCADE 8 may, without
+              prior
+              notice, remove
+              or disable access to any Content that CASCADE 8 finds to be in violation of applicable law, these T&Cs or
+              otherwise
+              may be harmful or objectionable to CASCADE 8, its Users, third parties, or property.
+            </p>
+          </article>
 
-        <article>
-          <h3>8 - Privacy</h3>
-          <p>
-            CASCADE 8, as data processor, is committed to protecting the privacy and security of Your personal
-            information.
-            CASCADE 8 collects the following information about You when You use the Website and the Service:
-            first name, surname, avatar, email address, telephone number, profile pictures and position within Your
-            Seller
-            or employer.
-            CASCADE 8 collects personal data concerning the Users for the purposes of managing the Website and the
-            Service,
-            together with its activities, its clients and prospects.
-            When You use the Service, CASCADE 8 automatically collects personal information about how You use the
-            Service,
-            such as usage information: CASCADE 8 collects information about Your interactions with the Website such as
-            the
-            pages or content You view or have access to,
-            Your searches for Film Pages, Screening You have followed and others actions on the Website.
-          </p>
-          <p>
-            This information is collected and anonymised exclusively to elaborate statistics.
-            Some of these personal data are transferred to subcontractors in order to ensure the performance of the
-            Service,
-            in accordance with the applicable legislation and notably to:
-          </p>
-          <ul>
-            <li>Google Ireland Limited for the storage of the Website;</li>
-            <li>Twilio Inc. for the sending of SMS to Users;</li>
-            <li>Longtail Ad Solutions, Inc. for the screening of Films trailer on the Website;</li>
-            <li>Functional Software Inc.: for the Sale Agents’ dashboard;</li>
-            <li>8x8 Inc. for live call and conferences on the Website.</li>
-          </ul>
-          <p>
-            By using the Service, You accept that Your personal data collected by CASCADE 8 are transferred to these
-            subcontractors for the sole purposes indicated below.
-            Your personal data can be transferred outside the European Union.
-            In such case, these third parties guarantee an appropriate level of protection as defined in EU Regulation
-            2016/679.
-          </p>
-          <p>
-            Some of Your personal data are visible on the Website to perform the Service and to allow other Users to
-            contact You.
-            In any case, pursuant to the French Data Protection Act of 6 January 1978 as revised in 2018,
-            You have the right to access, modify and remove Your personal data. To exercise Your right,
-            You must contact: Privacy Department, CASCADE 8, 4 rue de la République, 69002 Lyon, France, adresse mail.
-            For more information, You can read our <a [routerLink]="['/c/o', section$ | async, 'privacy']">Privacy Policy</a>.
-          </p>
-        </article>
+          <article>
+            <h3>8 - Privacy</h3>
+            <p>
+              CASCADE 8, as data processor, is committed to protecting the privacy and security of Your personal
+              information.
+              CASCADE 8 collects the following information about You when You use the Website and the Service:
+              first name, surname, avatar, email address, telephone number, profile pictures and position within Your
+              Seller
+              or employer.
+              CASCADE 8 collects personal data concerning the Users for the purposes of managing the Website and the
+              Service,
+              together with its activities, its clients and prospects.
+              When You use the Service, CASCADE 8 automatically collects personal information about how You use the
+              Service,
+              such as usage information: CASCADE 8 collects information about Your interactions with the Website such as
+              the
+              pages or content You view or have access to,
+              Your searches for Film Pages, Screening You have followed and others actions on the Website.
+            </p>
+            <p>
+              This information is collected and anonymised exclusively to elaborate statistics.
+              Some of these personal data are transferred to subcontractors in order to ensure the performance of the
+              Service,
+              in accordance with the applicable legislation and notably to:
+            </p>
+            <ul>
+              <li>Google Ireland Limited for the storage of the Website;</li>
+              <li>Twilio Inc. for the sending of SMS to Users;</li>
+              <li>Longtail Ad Solutions, Inc. for the screening of Films trailer on the Website;</li>
+              <li>Functional Software Inc.: for the Sale Agents’ dashboard;</li>
+              <li>8x8 Inc. for live call and conferences on the Website.</li>
+            </ul>
+            <p>
+              By using the Service, You accept that Your personal data collected by CASCADE 8 are transferred to these
+              subcontractors for the sole purposes indicated below.
+              Your personal data can be transferred outside the European Union.
+              In such case, these third parties guarantee an appropriate level of protection as defined in EU Regulation
+              2016/679.
+            </p>
+            <p>
+              Some of Your personal data are visible on the Website to perform the Service and to allow other Users to
+              contact You.
+              In any case, pursuant to the French Data Protection Act of 6 January 1978 as revised in 2018,
+              You have the right to access, modify and remove Your personal data. To exercise Your right,
+              You must contact: Privacy Department, CASCADE 8, 4 rue de la République, 69002 Lyon, France, adresse mail.
+              For more information, You can read our <a [routerLink]="['/c/o', section$ | async, 'privacy']">Privacy
+                Policy</a>.
+            </p>
+          </article>
 
-        <article>
-          <h3>9 - Applicable law and jurisdiction</h3>
-          <p>
-            Those T&Cs are governed by French law. In the event of a dispute regarding the validity,
-            interpretation and/or performance hereof, the Parties agree that the courts of Lyon, FRANCE, shall have
-            jurisdiction.
-          </p>
-        </article>
+          <article>
+            <h3>9 - Applicable law and jurisdiction</h3>
+            <p>
+              Those T&Cs are governed by French law. In the event of a dispute regarding the validity,
+              interpretation and/or performance hereof, the Parties agree that the courts of Lyon, FRANCE, shall have
+              jurisdiction.
+            </p>
+          </article>
 
-      </mat-card-content>
-    </mat-card>
-  </section>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  </ng-container>
+  <ng-container *ngSwitchCase="'catalog'">
+    <header>
+      <a mat-icon-button (click)="goBack()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <h1>TERMS and conditions of use OF ARCHIPEL CONTENT</h1>
+    </header>
+    <section fxLayout="row" fxLayoutAlign="center">
+      <mat-card>
+        <mat-card-content>
+          <article>
+            <h3> 1 – Purpose</h3>
+            <p>
+              The present Terms and Conditions of Use (hereinafter the (“T&Cs”) detail the rights and obligations of
+              CASCADE 8,
+              whose registered office is 4 rue de la République 69001 Lyon, France, registered under the Commercial
+              Registry of Lyon
+              under number 847 756 764 (hereinafter referred to as “CASCADE 8”) and of all users of the ARCHIPEL CONTENT
+              service
+              (hereinafter referred as the “Service”). User of the Service may be a duly organized company (hereinafter
+              designated
+              as a “Company”) or a natural person at least 18 years old, acting as a member of a Company (hereinafter
+              together
+              referred as the “User” and / or “You” / “Your”). The Service is accessible on the website
+              www.archipelcontent.com
+              (hereinafter referred to as the “Website”).
+              The Service is an online marketplace that enables Companies which offer for sale TV, VOD and ancillary
+              rights on
+              movies (hereinafter respectively designated as “Movies Rights” and “Seller”) to publish content relating
+              to
+              those
+              Movies Rights and to make financial transactions with Users that are seeking to purchase such Movies
+              Rights
+              (hereinafter designated as “Buyer”). The Service offers (i) Buyers a way to purchase more Movies rights in
+              a
+              more
+              efficient way and (ii) Sellers the chance to create new opportunity by mutualizing their assets.
+            </p>
+          </article>
+          <article>
+            <h3>2 – Creating and closing a profile</h3>
+            <p>
+              To use the Service, You must create Your own profile and join a Company. Your profile has to be linked
+              with
+              the
+              profile of Your Company. To do so, You have two options: create directly Your profile online or be invited
+              by a
+              Company to join it and create Your profile. To create directly Your profile, You need to access the
+              Website,
+              verify if
+              Your Company has already a profile by searching its name into the search field. If so, You can click on
+              the
+              profile of
+              Your Company and send it a request to join the Company. If the Company has not yet a profile, You have to
+              send to
+              CASCADE 8 a request to add the Company as a User. As its own discretion, CASCADE 8 may decide to create
+              the
+              profile of
+              the Company. After the creation of the profile of the Company by CASCADE 8, or after the Company has
+              accepted Your
+              request to join it, You must complete all compulsory information, notably regarding Your first name,
+              surname, email
+              address, telephone number, profile picture and position within the Company. The profile of the Company has
+              to be
+              completed with the following compulsory information: Company’s name, address, telephone number, email
+              address,
+              activity, fiscal number and logo. When You are registering a profile for a Company, You represent and
+              warrant that You
+              have the authority to legally bind that Company. When creating Your profile, You undertake to provide
+              accurate,
+              current and update information during the registration process and keep Your profile page information
+              up-to-date at
+              all times. Creation of a profile implies full acceptance of the present T&Cs, which is confirmed by
+              clicking
+              on
+              “Accept the T&Cs” when creating a profile. The T&Cs are made available to any User when creating a
+              profile,
+              before
+              finalising the profile and the aforementioned acceptance. You can print or save the T&Cs after reading
+              them.
+              CASCADE 8
+              reserves the right to change the T&Cs at any time. In this case CASCADE 8 will inform any User when
+              connecting itself
+              to the Website for the first time after the modification of the T&Cs. Any User will have then to confirm
+              its
+              acceptance of the new T&Cs in order to access to the Service. Users who accept the T&Cs subject to
+              reservations, or do
+              not accept the T&Cs, cannot access the Website or use the Service. Any User can decide to close its
+              profile
+              at any
+              time by clicking on “Delete my profile”. If a Company decides to close its own profile, all Users’
+              profiles
+              attached
+              to it, will be automatically closed by CASCADE 8 at the same time. CASCADE 8 reserves the right to close
+              or
+              suspend
+              the profile of any User who is in breach of its commitments under the T&Cs. In the event of suspension or
+              closing, it
+              is impossible for the User to access his profile, without prejudice to any other damages that CASCADE 8
+              may
+              claim.
+            </p>
+          </article>
+
+
+          <article>
+            <h3>3 – Specific terms applicable to Sellers</h3>
+            <p>
+              As a Seller, You can access to Your profile and create movies pages for each movie on which Your Company
+              offers for
+              sale Movies Rights (hereinafter designated as a “Movie Page”).
+              The Movie Page is composed by the following information: promotional material (trailer, script, movie
+              poster, etc.)
+              main information about the movie (production year, international title, original title, director name,
+              budget, etc.),
+              movies details (ISAN Number, Color, etc.), festival participations, languages, synopsis, keywords, key
+              assets, the
+              reserved territories and the production information.
+              When creating such Movie Page, You must provide complete and accurate information about Your Movie Rights
+              and provide
+              all information requested by CASCADE 8. You are responsible for keeping Your Movie Rights information
+              up-to-date at
+              all times.
+              You can use the e-mail functionality available on Your profile to communicate with CASCADE 8.
+              CASCADE 8 cannot be held liable for information about Movie Rights You published on the Website.
+            </p>
+          </article>
+
+          <article>
+            <h3>4 – Specific terms applicable to Buyers</h3>
+            <p>
+              As a Buyer, You can access to Your profile, and consult all the Movies Pages published on the Website.
+              You can create a wishlist by adding Movies Pages on it, to purchase Movie Rights (hereinafter the
+              “Wishlist”).
+              Once Your Wishlist is complete, You can fix Your financial offer and send it to CASCADE 8 through the
+              e-mail
+              functionality available through Your profile.
+            </p>
+          </article>
+
+          <article>
+            <h3>5 Obligations and liability of CASCADE 8</h3>
+            <p>
+              CASCADE 8 shall use reasonable endeavours to allow Your access to the Service 7 days / 7 and 24 hours
+              /
+              24.
+              You agree
+              that CASCADE 8 cannot be held liable for any unavailability of the Website and / or the Service due to
+              technical
+              hazards linked to the internet, a force majeure event, the internet connection of a User or its
+              equipment,
+              the
+              maintenance operations required for the smooth functioning of the Website and / or the Service, or the
+              interruption of
+              access to the Website or Service to protect the profiles from a virus attack. CASCADE 8 undertakes to
+              implement the
+              technical means at its disposal to maintain as long as possible the integrity and security of the
+              Service
+              and Website
+              and the confidentiality of Users’ personal data. However, there is no guarantee that the Service is
+              free
+              from errors,
+              bugs, flaws or defects and / or that no intrusion or fraudulent maintenance by a third party of a
+              User’s
+              profile or
+              illicit data extraction will occur. CASCADE 8 grants You a royalty-free license to use the Service.
+              CASCADE
+              8 cannot
+              be held liable for any damage to a third party or User resulting from the breach or non-compliance by
+              another User
+              with one of its obligations under the hereby T&Cs. Consequently, in the event of action or a claim by
+              a
+              third party
+              against CASCADE 8, CASCADE 8 may institute proceedings against any User who, by failing to respect its
+              commitments
+              under the hereby T&Cs, is the cause of the action or claim by the aforementioned third party against
+              CASCADE
+              8.
+              CASCADE 8 shall use reasonable endeavours to negotiate the Wishlist according to the stipulations of
+              article
+              8 of the
+              hereby T&Cs. CASCADE 8 cannot be held liable in case of no deal between Buyer and Seller. The
+              acceptance
+              of
+              whole or
+              part of the Wishlist by Sellers is not guaranteed.
+            </p>
+          </article>
+
+          <article>
+            <h3>6 Obligations and liability of the User</h3>
+            <p>
+              You are responsible for keeping Your username and password confidential and for the use that is made
+              of
+              Your
+              profile.
+              You must take all of the usual precautions to regularly change Your password. In the event of loss
+              or
+              discovery of an
+              intrusion into Your profile, You must immediately change Your password and follow the security
+              procedure
+              on
+              the
+              Website to recover Your username or password. You must immediately notify CASCADE 8 if You know or
+              have
+              any
+              reason to
+              suspect that Your username and password have been lost, stolen, misappropriated, or otherwise
+              compromised
+              or
+              in case
+              of any actual or suspected unauthorized use of Your profile. You are liable for any and all
+              activities
+              conducted
+              through Your profile. It is the User’s responsibility to make sure that its equipment and internet
+              connection are
+              sufficient to access the Website. All Users acknowledge that any action likely to interrupt the
+              Service,
+              limit its
+              availability or prevent its continuity, is prohibited. CASCADE 8 is entitled to take action against
+              the
+              concerned User
+              for any intrusion or attempted intrusion into the Website and / or Service, hijacking of data,
+              infringement
+              of the
+              security and / or of authentication measures of the Service, and more generally any breach of the
+              hereby
+              T&Cs. If You
+              discover abuse or a breach of the commitments of the T&Cs by any User, You undertake to immediately
+              notify
+              CASCADE 8
+              by email at the following address: ybossenmeyer@cascade8.com.
+            </p>
+          </article>
+
+          <article>
+            <h3>7 Intellectual property - Content</h3>
+            <p>
+              The Service, its functionalities, the Website, and all of the elements they comprise are and
+              remain
+              the
+              full
+              property
+              of CASCADE 8, including any related intellectual property rights. CASCADE 8 grants the User a
+              free,
+              limited,
+              personal,
+              non-transferable and non-exclusive licence to use the Service for its personal needs in relation
+              to
+              its
+              professional
+              activities, through the Website on any mobile device or computer. Any other use is expressly
+              excluded.
+              By creating, uploading, posting or otherwise making available any content on the Website, notably
+              Movie
+              Pages,
+              (hereinafter designated as “User Content”), You grant to CASCADE 8 a non-exclusive, worldwide,
+              royalty-free,
+              irrevocable license, for the term of their protection under author’s rights law, to access, store,
+              copy,
+              modify,
+              distribute, edit, publish, transmit and otherwise exploit in any manner, on the Service, such User
+              Content,
+              and more
+              generally to provide and /or promote the Service and the Website, in any media.
+              You are solely responsible for all User Content that You make available on, or through, the
+              Website.
+              Accordingly, You
+              represent and warrant that: (i) You either are the sole and exclusive owner of all User Content
+              that
+              You
+              make
+              available on, or through, the Website, or You have all rights, licenses, consents and releases
+              that
+              are
+              necessary to
+              grant to CASCADE 8 the rights to such User Content, as contemplated under these T&Cs (ii) neither
+              the User
+              Content
+              nor Your posting, uploading, publication, or CASCADE 8's use of the User Content (or any portion
+              thereof)
+              as
+              contemplated under these T&Cs infringe, misappropriate or violate a third party's patent,
+              copyright,
+              trademark, trade
+              secret, moral rights or other proprietary or intellectual property rights, or rights of publicity
+              or
+              privacy, or
+              results in the violation of any applicable law or regulation.
+              You will not post, upload, publish, submit or transmit any User Content that: (i) is fraudulent,
+              false,
+              misleading
+              (directly or by omission or failure to update information) or deceptive; (ii) is defamatory,
+              libellous,
+              obscene,
+              pornographic, vulgar or offensive; (iii) promotes discrimination, bigotry, racism, hatred,
+              harassment or
+              harm against
+              any individual or group; (iv) is violent or threatening or promotes violence or actions that are
+              threatening
+              to any
+              other person or animal; (v) promotes illegal or harmful activities or substances; or (vi) violates
+              the
+              hereby T&Cs.
+              CASCADE 8 may, without prior notice, remove or disable access to any User Content that CASCADE 8
+              finds to
+              be
+              in
+              violation of applicable law, these T&Cs or otherwise may be harmful or objectionable to CASCADE 8,
+              its
+              Users, third
+              parties, or property.
+            </p>
+          </article>
+
+          <article>
+            <h3>8 Transmission, negotiation and acceptance of the Wishlist</h3>
+            <p>
+              When a Buyer send the Wishlist to CASCADE 8 through the Website, CASCADE 8 transmits such
+              Wishlist
+              to each
+              Seller that
+              may be concerned by it or may be interested in it, which the Buyer duly acknowledges and
+              accepts.
+              CASCADE 8 negotiates directly the price of the Movie Rights in the name of the concerned Buyer
+              and
+              shall
+              use
+              reasonable endeavours to find the best deal with a Seller.
+              When the Wishlist is accepted in whole or in part in writing by a Buyer and a Seller, the
+              Wishlist
+              becomes
+              an “Offer”
+              that legally binds the concerned Buyer and Seller. The conditions of the deal based on the Offer
+              are
+              mentioned in an
+              agreement to be signed by Buyer and CASCADE 8 on the name and behalf of the Seller and financial
+              conditions
+              are
+              subject to payment of a commission to CASCADE 8, as detailed in the General Conditions of
+              Services
+              duly
+              accepted by
+              Seller.
+            </p>
+          </article>
+
+          <article>
+            <h3>9 Privacy</h3>
+            <p>
+              CASCADE 8, as data controller, is committed to protecting the privacy and security of Your
+              personal
+              information.
+              CASCADE 8 collects the following information about You when You use the Website and the
+              Service:
+              first
+              name,
+              surname,
+              email address, telephone number, photography and position within the Company.
+              CASCADE 8 collects personal data concerning the Users for the purposes of managing the Website
+              and
+              the
+              Service,
+              together with its activities, its clients and prospects.
+              When You use the Service, CASCADE 8 automatically collects personal information about how You
+              use
+              the
+              Service, such as
+              usage information: CASCADE 8 collects information about Your interactions with the Website
+              such
+              as
+              the
+              pages
+              or
+              content You view, Your searches for Movie Pages, offers You have made and others actions on
+              the
+              Website.
+              This information is collected and anonymised exclusively to elaborate statistics.
+              Some of these personal data are transferred to subcontractors in order to ensure the
+              performance
+              of
+              the
+              Service, in
+              accordance with the applicable legislation and notably the email functionality.
+              In any case, pursuant to the French Data Protection Act of 6 January 1978 as revised in 2018,
+              You
+              have the
+              right to
+              access, modify and remove Your personal data. To exercise Your right, You must contact:
+              Privacy
+              Department,
+              4 rue de
+              la République, 69002 Lyon, France, ybossenmeyer@cascade8.com
+            </p>
+          </article>
+
+          <article>
+            <h3>10 Applicable law and jurisdiction</h3>
+            <p>
+              Those T&Cs are governed by French law. In the event of a dispute regarding the validity,
+              interpretation
+              and/or
+              performance hereof, the Parties agree that the courts of Lyon, FRANCE, shall have
+              jurisdiction.
+            </p>
+          </article>
+
+        </mat-card-content>
+      </mat-card>
+    </section>
+  </ng-container>
+  <ng-container *ngSwitchCase="'financiers'">
+    <header>
+      <a mat-icon-button (click)="goBack()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <h1>TERMS and conditions of use of MEDIA FINANCIERS</h1>
+    </header>
+    <section fxLayout="row" fxLayoutAlign="center">
+      <mat-card>
+        <mat-card-content>
+          <article>
+            <h3> 1 – Purpose</h3>
+            <p>
+              The present Terms and Conditions of Use (hereinafter the (“T&Cs”) detail the rights and obligations of
+              CASCADE 8,
+              whose registered office is 4 rue de la République 69001 Lyon, France, registered under the Commercial
+              Registry of Lyon
+              under number 847 756 764 (hereinafter referred to as “CASCADE 8”) and of all users of the MEDIA FINANCIERS
+              service
+              (hereinafter referred as the “Service”). User of the Service may be a duly organized company (hereinafter
+              designated
+              as a “Company”) or a natural person at least 18 years old, acting as a member of a Company (hereinafter
+              together
+              referred as the “User” and / or “You” / “Your”). The Service is accessible on the website
+              www.mediafinanciers.com
+              (hereinafter referred to as the “Website”).
+              The Service is an online marketplace that enables Companies which offer for sale TV, VOD and ancillary
+              rights on
+              movies (hereinafter respectively designated as “Movies Rights” and “Seller”) to publish content relating
+              to
+              those
+              Movies Rights and to make financial transactions with Users that are seeking to purchase such Movies
+              Rights
+              (hereinafter designated as “Buyer”). The Service offers (i) Buyers a way to purchase more Movies rights in
+              a
+              more
+              efficient way and (ii) Sellers the chance to create new opportunity by mutualizing their assets.
+            </p>
+          </article>
+          <article>
+            <h3>2 – Creating and closing a profile</h3>
+            <p>
+              To use the Service, You must create Your own profile and join a Company. Your profile has to be linked
+              with
+              the
+              profile of Your Company. To do so, You have two options: create directly Your profile online or be invited
+              by a
+              Company to join it and create Your profile. To create directly Your profile, You need to access the
+              Website,
+              verify if
+              Your Company has already a profile by searching its name into the search field. If so, You can click on
+              the
+              profile of
+              Your Company and send it a request to join the Company. If the Company has not yet a profile, You have to
+              send to
+              CASCADE 8 a request to add the Company as a User. As its own discretion, CASCADE 8 may decide to create
+              the
+              profile of
+              the Company. After the creation of the profile of the Company by CASCADE 8, or after the Company has
+              accepted Your
+              request to join it, You must complete all compulsory information, notably regarding Your first name,
+              surname, email
+              address, telephone number, profile picture and position within the Company. The profile of the Company has
+              to be
+              completed with the following compulsory information: Company’s name, address, telephone number, email
+              address,
+              activity, fiscal number and logo. When You are registering a profile for a Company, You represent and
+              warrant that You
+              have the authority to legally bind that Company. When creating Your profile, You undertake to provide
+              accurate,
+              current and update information during the registration process and keep Your profile page information
+              up-to-date at
+              all times. Creation of a profile implies full acceptance of the present T&Cs, which is confirmed by
+              clicking
+              on
+              “Accept the T&Cs” when creating a profile. The T&Cs are made available to any User when creating a
+              profile,
+              before
+              finalising the profile and the aforementioned acceptance. You can print or save the T&Cs after reading
+              them.
+              CASCADE 8
+              reserves the right to change the T&Cs at any time. In this case CASCADE 8 will inform any User when
+              connecting itself
+              to the Website for the first time after the modification of the T&Cs. Any User will have then to confirm
+              its
+              acceptance of the new T&Cs in order to access to the Service. Users who accept the T&Cs subject to
+              reservations, or do
+              not accept the T&Cs, cannot access the Website or use the Service. Any User can decide to close its
+              profile
+              at any
+              time by clicking on “Delete my profile”. If a Company decides to close its own profile, all Users’
+              profiles
+              attached
+              to it, will be automatically closed by CASCADE 8 at the same time. CASCADE 8 reserves the right to close
+              or
+              suspend
+              the profile of any User who is in breach of its commitments under the T&Cs. In the event of suspension or
+              closing, it
+              is impossible for the User to access his profile, without prejudice to any other damages that CASCADE 8
+              may
+              claim.
+            </p>
+          </article>
+
+
+          <article>
+            <h3>3 – Specific terms applicable to Sellers</h3>
+            <p>
+              As a Seller, You can access to Your profile and create movies pages for each movie on which Your Company
+              offers for
+              sale Movies Rights (hereinafter designated as a “Movie Page”).
+              The Movie Page is composed by the following information: promotional material (trailer, script, movie
+              poster, etc.)
+              main information about the movie (production year, international title, original title, director name,
+              budget, etc.),
+              movies details (ISAN Number, Color, etc.), festival participations, languages, synopsis, keywords, key
+              assets, the
+              reserved territories and the production information.
+              When creating such Movie Page, You must provide complete and accurate information about Your Movie Rights
+              and provide
+              all information requested by CASCADE 8. You are responsible for keeping Your Movie Rights information
+              up-to-date at
+              all times.
+              You can use the e-mail functionality available on Your profile to communicate with CASCADE 8.
+              CASCADE 8 cannot be held liable for information about Movie Rights You published on the Website.
+            </p>
+          </article>
+
+          <article>
+            <h3>4 – Specific terms applicable to Buyers</h3>
+            <p>
+              As a Buyer, You can access to Your profile, and consult all the Movies Pages published on the Website.
+              You can create a wishlist by adding Movies Pages on it, to purchase Movie Rights (hereinafter the
+              “Wishlist”).
+              Once Your Wishlist is complete, You can fix Your financial offer and send it to CASCADE 8 through the
+              e-mail
+              functionality available through Your profile.
+            </p>
+          </article>
+
+          <article>
+            <h3>5 Obligations and liability of CASCADE 8</h3>
+            <p>
+              CASCADE 8 shall use reasonable endeavours to allow Your access to the Service 7 days / 7 and 24 hours
+              /
+              24.
+              You agree
+              that CASCADE 8 cannot be held liable for any unavailability of the Website and / or the Service due to
+              technical
+              hazards linked to the internet, a force majeure event, the internet connection of a User or its
+              equipment,
+              the
+              maintenance operations required for the smooth functioning of the Website and / or the Service, or the
+              interruption of
+              access to the Website or Service to protect the profiles from a virus attack. CASCADE 8 undertakes to
+              implement the
+              technical means at its disposal to maintain as long as possible the integrity and security of the
+              Service
+              and Website
+              and the confidentiality of Users’ personal data. However, there is no guarantee that the Service is
+              free
+              from errors,
+              bugs, flaws or defects and / or that no intrusion or fraudulent maintenance by a third party of a
+              User’s
+              profile or
+              illicit data extraction will occur. CASCADE 8 grants You a royalty-free license to use the Service.
+              CASCADE
+              8 cannot
+              be held liable for any damage to a third party or User resulting from the breach or non-compliance by
+              another User
+              with one of its obligations under the hereby T&Cs. Consequently, in the event of action or a claim by
+              a
+              third party
+              against CASCADE 8, CASCADE 8 may institute proceedings against any User who, by failing to respect its
+              commitments
+              under the hereby T&Cs, is the cause of the action or claim by the aforementioned third party against
+              CASCADE
+              8.
+              CASCADE 8 shall use reasonable endeavours to negotiate the Wishlist according to the stipulations of
+              article
+              8 of the
+              hereby T&Cs. CASCADE 8 cannot be held liable in case of no deal between Buyer and Seller. The
+              acceptance
+              of
+              whole or
+              part of the Wishlist by Sellers is not guaranteed.
+            </p>
+          </article>
+
+          <article>
+            <h3>6 Obligations and liability of the User</h3>
+            <p>
+              You are responsible for keeping Your username and password confidential and for the use that is made
+              of
+              Your
+              profile.
+              You must take all of the usual precautions to regularly change Your password. In the event of loss
+              or
+              discovery of an
+              intrusion into Your profile, You must immediately change Your password and follow the security
+              procedure
+              on
+              the
+              Website to recover Your username or password. You must immediately notify CASCADE 8 if You know or
+              have
+              any
+              reason to
+              suspect that Your username and password have been lost, stolen, misappropriated, or otherwise
+              compromised
+              or
+              in case
+              of any actual or suspected unauthorized use of Your profile. You are liable for any and all
+              activities
+              conducted
+              through Your profile. It is the User’s responsibility to make sure that its equipment and internet
+              connection are
+              sufficient to access the Website. All Users acknowledge that any action likely to interrupt the
+              Service,
+              limit its
+              availability or prevent its continuity, is prohibited. CASCADE 8 is entitled to take action against
+              the
+              concerned User
+              for any intrusion or attempted intrusion into the Website and / or Service, hijacking of data,
+              infringement
+              of the
+              security and / or of authentication measures of the Service, and more generally any breach of the
+              hereby
+              T&Cs. If You
+              discover abuse or a breach of the commitments of the T&Cs by any User, You undertake to immediately
+              notify
+              CASCADE 8
+              by email at the following address: ybossenmeyer@cascade8.com.
+            </p>
+          </article>
+
+          <article>
+            <h3>7 Intellectual property - Content</h3>
+            <p>
+              The Service, its functionalities, the Website, and all of the elements they comprise are and
+              remain
+              the
+              full
+              property
+              of CASCADE 8, including any related intellectual property rights. CASCADE 8 grants the User a
+              free,
+              limited,
+              personal,
+              non-transferable and non-exclusive licence to use the Service for its personal needs in relation
+              to
+              its
+              professional
+              activities, through the Website on any mobile device or computer. Any other use is expressly
+              excluded.
+              By creating, uploading, posting or otherwise making available any content on the Website, notably
+              Movie
+              Pages,
+              (hereinafter designated as “User Content”), You grant to CASCADE 8 a non-exclusive, worldwide,
+              royalty-free,
+              irrevocable license, for the term of their protection under author’s rights law, to access, store,
+              copy,
+              modify,
+              distribute, edit, publish, transmit and otherwise exploit in any manner, on the Service, such User
+              Content,
+              and more
+              generally to provide and /or promote the Service and the Website, in any media.
+              You are solely responsible for all User Content that You make available on, or through, the
+              Website.
+              Accordingly, You
+              represent and warrant that: (i) You either are the sole and exclusive owner of all User Content
+              that
+              You
+              make
+              available on, or through, the Website, or You have all rights, licenses, consents and releases
+              that
+              are
+              necessary to
+              grant to CASCADE 8 the rights to such User Content, as contemplated under these T&Cs (ii) neither
+              the User
+              Content
+              nor Your posting, uploading, publication, or CASCADE 8's use of the User Content (or any portion
+              thereof)
+              as
+              contemplated under these T&Cs infringe, misappropriate or violate a third party's patent,
+              copyright,
+              trademark, trade
+              secret, moral rights or other proprietary or intellectual property rights, or rights of publicity
+              or
+              privacy, or
+              results in the violation of any applicable law or regulation.
+              You will not post, upload, publish, submit or transmit any User Content that: (i) is fraudulent,
+              false,
+              misleading
+              (directly or by omission or failure to update information) or deceptive; (ii) is defamatory,
+              libellous,
+              obscene,
+              pornographic, vulgar or offensive; (iii) promotes discrimination, bigotry, racism, hatred,
+              harassment or
+              harm against
+              any individual or group; (iv) is violent or threatening or promotes violence or actions that are
+              threatening
+              to any
+              other person or animal; (v) promotes illegal or harmful activities or substances; or (vi) violates
+              the
+              hereby T&Cs.
+              CASCADE 8 may, without prior notice, remove or disable access to any User Content that CASCADE 8
+              finds to
+              be
+              in
+              violation of applicable law, these T&Cs or otherwise may be harmful or objectionable to CASCADE 8,
+              its
+              Users, third
+              parties, or property.
+            </p>
+          </article>
+
+          <article>
+            <h3>8 Transmission, negotiation and acceptance of the Wishlist</h3>
+            <p>
+              When a Buyer send the Wishlist to CASCADE 8 through the Website, CASCADE 8 transmits such
+              Wishlist
+              to each
+              Seller that
+              may be concerned by it or may be interested in it, which the Buyer duly acknowledges and
+              accepts.
+              CASCADE 8 negotiates directly the price of the Movie Rights in the name of the concerned Buyer
+              and
+              shall
+              use
+              reasonable endeavours to find the best deal with a Seller.
+              When the Wishlist is accepted in whole or in part in writing by a Buyer and a Seller, the
+              Wishlist
+              becomes
+              an “Offer”
+              that legally binds the concerned Buyer and Seller. The conditions of the deal based on the Offer
+              are
+              mentioned in an
+              agreement to be signed by Buyer and CASCADE 8 on the name and behalf of the Seller and financial
+              conditions
+              are
+              subject to payment of a commission to CASCADE 8, as detailed in the General Conditions of
+              Services
+              duly
+              accepted by
+              Seller.
+            </p>
+          </article>
+
+          <article>
+            <h3>9 Privacy</h3>
+            <p>
+              CASCADE 8, as data controller, is committed to protecting the privacy and security of Your
+              personal
+              information.
+              CASCADE 8 collects the following information about You when You use the Website and the
+              Service:
+              first
+              name,
+              surname,
+              email address, telephone number, photography and position within the Company.
+              CASCADE 8 collects personal data concerning the Users for the purposes of managing the Website
+              and
+              the
+              Service,
+              together with its activities, its clients and prospects.
+              When You use the Service, CASCADE 8 automatically collects personal information about how You
+              use
+              the
+              Service, such as
+              usage information: CASCADE 8 collects information about Your interactions with the Website
+              such
+              as
+              the
+              pages
+              or
+              content You view, Your searches for Movie Pages, offers You have made and others actions on
+              the
+              Website.
+              This information is collected and anonymised exclusively to elaborate statistics.
+              Some of these personal data are transferred to subcontractors in order to ensure the
+              performance
+              of
+              the
+              Service, in
+              accordance with the applicable legislation and notably the email functionality.
+              In any case, pursuant to the French Data Protection Act of 6 January 1978 as revised in 2018,
+              You
+              have the
+              right to
+              access, modify and remove Your personal data. To exercise Your right, You must contact:
+              Privacy
+              Department,
+              4 rue de
+              la République, 69002 Lyon, France, ybossenmeyer@cascade8.com
+            </p>
+          </article>
+
+          <article>
+            <h3>10 Applicable law and jurisdiction</h3>
+            <p>
+              Those T&Cs are governed by French law. In the event of a dispute regarding the validity,
+              interpretation
+              and/or
+              performance hereof, the Parties agree that the courts of Lyon, FRANCE, shall have
+              jurisdiction.
+            </p>
+          </article>
+
+        </mat-card-content>
+      </mat-card>
+    </section>
+  </ng-container>
 </ng-container>
-<ng-template #catalog>
-  <header>
-    <a mat-icon-button (click)="goBack()">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
-    <h1>TERMS and conditions of use OF ARCHIPEL CONTENT</h1>
-  </header>
-  <section fxLayout="row" fxLayoutAlign="center">
-    <mat-card>
-      <mat-card-content>
-        <article>
-          <h3> 1 – Purpose</h3>
-          <p>
-            The present Terms and Conditions of Use (hereinafter the (“T&Cs”) detail the rights and obligations of
-            CASCADE 8,
-            whose registered office is 4 rue de la République 69001 Lyon, France, registered under the Commercial
-            Registry of Lyon
-            under number 847 756 764 (hereinafter referred to as “CASCADE 8”) and of all users of the ARCHIPEL CONTENT
-            service
-            (hereinafter referred as the “Service”). User of the Service may be a duly organized company (hereinafter
-            designated
-            as a “Company”) or a natural person at least 18 years old, acting as a member of a Company (hereinafter
-            together
-            referred as the “User” and / or “You” / “Your”). The Service is accessible on the website
-            www.archipelcontent.com
-            (hereinafter referred to as the “Website”).
-            The Service is an online marketplace that enables Companies which offer for sale TV, VOD and ancillary
-            rights on
-            movies (hereinafter respectively designated as “Movies Rights” and “Seller”) to publish content relating to
-            those
-            Movies Rights and to make financial transactions with Users that are seeking to purchase such Movies Rights
-            (hereinafter designated as “Buyer”). The Service offers (i) Buyers a way to purchase more Movies rights in a
-            more
-            efficient way and (ii) Sellers the chance to create new opportunity by mutualizing their assets.
-          </p>
-        </article>
-        <article>
-          <h3>2 – Creating and closing a profile</h3>
-          <p>
-            To use the Service, You must create Your own profile and join a Company. Your profile has to be linked with
-            the
-            profile of Your Company. To do so, You have two options: create directly Your profile online or be invited
-            by a
-            Company to join it and create Your profile. To create directly Your profile, You need to access the Website,
-            verify if
-            Your Company has already a profile by searching its name into the search field. If so, You can click on the
-            profile of
-            Your Company and send it a request to join the Company. If the Company has not yet a profile, You have to
-            send to
-            CASCADE 8 a request to add the Company as a User. As its own discretion, CASCADE 8 may decide to create the
-            profile of
-            the Company. After the creation of the profile of the Company by CASCADE 8, or after the Company has
-            accepted Your
-            request to join it, You must complete all compulsory information, notably regarding Your first name,
-            surname, email
-            address, telephone number, profile picture and position within the Company. The profile of the Company has
-            to be
-            completed with the following compulsory information: Company’s name, address, telephone number, email
-            address,
-            activity, fiscal number and logo. When You are registering a profile for a Company, You represent and
-            warrant that You
-            have the authority to legally bind that Company. When creating Your profile, You undertake to provide
-            accurate,
-            current and update information during the registration process and keep Your profile page information
-            up-to-date at
-            all times. Creation of a profile implies full acceptance of the present T&Cs, which is confirmed by clicking
-            on
-            “Accept the T&Cs” when creating a profile. The T&Cs are made available to any User when creating a profile,
-            before
-            finalising the profile and the aforementioned acceptance. You can print or save the T&Cs after reading them.
-            CASCADE 8
-            reserves the right to change the T&Cs at any time. In this case CASCADE 8 will inform any User when
-            connecting itself
-            to the Website for the first time after the modification of the T&Cs. Any User will have then to confirm its
-            acceptance of the new T&Cs in order to access to the Service. Users who accept the T&Cs subject to
-            reservations, or do
-            not accept the T&Cs, cannot access the Website or use the Service. Any User can decide to close its profile
-            at any
-            time by clicking on “Delete my profile”. If a Company decides to close its own profile, all Users’ profiles
-            attached
-            to it, will be automatically closed by CASCADE 8 at the same time. CASCADE 8 reserves the right to close or
-            suspend
-            the profile of any User who is in breach of its commitments under the T&Cs. In the event of suspension or
-            closing, it
-            is impossible for the User to access his profile, without prejudice to any other damages that CASCADE 8 may
-            claim.
-          </p>
-        </article>
-
-
-        <article>
-          <h3>3 – Specific terms applicable to Sellers</h3>
-          <p>
-            As a Seller, You can access to Your profile and create movies pages for each movie on which Your Company
-            offers for
-            sale Movies Rights (hereinafter designated as a “Movie Page”).
-            The Movie Page is composed by the following information: promotional material (trailer, script, movie
-            poster, etc.)
-            main information about the movie (production year, international title, original title, director name,
-            budget, etc.),
-            movies details (ISAN Number, Color, etc.), festival participations, languages, synopsis, keywords, key
-            assets, the
-            reserved territories and the production information.
-            When creating such Movie Page, You must provide complete and accurate information about Your Movie Rights
-            and provide
-            all information requested by CASCADE 8. You are responsible for keeping Your Movie Rights information
-            up-to-date at
-            all times.
-            You can use the e-mail functionality available on Your profile to communicate with CASCADE 8.
-            CASCADE 8 cannot be held liable for information about Movie Rights You published on the Website.
-          </p>
-        </article>
-
-        <article>
-          <h3>4 – Specific terms applicable to Buyers</h3>
-          <p>
-            As a Buyer, You can access to Your profile, and consult all the Movies Pages published on the Website.
-            You can create a wishlist by adding Movies Pages on it, to purchase Movie Rights (hereinafter the
-            “Wishlist”).
-            Once Your Wishlist is complete, You can fix Your financial offer and send it to CASCADE 8 through the
-            e-mail
-            functionality available through Your profile.
-          </p>
-        </article>
-
-        <article>
-          <h3>5 Obligations and liability of CASCADE 8</h3>
-          <p>
-            CASCADE 8 shall use reasonable endeavours to allow Your access to the Service 7 days / 7 and 24 hours
-            /
-            24.
-            You agree
-            that CASCADE 8 cannot be held liable for any unavailability of the Website and / or the Service due to
-            technical
-            hazards linked to the internet, a force majeure event, the internet connection of a User or its
-            equipment,
-            the
-            maintenance operations required for the smooth functioning of the Website and / or the Service, or the
-            interruption of
-            access to the Website or Service to protect the profiles from a virus attack. CASCADE 8 undertakes to
-            implement the
-            technical means at its disposal to maintain as long as possible the integrity and security of the
-            Service
-            and Website
-            and the confidentiality of Users’ personal data. However, there is no guarantee that the Service is
-            free
-            from errors,
-            bugs, flaws or defects and / or that no intrusion or fraudulent maintenance by a third party of a
-            User’s
-            profile or
-            illicit data extraction will occur. CASCADE 8 grants You a royalty-free license to use the Service.
-            CASCADE
-            8 cannot
-            be held liable for any damage to a third party or User resulting from the breach or non-compliance by
-            another User
-            with one of its obligations under the hereby T&Cs. Consequently, in the event of action or a claim by
-            a
-            third party
-            against CASCADE 8, CASCADE 8 may institute proceedings against any User who, by failing to respect its
-            commitments
-            under the hereby T&Cs, is the cause of the action or claim by the aforementioned third party against
-            CASCADE
-            8.
-            CASCADE 8 shall use reasonable endeavours to negotiate the Wishlist according to the stipulations of
-            article
-            8 of the
-            hereby T&Cs. CASCADE 8 cannot be held liable in case of no deal between Buyer and Seller. The
-            acceptance
-            of
-            whole or
-            part of the Wishlist by Sellers is not guaranteed.
-          </p>
-        </article>
-
-        <article>
-          <h3>6 Obligations and liability of the User</h3>
-          <p>
-            You are responsible for keeping Your username and password confidential and for the use that is made
-            of
-            Your
-            profile.
-            You must take all of the usual precautions to regularly change Your password. In the event of loss
-            or
-            discovery of an
-            intrusion into Your profile, You must immediately change Your password and follow the security
-            procedure
-            on
-            the
-            Website to recover Your username or password. You must immediately notify CASCADE 8 if You know or
-            have
-            any
-            reason to
-            suspect that Your username and password have been lost, stolen, misappropriated, or otherwise
-            compromised
-            or
-            in case
-            of any actual or suspected unauthorized use of Your profile. You are liable for any and all
-            activities
-            conducted
-            through Your profile. It is the User’s responsibility to make sure that its equipment and internet
-            connection are
-            sufficient to access the Website. All Users acknowledge that any action likely to interrupt the
-            Service,
-            limit its
-            availability or prevent its continuity, is prohibited. CASCADE 8 is entitled to take action against
-            the
-            concerned User
-            for any intrusion or attempted intrusion into the Website and / or Service, hijacking of data,
-            infringement
-            of the
-            security and / or of authentication measures of the Service, and more generally any breach of the
-            hereby
-            T&Cs. If You
-            discover abuse or a breach of the commitments of the T&Cs by any User, You undertake to immediately
-            notify
-            CASCADE 8
-            by email at the following address: ybossenmeyer@cascade8.com.
-          </p>
-        </article>
-
-        <article>
-          <h3>7 Intellectual property - Content</h3>
-          <p>
-            The Service, its functionalities, the Website, and all of the elements they comprise are and
-            remain
-            the
-            full
-            property
-            of CASCADE 8, including any related intellectual property rights. CASCADE 8 grants the User a
-            free,
-            limited,
-            personal,
-            non-transferable and non-exclusive licence to use the Service for its personal needs in relation
-            to
-            its
-            professional
-            activities, through the Website on any mobile device or computer. Any other use is expressly
-            excluded.
-            By creating, uploading, posting or otherwise making available any content on the Website, notably
-            Movie
-            Pages,
-            (hereinafter designated as “User Content”), You grant to CASCADE 8 a non-exclusive, worldwide,
-            royalty-free,
-            irrevocable license, for the term of their protection under author’s rights law, to access, store,
-            copy,
-            modify,
-            distribute, edit, publish, transmit and otherwise exploit in any manner, on the Service, such User
-            Content,
-            and more
-            generally to provide and /or promote the Service and the Website, in any media.
-            You are solely responsible for all User Content that You make available on, or through, the
-            Website.
-            Accordingly, You
-            represent and warrant that: (i) You either are the sole and exclusive owner of all User Content
-            that
-            You
-            make
-            available on, or through, the Website, or You have all rights, licenses, consents and releases
-            that
-            are
-            necessary to
-            grant to CASCADE 8 the rights to such User Content, as contemplated under these T&Cs (ii) neither
-            the User
-            Content
-            nor Your posting, uploading, publication, or CASCADE 8's use of the User Content (or any portion
-            thereof)
-            as
-            contemplated under these T&Cs infringe, misappropriate or violate a third party's patent,
-            copyright,
-            trademark, trade
-            secret, moral rights or other proprietary or intellectual property rights, or rights of publicity
-            or
-            privacy, or
-            results in the violation of any applicable law or regulation.
-            You will not post, upload, publish, submit or transmit any User Content that: (i) is fraudulent,
-            false,
-            misleading
-            (directly or by omission or failure to update information) or deceptive; (ii) is defamatory,
-            libellous,
-            obscene,
-            pornographic, vulgar or offensive; (iii) promotes discrimination, bigotry, racism, hatred,
-            harassment or
-            harm against
-            any individual or group; (iv) is violent or threatening or promotes violence or actions that are
-            threatening
-            to any
-            other person or animal; (v) promotes illegal or harmful activities or substances; or (vi) violates
-            the
-            hereby T&Cs.
-            CASCADE 8 may, without prior notice, remove or disable access to any User Content that CASCADE 8
-            finds to
-            be
-            in
-            violation of applicable law, these T&Cs or otherwise may be harmful or objectionable to CASCADE 8,
-            its
-            Users, third
-            parties, or property.
-          </p>
-        </article>
-
-        <article>
-          <h3>8 Transmission, negotiation and acceptance of the Wishlist</h3>
-          <p>
-            When a Buyer send the Wishlist to CASCADE 8 through the Website, CASCADE 8 transmits such
-            Wishlist
-            to each
-            Seller that
-            may be concerned by it or may be interested in it, which the Buyer duly acknowledges and
-            accepts.
-            CASCADE 8 negotiates directly the price of the Movie Rights in the name of the concerned Buyer
-            and
-            shall
-            use
-            reasonable endeavours to find the best deal with a Seller.
-            When the Wishlist is accepted in whole or in part in writing by a Buyer and a Seller, the
-            Wishlist
-            becomes
-            an “Offer”
-            that legally binds the concerned Buyer and Seller. The conditions of the deal based on the Offer
-            are
-            mentioned in an
-            agreement to be signed by Buyer and CASCADE 8 on the name and behalf of the Seller and financial
-            conditions
-            are
-            subject to payment of a commission to CASCADE 8, as detailed in the General Conditions of
-            Services
-            duly
-            accepted by
-            Seller.
-          </p>
-        </article>
-
-        <article>
-          <h3>9 Privacy</h3>
-          <p>
-            CASCADE 8, as data controller, is committed to protecting the privacy and security of Your
-            personal
-            information.
-            CASCADE 8 collects the following information about You when You use the Website and the
-            Service:
-            first
-            name,
-            surname,
-            email address, telephone number, photography and position within the Company.
-            CASCADE 8 collects personal data concerning the Users for the purposes of managing the Website
-            and
-            the
-            Service,
-            together with its activities, its clients and prospects.
-            When You use the Service, CASCADE 8 automatically collects personal information about how You
-            use
-            the
-            Service, such as
-            usage information: CASCADE 8 collects information about Your interactions with the Website
-            such
-            as
-            the
-            pages
-            or
-            content You view, Your searches for Movie Pages, offers You have made and others actions on
-            the
-            Website.
-            This information is collected and anonymised exclusively to elaborate statistics.
-            Some of these personal data are transferred to subcontractors in order to ensure the
-            performance
-            of
-            the
-            Service, in
-            accordance with the applicable legislation and notably the email functionality.
-            In any case, pursuant to the French Data Protection Act of 6 January 1978 as revised in 2018,
-            You
-            have the
-            right to
-            access, modify and remove Your personal data. To exercise Your right, You must contact:
-            Privacy
-            Department,
-            4 rue de
-            la République, 69002 Lyon, France, ybossenmeyer@cascade8.com
-          </p>
-        </article>
-
-        <article>
-          <h3>10 Applicable law and jurisdiction</h3>
-          <p>
-            Those T&Cs are governed by French law. In the event of a dispute regarding the validity,
-            interpretation
-            and/or
-            performance hereof, the Parties agree that the courts of Lyon, FRANCE, shall have
-            jurisdiction.
-          </p>
-        </article>
-
-      </mat-card-content>
-    </mat-card>
-  </section>
-</ng-template>

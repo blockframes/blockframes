@@ -63,10 +63,10 @@ ORDER BY
 
 const queryAnalyticsActiveUsers = `
   SELECT
-    count(*) as page_view, 
+    count(*) as page_view,
     user_id,
-    MIN(event_date) as first_connexion,
-    MAX(event_date) as last_connexion
+    TIMESTAMP_MICROS(MIN(event_timestamp)) as first_connexion,
+    TIMESTAMP_MICROS(MAX(event_timestamp)) as last_connexion
   FROM
     \`${bigQueryAnalyticsTable}*\`,
     UNNEST(event_params) AS params

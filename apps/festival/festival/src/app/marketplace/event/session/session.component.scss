@@ -2,8 +2,6 @@
 
 :host {
   height: 100%;
-  display: flex;
-  justify-content: center;
   padding: 24px;
 }
 
@@ -22,7 +20,7 @@ p {
   }
 }
 
-section {
+.screening {
   height: 100%;
   width: 100%;
   text-align: center;
@@ -59,12 +57,38 @@ section {
 }
 
 .meeting {
+  height: 100%;
   width: 100%;
-  .visio {
-    border: solid 1px black;
-  }
+  display: flex;
+  flex-direction: column;
+
   .meeting-container {
     height: 60vh;
+    display: flex;
+    align-items: stretch;
+
+    media-viewer {
+      width: 40%;
+    }
+    meeting-video-room {
+      width: 60%;
+    }
+  }
+
+  img {
+    width: 100%;
+  }
+
+  media-control {
+    display: flex;
+    justify-content: center;
+  }
+
+  media-viewer,
+  meeting-video-room,
+  media-control,
+  event-meeting-media-list{
+    margin: 8px 16px;
   }
 }
 

@@ -1,4 +1,4 @@
-import { functions } from './internals/firebase';
+import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
 import * as invitations from './invitation';
 import {
@@ -11,28 +11,16 @@ import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
-import { onDocumentPermissionCreate } from './permissions';
+import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
 import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
-import { skipInMaintenance } from '@blockframes/firebase-utils';
-import { RuntimeOptions } from 'firebase-functions';
 import { getTwilioAccessToken } from './twilio';
+import { heavyConfig } from '@blockframes/firebase-utils';
 
-//--------------------------------
-//    Configuration             //
-//--------------------------------
-
-/**
- * Runtime options for heavy functions
- */
-export const heavyConfig: RuntimeOptions = {
-  timeoutSeconds: 300,
-  memory: '1GB',
-};
 
 //--------------------------------
 //    Users Management          //
@@ -94,14 +82,14 @@ export const privateVideo = functions.https.onCall(skipInMaintenance(logErrors(g
 //   Permissions  Management    //
 //--------------------------------
 
-/** Trigger: when a permission document is created. */
+/** Trigger: when a documentPermissions document is created. */
 export const onDocumentPermissionCreateEvent = onDocumentCreate(
   'permissions/{orgID}/documentPermissions/{docID}',
   onDocumentPermissionCreate
 );
 
-/** Trigger: when an user ask for a private media. */
-export const getMediaToken = functions.https.onCall(skipInMaintenance(logErrors(_getMediaToken)));
+/** Trigger: when a permission document is deleted. */
+export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',onPermissionDelete);
 
 //--------------------------------
 //    Invitations Management    //
@@ -213,6 +201,9 @@ export const onOrganizationDeleteEvent = onDocumentDelete('orgs/{orgID}', onOrga
 //--------------------------------
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
+
+/** Trigger: when an user ask for a private media. */
+export const getMediaToken = functions.https.onCall(skipInMaintenance(logErrors(_getMediaToken)));
 
 /**
  * This is a scheduled function which runs daily backup if complied with production configuration

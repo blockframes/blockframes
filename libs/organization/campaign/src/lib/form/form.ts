@@ -81,11 +81,11 @@ export class FundingForm extends FormEntity<FundingControls, Funding> {
 ////////////
 function createBudgetFormControl(budget: Partial<Budget> = {}) {
   return {
-    castCost: new FormControl(budget.castCost),
-    postProdCost: new FormControl(budget.postProdCost),
-    producerFees: new FormControl(budget.producerFees),
-    shootCost: new FormControl(budget.shootCost),
-    others: new FormControl(budget.others),
+    development: new FormControl(budget.development),
+    administration: new FormControl(budget.administration),
+    contingency: new FormControl(budget.contingency),
+    postProduction: new FormControl(budget.postProduction),
+    shooting: new FormControl(budget.shooting)
   }
 }
 

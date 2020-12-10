@@ -1,0 +1,27 @@
+<mat-form-field>
+  <mat-label>{{ schema.label }}</mat-label>
+  <mat-select (selectionChange)="change.emit($event)" [formControl]="form" [multiple]="schema.multiple" >
+    <!-- Array -->
+    <ng-container *ngIf="isArray else isMap">
+      <mat-option *ngFor="let option of schema.options" [value]="option">
+        <ng-template
+          [ngTemplateOutlet]="template || display"
+          [ngTemplateOutletContext]="{$implicit: option}"></ng-template>
+      </mat-option>
+    </ng-container>
+    <!-- Object -->
+    <ng-template #isMap>
+      <mat-option *ngFor="let option of schema.options | keyvalue" [value]="option.key">
+        <ng-template
+          [ngTemplateOutlet]="template || display"
+          [ngTemplateOutletContext]="{$implicit: option.value}"></ng-template>
+      </mat-option>
+    </ng-template>
+  </mat-select>
+  <mat-hint>{{ schema.hint }}</mat-hint>
+</mat-form-field>
+
+<!-- For dynamic content -->
+<ng-template #display let-option>
+  {{ option }}
+</ng-template>
