@@ -2,12 +2,14 @@
  * This is used to override JWPlayer watermark style.
  * We use it to be sure that the watermark is always centered
  * so it cannot be cropped out.
+ * We need to use ViewEncapsulation.None, that's why we don't use :host { }
  */
  event-video-viewer {
+  height: 100%;
   #puppet-player {
     height: 100%;
 
-    .loader {
+    section {
       display: flex;
       align-items: center;
       justify-content: center;
