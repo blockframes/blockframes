@@ -1,16 +1,15 @@
-// tslint:disable: no-console
-import 'tsconfig-paths/register';
 import * as faker from 'faker';
-import { readFileSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
 import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
-import { DbRecord } from '@blockframes/firebase-utils';
+import { CollectionReference, DbRecord, QueryDocumentSnapshot, QuerySnapshot, Queue, throwOnProduction } from '@blockframes/firebase-utils';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { FirestoreEmulator } from '../firestore';
+import { firebase } from '@env'
+import { runChunks } from '../firebase-utils';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -140,21 +139,57 @@ function getPathOrder(path: string): number {
   return 5;
 }
 
-// First argument
-const src = resolve(process.cwd(), process.argv[2] || 'tmp/backup-prod.jsonl');
-// Second argument
-const dest = resolve(process.cwd(), process.argv[3] || 'tmp/restore-ci.jsonl');
-const file = readFileSync(src, 'utf-8');
-const msg = 'Db anonymization time';
-console.time(msg);
-const db: DbRecord[] = file
-  .split('\n')
-  .filter((str) => !!str)
-  .map((str) => JSON.parse(str) as DbRecord);
-const output = db
-  .sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath))
-  .map((json) => anonymizeDocument(json))
-  .map((result) => JSON.stringify(result))
-  .join('\n');
-writeFileSync(dest, output, 'utf-8');
-console.timeEnd(msg);
+export async function runAnonymization(db: FirestoreEmulator) {
+  throwOnProduction();
+  const dbArray = await loadDb(db);
+  const orderedDbArray = dbArray.sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath))
+  await db.clearFirestoreData({ projectId: firebase.projectId });
+  const anonDb = orderedDbArray.map(anonymizeDocument)
+  await runChunks(anonDb, async ({content, docPath}) => {await db.doc(docPath).set(content)}, 1000)
+  console.log('Anonymization Done!')
+}
+
+export async function loadDb(db: FirebaseFirestore.Firestore) {
+  const output: DbRecord[] = [];
+  // Note: we use a Queue to store the collections to backup instead of doing a recursion,
+  // this will protect the stack. It will break when the size of keys to backup grows
+  // larger than our memory quota (memory is around 500mo => around 50GB of firestore data to backup)
+  // We'll have to store them in a collection at this point.
+  const processingQueue = new Queue();
+
+  // retrieve all the collections at the root.
+  const collections: CollectionReference[] = await db.listCollections()
+  collections.forEach(x => processingQueue.push(x.path));
+
+  while (!processingQueue.isEmpty()) {
+    // Note: we could speed up the code by processing multiple collections at once,
+    // we push many promises to a "worker queue" and await them when it reaches a certain size
+    // instead of using a while that blocks over every item.
+    const currentPath: string = processingQueue.pop();
+    const q: QuerySnapshot = await db.collection(currentPath).get();
+
+    if (q.size === 0) {
+      // Empty, move on
+      continue;
+    }
+
+    // Go through each document of the collection for backup
+    const promises = q.docs.map(async (doc: QueryDocumentSnapshot) => {
+      // Store the data
+      const docPath: string = doc.ref.path;
+      const content: any = doc.data();
+      const stored: DbRecord = { docPath, content };
+
+      output.push(stored);
+
+      // Adding the current path to the subcollections to backup
+      const subCollections = await doc.ref.listCollections();
+      subCollections.forEach(x => processingQueue.push(x.path));
+    });
+
+    // Wait for this backup to complete
+    await Promise.all(promises);
+  }
+  console.log('Firestore loaded');
+  return output;
+}

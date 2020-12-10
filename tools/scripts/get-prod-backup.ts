@@ -21,7 +21,7 @@ admin.initializeApp({
 const storage = admin.storage();
 const folder = join(process.cwd(), 'tmp');
 
-async function getProdBackup() {
+async function getProdJsonlBackup() {
   console.log('Current projectId: ', firebase.projectId);
   console.log('Current backup bucket name: ', backupBucket);
   try {
@@ -52,4 +52,4 @@ async function getProdBackup() {
   }
 }
 
-getProdBackup().then(() => process.exit(0));
+getProdJsonlBackup().then(() => process.exit(0));

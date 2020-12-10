@@ -13,10 +13,11 @@ import { generateFixtures } from './generate-fixtures';
 import { backup } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { importEmulatorFromBucket } from './emulator';
+import { anonymizeLatestProdDb, importEmulatorFromBucket, loadEmulator, uploadBackup } from './emulator';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
+const [arg1, arg2, arg3] = flags;
 
 async function runCommand() {
   const { db } = loadAdminServices();
@@ -29,11 +30,20 @@ async function runCommand() {
     case 'displayCredentials':
       await displayCredentials();
       break;
+    case 'loadEmulator':
+      await loadEmulator({ importFrom: arg1 });
+      break;
     case 'importEmulator':
-      await importEmulatorFromBucket(flags.pop());
+      await importEmulatorFromBucket(arg1);
+      break;
+    case 'anonProdDb':
+      await anonymizeLatestProdDb();
+      break;
+    case 'uploadToBucket':
+      await uploadBackup(arg1);
       break;
     case 'use':
-      await selectEnvironment(flags.pop());
+      await selectEnvironment(arg1);
       break;
     case 'prepareDb':
       await startMaintenance(db);
