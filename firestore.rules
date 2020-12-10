@@ -425,11 +425,11 @@ service cloud.firestore {
 
     match /cms/{app} {
       allow read: if true;
-      allow write: if isBlockframesAdmin(userId());
+      allow write: if isBlockframesAdmin(userId()) && notInMaintenance();
 
       match /{page}/{template} {
         allow read: if true;
-      	allow write: if isBlockframesAdmin(userId());
+        allow write: if isBlockframesAdmin(userId()) && notInMaintenance();
       }
     }
 
