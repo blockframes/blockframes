@@ -4,9 +4,6 @@
   overflow: auto;
 }
 
-h4 {
-  text-transform: uppercase;
-}
 
 $max-width: 1440px;
 
@@ -18,6 +15,10 @@ landing-header {
     flex-direction: column;
     align-self: center;
     max-width: $max-width;
+  }
+
+  h4 {
+    text-transform: uppercase;
   }
 
   p.mat-display-2 {
