@@ -4,7 +4,6 @@ import { ScreeningEvent } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state';
-import { Event } from '../../+state/event.model';
 
 @Component({
   selector: 'event-screening-item',
@@ -17,7 +16,7 @@ export class ScreeningItemComponent {
   public movie: Movie;
   public screening: ScreeningEvent;
   public invitation$: Observable<Invitation>;
-  private _event = new BehaviorSubject<Event>(null);
+  private _event = new BehaviorSubject<ScreeningEvent>(null);
   event$ = this._event.asObservable();
 
   @Input() set event(screening: ScreeningEvent) {
@@ -30,7 +29,7 @@ export class ScreeningItemComponent {
     );
   }
   get event() {
-    return this._event.getValue() as ScreeningEvent;
+    return this._event.getValue();
   }
 
   constructor(private invitationQuery: InvitationQuery) { }
