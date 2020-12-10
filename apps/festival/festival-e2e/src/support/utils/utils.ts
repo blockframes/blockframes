@@ -23,7 +23,7 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
 
   if (debugMovieId !== '') {
     cy.log('Check :', debugMovieId);
-    const path = 'c/o/dashboard/tunnel/movie/' + debugMovieId + 'summary';
+    const path = `http://localhost:4200/c/o/dashboard/tunnel/movie/${debugMovieId}/summary`;
     cy.visit(path);
     //window.location.href = path;
     cy.wait(TO.THREE_SEC);

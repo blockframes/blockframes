@@ -20,5 +20,5 @@ export enum TO {
   THREE_SEC = 3 * SEC,
   FIFTEEN_SEC = 15 * SEC,
   THIRTY_SEC = 30 * SEC,
-  FIFTY_MS = 0.5 * SEC,
+  HALF_SEC = 0.5 * SEC,
 }

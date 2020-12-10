@@ -217,7 +217,11 @@ const MovieFormSummary = [
     input: Movie.techSpec, debug: false },
 ];
 
+// Note: set debugMovieId to movie document ID to debug the tests.
+//  for normal runs, do not set a value for the movie ID.
+//  also use it.skip tests that are required to be run.
 const debugMovieId = '';
+
 /**
  * debugMovieTitle : Helper function to test a movie title for any step
  *    Within any test call it like this: debugMovieTitle(titleId, 'summary')
@@ -228,7 +232,7 @@ const debugMovieTitle = (id: string, loc: string) => {
   cy.log('Check movie:', id);
 
   //GoTo movie loc (summary, main ..)
-  const path = 'http://localhost:4200/c/o/dashboard/tunnel/movie/' + debugMovieId + loc;
+  const path = `http://localhost:4200/c/o/dashboard/tunnel/movie/${id}/${loc}`;
 
   cy.visit(path, {timeout: TO.VSLOW_UPDATE});
   cy.wait(TO.SLOW_OP);
@@ -244,7 +248,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Summary - Verification
   it('Fill all fields & navigate to Summary Page', () => {
-    cy.wait(TO.FIFTY_MS);
+    cy.wait(TO.HALF_SEC);
     cy.get('h1', {timeout: TO.VSLOW_UPDATE})
       .contains('Production Status');
 
