@@ -1,4 +1,4 @@
-﻿import {TestBed} from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 
 import { InvitationService } from './invitation.service';
 import { InvitationStore } from './invitation.store';
@@ -14,7 +14,7 @@ describe('Invitations Test Suite', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFireModule.initializeApp({projectId: 'test'}),
+        AngularFireModule.initializeApp({ projectId: 'test' }),
         AngularFirestoreModule
       ],
       providers: [
@@ -32,7 +32,10 @@ describe('Invitations Test Suite', () => {
     });
   });
 
-  afterEach(() => clearFirestoreData({projectId: 'test'}))
+  afterEach(() => clearFirestoreData({ projectId: 'test' }));
+
+  // To prevent "This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue."
+  afterAll(() => db.firestore.disableNetwork());
 
   it('Should check invitation service is created', () => {
     expect(service).toBeTruthy();
