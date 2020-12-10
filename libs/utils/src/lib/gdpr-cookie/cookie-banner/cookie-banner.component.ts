@@ -54,7 +54,8 @@ export class CookieBannerComponent implements OnInit {
   }
 
   confirmCookies() {
-    this.document.cookie = 'blockframes=';
+    // A max-age of 31536000 equals one year
+    this.document.cookie = 'blockframes=; path=/; max-age=31536000';
     this.hasAccepted = true;
     this.cdr.markForCheck();
   }

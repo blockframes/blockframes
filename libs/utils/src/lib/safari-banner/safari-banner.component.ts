@@ -26,7 +26,8 @@ export class SafariBannerComponent implements OnInit {
   }
 
   public userDismiss() {
-    this.document.cookie = 'archipel_safari=true';
+    // A max-age of 31536000 equals one year
+    this.document.cookie = 'archipel_safari=true; path=/; max-age=31536000';
     this.isHidden = true;
   }
 }
