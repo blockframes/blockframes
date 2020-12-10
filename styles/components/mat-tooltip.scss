@@ -1,0 +1,8 @@
+
+// TYPOGRAPHY
+@mixin mat-bf-tooltip-typography($config) {
+
+  .mat-tooltip {
+    line-height: 12px;
+  }
+}
