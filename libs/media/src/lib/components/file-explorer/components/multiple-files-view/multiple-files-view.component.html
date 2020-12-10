@@ -1,7 +1,7 @@
 <ng-container *ngIf="active$ | async | deepKey:getDeepPath(activeDirectory.storagePath) as data">
   <bf-table-filter [source]="data | toArray" [columns]="columns" [initialColumns]="initialColumns" (rowClick)="previewFile(getFileRef($event))" clickable>
     <ng-template colRef="ref" let-item="item">
-      <img [asset]="getFileRef(item) | fileTypeImage">
+      <mat-icon [svgIcon]="getFileRef(item) | fileTypeImage: 'icon'"></mat-icon>
     </ng-template>
     <ng-template colRef="main" let-item="item">
       <span (click)="previewFile(getFileRef(item))">

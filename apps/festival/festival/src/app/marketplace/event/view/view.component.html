@@ -21,14 +21,8 @@
       <section class="meeting" fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
         <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
           <h2>Organized by</h2>
-          <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-            <img [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="Organization Logo">
-            <div fxLayout="column" fxLayoutGap="4px">
-              <h6>{{ event.org | orgName }}</h6>
-              <ng-container *ngIf="event.organizedBy as user">
-                <span>{{ user | displayName }}{{ user.position ? ' | ' + user.position : '' }}</span>
-              </ng-container>
-            </div>
+          <div fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
+            <org-card fxFlex="400px" [org]="event.org"></org-card>
           </div>
           <ng-container *ngIf="!!event.meta.description">
             <h5>Description</h5>
