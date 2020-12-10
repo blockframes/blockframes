@@ -4,9 +4,13 @@
   <!-- Sales Pitch -->
   <section id="sales-pitch" *ngIf=" movie.promotional.salesPitch as salesPitch">
     <h2>Sales Pitch</h2>
-    <article fxLayout="column" fxLayoutGap="16px">
+    <article>
+      <h5>Description</h5>
       <p>{{ salesPitch.description }}</p>
-      <media-player *ngIf="salesPitch.jwPlayerId" [ref]="salesPitch.ref"></media-player>
+    </article>
+    <article *ngIf="salesPitch.jwPlayerId">
+      <h5>Video</h5>
+      <media-player [ref]="salesPitch.ref"></media-player>
     </article>
     <mat-divider></mat-divider>
   </section>
