@@ -342,7 +342,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
     //After filling all required fields, movie can be published.
     cy.get('table tr').each(($e) => {
-      let row = cy.wrap($e);
+      const row = cy.wrap($e);
       row.get('td:nth-child(1)').contains(Movie.mainInfo["international-title"]);
       row.get('td:nth-child(5)').contains('Accepted');
     });
