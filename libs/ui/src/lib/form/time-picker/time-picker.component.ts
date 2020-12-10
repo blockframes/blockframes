@@ -1,9 +1,10 @@
 import { Component, Input, Optional, Self, ElementRef, OnDestroy, EventEmitter, Output } from '@angular/core';
-import { FormGroup, FormControl, NgControl, ControlValueAccessor } from '@angular/forms';
+import { FormGroup, FormControl, NgControl, ControlValueAccessor, NgForm, FormGroupDirective } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 function createDate({ day, time }: { day: Date, time: string }): Date {
   const [h, m] = time.split(':');
@@ -38,6 +39,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   private _required = false;
   private _disabled = false;
   private previousTime: string; // Used if timepicker should use allDay
+  private parent: NgForm | FormGroupDirective;
 
   form = new FormGroup({
     day: new FormControl(new Date()),
@@ -47,7 +49,6 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   hours = hours;
   stateChanges = new Subject<void>();
   focused = false;
-  errorState = false;
   controlType = 'time-picker';
   id = `time-picker_${TimePickerComponent.nextId++}`;
   describedBy = '';
@@ -100,6 +101,17 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     this.stateChanges.next();
   }
 
+  // Error State
+  @Input() errorStateMatcher: ErrorStateMatcher;
+
+  get errorState() {
+    if (this.errorStateMatcher) {
+      const control = this.ngControl.control as FormControl ?? null;
+      return this.errorStateMatcher.isErrorState(control, this.parent);
+    }
+    return this.ngControl.touched && this.ngControl.invalid;
+  }
+
   @Input()
   set allDay(isAllDay: boolean) {
     this.isAllDay = coerceBooleanProperty(isAllDay);
@@ -130,9 +142,11 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   constructor(
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
+    @Optional() parentForm: NgForm,
+    @Optional() parentFormGroup: FormGroupDirective,
     @Optional() @Self() public ngControl: NgControl
   ) {
-
+    this.parent = parentForm || parentFormGroup;
     _focusMonitor.monitor(_elementRef, true).subscribe(origin => {
       if (this.focused && !origin) {
         this.onTouched();
