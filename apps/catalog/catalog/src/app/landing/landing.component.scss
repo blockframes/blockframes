@@ -1,7 +1,20 @@
+$max-width: 1440px;
+
 landing-header {
   background-image: url("/assets/images/banner_header.png");
+  div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    max-width: $max-width;
+  }
   a {
+    width: fit-content;
     margin-top: 80px;
+  }
+  h4 {
+    text-transform: uppercase;
   }
 }
 
@@ -11,6 +24,7 @@ landing-content {
   }
 
   article {
+    margin-top: 24px;
     mat-card {
       width: 49%;
       margin-bottom: 24px;
