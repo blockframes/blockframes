@@ -26,9 +26,14 @@
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <p class="mat-caption">{{ event.meta.description }}</p>
           <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
-          <ng-container *ngIf="(invitation$ | async)?.status === 'accepted' || event.isOwner">
-            <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+          <ng-container *ngIf="event.isOwner; else notOwner">
+            <h3>You are the owner of this event</h3>
+            <p>You can invite members and edit the event config in your dashboard</p>
+            <a mat-stroked-button color="primary" [routerLink]="editMeeting">Edit Event</a>
           </ng-container>
+          <ng-template #notOwner>
+            <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+          </ng-template>
         </ng-container>
 
         <ng-container *ngSwitchCase="'late'">
