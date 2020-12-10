@@ -73,6 +73,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
+          console.log("~M:>", movie, this.screeningFileRef);
         }
       } else if (event.type === 'meeting') {
         const uid = this.authQuery.userId;
