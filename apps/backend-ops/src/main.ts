@@ -13,6 +13,7 @@ import { generateFixtures } from './generate-fixtures';
 import { backup } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
+import { importEmulatorFromBucket } from './emulator';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -27,6 +28,9 @@ async function runCommand() {
       break;
     case 'displayCredentials':
       await displayCredentials();
+      break;
+    case 'importEmulator':
+      await importEmulatorFromBucket(flags.pop());
       break;
     case 'use':
       await selectEnvironment(flags.pop());

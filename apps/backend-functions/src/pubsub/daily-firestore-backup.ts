@@ -1,7 +1,6 @@
 import { db, functions, storage } from '../internals/firebase'
-import { exportFirestoreToBucket, getBackupBucket } from '@blockframes/firebase-utils';
+import { exportFirestoreToBucket, getBackupBucket, heavyConfig } from '@blockframes/firebase-utils';
 import { enableDailyFirestoreBackup } from '../environments/environment'
-import { heavyConfig } from '../main';
 import type { Bucket } from '@google-cloud/storage';
 
 async function dailyBackupHandler() {

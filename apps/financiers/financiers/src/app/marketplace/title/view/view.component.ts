@@ -43,16 +43,16 @@ export class MarketplaceMovieViewComponent implements OnInit {
     artisticRoute,
     {
       ...productionRoute,
-      label: 'Production Environment'
+      label: 'Production'
     },
     additionalRoute,
     {
       path: 'financing',
-      label: 'Financial Elements'
+      label: 'Financial'
     },
     {
       path: 'investment',
-      label: 'Investment Campaign'
+      label: 'Investment'
     }
   ];
 
@@ -76,7 +76,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private snackbar: MatSnackBar,
     private sendgrid: SendgridService,
     public router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     const orgQueryFn = (movieId: string, ref: CollectionReference) => ref

@@ -1,23 +1,24 @@
-<section fxLayout="column" fxLayoutGap="24px">
-  <ng-container *ngIf="activeDirectory.type === 'image' && !!this.activeForm">
-    <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
-      <h3 title>{{ activeDirectory.name }}</h3>
-    </drop-cropper>
-  </ng-container>
+<ng-container *ngIf="!!this.activeForm">
+  <section fxLayout="column" fxLayoutGap="24px">
+    <ng-container *ngIf="activeDirectory.type === 'image'">
+      <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
+        <h3 title>{{ activeDirectory.name }}</h3>
+      </drop-cropper>
+    </ng-container>
 
-  <ng-container *ngIf="activeDirectory.type === 'file' && !!this.activeForm">
-    <file-upload
-      [form]="getSingleMediaForm()"
-      [storagePath]="activeDirectory.storagePath"
-      [allowedFileType]="activeDirectory.acceptedFileType"
-      [filePrivacy]="activeDirectory.privacy">
-      <h3 title>Upload File</h3>
-    </file-upload>
-  </ng-container>
-  <div fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" (click)="update()">
-      <span>Update</span>
-      <mat-icon svgIcon="send"></mat-icon>
-    </button>
-  </div>
-</section>
+    <ng-container *ngIf="activeDirectory.type === 'file'">
+      <file-upload
+        [form]="getSingleMediaForm()"
+        [storagePath]="activeDirectory.storagePath"
+        [allowedFileType]="activeDirectory.acceptedFileType"
+        [filePrivacy]="activeDirectory.privacy">
+        <h3 title>Upload {{ activeDirectory.name }}</h3>
+      </file-upload>
+    </ng-container>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <button mat-stroked-button color="primary" (click)="update()" [disabled]="getSingleMediaForm().invalid">
+        <span>Update</span>
+      </button>
+    </div>
+  </section>
+</ng-container>

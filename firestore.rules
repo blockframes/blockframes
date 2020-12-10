@@ -199,7 +199,6 @@ service cloud.firestore {
     /// RULES ///
 
     match /orgs/{orgId} {
-      // @TODO #2650 #2692 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
       allow read: if isSignedIn()
         && notInMaintenance();
     	allow create: if isSignedIn()
@@ -208,8 +207,7 @@ service cloud.firestore {
         && notInMaintenance();
       allow update: if (isAdminAllowedToUpdateOrg() || isMemberAllowedToUpdateOrg())
         && notInMaintenance();
-      allow delete: if isSuperAdmin(existingData().id)
-        && notInMaintenance();
+      allow delete: if false; // Allowed only to blockframesAdmin via CRM
 
       match /carts/{cartId} {
         allow read: if isOrgMember(orgId) && notInMaintenance();
@@ -217,7 +215,6 @@ service cloud.firestore {
         allow update: if isOrgMember(orgId) && notInMaintenance();
         allow delete: if isOrgAdmin(userOrgId()) && notInMaintenance();
       }
-
 
     }
 
@@ -295,9 +292,7 @@ service cloud.firestore {
         && canCreateNewPermissions(userOrgId(), movieId)
         && notInMaintenance();
       allow update: if isAllowedToUpdateMovie() && notInMaintenance();
-      allow delete: if orgCan('canDelete', userOrgId(), existingData().id)
-      	&& isOrgAdmin(userOrgId())
-        && notInMaintenance();
+      allow delete: if false; // @TODO (#4301) Allowed only to blockframesAdmin via CRM for now
 
       match /distributionRights/{rightId} {
         // @TODO (#2606 #2049) We allow all distributionRights reads as we need it to search avails
@@ -377,7 +372,17 @@ service cloud.firestore {
         && notInMaintenance();
       allow update: if userHasValidOrg()
         && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerId == userId() || existingData().ownerId == userOrgId() )
+        && ( existingData().ownerId == userId()
+          || existingData().ownerId == userOrgId()
+          || (
+            (
+              isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting')
+              || isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'ended')
+              || isRemovingField(['meta', 'attendees', userId()])
+            )
+            && isOnlyChangingAttendeeStatus()
+          )
+        )
         && notInMaintenance();
       allow delete: if userHasValidOrg()
         && ( existingData().ownerId == userId() // Current user is event owner
@@ -386,6 +391,22 @@ service cloud.firestore {
         && notInMaintenance();
 		}
 
+    /// FUNCTIONS ///
+    function isOnlyChangingAttendeeStatus() {
+      return isNotUpdatingId('id', existingData().id)
+        && isNotUpdatingField(['allDay'])
+        && isNotUpdatingField(['end'])
+        && isNotUpdatingField(['isPrivate'])
+        && isNotUpdatingField(['ownerId'])
+        && isNotUpdatingField(['start'])
+        // && isNotUpdatingField(['title'])
+        // && isNotUpdatingField(['type'])
+        // && isNotUpdatingField(['meta', 'organizerId'])
+        // && isNotUpdatingField(['meta', 'titleId'])
+        // && isNotUpdatingField(['meta', 'controls'])
+        // && isNotUpdatingField(['meta', 'files']);
+    }
+
     ////////////////////////////////
     // CAMPAIGN RULES             //
     ////////////////////////////////
@@ -393,7 +414,9 @@ service cloud.firestore {
     // note: campaign is using the movieId as id
     match /campaigns/{movieId} {
       allow read: if isSignedIn() && notInMaintenance();
-      allow write: if isOrgMember(incomingData().orgId) && orgCan('update', incomingData().orgId, movieId) && notInMaintenance();
+      allow write: if isOrgMember(incomingData().orgId) 
+                  && orgCan('canUpdate', incomingData().orgId, movieId) 
+                  && notInMaintenance();
     }
 
     ///////////////////////////
@@ -404,7 +427,7 @@ service cloud.firestore {
     match /cms/{app} {
       allow read: if true;
       allow write: if true;
-      
+
       match /{page}/{template} {
         allow read: if true;
       	allow write: if true;
@@ -507,9 +530,25 @@ service cloud.firestore {
 
     // We check that the field is not sent or if field sent is equal to actual
     function isNotUpdatingField(fieldArray) {
+      let size = fieldArray.size();
+			return ( size == 3 &&  isNotUpdatingFieldDepth3(fieldArray))
+        || ( size == 2 &&  isNotUpdatingFieldDepth2(fieldArray))
+        || ( size == 1 &&  isNotUpdatingFieldDepth1(fieldArray));
+    }
+
+    function isNotUpdatingFieldDepth3(fieldArray) {
 			return ( !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) ||  incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == existingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] )
         || ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
         || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+    }
+
+    function isNotUpdatingFieldDepth2(fieldArray) {
+			return ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
+        || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+    }
+
+    function isNotUpdatingFieldDepth1(fieldArray) {
+			return ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
     }
 
     // Checks that the user is not trying to change document id
@@ -541,6 +580,13 @@ service cloud.firestore {
       return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
         || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
         || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
+    }
+
+    // The field is removed
+    function isRemovingField(fieldArray) {
+      return ( existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) )
+        || ( existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) )
+        || ( existingData().keys().hasAll([fieldArray[0]]) && !incomingData().keys().hasAll([fieldArray[0]]) );
     }
 
     function notInMaintenance() {

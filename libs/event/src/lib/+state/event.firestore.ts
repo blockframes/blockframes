@@ -7,12 +7,13 @@ type Timestamp = firestore.Timestamp;
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
 export type EventMeta = Meeting | Screening | {};
 
+export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
+
 export interface Meeting {
   organizerId: string;
   description: string;
+  attendees: Record<string, AttendeeStatus>;
   files: string[];
-
-  // TODO removed real-time shared state from firestore issue#3748
   selectedFile: string;
   controls: Record<string, MeetingMediaControl>
 }

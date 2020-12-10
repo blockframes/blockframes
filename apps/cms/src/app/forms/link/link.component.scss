@@ -1,0 +1,8 @@
+:host {
+  display: flex;
+}
+
+// Gap
+:host > *:not(:first-child) {
+  margin-left: 16px;
+}

@@ -8,7 +8,7 @@ import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 type Timestamp = firestore.Timestamp;
 
-interface Denomination {
+export interface Denomination {
   full: string;
   public?: string;
 }

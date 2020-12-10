@@ -6,20 +6,20 @@ import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
-  serie: 'producerFees',
-  label: 'Producers Fees',
+  serie: 'development',
+  label: 'Development',
 }, {
-  serie: 'castCost',
-  label: 'Casting Cost',
+  serie: 'shooting',
+  label: 'Shooting',
 }, {
-  serie: 'shootCost',
-  label: 'Shooting Cost',
+  serie: 'postProduction',
+  label: 'Post production',
 }, {
-  serie: 'postProdCost',
-  label: 'Post-Production Cost',
+  serie: 'administration',
+  label: 'Administration',
 }, {
-  serie: 'others',
-  label: 'Other Costs',
+  serie: 'contingency',
+  label: 'Contingency',
 }];
 
 @Component({
@@ -61,7 +61,7 @@ export class ApexBudgetPipe implements PipeTransform {
     return {
       series: data.map(b => budget[b.serie]),
       labels: data.map(b => b.label),
-      colors: data.map((_, i) =>`hsl(235, ${100 * ((i + 1) / data.length)}%, 50%)`),
+      colors: data.map((_, i) => `hsl(235, ${100 * ((i + 1) / data.length)}%, 50%)`),
       data
     };
   }
@@ -74,7 +74,7 @@ export class ApexFundingPipe implements PipeTransform {
     return {
       series: fundings.map(f => f.amount),
       labels: fundings.map(f => f.name),
-      colors: fundings.map((_, i) =>`hsl(235, ${100 * ((i + 1) / fundings.length)}%, 50%)`),
+      colors: fundings.map((_, i) => `hsl(235, ${100 * ((i + 1) / fundings.length)}%, 50%)`),
     };
   }
 }

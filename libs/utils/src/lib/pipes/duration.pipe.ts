@@ -5,29 +5,24 @@ import { NgModule } from '@angular/core';
   name: 'duration'
 })
 export class DurationPipe implements PipeTransform {
-  transform(value: number | string | { start: number | Date, end: number | Date },
-    base: 'ms' | 's' | 'min' = 'min', placeholder = 'TBC') {
-    if (!value) {
+  transform(value: number, placeholder = 'TBC') {
+    if (
+      !value ||
+      typeof value !== 'number' ||
+      Number.isNaN(value) ||
+      !Number.isFinite(value) ||
+      value < 0
+    ) {
       return placeholder;
     }
-    if (typeof value === 'string') {
-      return value;
-    }
-    if (typeof value === 'number') {
-      switch (base) {
-        // Our base for converting are milliseconds
-        case 'ms':
-          return this.convertToTimeString(value);
-        case 's':
-          return this.convertToTimeString(value * 1000);
-        case 'min':
-          return this.convertToTimeString(value * 60000);
-      }
-    }
+
+    return this.convertToTimeString(value);
   }
 
   convertToTimeString(time: number) {
+
     let day: number, hour: number, minute: number, second: number;
+
     second = Math.floor(time / 1000);
     minute = Math.floor(second / 60);
     second = second % 60;
@@ -36,9 +31,13 @@ export class DurationPipe implements PipeTransform {
     day = Math.floor(hour / 24);
     hour = hour % 24;
     hour += day * 24;
-    // If the previous number is 0, do not show next smaller one
-    return (hour > 0 ? hour + 'h ' : '') + (minute > 0 && hour > 0 ? minute + 'min' : '') + 
-      (second > 0 && minute > 0 ? second + 's' : '');
+
+    const dayStr = day > 0 ? `${day}d` : '';
+    const hourStr = hour > 0 ? `${hour}h` : '';
+    const minuteStr = minute > 0 ? `${minute}min` : '';
+    const secondStr = second > 0 ? `${second}s` : '';
+
+    return `${dayStr}${hourStr}${minuteStr}${secondStr}`;
   }
 }
 

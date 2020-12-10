@@ -1,0 +1,13 @@
+article {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+form-autocomplete, form-chips-autocomplete {
+  width: 100%;
+}
+
+mat-radio-button {
+  margin-right: 16px;
+}

@@ -31,6 +31,7 @@
         <ng-template colRef="campaign.received" let-received let-movie="item">
           {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
         </ng-template>
+        <ng-template colRef="campaignStarted" let-date>{{ date | date: 'short' }}</ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>

@@ -20,6 +20,8 @@ import { SingleFileViewModule } from './components/single-file-view/single-file-
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [FileExplorerComponent],
@@ -43,6 +45,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
+    MatBadgeModule
   ],
   exports: [FileExplorerComponent]
 })

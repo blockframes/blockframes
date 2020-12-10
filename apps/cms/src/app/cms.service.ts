@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CmsTemplate } from './template/template.model';
-import { CmsApp } from './app/app.model';
+import { CmsTemplate, CmsApp } from '@blockframes/admin/cms';
 
 export interface CmsParams {
   app?: string;

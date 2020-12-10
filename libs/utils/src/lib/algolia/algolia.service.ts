@@ -3,7 +3,7 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { algolia } from '@env';
 import algoliasearch from 'algoliasearch';
 import { App, getCurrentApp } from "../apps";
-import { algoliaIndex, AlgoliaObject, AlgoliaQueries } from "./algolia.interfaces";
+import { algoliaIndex, AlgoliaObject, AlgoliaQueries, AlgoliaRecord } from "./algolia.interfaces";
 import { parseFilters, parseFacets } from './helper.utils';
 
 @Injectable({ providedIn: 'root' })
@@ -29,7 +29,7 @@ export class AlgoliaService {
 
     }
 
-    query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]): Promise<AlgoliaObject[K]> {
+    query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]): Promise<AlgoliaRecord<AlgoliaObject[K]>> {
         return this.getIndex(name).search({
             query: config.text ?? '',
             hitsPerPage: config.limitResultsTo,

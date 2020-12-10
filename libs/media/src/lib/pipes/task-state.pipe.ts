@@ -24,7 +24,7 @@ export class TaskStatePipe implements PipeTransform {
         }
       }
       const error = () => {
-        subscriber.next('canceled');
+        subscriber.next('error');
         subscriber.complete();
       }
       task.task.on('state_changed', progress, error);

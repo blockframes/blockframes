@@ -17,7 +17,7 @@ export function createAlgoliaUserForm(validators?: Validator) {
 
 export function parseFilters(filters: MovieIndexFilters, operator: ' AND ' | ' OR ' = ' OR ',
     prefix?: string): string {
-    if (filters) return '';
+    if (!filters) return '';
     const filter: string[] = []
     for (const [key, value] of Object.entries(filters)) {
         const path = [prefix, key].filter(v => !!v).join('.');

@@ -2,21 +2,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 
 // Blockframes
-import { MovieService, Movie } from '@blockframes/movie/+state';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
-
-// RxJs
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { AlgoliaMovie, AlgoliaOrganization, AlgoliaRecord, AlgoliaService } from '@blockframes/utils/algolia';
 
 // env
-import { centralOrgID } from '@env';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { QueryFn } from '@angular/fire/firestore';
 
 interface CarouselSection {
   title: string;
-  movies$: Observable<Movie[]>;
+  movies: Promise<AlgoliaRecord<AlgoliaMovie>>;
   queryParams?: Record<string, string>;
   size: 'banner' | 'poster'
 }
@@ -32,49 +25,51 @@ export class HomeComponent implements OnInit {
   @HostBinding('test-id="content"') testId
 
   public sections: CarouselSection[];
-  public orgs$: Observable<Organization[]>;
+  public orgs: Promise<AlgoliaRecord<AlgoliaOrganization>>;
 
-  public featuredOrg$: Observable<Organization>;
+  public benefits = [
+    {
+      title: 'Tag along with professional content financiers',
+      imgAsset: 'tag_along.svg',
+      description: 'Co-invest with professional funds and benefit from « pari passu » financial conditions, already optimized thanks to their expertise. '
+    },
+    {
+      title: 'Get access to prominent film companies and projects',
+      imgAsset: 'topfilms.svg',
+      description: 'Find the hottest projects selected by a pool of industry veterans and benefit from their knowledge of the industry.'
+    },
+    {
+      title: 'Learn about investing in the content industry',
+      imgAsset: 'knowledge.svg',
+      description: 'No experience needed. \n Discover why content is a profitable investment.',
+      link: {
+        href: 'assets/docs/film-industry.pdf',
+        text: 'Download our investment guide.'
+      }
+    },
+    {
+      title: 'Enjoy exclusive privileges',
+      imgAsset: 'exclusive_priviledges.svg',
+      description: 'Get perks and live the full experience \n of the content industry.'
+    }
+  ];
+
 
   constructor(
-    private movieService: MovieService,
-    private organizationService: OrganizationService,
+    private algoliaService: AlgoliaService,
     private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-
-    const queryFn: QueryFn = ref => ref.where('storeConfig.appAccess.financiers', '==', true).where('storeConfig.status', '==', 'accepted');
     this.sections = [
       {
-        title: 'New projects',
-        movies$: this.movieService.valueChanges(ref => queryFn(ref).orderBy('_meta.createdAt', 'desc')),
-        size: 'banner'
-      },
-      {
-        title: 'Recommanded for you',
-        movies$: this.movieService.valueChanges(ref => queryFn(ref)),
+        title: 'New on Media Financiers',
+        movies: this.algoliaService.query('movie', { activePage: 0, limitResultsTo: 50, facets: { storeConfig: 'accepted' } }),
         size: 'poster'
-      },
-      {
-        title: 'In development',
-        movies$: this.movieService.valueChanges(ref => queryFn(ref).where('productionStatus', '==', 'development')),
-        queryParams: { productionStatus: 'development' },
-        size: 'banner'
       }
+      // CMS will add more
     ];
-/* TODO 3498 */
-  /*   this.orgs$ = this.organizationService
-      .valueChanges(ref => ref
-        .where('appAccess.financiers.dashboard', '==', true)
-        .where('status', '==', 'accepted'))
-      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
-
-    this.featuredOrg$ = this.orgs$.pipe(
-      map(orgs => orgs.filter(org => org.movieIds.length > 3)),
-      map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
-    ); */
-
+    this.orgs = this.algoliaService.query('org', { activePage: 0, limitResultsTo: 50, facets: { isAccepted: true, hasAcceptedMovies: true } })
   }
 }

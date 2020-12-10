@@ -16,27 +16,6 @@ _remove this section once everything is checked_
 - [ ] Data can be display like in the UI (see notion).
 - [ ] A link to this issue in the zeplin object
 
-## Implement Component
-- [ ] Create story with storybook
-- [ ] Connect component to Zeplin with zeplin-connect
-```
-update the components.json in blockframes/.zeplin/
-{
-    "path": "libs/ui/src/lib/slider/slider.component.ts",
-    "zeplinNames": [
-        "component/slider/archipel_content/movie-slider"
-    ],
-     "storybook": {
-                "kind": "Movie Slider",
-                "storybook": [
-                    "Movie Slider"
-                ]
-            }
-}
-path leads to the component.ts file and zeplinNames are the matching names from this component in zeplin. 
-Can be multiple names if there are different states of this component.
-```
-
 ## Description
 
 - name: ...

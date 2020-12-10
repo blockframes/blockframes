@@ -5,78 +5,57 @@
   flex-direction: column;
 }
 
-.detail {
-  margin: 24px 0px;
-}
-
-.upcoming-events-banner {
-  background-image: url("/assets/images/banner_empty.png");
+.banner {
   background-size: cover;
-  padding: 40px 0px;
-  margin-bottom: 80px;
-}
+  background-position: center;
 
-.movie-header-slider {
-  margin-top: 16px;
-}
-
-bf-slider {
-  margin-bottom: 80px;
-}
-
-/* We need some extra padding because of the intercom button. It covers the slide arrows */
-section {
-  padding-bottom: 100px;
-}
-
-bf-carousel {
-  margin-bottom: 80px;
-}
-
-.logo {
-  height: 48px;
-}
-
-header {
-  padding: 100px 96px;
-  margin-bottom: 80px;
-  background-image: url("/assets/images/ACMbannerlanding.png");
-  background-size: cover;
-  text-align: center;
-  border: none;
-
-  h1.mat-display-2 {
-    margin-bottom: 30px;
-  }
-
-  p {
-    margin-bottom: 30px;
-    margin-left: 12px;
-    a {
-      border-bottom: 2px solid;
-      font-weight: bolder;
-    }
-  }
-  h4 {
-    text-transform: uppercase;
+  h3 {
     margin-bottom: 0;
   }
-}
-
-@include layout-bp(xs) {
-  header {
-    padding: 50px 0;
+  p {
+    width: 50%;
+  }
+  .links {
+    margin-top: 24px;
   }
 }
 
-@include layout-bp(sm) {
-  header {
-    padding: 20px;
+.hero {
+  padding: 40px;
+  background-image: url("/assets/images/banner_empty.png");
+  background-size: cover;
+
+  h1 {
+    margin-bottom: 0;
+  }
+  .links {
+    margin-top: 24px;
   }
 }
 
-@include layout-bp(md) {
+.titles, .orgs, .org-titles {
+  padding-bottom: 24px;
   header {
-    padding: 20px;
+    padding: 24px;
+  }
+}
+
+.org-titles {
+  background-color: var(--background-card);
+}
+
+movie-slide {
+  height: 700px;
+}
+
+@include layout-bp(gt-sm) {
+  .banner, movie-slide {
+    padding: 80px;
+  }
+
+}
+@include layout-bp(lt-md) {
+  .banner, movie-slide {
+    padding: 24px;
   }
 }

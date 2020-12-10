@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { SliderComponent } from './slider.component';
@@ -18,6 +19,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 @NgModule({
    imports: [
       CommonModule,
+      FlexLayoutModule,
       ImageReferenceModule,
       MatButtonModule,
       MatIconModule,

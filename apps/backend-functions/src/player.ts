@@ -110,7 +110,7 @@ export const getPrivateVideoUrl = async (
           throw new Error(`Event ${data.eventId} is a screening but doesn't have a 'titleId' !`);
         }
 
-        if (event.isPrivate && !await isUserInvitedToEvent(uid, event.meta.titleId)) {
+        if (event.isPrivate && !await isUserInvitedToEvent(uid, data.eventId)) {
           return {
             error: 'NO_INVITATION',
             result: `You have not been invited to see this movie`

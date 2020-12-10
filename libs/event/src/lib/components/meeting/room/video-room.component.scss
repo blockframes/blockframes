@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  border: solid 1px var(--foreground-divider);
+  border-radius: 4px;
+  background-color: var(--background-card);
+  overflow: hidden;
+}
+
+section {
+  flex: 1;
+}
+footer {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+
+  button {
+    margin: 0 8px;
+  }
+}

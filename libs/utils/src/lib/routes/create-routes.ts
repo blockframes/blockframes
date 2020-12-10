@@ -18,17 +18,14 @@ interface RouteOptions {
 
 export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
   // Used for internal app
-  landing = landing || { path: '', redirectTo: 'c', pathMatch: 'full' };
+  landing = landing || { path: '', redirectTo: 'auth', pathMatch: 'full' };
+  landing.canActivate = landing.canActivate
+    ? [...landing.canActivate, UserRedirectionGuard]
+    : [UserRedirectionGuard];
 
   // We need to put the spread operator in a local variable to make build works on prod
   const children = [
     ...appsRoutes,
-    landing = {
-      ...landing,
-      canActivate: landing.canActivate
-        ? [...landing.canActivate, UserRedirectionGuard]
-        : [UserRedirectionGuard]
-    },
     {
       path: 'organization',
       loadChildren: () => import('@blockframes/organization/organization.module').then(m => m.OrganizationModule)
@@ -87,6 +84,61 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
       }
     ]
   }]
+}
+
+
+// Used for CMS & CMR
+// Strip out the notifications / invitations
+export function createAdminRoutes({ appsRoutes, appName }: RouteOptions) {
+  return [
+    {
+      path: 'maintenance',
+      canActivate: [MaintenanceGuard],
+      loadChildren: () => import('@blockframes/ui/maintenance/maintenance.module').then(m => m.MaintenanceModule)
+    },
+    {
+    path: '',
+    canActivate: [MaintenanceGuard],
+    data: { app: appName },
+    children: [
+      { path: '', redirectTo: 'auth', pathMatch: 'full' },
+      {
+        path: 'auth',
+        loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
+      },
+      {
+        path: 'c',
+        canActivate: [AuthGuard],
+        canDeactivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'o',
+            pathMatch: 'full'
+          },
+          {
+            // The redirection route when user has no organization
+            path: 'organization',
+            loadChildren: () => import('@blockframes/organization/no-organization.module').then(m => m.NoOrganizationModule)
+          },
+          {
+            path: 'o',
+            canActivate: [PermissionsGuard, OrganizationGuard],
+            canDeactivate: [PermissionsGuard, OrganizationGuard],
+            children: appsRoutes
+          }
+        ]
+      },
+      {
+        path: 'not-found',
+        loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
+      },
+      {
+        path: '**',
+        loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
+      }
+    ]
+  }];
 }
 
 

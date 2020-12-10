@@ -1,4 +1,4 @@
-<h1>Add File</h1>
+<h2>Add File</h2>
 <mat-divider></mat-divider>
 <form [formGroup]="data.form" fxLayout="column" fxLayoutGap="24px">
 
@@ -11,7 +11,7 @@
 
   <ng-container *ngIf="!!hostedMediaWithMetadataForm">
     <mat-form-field appearance="outline">
-      <mat-label>Note title</mat-label>
+      <mat-label>File title</mat-label>
       <input matInput formControlName="title">
     </mat-form-field>
   </ng-container>
@@ -36,10 +36,9 @@
     <h3 title>Upload File</h3>
   </file-upload>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
+    <button mat-stroked-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
       <span>Add file</span>
-      <mat-icon svgIcon="send"></mat-icon>
     </button>
-    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-button (click)="cancel()" color="primary">Cancel</button>
   </section>
 </form>

@@ -2,7 +2,7 @@ import { RouteDescription } from "@blockframes/utils/common-interfaces";
 
 export const productionRoute: RouteDescription = {
   path: 'production',
-  label: 'Production Information',
+  label: 'Production',
   requireKeys: [
     'stakeholders.productionCompany',
     'stakeholders.coProductionCompany',

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MultipleFilesViewComponent } from './multiple-files-view.component';
 
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [MultipleFilesViewComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     ImageReferenceModule,
     TableFilterModule,
     ToArrayPipeModule,

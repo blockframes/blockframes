@@ -13,6 +13,7 @@ mat-sidenav {
 
 mat-sidenav-content {
   flex: 1;
+  overflow: auto;
   mat-toolbar {
     justify-content: space-between;
   }
@@ -20,10 +21,18 @@ mat-sidenav-content {
   mat-accordion {
     display: block;
     margin: 24px;
+
+    mat-expansion-panel-header panel-title span {
+      margin-left: 8px;
+    }
   }
 
   .form {
     padding: 0 16px;
+  }
+  footer {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 

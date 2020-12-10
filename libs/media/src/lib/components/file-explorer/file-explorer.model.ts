@@ -7,6 +7,8 @@ import { isMediaForm } from "@blockframes/media/+state/media.model";
 import { MovieForm, MovieNotesForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
 import { AllowedFileType } from "@blockframes/utils/utils";
+import { Movie } from "@blockframes/movie/+state";
+import { OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
 
 type DirectoryType = 'directory' | 'file' | 'image';
 
@@ -38,6 +40,7 @@ interface FileDirectoryBase extends DirectoryBase {
    */
   storagePath: string;
   privacy: Privacy;
+  hasFile: boolean | number;
 }
 
 export interface SubDirectoryImage extends FileDirectoryBase {
@@ -83,9 +86,9 @@ export function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMedia
   return !!(form as HostedMediaWithMetadataForm).get('title');
 }
 
-export function createOrgFileStructure(orgId: string, orgName: string): Directory {
+export function createOrgFileStructure(org: OrganizationDocumentWithDates): Directory {
   return {
-    name: orgName,
+    name: 'Company Files',
     type: 'directory',
     path: [0],
     directories: [
@@ -96,9 +99,10 @@ export function createOrgFileStructure(orgId: string, orgName: string): Director
         multiple: true,
         docNameField: 'title',
         fileRefField: 'ref',
-        storagePath: `orgs/${orgId}/documents.notes`,
+        storagePath: `orgs/${org.id}/documents.notes`,
         privacy: 'protected',
-        path: [0,0]
+        path: [0,0],
+        hasFile: org.documents?.notes.length
       },
       {
         name: 'Logo',
@@ -107,22 +111,23 @@ export function createOrgFileStructure(orgId: string, orgName: string): Director
         multiple: false,
         docNameField: 'logo',
         fileRefField: 'logo',
-        storagePath: `orgs/${orgId}/logo`,
+        storagePath: `orgs/${org.id}/logo`,
         privacy: 'public',
-        path: [0,1]
+        path: [0,1],
+        hasFile: !!org.logo
       }
     ]
   };
 }
 
-export function createMovieFileStructure(titleId: string, titleName: string, index: number): Directory {
+export function createMovieFileStructure(title: Movie, index: number): Directory {
   return {
-    name: titleName,
+    name: title.title.international,
     type: 'directory',
     path: [index],
     directories: [
       {
-        name: 'Main information',
+        name: 'Poster & Banner',
         type: 'directory',
         path: [index, 0],
         directories: [
@@ -133,9 +138,10 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             multiple: false,
             docNameField: 'poster',
             fileRefField: 'poster',
-            storagePath: `movies/${titleId}/poster`,
+            storagePath: `movies/${title.id}/poster`,
             privacy: 'public',
             path: [index, 0, 0],
+            hasFile: !!title.poster
           },
           {
             name: 'Banner',
@@ -144,9 +150,10 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             multiple: false,
             docNameField: 'banner',
             fileRefField: 'banner',
-            storagePath: `movies/${titleId}/banner`,
+            storagePath: `movies/${title.id}/banner`,
             privacy: 'public',
             path: [index, 0, 1],
+            hasFile: !!title.banner
           },
         ]
       },
@@ -162,9 +169,10 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             multiple: false,
             docNameField: 'presentation_deck',
             fileRefField: 'presentation_deck',
-            storagePath: `movies/${titleId}/promotional.presentation_deck`,
+            storagePath: `movies/${title.id}/promotional.presentation_deck`,
             privacy: 'public',
             path: [index, 1, 0],
+            hasFile: !!title.promotional.presentation_deck
           },
           {
             name: 'Scenario',
@@ -173,9 +181,10 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             multiple: false,
             docNameField: 'scenario',
             fileRefField: 'scenario',
-            storagePath: `movies/${titleId}/promotional.scenario`,
+            storagePath: `movies/${title.id}/promotional.scenario`,
             privacy: 'public',
             path: [index, 1, 1],
+            hasFile: !!title.promotional.scenario
           },
           {
             name: 'Moodboard / Artistic Deck',
@@ -184,20 +193,22 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             multiple: false,
             docNameField: 'file',
             fileRefField: 'file',
-            storagePath: `movies/${titleId}/promotional.moodboard`,
+            storagePath: `movies/${title.id}/promotional.moodboard`,
             privacy: 'public',
             path: [index, 1, 2],
+            hasFile: !!title.promotional.moodboard
           },
           {
-            name: 'Still Photo',
+            name: 'Images',
             type: 'image',
             multiple: true,
             docNameField: '',
             fileRefField: '',
             ratio: 'still',
-            storagePath: `movies/${titleId}/promotional.still_photo`,
+            storagePath: `movies/${title.id}/promotional.still_photo`,
             privacy: 'public',
             path: [index, 1, 3],
+            hasFile: title.promotional.still_photo.length
           },
           {
             name: 'Screener',
@@ -206,9 +217,10 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             acceptedFileType: 'video',
             docNameField: 'ref',
             fileRefField: 'ref',
-            storagePath: `movies/${titleId}/promotional.videos.screener`,
+            storagePath: `movies/${title.id}/promotional.videos.screener`,
             privacy: 'protected',
-            path: [index, 1, 4]
+            path: [index, 1, 4],
+            hasFile: !!title.promotional.videos?.screener?.ref
           },
           {
             name: 'Other Videos',
@@ -217,9 +229,10 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
             multiple: true,
             docNameField: 'ref',
             fileRefField: 'ref',
-            storagePath: `movies/${titleId}/promotional.videos.otherVideos`,
+            storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
             privacy: 'protected',
-            path: [index, 1, 5]
+            path: [index, 1, 5],
+            hasFile: title.promotional.videos?.otherVideos?.length
           }
         ]
       },
@@ -230,9 +243,10 @@ export function createMovieFileStructure(titleId: string, titleName: string, ind
         multiple: true,
         docNameField: 'ref',
         fileRefField: 'ref',
-        storagePath: `movies/${titleId}/promotional.notes`,
+        storagePath: `movies/${title.id}/promotional.notes`,
         privacy: 'protected',
         path: [index, 2],
+        hasFile: title.promotional.notes.length
       }
     ]
   };

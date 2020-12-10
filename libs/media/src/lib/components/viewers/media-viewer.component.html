@@ -1,27 +1,33 @@
 
-<ng-container *ngIf="!!event.meta.selectedFile; else noFile">
-  <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
-    <ng-container *ngSwitchCase="'image'">
-      <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
-    </ng-container>
-    <ng-container *ngSwitchCase="'pdf'">
-      <event-pdf-viewer [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></event-pdf-viewer>
-    </ng-container>
-    <ng-container *ngSwitchCase="'video'">
-      <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
-    </ng-container>
-    <ng-container *ngSwitchDefault>
-      <p>Sorry, we don't know how to display this file.</p>
-      <p>Currently supported file are: pdf, images, and videos</p>
+<section fxLayout="column" fxLayoutAlign="space-between" [ngClass]="{ owner: event.isOwner }">
+  <ng-container *ngIf="!!event.meta.selectedFile">
+    <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
+      <ng-container *ngSwitchCase="'image'">
+        <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
+      </ng-container>
+      <ng-container *ngSwitchCase="'pdf'">
+        <event-pdf-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></event-pdf-viewer>
+      </ng-container>
+      <ng-container *ngSwitchCase="'video'">
+        <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <article class="noFile">
+          <h3>Sorry</h3>
+          <img asset="no_titles.webp" alt="Flying saucer">
+          <p>We don't know how to display this file.</p>
+          <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
+        </article>
+      </ng-container>
     </ng-container>
   </ng-container>
-</ng-container>
-<ng-template #noFile>
-  <p>No File Selected:</p>
   <ng-container *ngIf="event.isOwner">
-    <p>you can select a file to display in the list below.</p>
+    <article fxLayout="column" fxLayoutAlign="center center">
+      <mat-divider></mat-divider>
+      <button mat-button (click)="stop()">
+        <mat-icon svgIcon="cross_circle"></mat-icon>
+        <span>Stop Sharing</span>
+      </button>
+    </article>
   </ng-container>
-  <ng-template #notOwner>
-    <p>when the meeting owner select a file to display it will appear here.</p>
-  </ng-template>
-</ng-template>
+</section>

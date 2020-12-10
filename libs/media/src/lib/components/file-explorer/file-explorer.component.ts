@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
 
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
@@ -12,6 +13,7 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 // Material
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -65,7 +67,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // create org's folders & files
-    const orgFileStructure = createOrgFileStructure(this.org.id, this.org.denomination.full)
+    const orgFileStructure = createOrgFileStructure(this.org);
     this.directories.push(orgFileStructure);
 
     // set the org folder as active
@@ -75,9 +77,10 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     this.movieService.getValue(fromOrg(this.org.id)).then(titlesRaw => {
       const currentApp: App = this.routerQuery.getData('app');
       const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
+      titles.sort((a, b) => sortMovieBy(a, b, 'Title'));
 
       titles.forEach((title, index) =>
-        this.directories.push(createMovieFileStructure(title.id, title.title.international, index + 1)) // we do `index + 1` because `[0]` is the org
+        this.directories.push(createMovieFileStructure(title, index + 1)) // we do `index + 1` because `[0]` is the org
       );
       this.cdr.markForCheck();
     });
@@ -180,7 +183,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
       });
     }
 
-    // on dialog close update teh corresponding document & upload the file if needed
+    // on dialog close update the corresponding document & upload the file if needed
     this.dialogSubscription = dialog.afterClosed().subscribe(async result => {
       if (!!result) {
         if (this.activeDirectory.type === 'directory') return;
@@ -194,6 +197,13 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
         } else {
           this.dialogSubscription.unsubscribe();
           throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
+        }
+        const mediaIndex = mediasToUpload.findIndex(media => !!media.blobOrFile);
+        if (mediaIndex > -1) {
+          // oldRef is not set if it's a new upload and therefore a new file is added
+          if (!mediasToUpload[mediaIndex].oldRef && typeof this.activeDirectory.hasFile === 'number') {
+            this.activeDirectory.hasFile++
+          }
         }
         this.mediaService.uploadMedias(mediasToUpload);
       }
