@@ -14,7 +14,7 @@ export const appUrl = {
   crm: 'https://blockframes-ci-crm.web.app',
 }
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
   authDomain: 'blockframes-ci.firebaseapp.com',
   databaseURL: 'https://blockframes-ci.firebaseio.com',
@@ -24,6 +24,10 @@ export const firebase = {
   appId: "1:973979650792:web:8b3ec4caab8dd5ef",
   measurementId: "G-GE7LPQ7MBX"
 };
+
+export function firebase(app = 'festival') {
+  return firebaseConfig
+}
 
 // Algolia
 // =======

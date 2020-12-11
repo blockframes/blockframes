@@ -14,7 +14,7 @@ export const appUrl = {
   financiers: 'https://blockframes-demo1-financiers.web.app',
 };
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: "AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM",
   authDomain: "blockframes-demo-1.firebaseapp.com",
   databaseURL: "https://blockframes-demo-1.firebaseio.com",
@@ -24,6 +24,10 @@ export const firebase = {
   appId: "1:11685432883:web:bedc809872148fcde49d46",
   measurementId: "G-ZQHCHN67GF"
 };
+
+export function firebase(app = 'festival') {
+  return firebaseConfig
+}
 
 // Algolia
 // =======
