@@ -20,9 +20,7 @@ const firebaseConfig = {
   databaseURL: "https://blockframes-max.firebaseio.com",
   projectId: "blockframes-max",
   storageBucket: "blockframes-max.appspot.com",
-  messagingSenderId: "268195483565",
-  appId: "1:268195483565:web:8caa91b304c743d0",
-  measurementId: "G-22EMF70SGN"
+  messagingSenderId: "268195483565"
 };
 
 export function firebase(app?: string) {
