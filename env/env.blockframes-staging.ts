@@ -37,12 +37,12 @@ const appConfigs = {
     measurementId: "G-K6EPHB6MQ5"
   },
   cms: {
-    appId: "1:1080507348015:web:9abd62a79dc41e710002da",
-    measurementId: "G-THGSYK1D7K"
+    appId: "1:176629403574:web:5fdf3cbcb8eb67803afb17",
+    measurementId: "G-QCXWY2XS8V"
   },
   crm: {
-    appId: "1:1080507348015:web:ede10e0ebf25604e0002da",
-    measurementId: "G-X8XFZQCL8Z"
+    appId: "1:176629403574:web:eacdbef9a019b1c33afb17",
+    measurementId: "G-WFBNNFQZZM"
   }
 }
 
