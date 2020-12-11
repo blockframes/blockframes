@@ -2,11 +2,11 @@
   <ng-container tunnel-form>
     <h3>Shooting Information</h3>
 
-    <section id="shooting-dates" fxLayout="column">
+    <section id="shooting-dates">
       <h6 class="mat-caption">Shooting Dates</h6>
       <!-- TODO 3788 update hint, error, etc -->
 
-      <mat-radio-group [formControl]="disabledForm" name="shootingStatus">
+      <mat-radio-group fxLayout="column" [formControl]="disabledForm" name="shootingStatus">
 
         <!-- Shooting completed -->
         <article fxLayout="column">
