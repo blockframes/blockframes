@@ -64,7 +64,7 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param ref
  * @param parameters
  */
-export function getImgIxResourceUrl(ref: string, parameters: ImageParameters, app: App) {
+export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
   /**
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
