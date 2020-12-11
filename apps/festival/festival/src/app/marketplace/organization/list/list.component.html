@@ -4,17 +4,17 @@
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
       <mat-icon svgIcon="magnifying_glasses"></mat-icon>
       <input type="text" formControlName="query" [value]="searchForm.query.value"
-        placeholder="Search for titles, directors, keywords, ...">
+        placeholder="Search for a sales company...">
     </form>
   </list-page-app-bar>
 
   <list-page-title>
-    <h1 class="mat-display-2 page-title">Our partners</h1>
+    <h1 class="mat-display-2 page-title">Sales Agents</h1>
   </list-page-title>
 
   <list-page-search>
     <mat-form-field appearance="outline" [formGroup]="searchForm">
-      <mat-label>Try searching for our partners...</mat-label>
+      <mat-label>Search for a sales company...</mat-label>
       <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
     </mat-form-field>
   </list-page-search>
@@ -27,7 +27,7 @@
   </list-page-description>
 
   <list-filter>
-    <ng-template filter label="Partner Country" [form]="searchForm.country">
+    <ng-template filter label="Company's Nationality" [form]="searchForm.country">
       <form-country [form]="searchForm.country"></form-country>
     </ng-template>
   </list-filter>
