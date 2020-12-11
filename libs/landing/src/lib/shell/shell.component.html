@@ -22,7 +22,7 @@
 
   <!-- Contact -->
   <mat-card class="demo" id="demo">
-    <ng-container *ngIf="landingContractComponent; else contact">
+    <ng-container *ngIf="landingContractDirective; else contact">
       <ng-content select="landing-contact"></ng-content>
     </ng-container>
     <ng-template #contact>
