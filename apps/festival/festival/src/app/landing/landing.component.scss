@@ -1,22 +1,12 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   display: block;
-  height: 100vh;
-  overflow: auto;
 }
-
-$max-width: 1440px;
 
 landing-header {
   background-image: url("/assets/images/banner_header.png");
-  div {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    max-width: $max-width;
-  }
   a {
-    width: fit-content;
     margin-top: 80px;
   }
   h4 {
@@ -25,25 +15,60 @@ landing-header {
 }
 
 landing-content {
-  max-width: $max-width;
-
   h1.mat-display-1 {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
-  .join {
-    padding: 48px 0;
+  .tab-margin {
+    margin-top: 24px;
+  }
+
+  h5 {
+    margin-top: 48px;
+    text-transform: uppercase;
   }
 
   article {
-    margin-top: 24px;
     mat-card {
       width: 49%;
+      min-height: 400px;
       margin-bottom: 24px;
       text-align: center;
       img {
         width: 150px;
       }
+    }
+  }
+
+  .join {
+    padding: 48px 0;
+  }
+}
+
+@include layout-bp(lt-md) {
+  landing-header {
+    p.mat-body-1 {
+      width: 80%;
+    }
+  }
+  landing-content {
+    article mat-card {
+      width: 75%;
+    }
+  }
+}
+
+@include layout-bp(lt-sm) {
+  landing-header {
+    text-align: center;
+    p.mat-body-1 {
+      width: 90%;
+    }
+  }
+  landing-content {
+    text-align: center;
+    article mat-card {
+      width: 100%;
     }
   }
 }

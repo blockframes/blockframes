@@ -11,96 +11,100 @@
   </nav>
 </mat-toolbar>
 
-<!-- Header -->
+<main>
+  <!-- Header -->
 
-<ng-content select="landing-header"></ng-content>
+  <ng-content select="landing-header"></ng-content>
 
-<!-- Content -->
+  <!-- Content -->
 
-<ng-content select="landing-content"></ng-content>
+  <ng-content select="landing-content"></ng-content>
 
-<!-- Contact -->
-<mat-card class="demo" id="demo">
-  <ng-container *ngIf="landingContractComponent; else contact">
-    <ng-content select="landing-contact"></ng-content>
+  <!-- Contact -->
+  <mat-card class="demo" id="demo">
+    <ng-container *ngIf="landingContractComponent; else contact">
+      <ng-content select="landing-contact"></ng-content>
+    </ng-container>
+    <ng-template #contact>
+      <article fxLayout="column" fxLayoutAlign="start center" class="contact-us">
+        <h1>Want to learn more?</h1>
+        <h3>Schedule a demo with our team!</h3>
+        <p>
+          Program a personalized demonstration of the platform with a member of the Archipel team.
+          <br />
+          Please fill out the form and we will get back to you to choose the best time.
+        </p>
+      </article>
+      <form fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
+        <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline">
+            <mat-label>First name</mat-label>
+            <input matInput type="text" placeholder="First name" formControlName="firstName" required />
+            <mat-error *ngIf="form.get('firstName').hasError('required')">
+              First name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Last name</mat-label>
+            <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
+            <mat-error *ngIf="form.get('lastName').hasError('required')">
+              Last name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </article>
+        <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline">
+            <mat-label>Company name</mat-label>
+            <input matInput type="text" placeholder="Company name" formControlName="companyName" required />
+            <mat-error *ngIf="form.get('companyName').hasError('required')">
+              Company name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+            <mat-select placeholder="Activity" formControlName="role" required>
+              <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('role').hasError('required')">
+              Role is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </article>
+        <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" placeholder="Email" formControlName="email" required />
+            <mat-error *ngIf="form.get('email').hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <tel-input [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
+          </mat-form-field>
+        </article>
+        <button [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">Send a demo
+          request</button>
+      </form>
+    </ng-template>
+  </mat-card>
+  <!-- Footer -->
+
+  <ng-container *ngIf="landingFooterComponent; else footer">
+    <ng-content select="landing-footer"></ng-content>
   </ng-container>
-  <ng-template #contact>
-    <article fxLayout="column" fxLayoutAlign="start center" class="contact-us">
-      <h1>Want to learn more?</h1>
-      <h3>Schedule a demo with our team!</h3>
-      <p>
-        Program a personalized demonstration of the platform with a member of the Archipel team.
-        <br />
-        Please fill out the form and we will get back to you to choose the best time.
-      </p>
-    </article>
-    <form fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
-      <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
-        <mat-form-field appearance="outline">
-          <mat-label>First name</mat-label>
-          <input matInput type="text" placeholder="First name" formControlName="firstName" required />
-          <mat-error *ngIf="form.get('firstName').hasError('required')">
-            First name is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Last name</mat-label>
-          <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
-          <mat-error *ngIf="form.get('lastName').hasError('required')">
-            Last name is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-      </article>
-      <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
-        <mat-form-field appearance="outline">
-          <mat-label>Company name</mat-label>
-          <input matInput type="text" placeholder="Company name" formControlName="companyName" required />
-          <mat-error *ngIf="form.get('companyName').hasError('required')">
-            Company name is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Role</mat-label>
-          <mat-select placeholder="Activity" formControlName="role" required>
-            <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="form.get('role').hasError('required')">
-            Role is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-      </article>
-      <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" placeholder="Email" formControlName="email" required />
-          <mat-error *ngIf="form.get('email').hasError('required')">
-            Email is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <tel-input [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
-        </mat-form-field>
-      </article>
-      <button [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">Send a demo
-        request</button>
-    </form>
+  <ng-template #footer>
+    <footer fxLayout="column" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center"
+      fxLayoutGap="48px">
+      <app-logo></app-logo>
+      <h3>Proudly associated with the following partners</h3>
+      <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" fxLayoutGap="80px">
+        <img asset="CNC_logo.webp" type="logo" alt="cnc">
+        <img src="/assets/logo/BPI_france.png" alt="BPI France logo" />
+        <img src="/assets/logo/creative_media_europe.png" alt="creatiev media europe logo" />
+        <img asset="IFCIC_logo.webp" type="logo" alt="ifcic">
+      </span>
+    </footer>
   </ng-template>
-</mat-card>
-<!-- Footer -->
 
-<ng-container *ngIf="landingFooterComponent; else footer">
-  <ng-content select="landing-footer"></ng-content>
-</ng-container>
-<ng-template #footer>
-  <footer fxLayout="column" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center"
-    fxLayoutGap="48px">
-    <app-logo></app-logo>
-    <h3>Proudly associated with the following partners</h3>
-    <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" fxLayoutGap="80px">
-      <img asset="CNC_logo.webp" type="logo" alt="cnc">
-      <img src="/assets/logo/BPI_france.png" alt="BPI France logo" />
-      <img src="/assets/logo/creative_media_europe.png" alt="creatiev media europe logo" />
-      <img asset="IFCIC_logo.webp" type="logo" alt="ifcic">
-    </span>
-  </footer>
-</ng-template>
+</main>
+
