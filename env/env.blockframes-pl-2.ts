@@ -25,7 +25,7 @@ const firebaseConfig = {
   measurementId: "G-JP3DK3VKM4"
 }
 
-export function firebase(app = 'festival') {
+export function firebase(app?: string) {
   return firebaseConfig
 }
 

@@ -25,7 +25,7 @@ const firebaseConfig = {
   measurementId: 'G-XXXXXXXXXX' // @TODO #4214 measurementId: ""
 };
 
-export function firebase(app = 'festival') {
+export function firebase(app?: string) {
   return firebaseConfig
 }
 
