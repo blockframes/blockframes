@@ -2,8 +2,8 @@
 
   <landing-header fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.lt-sm="center center">
     <h4>Welcome to Media Financiers</h4>
-    <p class="mat-display-2">The professional financing hub <br /> for films and TV series</p>
-    <p class="mat-body-1">Media Financiers enables private investors to co-produce exclusive films and TV series
+    <p class="mat-display-2 p-margin">The professional financing hub <br /> for films and TV series</p>
+    <p class="mat-body-1 p-width">Media Financiers enables private investors to co-produce exclusive films and TV series
       on the same conditions as top professional content financiers.</p>
     <a mat-flat-button color="accent" routerLink="/auth/connexion">
       <span>Join now</span>
@@ -29,7 +29,7 @@
           </div>
         </article>
         <h5>Benefits</h5>
-        <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+        <article fxLayout="row wrap" fxLayoutAlign="space-between">
           <mat-card *ngFor="let feature of sellerFeatures">
             <img [asset]="feature.imgAsset" alt="seller feature image">
             <h3>{{ feature.title }}</h3>
@@ -50,7 +50,7 @@
           </div>
         </article>
         <h5>Benefits</h5>
-        <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column" fxLayoutAlign.lt-md="space-between center">
+        <article fxLayout="row wrap" fxLayoutAlign="space-between">
           <mat-card *ngFor="let feature of financierFeatures" class="buyer-card">
             <img [asset]="feature.imgAsset" alt="financiers feature image">
             <h3>{{ feature.title }}</h3>

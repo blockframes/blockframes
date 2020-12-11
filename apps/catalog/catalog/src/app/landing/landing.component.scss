@@ -8,13 +8,13 @@ landing-header {
   h4 {
     text-transform: uppercase;
   }
-  p.mat-display-2 {
+  p {
     width: 75%;
   }
 }
 
 landing-content {
-  h1.mat-display-1 {
+  h1 {
     margin-bottom: 12px;
   }
 
@@ -49,7 +49,7 @@ landing-content {
 
 @include layout-bp(lt-md) {
   landing-header {
-    p.mat-body-2 {
+    p {
       width: 80%;
     }
   }
@@ -63,7 +63,7 @@ landing-content {
 @include layout-bp(lt-sm) {
   landing-header {
     text-align: center;
-    p.mat-body-1 {
+    p {
       width: 90%;
     }
   }
