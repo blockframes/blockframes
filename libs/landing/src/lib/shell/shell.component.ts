@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -8,26 +8,16 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 
 @Directive({
-  selector: 'landing-header',
-  host: {
-    class: 'dark-contrast-theme'
-  },
+  selector: 'landing-header, [landingHeader]',
+  host: { class: 'dark-contrast-theme' },
 })
-export class LandingHeaderComponent { }
+export class LandingHeaderDirective { }
 
-@Directive({
-  selector: 'landing-content',
-})
-export class LandingContentComponent { }
+@Directive({selector: 'landing-content, [landingContent]'})
+export class LandingContentDirective { }
 
-@Component({
-  selector: 'landing-contact',
-  template: `<ng-content></ng-content>`,
-  styles: [`:host {
-    display: block;
-  }`]
-})
-export class LandingContactComponent { }
+@Directive({selector: 'landing-contact, [landingContact]'})
+export class LandingContactDirective { }
 
 @Component({
   selector: 'landing-footer',
@@ -65,7 +55,7 @@ export class LandingShellComponent {
     role: new FormControl('')
   });
 
-  @ContentChild(LandingContactComponent) landingContractComponent: LandingContactComponent
+  @ContentChild(LandingContactDirective) landingContractDirective: LandingContactDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
   constructor(private snackBar: MatSnackBar, private routerQuery: RouterQuery, private functions: AngularFireFunctions) { }
