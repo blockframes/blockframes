@@ -35,6 +35,14 @@ const appConfigs = {
   financiers: {
     appId: "1:1080507348015:web:e5bdd85e161de4220002da",
     measurementId: "G-RZF25ZLQ2M"
+  },
+  cms: {
+    appId: "1:1080507348015:web:9abd62a79dc41e710002da",
+    measurementId: "G-THGSYK1D7K"
+  },
+  crm: {
+    appId: "1:1080507348015:web:ede10e0ebf25604e0002da",
+    measurementId: "G-X8XFZQCL8Z"
   }
 }
 
