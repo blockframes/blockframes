@@ -15,6 +15,8 @@ import { delay, BehaviorStore } from "@blockframes/utils/helpers";
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from "../directives/image-reference/imgix-helpers";
 import { clamp } from '@blockframes/utils/utils';
 import { tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { getCurrentApp } from "@blockframes/utils/apps";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -36,7 +38,8 @@ export class MediaService {
     private storage: AngularFireStorage,
     private functions: AngularFireFunctions,
     private overlay: Overlay,
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private routerQuery: RouterQuery
   ) { }
 
   async upload(uploadFiles: UploadData | UploadData[]) {
@@ -83,7 +86,7 @@ export class MediaService {
 
   async uploadMedias(mediaForms: HostedMediaFormValue[]) {
     const promises = mediaForms.map(async mediaForm => {
-     if (!!mediaForm.blobOrFile) {
+      if (!!mediaForm.blobOrFile) {
         // upload the new file
         this.upload({
           data: mediaForm.blobOrFile,
@@ -124,7 +127,7 @@ export class MediaService {
 
     const urls = params.map((param, index) => {
       if (tokens[index]) { param.s = tokens[index] };
-      return `${getImgIxResourceUrl(ref, param)} ${param.w}w`;
+      return `${getImgIxResourceUrl(ref, param, getCurrentApp(this.routerQuery))} ${param.w}w`;
     })
 
     return urls.join(', ');
@@ -151,7 +154,7 @@ export class MediaService {
       }
     }
 
-    return getImgIxResourceUrl(ref, parameters);
+    return getImgIxResourceUrl(ref, parameters, getCurrentApp(this.routerQuery));
   }
 
   generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {

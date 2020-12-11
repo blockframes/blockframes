@@ -14,16 +14,44 @@ export const appUrl = {
   crm: 'https://staging.crm.blockframes.io',
 };
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: 'AIzaSyAmos48yDq2xnxy9OPtQpLMiE4NeyJlA5Y',
   authDomain: 'blockframes-staging.firebaseapp.com',
   databaseURL: 'https://blockframes-staging.firebaseio.com',
   projectId: 'blockframes-staging',
   storageBucket: 'blockframes-staging.appspot.com',
   messagingSenderId: '176629403574',
-  appId: "1:176629403574:web:d4d965add159857c3afb17",
-  measurementId: "G-91803TC0PB"
 };
+
+const appConfigs = {
+  festival: {
+    appId: "1:176629403574:web:6b87a6bd036a31923afb17",
+    measurementId: "G-YPFLZVR4XP"
+  },
+  catalog: {
+    appId: "1:176629403574:web:d4d965add159857c3afb17",
+    measurementId: "G-91803TC0PB"
+  },
+  financiers: {
+    appId: "1:176629403574:web:d581aebb64c37aeb3afb17",
+    measurementId: "G-K6EPHB6MQ5"
+  },
+  cms: {
+    appId: "1:1080507348015:web:9abd62a79dc41e710002da",
+    measurementId: "G-THGSYK1D7K"
+  },
+  crm: {
+    appId: "1:1080507348015:web:ede10e0ebf25604e0002da",
+    measurementId: "G-X8XFZQCL8Z"
+  }
+}
+
+export function firebase(app: keyof typeof appConfigs = 'festival') {
+  return {
+    ...firebaseConfig,
+    ...appConfigs[app]
+  }
+}
 
 // Algolia
 // =======
