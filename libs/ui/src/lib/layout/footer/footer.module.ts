@@ -13,6 +13,7 @@ import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
     AppPipeModule,
 
     // Material
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule
   ],
   exports: [FooterComponent],
   declarations: [FooterComponent]
