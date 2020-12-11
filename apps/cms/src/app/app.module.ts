@@ -24,7 +24,7 @@ import { FormFactoryModule } from 'ng-form-factory';
     BrowserAnimationsModule,
     OverlayModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(firebase()),
+    AngularFireModule.initializeApp(firebase('cms')),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     AngularFireStorageModule,

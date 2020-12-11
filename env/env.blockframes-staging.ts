@@ -46,11 +46,13 @@ const appConfigs = {
   }
 }
 
-export function firebase(app: keyof typeof appConfigs = 'festival') {
-  return {
+export function firebase(app?: keyof typeof appConfigs) {
+  return app ? {
     ...firebaseConfig,
     ...appConfigs[app]
-  }
+  } : {
+      ...firebaseConfig,
+    }
 }
 
 // Algolia

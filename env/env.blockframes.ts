@@ -46,7 +46,7 @@ const appConfigs = {
   }
 }
 
-export function firebase(app: keyof typeof appConfigs = 'festival') {
+export function firebase(app?: keyof typeof appConfigs) {
   return {
     ...firebaseConfig,
     ...appConfigs[app]
