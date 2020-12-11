@@ -78,6 +78,8 @@
         </button>
       </mat-list-item>
     </mat-list>
-    <button mat-raised-button color="primary" (click)="closeDialog()" [disabled]="!selectedFiles.length">Add Files</button>
+    <div fxLayout fxLayoutAlign="center">
+      <button mat-raised-button color="primary" (click)="closeDialog()" [disabled]="!selectedFiles.length">Add Files</button>
+    </div>
   </aside>
 </section>

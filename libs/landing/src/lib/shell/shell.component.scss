@@ -1,60 +1,117 @@
-:host {
-  display: block;
-}
+@import "~@angular/flex-layout/mq";
 
-/* Toolbar */
+landing-shell-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 
-mat-toolbar {
-  padding: 0 24px;
-  position: fixed;
-  top: 0;
-  z-index: 2;
+  /* Toolbar */
 
-  nav {
-    width: 100%;
-    a:nth-child(2) {
-      margin-right: auto;
-    }
+  mat-toolbar {
+    padding: 0 24px;
 
-    .logo {
-      margin-right: 96px;
-    }
+    nav {
+      width: 100%;
+      a:nth-child(2) {
+        margin-right: auto;
+      }
 
-    #demo-link {
-      letter-spacing: 0.5px;
-      line-height: 24px;
-      font-weight: 600;
+      .logo {
+        margin-right: 96px;
+      }
+
+      #demo-link {
+        letter-spacing: 0.5px;
+        line-height: 24px;
+        font-weight: 600;
+      }
     }
   }
-}
 
-.demo {
-  display: block;
-  width: 100%;
-}
+  main {
+    flex: 1;
+    overflow-y: auto;
 
-.contact-us {
-  p {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-}
-
-form {
-  article {
-    width: 50%;
-
-    mat-form-field {
+    .demo {
+      display: block;
       width: 100%;
     }
+
+    .contact-us {
+      p {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+    }
+
+    form {
+      article {
+        width: 50%;
+
+        mat-form-field {
+          width: 100%;
+        }
+      }
+    }
+
+    footer {
+      margin: 48px 0;
+      text-align: center;
+      width: 100%;
+      img {
+        height: 40px;
+      }
+    }
+
+    landing-header {
+      display: block;
+      background-size: cover;
+      padding: 60px 200px;
+    }
+
+    landing-content {
+      display: block;
+      padding: 48px 240px;
+    }
   }
 }
 
-footer {
-  margin: 48px 0;
-  text-align: center;
-  width: 100%;
-  img {
-    height: 40px;
+
+@include layout-bp(lt-lg) {
+  landing-shell-page main {
+    landing-header {
+      padding: 60px 100px;
+    }
+    landing-content {
+      padding: 48px 140px;
+    }
+    form article {
+      width: 80%;
+    }
+  }
+}
+
+@include layout-bp(lt-md) {
+  landing-shell-page main {
+    landing-header {
+      padding: 60px 36px;
+    }
+    landing-content {
+      padding: 48px 64px;
+    }
+  }
+}
+
+@include layout-bp(lt-sm) {
+  landing-shell-page main {
+    landing-header {
+      padding: 24px 8px;
+    }
+    landing-content {
+      padding: 24px 8px;
+    }
+    form article {
+      width: 100%;
+    }
   }
 }

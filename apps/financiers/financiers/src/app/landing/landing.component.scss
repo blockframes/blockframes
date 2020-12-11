@@ -1,35 +1,26 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   display: block;
   height: 100vh;
   overflow: auto;
 }
 
-h4 {
-  text-transform: uppercase;
-}
-
-$max-width: 1440px;
-
 landing-header {
   background-image: url("/assets/images/banner_landing.png");
-  div {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    max-width: $max-width;
+  h4 {
+    text-transform: uppercase;
   }
 
-  p.mat-display-2 {
+  .p-margin {
     margin-bottom: 24px;
   }
 
-  span {
-    width: 50%;
+  .p-width {
+    width: 70%;
   }
 
   a {
-    width: fit-content;
     margin-top: 24px;
   }
 
@@ -39,34 +30,30 @@ landing-header {
 }
 
 landing-content {
-  max-width: $max-width;
-
-  .showcase-illustrations {
-    max-width: 700px;
+  h1 {
+    margin-bottom: 12px;
   }
 
-  .features {
-    white-space: pre-wrap;
+  .tab-margin {
+    margin-top: 24px;
   }
 
   h5 {
-    margin-top: 36px;
+    margin-top: 48px;
+    text-transform: uppercase;
   }
 
   article {
-    margin-top: 24px;
+    img {
+      max-width: 635px;
+      max-height: 440px;
+    }
     mat-card {
-      height: 350px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: start;
-      padding: 24px 16px;
       width: 49%;
+      min-height: 400px;
       margin-bottom: 24px;
-      p {
-        text-align: center;
-      }
+      text-align: center;
+      justify-items: center;
       img {
         width: 150px;
         margin-bottom: 24px;
@@ -77,12 +64,46 @@ landing-content {
       margin: 0 auto;
     }
   }
-
-  .description {
-    width: 60%;
-  }
 }
 
 .join {
   margin-top: 80px;
+  padding-bottom: 40px;
+  p {
+    margin-bottom: 24px;
+  }
+  a.mat-flat-button {
+    margin-bottom: 36px;
+  }
+  h3 {
+    margin-bottom: 8px;
+  }
+}
+
+@include layout-bp(lt-md) {
+  landing-header {
+    .p-width {
+      width: 80%;
+    }
+  }
+  landing-content {
+    article mat-card {
+      width: 75%;
+    }
+  }
+}
+
+@include layout-bp(lt-sm) {
+  landing-header {
+    text-align: center;
+    .p-width {
+      width: 90%;
+    }
+  }
+  landing-content {
+    text-align: center;
+    article mat-card {
+      width: 100%;
+    }
+  }
 }
