@@ -3,7 +3,7 @@
     <app-menu></app-menu>
     <cal-header fxFlex [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
     <mat-form-field *ngIf="filter">
-      <mat-label>Filter-by</mat-label>
+      <mat-label>Filter by</mat-label>
       <mat-select [formControl]="filter">
         <mat-option [value]="types">All events</mat-option>
         <ng-container *ngFor="let type of types">
