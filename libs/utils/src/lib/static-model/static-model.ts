@@ -1846,7 +1846,7 @@ export const staticModel = {
 
 export type StaticModel = typeof staticModel;
 export type Scope = keyof StaticModel;
-export type GetKeys<S extends Scope> = keyof StaticModel[S];
+export type GetKeys<S extends Scope> = Extract<keyof StaticModel[S], string>;
 export type GetLabel<S extends Scope> = StaticModel[S][GetKeys<S>]
 export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
 export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
