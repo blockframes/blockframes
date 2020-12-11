@@ -1,6 +1,5 @@
 import { firebase } from '@env';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
-import { App } from '@blockframes/utils/apps';
 
 /**
  * Interface that hold the image options for imgix processing.
