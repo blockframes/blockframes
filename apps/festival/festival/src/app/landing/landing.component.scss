@@ -1,7 +1,7 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   display: block;
-  height: 100vh;
-  overflow: auto;
 }
 
 landing-header {
@@ -9,21 +9,55 @@ landing-header {
   a {
     margin-top: 80px;
   }
+  h4 {
+    text-transform: uppercase;
+  }
 }
 
 landing-content {
-  .join {
-    padding: 48px 0;
+  h1 {
+    margin-bottom: 12px;
+  }
+
+  .tab-margin {
+    margin-top: 24px;
+  }
+
+  h5 {
+    margin-top: 48px;
+    text-transform: uppercase;
   }
 
   article {
     mat-card {
       width: 49%;
+      min-height: 400px;
       margin-bottom: 24px;
       text-align: center;
       img {
         width: 150px;
       }
+    }
+  }
+
+  .join {
+    padding: 48px 0;
+  }
+}
+
+@include layout-bp(lt-md) {
+  landing-content {
+    article mat-card {
+      width: 75%;
+    }
+  }
+}
+
+@include layout-bp(lt-sm) {
+  landing-content {
+    text-align: center;
+    article mat-card {
+      width: 100%;
     }
   }
 }
