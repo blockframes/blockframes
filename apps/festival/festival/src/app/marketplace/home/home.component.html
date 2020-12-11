@@ -7,8 +7,8 @@
 <!-- Banner -->
 <ng-template #banner let-section>
   <header [bgRef]="section.background" bgAsset="banner.png" class="banner dark-contrast-theme">
-    <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
-    <h1 *ngIf="section.title">{{ section.title }}</h1>
+    <h4 *ngIf="section.subtitle">{{ section.subtitle }}</h4>
+    <h1 class="mat-display-2" *ngIf="section.title">{{ section.title }}</h1>
     <p *ngIf="section.description">{{ section.description }}</p>
     <div class="links" fxLayout fxLayoutGap="16px">
       <ng-container *ngFor="let link of section.links">
@@ -35,7 +35,7 @@
 
 <!-- Titles -->
 <ng-template #titles let-section>
-  <section class="titles">
+  <section class="titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link || '../title'" color="primary">
@@ -45,7 +45,7 @@
     </header>
     <bf-carousel flex>
       <ng-container *ngFor="let movie of section | queryTitles | async">
-        <movie-card [movie]="movie" [size]="section.mode" [link]="['title', movie.id]" [col]="3" carouselItem>
+        <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]" [col]="3" carouselItem>
         </movie-card>
       </ng-container>
     </bf-carousel>
@@ -54,7 +54,7 @@
 
 <!-- Orgs -->
 <ng-template #orgs let-section>
-  <section class="orgs">
+  <section class="orgs cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link || '../organization'" color="primary">
@@ -96,7 +96,7 @@
 
 <!-- Org Titles -->
 <ng-template #orgTitles let-section>
-  <section class="org-titles">
+  <section class="org-titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link || '../organization'" color="primary">

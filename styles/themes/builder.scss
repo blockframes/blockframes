@@ -13,6 +13,7 @@
 @import '../components/mat-snack-bar.scss';
 @import '../components/mat-dialog.scss';
 @import '../components/mat-slider.scss';
+@import '../components/mat-tooltip.scss';
 @import '../components/apex-chart.scss';
 @import '../components/bf-widget.scss';
 @import '../components/bf-tunnel.scss';
@@ -106,7 +107,7 @@
   // FOREGROUND //
   ////////////////
   $mat-foreground: (
-    base: map-get($primary, 200),
+    base: rgba(map-get($primary, 200), 0.5),
     divider: map-get($foreground, 500),
     dividers: map-get($foreground, 500),
     disabled: map-get($foreground, 500),
@@ -208,8 +209,10 @@
   --background-card: #{mat-color($background, card)};
   --background: #{mat-color($background, background, 0.5)};
   // Foreground
+  --foreground-disabled-text: #{mat-color($foreground, disabled-text)};
   --foreground-divider: #{mat-color($foreground, divider)};
   --foreground-text: #{mat-color($foreground, text)};
+  --foreground-base: #{mat-color($foreground, base)};
 
 }
 
@@ -221,6 +224,7 @@
 @include mat-bf-list-typography($bf-typography);
 @include mat-bf-button-typography($bf-typography);
 @include mat-bf-toolbar-typography($bf-typography);
+@include mat-bf-tooltip-typography($bf-typography);
 @include mat-native-control($bf-typography);
 
 // Density

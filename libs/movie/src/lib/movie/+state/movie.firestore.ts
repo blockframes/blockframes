@@ -285,7 +285,8 @@ export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> { 
 
 export interface MovieSalesPitch {
   description?: string,
-  file?: string, // hosted media
+  ref?: string, // hosted media
+  jwPlayerId?: string;
 }
 
 export interface MovieGoalsAudience {

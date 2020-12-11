@@ -7,8 +7,11 @@
       <!-- Cap -->
       <mat-form-field appearance="outline">
         <mat-label>Total Investment Needed</mat-label>
-        <input type="number" matInput formControlName="cap" required min="0" />
+        <input type="number" matInput formControlName="cap" required min="0"/>
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
+        <mat-error *ngIf="form.hasError('min', 'cap')">
+          Only positive numbers are allowed.
+        </mat-error>
         <mat-error *ngIf="form.hasError('required', 'cap')">
           Please specify total amount of the investement you need.
         </mat-error>
@@ -19,6 +22,9 @@
         <mat-label>Minimum Investment Amount</mat-label>
         <input type="number" matInput formControlName="minPledge" [errorStateMatcher]="errorMatcher" required min="0" />
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
+        <mat-error *ngIf="form.hasError('min', 'minPledge')">
+          Only positive numbers are allowed.
+        </mat-error>
         <mat-error *ngIf="form.hasError('minPledgeOverflow')">
           The minimum investment should be lower than your needed investment.
         </mat-error>
