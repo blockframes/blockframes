@@ -4,6 +4,11 @@
 
 :host {
   width: 100%;
+
+  /* Firefox scrollbar */
+  section {
+    scrollbar-color: rgba(255, 255, 255, 0.5) var(--primary);
+  }
 }
 
 section {

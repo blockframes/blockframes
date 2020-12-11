@@ -18,6 +18,11 @@ section {
     text-decoration: underline;
   }
 
+  a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
   p.no-files {
     width: 70%;
     text-align: center;
