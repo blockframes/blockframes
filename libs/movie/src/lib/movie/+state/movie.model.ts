@@ -130,7 +130,7 @@ export function createMoviePromotional(
 export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
   return {
     description: '',
-    file: '',
+    ref: '',
     ...params,
   }
 }

@@ -10,6 +10,7 @@ import { loadJWPlayerScript } from "@blockframes/utils/utils";
 declare const jwplayer: any;
 
 @Component({
+  // ! Warning if you change the selector, be sure to also change it in the .scss
   selector: '[eventId] [ref] [control] event-video-viewer',
   templateUrl: './video-viewer.component.html',
   styleUrls: ['./video-viewer.component.scss'],

@@ -1,7 +1,16 @@
-import { FormEntity, FormList, urlValidators } from '@blockframes/utils/form';
+import { FormEntity, FormList } from '@blockframes/utils/form';
 import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Meeting, Screening } from '../+state/event.firestore';
+
+function compareDates(form: FormControl) {
+  const eventForm = form?.parent as EventForm;
+  if (eventForm) {
+    const { start, end } = eventForm.value;
+    if (start && end && start > end) return { startOverEnd: true };
+  }
+  return null;
+}
 
 // Event
 export function createEventControl(params?: Partial<Event>) {
@@ -12,8 +21,8 @@ export function createEventControl(params?: Partial<Event>) {
     ownerId: new FormControl(event.ownerId),
     type: new FormControl(event.type, Validators.required),
     title: new FormControl(event.title),
-    start: new FormControl(event.start),
-    end: new FormControl(event.end),
+    start: new FormControl(event.start, compareDates),
+    end: new FormControl(event.end, compareDates),
     allDay: new FormControl(event.allDay),
     meta: createMetaControl(event)
   };
@@ -60,7 +69,7 @@ type MeetingControl = ReturnType<typeof createMeetingControl>;
 
 export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
   constructor(meeting?: Partial<Meeting>) {
-    super(createMeetingControl(meeting))
+    super(createMeetingControl(meeting), compareDates)
   }
 
   get files() {
@@ -81,6 +90,6 @@ type ScreeningControl = ReturnType<typeof createScreeningControl>;
 
 export class ScreeningForm extends FormEntity<ScreeningControl, Screening> {
   constructor(screening?: Partial<Screening>) {
-    super(createScreeningControl(screening))
+    super(createScreeningControl(screening), compareDates)
   }
 }

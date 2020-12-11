@@ -17,27 +17,52 @@
     margin: 12px;
 
     button {
-      padding: 0;
-      width: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
-      mat-icon {
-        width: 30px;
-        height: 42px;
+      p {
+        font-size: 14px;
+        align-self: stretch;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin: 0;
       }
     }
+
+    mat-icon {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 8px;
+    }
+    
+    img {
+      width: 42px;
+      margin-bottom: 8px;
+    }
+
+    .file {
+      cursor: pointer;
+      padding: 8px;
+      width: 140px;
+      margin-left: 16px;
+      border: none;
+      background-color: var(--background);
+      color: var(--foreground-text);
+    }
+
+    .file:hover {
+      background-color: var(--background-hover);
+    }
+
+    .file[disabled] {
+      cursor: auto;
+      background-color: var(--background-disabled-button);
+      color: var(--disabled-text);
+    }
   }
-}
-
-
-img {
-  width: 42px;
-}
-span {
-  font-size: 14px;
-  align-self: stretch;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 a {

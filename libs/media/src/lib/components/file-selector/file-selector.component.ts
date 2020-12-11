@@ -58,8 +58,9 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleSelect(file: string) {
-
+  toggleSelect(event: MouseEvent, file: string) {
+    event.preventDefault();
+    event.stopPropagation();
     for (const orgFile of this.orgFiles) {
       if (orgFile.path === file) {
 

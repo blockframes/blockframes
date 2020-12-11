@@ -124,7 +124,7 @@ export const quorum = {
 // BigQuery
 // ========
 ​
-export const bigQueryAnalyticsTable = 'blockframes-samir.analytics_193045559.events_';
+export const bigQueryAnalyticsTable = 'blockframes-clelia.analytics_224526935.events_';
 ​
 // Archipel Content OrgId
 // ========
