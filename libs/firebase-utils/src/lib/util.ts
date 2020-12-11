@@ -97,7 +97,7 @@ export function loadAdminServices(): AdminServices {
     if (!ci) {
       ci = admin.initializeApp(
         {
-          projectId: firebaseCI.projectId,
+          projectId: firebaseCI().projectId,
           credential: admin.credential.applicationDefault(),
         },
         'CI-app'
