@@ -1,5 +1,6 @@
 import { firebase } from '@env';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
+import { App } from '@blockframes/utils/apps';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -63,7 +64,7 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param ref
  * @param parameters
  */
-export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
+export function getImgIxResourceUrl(ref: string, parameters: ImageParameters, app: App) {
   /**
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
