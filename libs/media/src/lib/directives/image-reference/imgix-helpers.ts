@@ -64,7 +64,7 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param ref
  * @param parameters
  */
-export function getImgIxResourceUrl(ref: string, parameters: ImageParameters, app: App) {
+export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
   /**
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
@@ -73,6 +73,8 @@ export function getImgIxResourceUrl(ref: string, parameters: ImageParameters, ap
    */
   const protectedMediaDir: Privacy = 'protected';
   const query = formatParameters(parameters);
-  const imgixSource = parameters.s ? `${firebase(app).projectId}-${protectedMediaDir}` : firebase(app).projectId;
+  const imgixSource = parameters.s
+    ? `${firebase().projectId}-${protectedMediaDir}`
+    : firebase().projectId;
   return `https://${imgixSource}.imgix.net/${encodeURI(ref)}?${query}`;
 }
