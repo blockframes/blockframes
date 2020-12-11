@@ -10,10 +10,10 @@
         <ng-container *ngSwitchCase="'early'">
           <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
-          <p class="mat-caption">{{ event.meta.description }}</p>
+          <p class="mat-body-2">{{ event.meta.description }}</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
-            <h3>You are the owner of this event</h3>
-            <p>You can invite members and edit the event config in your dashboard</p>
+            <h3>You are the owner of this event.</h3>
+            <p>You can invite members and edit the event config in your dashboard.</p>
             <a mat-stroked-button color="primary" [routerLink]="editMeeting">Edit Event</a>
           </ng-container>
           <ng-template #notOwner>
@@ -24,12 +24,11 @@
         <ng-container *ngSwitchCase="'onTime'">
           <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
-          <p class="mat-caption">{{ event.meta.description }}</p>
-          <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+          <p class="mat-body-2">{{ event.meta.description }}</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
-            <h3>You are the owner of this event</h3>
-            <p>You can invite members and edit the event config in your dashboard</p>
-            <a mat-stroked-button color="primary" [routerLink]="editMeeting">Edit Event</a>
+            <h3>You are the owner of this event.</h3>
+            <p>You can invite members and <a class="link" [routerLink]="editMeeting">edit the event</a> config in your dashboard.</p>
+            <a mat-stroked-button color="primary" [routerLink]="['lobby']">Go to Event</a>
           </ng-container>
           <ng-template #notOwner>
             <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
