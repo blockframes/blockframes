@@ -1,7 +1,7 @@
 <ng-container *ngFor="let requestor of data.requests">
   <section fxLayout fxLayoutAlign="space-between center">
     <p>{{ requestor | displayUser | async }} wants to join</p>
-    <button mat-button color="warn" (click)="confirm(true, requestor.uid)">Accept</button>
-    <button mat-button color="warn" (click)="confirm(false, requestor.uid)">Deny</button>
+    <button mat-button color="primary" (click)="confirm(true, requestor.uid)">Accept</button>
+    <button mat-button color="primary" (click)="confirm(false, requestor.uid)">Deny</button>
   </section>
 </ng-container>
