@@ -100,7 +100,7 @@
     disabled-button-toggle: map-get($background, 500),
     unselected-chip: map-get($background, 500),
     disabled-list-option: map-get($background, 500),
-    tooltip: rgba(map-get($background, 500), 0.9),
+    tooltip: rgba(map-get($background, 700), 0.9),
   );
 
   ////////////////
@@ -113,11 +113,11 @@
     disabled: map-get($foreground, 500),
     disabled-button: map-get($foreground, 200),
     disabled-text: map-get($foreground, 600),
-    elevation: rgba(map-get($background, 700), 0.12),
+    elevation: rgba(#010101, 0.6),
     hint-text: map-get($foreground, 600),
     secondary-text: map-get($foreground, 700),
-    icon: map-get($foreground, 800),
-    icons: map-get($foreground, 800),
+    icon: map-get($foreground, 700),
+    icons: map-get($foreground, 700),
     text: map-get($foreground, 800),
     slider-min: map-get($foreground, 700),
     slider-off: rgba(map-get($foreground, 700), 0.26),
