@@ -25,7 +25,7 @@ a {
 }
 
 @include layout-bp(lt-md) {
-  div {
+  .feature-description {
     text-align: center;
     width: 100%;
   }
