@@ -12,11 +12,11 @@ landing-header {
     text-transform: uppercase;
   }
 
-  p.mat-display-2 {
+  .p-margin {
     margin-bottom: 24px;
   }
 
-  p.mat-body-1 {
+  .p-width {
     width: 70%;
   }
 
@@ -30,7 +30,7 @@ landing-header {
 }
 
 landing-content {
-  h1.mat-display-1 {
+  h1 {
     margin-bottom: 12px;
   }
 
@@ -68,7 +68,7 @@ landing-content {
 .join {
   margin-top: 80px;
   padding-bottom: 40px;
-  p.mat-display-2 {
+  p {
     margin-bottom: 24px;
   }
   a.mat-flat-button {
@@ -81,7 +81,7 @@ landing-content {
 
 @include layout-bp(lt-md) {
   landing-header {
-    p.mat-body-1 {
+    .p-width {
       width: 80%;
     }
   }
@@ -95,7 +95,7 @@ landing-content {
 @include layout-bp(lt-sm) {
   landing-header {
     text-align: center;
-    p.mat-body-1 {
+    .p-width {
       width: 90%;
     }
   }

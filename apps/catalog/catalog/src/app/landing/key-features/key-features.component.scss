@@ -24,17 +24,9 @@ a {
   text-decoration: underline;
 }
 
-@include layout-bp(sm) {
+@include layout-bp(lt-md) {
   div {
-    width: 100%;
-  }
-  .feature-description {
-    width: 100%;
-  }
-}
-
-@include layout-bp(xs) {
-  .feature-description {
+    text-align: center;
     width: 100%;
   }
 }

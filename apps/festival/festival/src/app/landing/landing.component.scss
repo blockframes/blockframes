@@ -15,7 +15,7 @@ landing-header {
 }
 
 landing-content {
-  h1.mat-display-1 {
+  h1 {
     margin-bottom: 12px;
   }
 
@@ -46,11 +46,6 @@ landing-content {
 }
 
 @include layout-bp(lt-md) {
-  landing-header {
-    p.mat-body-1 {
-      width: 80%;
-    }
-  }
   landing-content {
     article mat-card {
       width: 75%;
@@ -59,12 +54,6 @@ landing-content {
 }
 
 @include layout-bp(lt-sm) {
-  landing-header {
-    text-align: center;
-    p.mat-body-1 {
-      width: 90%;
-    }
-  }
   landing-content {
     text-align: center;
     article mat-card {
