@@ -55,7 +55,7 @@ export class LandingShellComponent {
     role: new FormControl('')
   });
 
-  @ContentChild(LandingContactDirective) landingContractDirective: LandingContactDirective
+  @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
   constructor(private snackBar: MatSnackBar, private routerQuery: RouterQuery, private functions: AngularFireFunctions) { }
