@@ -43,14 +43,21 @@ const appConfigs = {
   crm: {
     appId: "1:1080507348015:web:ede10e0ebf25604e0002da",
     measurementId: "G-X8XFZQCL8Z"
+  },
+  default: {
+    appId: "1:1080507348015:web:413468c3253b02760002da",
+    measurementId: "G-NHLYYB4DSP"
   }
 }
 
 export function firebase(app?: keyof typeof appConfigs) {
-  return {
+  return app ? {
     ...firebaseConfig,
     ...appConfigs[app]
-  }
+  } : {
+      ...firebaseConfig,
+      ...appConfigs.default
+    }
 }
 
 
