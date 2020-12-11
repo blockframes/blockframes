@@ -4,7 +4,7 @@
     <a [routerLink]="['/c/o', section]">
       <app-logo></app-logo>
     </a>
-    <!-- ATM there is no about page for festival -->
+    <!-- ATM there is no about page for festival and financiers -->
     <ng-container *ngIf="'catalog' | app">
       <a mat-button [routerLink]="['/c/o/'+section+'/about']">About us</a>
     </ng-container>
