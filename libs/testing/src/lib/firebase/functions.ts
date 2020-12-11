@@ -35,7 +35,7 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
   }
 
   const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
-  const testObj: FeaturesList = firebaseFunctionsTest({ ...firebaseEnv, ...overrideConfig }, pathToServiceAccountKey);
+  const testObj: FeaturesList = firebaseFunctionsTest({ ...firebaseEnv(), ...overrideConfig }, pathToServiceAccountKey);
   // tslint:disable-next-line: no-eval
   const runtimeConfig = eval('require')(resolve(process.cwd(), './.runtimeconfig.json'));
   testObj.mockConfig(runtimeConfig);

@@ -88,7 +88,7 @@ export function loadAdminServices(): AdminServices {
 
   if (!admin.apps.length) {
     admin.initializeApp({
-      ...firebase,
+      ...firebase(),
       credential: admin.credential.applicationDefault(),
     });
   }
@@ -110,7 +110,7 @@ export function loadAdminServices(): AdminServices {
     getCI,
     auth: admin.auth(),
     db: admin.firestore(),
-    firebaseConfig: firebase,
+    firebaseConfig: firebase(),
     storage: admin.storage(),
   };
 }

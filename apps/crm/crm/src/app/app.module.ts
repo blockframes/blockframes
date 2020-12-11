@@ -49,7 +49,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     OverlayModule,
 
     // Firebase
-    AngularFireModule.initializeApp(firebase),
+    AngularFireModule.initializeApp(firebase()),
     AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,

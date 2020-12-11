@@ -8,7 +8,7 @@ import { upsertWatermark, } from '../watermark';
 import { runChunks } from '../firebase-utils';
 import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument } from './old-types';
 import { firebase } from '@env';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 
 import {
   createOldHostedMedia as createHostedMedia,

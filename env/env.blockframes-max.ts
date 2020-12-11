@@ -20,31 +20,14 @@ const firebaseConfig = {
   databaseURL: "https://blockframes-max.firebaseio.com",
   projectId: "blockframes-max",
   storageBucket: "blockframes-max.appspot.com",
-  messagingSenderId: "268195483565"
+  messagingSenderId: "268195483565",
+  appId: "1:268195483565:web:8caa91b304c743d0",
+  measurementId: "G-22EMF70SGN"
 };
 
-const appSpecificConfigs = {
-  festival: {
-    appId: "1:268195483565:web:c288eb087c3e9fb8179b24",
-    measurementId: "G-HE97S1CHVM"
-  },
-  financiers: {
-    appId: "1:268195483565:web:ffc1e972dc97ab0c179b24",
-    measurementId: "G-Y7X6VCQQC1"
-  },
-  catalog: {
-    appId: "1:268195483565:web:8caa91b304c743d0",
-    measurementId: "G-22EMF70SGN"
-  }
+export function firebase(app = 'festival') {
+  return firebaseConfig
 }
-
-export function firebase(app: keyof typeof appSpecificConfigs = 'festival') {
-  return {
-    ...firebaseConfig,
-    ...appSpecificConfigs[app]
-  }
-}
-
 
 // Algolia
 // =======
