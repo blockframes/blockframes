@@ -26,6 +26,10 @@ pre {
 
 section {
   padding: 24px;
+
+  .link {
+    text-decoration: underline;
+  }
 }
 
 h3 {
@@ -36,16 +40,12 @@ p {
   margin-bottom: 16px;
 }
 
-p.mat-caption {
+p.mat-body-2 {
   text-align: center;
   max-width: 800px;
-  margin-bottom: 24px;
+  margin: 24px 0;
 }
 
 a.mat-flat-button {
   margin-top: 40px;
-}
-
-invitation-action {
-  margin-bottom: 40px;
 }
