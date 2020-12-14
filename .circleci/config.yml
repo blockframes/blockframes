@@ -296,7 +296,7 @@ jobs:
       - checkout_project
       - run: npm run db:download-prod
       - run: npm run db:anonymize
-      - run: npm run db:upload-ci
+      - run: npm run db:upload-anon-db-ci
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
@@ -306,6 +306,7 @@ jobs:
     executor: blockframes-ci
     environment:
         SERVICE_ACCOUNT: FIREBASE_PRODUCTION_SERVICE_ACCOUNT
+        PROJECT_ID: blockframes
     steps:
       - prepare_gcloud
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
