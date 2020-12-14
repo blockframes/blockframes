@@ -98,7 +98,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}/details`,
+          url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'eventIsAboutToStart':
 
