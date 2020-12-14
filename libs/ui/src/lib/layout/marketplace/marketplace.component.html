@@ -14,7 +14,7 @@
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
-      <header fxLayout fxLayoutAlign="start center">
+      <header fxLayout fxLayoutAlign="start center" fxLayoutGap="14px">
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
