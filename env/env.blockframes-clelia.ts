@@ -13,7 +13,8 @@ export const appUrl = {
   crm: 'https://crm-blockframes-clelia.web.app',
   financiers: 'https://financiers-blockframes-clelia.web.app',
 };
-export const firebase = {
+
+const firebaseConfig = {
   apiKey: "AIzaSyCkHd1eCnt-XRwZzbEViePI0IVQpphl0i4",
   authDomain: "blockframes-clelia.firebaseapp.com",
   databaseURL: "https://blockframes-clelia.firebaseio.com",
@@ -23,6 +24,10 @@ export const firebase = {
   appId: "1:174404760121:web:e168a77a6d709a98",
   measurementId: "G-M53WGKF7H3"
 };
+
+export function firebase(app?: string) {
+  return firebaseConfig
+}
 
 // Algolia
 // =======

@@ -14,7 +14,7 @@ export const appUrl = {
   financiers: 'https://blockframes-remco-financiers.web.app'
 };
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: 'AIzaSyB1cJKPNsBDnq3qaK1VOUm2bNHuIJYthBY',
   authDomain: 'blockframes-remco.firebaseapp.com',
   databaseURL: 'https://blockframes-remco.firebaseio.com',
@@ -24,6 +24,10 @@ export const firebase = {
   appId: '1:734521736086:web:42cff622b99ae91a687bb7',
   measurementId: 'G-S2WM53H3YX'
 };
+
+export function firebase(app?: string) {
+  return firebaseConfig
+}
 
 // Algolia
 // =======

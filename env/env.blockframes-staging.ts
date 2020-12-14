@@ -14,16 +14,51 @@ export const appUrl = {
   crm: 'https://staging.crm.blockframes.io',
 };
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: 'AIzaSyAmos48yDq2xnxy9OPtQpLMiE4NeyJlA5Y',
   authDomain: 'blockframes-staging.firebaseapp.com',
   databaseURL: 'https://blockframes-staging.firebaseio.com',
   projectId: 'blockframes-staging',
   storageBucket: 'blockframes-staging.appspot.com',
   messagingSenderId: '176629403574',
-  appId: "1:176629403574:web:d4d965add159857c3afb17",
-  measurementId: "G-91803TC0PB"
 };
+
+const appConfigs = {
+  festival: {
+    appId: "1:176629403574:web:6b87a6bd036a31923afb17",
+    measurementId: "G-YPFLZVR4XP"
+  },
+  catalog: {
+    appId: "1:176629403574:web:d4d965add159857c3afb17",
+    measurementId: "G-91803TC0PB"
+  },
+  financiers: {
+    appId: "1:176629403574:web:d581aebb64c37aeb3afb17",
+    measurementId: "G-K6EPHB6MQ5"
+  },
+  cms: {
+    appId: "1:176629403574:web:5fdf3cbcb8eb67803afb17",
+    measurementId: "G-QCXWY2XS8V"
+  },
+  crm: {
+    appId: "1:176629403574:web:eacdbef9a019b1c33afb17",
+    measurementId: "G-WFBNNFQZZM"
+  },
+  default: {
+    appId: "1:176629403574:web:e97f704329b41f233afb17",
+    measurementId: "G-46P00JHXXK"
+  }
+}
+
+export function firebase(app?: keyof typeof appConfigs) {
+  return app ? {
+    ...firebaseConfig,
+    ...appConfigs[app]
+  } : {
+      ...firebaseConfig,
+      ...appConfigs.default
+    }
+}
 
 // Algolia
 // =======
