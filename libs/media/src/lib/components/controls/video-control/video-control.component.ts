@@ -19,8 +19,8 @@ export class VideoControlComponent {
   /** Backend functions to call in order to get the url of the video to play */
   private getVideoInfo = this.functions.httpsCallable('privateVideo');
 
-  /** A debounced version of `updateRemoteControl` to avoid writing on the db more than every 500ms */
-  private debouncedUpdateRemoteControl = debounceFactory((newControl: MeetingVideoControl) => this.updateRemoteControl(newControl), 500);
+  /** A debounced version of `updateRemoteControl` to avoid writing on the db more than every 1s */
+  private debouncedUpdateRemoteControl = debounceFactory((newControl: MeetingVideoControl) => this.updateRemoteControl(newControl), 1000);
 
   // Hold the event instance
   private _event: Event<Meeting>;
@@ -93,6 +93,13 @@ export class VideoControlComponent {
     this.intervalId = window.setInterval(() => {
       const newControl = this.localControl$.getValue();
       newControl.position += 1;
+
+      if (newControl.position > newControl.duration) {
+        newControl.position = newControl.duration;
+        newControl.isPlaying = false;
+        window.clearInterval(this.intervalId);
+      }
+
       this.localControl$.next(newControl);
     }, 1000);
   }
@@ -106,8 +113,12 @@ export class VideoControlComponent {
     const newControl = this.localControl$.getValue();
     newControl.isPlaying = !newControl.isPlaying;
 
-    if (newControl.isPlaying) this.play();
-    else this.pause();
+    if (newControl.isPlaying) {
+      if (newControl.position === newControl.duration) {
+        newControl.position = 0;
+      }
+      this.play();
+    } else this.pause();
 
     this.localControl$.next(newControl);
     this.updateRemoteControl(newControl);
