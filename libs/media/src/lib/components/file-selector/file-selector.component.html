@@ -51,16 +51,14 @@
       <mat-action-list>
         <ng-container *ngIf="orgFiles.length; else noOrgFiles">
           <button class="list-item" mat-list-item *ngFor="let file of orgFiles" (click)="previewFile(file.path)" >
-            <!-- <div fxLayout fxLayoutAlign="space-between center"> -->
-              <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
-              <p mat-line [matTooltip]="file.path | fileName">
-                {{ file.path | fileFolder }} - {{file.path | fileName}}
-              </p>
-              <button mat-icon-button (click)="toggleSelect($event, file.path)">
-                <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
-                <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>
-              </button>
-            <!-- </div> -->
+            <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
+            <p mat-line [matTooltip]="file.path | fileName">
+              {{ file.path | fileFolder }} - {{file.path | fileName}}
+            </p>
+            <button mat-icon-button (click)="toggleSelect($event, file.path)">
+              <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
+              <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>
+            </button>
           </button>
         </ng-container>
         <ng-template #noOrgFiles>
