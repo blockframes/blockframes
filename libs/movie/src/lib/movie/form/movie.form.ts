@@ -161,6 +161,11 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
       if (this.contains(key)) {
         const control = this.get(key as keyof MovieControl);
         const value = controls[key].value;
+        if (control instanceof StakeholderMapForm) {
+          for (const key2 in control.controls) {
+            control.controls[key2].patchAllValue(value[key2])
+          }
+        } else 
         if (control instanceof FormList) {
           control.patchAllValue(value);
         } else {
