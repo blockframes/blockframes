@@ -12,8 +12,8 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
-import { PermissionsService } from '@blockframes/permissions/+state';
-import { Movie } from '@blockframes/movie/+state';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';

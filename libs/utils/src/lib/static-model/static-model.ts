@@ -150,7 +150,7 @@ export const genres = {
   horror: 'Horror',
   scienceFiction: 'Science Fiction', // science-fiction
   thriller: 'Thriller',
-  comingAge: 'Young Adult', // coming-of-age
+  youngAdult: 'Young Adult', // coming-of-age
   fantasy: 'Fantasy',
   romance: 'Romance',
   western: 'Western',
