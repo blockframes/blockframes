@@ -51,13 +51,16 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     private service: MovieService,
     private query: MovieQuery,
     private mediaService: MediaService,
-  ) {}
+  ) { }
 
   onInit(): Observable<any>[] {
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.valueChanges(id)),
-      tap(movie => this.form.setAllValue(movie))
+      switchMap((id: string) => this.service.getValue(id)),
+      tap(movie => {
+        this.form.reset();
+        this.form.setAllValue(movie);
+      })
     );
 
     // Update form on status change
@@ -101,7 +104,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.storeConfig.appAccess[currentApp] = true;
     }
-    
+
     // -- Update movie & media -- //
     await this.service.upsert(movie);
     this.mediaService.uploadMedias(mediasToUpload);

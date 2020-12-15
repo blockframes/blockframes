@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state';

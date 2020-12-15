@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
@@ -41,14 +40,12 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private orgService: OrganizationService
-    ) {}
+    private orgService: OrganizationService,
+  ) { }
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
-    this.orgs$ = this.movieQuery.selectActiveId().pipe(
-      switchMap(movieId => this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', movieId)))
-    );
+    this.orgs$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds);
   }
 
 }
