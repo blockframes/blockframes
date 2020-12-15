@@ -24,7 +24,7 @@ const generatePassword = () =>
 /**
  * Get user by email & create one if there is no user for this email
  */
-export const getOrInviteUserByMail = async (email: string, fromOrgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
+export const getOrInviteUserByMail = async (email: string, fromOrgId: string, invitationType: InvitationType, app: App = 'catalog', eventName: string): Promise<UserProposal | PublicUser> => {
 
   try {
     const { uid } = await auth.getUserByEmail(email);
@@ -38,7 +38,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     const urlToUse = applicationUrl[app];
 
     const templateId = templateIds.user.credentials[invitationType][app];
-    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId);
+    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventName);
     await sendMailFromTemplate(template, app);
     return newUser.user;
   }

@@ -131,14 +131,20 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
             throw new Error(
 `MEETING MAX INVITATIONS EXCEEDED : Meeting ${docId} has already ${querySnap.size} invitations
 and user ${user.uid} tried to add ${data.emails.length} new invitations.
-That would have exceeded the current limit witch is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
+That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
           }
         }
       }
     }
 
+    let eventName = '';
+    if (invitation.type === 'attendEvent' && !!invitation.docId) {
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.docId}`);
+      eventName = event.title;
+    }
+
     for (const email of data.emails) {
-      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app)
+      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app, eventName)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;

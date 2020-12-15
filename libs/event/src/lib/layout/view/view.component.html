@@ -32,6 +32,9 @@
           </ng-container>
           <ng-template #notOwner>
             <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+            <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
+              <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+            </ng-container>
           </ng-template>
         </ng-container>
 
