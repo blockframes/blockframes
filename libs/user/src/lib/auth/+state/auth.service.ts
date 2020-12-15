@@ -15,11 +15,13 @@ import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId } from '@env';
 import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta';
-import { NotificationStore } from '@blockframes/notification/+state/notification.store';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
 export class AuthService extends FireAuthService<AuthState> {
+  signedOut = new Subject<void>();
+
   constructor(
     protected store: AuthStore,
     private http: HttpClient,
@@ -27,7 +29,6 @@ export class AuthService extends FireAuthService<AuthState> {
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery,
     private gdprService: GDPRService,
-    private notifications: NotificationStore,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
@@ -89,7 +90,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
     this.ngIntercom?.shutdown();
     sessionStorage.clear();
-    this.notifications.remove();
+    this.signedOut.next();
   }
 
   /**
