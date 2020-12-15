@@ -31,7 +31,12 @@
             <a mat-stroked-button color="primary" [routerLink]="['lobby']">Go to Event</a>
           </ng-container>
           <ng-template #notOwner>
-            <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+            <ng-container *ngIf="invitation$ | async as invitation">
+              <invitation-action [invitation]="invitation" [event]="event"></invitation-action>
+              <ng-container *ngIf="invitation.status === 'accepted'">
+                <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+              </ng-container>
+            </ng-container>
           </ng-template>
         </ng-container>
 

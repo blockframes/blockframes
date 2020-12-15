@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, Vie
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, getAppName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
@@ -39,6 +39,7 @@ export class LandingFooterComponent { }
 })
 export class LandingShellComponent {
   public submitted = false;
+  public appName = getAppName(getCurrentApp(this.routerQuery));
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',
