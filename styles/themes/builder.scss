@@ -100,7 +100,7 @@
     disabled-button-toggle: map-get($background, 500),
     unselected-chip: map-get($background, 500),
     disabled-list-option: map-get($background, 500),
-    tooltip: rgba(map-get($background, 700), 0.9),
+    tooltip: rgba(map-get($foreground, 700), 0.9),
   );
 
   ////////////////
