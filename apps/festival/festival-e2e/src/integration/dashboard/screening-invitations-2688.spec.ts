@@ -20,7 +20,7 @@ const OrgName = orgsFixture.getByID(TestEVENT.org.id).denomination.public;
 const users  =  [ userFixture.getByUID(TestEVENT.by.uid) ];
 users.push(...invitedUsers.map(uid => userFixture.getByUID(uid)));
 users.push(userFixture.getByUID(USER.Ivo));
-//Admin
+//Super Admin
 users.push(userFixture.getByUID(USER.Daphney));
 let SCREENING_URL: string;
 
@@ -94,7 +94,7 @@ describe('Organiser invites other users to private screening', () => {
   });
 
   // Member organiser do not get notification
-  // Admin gets notification about invitation acceptance.
+  // Admin / Super Admin gets notification about invitation acceptance.
   it('Org admin logs in and verifies the accepted invitations', () => {
     signIn(users[UserIndex.Admin]);
     acceptCookie();
