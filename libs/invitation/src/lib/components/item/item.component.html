@@ -20,7 +20,7 @@
             <ng-template #inviteScreening>
               <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a> invited you to
               <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
-              {{event | eventRange }}
+              ({{event | eventRange }})
             </ng-template>
           </ng-container>
           <!-- Request to attendEvent -->
@@ -30,14 +30,14 @@
               <ng-container *ngIf="fromUser.$ | async as user">
                 <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> would like to attend {{ event.type }}
                 <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
-                {{ event | eventRange }}
+                ({{ event | eventRange }})
               </ng-container>
 
             </ng-container>
             <ng-template #requestScreening>
               <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> would like to attend {{ event.type }}
               <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
-              {{ event | eventRange }}
+              ({{ event | eventRange }})
             </ng-template>
           </ng-template>
         </ng-container>
