@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Event } from '@blockframes/event/+state';
 import { InvitationQuery } from '@blockframes/invitation/+state';
@@ -61,7 +61,7 @@ export class EventCalendarComponent implements OnInit {
 export class hideBadgePipe implements PipeTransform {
   constructor(private invitationQuery: InvitationQuery) {}
   transform(event: Event) {
-    if (eventTime(event) === 'late') return Promise.resolve(true);
+    if (eventTime(event) === 'late') return of(true);
     return this.invitationQuery.selectEntity(i => i.docId === event.id).pipe(
       map(i => i.status !== 'pending')
     );
