@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
@@ -50,7 +49,6 @@ export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public navLinks = links;
-  public getLabelBySlug = getLabelBySlug;
 
 
   constructor(
