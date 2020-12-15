@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { EventCalendarComponent } from './calendar.component';
+import { EventCalendarComponent, hideBadgePipe } from './calendar.component';
 
 import { EventModule } from '@blockframes/event/event.module';
 import { EventCardModule } from '@blockframes/event/components/card/card.module';
 import { EventLinkModule } from '@blockframes/event/pipes/event-link.pipe';
-import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,7 +16,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 
 
 @NgModule({
-  declarations: [EventCalendarComponent],
+  declarations: [EventCalendarComponent, hideBadgePipe],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -25,7 +24,6 @@ import { MatBadgeModule } from '@angular/material/badge';
     EventModule,
     EventCardModule,
     EventLinkModule,
-    EventTimeModule,
     AppBarModule,
     // Material
     MatFormFieldModule,

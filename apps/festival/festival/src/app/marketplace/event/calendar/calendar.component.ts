@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Event } from '@blockframes/event/+state';
@@ -7,6 +7,7 @@ import { map, switchMap, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -25,7 +26,6 @@ export class EventCalendarComponent implements OnInit {
   filter = new FormControl(this.types);
   events$: Observable<Event[]>;
   viewDate = new Date();
-  public hidden: boolean;
 
   constructor(
     private service: EventService,
@@ -55,12 +55,15 @@ export class EventCalendarComponent implements OnInit {
     this.viewDate = date;
     this.cdr.markForCheck();
   }
+}
 
-  // Hide the matBadge if invitation to the event isn't pending anymore
-  isHidden(event: Event) {
-    const invitation$ = this.invitationQuery.selectEntity(i => i.docId === event.id);
-    invitation$.subscribe(i => i.status === 'pending' ? this.hidden = false : this.hidden = true);
-    return this.hidden;
+@Pipe({ name: 'hideBadge'})
+export class hideBadgePipe implements PipeTransform {
+  constructor(private invitationQuery: InvitationQuery) {}
+  transform(event: Event) {
+    if (eventTime(event) === 'late') return Promise.resolve(true);
+    return this.invitationQuery.selectEntity(i => i.docId === event.id).pipe(
+      map(i => i.status !== 'pending')
+    );
   }
-
 }
