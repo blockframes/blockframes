@@ -8,7 +8,7 @@ import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../te
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient } from "@blockframes/utils/emails/utils";
-import { getAppName, getSendgridFrom, App, applicationUrl } from "@blockframes/utils/apps";
+import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
 
 
@@ -120,8 +120,9 @@ async function onInvitationToAnEventCreate({
         await triggerNotifications([notification]);
 
         return Promise.all(recipients.map(recipient => {
+          const userName = `${fromUser.firstName} ${fromUser.lastName}`
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), recipient, event.title, link, urlToUse);
+          const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, appKey);
         }))
     }
