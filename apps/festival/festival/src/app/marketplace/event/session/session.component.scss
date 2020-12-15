@@ -2,8 +2,6 @@
 
 :host {
   height: 100%;
-  display: flex;
-  justify-content: center;
   padding: 24px;
 }
 
@@ -75,6 +73,10 @@ p {
     meeting-video-room {
       width: 60%;
     }
+  }
+
+  img {
+    width: 100%;
   }
 
   media-control {

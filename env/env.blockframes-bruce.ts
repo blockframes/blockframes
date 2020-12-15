@@ -14,7 +14,7 @@ export const appUrl = {
   financiers: 'https://financiers-blockframes-bruce.web.app',
 };
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: "AIzaSyDty3fra5v06b8R15JjDarwd-y9vP4DQIs",
   authDomain: "blockframes-bruce.firebaseapp.com",
   databaseURL: "https://blockframes-bruce.firebaseio.com",
@@ -24,6 +24,10 @@ export const firebase = {
   appId: "1:308574859435:web:6be97448e5508f5ab387ee",
   measurementId: "G-XXXXXXXXXX"
 };
+
+export function firebase(app?: string) {
+  return firebaseConfig
+}
 
 // Algolia
 // =======

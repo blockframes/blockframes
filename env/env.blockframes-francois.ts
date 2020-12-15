@@ -14,7 +14,7 @@ export const appUrl = {
   crm: 'https://blockframes-francois-crm.web.app',
 };
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: "AIzaSyD1qjU9feHzxAFg96L4VouE9_nt9nFGg0s",
   authDomain: "blockframes-francois.firebaseapp.com",
   databaseURL: "https://blockframes-francois.firebaseio.com",
@@ -24,6 +24,10 @@ export const firebase = {
   appId: "1:309694417970:web:3e81f3430c9e0a5c",
   measurementId: "G-FJK6DBB02R"
 };
+
+export function firebase(app?: string) {
+  return firebaseConfig
+}
 
 // Algolia
 // =======

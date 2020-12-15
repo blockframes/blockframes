@@ -20,7 +20,7 @@ export {
 
 import { firebase } from '@env';
 import { mockConfigIfNeeded } from '@blockframes/firebase-utils';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');

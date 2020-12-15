@@ -121,7 +121,11 @@ export class CropperComponent implements OnInit {
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
     $event.preventDefault();
-    this.filesSelected($event.dataTransfer.files);
+    if (!!$event.dataTransfer.files.length) {
+      this.filesSelected($event.dataTransfer.files);
+    } else {
+      this.resetState();
+    }
   }
 
   @HostListener('dragover', ['$event'])
@@ -133,6 +137,10 @@ export class CropperComponent implements OnInit {
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
+    this.resetState();
+  }
+
+  private resetState() {
     if (!!this.form.blobOrFile.value || (!!this.form.ref?.value)) {
       this.nextStep('show');
     } else {
@@ -164,7 +172,7 @@ export class CropperComponent implements OnInit {
 
     const isFileTypeValid = this.types && this.types.includes(fileType);
     if (!isFileTypeValid) {
-      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 1000 });
+      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
       this.delete();
     } else {
       this.nextStep('crop');

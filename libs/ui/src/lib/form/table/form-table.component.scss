@@ -5,6 +5,8 @@
 .table-container {
   overflow: auto;
   width: 100%;
+  /* Firefox scrollbar */
+  scrollbar-color: var(--primary) var(--active);
 }
 
 table {
@@ -31,21 +33,6 @@ mat-paginator {
 .action-buttons {
   display: flex;
   justify-content: flex-end;
-}
-
-::-webkit-scrollbar {
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  height: 10px;
-  background-color: var(--active);
-  opacity: 0.5;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #1a49f5;
-  border-radius: 10px;
 }
 
 footer {

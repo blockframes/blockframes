@@ -3,7 +3,7 @@
     <h3>{{ data.title || "Confirm" }}</h3>
     <p>{{ data.question || "Do you confirm ?" }}</p>
   </div>
-  <div mat-dialog-actions fxLayoutAlign="space-around">
+  <div mat-dialog-actions fxLayoutAlign="center" fxLayoutGap="16px">
     <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
     <button test-id="confirm" mat-flat-button color="primary" (click)="confirm()">
       {{ data.buttonName || "Confirm" }}

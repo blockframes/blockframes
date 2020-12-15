@@ -27,13 +27,14 @@
           <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
           <mat-error *ngIf="form.hasError('receivedOverflow')">
             Your funding status should be lower than your needed investment
-            ({{ form.get('cap').value | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
+            ({{ form.get('cap').value ? form.get('cap').value: 0 | currency: form.getCurrency() : 'symbol' : '1.0-0' }}).
           </mat-error>
         </mat-form-field>
 
         <footer fxLayout fxLayoutAlign="space-between center">
           <button mat-stroked-button mat-dialog-close type="reset" color="primary">Cancel</button>
-          <button mat-flat-button type="submit" color="primary" [disabled]="form.invalid">Save</button>
+          <button mat-flat-button type="submit" color="primary"
+            [disabled]="form.invalid || form.get('received').value < 0">Save</button>
         </footer>
       </form>
     </ng-container>

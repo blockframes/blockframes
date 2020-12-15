@@ -11,6 +11,12 @@
       <strong>Description </strong>
       <missing-control [control]="salesPitch.get('description')" [link]="link" fragment="sales-pitch"></missing-control>
     </li>
+    <li>
+      <strong>Video </strong>
+      <missing-control [control]="salesPitch.get('ref').get('ref')" [link]="link" fragment="sales-pitch">
+        <ng-template let-ref>{{ ref | fileName }}</ng-template>
+      </missing-control>
+    </li>
   </ul>
 </article>
 

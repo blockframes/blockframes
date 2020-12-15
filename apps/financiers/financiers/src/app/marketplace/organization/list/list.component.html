@@ -2,18 +2,19 @@
 
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
-      <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-      <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Search for our partners...">
+      <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
+      <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Search for a sales company...">
     </form>
   </list-page-app-bar>
 
   <list-page-title>
-    <h1 class="mat-display-2 page-title">Our partners</h1>
+    <h1 class="mat-display-2 page-title">Partners</h1>
   </list-page-title>
 
   <list-page-search>
     <mat-form-field appearance="outline" [formGroup]="searchForm">
-      <mat-label>Search for our partners...</mat-label>
+      <mat-label>Search for a sales company...</mat-label>
+      <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
       <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
     </mat-form-field>
   </list-page-search>
@@ -26,7 +27,7 @@
   </list-page-description>
 
   <list-filter>
-    <ng-template filter label="Partner's Country" [form]="searchForm.country">
+    <ng-template filter label="Company's Nationality" [form]="searchForm.country">
       <form-country [form]="searchForm.country" noWorld></form-country>
     </ng-template>
   </list-filter>

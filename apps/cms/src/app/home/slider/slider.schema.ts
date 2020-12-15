@@ -1,13 +1,8 @@
-import { Section, TemplateParams } from '../../template/template.model';
-import { firestoreQuery, FirestoreQuery, titlesFromApp } from '../../forms/firestore';
 import { FormGroupSchema } from 'ng-form-factory';
+import { SliderSection, TemplateParams } from '@blockframes/admin/cms';
+import { firestoreQuery, titlesFromApp } from '../../forms/firestore';
 import { matMultiSelect } from '../../forms/select';
 
-interface SliderSection extends Section {
-  _type: 'slider',
-  titleIds: string[];
-  query: FirestoreQuery;
-}
 
 export type SliderSchema = FormGroupSchema<SliderSection>;
 

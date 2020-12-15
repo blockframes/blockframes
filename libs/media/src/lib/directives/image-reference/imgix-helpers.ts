@@ -60,8 +60,8 @@ export function formatParameters(parameters: ImageParameters): string {
 
 /**
  * getImgIxResourceUrl : Generate ImgIx resource URL
- * @param ref 
- * @param parameters 
+ * @param ref
+ * @param parameters
  */
 export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
   /**
@@ -72,6 +72,8 @@ export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
    */
   const protectedMediaDir: Privacy = 'protected';
   const query = formatParameters(parameters);
-  const imgixSource = parameters.s ? `${firebase.projectId}-${protectedMediaDir}` : firebase.projectId;
-  return `https://${imgixSource}.imgix.net/${ref}?${query}`;
+  const imgixSource = parameters.s
+    ? `${firebase().projectId}-${protectedMediaDir}`
+    : firebase().projectId;
+  return `https://${imgixSource}.imgix.net/${encodeURI(ref)}?${query}`;
 }

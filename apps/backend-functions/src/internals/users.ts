@@ -24,7 +24,7 @@ const generatePassword = () =>
 /**
  * Get user by email & create one if there is no user for this email
  */
-export const getOrInviteUserByMail = async (email: string, fromOrgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
+export const getOrInviteUserByMail = async (email: string, fromOrgId: string, invitationType: InvitationType, app: App = 'catalog', eventName: string): Promise<UserProposal | PublicUser> => {
 
   try {
     const { uid } = await auth.getUserByEmail(email);
@@ -36,11 +36,10 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     // User does not exists, send him an email.
     const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
     const urlToUse = applicationUrl[app];
-    const from = getSendgridFrom(app);
 
     const templateId = templateIds.user.credentials[invitationType][app];
-    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId);
-    await sendMailFromTemplate(template, from);
+    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventName);
+    await sendMailFromTemplate(template, app);
     return newUser.user;
   }
 };
@@ -48,7 +47,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
 
 /**
  * Creates an user from email address
- * @param email 
+ * @param email
  */
 export const createUserFromEmail = async (email: string): Promise<{ user: PublicUser, password: string }> => {
 
@@ -67,8 +66,8 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
 
 /**
  * User setted his firstName for the first time
- * Send an informative email to c8 admin 
- * @param user 
+ * Send an informative email to c8 admin
+ * @param user
  */
 export const sendFirstConnexionEmail = async (user: PublicUser): Promise<any> => {
   const mailRequest = await userFirstConnexion(user);

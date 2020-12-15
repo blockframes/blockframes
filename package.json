@@ -21,6 +21,7 @@
     "deploy:catalog": "cross-env nx deploy catalog --configuration=$NG_CONFIG",
     "deploy:festival": "cross-env nx deploy festival --configuration=$NG_CONFIG",
     "deploy:crm": "cross-env nx deploy crm --configuration=$NG_CONFIG",
+    "deploy:cms": "cross-env nx deploy cms --configuration=$NG_CONFIG",
     "deploy:firestore": "cross-env firebase deploy --only firestore --force --project=$PROJECT_ID",
     "deploy:firestore:rules": "cross-env firebase deploy --only firestore:rules --project=$PROJECT_ID",
     "deploy:storage": "cross-env firebase deploy --only storage --project=$PROJECT_ID",

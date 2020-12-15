@@ -4,6 +4,7 @@ import { CampaignService } from '../../+state';
 import { CampaignForm } from '../../form/form';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'campaign-dashboard-investment',
@@ -19,9 +20,11 @@ export class InvestmentComponent implements OnInit, OnDestroy {
   constructor(
     private service: CampaignService,
     private route: RouterQuery,
+    private dynTitle: DynamicTitleService
   ) { }
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('Title page', 'Investment Information');
     this.sub = this.movieId$.pipe(
       switchMap((id: string) => this.service.valueChanges(id))
     ).subscribe(campaign => this.form.setAllValue(campaign));

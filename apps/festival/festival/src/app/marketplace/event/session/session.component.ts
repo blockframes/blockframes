@@ -8,6 +8,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { Router } from '@angular/router';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 
 @Component({
@@ -52,13 +53,17 @@ export class SessionComponent implements OnInit, OnDestroy {
     private bottomSheet: MatBottomSheet,
     private userService: UserService,
     private router: Router,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
     this.service.startLocalSession();
     this.event$ = this.service.queryDocs(this.eventQuery.getActiveId());
     this.sub = this.event$.subscribe(async event => {
-      if (event.isOwner) {
+      const fileSelected = !!event?.meta?.selectedFile;
+      if (!fileSelected) {
+        this.visioContainerSize = '100%';
+      } else if (event.isOwner) {
         this.mediaContainerSize = '40%';
         this.visioContainerSize = '60%';
       } else {
@@ -67,11 +72,13 @@ export class SessionComponent implements OnInit, OnDestroy {
       }
 
       if (event.type === 'screening') {
+        this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
       } else if (event.type === 'meeting') {
+        this.dynTitle.setPageTitle(event.title, 'Meeting');
         const uid = this.authQuery.userId;
         if (event.isOwner) {
           const attendees = (event.meta as Meeting).attendees;
@@ -88,7 +95,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         } else {
           const userStatus = (event.meta as Meeting).attendees[uid];
 
-          if (!userStatus) { // meeting session is over
+          if (!userStatus || userStatus === 'ended') { // meeting session is over
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/ended`);
           } else if (userStatus !== 'accepted') { // user has been banned or something else
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);

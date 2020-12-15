@@ -83,7 +83,7 @@ export class MediaService {
 
   async uploadMedias(mediaForms: HostedMediaFormValue[]) {
     const promises = mediaForms.map(async mediaForm => {
-     if (!!mediaForm.blobOrFile) {
+      if (!!mediaForm.blobOrFile) {
         // upload the new file
         this.upload({
           data: mediaForm.blobOrFile,
@@ -104,9 +104,9 @@ export class MediaService {
    * @param ref (without "/protected")
    * @param parametersSet ImageParameters[]
    */
-  private async getProtectedMediaToken(ref: string, parametersSet: ImageParameters[]): Promise<string[]> {
+  private async getProtectedMediaToken(ref: string, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
     ref = !ref.startsWith('/') ? `/${ref}` : ref;
-    return this.getMediaToken({ ref, parametersSet }).toPromise();
+    return this.getMediaToken({ ref, parametersSet, eventId }).toPromise();
   }
 
   async generateImageSrcset(ref: string, _parameters: ImageParameters): Promise<string> {
@@ -135,11 +135,10 @@ export class MediaService {
    * @param ref string
    * @param parameters ImageParameters
    */
-  async generateImgIxUrl(ref: string, parameters: ImageParameters = {}): Promise<string> {
+  async generateImgIxUrl(ref: string, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
     if (!ref) {
       return '';
     }
-    ref = encodeURI(ref); // For accentuated files names
 
     const refParts = ref.split('/');
     const privacy = refParts.shift() as Privacy;
@@ -147,7 +146,7 @@ export class MediaService {
     if (privacies.includes(privacy)) {
       ref = refParts.join('/');
       if (privacy === 'protected') {
-        const [token] = await this.getProtectedMediaToken(ref, [parameters]);
+        const [token] = await this.getProtectedMediaToken(ref, [parameters], eventId);
         parameters.s = token;
       }
     }

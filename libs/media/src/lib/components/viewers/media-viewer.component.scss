@@ -5,21 +5,32 @@
   background-color: var(--background-card);
 }
 
-article {
-  text-align: center;
-  h3 {
-    margin-top: 16px;
-  }
+section {
+  height: 100%;
+
   img {
-    width: 250px;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
   }
-  p {
-    padding: 0 16px;
+
+  article {
+    max-height: 15%;
+    padding: 8px;
+    mat-divider {
+      width: 60%;
+      margin-bottom: 6px;
+    }
+    button {
+      padding: 0;
+    }
   }
 }
 
-img {
-  height: 100%;
-  width: 100%;
-  object-fit: contain;
+section.owner {
+  event-pdf-viewer,
+  event-video-viewer,
+  img {
+    max-height: 85%;
+  }
 }

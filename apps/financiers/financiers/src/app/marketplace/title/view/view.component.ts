@@ -135,6 +135,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const message = success
       ? 'Your mail has been send.'
       : 'An error occurred. Your mail has not been send.';
-    this.snackbar.open(message, null, { duration: 1000 });
+    this.snackbar.open(message, null, { duration: 3000 });
   }
 }

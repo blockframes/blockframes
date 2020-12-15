@@ -1,4 +1,80 @@
-@mixin setTheme($theme) {
+@import '~@angular/material/theming';
+@import '../components/mat-list';
+@import '../components/mat-card';
+@import '../components/mat-table';
+@import '../components/mat-toolbar';
+@import '../components/mat-button';
+@import '../components/mat-expansion-panel';
+@import '../components/mat-chips';
+@import '../components/mat-form-field';
+@import '../components/mat-icon.scss';
+@import '../components/mat-toggle-button.scss';
+@import '../components/mat-sidenav.scss';
+@import '../components/mat-snack-bar.scss';
+@import '../components/mat-dialog.scss';
+@import '../components/mat-slider.scss';
+@import '../components/mat-tooltip.scss';
+@import '../components/apex-chart.scss';
+@import '../components/bf-widget.scss';
+@import '../components/bf-tunnel.scss';
+@import '../components/bf-table.scss';
+@import '../components/bf-font-color.scss';
+@import '../components/bf-missing-control.scss';
+@import '../components/bf-world-map.scss';
+@import '../components/bf-calendar.scss';
+@import '../components/mat-native-control.scss';
+@import '../components/mat-datepicker.scss';
+@import '../components/surface.scss';
+@import '../components/scroll.scss';
+
+
+@include mat-core();
+
+
+@function getContrast($theme) {
+  $primary: map-get($theme, 'primary');
+  $accent: map-get($theme, 'accent');
+
+  $primary-contrast: (
+    200: mat-color($primary, 100),
+    500: mat-color($primary, 400),
+    800: mat-color($primary, 700),
+    contrast: (
+      200: mat-color(map-get($primary, contrast), 100),
+      500: mat-color(map-get($primary, contrast), 400),
+      800: mat-color(map-get($primary, contrast), 700),
+    )
+  );
+  $accent-contrast: (
+    200: mat-color($accent, 100),
+    500: mat-color($accent, 400),
+    800: mat-color($accent, 700),
+    contrast: (
+      200: mat-color(map-get($accent, contrast), 100),
+      500: mat-color(map-get($accent, contrast), 400),
+      800: mat-color(map-get($accent, contrast), 700),
+    )
+  );
+
+  $foreground-contrast: (
+		900: #ffffff,
+		800: #ffffff,
+		700: #ffffff,
+		600: #ffffff,
+		500: #ffffff
+  );
+  @return (
+    is-dark: map-get($theme, 'is-dark'),
+    primary: $primary-contrast,
+    accent: $accent-contrast,
+    warn: map-get($theme, 'warn'),
+    background: map-get($theme, 'background'),
+    foreground: $foreground-contrast,
+  );
+}
+
+
+@function getTheme($theme) {
 
   $primary: map-get($theme, 'primary');
   $accent: map-get($theme, 'accent');
@@ -10,82 +86,83 @@
   // BACKGROUND //
   ////////////////
   $mat-background: (
-    app-bar: map-get($background, 700),
-    status-bar: map-get($background, 700),
-    background: map-get($background, 500),
-    disabled-button: map-get($background, 100),
-    hover: rgba(map-get($background, 500), 0.05),
+    app-bar: map-get($background, 800),
+    status-bar: map-get($background, 800),
+    background: map-get($background, 900),
+    disabled-button: map-get($background, 500),
+    hover: rgba(map-get($foreground, 600), 0.1),
     card: map-get($background, 700),
     dialog: map-get($background, 700),
-    raised-button: map-get($background, 700),
-    focused-button: map-get($background, 400),
-    selected-button: map-get($background, 400),
-    selected-disabled-button: map-get($background, 100),
-    disabled-button-toggle: map-get($background, 100),
-    unselected-chip: map-get($background, 400),
-    disabled-list-option: map-get($background, 400),
-    tooltip: rgba(map-get($background, 10), 0.9),
+    raised-button: map-get($background, 600),
+    focused-button: map-get($background, 600),
+    selected-button: map-get($background, 600),
+    selected-disabled-button: map-get($background, 500),
+    disabled-button-toggle: map-get($background, 500),
+    unselected-chip: map-get($background, 500),
+    disabled-list-option: map-get($background, 500),
+    tooltip: rgba(map-get($background, 700), 0.9),
   );
 
   ////////////////
   // FOREGROUND //
   ////////////////
   $mat-foreground: (
-    base: map-get($foreground, 500),
-    divider: map-get($foreground, 700),
-    dividers: map-get($foreground, 700),
-    disabled: map-get($foreground, 400),
-    disabled-text: map-get($foreground, 200),
+    base: rgba(map-get($primary, 200), 0.5),
+    divider: map-get($foreground, 500),
+    dividers: map-get($foreground, 500),
+    disabled: map-get($foreground, 500),
     disabled-button: map-get($foreground, 200),
-    elevation: rgba(map-get($background, 700), 0.12),
-    hint-text: map-get($foreground, 400),
+    disabled-text: map-get($foreground, 600),
+    elevation: rgba(#010101, 0.6),
+    hint-text: map-get($foreground, 600),
     secondary-text: map-get($foreground, 700),
     icon: map-get($foreground, 700),
     icons: map-get($foreground, 700),
-    slider-min: rgba(map-get($foreground, 900), 0.87),
-    slider-off: rgba(map-get($foreground, 900), 0.26),
-    slider-off-active: rgba(map-get($foreground, 900), 0.38),
-    text: map-get($foreground, 500),
+    text: map-get($foreground, 800),
+    slider-min: map-get($foreground, 700),
+    slider-off: rgba(map-get($foreground, 700), 0.26),
+    slider-off-active: rgba(map-get($foreground, 700), 0.38),
   );
 
   //////////
   // FONT //
   //////////
   $font: (
-    display-4: map-get($foreground, 300),
-    display-3: map-get($foreground, 900),
-    display-2: map-get($foreground, 500),
-    display-1: map-get($foreground, 400),
-    h1: map-get($foreground, 900),
-    h2: map-get($foreground, 700),
-    h3: map-get($foreground, 500),
-    h4: map-get($foreground, 300),
-    h5: map-get($foreground, 300),
-    h6: map-get($foreground, 400),
-    mat-body-1: map-get($foreground, 500),
+    display-4: map-get($foreground, 700),
+    display-3: map-get($foreground, 700),
+    display-2: map-get($foreground, 700),
+    display-1: map-get($foreground, 700),
+    h1: map-get($foreground, 800),
+    h2: map-get($foreground, 800),
+    h3: map-get($foreground, 800),
+    h4: map-get($foreground, 800),
+    h5: map-get($foreground, 800),
+    h6: map-get($foreground, 800),
+    mat-body-1: map-get($foreground, 800),
     mat-body-2: map-get($foreground, 700),
-    mat-caption: map-get($foreground, 500)
+    mat-caption: map-get($foreground, 600)
   );
-
 
   ///////////
   // THEME //
   ///////////
   $mat-theme: (
     // Standard
-    primary: mat-palette($primary, 500, 50, 700),
-    accent: mat-palette($accent, 500, 50, 700),
-    warn: mat-palette($warn, 500, 50, 700),
+    primary: mat-palette($primary, 500, 200, 800),
+    accent: mat-palette($accent, 500, 200, 800),
+    warn: mat-palette($warn, 500),
     is-dark: map-get($theme, 'is-dark'),
     foreground: $mat-foreground,
     background: $mat-background,
-    // font key is not standard angular theme, we've created font palette for each typography config except button & input
-    font: $font
+    font: $font,
   );
+
+
+  @return $mat-theme;
 }
 
-
 @mixin mat-theme($theme) {
+  @include angular-material-color($theme);
   @include mat-bf-button-theme($theme);
   @include mat-bf-card-theme($theme);
   @include mat-bf-chips-theme($theme);
@@ -109,29 +186,47 @@
   @include bf-missing-control-theme($theme);
   @include bf-tunnel-theme($theme);
   @include apex-chart-theme($theme);
-  
+
+
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
-  :root {
-    // Add css variables here when you need one
-    --primary: #{mat-color($primary, default)};
-    --primary-contract: #{mat-color($primary, default-contrast)};
-    --accent: #{mat-color($accent, default)};
-    --accent-contract: #{mat-color($accent, default-contrast)};
-    --warn: #{mat-color($warn, default)};
-    --warn-contract: #{mat-color($warn, default-contrast)};
-    --active: #5f6e8680;
-    // Background
-    --background-disabled-button: #{mat-color($background, disabled-button)};
-    --background-slider: #{mat-color($foreground, slider-min)};
-    --background-hover: #{mat-color($background, hover)};
-    --background-card: #{mat-color($background, card)};
-    --background: #{mat-color($background, background, 0.5)};
-    // Foreground
-    --foreground-divider: #{mat-color($foreground, divider)};
-    --foreground-text: #{mat-color($foreground, text)};
-  }
+
+  // Add css variables here when you need one
+  --primary: #{mat-color($primary, default)};
+  --primary-contract: #{mat-color($primary, default-contrast)};
+  --accent: #{mat-color($accent, default)};
+  --accent-contract: #{mat-color($accent, default-contrast)};
+  --warn: #{mat-color($warn, default)};
+  --warn-contract: #{mat-color($warn, default-contrast)};
+  --active: #5f6e8680;
+  // Background
+  --background-disabled-button: #{mat-color($background, disabled-button)};
+  --background-slider: #{mat-color($foreground, slider-min)};
+  --background-hover: #{mat-color($background, hover)};
+  --background-card: #{mat-color($background, card)};
+  --background: #{mat-color($background, background, 0.5)};
+  // Foreground
+  --foreground-disabled-text: #{mat-color($foreground, disabled-text)};
+  --foreground-divider: #{mat-color($foreground, divider)};
+  --foreground-text: #{mat-color($foreground, text)};
+  --foreground-base: #{mat-color($foreground, base)};
+
 }
+
+@import '../typography.scss';
+
+// COMPONENT TYPOGRAPHY
+@include angular-material-typography($bf-typography);
+@include mat-bf-expansion-panel-typography($bf-typography);
+@include mat-bf-list-typography($bf-typography);
+@include mat-bf-button-typography($bf-typography);
+@include mat-bf-toolbar-typography($bf-typography);
+@include mat-bf-tooltip-typography($bf-typography);
+@include mat-native-control($bf-typography);
+
+// Density
+// Remove the "_" when we switch to ng 11
+@include _angular-material-density(maximum);

@@ -1,5 +1,15 @@
+:host {
+  height: 100%;
+}
+
 div {
-  height: 55vh;
+  height: 100%;
+  position: relative;
+
+  mat-progress-spinner {
+    margin: 30% auto;
+  }
+
   img {
 
 
@@ -14,9 +24,13 @@ div {
     background-color: #fff;
   }
 
-  button.fullscreen {
+  button {
     position: absolute;
     bottom: 0;
+    right: 0;
+  }
+  button.fullscreen {
     background: #000;
+    margin: 24px;
   }
 }

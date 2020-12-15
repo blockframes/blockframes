@@ -1633,10 +1633,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.blockframes.ts"
-                },
-                {
-                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
-                  "with": "apps/financiers/financiers/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -1668,10 +1664,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.blockframes-ci.ts"
-                },
-                {
-                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
-                  "with": "apps/financiers/financiers/src/environments/environment.ci.ts"
                 }
               ]
             },
@@ -1688,10 +1680,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.blockframes-staging.ts"
-                },
-                {
-                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
-                  "with": "apps/financiers/financiers/src/environments/environment.staging.ts"
                 }
               ]
             },
@@ -1708,10 +1696,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.blockframes-demo-1.ts"
-                },
-                {
-                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
-                  "with": "apps/financiers/financiers/src/environments/environment.staging.ts"
                 }
               ]
             }
@@ -1889,8 +1873,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/cms/src/environments/environment.ts",
-                  "with": "apps/cms/src/environments/environment.prod.ts"
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes.ts"
                 }
               ],
               "optimization": true,
@@ -1943,6 +1927,18 @@
               "**/node_modules/**",
               "!apps/cms/**/*"
             ]
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build cms --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:cms"
+            ],
+            "parallel": false,
+            "color": true
           }
         }
       }

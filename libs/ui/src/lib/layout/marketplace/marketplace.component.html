@@ -2,7 +2,7 @@
   <mat-sidenav class="dark-theme" id="dashboard-navbar" mode="over">
     <mat-toolbar fxLayout fxLayoutAlign="space-between center">
       <a routerLink=".">
-        <app-logo theme="dark"></app-logo>
+        <app-logo></app-logo>
       </a>
       <button mat-icon-button (click)="sidenav.close()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
@@ -14,7 +14,7 @@
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
-      <header fxLayout fxLayoutAlign="start center">
+      <header fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>

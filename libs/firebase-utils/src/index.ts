@@ -9,7 +9,4 @@ export * from './lib/util';
 export * from './lib/restore-storage-from-ci';
 export * from './lib/types'
 export * from './lib/algolia/algolia'
-export * from './lib/algolia/movie-index.config';
-export * from './lib/algolia/org-index.config';
-export * from './lib/algolia/user-index.config';
 export * from './lib/commands'
