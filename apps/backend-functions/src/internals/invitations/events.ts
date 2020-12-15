@@ -8,7 +8,7 @@ import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../te
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient } from "@blockframes/utils/emails/utils";
-import { getAppName, getSendgridFrom, App, applicationUrl } from "@blockframes/utils/apps";
+import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
 
 
@@ -62,7 +62,7 @@ async function onInvitationToAnEventCreate({
       console.log('Invitation have already been sent along with user credentials');
       return;
     }
-    recipients.push({ email: toUser.email, name: toUser.firstName });
+    recipients.push({ email: toUser.email, name: `${toUser.firstName} ${toUser.lastName}` });
   } else if (!!toOrg) {
     const adminIds = await getAdminIds(toOrg.id);
     const admins = await Promise.all(adminIds.map(i => getUser(i)));
@@ -84,14 +84,12 @@ async function onInvitationToAnEventCreate({
     const senderName = orgName(org);
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
-    const appName = getAppName(appKey);
 
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending invitation email for an event (${docId}) from ${senderName} to : ${recipient.email}`);
-          // TODO #4206 Update and delete the appLabel parameter
-          const templateInvitation = invitationToEventFromOrg(recipient, senderName, appName.label, event.title, link, urlToUse);
+          const templateInvitation = invitationToEventFromOrg(recipient, senderName, event.title, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, appKey);
         }))
       case 'request':
@@ -104,7 +102,6 @@ async function onInvitationToAnEventCreate({
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
-    const appName = getAppName(appKey);
 
     switch (mode) {
       case 'invitation':
@@ -123,9 +120,9 @@ async function onInvitationToAnEventCreate({
         await triggerNotifications([notification]);
 
         return Promise.all(recipients.map(recipient => {
+          const userName = `${fromUser.firstName} ${fromUser.lastName}`
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          // TODO #4206 Update and delete the appLabel parameter
-          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), appName.label, recipient, event.title, link, urlToUse);
+          const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, appKey);
         }))
     }
