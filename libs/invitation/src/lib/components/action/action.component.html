@@ -31,15 +31,15 @@
         <button test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar"></mat-icon>
           <span *ngIf="event.isPrivate">Ask for Invitation</span>
-          <span *ngIf="!event.isPrivate">Add to my calendar</span>
+          <span *ngIf="!event.isPrivate">Add to My Calendar</span>
         </button>
       </ng-container>
       <ng-container *ngSwitchCase="'onTime'">
         <p>This event has already started.</p>
         <button test-id="invitation-request" mat-button (click)="request(event)">
           <mat-icon svgIcon="calendar"></mat-icon>
-          <span *ngIf="event.isPrivate">Request access</span>
-          <span *ngIf="!event.isPrivate">Access event</span>
+          <span *ngIf="event.isPrivate">Request Access</span>
+          <span *ngIf="!event.isPrivate">Access Event</span>
         </button>
       </ng-container>
     </ng-container>
