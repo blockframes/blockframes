@@ -8,8 +8,8 @@ export const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
 
 export async function restoreStorageFromCi(ciApp: admin.app.App) {
   if (
-    firebase.storageBucket === 'blockframes.appspot.com' ||
-    firebase.storageBucket === firebaseProd.storageBucket
+    firebase().storageBucket === 'blockframes.appspot.com' ||
+    firebase().storageBucket === firebaseProd().storageBucket
   )
     throw Error('ABORT: YOU ARE TRYING TO RUN SCRIPT AGAINST PROD - THIS WILL DELETE STORAGE!!');
 
@@ -18,9 +18,9 @@ export async function restoreStorageFromCi(ciApp: admin.app.App) {
     // @ts-ignore
     const [files, nextQuery, apiResponse] =
       await ciStorage.bucket(CI_STORAGE_BACKUP).getFiles({
-      autoPaginate: false,
-      delimiter: '/',
-    });
+        autoPaginate: false,
+        delimiter: '/',
+      });
     const folders = apiResponse.prefixes as string[];
     // ! There is no such thing as a folder - these are GCS prefixes: https://googleapis.dev/nodejs/storage/latest/Bucket.html#getFiles
     const latestFolder = folders
@@ -37,14 +37,14 @@ export async function restoreStorageFromCi(ciApp: admin.app.App) {
     const { folderName } = latestFolder;
     console.log('Latest backup:', folderName);
 
-    console.log('Clearing your storage bucket:', firebase.storageBucket);
+    console.log('Clearing your storage bucket:', firebase().storageBucket);
 
-    let cmd = `gsutil -m -q rm -r "gs://${firebase.storageBucket}/*"`;
+    let cmd = `gsutil -m -q rm -r "gs://${firebase().storageBucket}/*"`;
     console.log('Running command:', cmd);
     catchErrors(() => process.stdout.write(execSync(cmd)));
 
     console.log("Copying storage bucket from blockframe-ci to your local project's storage bucket...");
-    cmd = `gsutil -m -q cp -r gs://${CI_STORAGE_BACKUP}/${folderName}* gs://${firebase.storageBucket}`;
+    cmd = `gsutil -m -q cp -r gs://${CI_STORAGE_BACKUP}/${folderName}* gs://${firebase().storageBucket}`;
     console.log('Running command:', cmd);
     catchErrors(() => process.stdout.write(execSync(cmd)));
   });

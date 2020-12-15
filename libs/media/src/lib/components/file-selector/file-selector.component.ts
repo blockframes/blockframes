@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 
 import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -28,6 +28,7 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<FileSelectorComponent>,
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: { selectedFiles: string[] }
   ) { }
 
@@ -41,6 +42,7 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
     this.movies.forEach(movie =>
       this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file =>
         ({ path: file, isSelected: this.selectedFiles.includes(file) })));
+    this.cdr.markForCheck();
 
     // we set disableClose to `true` on the dialog, so we have to fake the exits events
     this.sub = this.dialogRef.backdropClick().subscribe(() => this.closeDialog()); // user click outside of the dialog

@@ -5,7 +5,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OldPromotionalElement } from './old-types'; 
 import { firebase } from '@env';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 import {
   createOldHostedMedia as createHostedMedia,
 } from './old-types';

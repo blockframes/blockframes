@@ -83,7 +83,7 @@ export class MediaService {
 
   async uploadMedias(mediaForms: HostedMediaFormValue[]) {
     const promises = mediaForms.map(async mediaForm => {
-     if (!!mediaForm.blobOrFile) {
+      if (!!mediaForm.blobOrFile) {
         // upload the new file
         this.upload({
           data: mediaForm.blobOrFile,

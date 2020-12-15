@@ -4,7 +4,7 @@ import { runChunks, getDocAndPath } from '../firebase-utils';
 import { firebase } from '@env';
 import { has, get } from 'lodash';
 import { privacies } from '@blockframes/utils/file-sanitizer';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 const EMPTY_REF = '';
 
 export async function upgrade(_: Firestore, storage: Storage) {

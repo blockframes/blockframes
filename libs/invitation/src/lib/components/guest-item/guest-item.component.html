@@ -13,8 +13,7 @@
     <span *ngIf="!user.firstName" matLine>{{ user.email }}</span>
     <span matLine>
       <small class="mat-caption">
-        {{ invitation.date | date: 'short' }} 
-        ({{ invitation.mode === 'request' ? 'Buyer request' : 'Sales agent invitation' }})
+        {{ invitation.date | date: 'short' }} - {{ invitation.mode === 'request' ? 'Request' : 'Invitation' }}
       </small>
     </span>
   </mat-list-item>
