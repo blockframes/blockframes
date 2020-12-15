@@ -19,8 +19,6 @@ const appLogos: Record<App | 'crm', string> = {
 export class AppLogoComponent implements OnInit {
   public imageLogo: string;
 
-  // @Input() theme: 'dark' | 'light';
-
   constructor(
     private routerQuery: RouterQuery,
     public theme: ThemeService
@@ -29,6 +27,5 @@ export class AppLogoComponent implements OnInit {
   ngOnInit() {
     const appName = this.routerQuery.getData<string>('app');
     this.imageLogo = appLogos[appName];
-    console.log('theme: ', this.theme);
   }
 }
