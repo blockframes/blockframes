@@ -2,14 +2,15 @@ import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/ak
 import { Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { toDate } from '@blockframes/utils/helpers';
-import { MovieQuery } from '@blockframes/movie/+state';
-import { Event } from '@blockframes/event/+state';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Event } from '@blockframes/event/+state/event.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
+import { AuthService } from '@blockframes/auth/+state';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -24,13 +25,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   private appName;
 
   constructor(
+    private auth: AuthService,
     private movieQuery: MovieQuery,
     private firestore: AngularFirestore,
     private routerQuery: RouterQuery,
     private orgService: OrganizationService
   ) {
     super(initialState);
-    this.appName = appName[getCurrentApp(this.routerQuery)]
+    this.appName = appName[getCurrentApp(this.routerQuery)];
+    this.auth.signedOut.subscribe(() => this.remove());
   }
 
   public formatNotification(notification: Notification): Partial<Notification> {
