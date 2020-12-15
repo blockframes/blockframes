@@ -62,7 +62,7 @@ async function onInvitationToAnEventCreate({
       console.log('Invitation have already been sent along with user credentials');
       return;
     }
-    recipients.push({ email: toUser.email, name: toUser.firstName });
+    recipients.push({ email: toUser.email, name: `${toUser.firstName} ${toUser.lastName}` });
   } else if (!!toOrg) {
     const adminIds = await getAdminIds(toOrg.id);
     const admins = await Promise.all(adminIds.map(i => getUser(i)));
