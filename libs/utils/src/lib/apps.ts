@@ -35,7 +35,6 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
-// TODO #4206 Use PNG logo, Gmail doesn't support SVG picture
 export const appLogo = {
   catalog: `${appUrl.content}/assets/logo/light/content-primary-blue.png`,
   festival: `${appUrl.market}/assets/logo/light/market-primary-blue.png`,
