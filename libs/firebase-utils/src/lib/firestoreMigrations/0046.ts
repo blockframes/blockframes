@@ -1,5 +1,4 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
 /**
  * Update the screener with fake ref if missing
@@ -9,10 +8,10 @@ export async function upgrade(db: Firestore) {
     const batch = db.batch();
 
     movies.docs.map(movieDoc => {
-        let data = movieDoc.data();
-        if (data.genres.inlcudes('comingAge')) {
+        const data = movieDoc.data();
+        if (data?.genres?.includes('comingAge') || data?.genres?.includes('coming-of-age')) {
             data.genres = data.genres.map(genre => {
-                if (genre === 'comingAge') {
+                if (genre === 'comingAge' || genre === 'coming-of-age') {
                     return 'youngAdult';
                 }
                 return genre;
