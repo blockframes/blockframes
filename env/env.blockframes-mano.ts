@@ -1,7 +1,7 @@
-export const production = false;
+﻿export const production = false;
 
 export const persistenceSettings = {
-  synchronizeTabs: true
+  synchronizeTabs: true,
 };
 
 // Firebase
@@ -14,15 +14,15 @@ export const appUrl = {
   crm: 'https://blockframes-mano-crm.web.app',
 };
 
-export const firebase = {
-  apiKey: "AIzaSyDAD0rQPfLCQcp-sX5MIwHJsRISnMKnDgU",
-  authDomain: "blockframes-mano.firebaseapp.com",
-  databaseURL: "https://blockframes-mano.firebaseio.com",
-  projectId: "blockframes-mano",
-  storageBucket: "blockframes-mano.appspot.com",
-  messagingSenderId: "260537474845",
-  appId: "1:260537474845:web:5328ccbb9a6fd91baf4bf4",
-  measurementId: "G-GDGR4R6KDY"
+export const firebaseConfig = {
+  apiKey: 'AIzaSyDAD0rQPfLCQcp-sX5MIwHJsRISnMKnDgU',
+  authDomain: 'blockframes-mano.firebaseapp.com',
+  databaseURL: 'https://blockframes-mano.firebaseio.com',
+  projectId: 'blockframes-mano',
+  storageBucket: 'blockframes-mano.appspot.com',
+  messagingSenderId: '260537474845',
+  appId: '1:260537474845:web:5328ccbb9a6fd91baf4bf4',
+  measurementId: 'G-GDGR4R6KDY',
 };
 
 // Algolia
@@ -34,7 +34,7 @@ export const algolia = {
   indexNameOrganizations: {
     festival: 'mano_festival_org',
     financiers: 'mano_financiers_org',
-    catalog: 'mano_catalog_org'
+    catalog: 'mano_catalog_org',
   },
   indexNameMovies: {
     festival: 'mano_festival_movies',
@@ -44,17 +44,17 @@ export const algolia = {
   indexNameUsers: 'mano_users',
 };
 
-// Support emails 
+// Support emails
 // =======
 
 export const supportEmails = {
   default: 'mbangera@cascade8.com',
   catalog: 'mbangera+catalog@cascade8.com',
   festival: 'mbangera+festival@cascade8.com',
-  financiers: 'mbangera+financiers@cascade8.com'
-}
+  financiers: 'mbangera+financiers@cascade8.com',
+};
 
-// Yandex 
+// Yandex
 // =======
 
 export const yandexId = 0;
@@ -75,7 +75,7 @@ export const factoryContract = 'factory2.eth';
 export const contracts = {
   ipHash: '0x6f77765b18deac65dc55c3a38a112c9583e25185',
   testErc1077: '0x758011e12E57a81f93D1e59AdF8867463349A54d',
-  ensResolver: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96'
+  ensResolver: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
 };
 
 export const relayer = {
@@ -83,7 +83,7 @@ export const relayer = {
   resolverAddress: '0xc1EA41786094D1fBE5aded033B5370d51F7a3F96',
   network,
   baseEnsDomain,
-  factoryContract
+  factoryContract,
 };
 
 // OMDB
@@ -91,7 +91,7 @@ export const relayer = {
 
 export const omdbApiKey = '4d1be897';
 
-// Sentry 
+// Sentry
 // =======
 
 export const sentryEnv = undefined;
@@ -119,7 +119,7 @@ export const quorum = {
     privateFor: 'Tj879+7P6IgX2UJTOLtWx5IjrPlABb7HO//kNNbnt28=',
     ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
   },
-}
+};
 
 // BigQuery
 // ========
@@ -129,7 +129,7 @@ export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.e
 // Archipel Content OrgId
 // ========
 
-export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+export const centralOrgID = 'jnbHKBP5YLvRQGcyQ8In';
 
 // Import / Export parameters
 // =======
@@ -137,3 +137,7 @@ export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 export const backupBucket = 'mano-backups';
 export const heavyChunkSize = 2;
 export const chunkSize = 15;
+
+export function firebase(app?: string) {
+  return firebaseConfig;
+}

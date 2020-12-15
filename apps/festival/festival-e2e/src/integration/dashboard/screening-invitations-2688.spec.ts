@@ -20,13 +20,16 @@ const OrgName = orgsFixture.getByID(TestEVENT.org.id).denomination.public;
 const users  =  [ userFixture.getByUID(TestEVENT.by.uid) ];
 users.push(...invitedUsers.map(uid => userFixture.getByUID(uid)));
 users.push(userFixture.getByUID(USER.Ivo));
+//Admin
+users.push(userFixture.getByUID(USER.Daphney));
 let SCREENING_URL: string;
 
 enum UserIndex {
   Organiser = 0,
   InvitedUser1,
   InvitedUser2,
-  UninvitedGuest
+  UninvitedGuest,
+  Admin
 }
 
 describe('Organiser invites other users to private screening', () => {
@@ -90,8 +93,10 @@ describe('Organiser invites other users to private screening', () => {
     p2.refuseInvitationScreening();
   });
 
-  it('Organiser logs in and verifies the accepted invitations', () => {
-    signIn(users[UserIndex.Organiser]);
+  // Member organiser do not get notification
+  // Admin gets notification about invitation acceptance.
+  it('Org admin logs in and verifies the accepted invitations', () => {
+    signIn(users[UserIndex.Admin]);
     acceptCookie();
 
     (new FestivalMarketplaceHomePage()).goToDashboard();
