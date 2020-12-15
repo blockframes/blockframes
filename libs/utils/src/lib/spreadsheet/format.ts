@@ -247,7 +247,7 @@ export function formatGenres(genres: string[], customGenres: string[], movie: Mo
   movie.customGenres = customGenres;
 }
 
-export function formatCredits(credits: { lastName: string, firstName: string, role?: string, filmography?: string, status?: string }[], scope?: Scope) {
+export function formatCredits(credits: { lastName: string, firstName: string, role?: string, description?: string, status?: string }[], scope?: Scope) {
   return credits.filter(c => !!c.firstName).map(c => {
     const credit = createCredit({ firstName: c.firstName, lastName: c.lastName });
 
@@ -265,8 +265,8 @@ export function formatCredits(credits: { lastName: string, firstName: string, ro
       }
     }
 
-    if (c.filmography) {
-      credit.filmography = [createFilmography({ title: c.filmography })];
+    if (c.description) {
+      credit.description = c.description;
     }
     return credit;
   });

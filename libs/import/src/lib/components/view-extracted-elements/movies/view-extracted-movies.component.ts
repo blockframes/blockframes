@@ -66,7 +66,7 @@ const fields = {
     fields: {
       firstName: index++,
       lastName: index++,
-      filmography: index++,
+      description: index++,
     }
   },
   originCountries: {
