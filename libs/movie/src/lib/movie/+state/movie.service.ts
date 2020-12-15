@@ -59,8 +59,8 @@ export class MovieService extends CollectionService<MovieState> {
 
     const movie = createMovie({
       _meta: createDocumentMeta({ createdBy }),
-      orgIds,
-      ...movieImported
+      ...movieImported,
+      orgIds
     });
     movie.storeConfig = {
       ...createStoreConfig(),

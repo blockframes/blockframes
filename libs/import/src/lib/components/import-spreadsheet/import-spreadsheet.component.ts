@@ -71,7 +71,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   setSheetRange(bytes: Uint8Array) {
     let sheetRange;
     if (this.fileType.value === 'movies') {
-      sheetRange = 'A14:AZ100';
+      sheetRange = 'A14:BZ100';
     } else if (this.fileType.value === 'contracts') {
       sheetRange = 'A1:DD100';
     } else if (this.fileType.value === 'organizations') {
