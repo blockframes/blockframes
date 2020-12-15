@@ -2,23 +2,25 @@
 
   <h1>Main Information</h1>
   <!-- Sales Pitch -->
-  <section id="sales-pitch" *ngIf=" movie.promotional.salesPitch as salesPitch">
-    <h2>Sales Pitch</h2>
-    <article>
-      <h5>Description</h5>
-      <p>{{ salesPitch.description }}</p>
-    </article>
-    <article *ngIf="salesPitch.jwPlayerId">
-      <h5>Video</h5>
-      <media-player [ref]="salesPitch.ref"></media-player>
-    </article>
-    <mat-divider></mat-divider>
-  </section>
+  <ng-container *ngIf="movie.promotional.salesPitch?.jwPlayerId || movie.promotional.salesPitch?.description">
+    <section id="sales-pitch" *ngIf="movie.promotional.salesPitch as salesPitch">
+      <h2>Sales Pitch</h2>
+      <article *ngIf="salesPitch.description">
+        <h5>Description</h5>
+        <p>{{ salesPitch.description }}</p>
+      </article>
+      <article *ngIf="salesPitch.jwPlayerId">
+        <h5>Video</h5>
+        <media-player [ref]="salesPitch.ref"></media-player>
+      </article>
+      <mat-divider></mat-divider>
+    </section>
+  </ng-container>
 
 
   <!-- Storyline Information -->
   <section *ngIf="movie | hasKeys: keys.main">
-    <h2>Story Elements</h2>
+    <h2>Storyline Elements</h2>
     <article *ngIf="movie.logline">
       <h5>Logline</h5>
       <p>{{ movie.logline }}</p>
