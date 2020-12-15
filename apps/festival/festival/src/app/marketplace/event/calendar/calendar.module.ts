@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { EventCalendarComponent, hideBadgePipe } from './calendar.component';
+import { EventCalendarComponent, HideBadgePipe } from './calendar.component';
 
 import { EventModule } from '@blockframes/event/event.module';
 import { EventCardModule } from '@blockframes/event/components/card/card.module';
@@ -16,7 +16,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 
 
 @NgModule({
-  declarations: [EventCalendarComponent, hideBadgePipe],
+  declarations: [EventCalendarComponent, HideBadgePipe],
   imports: [
     CommonModule,
     FlexLayoutModule,

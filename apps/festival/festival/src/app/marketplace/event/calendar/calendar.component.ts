@@ -58,7 +58,7 @@ export class EventCalendarComponent implements OnInit {
 }
 
 @Pipe({ name: 'hideBadge'})
-export class hideBadgePipe implements PipeTransform {
+export class HideBadgePipe implements PipeTransform {
   constructor(private invitationQuery: InvitationQuery) {}
   transform(event: Event) {
     if (eventTime(event) === 'late') return of(true);
