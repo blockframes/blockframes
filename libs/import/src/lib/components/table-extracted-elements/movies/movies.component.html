@@ -27,17 +27,6 @@
         <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
-    <button mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
-      (click)="publishSelectedMovies()">
-      <ng-container *ngIf="publishedTitles === 0 else publishinprogress">
-        <mat-icon svgIcon="archipel_content"></mat-icon>
-        <span>Publish to Marketplace</span>
-      </ng-container>
-      <ng-template #publishinprogress>
-        <span>Publishing... {{ publishedTitles }} / {{ selection.selected.length}}</span>
-        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
-      </ng-template>
-    </button>
   </p>
 </ng-template>
 
@@ -84,19 +73,6 @@
     <td mat-cell *matCellDef="let element"> {{ element.movie.storeConfig.storeType | toLabel: 'storeType' }} </td>
   </ng-container>
 
-  <!-- TODO issue #3091
-  <ng-container matColumnDef="movie.poster">
-    <th mat-header-cell *matHeaderCellDef> Poster </th>
-    <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.movie.poster.media as poster; else noposter">
-        <img class="poster" [ref]="poster" alt="Movie Poster" asset="empty_poster.webp">
-      </ng-container>
-      <ng-template #noposter>
-        --
-      </ng-template>
-    </td>
-  </ng-container> -->
-
   <ng-container matColumnDef="movie.releaseYear">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Release Year </th>
     <td mat-cell *matCellDef="let element"> {{ element.movie.releaseYear || '--' }} </td>
@@ -127,11 +103,6 @@
         <button mat-icon-button color="accent" [disabled]="isSaveOrUpdateDisabledForTitle(element)"
           (click)="updateMovie(element)">
           <mat-icon svgIcon="access_time"></mat-icon>
-        </button>
-        <button mat-stroked-button color="primary" [disabled]="!isTitleValidForPublish(element)"
-          (click)="publishMovie(element)">
-          <mat-icon svgIcon="archipel_content"></mat-icon>
-          <span>Publish to Marketplace</span>
         </button>
       </ng-container>
       <ng-template #create>

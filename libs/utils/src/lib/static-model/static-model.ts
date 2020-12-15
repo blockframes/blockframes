@@ -1849,7 +1849,6 @@ export type Scope = keyof StaticModel;
 export type GetKeys<S extends Scope> = keyof StaticModel[S];
 export type GetLabel<S extends Scope> = StaticModel[S][GetKeys<S>]
 export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
-export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
 
 /** Check if the given value is a key of a scope */
 export const isInKeys = (scope: Scope, givenValue: string) => {
