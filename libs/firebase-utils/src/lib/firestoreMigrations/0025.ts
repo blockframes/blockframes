@@ -5,7 +5,7 @@ import { get } from 'https';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { OldImgRef, OldPublicUser, OldPublicOrganization, OldMovieImgRefDocument, OldPromotionalElement } from './old-types';
 import { firebase } from '@env';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 
 const EMPTY_REF: OldImgRef = {
   ref: '',

@@ -13,7 +13,7 @@ import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 export { restore } from './admin';
 
 export async function prepareForTesting() {

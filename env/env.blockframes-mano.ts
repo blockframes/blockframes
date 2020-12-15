@@ -25,6 +25,10 @@ export const firebaseConfig = {
   measurementId: 'G-GDGR4R6KDY',
 };
 
+export function firebase(app?: string) {
+  return firebaseConfig
+}
+
 // Algolia
 // =======
 

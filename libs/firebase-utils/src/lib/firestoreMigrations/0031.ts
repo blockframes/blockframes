@@ -3,7 +3,7 @@ import { Firestore, Storage } from '../types';
 import { File as GFile } from '@google-cloud/storage';
 import { getDocument, runChunks } from '../firebase-utils';
 import { firebase } from '@env';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 
 import {
   OldHostedMedia as HostedMedia,

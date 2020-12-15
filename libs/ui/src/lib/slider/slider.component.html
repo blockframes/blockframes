@@ -19,7 +19,7 @@
 <ng-container *ngIf="!hideIndicators">
   <div class="indicator" fxLayout fxLayoutGap="8px">
     <ng-container *ngFor="let slide of slides; let i = index">
-      <button  mat-mini-fab tabindex="-1" [disabled]="i === currentIndex" (click)="slideTo(i)"></button>
+      <button  mat-mini-fab color="primary" tabindex="-1" [disabled]="i === currentIndex" (click)="slideTo(i)"></button>
     </ng-container>
   </div>
 </ng-container>

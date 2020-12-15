@@ -1,5 +1,5 @@
 
-<video #video></video>
+<video #video [ngClass]="{ hidden: !(remoteTrackState$.video | async) || !(localTrackState$.video | async) }"></video>
 <audio #audio></audio>
 
 <svg *ngIf="!(remoteTrackState$.video | async) || !(localTrackState$.video | async)" viewBox="0 0 100 100">

@@ -47,8 +47,7 @@ import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-bann
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
-import { environment } from '../environments/environment';
-import { firebase } from '@env';
+import { firebase, production } from '@env';
 
 @NgModule({
   declarations: [AppComponent],
@@ -58,14 +57,14 @@ import { firebase } from '@env';
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: production }),
     MatNativeDateModule,  // Required for Datepicker
 
     // Intercom
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireModule.initializeApp(firebase('financiers')),
     AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,

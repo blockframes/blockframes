@@ -22,7 +22,7 @@ export class LandingComponent {
       description: 'A reliable way to invest in top film & TV projects, backed by professional financiers. By sharing their investment, investors benefit from their expertise in dealmaking and content acquisition.'
     },
     {
-      title: 'For Professional',
+      title: 'For Professionals',
       imgAsset: 'buyer_perspective.webp',
       description: 'Package the financing of your projects by connecting with high-capacity investors looking to invest in films and series.'
     }

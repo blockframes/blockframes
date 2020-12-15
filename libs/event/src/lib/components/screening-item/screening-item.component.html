@@ -9,6 +9,13 @@
     <org-chip [org]="screening.org"></org-chip>
   </div>
   <footer fxLayout>
-    <invitation-action [invitation]="invitation$ | async" [event]="screening"></invitation-action>
+    <ng-container *ngIf="event$ | async as event">
+      <ng-container *ngIf="event.isOwner; else notOwner">
+        <h3>You are the owner of this event</h3>
+      </ng-container>
+      <ng-template #notOwner>
+        <invitation-action [invitation]="invitation$ | async" [event]="screening"></invitation-action>
+      </ng-template>
+    </ng-container>
   </footer>
 </article>

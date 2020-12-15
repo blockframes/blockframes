@@ -27,7 +27,7 @@
 
     <section id="storyline-elements">
       <h3>Storyline Elements</h3>
-      <movie-summary-synopsis [movie]="form" [link]="('synopsis' | getPath)"></movie-summary-synopsis>
+      <movie-summary-synopsis [movie]="form" [link]="('story-elements' | getPath)"></movie-summary-synopsis>
     </section>
 
     <mat-divider></mat-divider>
@@ -97,7 +97,7 @@
 
     <section id="technical-information">
       <h3>Technical Information</h3>
-      <movie-summary-technical-info [movie]="form" [link]="('technical-info' | getPath)"></movie-summary-technical-info>
+      <movie-summary-technical-info [movie]="form" [link]="('technical-spec' | getPath)"></movie-summary-technical-info>
     </section>
 
     <mat-divider></mat-divider>
@@ -137,9 +137,9 @@
     <!-- CAMPAIGN -->
     <section id="campaign">
       <h3>Investment conditions</h3>
-      <campaign-summary-proposal [form]="campaignForm" link="../proposal"></campaign-summary-proposal>
+      <campaign-summary-proposal [form]="campaignForm" [link]="'proposal' | getPath"></campaign-summary-proposal>
             
-      <campaign-summary-perks [form]="campaignForm" link="../perks"></campaign-summary-perks>
+      <campaign-summary-perks [form]="campaignForm" [link]="'perks' | getPath"></campaign-summary-perks>
     </section>
   
     <!-- Submit -->

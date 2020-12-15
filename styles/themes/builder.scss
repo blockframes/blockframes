@@ -13,6 +13,7 @@
 @import '../components/mat-snack-bar.scss';
 @import '../components/mat-dialog.scss';
 @import '../components/mat-slider.scss';
+@import '../components/mat-tooltip.scss';
 @import '../components/apex-chart.scss';
 @import '../components/bf-widget.scss';
 @import '../components/bf-tunnel.scss';
@@ -99,24 +100,24 @@
     disabled-button-toggle: map-get($background, 500),
     unselected-chip: map-get($background, 500),
     disabled-list-option: map-get($background, 500),
-    tooltip: rgba(map-get($background, 500), 0.9),
+    tooltip: rgba(map-get($background, 700), 0.9),
   );
 
   ////////////////
   // FOREGROUND //
   ////////////////
   $mat-foreground: (
-    base: map-get($primary, 200),
+    base: rgba(map-get($primary, 200), 0.5),
     divider: map-get($foreground, 500),
     dividers: map-get($foreground, 500),
     disabled: map-get($foreground, 500),
     disabled-button: map-get($foreground, 200),
-    disabled-text: map-get($foreground, 500),
-    elevation: rgba(map-get($background, 700), 0.12),
+    disabled-text: map-get($foreground, 600),
+    elevation: rgba(#010101, 0.6),
     hint-text: map-get($foreground, 600),
     secondary-text: map-get($foreground, 700),
-    icon: map-get($foreground, 800),
-    icons: map-get($foreground, 800),
+    icon: map-get($foreground, 700),
+    icons: map-get($foreground, 700),
     text: map-get($foreground, 800),
     slider-min: map-get($foreground, 700),
     slider-off: rgba(map-get($foreground, 700), 0.26),
@@ -155,7 +156,7 @@
     background: $mat-background,
     font: $font,
   );
-  
+
 
   @return $mat-theme;
 }
@@ -186,7 +187,7 @@
   @include bf-tunnel-theme($theme);
   @include apex-chart-theme($theme);
 
-    
+
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
@@ -208,8 +209,10 @@
   --background-card: #{mat-color($background, card)};
   --background: #{mat-color($background, background, 0.5)};
   // Foreground
+  --foreground-disabled-text: #{mat-color($foreground, disabled-text)};
   --foreground-divider: #{mat-color($foreground, divider)};
   --foreground-text: #{mat-color($foreground, text)};
+  --foreground-base: #{mat-color($foreground, base)};
 
 }
 
@@ -221,6 +224,7 @@
 @include mat-bf-list-typography($bf-typography);
 @include mat-bf-button-typography($bf-typography);
 @include mat-bf-toolbar-typography($bf-typography);
+@include mat-bf-tooltip-typography($bf-typography);
 @include mat-native-control($bf-typography);
 
 // Density

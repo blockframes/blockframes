@@ -1,6 +1,8 @@
 
 <ng-container *ngIf="loading$ | async; else ready">
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  <section fxLayout fxLayoutAlign="center">
+    <mat-progress-spinner mode="indeterminate" [diameter]="50"></mat-progress-spinner>
+  </section>
 </ng-container>
 <ng-template #ready>
   <ng-container *ngIf="localControl$ | async as control">
