@@ -101,7 +101,8 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.data = data;
 
     if (importState.distributionRights) {
-      const orgId = this.orgQuery.getActiveId();
+      const orgId = !!importState.movie.orgIds.length ? importState.movie.orgIds[0] : this.orgQuery.getActiveId();
+
       const movieId = importState.movie.id;
       const titlesAndRights = { [movieId]: importState.distributionRights };
 

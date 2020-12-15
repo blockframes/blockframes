@@ -367,7 +367,7 @@ export function formatReview(reviews: { revue: string, link: string, quote: stri
 }
 
 export function formatSingleValue(value: string, scope: Scope, path: string, movie: Movie) {
-  if(!!value){
+  if (!!value) {
     const key = getKeyIfExists(scope, value);
     if (!!key) {
       const pathParts = path.split('.');
@@ -404,8 +404,10 @@ export function formatDistributionRights(territories: string, territoriesExclude
   // This feature is used on festival app.
   const separator = ';';
   const distributionRight = createDistributionRight();
+  let hasData = false;
   // TERRITORIES
   if (territories) {
+    hasData = true;
     distributionRight.territory = [];
     territories.split(separator).forEach((c: TerritoryValue) => {
       const territory = getKeyIfExists('territories', c);
@@ -425,6 +427,7 @@ export function formatDistributionRights(territories: string, territoriesExclude
 
   // TERRITORIES EXCLUDED
   if (territoriesExcluded) {
+    hasData = true;
     distributionRight.territoryExcluded = [];
     territoriesExcluded.split(separator).forEach((c: TerritoryValue) => {
       const territory = getKeyIfExists('territories', c);
@@ -442,6 +445,8 @@ export function formatDistributionRights(territories: string, territoriesExclude
     });
   }
 
-  // We keep it for save in the next component
-  state.distributionRights = [distributionRight];
+  if (hasData) {
+    // We keep it for save in the next component
+    state.distributionRights = [distributionRight];
+  }
 }

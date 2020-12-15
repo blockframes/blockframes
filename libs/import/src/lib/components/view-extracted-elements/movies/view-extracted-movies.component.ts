@@ -459,15 +459,16 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // USER ID (to override who is creating this title)
         if (this.mapping.ownerId) {
           movie._meta = createDocumentMeta();
-          const userExists = await this.userService.userExists(this.mapping.ownerId);
-          if (userExists) {
-            movie._meta.createdBy = this.mapping.ownerId;
+          const user = await this.userService.getUser(this.mapping.ownerId);
+          if (user && user.orgId) {
+            movie._meta.createdBy = user.uid;
+            movie.orgIds = [user.orgId];
           } else {
             importErrors.errors.push({
               type: 'error',
               field: 'movie._meta.createdBy',
               name: 'Movie owned id',
-              reason: `User Id specified for movie admin does not exists "${this.mapping.ownerId}"`,
+              reason: `User Id specified for movie admin does not exists or does not have an org "${this.mapping.ownerId}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }
