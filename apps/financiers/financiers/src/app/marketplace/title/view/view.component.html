@@ -20,13 +20,13 @@
       <h1>Project Funding</h1>
       <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
       <ng-container *ngIf="orgs$ | async as orgs">
-        <p class="mat-caption">Meet the fund to have further information</p>
+        <p class="mat-caption">Contact financier for further information</p>
         <button mat-flat-button color="accent" (click)="openForm(orgs)">
           Open discussion
         </button>
       </ng-container>
       <a mat-button class="mat-caption" href="assets/docs/film-industry.pdf" target="_blank">Learn more about investing
-        in cinema industry</a>
+        in the content industry</a>
     </section>
 
   </title-marketplace-shell>
@@ -43,7 +43,6 @@
           <mat-select formControlName="subject" required>
             <mat-option></mat-option>
             <mat-option value="main">Main</mat-option>
-            <mat-option value="artistic">Artistic</mat-option>
             <mat-option value="artistic">Artistic</mat-option>
             <mat-option value="additional">Additional</mat-option>
             <mat-option value="financial">Financial</mat-option>
