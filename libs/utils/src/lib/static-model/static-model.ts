@@ -150,7 +150,7 @@ export const genres = {
   horror: 'Horror',
   scienceFiction: 'Science Fiction', // science-fiction
   thriller: 'Thriller',
-  comingAge: 'Young Adult', // coming-of-age
+  youngAdult: 'Young Adult', // coming-of-age
   fantasy: 'Fantasy',
   romance: 'Romance',
   western: 'Western',
@@ -451,20 +451,30 @@ export const cartStatus = {
 } as const
 
 export const orgActivity = {
-  production: 'Production',
-  intlSales: 'International Sales',
-  distribution: 'Distribution',
-  tvBroadcast: 'Television Broadcast',
-  vodPlatform: 'VOD Platform',
-  theatricalExhibition: 'Theatrical Exhibition',
+  actor: 'Actor',
   buyersRep: 'Buyer\'s Rep',
+  consulting: 'Consulting',
+  director: 'Director',
+  distribution: 'Distribution',
+  filmCommission: 'Film Commission',
   filmFestival: 'Film Festival',
   filmFund: 'Film Fund',
   filmLibrary: 'Film Library',
-  filmCommission: 'Film Commission',
+  filmSchool: 'Film School',
   financialInstitution: 'Financial Institution',
-  press: 'Press',
   inflight: 'Inflight',
+  institution: 'Institution',
+  intlSales: 'International Sales',
+  organization: 'Organization',
+  press: 'Press',
+  privateInvestor: 'Private Investor',
+  production: 'Production',
+  talentAgency: 'Talent Agency',
+  technical: 'Technical',
+  tvBroadcast: 'Television Broadcast',
+  theatricalExhibition: 'Theatrical Exhibition',
+  vodPlatform: 'VOD Platform',
+  other: 'Other',
 } as const
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
@@ -1849,7 +1859,6 @@ export type Scope = keyof StaticModel;
 export type GetKeys<S extends Scope> = keyof StaticModel[S];
 export type GetLabel<S extends Scope> = StaticModel[S][GetKeys<S>]
 export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
-export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
 
 /** Check if the given value is a key of a scope */
 export const isInKeys = (scope: Scope, givenValue: string) => {

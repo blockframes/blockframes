@@ -7,7 +7,12 @@
   <footer *ngIf="(local$ | async) as local">
 
     <ng-container *ngIf="local.tracks.video as videoTrack">
-      <button mat-fab color="primary" (click)="toggleLocalTrack('video')">
+      <button
+        mat-fab
+        color="primary"
+        [matTooltip]="'Turn ' + (videoTrack.isEnabled ? 'off' : 'on') + ' camera'"
+        (click)="toggleLocalTrack('video')"
+      >
         <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
         <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
       </button>
@@ -22,7 +27,12 @@
     </ng-container>
 
     <ng-container *ngIf="local.tracks.audio as audioTrack">
-      <button mat-fab color="primary" (click)="toggleLocalTrack('audio')">
+      <button
+        mat-fab
+        color="primary"
+        [matTooltip]="'Turn ' + (audioTrack.isEnabled ? 'off' : 'on') + ' mic'"
+        (click)="toggleLocalTrack('audio')"
+      >
         <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
         <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
       </button>

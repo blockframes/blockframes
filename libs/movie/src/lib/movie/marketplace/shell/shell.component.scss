@@ -14,4 +14,10 @@ footer {
       width: 70%;
     }
   }
+
+  bf-carousel {
+    img {
+      height: 100%; // Only necessary for Safari
+    }
+  }
 }
