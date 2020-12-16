@@ -76,9 +76,21 @@ export class PdfViewerComponent {
   toggleFullScreen() {
 
     if (!this.fullScreen) {
-      this.pdfContainer.nativeElement.requestFullscreen();
+      if (!!this.pdfContainer.nativeElement.requestFullscreen) {
+        this.pdfContainer.nativeElement.requestFullscreen();
+
+      // F***ing Safari Browser
+      } else {
+        (this.pdfContainer.nativeElement as any).webkitRequestFullscreen();
+      }
     } else {
-      this.document.exitFullscreen();
+      if (!!this.document.exitFullscreen) {
+        this.document.exitFullscreen();
+
+      // F***ing Safari Browser
+      } else {
+        (this.document as any).webkitExitFullscreen();
+      }
     }
   }
 }
