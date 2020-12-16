@@ -6,6 +6,12 @@ import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
+import { AuthService } from '@blockframes/auth/+state';
+import { Subject } from 'rxjs';
+
+class MockAuthService {
+  signedOut = new Subject<void>();
+}
 
 describe('Notifications Test Suite', () => {
   let service: NotificationService;
@@ -20,6 +26,7 @@ describe('Notifications Test Suite', () => {
       providers: [
         NotificationService,
         NotificationStore,
+        { provide: AuthService, useClass: MockAuthService },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
