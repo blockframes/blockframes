@@ -9,6 +9,7 @@ import { readFileSync } from 'fs';
 import { AuthService } from '@blockframes/auth/+state';
 import { Subject } from 'rxjs';
 
+// @TODO (#4564) replace this mock by actual AuthService
 class MockAuthService {
   signedOut = new Subject<void>();
 }
