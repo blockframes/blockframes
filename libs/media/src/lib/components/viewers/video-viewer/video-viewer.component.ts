@@ -121,7 +121,7 @@ export class VideoViewerComponent implements AfterViewInit {
       if (!!this.playerContainer.nativeElement.requestFullscreen) {
         this.playerContainer.nativeElement.requestFullscreen();
 
-      // F***ing Safari Browser
+      // Safari Browser
       } else {
         (this.playerContainer.nativeElement as any).webkitRequestFullscreen();
       }
@@ -129,7 +129,7 @@ export class VideoViewerComponent implements AfterViewInit {
       if (!!this.document.exitFullscreen) {
         this.document.exitFullscreen();
 
-      // F***ing Safari Browser
+      // Safari Browser
       } else {
         (this.document as any).webkitExitFullscreen();
       }

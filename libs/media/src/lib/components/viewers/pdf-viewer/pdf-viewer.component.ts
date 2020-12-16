@@ -79,7 +79,7 @@ export class PdfViewerComponent {
       if (!!this.pdfContainer.nativeElement.requestFullscreen) {
         this.pdfContainer.nativeElement.requestFullscreen();
 
-      // F***ing Safari Browser
+      // Safari Browser
       } else {
         (this.pdfContainer.nativeElement as any).webkitRequestFullscreen();
       }
@@ -87,7 +87,7 @@ export class PdfViewerComponent {
       if (!!this.document.exitFullscreen) {
         this.document.exitFullscreen();
 
-      // F***ing Safari Browser
+      // Safari Browser
       } else {
         (this.document as any).webkitExitFullscreen();
       }
