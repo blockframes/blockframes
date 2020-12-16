@@ -18,7 +18,7 @@
     <div class="status" [ngSwitch]="invit.status">
       <span class="primary" *ngSwitchCase="'accepted'">Accepted</span>
       <span class="warn" *ngSwitchCase="'declined'">Declined</span>
-      <span *ngSwitchCase="'pending'">Your request has been sent to the organizer. We're waiting for them to let you in.</span>
+      <span class="primary" *ngSwitchCase="'pending'">Pending</span>
     </div>
   </ng-template>
 </ng-container>
