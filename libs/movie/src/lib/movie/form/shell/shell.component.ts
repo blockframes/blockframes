@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
@@ -197,7 +197,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     if (options.publishing) {
       for (const name in this.configs) {
         const form: FormEntity<any> = this.getForm(name as any);
-        if (form.invalid) {
+        if (form.invalid || hasRequired(form, 'required')) {
           const fields = findInvalidControls(form);
           throw new Error(`Form "${name}" should be valid before publishing. Invalid fields are: ${fields.join()}`);
         }
@@ -238,6 +238,19 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     );
   }
 }
+
+function hasRequired(control: AbstractControl, error: string) {
+  if (control instanceof FormArray) {
+    return control.controls.some(c => hasRequired(c, error));
+  }
+  if (control instanceof FormGroup) {
+    return Object.values(control.controls).some(c => hasRequired(c, error));
+  }
+  if (control instanceof FormControl) {
+    return control.hasError(error);
+  }
+}
+
 
 /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
 export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
