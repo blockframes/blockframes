@@ -4,7 +4,7 @@ import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { BehaviorSubject } from 'rxjs';
-import { toggleFullScreen as _toggleFullScreen } from '../utils';
+import { toggleFullScreen } from '../utils';
 
 @Component({
   selector: '[ref] [control] event-pdf-viewer',
@@ -73,6 +73,6 @@ export class PdfViewerComponent {
   }
 
   toggleFullScreen() {
-    _toggleFullScreen(this.pdfContainer, this.document, this.fullScreen);
+    toggleFullScreen(this.pdfContainer, this.document, this.fullScreen);
   }
 }
