@@ -2,6 +2,7 @@ export * from './term-date.pipe';
 export * from './to-label.pipe';
 export * from './reverse.pipe';
 export * from './display-name.pipe';
+export * from './display-position.pipe';
 export * from './filter-by-date.pipe';
 export * from './deep-key.pipe';
 export * from './workspace.pipe';
