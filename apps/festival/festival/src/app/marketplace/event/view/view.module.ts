@@ -13,7 +13,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
-import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pipes';
 import { MatButtonModule} from '@angular/material/button';
 
 @NgModule({
@@ -30,6 +30,7 @@ import { MatButtonModule} from '@angular/material/button';
     OrgChipModule,
     OrganizationCardModule,
     DisplayNameModule,
+    DisplayPositionModule,
     MatButtonModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
