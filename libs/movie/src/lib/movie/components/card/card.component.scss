@@ -7,7 +7,7 @@
 figure {
   position: relative;
   margin: 0;
-  line-height: 1rem;  // Required to fit the img size
+  line-height: 1rem; // Required to fit the img size
 
   .view-more {
     color: var(--primary);
@@ -50,6 +50,5 @@ span {
   margin-top: 8px;
   margin-bottom: 0;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
 }

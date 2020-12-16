@@ -734,7 +734,7 @@ function createMovieReviewControl(review: Partial<MovieReview> = {}) {
     criticName: new FormControl(criticName),
     journalName: new FormControl(journalName),
     criticQuote: new FormControl(criticQuote),
-    revueLink: new FormControl(revueLink, urlValidators),
+    revueLink: new FormControl(revueLink),
   }
 }
 
@@ -855,7 +855,7 @@ export class VersionSpecificationForm extends FormEntity<any> {
       dubbed: new FormControl(versionSpecification.dubbed),
       subtitle: new FormControl(versionSpecification.subtitle),
       caption: new FormControl(versionSpecification.caption)
-    }, [...validators, versionLanguagesValidator]);
+    });
   }
 }
 
