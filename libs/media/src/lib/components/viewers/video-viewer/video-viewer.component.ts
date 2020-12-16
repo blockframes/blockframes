@@ -118,9 +118,21 @@ export class VideoViewerComponent implements AfterViewInit {
   toggleFullScreen() {
 
     if (!this.fullScreen) {
-      this.playerContainer.nativeElement.requestFullscreen();
+      if (!!this.playerContainer.nativeElement.requestFullscreen) {
+        this.playerContainer.nativeElement.requestFullscreen();
+
+      // Safari Browser
+      } else {
+        (this.playerContainer.nativeElement as any).webkitRequestFullscreen();
+      }
     } else {
-      this.document.exitFullscreen();
+      if (!!this.document.exitFullscreen) {
+        this.document.exitFullscreen();
+
+      // Safari Browser
+      } else {
+        (this.document as any).webkitExitFullscreen();
+      }
     }
   }
 }
