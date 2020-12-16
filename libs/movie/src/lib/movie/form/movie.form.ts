@@ -734,7 +734,7 @@ function createMovieReviewControl(review: Partial<MovieReview> = {}) {
     criticName: new FormControl(criticName),
     journalName: new FormControl(journalName),
     criticQuote: new FormControl(criticQuote),
-    revueLink: new FormControl(revueLink, urlValidators),
+    revueLink: new FormControl(revueLink),
   }
 }
 
@@ -850,17 +850,13 @@ export class MovieVersionInfoForm extends FormEntity<any> {
 }
 
 export class VersionSpecificationForm extends FormEntity<any> {
-  constructor(versionSpecification: MovieLanguageSpecification, validators: ValidatorFn[] = []) {
+  constructor(versionSpecification: MovieLanguageSpecification) {
     super({
       dubbed: new FormControl(versionSpecification.dubbed),
       subtitle: new FormControl(versionSpecification.subtitle),
       caption: new FormControl(versionSpecification.caption)
-    }, [...validators, versionLanguagesValidator]);
+    });
   }
-}
-
-const versionLanguagesValidator: ValidatorFn = (version: VersionSpecificationForm) => {
-  return Object.values(version.value).every(hasVersion => !hasVersion) ? { noVersion: true } : null;
 }
 
 // ------------------------------
