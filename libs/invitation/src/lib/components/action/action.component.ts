@@ -45,7 +45,7 @@ export class ActionComponent {
     const { ownerId, id, isPrivate } = event;
     this.service.request('org', ownerId).from('user').to('attendEvent', id);
     if (isPrivate) {
-      this.snackBar.open('Your request has been sent to the organizer. We\'re waiting for them to let you in', 'close', { duration: 2000 });
+      this.snackBar.open('Your request has been sent to the organizer.', 'close', { duration: 2000 });
     }
     this.requestPending = true;
   }
