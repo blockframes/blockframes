@@ -19,7 +19,10 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
   onInit(): Observable<any>[] {
     const sub = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
-      tap(campaign => this.form = new CampaignForm(campaign))
+      tap(campaign => {
+        this.form.reset();
+        this.form.setAllValue(campaign);
+      })
     );
     return [sub];
   }
