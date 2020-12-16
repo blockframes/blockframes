@@ -1,10 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild } from '@angular/core';
-
 import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { BehaviorSubject } from 'rxjs';
+import { toggleFullScreen as _toggleFullScreen } from '../utils';
 
 @Component({
   selector: '[ref] [control] event-pdf-viewer',
@@ -72,25 +72,7 @@ export class PdfViewerComponent {
     }
   }
 
-  /** Toggle the full screen mode depending on the current full screen state */
   toggleFullScreen() {
-
-    if (!this.fullScreen) {
-      if (!!this.pdfContainer.nativeElement.requestFullscreen) {
-        this.pdfContainer.nativeElement.requestFullscreen();
-
-      // Safari Browser
-      } else {
-        (this.pdfContainer.nativeElement as any).webkitRequestFullscreen();
-      }
-    } else {
-      if (!!this.document.exitFullscreen) {
-        this.document.exitFullscreen();
-
-      // Safari Browser
-      } else {
-        (this.document as any).webkitExitFullscreen();
-      }
-    }
+    _toggleFullScreen(this.pdfContainer, this.document, this.fullScreen);
   }
 }

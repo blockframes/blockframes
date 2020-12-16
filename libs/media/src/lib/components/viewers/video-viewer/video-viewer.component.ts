@@ -6,6 +6,7 @@ import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { MediaService } from "@blockframes/media/+state/media.service";
 import { ImageParameters } from "@blockframes/media/directives/image-reference/imgix-helpers";
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
+import { toggleFullScreen as _toggleFullScreen } from '../utils';
 
 declare const jwplayer: any;
 
@@ -114,25 +115,7 @@ export class VideoViewerComponent implements AfterViewInit {
     this.control.isPlaying ? this.player.play() : this.player.pause();
   }
 
-  /** Toggle the full screen mode depending on the current full screen state */
   toggleFullScreen() {
-
-    if (!this.fullScreen) {
-      if (!!this.playerContainer.nativeElement.requestFullscreen) {
-        this.playerContainer.nativeElement.requestFullscreen();
-
-      // Safari Browser
-      } else {
-        (this.playerContainer.nativeElement as any).webkitRequestFullscreen();
-      }
-    } else {
-      if (!!this.document.exitFullscreen) {
-        this.document.exitFullscreen();
-
-      // Safari Browser
-      } else {
-        (this.document as any).webkitExitFullscreen();
-      }
-    }
+    _toggleFullScreen(this.playerContainer, this.document, this.fullScreen);
   }
 }
