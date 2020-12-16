@@ -74,7 +74,7 @@ export class Grid implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.layout.layout$.subscribe(({ margin, columns, gutter }) => {
-      this.columns = `repeat(${columns}, 1fr)`;
+      this.columns = `repeat(${columns}, minmax(0, 1fr))`;
       this.gutters = `${gutter}px`;
       this.margin = `${margin}px`;
     });
