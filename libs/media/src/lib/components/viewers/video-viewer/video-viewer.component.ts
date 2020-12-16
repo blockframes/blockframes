@@ -6,7 +6,7 @@ import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { MediaService } from "@blockframes/media/+state/media.service";
 import { ImageParameters } from "@blockframes/media/directives/image-reference/imgix-helpers";
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
-import { toggleFullScreen as _toggleFullScreen } from '../utils';
+import { toggleFullScreen  } from '../utils';
 
 declare const jwplayer: any;
 
@@ -116,6 +116,6 @@ export class VideoViewerComponent implements AfterViewInit {
   }
 
   toggleFullScreen() {
-    _toggleFullScreen(this.playerContainer, this.document, this.fullScreen);
+    toggleFullScreen(this.playerContainer, this.document, this.fullScreen);
   }
 }
