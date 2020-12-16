@@ -5,18 +5,26 @@
   </a>
 </ng-container>
 
-<!-- If not required, check if value is missing -->
 <ng-template #notRequired>
-  <ng-container *ngIf="isMissing(control); else content">
-    <a [routerLink]="link" [fragment]="fragment" class="missing-control">
-      <span>Missing {{ isLast ? '' : ', ' }}</span>
-    </a>
+  <ng-container [ngSwitch]="getStatus(control)">
+    <ng-container *ngSwitchCase="'error'">
+      <a [routerLink]="link" [fragment]="fragment" class="mandatory-control">
+        Error
+      </a>
+    </ng-container>
+    <ng-container *ngSwitchCase="'missing'">
+      <a [routerLink]="link" [fragment]="fragment" class="missing-control">
+        <span>Missing {{ isLast ? '' : ', ' }}</span>
+      </a>
+    </ng-container>
+    <ng-container *ngSwitchCase="'valid'">
+      <!-- Display projected content if provided -->
+      <ng-template #content [ngTemplateOutlet]="child || value"
+        [ngTemplateOutletContext]="{ $implicit: control?.value, control: control }">
+      </ng-template>
+    </ng-container>
   </ng-container>
-</ng-template>
 
-<!-- Display projected content if provided -->
-<ng-template #content [ngTemplateOutlet]="child || value"
-  [ngTemplateOutletContext]="{ $implicit: control?.value, control: control }">
 </ng-template>
 
 <!-- Display value if no projected content -->

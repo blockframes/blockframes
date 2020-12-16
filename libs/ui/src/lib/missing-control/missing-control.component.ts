@@ -23,6 +23,8 @@ export class MissingControlComponent implements OnInit, OnDestroy {
   @Input() fragment: string;
   @Input() isLast = true;
 
+  getStatus = getStatus;
+
   @ContentChild(TemplateRef) child: TemplateRef<any>;
 
   constructor(private cdr: ChangeDetectorRef) { }
@@ -31,27 +33,39 @@ export class MissingControlComponent implements OnInit, OnDestroy {
     this.sub = this.control?.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
-  isMissing(control: AbstractControl) {
-    if (control.invalid) return true;
-
-    if (control instanceof FormArray) {
-      return !control.controls.length;
-    } else if (control instanceof FormGroup) {
-      if (Object.keys(control.controls).length) {
-        const values = Object.values(control.controls);
-        return values.length ? values.some(c => this.isMissing(c)) : true;
-      } else {
-        return true;
-      }
-    }
-    if (Array.isArray(control?.value)) {
-      return !control?.value.length;
-    }
-    const value = control?.value;
-    return value === null || value === undefined || value === ''; // 0 should be a valid value
-  }
-
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
   }
+}
+
+function getStatus(control: AbstractControl): 'error' | 'valid' | 'missing' {
+  if (control.invalid) return 'error';
+
+  if (control instanceof FormArray) {
+    if (!control.controls.length) return 'missing';
+
+    const hasError = control.controls.some(ctrl => getStatus(ctrl) === 'error');
+
+    if (hasError) return 'error';
+    return 'valid';
+  }
+  if (control instanceof FormGroup) {
+    const controls = Object.values(control.controls)
+    if (!controls.length) return 'missing';
+
+    const hasValue = controls.map(getStatus);
+
+    if (hasValue.includes('missing')) return 'missing';
+
+    const hasError = controls.some(ctrl => getStatus(ctrl) === 'error');
+
+    if (hasError) return 'error';
+    return 'valid';
+  }
+  if (Array.isArray(control?.value)) {
+    if (!control?.value.length) return 'missing';
+    return 'valid';
+  }
+  if (control.value === null || control.value === undefined || control.value === '') return 'missing';
+  return 'valid'
 }
