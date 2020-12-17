@@ -14,7 +14,7 @@ export const appUrl = {
   crm: 'https://crm.blockframes.io',
 };
 
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: 'AIzaSyCcUEsNlBgusJtyYAawoJAshnnHBruM1ss',
   authDomain: 'blockframes.firebaseapp.com',
   databaseURL: 'https://blockframes.firebaseio.com',
