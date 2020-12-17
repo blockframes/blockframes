@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 
@@ -12,14 +12,13 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 })
 export class ContractsComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'type': 'Type',
     'lastVersion.id': 'Version',
     'lastVersion.status': 'Status',
     'lastVersion.scope': 'Scope',
-    'partyIds': 'Parties',
-    'titleIds': 'Titles',
-    'edit': 'Edit',
+    'partyIds': { value: 'Parties', disableSort: true },
+    'titleIds': { value: 'Titles', disableSort: true }
   };
 
   public initialColumns: string[] = [
@@ -30,38 +29,30 @@ export class ContractsComponent implements OnInit {
     'lastVersion.scope',
     'partyIds',
     'titleIds',
-    'edit',
   ];
   public rows: Contract[] = [];
   public movieId = '';
   constructor(
     private contractService: ContractService,
     private route: ActivatedRoute,
+    private router: Router,
     private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
 
     this.movieId = this.route.snapshot.paramMap.get('movieId');
-    let contracts: Contract[] = [];
     if (this.movieId) {
-      contracts = await this.contractService.getMovieContracts(this.movieId);
+      this.rows = await this.contractService.getMovieContracts(this.movieId);
     } else {
-      contracts = await this.contractService.getValue();
+      this.rows = await this.contractService.getValue();
     }
 
-    const promises = contracts.map(async contract => {
-      const row = { ...contract } as any;
-      // Append new data for table display
-      row.edit = {
-        id: row.id,
-        link: `/c/o/admin/panel/contract/${row.id}`,
-      }
-      return row;
-    });
-
-    this.rows = await Promise.all(promises);
     this.cdRef.markForCheck();
+  }
+
+  goToEdit(contract: Contract) {
+    this.router.navigate([`/c/o/admin/panel/contract/${contract.id}`]);
   }
 
   public filterPredicate(data: any, filter: string) {

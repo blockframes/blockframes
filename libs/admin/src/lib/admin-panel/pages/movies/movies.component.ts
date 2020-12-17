@@ -13,8 +13,8 @@ import { OrganizationService, orgName, Organization } from '@blockframes/organiz
 })
 export class MoviesComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
-    'poster': 'Poster',
+    'id': { value: 'Id', disableSort: true },
+    'poster': { value: 'Poster', disableSort: true },
     'title.original': 'Original title',
     'org': 'Organization',
     'storeConfig.status': 'Status',
@@ -50,7 +50,6 @@ export class MoviesComponent implements OnInit {
         id: row.id,
         link: `/c/o/admin/panel/movie/${row.id}`,
       }
-
       row.org = await this.getOrg(row.id);
       return row;
     })
@@ -59,7 +58,6 @@ export class MoviesComponent implements OnInit {
 
     this.cdRef.markForCheck();
   }
-
 
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [

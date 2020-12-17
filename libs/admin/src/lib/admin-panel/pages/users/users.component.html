@@ -12,14 +12,9 @@
     </button>
   </article>
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
-    [filterPredicate]="filterPredicate" showFilter [pageSize]="50" showLoader showPaginator>
+    [filterPredicate]="filterPredicate" showFilter [pageSize]="50" showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="avatar" let-avatar>
       <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
-    </ng-template>
-    <ng-template colRef="edit" let-edit>
-      <a [routerLink]="edit.link">
-        <mat-icon svgIcon="pencil"></mat-icon>
-      </a>
     </ng-template>
     <ng-template colRef="org" let-org>
       <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
