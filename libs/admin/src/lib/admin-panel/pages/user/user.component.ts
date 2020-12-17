@@ -12,6 +12,7 @@ import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-for
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { InvitationService } from '@blockframes/invitation/+state';
 
 @Component({
   selector: 'admin-user',
@@ -36,6 +37,7 @@ export class UserComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private permissionService: PermissionsService,
     private adminService: AdminService,
+    private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) { }
@@ -146,10 +148,12 @@ export class UserComponent implements OnInit {
       throw new Error('There must be at least one Super Admin in the organization.');
     }
 
+    const simulation = await this.simulateDeletion(this.user);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         question: 'You are currently deleting this user from Archipel, are you sure ?',
         warning: 'This user will be deleted from the application.',
+        simulation,
         confirmationWord: 'delete',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
@@ -158,5 +162,25 @@ export class UserComponent implements OnInit {
         }
       }
     });
+  }
+
+  /** Simulate how many document will be deleted if we delete this user */
+  private async simulateDeletion(user: User) {
+    const output: string[] = [];
+
+    // organization update
+    if (!!user.orgId) {
+      output.push('An organization will be updating without this user.');
+    }
+
+    // Calculate how many invitation will be deleted
+    const invitFrom = await this.invitationService.getValue(ref => ref.where('fromUser.uid', '==', user.uid));
+    const invitTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', user.uid));
+    const allInvit = [...invitFrom, ...invitTo];
+    if (allInvit.length) {
+      output.push(`${allInvit.length} invitation(s) will be removed.`)
+    }
+
+    return output;
   }
 }
