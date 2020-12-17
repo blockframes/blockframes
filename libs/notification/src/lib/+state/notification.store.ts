@@ -4,6 +4,7 @@ import { Notification } from './notification.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Event } from '@blockframes/event/+state/event.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -96,6 +97,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieAccepted':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              imgRef: movie?.poster ?? 'empty_poster.webp',
+              message: `${movie.title.international} was successfully published on the marketplace.`,
+            };
+          })
+        })
         return {
           date: toDate(notification.date),
           message: `Your project was successfully published on the marketplace.`,
@@ -135,7 +145,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} has accepted your invitation to event "${notification.docId}".`,
+          message: `Someone has accepted your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
@@ -155,7 +165,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} has declined your invitation to event "${notification.docId}".`,
+          message: `Someone has declined your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
