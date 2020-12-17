@@ -14,7 +14,7 @@ export const appUrl = {
   crm: 'https://blockframes-mano-crm.web.app',
 };
 
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: 'AIzaSyDAD0rQPfLCQcp-sX5MIwHJsRISnMKnDgU',
   authDomain: 'blockframes-mano.firebaseapp.com',
   databaseURL: 'https://blockframes-mano.firebaseio.com',
@@ -142,6 +142,3 @@ export const backupBucket = 'mano-backups';
 export const heavyChunkSize = 2;
 export const chunkSize = 15;
 
-export function firebase(app?: string) {
-  return firebaseConfig;
-}
