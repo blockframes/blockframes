@@ -1,7 +1,7 @@
 <main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> >{{ movieId ? ' ' + movieId + ' >':'' }} Contracts</h1>
 
-  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
+  <bf-table-filter [source]="contracts" [columns]="versionColumns" [initialColumns]="initialColumns"
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="lastVersion.scope" let-terms>
       <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}

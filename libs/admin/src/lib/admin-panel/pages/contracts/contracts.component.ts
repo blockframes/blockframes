@@ -30,7 +30,7 @@ export class ContractsComponent implements OnInit {
     'partyIds',
     'titleIds',
   ];
-  public rows: Contract[] = [];
+  public contracts: Contract[] = [];
   public movieId = '';
   constructor(
     private contractService: ContractService,
@@ -43,9 +43,9 @@ export class ContractsComponent implements OnInit {
 
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     if (this.movieId) {
-      this.rows = await this.contractService.getMovieContracts(this.movieId);
+      this.contracts = await this.contractService.getMovieContracts(this.movieId);
     } else {
-      this.rows = await this.contractService.getValue();
+      this.contracts = await this.contractService.getValue();
     }
 
     this.cdRef.markForCheck();
