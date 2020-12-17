@@ -75,6 +75,8 @@ export class OrganizationsComponent implements OnInit {
       status: r.status,
       country: r && r.addresses.main.country ? r.addresses.main.country : '--',
       email: r.email,
+      memberCount: r.userIds.length,
+      activity: !! r.activity ? r.activity : '--',
       catalog: `dashboard: ${r.appAccess.catalog.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.catalog.marketplace ? 'yes' : 'no'}`,
       festival: `dashboard: ${r.appAccess.festival.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.festival.marketplace ? 'yes' : 'no'}`
     }))
