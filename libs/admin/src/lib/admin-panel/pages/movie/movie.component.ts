@@ -33,16 +33,14 @@ export class MovieComponent implements OnInit {
   public storeType = storeType;
   public storeStatus = storeStatus;
   public staticConsts = staticModel;
-  public rows: any[] = [];
   public app = app;
-  private rights: DistributionRightDocumentWithDates[] = [];
+  public rights: DistributionRightDocumentWithDates[] = [];
 
   public versionColumnsTable = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'status': 'Status',
     'contractId': 'Contract Id',
     'terms': 'Scope',
-    'rightLink': 'Edit'
   };
 
   public initialColumnsTable: string[] = [
@@ -50,7 +48,6 @@ export class MovieComponent implements OnInit {
     'status',
     'contractId',
     'terms',
-    'rightLink',
   ];
 
   constructor(
@@ -76,7 +73,6 @@ export class MovieComponent implements OnInit {
     this.movieAppAccessForm = new MovieAppAccessAdminForm(this.movie);
 
     this.rights = await this.distributionRightService.getMovieDistributionRights(this.movieId);
-    this.rows = this.rights.map(d => ({ ...d, rightLink: { id: d.id, movieId: this.movieId } }));
 
     this.cdRef.markForCheck();
   }
@@ -189,6 +185,10 @@ export class MovieComponent implements OnInit {
     }
 
     return output;
+  }
+
+  goToRights(right: DistributionRightDocumentWithDates) {
+    this.router.navigate([`/c/o/admin/panel/right/${right.id}/m/${this.movieId}`]);
   }
 
 }

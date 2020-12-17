@@ -19,7 +19,7 @@
   </article>
 
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="50"
-    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
+    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="logo" let-logo>
       <ng-container *ngIf="logo; else nologo">
         <img class="logo" [ref]="logo" asset="empty_poster.webp">
@@ -27,11 +27,6 @@
       <ng-template #nologo>
         --
       </ng-template>
-    </ng-template>
-    <ng-template colRef="edit" let-edit>
-      <a mat-icon-button [routerLink]="edit.link">
-        <mat-icon svgIcon="pencil"></mat-icon>
-      </a>
     </ng-template>
     <ng-template colRef="denomination.full" let-denominationFull>
       {{ denominationFull }}

@@ -4,6 +4,7 @@ import { getValue, downloadCsvFromJson, BehaviorStore } from '@blockframes/utils
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { OrganizationService, orgName, Organization } from '@blockframes/organization/+state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'admin-movies',
@@ -13,12 +14,11 @@ import { OrganizationService, orgName, Organization } from '@blockframes/organiz
 })
 export class MoviesComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
-    'poster': 'Poster',
+    'id': { value: 'Id', disableSort: true },
+    'poster': { value: 'Poster', disableSort: true },
     'title.original': 'Original title',
     'org': 'Organization',
-    'storeConfig.status': 'Status',
-    'edit': 'Edit',
+    'storeConfig.status': 'Status'
   };
 
   public initialColumns: string[] = [
@@ -26,8 +26,7 @@ export class MoviesComponent implements OnInit {
     'poster',
     'title.original',
     'org',
-    'storeConfig.status',
-    'edit',
+    'storeConfig.status'
   ];
   public rows: any[] = [];
   public orgs: Record<string, Organization> = {};
@@ -39,18 +38,13 @@ export class MoviesComponent implements OnInit {
     private contractService: ContractService,
     private orgService: OrganizationService,
     private cdRef: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   async ngOnInit() {
     const movies = await this.movieService.getAllMovies();
 
     const promises = movies.map(async (row :any) => {
-      // Edit link
-      row.edit = {
-        id: row.id,
-        link: `/c/o/admin/panel/movie/${row.id}`,
-      }
-
       row.org = await this.getOrg(row.id);
       return row;
     })
@@ -60,6 +54,9 @@ export class MoviesComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
+  goToEdit(movie) {
+    this.router.navigate([`/c/o/admin/panel/movie/${movie.id}`])
+  }
 
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [

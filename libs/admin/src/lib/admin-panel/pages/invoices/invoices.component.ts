@@ -10,7 +10,7 @@ import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.ser
 })
 export class InvoicesComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'internalRef': 'Internal Ref',
     'paymentRef': 'Payment ref',
     'status': 'Status',
@@ -19,7 +19,7 @@ export class InvoicesComponent implements OnInit {
     'legalDocumentId': 'Document',
     'contractLink': 'Contract',
     'emittedDate': 'Date',
-    'edit': 'Edit',
+    'edit': { value: 'Edit', disableSort: true },
   };
 
   public initialColumns: string[] = [

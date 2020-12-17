@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { getValue, downloadCsvFromJson, BehaviorStore } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
@@ -16,14 +17,13 @@ import { getOrgModuleAccess } from '@blockframes/utils/apps';
 })
 export class UsersComponent implements OnInit {
   public versionColumns = {
-    'uid': 'Id',
+    'uid': { value: 'Id', disableSort: true },
     'firstName': 'FirstName',
     'lastName': 'LastName',
     'org': 'Organization',
     'email': 'Email',
     'firstConnexion': 'First connexion',
-    'lastConnexion': 'Last connexion',
-    'edit': 'Edit',
+    'lastConnexion': 'Last connexion'
   };
 
   public initialColumns: string[] = [
@@ -34,7 +34,6 @@ export class UsersComponent implements OnInit {
     'email',
     'firstConnexion',
     'lastConnexion',
-    'edit',
   ];
   public rows: any[] = [];
   public orgs: Record<string, Organization> = {};
@@ -46,7 +45,8 @@ export class UsersComponent implements OnInit {
     private adminService: AdminService,
     private adminQuery: AdminQuery,
     private orgService: OrganizationService,
-  ) { }
+    private router: Router,
+    ) { }
 
   async ngOnInit() {
     await this.adminService.loadAnalyticsData();
@@ -61,16 +61,16 @@ export class UsersComponent implements OnInit {
         email: u.email,
         firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
         lastConnexion: this.adminQuery.getLastConnexion(u.uid),
-        edit: {
-          id: u.uid,
-          link: `/c/o/admin/panel/user/${u.uid}`,
-        },
         org: org,
       }
     });
 
     this.rows = await Promise.all(rows);
     this.cdRef.markForCheck();
+  }
+
+  public goToEdit(user) {
+    this.router.navigate([`c/o/admin/panel/user/${user.uid}`]);
   }
 
   public filterPredicate(data: any, filter: string) {
