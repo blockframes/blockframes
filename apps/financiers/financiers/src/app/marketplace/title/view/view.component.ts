@@ -133,8 +133,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const res = await Promise.all(promises);
     const success = res.some(r => r.result);
     const message = success
-      ? 'Your mail has been send.'
-      : 'An error occurred. Your mail has not been send.';
+      ? 'Your mail has been sent.'
+      : 'An error occurred. Your mail was not sent.';
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }
