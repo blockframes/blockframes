@@ -7,10 +7,13 @@
   <article>
     <form [formGroup]="form" fxLayout="column">
       <mat-form-field appearance="outline">
+        <mat-label>Subject</mat-label>
         <input formControlName="subject" matInput placeholder="Subject">
       </mat-form-field>
       <mat-form-field class="textarea" appearance="outline">
-        <textarea formControlName="message" matInput placeholder="Message" cdkTextareaAutosize cdkAutosizeMinRows="6"></textarea>
+        <mat-label>Message</mat-label>
+        <textarea formControlName="message" matInput placeholder="Message" cdkTextareaAutosize
+          cdkAutosizeMinRows="6"></textarea>
       </mat-form-field>
     </form>
     <div fxLayout="row" fxLayoutAlign="center">
@@ -22,14 +25,8 @@
   </article>
   <article>
     <p class="text-margin">Our offices are located at 59-61, Passage Choiseul, 75002, Paris</p>
-    <google-map
-    height="366px"
-    width="556px"
-    [center]="center"
-    [zoom]="14">
-      <map-marker
-      [position]="center"
-      [label]="markerLabel">
+    <google-map height="366px" width="556px" [center]="center" [zoom]="14">
+      <map-marker [position]="center" [label]="markerLabel">
       </map-marker>
     </google-map>
   </article>

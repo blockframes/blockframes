@@ -44,6 +44,8 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Input() disabled = false;
   @Input() placeholder = '';
   @Input() @boolean required: boolean;
+  /* Values should be unique in the input */
+  @Input() @boolean uniqueValues: boolean;
   @Input() withoutValues: string[] = []
   // The parent form to connect to
   @Input()
@@ -101,8 +103,13 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
     value.trim();
     const keyByValue = getKeyIfExists(this.scope, value)
     if (value && keyByValue) {
-      this.form.add(keyByValue);
-      this.added.emit(value);
+      if (this.uniqueValues && !this.form.value.includes(keyByValue)) {
+        this.form.add(keyByValue);
+        this.added.emit(value);
+      } else if (!this.uniqueValues) {
+        this.form.add(keyByValue);
+        this.added.emit(value);
+      }
     }
     this.inputEl.nativeElement.value = ''
     this.ctrl.setValue(null);
@@ -110,8 +117,13 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /** Select based on the option */
   public selected({ option }: MatAutocompleteSelectedEvent) {
-    this.added.emit(option.viewValue);
-    this.form.add(option.value);
+    if (this.uniqueValues && !this.form.value.includes(option.value)) {
+      this.added.emit(option.viewValue);
+      this.form.add(option.value);
+    } else if (!this.uniqueValues) {
+      this.added.emit(option.viewValue);
+      this.form.add(option.value);
+    }
     this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
     this.focusOut();

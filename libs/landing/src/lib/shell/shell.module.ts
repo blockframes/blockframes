@@ -8,9 +8,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Components
 import {
   LandingShellComponent,
-  LandingHeaderComponent,
-  LandingContentComponent,
-  LandingContactComponent,
+  LandingHeaderDirective,
+  LandingContentDirective,
+  LandingContactDirective,
   LandingFooterComponent
 } from './shell.component';
 
@@ -52,15 +52,15 @@ import { MatInputModule } from '@angular/material/input';
   ],
   exports: [
     LandingShellComponent,
-    LandingHeaderComponent,
-    LandingContentComponent,
-    LandingContactComponent,
+    LandingHeaderDirective,
+    LandingContentDirective,
+    LandingContactDirective,
     LandingFooterComponent],
   declarations: [
     LandingShellComponent,
-    LandingHeaderComponent,
-    LandingContentComponent,
-    LandingContactComponent,
+    LandingHeaderDirective,
+    LandingContentDirective,
+    LandingContactDirective,
     LandingFooterComponent
   ],
 })

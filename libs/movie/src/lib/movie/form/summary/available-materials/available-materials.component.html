@@ -22,9 +22,9 @@
   </h6>
   <ul>
     <li *ngFor="let language of movie.languages.controls | keyvalue">
-    <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
-    <missing-control [control]="language.value">
-      <ng-template let-version>
+      <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
+      <missing-control [control]="language.value" [link]="link">
+        <ng-template let-version>
           <span>{{ version | versionPipe }}</span>
         </ng-template>
       </missing-control>

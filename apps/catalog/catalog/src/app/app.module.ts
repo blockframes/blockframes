@@ -64,7 +64,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    AngularFireModule.initializeApp(firebase),
+    AngularFireModule.initializeApp(firebase('catalog')),
     AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,

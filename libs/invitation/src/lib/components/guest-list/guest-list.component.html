@@ -1,11 +1,11 @@
 <mat-list>
   <mat-list-item>
     <mat-icon matListIcon svgIcon="group"></mat-icon>
-    <span matLine>{{ invitations.length }} guests</span>
+    <span matLine>{{ invitations.length }} Guests</span>
     <span matLine>
       <small class="mat-caption">
-        {{ invitations | statusLength: 'accepted' }} yes,
-        {{ invitations | statusLength: 'declined' }} no,
+        {{ invitations | statusLength: 'accepted' }} accepted,
+        {{ invitations | statusLength: 'declined' }} declined,
         {{ invitations | statusLength: 'pending' }} unanswered
       </small>
     </span>
@@ -16,9 +16,9 @@
 </mat-list>
 
 <mat-form-field *ngIf="invitations.length">
-  <mat-label>Search for a guest</mat-label>
+  <mat-label>Search for a Guest</mat-label>
   <mat-icon matPrefix svgIcon="search_table"></mat-icon>
-  <input matInput [formControl]="searchControl" placeholder="Search for a guest"/>
+  <input matInput [formControl]="searchControl" placeholder="Search for a Guest"/>
 </mat-form-field>
 
 <cdk-virtual-scroll-viewport [itemSize]="72" *ngIf="invitations.length">

@@ -2,6 +2,15 @@ section {
   padding: 24px;
 }
 
+.screening {
+  org-chip {
+    width: fit-content;
+  }
+  movie-header-cta {
+    margin-top: 16px;
+  }
+}
+
 .meeting {
   h5 {
     text-transform: uppercase;
@@ -10,6 +19,7 @@ section {
   .organized-by {
     img {
       height: 120px;
+      border-radius: 50%;
     }
   }
 }

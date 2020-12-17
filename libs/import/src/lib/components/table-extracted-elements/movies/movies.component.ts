@@ -13,7 +13,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, App, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { getCurrentApp, App } from '@blockframes/utils/apps';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -39,7 +39,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     'movie.internalRef',
     'select',
     'movie.title.original',
-    // 'movie.poster', TODO issue #3091
     'errors',
     'warnings',
     'actions',
@@ -69,15 +68,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     return true;
   }
 
-  /**
-    * @dev Once created (as draft), depending on the app, titles can be submitted to Archipel Content or accepted (ndlr: published) directly
-   */
-  async publishMovie(importState: MovieImportState): Promise<boolean> {
-    await this.publish(importState);
-    this.snackBar.open('Title published !', 'close', { duration: 3000 });
-    return true;
-  }
-
   async createSelectedMovies(): Promise<boolean> {
     try {
       const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
@@ -91,25 +81,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     } catch (err) {
       this.snackBar.open(`Could not create all titles (${this.processedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedTitles = 0;
-    }
-  }
-
-  /**
-   * @dev Once created (as draft), titles can be submitted to Archipel Content
-   */
-  async publishSelectedMovies(): Promise<boolean> {
-    try {
-      const creations = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState) && this.isTitleValidForPublish(importState));
-      for (const movie of creations) {
-        this.publishedTitles++;
-        await this.publish(movie);
-      }
-      this.snackBar.open(`${this.publishedTitles} titles published!`, 'close', { duration: 3000 });
-      this.publishedTitles = 0;
-      return true;
-    } catch (err) {
-      this.snackBar.open(`Could not published all titles (${this.publishedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.publishedTitles = 0;
     }
   }
 
@@ -130,7 +101,8 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.data = data;
 
     if (importState.distributionRights) {
-      const orgId = this.orgQuery.getActiveId();
+      const orgId = !!importState.movie.orgIds.length ? importState.movie.orgIds[0] : this.orgQuery.getActiveId();
+
       const movieId = importState.movie.id;
       const titlesAndRights = { [movieId]: importState.distributionRights };
 
@@ -154,29 +126,6 @@ export class TableExtractedMoviesComponent implements OnInit {
       mandateContract.parties.push(licensor);
 
       await this.contractService.createContractAndRight(orgId, titlesAndRights, mandateContract);
-    }
-
-    return true;
-  }
-
-  /**
-   * Change title status from 'Draft' to 'Submitted to Archipel Content'
-   * @param importState
-   */
-  private async publish(importState: MovieImportState): Promise<boolean> {
-    const data = this.rows.data;
-    importState.movie.storeConfig.status = getMoviePublishStatus(this.currentApp); // @TODO (#2765)
-    await this.movieService.update(importState.movie.id, importState.movie);
-    this.rows.data = data;
-    return true;
-  }
-
-  public isTitleValidForPublish(importState: MovieImportState): boolean {
-    // Already valid or submitted
-    if (
-      importState.movie.storeConfig.status === 'submitted' ||
-      importState.movie.storeConfig.status === 'accepted') {
-      return false;
     }
 
     return true;

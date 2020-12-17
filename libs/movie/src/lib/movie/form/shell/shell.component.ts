@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormArray, FormGroup } from '@angular/forms';
 
@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map, startWith } from 'rxjs/operators';
+import { switchMap, map, startWith, tap } from 'rxjs/operators';
 import { Observable, of, Subscription, combineLatest } from 'rxjs';
 import { ProductionStatus } from '@blockframes/utils/static-model';
 import { EntityControl, FormEntity } from '@blockframes/utils/form';
@@ -145,11 +145,12 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private route: RouterQuery,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     const subs: Observable<any>[] = Object.values(this.configs).map(config => config.onInit()).flat();
-    this.sub = combineLatest(subs).subscribe();
+    this.sub = combineLatest(subs).subscribe(() => this.cdr.markForCheck());
     const appSteps = this.route.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');
     this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(

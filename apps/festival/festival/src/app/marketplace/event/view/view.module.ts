@@ -10,9 +10,10 @@ import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
-import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pipes';
 import { MatButtonModule} from '@angular/material/button';
 
 @NgModule({
@@ -27,7 +28,9 @@ import { MatButtonModule} from '@angular/material/button';
     ImageReferenceModule,
     OrgNameModule,
     OrgChipModule,
+    OrganizationCardModule,
     DisplayNameModule,
+    DisplayPositionModule,
     MatButtonModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]

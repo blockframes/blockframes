@@ -1,12 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { CampaignForm } from '@blockframes/campaign/form/form';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -52,7 +49,6 @@ export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public navLinks = links;
-  public getLabelBySlug = getLabelBySlug;
 
 
   constructor(

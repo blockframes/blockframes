@@ -1,13 +1,20 @@
+import { TO } from "@blockframes/e2e/utils";
+
 export default class FestivalMarketplaceScreeningPage {
   constructor() {
-    cy.get('festival-session')
+    cy.log('->FestivalMarketplaceScreeningPage: Access festival-session');
+    cy.get('festival-session', { timeout: TO.PAGE_LOAD });
   }
 
   clickPlay() {
-    cy.get('festival-session [test-id=play]').click();
+    cy.log('>FestivalMarketplaceScreeningPage: Start Play [test-id=play]');
+    cy.get('festival-session [test-id=play]', { timeout: TO.PAGE_ELEMENT })
+      .click();
+    cy.wait(TO.ONE_SEC);
   }
 
   runVideo() {
-    cy.get('festival-session video', { timeout: 30000 }).click({ force: true });
+    cy.log('>FestivalMarketplaceScreeningPage: Play video');
+    cy.get('festival-session video', { timeout: TO.VSLOW_UPDATE }).click({ force: true });
   }
 }

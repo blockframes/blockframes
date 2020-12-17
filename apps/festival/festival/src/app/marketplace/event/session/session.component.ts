@@ -8,6 +8,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { Router } from '@angular/router';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 
 @Component({
@@ -52,6 +53,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     private bottomSheet: MatBottomSheet,
     private userService: UserService,
     private router: Router,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
@@ -70,11 +72,13 @@ export class SessionComponent implements OnInit, OnDestroy {
       }
 
       if (event.type === 'screening') {
+        this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
       } else if (event.type === 'meeting') {
+        this.dynTitle.setPageTitle(event.title, 'Meeting');
         const uid = this.authQuery.userId;
         if (event.isOwner) {
           const attendees = (event.meta as Meeting).attendees;
