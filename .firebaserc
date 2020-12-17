@@ -281,7 +281,13 @@
           "blockframes-remco"
         ],
         "festival": [
-          "blockframes-remco"
+          "blockframes-remco-festival"
+        ],
+        "financiers": [
+          "blockframes-remco-financiers"
+        ],
+        "crm": [
+          "blockframes-remco-crm"
         ]
       }
     },

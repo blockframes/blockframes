@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService, Event } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'admin-events',
@@ -11,15 +12,14 @@ import { InvitationService } from '@blockframes/invitation/+state';
 })
 export class EventsComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'title': 'Title',
     'type': 'Type',
     'start': 'Start',
     'end': 'End',
     'attendees': 'Number of attendees',
     'confirmed': 'Confirmed',
-    'pending': 'Pending',
-    'edit': 'Edit',
+    'pending': 'Pending'
   };
 
   public initialColumns: string[] = [
@@ -30,8 +30,7 @@ export class EventsComponent implements OnInit {
     'end',
     'attendees',
     'confirmed',
-    'pending',
-    'edit',
+    'pending'
   ];
   public rows: any[] = [];
   public eventListLoaded = false;
@@ -40,6 +39,7 @@ export class EventsComponent implements OnInit {
     private eventService: EventService,
     private invitationService: InvitationService,
     private cdRef: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   async ngOnInit() {
@@ -47,11 +47,6 @@ export class EventsComponent implements OnInit {
     const promises = events.map(async event => {
       const row = { ...event } as any;
       // Append new data for table display
-      row.edit = {
-        id: row.id,
-        link: `/c/o/admin/panel/event/${row.id}`,
-      }
-
       const invitations = await this.invitationService.getValue(ref => ref.where('docId', '==', row.id));
       row.attendees = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
@@ -63,6 +58,10 @@ export class EventsComponent implements OnInit {
     this.rows = await Promise.all(promises);
     this.eventListLoaded = true;
     this.cdRef.markForCheck();
+  }
+
+  goToEdit(event) {
+    this.router.navigate([`/c/o/admin/panel/event/${event.id}`])
   }
 
   public filterPredicate(data: any, filter: string) {
