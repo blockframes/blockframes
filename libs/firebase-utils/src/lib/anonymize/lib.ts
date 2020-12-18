@@ -10,6 +10,8 @@ import { PublicOrganization } from '@blockframes/organization/+state/organizatio
 import { FirestoreEmulator } from '../firestore';
 import { firebase } from '@env'
 import { runChunks } from '../firebase-utils';
+import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
+import { firestore } from 'firebase-admin';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -97,9 +99,13 @@ function processMovie(movie: Movie): Movie {
   return movie;
 }
 
+function processMaintenanceDoc(doc: IMaintenanceDoc): IMaintenanceDoc {
+  if (doc.startedAt && !doc.endedAt) return doc;
+  return { endedAt: null, startedAt: firestore.Timestamp.now() }
+}
+
 function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   const ignorePaths = [
-    '_META/',
     'blockframesAdmin/',
     'contracts/',
     'docsIndex/',
@@ -121,6 +127,8 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     } else if (docPath.includes('movies/') ) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
       return { docPath, content: doc };
+    } else if (docPath.includes('_META') && hasKeys<IMaintenanceDoc>(doc, 'endedAt')) { // Always set maintenance
+      return { docPath, content: processMaintenanceDoc(doc)}
     }
   } catch (e) {
     throw [Error(`Error docPath: ${docPath}`), e];

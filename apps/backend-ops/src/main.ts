@@ -40,7 +40,7 @@ async function runCommand() {
       await anonymizeLatestProdDb();
       break;
     case 'uploadToBucket':
-      await uploadBackup(arg1);
+      await uploadBackup({ remoteDir: arg1, localRelPath: arg2 });
       break;
     case 'use':
       await selectEnvironment(arg1);

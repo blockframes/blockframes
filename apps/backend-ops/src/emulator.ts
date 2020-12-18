@@ -89,6 +89,6 @@ export async function anonymizeLatestProdDb() {
   }
 }
 
-export async function uploadBackup(localRelPath?: string) {
-  await uploadDbBackupToBucket(backupBucket, localRelPath)
+export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
+  await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
 }

@@ -64,6 +64,10 @@ export async function prepareForTesting() {
 
 }
 
+export async function prepareForTestingNew() {
+
+}
+
 export async function prepareDb() {
   const { db, auth } = loadAdminServices();
   console.warn('This script only restores the DB - does NOT refresh Firebase Auth, Sync storage, generate fixtures.');

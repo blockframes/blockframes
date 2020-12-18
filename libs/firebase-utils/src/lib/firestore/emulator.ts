@@ -95,16 +95,16 @@ export function connectEmulator(): FirestoreEmulator  {
   return db as FirestoreEmulator;
 }
 
-export function uploadDbBackupToBucket(bucketName: string, localPath?: string) {
+export function uploadDbBackupToBucket({ bucketName, remoteDir, localPath }: { bucketName: string; remoteDir?: string; localPath?: string; }) {
   const absFirestoreBackupPath = localPath
-    ? resolve(process.cwd(), localPath)
+    ? join(process.cwd(), localPath)
     : getFirestoreBackupPath(defaultEmulatorBackupPath);
   const metaFilename = getFirestoreMetadataJsonFilename(absFirestoreBackupPath);
   const metaAbsPath = join(absFirestoreBackupPath, metaFilename);
 
   const d = new Date();
-  const remoteDir = `firestore-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
-  const newFirestoreMetaFilename = `${remoteDir}.overall_export_metadata`
+  const _remoteDir = remoteDir || `firestore-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+  const newFirestoreMetaFilename = `${_remoteDir}.overall_export_metadata`
   const newFirestoreMetadataAbsPath = join(absFirestoreBackupPath, newFirestoreMetaFilename);
   renameSync(metaAbsPath, newFirestoreMetadataAbsPath);
 
@@ -117,7 +117,7 @@ export function uploadDbBackupToBucket(bucketName: string, localPath?: string) {
   emulatorMetaData.firestore.metadata_file = join(firestoreFolderName, newFirestoreMetaFilename)
   writeFileSync(emulatorMetadataJsonPath, JSON.stringify(emulatorMetaData, null, 4), 'utf-8');
 
-  const cmd = `gsutil -m cp -r "${absFirestoreBackupPath}" "gs://${bucketName}/${remoteDir}"`;
+  const cmd = `gsutil -m cp -r "${absFirestoreBackupPath}" "gs://${bucketName}/${_remoteDir}"`;
   console.log('Running command:', cmd)
   return runShellCommand(cmd);
 }
