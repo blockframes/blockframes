@@ -56,7 +56,7 @@
     </div>
     <bf-carousel flex [min]="4">
       <ng-container *ngFor="let org of (orgs | async)?.hits">
-        <org-card-minimal [org]="org" carouselItem [col]="3"></org-card-minimal>
+        <org-card-minimal [org]="org" carouselItem [col]="2"></org-card-minimal>
       </ng-container>
     </bf-carousel>
   </section>
