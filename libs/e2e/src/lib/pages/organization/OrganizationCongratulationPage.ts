@@ -1,11 +1,11 @@
-import { TO } from '../../utils/env';
+import { SEC } from '../../utils/env';
 
 const PATH = '/c/organization/create-congratulations';
 
 export default class OrganizationCongratulationPage {
 
   constructor() {
-    cy.get('organization-create-feedback', {timeout: TO.VSLOW_UPDATE});
+    cy.get('organization-create-feedback', {timeout: 150 * SEC});
   }
 
   public assertMoveToOrgCongratulationPage() {

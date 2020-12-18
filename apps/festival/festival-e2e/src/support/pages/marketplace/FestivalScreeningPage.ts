@@ -1,17 +1,17 @@
 ﻿import FestivalMarketplaceCalendarPage from "./FestivalMarketplaceCalendarPage";
 import FestivalMarketplaceEventPage from "./FestivalMarketplaceEventPage";
-import { TO } from "@blockframes/e2e/utils";
+import { SEC } from "@blockframes/e2e/utils";
 
 const CALENDAR_LABEL = 'My Calendar';
 
 export default class FestivalScreeningPage {
   constructor() {
-    cy.get('festival-screening', {timeout: TO.PAGE_LOAD});
+    cy.get('festival-screening', {timeout: 60 * SEC});
     cy.wait(1000);
   }
 
   assertScreeningsExists(screeningNames: string[]) {
-    cy.get('festival-screening event-screening-item', {timeout: 30000})
+    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
     .then($el => {
       screeningNames.forEach(screeningName => {
         cy.log(`assertScreeningsExists: {${screeningName}}!`);
@@ -27,15 +27,15 @@ export default class FestivalScreeningPage {
    * @param screeningTitle : Title of event
    */
   clickRequestInvitation(screeningTitle: string) {
-    cy.get('festival-screening event-screening-item', {timeout: 30000})
+    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
       .contains(screeningTitle)
       .parent().parent().parent()
       .find('button[test-id=invitation-request]').click();
-    cy.wait(TO.WAIT_1SEC);
+    cy.wait(1 * SEC);
   }
 
   clickOnMenu() {
-    cy.get('festival-marketplace button[test-id=menu]', {timeout: 1000})
+    cy.get('festival-marketplace button[test-id=menu]', {timeout: 3 * SEC})
       .click();
   }
 
@@ -52,10 +52,10 @@ export default class FestivalScreeningPage {
   clickSpecificEvent(eventName: string, navigateToEvent: boolean = false) {
     //TODO: check : festival-screening event-screening-item h3
     if (!navigateToEvent) {
-      cy.get('article h3', {timeout: 30000})
+      cy.get('article h3', {timeout: 30 * SEC})
         .contains(eventName);
     } else {
-      cy.get('article h3', {timeout: 30000})
+      cy.get('article h3', {timeout: 30 * SEC})
         .contains(eventName).click();
       
       return new FestivalMarketplaceEventPage();

@@ -1,6 +1,6 @@
 import { LandingPage } from '../../support/pages/landing';
 import { acceptCookie, signIn, selectAction, clickOnMenu } from '@blockframes/e2e/utils/functions';
-import { TO, User } from '@blockframes/e2e/utils';
+import { SEC, User } from '@blockframes/e2e/utils';
 
 export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: string = '') {
   cy.log('Reach LandingPage and accept cookies');
@@ -11,32 +11,32 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
   cy.log(`Sign-in user: ${user.email}`);
   p1.clickSignup();   
   signIn(user);
-  cy.get('festival-marketplace', {timeout: TO.PAGE_LOAD});
+  cy.get('festival-marketplace', {timeout: 60 * SEC});
   acceptCookie();
 
   // Navigate to movie-tunnel-main
   cy.log('Click sidemenu to reach Add New Title');
   clickOnMenu(['festival-marketplace', 'festival-dashboard'], 'menu', 'dashboard/home');
-  cy.wait(TO.WAIT_1SEC);
+  cy.wait(1 * SEC);
   clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
-  cy.wait(TO.WAIT_1SEC);
+  cy.wait(1 * SEC);
 
   if (debugMovieId !== '') {
     cy.log('Check :', debugMovieId);
     const path = `http://localhost:4200/c/o/dashboard/tunnel/movie/${debugMovieId}/summary`;
     cy.visit(path);
     //window.location.href = path;
-    cy.wait(TO.THREE_SEC);
+    cy.wait(3 * SEC);
     return;
   }
 
   cy.log('->Click: Add New Title');
-  cy.get('a[mattooltip="Add a new title"]', {timeout: TO.FIFTEEN_SEC})
+  cy.get('a[mattooltip="Add a new title"]', {timeout: 15 * SEC})
     .click();
-  cy.wait(TO.THREE_SEC);
+  cy.wait(3 * SEC);
 
   cy.log('->Reach New Title Interstitial & start');
-  cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
+  cy.get('festival-dashboard  a:contains("Start")', { timeout: 60 * SEC })
     .click();
-  cy.wait(TO.ONE_SEC);
+  cy.wait(1 * SEC);
 }

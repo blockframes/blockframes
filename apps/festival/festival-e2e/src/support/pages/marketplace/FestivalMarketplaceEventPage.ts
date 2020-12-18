@@ -1,11 +1,11 @@
 ﻿import FestivalMarketplaceScreeningPage from "./FestivalMarketplaceScreeningPage";
 import FestivalScreeningPage from "./FestivalScreeningPage";
-import { TO } from "@blockframes/e2e/utils";
+import { SEC } from "@blockframes/e2e/utils";
 
 export default class FestivalMarketplaceEventPage {
   constructor() {
-    cy.wait(3000);
-    cy.get('festival-event-view', {timeout: 90000});
+    cy.wait(3 * SEC);
+    cy.get('festival-event-view', {timeout: 90 * SEC});
   }
 
   assertScreeningExist(movieTitle: string) {
@@ -14,9 +14,9 @@ export default class FestivalMarketplaceEventPage {
 
   clickJoinScreening() {
     cy.log('Going for screening: (festival-event-view a[test-id=event-room])');
-    cy.get('festival-event-view a[test-id=event-room]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('festival-event-view a[test-id=event-room]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.WAIT_1SEC);
+    cy.wait(1 * SEC);
     return new FestivalMarketplaceScreeningPage();
   }
 
@@ -28,7 +28,7 @@ export default class FestivalMarketplaceEventPage {
 
   assertEventNameExist(eventName: string) {
     cy.log(`assertEventNameExist : header for {${eventName}}!`);
-    cy.get('festival-event-view header', {timeout: 30000})
+    cy.get('festival-event-view header', {timeout: 3 * SEC})
       .should('contain', eventName);
   }
 

@@ -22,7 +22,7 @@ import { NOW } from '../../fixtures/data';
 import { EVENTS } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { Orgs } from '@blockframes/e2e/fixtures/orgs';
-import { TO } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 
 let tomorrow, twodayslater;
 const userFixture = new User();
@@ -119,7 +119,7 @@ describe('User create a screening', () => {
 
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
-    cy.wait(TO.SLOW_OP);
+    cy.wait(10 * SEC);
     p2.searchPartner(OrgName);
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
@@ -133,7 +133,7 @@ describe('User create a screening', () => {
 
     const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
     // Wait notifications
-    cy.wait(TO.THREE_SEC);
+    cy.wait(3 * SEC);
     cy.log(`=>Test Notification from {${OrgName}} exists`);
     pn.verifyNotification(OrgName, true); 
   });
