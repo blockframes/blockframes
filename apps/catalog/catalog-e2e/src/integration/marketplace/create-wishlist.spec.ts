@@ -3,7 +3,7 @@
 import { HomePage, SearchPage, ViewPage, WishlistPage } from '../../support/pages/marketplace';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
-import { TO } from '@blockframes/e2e/utils/env';
+import { SEC } from '@blockframes/e2e/utils/env';
 
 const BINGE_WATCH_COUNT = 5;
 const MOVIE_LIST1_COUNT = 3;
@@ -22,8 +22,8 @@ describe('Test wishlist features from library, detail page',  () => {
     acceptCookie();
     const p3: SearchPage = p1.clickViewTheLibrary();
     const p4: WishlistPage = p3.clickWishlist();
-    cy.get('marketplace-wishlist', {timeout: TO.PAGE_LOAD});
-    cy.wait(TO.THREE_SEC);
+    cy.get('marketplace-wishlist', {timeout: 60 * SEC});
+    cy.wait(3 * SEC);
     cy.log('Clear WatchList');
     p4.getWishListCount()
     cy.get('@movieCount').then((numMovies) => {
@@ -36,7 +36,7 @@ describe('Test wishlist features from library, detail page',  () => {
     const p1 = new HomePage();
     acceptCookie();
     const p3: SearchPage = p1.clickViewTheLibrary();
-    cy.wait(TO.FIFTEEN_SEC);
+    cy.wait(15 * SEC);
 
     let movieViewCount = BINGE_WATCH_COUNT;
 
@@ -55,12 +55,12 @@ describe('Test wishlist features from library, detail page',  () => {
       cy.log(`A: Updating WishList: [${JSON.stringify(movieList1)}]`);
       movieList1.forEach(movieName => {
         p3.clickWishlistButton(movieName);
-        cy.wait(TO.ONE_SEC);
+        cy.wait(1 * SEC);
       });
 
       //3. Verify list
       const p4: WishlistPage = p3.clickWishlist();
-      cy.wait(TO.PAGE_LOAD);
+      cy.wait(60 * SEC);
       movieList1.forEach(movieName => {
         p4.assertMovieInCurrentWishlist(movieName);
       });
@@ -72,14 +72,14 @@ describe('Test wishlist features from library, detail page',  () => {
       /*
       //4. let movieList2 = []
       cy.go('back');
-      cy.wait(TO.FIFTEEN_SEC);
+      cy.wait(15 * SEC);
       cy.log(`B: Updating WishList: [${JSON.stringify(movieList2)}]`);
       movieList2.forEach(movieName => {
         const p5: ViewPage = p3.selectMovie(movieName);
         p5.clickWishListButton();
         p5.openSideNav();
         p5.clickLibrary();
-        cy.wait(TO.THREE_SEC);
+        cy.wait(3 * SEC);
       });
 
       // one movie got removed from likes.
@@ -89,7 +89,7 @@ describe('Test wishlist features from library, detail page',  () => {
       //5. Remove a movie from Line view
       p4.openSideNav();
       p4.clickLibrary();
-      cy.wait(TO.FIFTEEN_SEC);
+      cy.wait(15 * SEC);
       cy.log(`C: Dropping from WishList: [${movieList2[1]}]`);
       p3.clickWishlistButton(movieList2[1]);
       //TODO : need correction for step 4.
