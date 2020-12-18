@@ -148,8 +148,4 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
       : 'An error occurred. Your email was not sent.';
     this.snackbar.open(message, null, { duration: 3000 });
   }
-
-  public getCurrencySymbol(currency: string, format: 'wide' | 'narrow') {
-    return getCurrencySymbol(currency, format);
-  }
 }
