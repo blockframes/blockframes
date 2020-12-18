@@ -3,6 +3,8 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
+export const max = 20000000;
+
 @Component({
   selector: '[form] filter-budget',
   templateUrl: './budget.component.html',
@@ -13,6 +15,8 @@ export class BudgetFilterComponent implements OnInit, OnDestroy {
 
   @Input() form: FormControl; // FormControl of number
   private sub: Subscription;
+
+  max = max;
 
   ngOnInit() {
     this.sub = this.form.valueChanges.pipe(
@@ -26,14 +30,14 @@ export class BudgetFilterComponent implements OnInit, OnDestroy {
   }
 
   formatLabel(value: number) {
-    const invertedValue = 20000000 - value
-    if (invertedValue >= 1000 && invertedValue < 1000000) {
-      return Math.round(invertedValue / 1000) + 'k';
-    } else if (invertedValue >= 1000000) {
-      return (invertedValue / 1000000) + 'M';
+    const minBudget = max - value;
+    if (minBudget >= 1000 && minBudget < 1000000) {
+      return Math.round(minBudget / 1000) + 'k';
+    } else if (minBudget >= 1000000) {
+      return (minBudget / 1000000) + 'M';
     }
 
-    return invertedValue;
+    return minBudget;
   }
 
 }

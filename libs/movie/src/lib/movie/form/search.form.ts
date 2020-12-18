@@ -7,6 +7,7 @@ import algoliasearch, { Index } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
+import { max } from './filters/budget/budget.component';
 
 export interface LanguagesSearch {
   original: Language[];
@@ -144,7 +145,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     } as any;
 
     if (this.minBudget.value) {
-      search.filters = `budget >= ${20000000 - this.minBudget.value ?? 0}`;
+      search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
     return this.movieIndex.search(search);
   }
