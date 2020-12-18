@@ -7,7 +7,11 @@ org-chip {
   background-color: var(--background-card);
 }
 
-// Form 
+// Form
 h2 {
   text-align: center;
+}
+
+span[matPrefix] {
+  padding-right: 16px;
 }
