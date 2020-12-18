@@ -8,15 +8,17 @@
 .banner {
   background-size: cover;
   background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   
-  h4 {
-    margin-bottom: 0;
-  }
-  p {
-    width: 50%;
-  }
-  .links {
-    margin-top: 24px;
+  .banner-details {
+    h4 {
+      margin-bottom: 0;
+    }
+    .links {
+      margin-top: 24px;
+    }
   }
 }
 
@@ -59,10 +61,29 @@ movie-slide {
   .banner, movie-slide {
     padding: 80px;
   }
-
+  .banner {
+    flex-direction: row;
+    .banner-details {
+      width: 50%;
+    }
+    img {
+      margin-left: 24px;
+      max-width: 50%;
+    }
+  }
 }
 @include layout-bp(lt-md) {
   .banner, movie-slide {
     padding: 24px;
+  }
+  .banner {
+    flex-direction: column;
+    .banner-details {
+      width: 100%;
+    }
+    img {
+      margin-top: 24px;
+      max-width: 80%;
+    }
   }
 }

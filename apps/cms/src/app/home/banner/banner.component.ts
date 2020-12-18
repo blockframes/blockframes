@@ -20,6 +20,7 @@ export const bannerSchema: FormGroupSchema<BannerSection> = {
     subtitle: matText({ label: 'subtitle' }),
     description: matText({ label: 'description', size: 'long' }),
     background: matText({ label: 'background' }),
+    image: matText({ label: 'Image' }),
     links: { form: 'array', controls: [], factory: linkSchema }
   },
 }
