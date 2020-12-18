@@ -1,0 +1,102 @@
+$dark-theme: (
+  is-dark: true,
+  primary: (
+    200: #2A3052,
+    500: #9eb1ff,
+    800: #8298ff,
+    contrast: (
+      200: #F9F8FF,
+      500: #f9f8ff,
+      800: #f9f8ff,
+    )
+  ),
+  accent: (
+    200: #581B1E,
+    500: #A81C22,
+    800: #D01B22,
+    contrast: (
+      200: #1F2A3B,
+      500: #FFFFFF,
+      800: #FFFFFF,
+    )
+  ),
+  warn: (
+    500: #ff3f33,
+    contrast: (
+      500: #FFFFFF
+    )
+  ),
+  background: (
+    900: #0E0E11,
+    800: #202026,
+    700: #28282F,
+    600: #222327,
+    500: #000000,
+  ),
+  foreground: (
+    900: #f9f8ff,
+    800: #C6C6C6,
+    700: #DCDCDC,
+    600: #BEBFC2,
+    500: #575759
+  )
+);
+
+
+
+$light-theme: (
+  is-dark: false,
+  primary: (
+    100: lighten(#8DA4FA, 10%),
+    200: #8DA4FA,
+    400: lighten(#1A49F5, 10%),
+    500: #1A49F5,
+    700:  lighten(#0F31F0, 10%),
+    800:  #0F31F0,
+    contrast: (
+      100: #1F2A3B,
+      200: #1F2A3B,
+      400: #FFFFFF,
+      500: #FFFFFF,
+      700: #FFFFFF,
+      800: #FFFFFF,
+    )
+  ),
+  accent: (
+    100: #FFB7B0,
+    200: #FFB7B0,
+    400: #FF6E61,
+    500: #FF6E61,
+    700: #FF5145,
+    800: #FF5145,
+    contrast: (
+      100: #1F2A3B,
+      200: #1F2A3B,
+      400: #FFFFFF,
+      500: #FFFFFF,
+      700: #FFFFFF,
+      800: #FFFFFF,
+    )
+  ),
+  warn: (
+    500: #ff3f33,
+    contrast: (
+      500: #FFFFFF
+    )
+  ),
+  background: (
+    900: #f4f4f4,
+    800: #FFFFFF,
+    700: #fdfdfd,
+    600: #E7E7E7,
+    500: #DBDCE0,
+  ),
+  foreground: (
+    900: #080B0F,
+    800: #1F2A3B,
+    700: #454E5D,
+    600: #666B81,
+    500: #D3D5DC,
+  )
+);
+
