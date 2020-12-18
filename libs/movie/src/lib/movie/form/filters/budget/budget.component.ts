@@ -26,13 +26,14 @@ export class BudgetFilterComponent implements OnInit, OnDestroy {
   }
 
   formatLabel(value: number) {
-    if (value >= 1000 && value < 1000000) {
-      return Math.round(value / 1000) + 'k';
-    } else if (value >= 1000000) {
-      return (value / 1000000) + 'M';
+    const invertedValue = 20000000 - value
+    if (invertedValue >= 1000 && invertedValue < 1000000) {
+      return Math.round(invertedValue / 1000) + 'k';
+    } else if (invertedValue >= 1000000) {
+      return (invertedValue / 1000000) + 'M';
     }
 
-    return value;
+    return invertedValue;
   }
 
 }

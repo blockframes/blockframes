@@ -144,7 +144,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     } as any;
 
     if (this.minBudget.value) {
-      search.filters = `budget >= ${this.minBudget.value ?? 0}`;
+      search.filters = `budget >= ${20000000 - this.minBudget.value ?? 0}`;
     }
     return this.movieIndex.search(search);
   }
