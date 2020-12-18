@@ -1,5 +1,5 @@
 ﻿import FestivalMarketplaceEventPage from "./FestivalMarketplaceEventPage";
-import { TO } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 
 export default class FestivalMarketplaceCalendarPage {
   constructor() {
@@ -7,9 +7,9 @@ export default class FestivalMarketplaceCalendarPage {
   }
 
   clickOnEvent(movieTitle: string) {
-    cy.get('festival-marketplace main', {timeout: TO.PAGE_ELEMENT})
+    cy.get('festival-marketplace main', {timeout: 3 * SEC})
       .scrollTo('top');
-    cy.wait(TO.WAIT_1SEC);
+    cy.wait(1 * SEC);
     cy.get('festival-event-calendar event-card h5[test-id=movie-title]')
       .contains(movieTitle).click();
     return new FestivalMarketplaceEventPage();
