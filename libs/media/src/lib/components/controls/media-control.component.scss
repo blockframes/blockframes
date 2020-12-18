@@ -2,4 +2,8 @@
   border: solid 1px var(--foreground-divider);
   border-radius: 4px;
   background-color: var(--background-card);
+
+  media-video-control {
+    width: 100%;
+  }
 }

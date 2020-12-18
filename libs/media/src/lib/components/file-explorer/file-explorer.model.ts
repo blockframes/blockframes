@@ -230,7 +230,7 @@ export function createMovieFileStructure(title: Movie, index: number): Directory
             docNameField: 'ref',
             fileRefField: 'ref',
             storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
-            privacy: 'protected',
+            privacy: 'public',
             path: [index, 1, 5],
             hasFile: title.promotional.videos?.otherVideos?.length
           }
@@ -244,7 +244,7 @@ export function createMovieFileStructure(title: Movie, index: number): Directory
         docNameField: 'ref',
         fileRefField: 'ref',
         storagePath: `movies/${title.id}/promotional.notes`,
-        privacy: 'protected',
+        privacy: 'public',
         path: [index, 2],
         hasFile: title.promotional.notes.length
       }

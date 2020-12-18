@@ -31,7 +31,7 @@
       <password-confirm formControlName="newPassword"></password-confirm>
       <div>
         <auth-accept-conditions [control]="form.get('termsOfUse')">
-          <span conditionText>I hereby accept Archipel Market</span>
+          <span conditionText>I hereby accept {{ appName }}</span>
           <span conditionLink>Terms and Conditions</span>
           <ng-template authConditions>
             <auth-terms-conditions></auth-terms-conditions>

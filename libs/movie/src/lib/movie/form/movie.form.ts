@@ -709,10 +709,10 @@ export class MovieNotesForm extends FormEntity<MovieNotesControl> {
 // ------------------------------
 
 function createMovieSalesPitchControl(pitch: Partial<MovieSalesPitch> = {}) {
-  const { description, file } = createSalesPitch(pitch);
+  const { description, ref } = createSalesPitch(pitch);
   return {
     description: new FormControl(description),
-    file: new HostedMediaForm(file),
+    ref: new HostedMediaForm(ref),
   }
 }
 

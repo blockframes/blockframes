@@ -2,7 +2,7 @@ import { Firestore } from '../types';
 import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from '../watermark';
 import { firebase } from '@env';
-export const { storageBucket } = firebase;
+export const { storageBucket } = firebase();
 
 /**
  * Creating a watermark image for each user and store it into storage /watermark/<UID>.svg

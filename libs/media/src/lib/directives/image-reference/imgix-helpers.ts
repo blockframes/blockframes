@@ -72,6 +72,8 @@ export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
    */
   const protectedMediaDir: Privacy = 'protected';
   const query = formatParameters(parameters);
-  const imgixSource = parameters.s ? `${firebase.projectId}-${protectedMediaDir}` : firebase.projectId;
+  const imgixSource = parameters.s
+    ? `${firebase().projectId}-${protectedMediaDir}`
+    : firebase().projectId;
   return `https://${imgixSource}.imgix.net/${encodeURI(ref)}?${query}`;
 }

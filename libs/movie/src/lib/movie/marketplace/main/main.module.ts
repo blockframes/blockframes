@@ -7,11 +7,12 @@ import { MainComponent } from './main.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, ToLabelModule, HasKeysModule } from '@blockframes/utils/pipes';
 import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
+import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
 
 import { PrizeCardModule } from '../../components/prize-card/prize-card.module';
 import { CreditCardModule } from '../../components/credit-card/credit-card.module';
 import { ReviewCardModule } from '../../components/review-card/review-card.module';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { HasStatusModule } from '../../pipes/has-status.pipe';
 
 // Material
@@ -35,6 +36,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CreditCardModule,
     ReviewCardModule,
     RunningTimePipeModule,
+    MediaPlayerModule,
     // Material
     MatIconModule,
     MatButtonModule,

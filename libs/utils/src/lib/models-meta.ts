@@ -26,16 +26,18 @@ export function formatDocumentMetaFromFirestore(
 
   const m = { ...meta } as any;
 
-  if (!!meta.createdAt) {
-    m.createdAt = meta.createdAt.toDate();
-  }
+  if (!!meta) {
+    if (!!meta.createdAt) {
+      m.createdAt = meta.createdAt.toDate();
+    }
 
-  if (!!meta.updatedAt) {
-    m.updatedAt = meta.updatedAt.toDate();
-  }
+    if (!!meta.updatedAt) {
+      m.updatedAt = meta.updatedAt.toDate();
+    }
 
-  if (!!meta.deletedAt) {
-    m.deletedAt = meta.deletedAt.toDate();
+    if (!!meta.deletedAt) {
+      m.deletedAt = meta.deletedAt.toDate();
+    }
   }
 
   return m;

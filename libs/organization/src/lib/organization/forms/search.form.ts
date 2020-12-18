@@ -18,7 +18,7 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
   return {
     query: '',
     page: 0,
-    hitsPerPage: 8,
+    hitsPerPage: 25,
     isAccepted: true,
     hasAcceptedMovies: true,
     ...search,

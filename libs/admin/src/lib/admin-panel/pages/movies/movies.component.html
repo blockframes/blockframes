@@ -19,18 +19,13 @@
     showFilter
     showLoader
     [pageSize]="50"
-    showPaginator>
+    showPaginator
+    clickable
+    (rowClick)="goToEdit($event)">
     <ng-template colRef="poster" let-posters>
       <ng-container *ngIf="posters">
         <img class="poster" [ref]="posters" asset="empty_poster.webp">
       </ng-container>
-    </ng-template>
-    <ng-template colRef="id" let-id>
-      <span>{{ id }} </span>
-      <admin-go-to type="title" [id]="id"></admin-go-to>
-    </ng-template>
-    <ng-template colRef="edit" let-edit>
-      <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
     </ng-template>
     <ng-template colRef="storeConfig.status" let-storeStatus>
       {{ storeStatus | toLabel: 'storeStatus' }}

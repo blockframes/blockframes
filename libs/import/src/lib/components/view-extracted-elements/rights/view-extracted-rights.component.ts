@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional
 import { MatTableDataSource } from '@angular/material/table';
 import { populateMovieLanguageSpecification, MovieService, } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { SSF } from 'xlsx';
 import { createDistributionRight, createHoldback } from '@blockframes/distribution-rights/+state/distribution-right.model';

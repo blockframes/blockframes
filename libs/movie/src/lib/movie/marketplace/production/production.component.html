@@ -26,7 +26,7 @@
   <section *ngIf="movie.producers.length">
     <h2>Producers</h2>
     <article *ngFor="let producer of movie.producers">
-      <h5>{{ producer.role }}</h5>
+      <h5>{{ producer.role | toLabel: 'producerRoles' }}</h5>
       <p>{{ producer | displayName }}</p>
     </article>
 
@@ -67,7 +67,11 @@
     </article>
     <article *ngIf="movie.expectedPremiere.date">
       <h5>Expected premiere</h5>
-      <p>{{ movie.expectedPremiere.event }} - {{ movie.expectedPremiere.date | date: 'longDate' }}</p>
+      <p>{{ movie.expectedPremiere.event }} -
+        <ng-container *ngIf="!!movie.expectedPremiere.date">
+          {{ movie.expectedPremiere.date | date: 'longDate' }}
+        </ng-container>
+      </p>
     </article>
   </section>
 

@@ -11,6 +11,7 @@ import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/
 import { TwilioQuery } from '@blockframes/event/components/meeting/+state/twilio.query';
 import { displayName } from '@blockframes/utils/utils';
 import { AttendeeStatus, Meeting } from '@blockframes/event/+state/event.firestore';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-lobby',
@@ -37,6 +38,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     private router: Router,
     private twilioService: TwilioService,
     private twilioQuery: TwilioQuery,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
@@ -47,6 +49,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     this.sub = this.event$.subscribe(event => {
       if (event.type === 'meeting') {
+        this.dynTitle.setPageTitle(event.title, 'Lobby');
         const attendees = (event.meta as Meeting).attendees;
         this.ownerIsPresent = Object.values(attendees).some(value => value === 'owner');
         this.attendeeStatus = event.isOwner ? 'owner' : attendees[this.authQuery.userId];

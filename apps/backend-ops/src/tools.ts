@@ -37,7 +37,7 @@ export async function displayCredentials() {
   delete GAP.private_key;
   console.log('Using default service account:\n', GAP);
 
-  console.log('Local env.ts:\n', firebase)
+  console.log('Local env.ts:\n', firebase())
 }
 
 export async function ensureMaintenanceMode(db: FirebaseFirestore.Firestore) {

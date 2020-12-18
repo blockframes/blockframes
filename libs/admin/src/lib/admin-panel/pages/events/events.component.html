@@ -8,7 +8,7 @@
   </article>
 
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
-    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
+    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link">
         <mat-icon svgIcon="pencil"></mat-icon>

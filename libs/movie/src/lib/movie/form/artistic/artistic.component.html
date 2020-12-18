@@ -118,11 +118,11 @@
                 <div [formGroup]="crew" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Film Title</mat-label>
-                    <input [attr.test-id]= "'crew-film' + (i + 1)" matInput formControlName="title">
+                    <input [attr.test-id]="'crew-film' + (i + 1)" matInput formControlName="title">
                   </mat-form-field>
                   <mat-form-field appearance="outline" fxFlex>
-                    <mat-label>Crew's Filmography</mat-label>
-                    <input [attr.test-id]= "'crew-year' + (i + 1)" matInput formControlName="year" type="number">
+                    <mat-label>Release Year</mat-label>
+                    <input [attr.test-id]="'crew-year' + (i + 1)" matInput formControlName="year" type="number">
                     <mat-error *ngIf="crew.hasError('invalidYear', 'year')">Please enter a 4 digit date (e.g. 2020)
                     </mat-error>
                   </mat-form-field>

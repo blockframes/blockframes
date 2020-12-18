@@ -11,7 +11,7 @@ import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 import * as env from '@env';
 import { User } from '@blockframes/user/types';
 
-export const { storageBucket } = env.firebase;
+export const { storageBucket } = env.firebase();
 
 export interface UserConfig {
   uid: string;

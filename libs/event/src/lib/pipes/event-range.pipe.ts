@@ -10,7 +10,7 @@ export class EventRangePipe implements PipeTransform {
     const to = formatDate(end, 'h:mm a', 'en');
     const gmt = formatDate(start, 'O', 'en');
 
-    const time = `\n${from} - ${to} (${gmt})`; // Use <pre>{{ | eventRange }}</pre> to take advantage of \n
+    const time = `\n${from} - ${to}, ${gmt}`; // Use <pre>{{ | eventRange }}</pre> to take advantage of \n
 
     if (isSameDay(start, end)) {
       return `${formatDate(start, 'EEEE, MMMM d, y', 'en')} ${time}`;
