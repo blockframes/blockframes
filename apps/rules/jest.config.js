@@ -1,4 +1,4 @@
-module.exports = {
+﻿module.exports = {
   name: 'rules',
   preset: '../../jest.config.js',
   globals: {
@@ -6,5 +6,6 @@ module.exports = {
       tsConfig: '<rootDir>/tsconfig.spec.json',
     }
   },
-  coverageDirectory: '../../coverage/apps/rules'
+  coverageDirectory: '../../coverage/apps/rules',
+  testEnvironment: 'node',
 };
