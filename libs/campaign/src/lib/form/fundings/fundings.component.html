@@ -24,13 +24,13 @@
                 <mat-label>Organization Name</mat-label>
                 <input matInput formControlName="name"/>
               </mat-form-field>
-  
+
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Nature</mat-label>
                 <input matInput formControlName="kind" placeholder="e.g. Executive producer, television co-production"/>
               </mat-form-field>
             </div>
-  
+
             <!-- Amount / status -->
             <div fxLayout fxLayoutGap="16px">
               <mat-form-field fxFlex appearance="outline">
@@ -39,7 +39,7 @@
                 <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
                 <mat-error *ngIf="fundinForm.hasError('min', 'amount')">Only positive numbers are allowed.</mat-error>
               </mat-form-field>
-  
+
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="status">
@@ -53,6 +53,24 @@
 
         </ng-template>
       </bf-form-table>
+      <p class="mat-body-2 total">
+        <b>
+          Your total financing plan is:
+          {{ (fundings.value | totalFundings) !== 0
+            ? (fundings.value | totalFundings | currency: form.getCurrency() : 'symbol' : '1.0-0')
+            : 'N/C'
+          }}
+        </b>
+      </p>
+      <p class="mat-body-2">
+        <b>
+          N.B. Your total estimated budget is:
+          {{ (budget.value | budget ) !== 0
+            ? (budget.value | budget | currency: form.getCurrency() : 'symbol' : '1.0-0')
+            : 'N/C'
+          }}
+        </b>
+      </p>
     </section>
 
     <mat-divider></mat-divider>

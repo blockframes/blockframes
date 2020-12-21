@@ -18,7 +18,6 @@ export class PrizePipe implements PipeTransform {
     if (prize.premiere) array.push(`${staticModel['premiereType'][prize.premiere]} Premiere`);
 
     const displayPrize = array.join(' - ');
-    console.log(displayPrize)
     return displayPrize;
   }
 }
