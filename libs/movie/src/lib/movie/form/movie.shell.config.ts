@@ -76,7 +76,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     return [onMovieChanges, onStatusChanges];
   }
 
-  async onSave({ publishing }: FormSaveOptions): Promise<any> {
+  async onSave({ publishing }: FormSaveOptions): Promise<void> {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     const base = this.query.getActive();
     const movie = mergeDeep(base, documentToUpdate);
