@@ -22,6 +22,7 @@ export class InputAutocompleteComponent implements OnInit {
 
   @Input() scope: Scope;
   @Input() control: FormStaticValueArray<Scope>;
+  @Input() withoutValues: string[];
 
   public filteredStates: Observable<Scope[]>;
 
@@ -34,7 +35,12 @@ export class InputAutocompleteComponent implements OnInit {
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   ngOnInit() {
-    this.state = Object.keys(staticModel[this.scope]);
+    if (this.withoutValues) {
+      this.state = Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys));
+    } else {
+      this.state = Object.keys(staticModel[this.scope]);
+    }
+
     this.filteredStates = this.control.valueChanges
       .pipe(
         startWith(''),
