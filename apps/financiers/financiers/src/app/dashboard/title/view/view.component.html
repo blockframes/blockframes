@@ -5,6 +5,7 @@
 
   <title-dashboard-shell [routes]="navLinks">
     <ng-container *ngIf="movie.storeConfig.status === 'accepted'">
+      <span>{{ percentage }}% funded</span>
       <button mat-stroked-button color="primary" (click)="openDialog()">Update funding status</button>
     </ng-container>
   </title-dashboard-shell>
