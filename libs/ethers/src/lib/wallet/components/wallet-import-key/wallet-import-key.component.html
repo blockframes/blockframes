@@ -18,12 +18,6 @@
     </ng-template>
   </article>
   <article *ngSwitchCase="steps.end">
-    <feedback-message
-      title="Congratulations !"
-      subTitle="Your key was successfully imported"
-      buttonMessage="Back to wallet"
-      (redirectUser)="handleRedirection()">
-    </feedback-message>
   </article>
   <a mat-button color="primary" routerLink="/c/o/account/wallet">Cancel</a>
 </section>
