@@ -1985,8 +1985,7 @@
               "apps/rules/tsconfig.spec.json"
             ],
             "exclude": [
-              "**/node_modules/**",
-              "!apps/rules/**/*"
+              "**/node_modules/**"
             ]
           }
         },
