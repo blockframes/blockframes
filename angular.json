@@ -1956,9 +1956,7 @@
             "outputPath": "dist/apps/rules",
             "main": "apps/rules/src/main.ts",
             "tsConfig": "apps/rules/tsconfig.app.json",
-            "assets": [
-              "apps/rules/src/assets"
-            ]
+            "assets": []
           },
           "configurations": {
             "production": {
@@ -1967,8 +1965,7 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "apps/rules/src/environments/environment.ts",
-                  "with": "apps/rules/src/environments/environment.prod.ts"
+
                 }
               ]
             }
