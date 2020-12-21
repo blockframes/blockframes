@@ -19,7 +19,3 @@ export interface TunnelStepSnapshot {
   icon: string;
   route: RouteDescription;
 }
-
-export interface TunnelRoot {
-  confirmExit: () => Observable<boolean>;
-}

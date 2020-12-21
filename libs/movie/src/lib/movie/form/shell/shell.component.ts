@@ -1,24 +1,33 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnInit,
+  Inject,
+  AfterViewInit,
+  OnDestroy,
+  InjectionToken,
+  ChangeDetectorRef
+} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormArray, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
-import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
+import { TunnelStep } from '@blockframes/ui/tunnel';
 
 // Material
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map, startWith } from 'rxjs/operators';
-import { Observable, of, Subscription, combineLatest } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { Observable, Subscription, combineLatest } from 'rxjs';
 import { ProductionStatus } from '@blockframes/utils/static-model';
 import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { MovieShellConfig } from '../movie.shell.config';
 import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { TunnelDialogText } from '@blockframes/ui/tunnel/exit/exit.component';
 
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
@@ -133,17 +142,20 @@ export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form manage
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
+export class MovieFormShellComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: Subscription;
   steps$: Observable<TunnelStep[]>;
   exitRoute: string;
+  dialogText: TunnelDialogText = {
+    title: 'You are going to leave the Movie Form.',
+    subtitle: 'Pay attention, if you leave now your changes will not be saved.'
+  }
 
   constructor(
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
     private route: RouterQuery,
     private cdr: ChangeDetectorRef
   ) { }
@@ -213,29 +225,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     await this.update({ publishing: false });
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
-  }
-
-  confirmExit() {
-    const isPristine = Object.values(this.configs).every(config => config.form.pristine);
-    if (isPristine) {
-      return of(true);
-    }
-    const dialogRef = this.dialog.open(TunnelConfirmComponent, {
-      width: '80%',
-      data: {
-        title: 'You are going to leave the Movie Form.',
-        subtitle: 'Pay attention, if you leave now your changes will not be saved.'
-      }
-    });
-    return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => {
-        /* Undefined means, user clicked on the backdrop, meaning just close the modal */
-        if (typeof shouldSave === 'undefined') {
-          return of(false)
-        }
-        return shouldSave ? this.save() : of(true)
-      })
-    );
   }
 }
 

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation, V
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep, TunnelStepSnapshot } from '../tunnel.model';
+import { TunnelDialogText } from '../exit/exit.component';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
@@ -68,6 +69,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   /** Fallback link to redirect on exit */
   @Input() exitRedirect: string;
+
+  @Input() dialogText: TunnelDialogText;
 
   private sub: Subscription;
 
