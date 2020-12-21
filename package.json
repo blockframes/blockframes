@@ -16,7 +16,7 @@
     "build:backend-ops": "cross-env nx build backend-ops --configuration=$NG_CONFIG --maxWorkers=8",
     "build:crm": "cross-env nx build crm --configuration=$NG_CONFIG",
     "build:cms": "cross-env nx build cms --configuration=$NG_CONFIG",
-    "build:rules": "cross-env nx build rules --configuration=$NG_CONFIG",    
+    "build:rules": "cross-env nx build rules --configuration=$NG_CONFIG",
     "build:all": "cross-env nx run-many --target=build --projects=festival,catalog,crm,cms,financiers,backend-functions --configuration=$NG_CONFIG",
     "deploy:functions": "cross-env nx deploy backend-functions --configuration=$NG_CONFIG",
     "deploy:catalog": "cross-env nx deploy catalog --configuration=$NG_CONFIG",
