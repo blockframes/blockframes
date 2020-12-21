@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CollectionReference } from '@angular/fire/firestore';
@@ -12,8 +12,8 @@ import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { shareReplay, switchMap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { shareReplay, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
@@ -32,14 +32,13 @@ interface EmailData {
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieViewComponent implements OnInit {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
   private dialogRef: MatDialogRef<any, any>;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public campaign$: Observable<Campaign>;
   public currency: string;
-  public sub: Subscription;
 
   public navLinks: RouteDescription[] = [
     mainRoute,
@@ -92,16 +91,9 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
       shareReplay(1)
     );
     this.campaign$ = this.movieQuery.selectActiveId().pipe(
-      switchMap(id => this.campaignService.valueChanges(id))
+      switchMap(id => this.campaignService.valueChanges(id)),
+      tap(campaign => this.currency = campaign.currency)
     );
-
-    this.sub = this.campaign$.subscribe(data => {
-      this.currency = data.currency;
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe()
   }
 
   openForm(orgs: Organization[]) {
