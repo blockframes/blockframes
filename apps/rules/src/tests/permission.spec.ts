@@ -13,7 +13,7 @@ testFixture[metaDoc] = {};
 testFixture[metaDoc].endedAt = true;
 
 //TODO: 4198
-describe.skip('Permission Rules Tests', () => {
+describe('Permission Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
@@ -22,4 +22,6 @@ describe.skip('Permission Rules Tests', () => {
   });
 
   afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+  test('test', async () => {});
 });
