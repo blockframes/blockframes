@@ -29,20 +29,16 @@ const routes: Routes = [{
       loadChildren: () => import('./home/home.module').then(m => m.MarketplaceHomeModule)
     },
     {
-      path: 'about',
-      loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
-    },
-    {
       path: 'contact',
-      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+      loadChildren: () => import('@blockframes/ui/contact-us/contact.module').then(m => m.ContactModule)
     },
     {
       path: 'terms',
-      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+      loadChildren: () => import('@blockframes/auth/components/terms-conditions/terms-conditions.module').then(m => m.TermsConditionsModule)
     },
     {
       path: 'privacy',
-      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+      loadChildren: () => import('@blockframes/auth/components/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyModule)
     },
     {
       path: 'notifications',

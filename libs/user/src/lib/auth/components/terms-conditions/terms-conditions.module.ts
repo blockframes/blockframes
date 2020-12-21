@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
   declarations: [TermsConditionsComponent],
   imports: [
     CommonModule,
+    RouterModule.forChild([{path: '', component: TermsConditionsComponent}]),
     MatCardModule,
     FlexLayoutModule,
     AppPipeModule,

@@ -105,15 +105,15 @@ const routes: Routes = [{
     },
     {
       path: 'contact',
-      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+      loadChildren: () => import('@blockframes/ui/contact-us/contact.module').then(m => m.ContactModule)
     },
     {
       path: 'terms',
-      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+      loadChildren: () => import('@blockframes/auth/components/terms-conditions/terms-conditions.module').then(m => m.TermsConditionsModule)
     },
     {
       path: 'privacy',
-      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+      loadChildren: () => import('@blockframes/auth/components/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyModule)
     }
   ]
 }];
@@ -127,7 +127,7 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     OrgAccessModule,
-    
+
     // Material
     MatListModule,
     MatIconModule,

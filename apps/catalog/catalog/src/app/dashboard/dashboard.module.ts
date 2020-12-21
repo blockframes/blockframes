@@ -43,112 +43,147 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'home'
+        redirectTo: 'home',
       },
       {
-        path: 'home',   // Home (dashboard if film, welcome if not)
+        path: 'home', // Home (dashboard if film, welcome if not)
         canActivate: [MovieOrganizationListGuard],
         canDeactivate: [MovieOrganizationListGuard],
-        loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+        loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
       },
       {
         path: 'notifications',
-        loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule),
-        data: { animation: 'notifications' }
+        loadChildren: () =>
+          import('@blockframes/notification/notification.module').then((m) => m.NotificationModule),
+        data: { animation: 'notifications' },
       },
       {
         path: 'invitations',
-        loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule),
-        data: { animation: 'invitations' }
+        loadChildren: () =>
+          import('@blockframes/invitation/invitation.module').then((m) => m.InvitationModule),
+        data: { animation: 'invitations' },
       },
       {
         path: 'import', // Import bulk of movies
-        loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
+        loadChildren: () => import('@blockframes/import').then((m) => m.ImportModule),
       },
       {
         path: 'title',
         canActivate: [OrganizationContractListGuard],
         canDeactivate: [OrganizationContractListGuard],
-        children: [{
-          path: '',
-          canActivate: [MovieOrganizationListGuard],
-          canDeactivate: [MovieOrganizationListGuard],
-          loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
-        },
-        {
-          path: 'lobby',
-          loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
-        },
-        {
-          path: ':movieId',
-          canActivate: [MovieActiveGuard, MovieTunnelGuard],
-          canDeactivate: [MovieActiveGuard],
-          loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
-          data: { redirect: '/c/o/dashboard/title' }
-        }]
+        children: [
+          {
+            path: '',
+            canActivate: [MovieOrganizationListGuard],
+            canDeactivate: [MovieOrganizationListGuard],
+            loadChildren: () => import('./title/list/list.module').then((m) => m.TitleListModule),
+          },
+          {
+            path: 'lobby',
+            loadChildren: () =>
+              import('@blockframes/movie/form/start/start-tunnel.module').then(
+                (m) => m.StartTunnelModule
+              ),
+          },
+          {
+            path: ':movieId',
+            canActivate: [MovieActiveGuard, MovieTunnelGuard],
+            canDeactivate: [MovieActiveGuard],
+            loadChildren: () => import('./title/view/view.module').then((m) => m.TitleViewModule),
+            data: { redirect: '/c/o/dashboard/title' },
+          },
+        ],
       },
       {
         path: 'deals',
-        children: [{
-          path: '',
-          canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-          canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-          loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule)
-        }, {
-          path: ':contractId', // One right: different state of a right (offer, counter-offer, payment),
-          canActivate: [ActiveContractGuard],
-          canDeactivate: [ActiveContractGuard],
-          loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
-        }]
-      },
-      {
-        path: 'about',
-        loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
+        children: [
+          {
+            path: '',
+            canActivate: [
+              OrganizationContractListGuard,
+              ContractsRightListGuard,
+              MovieListContractListGuard,
+            ],
+            canDeactivate: [
+              OrganizationContractListGuard,
+              ContractsRightListGuard,
+              MovieListContractListGuard,
+            ],
+            loadChildren: () => import('./right/list/list.module').then((m) => m.RightListModule),
+          },
+          {
+            path: ':contractId', // One right: different state of a right (offer, counter-offer, payment),
+            canActivate: [ActiveContractGuard],
+            canDeactivate: [ActiveContractGuard],
+            loadChildren: () => import('./right/view/view.module').then((m) => m.RightViewModule),
+          },
+        ],
       },
       {
         path: 'contact',
-        loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+        loadChildren: () =>
+          import('@blockframes/ui/contact-us/contact.module').then(
+            (m) => m.ContactModule
+          ),
       },
       {
         path: 'terms',
-        loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+        loadChildren: () =>
+          import('@blockframes/auth/components/terms-conditions/terms-conditions.module').then(
+            (m) => m.TermsConditionsModule
+          ),
       },
       {
         path: 'privacy',
-        loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
-      }
-    ]
+        loadChildren: () =>
+          import('@blockframes/auth/components/privacy-policy/privacy-policy.module').then(
+            (m) => m.PrivacyPolicyModule
+          ),
+      },
+    ],
   },
   {
     path: 'tunnel',
     canActivate: [TunnelGuard],
-    children: [{
-      path: 'movie',
-      children: [{
-        path: ':movieId',
-        canActivate: [MovieActiveGuard, MovieTunnelGuard],
-        canDeactivate: [MovieActiveGuard],
-        children: tunnelRoutes,
-        data: {
-          redirect: '/c/o/dashboard/tunnel/movie'
-        },
-      }]
-    }, {
-      path: 'contract',
-      children: [{
-        path: '',
-        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
-      }, {
-        path: ':contractId',
-        canActivate: [ActiveContractGuard],
-        canDeactivate: [ActiveContractGuard],
-        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
-        data: {
-          redirect: '/c/o/dashboard/tunnel/contract'
-        },
-      }]
-    }]
-  }
+    children: [
+      {
+        path: 'movie',
+        children: [
+          {
+            path: ':movieId',
+            canActivate: [MovieActiveGuard, MovieTunnelGuard],
+            canDeactivate: [MovieActiveGuard],
+            children: tunnelRoutes,
+            data: {
+              redirect: '/c/o/dashboard/tunnel/movie',
+            },
+          },
+        ],
+      },
+      {
+        path: 'contract',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('@blockframes/contract/contract/tunnel').then(
+                (m) => m.ContractTunnelLobbyModule
+              ),
+          },
+          {
+            path: ':contractId',
+            canActivate: [ActiveContractGuard],
+            canDeactivate: [ActiveContractGuard],
+            loadChildren: () =>
+              import('@blockframes/contract/contract/tunnel').then((m) => m.ContractTunnelModule),
+            data: {
+              redirect: '/c/o/dashboard/tunnel/contract',
+            },
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 @NgModule({
@@ -167,12 +202,14 @@ const routes: Routes = [
     MatListModule,
     MatIconModule,
     MatToolbarModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
-  providers: [{
-    provide: FORMS_CONFIG,
-    useFactory: (movie) => ({ movie }),
-    deps: [MovieShellConfig]
-  }]
+  providers: [
+    {
+      provide: FORMS_CONFIG,
+      useFactory: (movie) => ({ movie }),
+      deps: [MovieShellConfig],
+    },
+  ],
 })
 export class DashboardModule { }

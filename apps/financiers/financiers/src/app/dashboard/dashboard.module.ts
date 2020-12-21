@@ -35,70 +35,70 @@ const routes: Routes = [{
   path: '',
   component: DashboardComponent,
   children: [{
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'home'
+  },
+  {
+    path: 'home',   // Home (dashboard if film, welcome if not)
+    loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
+  },
+  {
+    path: 'notifications',
+    loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
+  },
+  {
+    path: 'invitations',
+    loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
+  },
+  {
+    path: 'import', // Import bulk of movies
+    loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
+  },
+  {
+    path: 'title',
+    canActivate: [OrganizationContractListGuard],
+    canDeactivate: [OrganizationContractListGuard],
+    children: [{
       path: '',
-      pathMatch: 'full',
-      redirectTo: 'home'
-    },
-    {
-      path: 'home',   // Home (dashboard if film, welcome if not)
-      loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
-    },
-    {
-      path: 'notifications',
-      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
-    },
-    {
-      path: 'invitations',
-      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
-    },
-    {
-      path: 'import', // Import bulk of movies
-      loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
-    },
-    {
-      path: 'title',
-      canActivate: [OrganizationContractListGuard],
-      canDeactivate: [OrganizationContractListGuard],
-      children: [{
-        path: '',
-        loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
-      }, {
-        path: 'lobby',
-        loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
-      }, {
-        path: ':movieId',
-        canActivate: [MovieActiveGuard, MovieTunnelGuard],
-        canDeactivate: [MovieActiveGuard],
-        loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
-        data: { redirect: '/c/o/dashboard/title' }
-      }]
-    },
-    {
-      path: 'contact',
-      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
-    },
-    {
-      path: 'terms',
-      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
-    },
-    {
-      path: 'privacy',
-      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+      loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
+    }, {
+      path: 'lobby',
+      loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
+    }, {
+      path: ':movieId',
+      canActivate: [MovieActiveGuard, MovieTunnelGuard],
+      canDeactivate: [MovieActiveGuard],
+      loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
+      data: { redirect: '/c/o/dashboard/title' }
     }]
   },
   {
-    path: 'tunnel',
-    canActivate: [TunnelGuard],
-    children: [{
-      path: 'movie/:movieId',
-      canActivate: [MovieActiveGuard, MovieTunnelGuard],
-      canDeactivate: [MovieActiveGuard],
-      children: titleTunnelRoutes,
-      data: {
-        redirect: '/c/o/dashboard/tunnel/movie',
-      },
-    }]
+    path: 'contact',
+    loadChildren: () => import('@blockframes/ui/contact-us/contact.module').then(m => m.ContactModule)
   },
+  {
+    path: 'terms',
+    loadChildren: () => import('@blockframes/auth/components/terms-conditions/terms-conditions.module').then(m => m.TermsConditionsModule)
+  },
+  {
+    path: 'privacy',
+    loadChildren: () => import('@blockframes/auth/components/privacy-policy/privacy-policy.module').then(m => m.PrivacyPolicyModule)
+  }]
+},
+{
+  path: 'tunnel',
+  canActivate: [TunnelGuard],
+  children: [{
+    path: 'movie/:movieId',
+    canActivate: [MovieActiveGuard, MovieTunnelGuard],
+    canDeactivate: [MovieActiveGuard],
+    children: titleTunnelRoutes,
+    data: {
+      redirect: '/c/o/dashboard/tunnel/movie',
+    },
+  }]
+},
 ];
 
 @NgModule({
