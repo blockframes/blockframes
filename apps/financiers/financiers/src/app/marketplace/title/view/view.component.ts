@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, Pipe } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CollectionReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -84,8 +84,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
       .where('appAccess.financiers.dashboard', '==', true);
 
     this.movie$ = this.movieQuery.selectActive();
-    this.orgs$ = this.movieQuery.selectActiveId().pipe(
-      switchMap(movieId => this.orgService.getValue(ref => orgQueryFn(movieId, ref))),
+    this.orgs$ = this.movieQuery.selectActive().pipe(
+      switchMap(movie => this.orgService.valueChanges(movie.orgIds)),
       shareReplay(1)
     );
     this.campaign$ = this.movieQuery.selectActiveId().pipe(
@@ -133,8 +133,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const res = await Promise.all(promises);
     const success = res.some(r => r.result);
     const message = success
-      ? 'Your mail has been send.'
-      : 'An error occurred. Your mail has not been send.';
-    this.snackbar.open(message, null, { duration: 1000 });
+      ? 'Your email has been sent.'
+      : 'An error occurred. Your email was not sent.';
+    this.snackbar.open(message, null, { duration: 3000 });
   }
 }

@@ -73,21 +73,20 @@
       <h2>Rights :</h2>
 
       <bf-table-filter class="rights-table"
-        [source]="rows"
+        [source]="rights"
         [columns]="versionColumnsTable"
         [initialColumns]="initialColumnsTable"
         [filterPredicate]="filterPredicate"
         showFilter
         showLoader
-        showPaginator>
+        showPaginator
+        clickable
+        (rowClick)="goToRights($event)">
         <ng-template colRef="contractId" let-contractId>
           <a [routerLink]="['/c/o/admin/panel/contract', contractId]" routerLinkActive="active"> {{ contractId }}</a>
         </ng-template>
         <ng-template colRef="terms" let-terms>
           <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
-        </ng-template>
-        <ng-template colRef="rightLink" let-rightLink>
-          <a [routerLink]="['/c/o/admin/panel/right',rightLink.id, 'm', rightLink.movieId]"><mat-icon svgIcon="pencil"></mat-icon></a>
         </ng-template>
         <ng-template colRef="status" let-status>
           {{ status | toLabel: 'distributionRightStatus'  }}

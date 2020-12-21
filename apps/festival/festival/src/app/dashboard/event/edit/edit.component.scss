@@ -10,7 +10,17 @@ section {
   padding: 24px 16px;
 
   .manage-files-btn {
-    margin-bottom: 16px;
+    margin-bottom: 40px;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: underline;
   }
 
   p.no-files {

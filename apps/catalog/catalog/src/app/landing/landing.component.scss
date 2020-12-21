@@ -1,18 +1,39 @@
+@import "~@angular/flex-layout/mq";
+
 landing-header {
   background-image: url("/assets/images/banner_header.png");
   a {
     margin-top: 80px;
   }
+  h4 {
+    text-transform: uppercase;
+  }
+  p {
+    width: 75%;
+  }
 }
 
 landing-content {
-  .join {
-    padding: 48px 0;
+  h1 {
+    margin-bottom: 12px;
+  }
+
+  .tab-margin {
+    margin-top: 24px;
+    img {
+      max-width: 600px;
+    }
+  }
+
+  h5 {
+    margin-top: 48px;
+    text-transform: uppercase;
   }
 
   article {
     mat-card {
       width: 49%;
+      min-height: 400px;
       margin-bottom: 24px;
       text-align: center;
       img {
@@ -21,15 +42,35 @@ landing-content {
     }
   }
 
-  article {
-    img {
-      width: 550px;
-    }
+  .join {
+    padding: 48px 0;
+  }
+}
 
-    div {
-      h3 {
-        word-break: break-word;
-      }
+@include layout-bp(lt-md) {
+  landing-header {
+    p {
+      width: 80%;
+    }
+  }
+  landing-content {
+    article mat-card {
+      width: 75%;
+    }
+  }
+}
+
+@include layout-bp(lt-sm) {
+  landing-header {
+    text-align: center;
+    p {
+      width: 90%;
+    }
+  }
+  landing-content {
+    text-align: center;
+    article mat-card {
+      width: 100%;
     }
   }
 }

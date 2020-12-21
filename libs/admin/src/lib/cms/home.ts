@@ -7,6 +7,7 @@ export interface BannerSection extends Section {
   subtitle: string;
   description: string;
   background: string;
+  image: string;
   links: Link[]
 }
 

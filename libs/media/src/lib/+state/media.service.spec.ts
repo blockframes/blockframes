@@ -69,13 +69,13 @@ describe('Media Service Test Suite', () => {
       s: 'FOO123bar'
     }
     const query = formatParameters(imgParam);
-    const expURL = `https://${firebase.projectId}-protected.imgix.net/test?${query}`;
+    const expURL = `https://${firebase().projectId}-protected.imgix.net/test?${query}`;
     const genURL = await service.generateImgIxUrl('test', imgParam)
     expect(genURL).toBe(expURL);
   });
 
   it('Verify generated background ImgIx URL', async () => {
-    const expURL = `https://${firebase.projectId}.imgix.net/test?w=1024`;
+    const expURL = `https://${firebase().projectId}.imgix.net/test?w=1024`;
     const genURL = await service.generateBackgroundImageUrl('test', {})
     expect(genURL).toBe(expURL);
   });

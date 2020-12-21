@@ -42,7 +42,7 @@ function getStepSnapshot(steps: TunnelStep[], url: string): TunnelStepSnapshot {
 }
 
 @Component({
-  selector: 'tunnel-layout',
+  selector: '[exitRedirect] tunnel-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,10 +1,10 @@
 import NavbarPage from "./NavbarPage";
-import { TO } from "@blockframes/e2e/utils/env";
+import { SEC } from "@blockframes/e2e/utils/env";
 
 export default class WishlistPage extends NavbarPage {
   constructor() {
     super();
-    cy.get('marketplace-wishlist', {timeout: TO.PAGE_LOAD});
+    cy.get('marketplace-wishlist', {timeout: 60 * SEC});
   }
 
   public clickSendToSellers() {
@@ -19,7 +19,7 @@ export default class WishlistPage extends NavbarPage {
   }
 
   public assertMovieInCurrentWishlist(movieName: string) {
-    cy.get('marketplace-wishlist td', {timeout: TO.SLOW_OP})
+    cy.get('marketplace-wishlist td', {timeout: 10 * SEC})
       .contains(movieName);
   }
 
@@ -53,8 +53,8 @@ export default class WishlistPage extends NavbarPage {
       return;
     }
 
-    cy.wait(TO.FIFTEEN_SEC);
-    cy.get("marketplace-wishlist section", {timeout: TO.VSLOW_UPDATE}).then($table => {
+    cy.wait(15 * SEC);
+    cy.get("marketplace-wishlist section", {timeout: 150 * SEC}).then($table => {
       if ($table.find("tr").length === 0) {
         cy.log("Wishlist empty...");
         return;

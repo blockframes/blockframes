@@ -1,12 +1,12 @@
 import OrganizationCreatePage from './OrganizationCreatePage';
 import OrganizationFindPage from './OrganizationFindPage';
-import { TO } from '../../utils/env';
+import { SEC } from '../../utils/env';
 
 const PATH = '/c/organization/home';
 
 export default class OrganizationHomePage {
   constructor() {
-    cy.get('organization-home', {timeout: TO.VSLOW_UPDATE});
+    cy.get('organization-home', {timeout: 150 * SEC});
   }
 
   public assertMoveToOrgHomepage() {
@@ -16,26 +16,26 @@ export default class OrganizationHomePage {
   }
 
   public clickCreateOrganization() {
-    cy.get('organization-home [value=create]mat-radio-button', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-home [value=create]mat-radio-button', {timeout: 3 * SEC})
       .click();
   }
 
   public clickFindOrganization() {
-    cy.get('organization-home [value=find]mat-radio-button', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-home [value=find]mat-radio-button', {timeout: 3 * SEC})
       .click();
   }
 
   public clickSubmitToCreate() {
-    cy.get('organization-home a[test-id=submit]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-home a[test-id=submit]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.ONE_SEC);
+    cy.wait(1 * SEC);
     return new OrganizationCreatePage();
   }
 
   public clickSubmitToFind() {
-    cy.get('organization-home a[test-id=submit]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-home a[test-id=submit]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.ONE_SEC);
+    cy.wait(1 * SEC);
     return new OrganizationFindPage();
   }
 }

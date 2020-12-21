@@ -1,4 +1,4 @@
-﻿import {TestBed} from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 
 import { NotificationService } from './notification.service';
 import { NotificationStore } from './notification.store';
@@ -6,6 +6,13 @@ import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
+import { AuthService } from '@blockframes/auth/+state';
+import { Subject } from 'rxjs';
+
+// @TODO (#4564) replace this mock by actual AuthService
+class MockAuthService {
+  signedOut = new Subject<void>();
+}
 
 describe('Notifications Test Suite', () => {
   let service: NotificationService;
@@ -14,12 +21,13 @@ describe('Notifications Test Suite', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFireModule.initializeApp({projectId: 'test'}),
+        AngularFireModule.initializeApp({ projectId: 'test' }),
         AngularFirestoreModule
       ],
       providers: [
         NotificationService,
         NotificationStore,
+        { provide: AuthService, useClass: MockAuthService },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
@@ -32,7 +40,10 @@ describe('Notifications Test Suite', () => {
     });
   });
 
-  afterEach(() => clearFirestoreData({projectId: 'test'}))
+  afterEach(() => clearFirestoreData({ projectId: 'test' }));
+
+  // To prevent "This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue."
+  afterAll(() => db.firestore.disableNetwork());
 
   it('Should check notif service is created', () => {
     expect(service).toBeTruthy();

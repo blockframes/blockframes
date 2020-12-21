@@ -6,17 +6,12 @@
 
 mat-card#background-card {
   border: none;
+  margin-bottom: 56px;
 }
 
 article {
   display: block;
-  width: 60%;
-  margin: auto;
   padding: 30px 0;
-}
-
-.feature-description {
-  width: 45%;
 }
 
 img {
@@ -29,17 +24,9 @@ a {
   text-decoration: underline;
 }
 
-@include layout-bp(sm) {
-  div {
-    width: 100%;
-  }
+@include layout-bp(lt-md) {
   .feature-description {
-    width: 100%;
-  }
-}
-
-@include layout-bp(xs) {
-  .feature-description {
+    text-align: center;
     width: 100%;
   }
 }

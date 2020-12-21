@@ -1,11 +1,11 @@
 import { User } from '../../utils/type';
 import { OrganizationHomePage } from '../organization';
-import { TO } from '../../utils/env';
+import { SEC } from '../../utils/env';
 
 export default class AuthLoginPage {
 
   constructor() {
-    cy.get('auth-login-view', {timeout: TO.PAGE_LOAD});
+    cy.get('auth-login-view', {timeout: 60 * SEC});
   }
 
   public switchMode() {
@@ -94,9 +94,9 @@ export default class AuthLoginPage {
   }
 
   public clickSignupToOrgHome() {
-    cy.get('auth-signup-form button[type=submit]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('auth-signup-form button[type=submit]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.THREE_SEC);
+    cy.wait(3 * SEC);
     return new OrganizationHomePage();
   }
 
@@ -119,15 +119,15 @@ export default class AuthLoginPage {
 
   /** Connection returns to the home page of the application in which you are. You have to create it. */
   public clickSignIn() {
-    cy.get('auth-signin-form button[type=submit]', {timeout: 3000})
+    cy.get('auth-signin-form button[type=submit]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.THREE_SEC);
+    cy.wait(3 * SEC);
   }
 
   public clickSigninToOrgHome() {
-    cy.get('auth-signin-form button[type=submit]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('auth-signin-form button[type=submit]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.WAIT_1SEC);
+    cy.wait(1 * SEC);
     return new OrganizationHomePage();
   }
 }

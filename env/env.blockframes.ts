@@ -14,16 +14,53 @@ export const appUrl = {
   crm: 'https://crm.blockframes.io',
 };
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: 'AIzaSyCcUEsNlBgusJtyYAawoJAshnnHBruM1ss',
   authDomain: 'blockframes.firebaseapp.com',
   databaseURL: 'https://blockframes.firebaseio.com',
   projectId: 'blockframes',
   storageBucket: 'blockframes.appspot.com',
-  messagingSenderId: '1080507348015',
-  appId: "1:1080507348015:web:1009793cb9e2b297",
-  measurementId: "G-Q4BWTRSV6P"
+  messagingSenderId: '1080507348015'
 };
+
+const appConfigs = {
+  festival: {
+    appId: "1:1080507348015:web:6fee072c90f5a9510002da",
+    measurementId: "G-QC4D0W5506"
+  },
+  catalog: {
+    appId: "1:1080507348015:web:1009793cb9e2b297",
+    measurementId: "G-Q4BWTRSV6P"
+  },
+  financiers: {
+    appId: "1:1080507348015:web:e5bdd85e161de4220002da",
+    measurementId: "G-RZF25ZLQ2M"
+  },
+  cms: {
+    appId: "1:1080507348015:web:9abd62a79dc41e710002da",
+    measurementId: "G-THGSYK1D7K"
+  },
+  crm: {
+    appId: "1:1080507348015:web:ede10e0ebf25604e0002da",
+    measurementId: "G-X8XFZQCL8Z"
+  },
+  default: {
+    appId: "1:1080507348015:web:413468c3253b02760002da",
+    measurementId: "G-NHLYYB4DSP"
+  }
+}
+
+export function firebase(app?: keyof typeof appConfigs) {
+  return app ? {
+    ...firebaseConfig,
+    ...appConfigs[app]
+  } : {
+      ...firebaseConfig,
+      ...appConfigs.default
+    }
+}
+
+
 
 // Algolia
 // =======

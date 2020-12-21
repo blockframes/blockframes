@@ -1,10 +1,10 @@
-import { TO } from '../../utils/env';
+import { SEC } from '../../utils/env';
 
 const PATH = '/c/organization/find';
 
 export default class OrganizationFindPage {
   constructor() {
-    cy.get('organization-find', {timeout: TO.VSLOW_UPDATE});
+    cy.get('organization-find', {timeout: 150 * SEC});
   }
 
   public assertMoveToOrgFindPage() {

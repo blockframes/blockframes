@@ -14,7 +14,7 @@ export const appUrl = {
   crm: 'https://blockframes-pl-2.web.app',
 }
 
-export const firebase = {
+const firebaseConfig = {
   apiKey: "AIzaSyB7wrvLk8sdjPYGZ7-Tncc9vP8Pw28sO40",
   authDomain: "blockframes-pl-2.firebaseapp.com",
   databaseURL: "https://blockframes-pl-2.firebaseio.com",
@@ -23,6 +23,10 @@ export const firebase = {
   messagingSenderId: "264024635102",
   appId: "1:264024635102:web:995c5f1c3ecfa961c3f44f",
   measurementId: "G-JP3DK3VKM4"
+}
+
+export function firebase(app?: string) {
+  return firebaseConfig
 }
 
 // Algolia

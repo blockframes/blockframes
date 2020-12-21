@@ -17,6 +17,7 @@ import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-for
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Component({
   selector: 'admin-organization',
@@ -28,7 +29,7 @@ export class OrganizationComponent implements OnInit {
   public orgId = '';
   public org: Organization;
   public orgForm: OrganizationAdminForm;
-  public movies: any[];
+  public movies: Movie[];
   public members: any[];
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
@@ -37,14 +38,13 @@ export class OrganizationComponent implements OnInit {
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
   public versionColumnsMovies = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'internalRef': 'Internal Ref',
-    'poster': 'Poster',
+    'poster': { value: 'Poster', disableSort: true },
     'title.original': 'Original title',
     'releaseYear': 'Release year',
     'storeConfig.status': 'Status',
-    'storeConfig.storeType': 'Store type',
-    'edit': 'Edit',
+    'storeConfig.storeType': 'Store type'
   };
 
   public initialColumnsMovies: string[] = [
@@ -54,8 +54,7 @@ export class OrganizationComponent implements OnInit {
     'title.original',
     'releaseYear',
     'storeConfig.status',
-    'storeConfig.storeType',
-    'edit',
+    'storeConfig.storeType'
   ];
 
   public memberColumns = {
@@ -92,13 +91,7 @@ export class OrganizationComponent implements OnInit {
     this.orgForm = new OrganizationAdminForm(this.org);
 
     const movies = await this.movieService.getValue(fromOrg(this.org.id))
-    this.movies = movies.filter(m => !!m).map(m => ({
-      ...m,
-      edit: {
-        id: m.id,
-        link: `/c/o/admin/panel/movie/${m.id}`,
-      }
-    }));
+    this.movies = movies.filter(m => !!m);
 
     this.members = await this.getMembers();
     this.cdRef.markForCheck();
@@ -250,5 +243,9 @@ export class OrganizationComponent implements OnInit {
       output.push(`${contracts.length} contract(s) will be updated.`)
     }
     return output;
+  }
+
+  goToMovieEdit(movie: Movie) {
+    this.router.navigate([`/c/o/admin/panel/movie/${movie.id}`]);
   }
 }

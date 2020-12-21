@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
 import { AttendeeStatus, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
@@ -8,6 +8,9 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { Router } from '@angular/router';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 
 @Component({
@@ -26,6 +29,11 @@ export class SessionComponent implements OnInit, OnDestroy {
   public screeningFileRef: string;
 
   private sub: Subscription;
+  private dialogSub: Subscription;
+
+  private confirmDialog: MatDialogRef<any>
+  private isAutoPlayEnabled = false;
+  @ViewChild('autotester') autoPlayTester: ElementRef<HTMLVideoElement>;
 
   @HostListener('window:beforeunload')
   attendeeLeaves() {
@@ -52,6 +60,8 @@ export class SessionComponent implements OnInit, OnDestroy {
     private bottomSheet: MatBottomSheet,
     private userService: UserService,
     private router: Router,
+    private dynTitle: DynamicTitleService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -70,11 +80,37 @@ export class SessionComponent implements OnInit, OnDestroy {
       }
 
       if (event.type === 'screening') {
+        this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
       } else if (event.type === 'meeting') {
+        this.dynTitle.setPageTitle(event.title, 'Meeting');
+
+        try {
+          if (!this.isAutoPlayEnabled) {
+            await this.autoPlayTester.nativeElement.play();
+            this.autoPlayTester.nativeElement.pause();
+            this.isAutoPlayEnabled = true;
+          }
+        } catch (error) {
+          this.confirmDialog = this.dialog.open(ConfirmComponent, {
+            data: {
+              title: 'Your browser might be blocking autoplay',
+              question: 'This can result in poor viewing experience during your meeting.\nYou can try to unblock autoplay by clicking the following button. If it doesn\'t work, please change your browser settings to allow autoplay.',
+              buttonName: 'Unblock autoplay',
+              onConfirm: () => {
+                this.autoPlayTester.nativeElement.play();
+                this.autoPlayTester.nativeElement.pause();
+              },
+            },
+          });
+          this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
+            this.isAutoPlayEnabled = !!confirmed;
+          });
+        }
+
         const uid = this.authQuery.userId;
         if (event.isOwner) {
           const attendees = (event.meta as Meeting).attendees;
@@ -104,5 +140,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.attendeeLeaves();
     this.sub.unsubscribe();
+    this.dialogSub?.unsubscribe();
   }
 }

@@ -16,7 +16,7 @@
       </file-upload>
     </ng-container>
     <div fxLayout="column" fxLayoutAlign="center center">
-      <button mat-stroked-button color="primary" (click)="update()" [disabled]="getSingleMediaForm().invalid">
+      <button mat-stroked-button color="primary" (click)="update()" [disabled]="getSingleMediaForm().invalid || getSingleMediaForm().pristine">
         <span>Update</span>
       </button>
     </div>

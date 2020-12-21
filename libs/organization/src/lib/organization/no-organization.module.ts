@@ -9,8 +9,6 @@ import { CropperModule } from '@blockframes/media/components/cropper/cropper.mod
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
-import { ActionsListModule } from '@blockframes/ui/actions-list/actions-list.module';
-import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
 import { WorkspacePipeModule } from '@blockframes/utils/pipes';
 
 // Material
@@ -106,10 +104,6 @@ export const noOrganizationRoutes: Routes = [
     MatSnackBarModule,
     MatRadioModule,
     MatRippleModule,
-
-    // UI
-    ActionsListModule,
-    FeedbackMessageModule,
 
     RouterModule.forChild(noOrganizationRoutes),
   ],

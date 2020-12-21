@@ -2,19 +2,19 @@
 import EventEditPage from './EventEditPage';
 import FestivalInvitationsPage from './FestivalInvitationsPage';
 import FestivalMarketplaceNotifications from '../marketplace/FestivalMarketplaceNotificationsPage';
-import { TO } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 
 export default class FestivalDashboardHomePage {
   constructor() {
-    cy.get('festival-dashboard', { timeout: TO.PAGE_LOAD });
+    cy.get('festival-dashboard', { timeout: 60 * SEC });
   }
 
   goToMarket() {
-    cy.get('a[href="/c/o/marketplace/home"]', { timeout: TO.PAGE_ELEMENT }).click();
+    cy.get('a[href="/c/o/marketplace/home"]', { timeout: 3 * SEC }).click();
   }
 
   goToCalendar() {
-    cy.get('festival-dashboard a[test-id=calendar]', { timeout: TO.PAGE_ELEMENT }).click();
+    cy.get('festival-dashboard a[test-id=calendar]', { timeout: 3 * SEC }).click();
     return new EventPage();
   }
 
@@ -26,13 +26,13 @@ export default class FestivalDashboardHomePage {
   }
 
   clickOnInvitations() {
-    cy.get('festival-dashboard a[test-id=invitations-link]', { timeout: TO.PAGE_ELEMENT }).click();
+    cy.get('festival-dashboard a[test-id=invitations-link]', { timeout: 3 * SEC }).click();
     return new FestivalInvitationsPage();
   }
 
   goToNotifications() {
     cy.get('festival-dashboard a[test-id=notifications-link]', {
-      timeout: TO.PAGE_ELEMENT,
+      timeout: 3 * SEC,
     }).click();
     return new FestivalMarketplaceNotifications();
   }
@@ -44,15 +44,15 @@ export default class FestivalDashboardHomePage {
     isPublic: boolean = false
   ) {
     const eventPage: EventPage = new EventPage();
-    cy.get('a[test-id="calendar"]', { timeout: TO.PAGE_ELEMENT }).then(($menu) => {
+    cy.get('a[test-id="calendar"]', { timeout: 3 * SEC }).then(($menu) => {
       if ($menu.length) {
         cy.wrap($menu).click();
       } else {
-        cy.get('button[test-id=menu]', { timeout: TO.PAGE_ELEMENT }).first().click();
-        cy.get('a[test-id="calendar"]', { timeout: TO.PAGE_ELEMENT }).click();
+        cy.get('button[test-id=menu]', { timeout: 3 * SEC }).first().click();
+        cy.get('a[test-id="calendar"]', { timeout: 3 * SEC }).click();
       }
-      cy.wait(TO.WAIT_1SEC);
-      cy.get('button[test-id="menu"]', { timeout: TO.PAGE_ELEMENT }).first().click();
+      cy.wait(1 * SEC);
+      cy.get('button[test-id="menu"]', { timeout: 3 * SEC }).first().click();
       const event: EventEditPage = eventPage.createDetailedEvent(eventDate);
       event.addEventTitle(eventTitle);
       event.selectMovie(screeningName);

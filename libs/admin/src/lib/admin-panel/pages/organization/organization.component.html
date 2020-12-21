@@ -79,7 +79,9 @@
         [filterPredicate]="filterPredicateMovies"
         showFilter
         showLoader
-        showPaginator>
+        showPaginator
+        clickable
+        (rowClick)="goToMovieEdit($event)">
         <ng-template colRef="poster" let-posters>
           <ng-container *ngIf="posters; else noposter">
             <img class="poster" [ref]="posters" asset="empty_poster.webp">
@@ -88,19 +90,12 @@
             --
           </ng-template>
         </ng-template>
-        <ng-template colRef="id" let-id>
-          <span>{{ id }} </span>
-          <admin-go-to type="title" [id]="id"></admin-go-to>
-        </ng-template>
-        <ng-template colRef="edit" let-edit>
-          <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-        </ng-template>
       </bf-table-filter>
     </article>
   </section>
   <section fxLayout fxLayoutAlign="space-around start">
     <article fxLayout="column" fxLayoutAlign="space-between start" *ngIf="org">
-      <mat-card>
+      <mat-card class="file-explorer">
         <mat-card-title>Organization's resources</mat-card-title>
         <mat-card-content>
           <file-explorer [org]="org"></file-explorer>

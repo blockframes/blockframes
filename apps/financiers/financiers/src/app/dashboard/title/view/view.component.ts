@@ -1,15 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
-import { Observable } from 'rxjs';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { CampaignForm } from '@blockframes/campaign/form/form';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Campaign, CampaignService } from '@blockframes/campaign/+state';
+import { switchMap } from 'rxjs/operators';
 
 
 const links: RouteDescription[] = [
@@ -45,25 +44,40 @@ const links: RouteDescription[] = [
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleViewComponent implements OnInit {
+export class TitleViewComponent implements OnInit, OnDestroy {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
   private dialogRef: MatDialogRef<any, any>;
   public movie$: Observable<Movie>;
+  public campaign$: Observable<Campaign>;
   public loading$: Observable<boolean>;
   public navLinks = links;
-  public getLabelBySlug = getLabelBySlug;
-
+  public sub: Subscription;
+  public percentage = 0;
 
   constructor(
     private movieQuery: MovieQuery,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
+    private campaignService: CampaignService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.loading$ = this.movieQuery.selectLoading();
     this.movie$ = this.movieQuery.selectActive();
+    this.campaign$ = this.movie$.pipe(
+      switchMap(movie => this.campaignService.getValue(movie.id))
+    );
+
+    this.sub = this.campaign$.subscribe(data => {
+      this.percentage = Math.floor((data.received / data.cap) * 100);
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   async openDialog() {

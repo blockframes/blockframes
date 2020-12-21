@@ -30,6 +30,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   public excelForm = new HostedMediaForm();
 
   private sub: Subscription;
+  private fileTypeSub: Subscription;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -50,28 +51,28 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
 
     this.sub = this.excelForm.valueChanges.subscribe(excelFormValue => {
       if (!!excelFormValue.blobOrFile && !!excelFormValue.blobOrFile.name) {
-
-        const reader = new FileReader();
-        reader.addEventListener('loadend', _ => {
-          const buffer = new Uint8Array(reader.result as ArrayBuffer);
-          this.setSheetRange(buffer);
-        });
-        reader.readAsArrayBuffer(excelFormValue.blobOrFile);
-
+        this.importSpreadsheet(excelFormValue.blobOrFile);
       } else {
         this.sheets = [];
       }
     });
+
+    this.fileTypeSub = this.fileType.valueChanges.subscribe(_ => {
+      if (!!this.excelForm.value.blobOrFile && !!this.excelForm.value.blobOrFile.name) {
+        this.importSpreadsheet(this.excelForm.value.blobOrFile);
+      }
+    })
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.fileTypeSub.unsubscribe();
   }
 
-  setSheetRange(bytes: Uint8Array) {
-    let sheetRange;
+  importSpreadsheet(blob: Blob) {
+    let sheetRange: string;
     if (this.fileType.value === 'movies') {
-      sheetRange = 'A14:AZ100';
+      sheetRange = 'A14:BZ100';
     } else if (this.fileType.value === 'contracts') {
       sheetRange = 'A1:DD100';
     } else if (this.fileType.value === 'organizations') {
@@ -79,8 +80,14 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     } else {
       sheetRange = 'A10:AD100';
     }
-    this.sheets = importSpreadsheet(bytes, sheetRange);
-    this.cdRef.markForCheck();
+
+    const reader = new FileReader();
+    reader.addEventListener('loadend', _ => {
+      const buffer = new Uint8Array(reader.result as ArrayBuffer);
+      this.sheets = importSpreadsheet(buffer, sheetRange);
+      this.cdRef.markForCheck();
+    })
+    reader.readAsArrayBuffer(blob);
   }
 
   next(): void {

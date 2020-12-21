@@ -3,7 +3,8 @@
   <!-- App Bar Search -->
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm">
-      <input type="text" formControlName="query" [value]="searchForm.query.value">
+      <input type="text" formControlName="query" [value]="searchForm.query.value"
+        placeholder="Search for titles, directors, keywords, ...">
     </form>
   </list-page-app-bar>
 

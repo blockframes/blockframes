@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
+import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'admin-organizations',
@@ -12,15 +14,14 @@ import { OrganizationCreateComponent } from '../../components/organization/creat
 })
 export class OrganizationsComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'status': 'Status',
-    'logo': 'Logo',
+    'logo': { value: 'Logo', disableSort: true },
     'denomination.full': 'Company name',
     'denomination.public': 'Short name',
     'addresses.main.country': 'Country',
     'email': 'Email',
-    'appAccess': 'Authorizations',
-    'edit': 'Edit',
+    'appAccess': { value: 'Authorizations', disableSort: true } 
   };
 
   public initialColumns: string[] = [
@@ -32,28 +33,25 @@ export class OrganizationsComponent implements OnInit {
     'status',
     'email',
     'appAccess',
-    'edit',
   ];
-  public rows: any[] = [];
+  public rows: OrganizationDocumentWithDates[] = [];
   public orgListLoaded = false;
 
   constructor(
     private organizationService: OrganizationService,
     private cdRef: ChangeDetectorRef,
     private dialog: MatDialog,
+    private router: Router
   ) { }
 
   async ngOnInit() {
-    const orgs = await this.organizationService.getValue();
-    this.rows = orgs.map(o => ({
-      ...o,
-      edit: {
-        id: o.id,
-        link: `/c/o/admin/panel/organization/${o.id}`,
-      }
-    }));
+    this.rows = await this.organizationService.getValue();
     this.orgListLoaded = true;
     this.cdRef.markForCheck();
+  }
+
+  goToEdit(org: OrganizationDocumentWithDates) {
+    this.router.navigate([`/c/o/admin/panel/organization/${org.id}`]);
   }
 
   public filterPredicate(data: any, filter: string) {
