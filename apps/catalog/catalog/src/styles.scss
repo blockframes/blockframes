@@ -1,64 +1,63 @@
 /* You can add global styles to this file, and also import other style files */
-@import "../../../../styles/style.scss";
-@import "../../../../styles/themes/builder.scss";
+@import '../../../../styles/style.scss';
+@import '../../../../styles/themes/builder.scss';
 // @todo(#1617) Lazy Load this
-@import "~leaflet/dist/leaflet.css";
-
+@import '~leaflet/dist/leaflet.css';
 
 $dark-theme: (
   is-dark: true,
   primary: (
     100: #cfd8ff,
-    200: #2A3052,
+    200: #2a3052,
     400: #9eb1ff,
     500: #9eb1ff,
     700: #8298ff,
     800: #8298ff,
     contrast: (
       100: #24374e,
-      200: #F9F8FF,
+      200: #f9f8ff,
       400: #f9f8ff,
       500: #f9f8ff,
       700: #f9f8ff,
       800: #f9f8ff,
-    )
+    ),
   ),
   accent: (
     100: #ffb7b0,
     200: #ffb7b0,
     400: #ff6e61,
     500: #ff6e61,
-    700: #FF5145,
-    800: #FF5145,
+    700: #ff5145,
+    800: #ff5145,
     contrast: (
-      100: #272A44,
-      200: #272A44,
+      100: #272a44,
+      200: #272a44,
       400: #f9f8ff,
       500: #f9f8ff,
       700: #f9f8ff,
       800: #f9f8ff,
-    )
+    ),
   ),
   warn: (
     500: #ff3f33,
     contrast: (
-      500: #FFFFFF
-    )
+      500: #ffffff,
+    ),
   ),
   background: (
     900: #010314,
-    800: #06081C,
+    800: #06081c,
     700: #121424,
-    600: #06081C,
-    500: #1F1F26,
+    600: #06081c,
+    500: #1f1f26,
   ),
   foreground: (
     900: #f9f8ff,
-    800: #BBC3E7,
-    700: #9CA3C4,
-    600: #666B81,
-    500: #272A44,
-  )
+    800: #bbc3e7,
+    700: #9ca3c4,
+    600: #666b81,
+    500: #272a44,
+  ),
 );
 
 .dark-theme {
@@ -66,7 +65,6 @@ $dark-theme: (
   @include mat-theme($mat-theme);
   @include bf-calendar-theme($mat-theme);
   @include bf-world-map-theme($mat-theme);
-  @include sat-datepicker-theme($mat-theme);
   // Transform into contrast-theme
   .dark-contrast-theme {
     $contrast-theme: getContrast($dark-theme);
@@ -74,71 +72,68 @@ $dark-theme: (
     @include mat-theme($mat-contrast-theme);
     @include bf-calendar-theme($mat-contrast-theme);
     @include bf-world-map-theme($mat-contrast-theme);
-    @include sat-datepicker-theme($mat-contrast-theme);
-    
+
     scrollbar-color: dark;
   }
-  
+
   // Not supported yet by browser. Here for future support
   scrollbar-color: dark;
 }
 
-
-
 $light-theme: (
   is-dark: false,
   primary: (
-    100: lighten(#8DA4FA, 10%),
-    200: #8DA4FA,
-    400: lighten(#1A49F5, 10%),
-    500: #1A49F5,
-    700:  lighten(#0F31F0, 10%),
-    800:  #0F31F0,
+    100: lighten(#8da4fa, 10%),
+    200: #8da4fa,
+    400: lighten(#1a49f5, 10%),
+    500: #1a49f5,
+    700: lighten(#0f31f0, 10%),
+    800: #0f31f0,
     contrast: (
-      100: #1F2A3B,
-      200: #1F2A3B,
-      400: #FFFFFF,
-      500: #FFFFFF,
-      700: #FFFFFF,
-      800: #FFFFFF,
-    )
+      100: #1f2a3b,
+      200: #1f2a3b,
+      400: #ffffff,
+      500: #ffffff,
+      700: #ffffff,
+      800: #ffffff,
+    ),
   ),
   accent: (
-    100: #FFB7B0,
-    200: #FFB7B0,
-    400: #FF6E61,
-    500: #FF6E61,
-    700: #FF5145,
-    800: #FF5145,
+    100: #ffb7b0,
+    200: #ffb7b0,
+    400: #ff6e61,
+    500: #ff6e61,
+    700: #ff5145,
+    800: #ff5145,
     contrast: (
-      100: #1F2A3B,
-      200: #1F2A3B,
-      400: #FFFFFF,
-      500: #FFFFFF,
-      700: #FFFFFF,
-      800: #FFFFFF,
-    )
+      100: #1f2a3b,
+      200: #1f2a3b,
+      400: #ffffff,
+      500: #ffffff,
+      700: #ffffff,
+      800: #ffffff,
+    ),
   ),
   warn: (
     500: #ff3f33,
     contrast: (
-      500: #FFFFFF
-    )
+      500: #ffffff,
+    ),
   ),
   background: (
     900: #f4f4f4,
-    800: #FFFFFF,
+    800: #ffffff,
     700: #fdfdfd,
-    600: #E7E7E7,
-    500: #DBDCE0,
+    600: #e7e7e7,
+    500: #dbdce0,
   ),
   foreground: (
-    900: #080B0F,
-    800: #1F2A3B,
-    700: #454E5D,
-    600: #666B81,
-    500: #D3D5DC,
-  )
+    900: #080b0f,
+    800: #1f2a3b,
+    700: #454e5d,
+    600: #666b81,
+    500: #d3d5dc,
+  ),
 );
 
 .light-theme {
@@ -146,7 +141,6 @@ $light-theme: (
   @include mat-theme($mat-theme);
   @include bf-calendar-theme($mat-theme);
   @include bf-world-map-theme($mat-theme);
-  @include sat-datepicker-theme($mat-theme);
 
   // Not supported yet by browser. Here for future support
   scrollbar-color: light;
@@ -157,7 +151,6 @@ $light-theme: (
     @include mat-theme($mat-contrast-theme);
     @include bf-calendar-theme($mat-contrast-theme);
     @include bf-world-map-theme($mat-contrast-theme);
-    @include sat-datepicker-theme($mat-contrast-theme);
     scrollbar-color: dark;
   }
 }
