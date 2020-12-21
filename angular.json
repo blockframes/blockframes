@@ -1810,22 +1810,22 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libsu/campaign/tsconfig.lib.json",
-              "libsu/campaign/tsconfig.spec.json"
+              "libs/campaign/tsconfig.lib.json",
+              "libs/campaign/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libsu/campaign/**/*"
+              "!libs/campaign/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libsu/campaign/jest.config.js",
-            "tsConfig": "libsu/campaign/tsconfig.spec.json",
+            "jestConfig": "libs/campaign/jest.config.js",
+            "tsConfig": "libs/campaign/tsconfig.spec.json",
             "passWithNoTests": true,
-            "setupFile": "libsu/campaign/src/test-setup.ts"
+            "setupFile": "libs/campaign/src/test-setup.ts"
           }
         }
       },
