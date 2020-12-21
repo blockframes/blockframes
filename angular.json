@@ -1802,30 +1802,30 @@
     },
     "campaign": {
       "projectType": "library",
-      "root": "libs/organization/campaign",
-      "sourceRoot": "libs/organization/campaign/src",
+      "root": "libsu/campaign",
+      "sourceRoot": "libsu/campaign/src",
       "prefix": "campaign",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/organization/campaign/tsconfig.lib.json",
-              "libs/organization/campaign/tsconfig.spec.json"
+              "libsu/campaign/tsconfig.lib.json",
+              "libsu/campaign/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/organization/campaign/**/*"
+              "!libsu/campaign/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/organization/campaign/jest.config.js",
-            "tsConfig": "libs/organization/campaign/tsconfig.spec.json",
+            "jestConfig": "libsu/campaign/jest.config.js",
+            "tsConfig": "libsu/campaign/tsconfig.spec.json",
             "passWithNoTests": true,
-            "setupFile": "libs/organization/campaign/src/test-setup.ts"
+            "setupFile": "libsu/campaign/src/test-setup.ts"
           }
         }
       },
