@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ShellConfig, FORMS_CONFIG } from '@blockframes/movie/form/shell/shell.component';
 
 @Component({
   selector: '[exitRedirect] tunnel-exit',
@@ -14,7 +15,8 @@ export class ExitComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(FORMS_CONFIG) private configs: ShellConfig
   ) { }
 
   ngOnInit() {
@@ -22,6 +24,7 @@ export class ExitComponent implements OnInit {
   }
 
   async redirect() {
+    console.log(this.configs)
     this.router.navigate([this.routeBeforeTunnel], { relativeTo: this.route });
   }
 }

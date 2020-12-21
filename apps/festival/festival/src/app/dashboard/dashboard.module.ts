@@ -20,7 +20,6 @@ import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { EventOrganizationGuard } from "@blockframes/event/guard/event-organization.guard";
 
@@ -115,7 +114,6 @@ const routes: Routes = [{
 },
 {
   path: 'tunnel',
-  canActivate: [TunnelGuard],
   children: [{
     path: 'movie',
     children: [{

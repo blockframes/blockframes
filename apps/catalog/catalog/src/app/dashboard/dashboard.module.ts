@@ -19,7 +19,6 @@ import { FORMS_CONFIG } from '@blockframes/movie/form/shell/shell.component';
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
 import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
@@ -121,7 +120,6 @@ const routes: Routes = [
   },
   {
     path: 'tunnel',
-    canActivate: [TunnelGuard],
     children: [{
       path: 'movie',
       children: [{

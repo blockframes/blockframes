@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Guards
 import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
@@ -94,7 +93,6 @@ const routes: Routes = [{
     },
     {
       path: 'tunnel',
-      canActivate: [TunnelGuard],
       children: [{
         path: 'contract/:contractId',
         canActivate: [ActiveContractGuard],

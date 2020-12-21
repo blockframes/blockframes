@@ -1,12 +1,10 @@
 import { Routes } from '@angular/router';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
 export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
-    canDeactivate: [TunnelGuard],
     children: [
       {
         path: '',

@@ -1,12 +1,10 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ContractTunnelComponent } from './contract-tunnel.component';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 const routes: Routes = [{
   path: 'sale',
   component: ContractTunnelComponent,
-  canDeactivate: [TunnelGuard],
   children: [{
     path: '',
     redirectTo: 'details',
@@ -24,7 +22,6 @@ const routes: Routes = [{
 }, {
   path: 'mandate',
   component: ContractTunnelComponent,
-  canDeactivate: [TunnelGuard],
   children: [{
     path: '',
     redirectTo: 'details',
