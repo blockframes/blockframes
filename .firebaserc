@@ -3,12 +3,9 @@
     "default": "blockframes-test",
     "prod": "blockframes",
     "staging": "blockframes-staging",
-    "laurent": "blockframes-laurent",
     "francois": "blockframes-francois",
     "bruce": "blockframes-bruce",
-    "hugo": "blockframes-hugo",
     "george": "blockframes-george",
-    "yohann": "blockframes-yohann",
     "vincent": "blockframes-vincent",
     "pl": "blockframes-pl-2",
     "demo1": "blockframes-demo-1",
@@ -19,11 +16,8 @@
     "ci": "blockframes-ci",
     "max": "blockframes-max",
     "mano": "blockframes-mano",
-    "victor": "blockframes-victor",
     "clelia": "blockframes-clelia",
-    "dajung": "blockframes-dajung",
     "remco": "blockframes-remco",
-    "sebastian": "blockframes-sebastian"
   },
   "targets": {
     "blockframes": {
@@ -269,6 +263,9 @@
         ],
         "financiers": [
           "financiers-blockframes-clelia"
+        ],
+        "cms": [
+          "cms-blockframes-clelia"
         ]
       }
     },

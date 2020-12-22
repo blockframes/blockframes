@@ -1,9 +1,9 @@
 ﻿import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
-import { TO } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 
 export default class LandingPage {
   constructor() {
-    cy.get('festival-landing', {timeout: TO.PAGE_LOAD});
+    cy.get('festival-landing', {timeout: 60 * SEC});
   }
 
   public clickLogin() {

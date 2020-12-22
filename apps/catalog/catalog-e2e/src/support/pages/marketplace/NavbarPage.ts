@@ -1,10 +1,10 @@
 import { WishlistPage, SearchPage } from "./index";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
-import { TO } from "@blockframes/e2e/utils/env";
+import { SEC } from "@blockframes/e2e/utils/env";
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('catalog-marketplace', {timeout: 10000});
+    cy.get('catalog-marketplace', {timeout: 10 * SEC});
   }
 
   public openProfileMenu(){
@@ -21,14 +21,14 @@ export default abstract class NavbarPage {
   }
 
   public clickWishlist() {
-    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.ONE_SEC);
+    cy.wait(1 * SEC);
     return new WishlistPage();
   }
 
   public checkWishListCount(count: number) {
-    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: 3 * SEC})
       .should('contain', count);
   }
 
@@ -39,7 +39,7 @@ export default abstract class NavbarPage {
 
   public getWishListCount() {
     let movieCount = 0;
-    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: 3 * SEC})
       .then(countEl => {
         movieCount = parseInt(countEl[0].innerText, 10);
         cy.log(`>>Wishes count:${movieCount}`);

@@ -1,12 +1,12 @@
 ﻿import FestivalDashboardHomePage from './FestivalDashboardHomePage';
-import { TO } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 
 export default class EventEditPage {
   constructor() {
     cy.scrollTo(0, 500, { ensureScrollable: false });
-    cy.wait(1000);
+    cy.wait(1 * SEC);
     cy.scrollTo(0, 100, { ensureScrollable: false });
-    cy.get('event-edit', { timeout: 90000 });
+    cy.get('event-edit', { timeout: 90 * SEC });
   }
 
   addEventTitle(title: string) {
@@ -16,11 +16,11 @@ export default class EventEditPage {
   //Sets if event is full day.
   checkAllDay(fullDay: boolean = true) {
     if (fullDay) {
-      cy.get('event-edit mat-slide-toggle[test-id=all-day]', { timeout: TO.PAGE_ELEMENT })
+      cy.get('event-edit mat-slide-toggle[test-id=all-day]', { timeout: 3 * SEC })
         .find('input')
         .check({ force: true });
     } else {
-      cy.get('event-edit mat-slide-toggle[test-id=all-day]', { timeout: TO.PAGE_ELEMENT })
+      cy.get('event-edit mat-slide-toggle[test-id=all-day]', { timeout: 3 * SEC })
         .find('input')
         .uncheck({ force: true });
     }
@@ -44,18 +44,18 @@ export default class EventEditPage {
   //set event access
   uncheckPrivate(isPublic: boolean = false) {
     if (!isPublic) {
-      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: TO.PAGE_ELEMENT })
+      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: 3 * SEC })
         .find('input')
         .check({ force: true });
     } else {
-      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: TO.PAGE_ELEMENT })
+      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: 3 * SEC })
         .find('input')
         .uncheck({ force: true });
     }
   }
 
   selectMovie(movieName: string) {
-    cy.get('event-edit mat-select[formControlName=titleId]', { timeout: 99000 }).click();
+    cy.get('event-edit mat-select[formControlName=titleId]', { timeout: 100 * SEC }).click();
     cy.get('mat-option').contains(movieName).click();
   }
 
@@ -69,8 +69,8 @@ export default class EventEditPage {
     } else {
       cy.get('event-edit algolia-chips-autocomplete input').type(email).type('{enter}');
     }
-    cy.get('event-edit button[test-id=event-invite]').click({ timeout: 500 });
-    cy.wait(2000);
+    cy.get('event-edit button[test-id=event-invite]').click({ timeout: 0.5 * SEC });
+    cy.wait(2 * SEC);
   }
 
   copyGuests() {
@@ -78,13 +78,13 @@ export default class EventEditPage {
   }
 
   saveEvent() {
-    cy.get('button[test-id=event-save]', { timeout: 1000 }).click();
-    cy.wait(2000);
+    cy.get('button[test-id=event-save]', { timeout: 1 * SEC }).click();
+    cy.wait(2 * SEC);
   }
 
   clickMoreDetails() {
-    cy.get('button[test-id=more-details]', { timeout: 1000 }).click();
-    cy.wait(1000);
+    cy.get('button[test-id=more-details]', { timeout: 1 * SEC }).click();
+    cy.wait(1 * SEC);
   }
 
   goToDashboard() {

@@ -1,13 +1,13 @@
 import ViewPage from "./ViewPage";
 import NavbarPage from "./NavbarPage";
 import { Dates, Availabilities } from "@blockframes/e2e/utils/type";
-import { TO } from "@blockframes/e2e/utils/env";
+import { SEC } from "@blockframes/e2e/utils/env";
 
 export default class SearchPage extends NavbarPage {
 
   constructor() {
     super();
-    cy.get('catalog-marketplace-title-list', {timeout: TO.PAGE_LOAD});
+    cy.get('catalog-marketplace-title-list', {timeout: 60 * SEC});
   }
 
   public clearAllFilters(optionSortBy: string) {
@@ -16,9 +16,9 @@ export default class SearchPage extends NavbarPage {
     // cy.get('mat-option')
     //   .contains(optionSortBy)
     //   .click();
-    cy.get('[mattooltip="Clear all filters"]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('[mattooltip="Clear all filters"]', {timeout: 3 * SEC})
       .click();
-    cy.wait(TO.THREE_SEC);
+    cy.wait(3 * SEC);
   }
 
   public fillProductionYear(years: Dates) {
@@ -70,14 +70,14 @@ export default class SearchPage extends NavbarPage {
 
   public selectMovie(movieName: string) {
     cy.log(`=>selectMovie : {${movieName}}`);
-    cy.get('movie-card', {timeout: 30000})
+    cy.get('movie-card', {timeout: 30 * SEC})
       .contains(movieName).parent().parent()
       .find('a').click();
     return new ViewPage();
   }
 
   public clickWishlistButton(movieName: string) {
-    cy.get('movie-card', {timeout: 30000})
+    cy.get('movie-card', {timeout: 30 * SEC})
       .contains(movieName).parent().parent()
       .find('button[test-id=heart-button]').click('bottom', {force: true} );
     cy.wait(2000);
@@ -85,7 +85,7 @@ export default class SearchPage extends NavbarPage {
 
   public  getAllMovies(movieCount: number) {
     const movies = [];
-    cy.get('movie-card article h6', {timeout: TO.THIRTY_SEC}).then((m) => {
+    cy.get('movie-card article h6', {timeout: 30 * SEC}).then((m) => {
       for (let i =0; i < movieCount; i++) {
         movies.push(m[i].firstChild.textContent);
       }

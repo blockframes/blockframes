@@ -1,6 +1,6 @@
 ﻿import { AuthLoginPage, AuthIdentityPage } from "../pages/auth";
 import { User } from "./type";
-import { TO } from './env';
+import { SEC } from './env';
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
@@ -50,7 +50,7 @@ export function assertUploadStatus(content: string, testId: string) {
 }
 
 export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]', 
-                                    {waitTime: TO.ONE_SEC, message: 'Accepting all cookies'});
+                                    {waitTime: 1 * SEC, message: 'Accepting all cookies'});
 
 /**
  * selectAction : Clicks the element & waits if needed.
@@ -59,7 +59,7 @@ export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]
  */
 export function selectAction(element: string, 
   Option: { waitTime?: number, timeout?: number, message?: string } = 
-    {waitTime : 0, timeout: TO.PAGE_ELEMENT, message: ''}) {
+    {waitTime : 0, timeout: 3 * SEC, message: ''}) {
   if (Option.message !== '') {
     cy.log(Option.message);
   }
@@ -79,16 +79,16 @@ export function selectAction(element: string,
  */
 export function clickOnMenu(page: string[], menu: string, menu_item: string,
   closeMenu: boolean = true) {
-  cy.get(`${page[0]} button[test-id="${menu}"]`, {timeout: TO.PAGE_ELEMENT})
+  cy.get(`${page[0]} button[test-id="${menu}"]`, {timeout: 3 * SEC})
     .first().click();
-  cy.wait(TO.THREE_SEC);
-  cy.get(`aside a[routerlink*="${menu_item}"]`, {timeout: TO.PAGE_ELEMENT})
+  cy.wait(3 * SEC);
+  cy.get(`aside a[routerlink*="${menu_item}"]`, {timeout: 3 * SEC})
     .click();
-  cy.wait(TO.WAIT_1SEC);
+  cy.wait(1 * SEC);
   if (closeMenu) {
-    cy.get(`${page[1]} button[test-id="${menu}"]`, {timeout: TO.PAGE_ELEMENT})
+    cy.get(`${page[1]} button[test-id="${menu}"]`, {timeout: 3 * SEC})
     .first().click();
-    cy.wait(TO.WAIT_1SEC);
+    cy.wait(1 * SEC);
   }
 }
 
@@ -137,19 +137,19 @@ function handleFormElement(el:any, id: string, value: string) {
   if (el.is('mat-button-toggle') || el.is('mat-slide-toggle') ||
       el.is('mat-radio-button')) {
     if (value) {
-      cy.get(`[test-id="${id}"]`, {timeout: 1000})
+      cy.get(`[test-id="${id}"]`, {timeout: 1 * SEC})
         .click();
     }
     return;
   }
 
   if (el.is('chips-autocomplete') || el.is('input-autocomplete')) {
-    cy.get(`[test-id="${id}"] input`, {timeout: 1000})
+    cy.get(`[test-id="${id}"] input`, {timeout: 1 * SEC})
       .type(value, {force: true});
   }
   
   if (el.is('static-select')) {
-    cy.get(`[test-id="${id}"] .mat-form-field-outline`, {timeout: 1000})
+    cy.get(`[test-id="${id}"] .mat-form-field-outline`, {timeout: 1 * SEC})
       .first()
       .click({force: true});
       doClick = false;
@@ -159,7 +159,7 @@ function handleFormElement(el:any, id: string, value: string) {
     cw.click();
   }
 
-  cy.get('mat-option', {timeout: 1000})
+  cy.get('mat-option', {timeout: 1 * SEC})
     .contains(value).click({force: true});  
 }
 

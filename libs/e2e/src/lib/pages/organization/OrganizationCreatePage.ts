@@ -1,13 +1,13 @@
 ﻿import OrganizationAppAccessPage from './OrganizationAppAccessPage';
 import { Organization } from '../../utils/type';
 import { setForm, FormOptions } from '../../utils/functions';
-import { TO } from '../../utils/env';
+import { SEC } from '../../utils/env';
 
 const PATH = '/c/organization/create';
 
 export default class OrganizationCreatePage {
   constructor() {
-    cy.get('organization-create', {timeout: TO.VSLOW_UPDATE});
+    cy.get('organization-create', {timeout: 150 * SEC});
   }
 
   public assertMoveToOrgCreatePage() {
@@ -17,15 +17,15 @@ export default class OrganizationCreatePage {
   }
 
   public fillName(name: string) {
-    cy.get('organization-form input[test-id=name]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-form input[test-id=name]', {timeout: 3 * SEC})
       .type(name);
   }
 
   /** If navigate is set to false, this doesn't return a new page. */
   public clickCreate(navigate: boolean = true) {
-    cy.get('organization-create button[test-id=create]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-create button[test-id=create]', {timeout: 3 * SEC})
       .click({ force: true });
-    cy.wait(TO.THREE_SEC);
+    cy.wait(3 * SEC);
     if (navigate) {
       return new OrganizationAppAccessPage();
     }

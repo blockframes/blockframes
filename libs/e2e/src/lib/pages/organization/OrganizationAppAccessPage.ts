@@ -1,11 +1,11 @@
 import OrganizationCongratulationPage from "./OrganizationCongratulationPage";
-import { TO } from '../../utils/env';
+import { SEC } from '../../utils/env';
 
 const PATH = '/c/organization/app-access';
 
 export default class OrganizationAppAccessPage {
   constructor() {
-    cy.get('organization-app-access', {timeout: TO.PAGE_LOAD});
+    cy.get('organization-app-access', {timeout: 60 * SEC});
   }
 
   public assertMoveToOrgAppAccessPage() {
@@ -15,19 +15,19 @@ export default class OrganizationAppAccessPage {
   }
 
   public chooseMarketplace() {
-    cy.get('organization-app-access mat-radio-button[value=marketplace]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-app-access mat-radio-button[value=marketplace]', {timeout: 3 * SEC})
       .click();
   }
 
   public chooseDashboard() {
-    cy.get('organization-app-access mat-radio-button[value=dashboard]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('organization-app-access mat-radio-button[value=dashboard]', {timeout: 3 * SEC})
       .click();
   }
 
   public clickSubmit() {
-    cy.get('organization-app-access button[test-id=submit]')
+    cy.get('organization-app-access button[test-id=submit]', {timeout: 3 * SEC})
       .click({ force: true });
-    cy.wait(TO.WAIT_1SEC);
+    cy.wait(1 * SEC);
     return new OrganizationCongratulationPage();
   }
 }
