@@ -71,7 +71,7 @@ export class ContractTunnelComponent implements OnInit {
   public contractForm: ContractForm;
 
   public dialogText: TunnelDialogText = {
-    title: 'You are going to leave the Movie Form.',
+    title: 'You are going to leave the Contract Form.',
     subtitle: 'Pay attention, if you leave now your changes will not be saved.'
   }
 
