@@ -19,7 +19,7 @@
   </mat-form-field>
   <mat-autocomplete
     #auto="matAutocomplete"
-    [displayWith]="displayFn.bind(this)"
+    (optionSelected)="getSelectedOrg($event.option.value)"
   >
     <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 
