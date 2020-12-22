@@ -3,8 +3,7 @@
     <h3>Festival & Awards</h3>
     <section id="festival">
       <bf-form-list [form]="form.prizes" buttonText="Add a Festival">
-        <ng-template itemRef let-prizes>{{ prizes.name | toLabel: 'festival' }} - {{ prizes.prize }} - {{ prizes.year }}
-          - {{ prizes.premiere | toLabel: 'premiereType' }}</ng-template>
+        <ng-template itemRef let-prizes>{{ prizes | festivalPrize | titlecase}}</ng-template>
         <ng-template formView let-prizesForm>
           <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -56,8 +55,7 @@
     <section id="custom-festival">
 
       <bf-form-list [form]="form.customPrizes" buttonText="Add other Festival">
-        <ng-template itemRef let-customPrizes>{{ customPrizes.name }} - {{ customPrizes.prize }} -
-          {{ customPrizes.year }} - {{ customPrizes.premiere | toLabel: 'premiereType' }}</ng-template>
+        <ng-template itemRef let-customPrizes>{{ customPrizes | festivalPrize | titlecase }}</ng-template>
         <ng-template formView let-customPrizesForm>
           <article [formGroup]="customPrizesForm" fxLayout="column" fxLayoutGap="24px">
 
