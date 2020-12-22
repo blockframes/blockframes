@@ -50,7 +50,7 @@
     <mat-icon matSuffix svgIcon="cross" *ngIf="clearable && control.value" (click)="control.reset()" class="pointer"></mat-icon>
     <mat-autocomplete
       #auto="matAutocomplete"
-      [displayWith]="displayFn.bind(this)"
+      (optionSelected)="getSelectedOrg($event.option.value)"
     >
       <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 
