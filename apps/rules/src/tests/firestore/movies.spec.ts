@@ -8,12 +8,6 @@ import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/funct
 import { Movie } from '@blockframes/movie/+state';
 import { MovieAppAccess } from '@blockframes/utils/apps';
 import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
-import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
-
-//Meta collection, for maintenance control.
-const metaDoc = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
-testFixture[metaDoc] = {};
-testFixture[metaDoc].endedAt = true;
 
 describe('Movies Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;

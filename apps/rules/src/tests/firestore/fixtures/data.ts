@@ -1,4 +1,6 @@
-﻿export const testFixture = {
+﻿import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
+
+export const testFixture = {
   //Permissions
   'permissions/O001': {
     roles: {
@@ -123,3 +125,9 @@
     orgId: 'MI-UK',
   },
 };
+
+
+//Meta collection, for maintenance control.
+export const metaDoc = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
+testFixture[metaDoc] = {};
+testFixture[metaDoc].endedAt = true;
