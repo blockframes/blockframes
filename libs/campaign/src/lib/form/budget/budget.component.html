@@ -65,7 +65,7 @@
       <p class="mat-body-2 total">
         <b>
           Your total estimated budget is:
-          {{ (budget.value | budget) !== 0 ? (budget.value | budget | currency: form.getCurrency() : 'symbol' : '1.0-0') : 'N/C' }}
+          {{ budget.value | budget: form.getCurrency() }}
         </b>
       </p>
     </section>
