@@ -294,7 +294,7 @@ describe('DB cleaning script', () => {
     expect(docsIndexAfter.docs.length).toEqual(1);
   });
 
-  it('should delete notifications that are to old', async () => {
+  it('should delete notifications that are too old', async () => {
     const currentTimestamp = new Date().getTime() / 1000;
     const testNotifications = [
       {
@@ -409,34 +409,34 @@ describe('DB cleaning script', () => {
     expect(every(cleanOutput)).toEqual(true);
   });
 
-  it('should delete invitations to a deleted event and keep outdated but valids events', async () => {
+  it('should delete invitations to a deleted event and keep outdated but valid events', async () => {
     const currentTimestamp = new Date().getTime() / 1000;
     const testInvitations = [
       {
         id: 'invit-A',
         type: 'attendEvent',
-        docId: 'event-C', // event-C does not exists, should be removed
+        eventId: 'event-C', // event-C does not exists, should be removed
         fromOrg: { id: 'org-A' },
         toUser: { uid: 'A' },
       },
       {
         id: 'invit-B',
         type: 'attendEvent',
-        docId: 'event-B',
+        eventId: 'event-B',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A' },
       },
       {
         id: 'invit-C',
         type: 'attendEvent',
-        docId: 'event-B',
+        eventId: 'event-B',
         toOrg: { id: 'org-B' }, // org-B doest not exists, should be removed
         fromUser: { uid: 'A' },
       },
       {
         id: 'invit-D',
         type: 'attendEvent',
-        docId: 'event-B',
+        eventId: 'event-B',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'B' }, // B doest not exists, should be removed
       }
