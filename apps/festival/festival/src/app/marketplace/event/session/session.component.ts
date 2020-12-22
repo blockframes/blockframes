@@ -128,7 +128,6 @@ export class SessionComponent implements OnInit, OnDestroy {
               this.createCountDown();
             } else if (!!hasOwner && !!this.countdownId) {
               this.snackbar.open(`The meeting owner has reconnected`, 'dismiss', { duration: 5000 });
-              console.log('Owner reconnected, cancelling timeout', this.countdownId);
               this.deleteCountDown();
             }
           }
@@ -149,7 +148,6 @@ export class SessionComponent implements OnInit, OnDestroy {
       () => this.autoLeave(),
       ((1000 * 60) * durationMinutes) + (1000 * randomDurationSeconds)
     );
-    console.log('No Owner, starting countdown', this.countdownId);
   }
 
   deleteCountDown() {
@@ -158,7 +156,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   autoLeave() {
-    console.log('Auto Quitting the meeting', this.countdownId);
     if (!!this.countdownId) this.twilioService.disconnect();
     this.deleteCountDown();
   }

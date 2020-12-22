@@ -123,9 +123,4 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
       this.element[kind].muted = currentValue;
     }
   }
-
-  // get userInitials() {
-  //   // console.log(this.name);
-  //   return this.name?.split(' ').map(name => name[0]).join('') ?? '?';
-  // }
 }
