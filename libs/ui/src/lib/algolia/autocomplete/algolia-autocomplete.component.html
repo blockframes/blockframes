@@ -1,30 +1,19 @@
-
 <!-- MATERIAL VERSION -->
 <ng-container *ngIf="!native; else nativeControl">
   <mat-form-field [appearance]="mode">
     <mat-label>{{ label }}</mat-label>
-    <input
-      matInput
-      type="text"
-      [formControl]="control"
-      [matAutocomplete]="auto"
-      [placeholder]="placeholder"
-
-      autocapitalize="off"
-      autocorrect="off"
-      spellcheck="false"
-    />
+    <input matInput type="text" [formControl]="control" [matAutocomplete]="auto" [placeholder]="placeholder"
+      autocapitalize="off" autocorrect="off" spellcheck="false" />
     <mat-icon matSuffix svgIcon="cross" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
     <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()" class="pointer"></mat-icon>
   </mat-form-field>
-  <mat-autocomplete
-    #auto="matAutocomplete"
-    [displayWith]="displayFn.bind(this)"
-  >
-    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay"
+      (click)="selected(result)">
 
       <!-- INJECTED CONTENT -->
-      <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
+      <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
+      </ng-template>
       <ng-template #default> {{ result | json }}</ng-template>
 
     </mat-option>
@@ -36,26 +25,17 @@
 <ng-template #nativeControl>
   <div fxLayout="row">
     <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()"></mat-icon>
-    <input
-      type="text"
-      matNativeControl
-      [formControl]="control"
-      [matAutocomplete]="auto"
-      [placeholder]="placeholder"
-
-      autocapitalize="off"
-      autocorrect="off"
-      spellcheck="false"
-    />
-    <mat-icon matSuffix svgIcon="cross" *ngIf="clearable && control.value" (click)="control.reset()" class="pointer"></mat-icon>
-    <mat-autocomplete
-      #auto="matAutocomplete"
-      [displayWith]="displayFn.bind(this)"
-    >
-      <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
+    <input type="text" matNativeControl [formControl]="control" [matAutocomplete]="auto" [placeholder]="placeholder"
+      autocapitalize="off" autocorrect="off" spellcheck="false" />
+    <mat-icon matSuffix svgIcon="cross" *ngIf="clearable && control.value" (click)="control.reset()" class="pointer">
+    </mat-icon>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+      <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay"
+        (click)="selected(result)">
 
         <!-- INJECTED RESULT -->
-        <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
+        <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
+        </ng-template>
         <ng-template #default> {{ result | json }}</ng-template>
 
       </mat-option>

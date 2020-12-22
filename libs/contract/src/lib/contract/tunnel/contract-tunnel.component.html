@@ -1,4 +1,4 @@
-<tunnel-layout [steps]="steps$ | async" [exitRedirect]="exitRoute$ | async">
+<tunnel-layout [steps]="steps$ | async" [exitRedirect]="exitRoute$ | async" [dialogText]="dialogText">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <app-logo></app-logo>
     <button test-id="save" mat-stroked-button color="primary" (click)="save()">

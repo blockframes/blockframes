@@ -1,7 +1,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TunnelStep } from '@blockframes/ui/tunnel'
+import { TunnelStep, TunnelConfirmComponent, TunnelDialogText } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, createContract, TitlesAndRights } from '../+state';
 import { ContractType } from '@blockframes/utils/static-model/types';
@@ -69,6 +69,11 @@ export class ContractTunnelComponent implements OnInit {
   public movies$: Observable<Movie[]>;
   public rightForms = new FormEntity<RightControls>({});
   public contractForm: ContractForm;
+
+  public dialogText: TunnelDialogText = {
+    title: 'You are going to leave the Movie Form.',
+    subtitle: 'Pay attention, if you leave now your changes will not be saved.'
+  }
 
   constructor(
     private orgQuery: OrganizationQuery,
