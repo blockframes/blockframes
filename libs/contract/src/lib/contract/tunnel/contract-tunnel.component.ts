@@ -1,11 +1,10 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TunnelStep, TunnelConfirmComponent, TunnelDialogText } from '@blockframes/ui/tunnel'
+import { TunnelStep, TunnelDialogText, TunnelService } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, createContract, TitlesAndRights } from '../+state';
 import { ContractType } from '@blockframes/utils/static-model/types';
-import { MatDialog } from '@angular/material/dialog';
 import { DistributionRightForm } from '@blockframes/distribution-rights/form/distribution-right.form';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
@@ -59,7 +58,7 @@ export type RightControls = Record<string, FormList<DistributionRight, Distribut
   styleUrls: ['./contract-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContractTunnelComponent implements OnInit {
+export class ContractTunnelComponent implements OnInit, OnDestroy {
   /** Keep track of the rights removed */
   private removedRights: Record<string, string[]> = {};
   public steps$: Observable<TunnelStep[]>;
@@ -82,11 +81,13 @@ export class ContractTunnelComponent implements OnInit {
     private query: ContractQuery,
     private movieService: MovieService,
     private rightService: DistributionRightService,
-    private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     private db: AngularFirestore,
-  ) { }
+    private tunnelService: TunnelService
+  ) {
+    this.tunnelService.isInTunnel = true;
+  }
 
   async ngOnInit() {
     const contract = this.query.getActive();
@@ -216,19 +217,7 @@ export class ContractTunnelComponent implements OnInit {
     return true;
   }
 
-  confirmExit() {
-    if (this.contractForm.pristine && this.rightForms.pristine) {
-      return of(true);
-    }
-    const dialogRef = this.dialog.open(TunnelConfirmComponent, {
-      width: '80%',
-      data: {
-        title: 'You are going to leave the Movie Form.',
-        subtitle: 'Pay attention, if you leave now your changes will not be saved.'
-      }
-    });
-    return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => shouldSave ? this.save() : of(false))
-    );
+  ngOnDestroy() {
+    this.tunnelService.isInTunnel = false;
   }
 }

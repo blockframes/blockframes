@@ -14,7 +14,7 @@ import { FormArray, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
-import { TunnelStep } from '@blockframes/ui/tunnel';
+import { TunnelStep, TunnelService } from '@blockframes/ui/tunnel';
 
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -157,8 +157,11 @@ export class MovieFormShellComponent implements OnInit, AfterViewInit, OnDestroy
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private route: RouterQuery,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private tunnelService: TunnelService
+  ) {
+    this.tunnelService.isInTunnel = true;
+  }
 
   ngOnInit() {
     const subs: Observable<any>[] = Object.values(this.configs).map(config => config.onInit()).flat();
@@ -188,6 +191,7 @@ export class MovieFormShellComponent implements OnInit, AfterViewInit, OnDestroy
     this.sub?.unsubscribe();
     this.getForm('movie').reset();
     this.getForm('campaign')?.reset();
+    this.tunnelService.isInTunnel = false;
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
