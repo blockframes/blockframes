@@ -1,4 +1,3 @@
-import { Observable } from "rxjs";
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 export interface TunnelStep {
