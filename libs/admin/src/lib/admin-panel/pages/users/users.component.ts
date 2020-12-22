@@ -117,6 +117,7 @@ export class UsersComponent implements OnInit {
         'country': r.org?.addresses.main.country ?? '--',
         'role': r.userOrgRole ? r.userOrgRole : '--',
         'position': r.position ? r.position : '--',
+        'org activity': r.org ? r.org.activity : '--', 
         'email': r.email,
         'first connexion': r.firstConnexion ? r.firstConnexion : '--',
         'last connexion': r.lastConnexion ? r.lastConnexion : '--',
