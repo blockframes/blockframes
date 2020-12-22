@@ -5,28 +5,20 @@ import { staticModel } from '@blockframes/utils/static-model';
 @Pipe({ name: 'festivalPrize' })
 export class PrizePipe implements PipeTransform {
   transform(prize: Prize) {
-    let array = [];
+    const displayPrizes: (string | number)[] = [];
 
-    if (prize.name) {
-      if (Object.keys(staticModel['festival']).includes(prize.name)) {
-        array.push(staticModel['festival'][prize.name])
-      }
-      else array.push(prize.name)
-    }
-    if (prize.prize) array.push(prize.prize);
-    if (prize.year) array.push(prize.year);
-    if (prize.premiere) array.push(`${staticModel['premiereType'][prize.premiere]} Premiere`);
+    if (prize.name) displayPrizes.push(staticModel['festival'][prize.name] ?? prize.name);
+    if (prize.prize) displayPrizes.push(prize.prize);
+    if (prize.year) displayPrizes.push(prize.year);
+    if (prize.premiere) displayPrizes.push(`${staticModel['premiereType'][prize.premiere]} Premiere`);
 
-    const displayPrize = array.join(' - ');
-    return displayPrize;
+    return displayPrizes.join(' - ');
   }
 }
 
 
 @NgModule({
-  imports: [],
   exports: [PrizePipe],
   declarations: [PrizePipe],
-  providers: [],
 })
 export class PrizePipeModule { }
