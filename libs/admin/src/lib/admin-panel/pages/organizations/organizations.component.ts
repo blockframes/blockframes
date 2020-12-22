@@ -5,6 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
+import { appName } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organizations',
@@ -68,18 +69,25 @@ export class OrganizationsComponent implements OnInit {
   }
 
   public exportTable() {
-    const exportedRows = this.rows.map(r => ({
-      id: r.id,
-      fullDenomination: r.denomination.full,
-      publicDenormination: r.denomination.public,
-      status: r.status,
-      country: r && r.addresses.main.country ? r.addresses.main.country : '--',
-      email: r.email,
-      memberCount: r.userIds.length,
-      activity: !! r.activity ? r.activity : '--',
-      catalog: `dashboard: ${r.appAccess.catalog.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.catalog.marketplace ? 'yes' : 'no'}`,
-      festival: `dashboard: ${r.appAccess.festival.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.festival.marketplace ? 'yes' : 'no'}`
-    }))
+    const exportedRows = this.rows.map(r => {
+      const row = {
+        id: r.id,
+        fullDenomination: r.denomination.full,
+        publicDenormination: r.denomination.public,
+        status: r.status,
+        country: r && r.addresses.main.country ? r.addresses.main.country : '--',
+        email: r.email,
+        memberCount: r.userIds.length,
+        activity: !! r.activity ? r.activity : '--',
+      }
+
+      Object.keys(r.appAccess).forEach(a => {
+        row[`${appName[a]} - dashboard`] = r.appAccess[a].dashboard? 'true' : 'false',
+        row[`${appName[a]} - marketplace`] = r.appAccess[a].dashboard? 'true' : 'false'
+      })
+
+      return row;
+    })
     downloadCsvFromJson(exportedRows, 'org-list');
   }
 
