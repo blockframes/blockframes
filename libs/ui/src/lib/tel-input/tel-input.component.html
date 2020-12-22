@@ -1,5 +1,5 @@
 <div [formGroup]="parts" fxLayout="row">
-  <input matInput formControlName="nation" type="tel" placeholder="+33" class="first">
+  <input matInput formControlName="nation" type="tel" placeholder="+33" maxLength="4" class="first">
   <span>&ndash;</span>
   <input matInput formControlName="phoneNumber" type="tel" [placeholder]="placeholder" class="last">
 </div>

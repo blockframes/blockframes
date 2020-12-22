@@ -5,6 +5,10 @@ mat-divider {
 
 p {
   margin-bottom: 24px;
+  &.total {
+    margin-top: 24px;
+    margin-bottom: 0;
+  }
   a {
     color: var(--primary);
     text-decoration: underline;

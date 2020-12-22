@@ -56,17 +56,14 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Contingency, producer fees, overheads</mat-label>
+        <mat-label>Other (Contingency, producer fees, overheads fees)</mat-label>
         <input matInput type="number" [formControl]="budget.get('contingency')" min="0"/>
         <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('min', 'contingency')">Only positive numbers are allowed.</mat-error>
       </mat-form-field>
 
       <p class="mat-body-2 total">
-        <b>
-          Your total estimated budget is:
-          {{ budget.value | budget | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
-        </b>
+        <b>Your total estimated budget is: {{ budget.value | budget: form.getCurrency() }}</b>
       </p>
     </section>
 

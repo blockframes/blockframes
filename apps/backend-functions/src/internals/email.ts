@@ -6,9 +6,8 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db } from './firebase';
-import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo } from '@blockframes/utils/apps';
+import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo, applicationUrl } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
-import { appUrl } from "@env";
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
@@ -30,13 +29,13 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appLogoLink =  appLogo[app];
-  const appLink = appUrl[app];
+  const appLink = applicationUrl[app];
   const appMailSettings: AppMailSetting = { name: label, logo: appLogoLink, url: appLink }
   const msg: MailDataRequired = {
     from,
     to,
     templateId,
-    dynamicTemplateData: { ...data, app: appMailSettings },
+    dynamicTemplateData: { ...data, app: appMailSettings, from }
   };
 
   return send(msg);

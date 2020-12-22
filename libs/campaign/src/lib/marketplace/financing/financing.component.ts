@@ -3,7 +3,8 @@ import { formatCurrency, formatPercent } from '@angular/common';
 import { Budget, Campaign, CampaignService, Funding } from '../../+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
+import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -29,6 +30,7 @@ const budgetData: { serie: keyof Budget, label: string }[] = [{
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceFinancingComponent implements OnInit {
+  public totalFundings: number;
   campaign$: Observable<Campaign>;
   budgetData = budgetData;
   formatter = {
@@ -49,6 +51,7 @@ export class MarketplaceFinancingComponent implements OnInit {
   ngOnInit(): void {
     this.campaign$ = this.route.selectParams<string>('movieId').pipe(
       switchMap(id => this.service.valueChanges(id)),
+      tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
     );
   }
 }
