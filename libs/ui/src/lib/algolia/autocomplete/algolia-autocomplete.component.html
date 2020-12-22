@@ -19,7 +19,7 @@
   </mat-form-field>
   <mat-autocomplete
     #auto="matAutocomplete"
-    (optionSelected)="getSelectedOrg($event.option.value)"
+    (optionSelected)="getSelectedEntity($event.option.value)"
   >
     <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 
@@ -50,7 +50,7 @@
     <mat-icon matSuffix svgIcon="cross" *ngIf="clearable && control.value" (click)="control.reset()" class="pointer"></mat-icon>
     <mat-autocomplete
       #auto="matAutocomplete"
-      (optionSelected)="getSelectedOrg($event.option.value)"
+      (optionSelected)="getSelectedEntity($event.option.value)"
     >
       <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 
