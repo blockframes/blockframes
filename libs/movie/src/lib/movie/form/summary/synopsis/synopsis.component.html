@@ -8,7 +8,8 @@
   </h6>
   <ul>
     <li>
-      <missing-control test-id="logline" [control]="movie.get('logline')" [link]="link" fragment="logline"></missing-control>
+      <missing-control test-id="logline" [control]="movie.get('logline')" [link]="link" fragment="logline">
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -23,7 +24,8 @@
   </h6>
   <ul>
     <li>
-      <missing-control test-id="synopsis" [control]="movie.get('synopsis')" [link]="link" fragment="synopsis"></missing-control>
+      <missing-control test-id="synopsis" [control]="movie.get('synopsis')" [link]="link" fragment="synopsis">
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -38,7 +40,8 @@
   </h6>
   <ul>
     <li>
-      <missing-control test-id="key-assets" [control]="movie.get('keyAssets')" [link]="link" fragment="key-assets"></missing-control>
+      <missing-control test-id="key-assets" [control]="movie.get('keyAssets')" [link]="link" fragment="key-assets">
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -55,9 +58,7 @@
     <li>
       <missing-control test-id="keyword-summary" [control]="movie.get('keywords')" [link]="link" fragment="keywords">
         <ng-template let-keywords>
-          <ng-container *ngFor="let keyword of keywords; let last = last">
-            <span>{{ keyword | titlecase }}{{ last ? '' : ', '}}</span>
-          </ng-container>
+          <span>{{ keywords.join(', ') }}</span>
         </ng-template>
       </missing-control>
     </li>
