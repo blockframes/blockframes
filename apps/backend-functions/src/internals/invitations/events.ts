@@ -113,7 +113,7 @@ async function onInvitationToAnEventCreate({
         const notification = createNotification({
           toUserId: fromUser.uid,
           user: fromUser,
-          eventId,
+          docId: eventId,
           type: 'requestToAttendEventSent'
         });
 
@@ -139,7 +139,7 @@ async function onInvitationToAnEventAccepted({
   fromOrg,
   toUser,
   toOrg,
-  eventId,
+  eventId
 }: InvitationDocument) {
 
   const notifications: NotificationDocument[] = [];
@@ -147,7 +147,7 @@ async function onInvitationToAnEventAccepted({
   if (!!fromUser) {
     const notification = createNotification({
       toUserId: fromUser.uid,
-      eventId,
+      docId: eventId,
       type: 'invitationToAttendEventAccepted'
     });
 
@@ -165,7 +165,7 @@ async function onInvitationToAnEventAccepted({
     adminIds.forEach(toUserId => {
       const notification = createNotification({
         toUserId,
-        eventId,
+        docId: eventId,
         type: 'invitationToAttendEventAccepted'
       });
 
@@ -201,7 +201,7 @@ async function onInvitationToAnEventRejected({
   if (!!fromUser) {
     const notification = createNotification({
       toUserId: fromUser.uid,
-      eventId,
+      docId: eventId,
       type: 'invitationToAttendEventDeclined'
     });
 
@@ -219,7 +219,7 @@ async function onInvitationToAnEventRejected({
     adminIds.forEach(toUserId => {
       const notification = createNotification({
         toUserId,
-        eventId,
+        docId: eventId,
         type: 'invitationToAttendEventDeclined'
       });
 
