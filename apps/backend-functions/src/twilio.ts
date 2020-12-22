@@ -5,10 +5,12 @@ import { getDocument } from "@blockframes/firebase-utils";
 import { EventDocument, Meeting } from "@blockframes/event/+state/event.firestore";
 import { ErrorResultResponse, displayName } from "@blockframes/utils/utils";
 
-import { twilioApiKeySecret, twilioAccountSid, twilioApiKeySid } from './environments/environment';
+import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
 import { hasUserAcceptedEvent } from "./internals/invitations/meetings";
+import Twilio from "twilio/lib/rest/Twilio";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
-import { getUser } from "./internals/firebase";
+import { db, functionRegion, getUser } from "./internals/firebase";
+import { Request, Response } from "firebase-functions";
 
 export interface RequestAccessToken {
   eventId: string,
@@ -75,8 +77,7 @@ export const getTwilioAccessToken = async (
   }
 
   const user = await getUser(context.auth.uid);
-  // const identity = `${user.firstName[0].toUpperCase()}${user.firstName.substr(1).toLowerCase()} ${user.lastName[0].toUpperCase()}${user.lastName.substr(1).toLowerCase()}`;
-  const identity = displayName(user);
+  const identity = JSON.stringify({ id: user.uid, displayName: displayName(user) });
 
   // Create access token with twilio global var et identity of the user as identity of token
   const token = new AccessToken(twilioAccountSid, twilioApiKeySid, twilioApiKeySecret, { identity });
@@ -85,8 +86,62 @@ export const getTwilioAccessToken = async (
   // add Grant to token
   token.addGrant(videoGrant);
 
+  const client = new Twilio(twilioAccountSid, twilioAccountSecret);
+  const [ roomAlreadyExists ] = await client.video.rooms.list({ uniqueName: eventId, limit: 1 });
+  if (!roomAlreadyExists) {
+    await client.video.rooms.create({
+      uniqueName: eventId,
+      statusCallback: `https://${functionRegion}-${projectId}.cloudfunctions.net/twilioWebhook`,
+      statusCallbackMethod: 'POST',
+    });
+  }
+
   return {
     error: '',
     result: token.toJwt()
   };
+};
+
+/** This function will be called directly by the Twilio servers each time an event happens in a Video Room */
+export const twilioWebhook = async (req: Request, res: Response) => {
+  try {
+
+    if (
+      // we first check if the request come from Twilio server
+      req.body.AccountSid !== twilioAccountSid ||
+      ( // we are interested only by those 2 events
+        req.body.StatusCallbackEvent !== 'participant-disconnected' &&
+        req.body.StatusCallbackEvent !== 'room-ended'
+      )
+    ) {
+      // in any case we return 200 OK to the twilio servers
+      res.status(200).send();
+      return;
+    }
+
+    const eventId = req.body.RoomName;
+    const eventRef = db.collection('events').doc(eventId);
+    const eventSnap = await eventRef.get();
+    if (!eventSnap.exists) {
+      res.status(200).send();
+      return;
+    }
+
+    if (req.body.StatusCallbackEvent === 'participant-disconnected') {
+
+      const user = JSON.parse(req.body.ParticipantIdentity) as { id: string, displayName: string};
+      eventRef.update({ [`meta.attendees.${user.id}`]: 'ended' });
+
+    } else {
+      eventRef.update({ 'meta.attendees': {} });
+    }
+
+
+  } catch (e) {
+    console.warn(e);
+  }
+
+  // in any case we return 200 OK to the twilio servers
+  res.status(200).send();
+  return;
 };

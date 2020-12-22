@@ -15,6 +15,7 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
   @Input() set attendee(value: Attendee) {
 
     this.name = value.userName;
+    this.userInitials = this.name?.split(' ').map(name => name[0]).join('') ?? '?';
     this.local = value.kind === 'local';
 
     if (!this.track.audio && !!value.tracks.audio) {
@@ -31,6 +32,7 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
   track: Tracks = { audio: null, video: null };
   local = false;
   name = 'Unknown User';
+  userInitials = '?';
 
   localTrackState$ = {
     video: new BehaviorSubject<boolean>(true),
@@ -120,9 +122,5 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
     } else if (kind === 'audio') {
       this.element[kind].muted = currentValue;
     }
-  }
-
-  get userInitials() {
-    return this.name.split(' ').map(name => name[0]).join('');
   }
 }

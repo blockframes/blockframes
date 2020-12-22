@@ -20,7 +20,7 @@ export {
 
 import { firebase } from '@env';
 import { mockConfigIfNeeded } from '@blockframes/firebase-utils';
-export const { storageBucket } = firebase();
+export const { projectId, storageBucket } = firebase();
 
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
@@ -33,6 +33,7 @@ export const jwplayerKey = mockConfigIfNeeded('jwplayer', 'key');
 export const imgixToken = mockConfigIfNeeded('imgix', 'token');
 
 export const twilioAccountSid = mockConfigIfNeeded('twilio', 'account', 'sid');
+export const twilioAccountSecret = mockConfigIfNeeded('twilio', 'account', 'secret');
 export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'secret');
 export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
 
