@@ -134,18 +134,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * This function is used internally by the MatAutocomplete to decide
-   * what to display in the input field when an option has been selected
-   */
-  public getSelectedEntity(selection: string) {
-    const value = this.lastValue$.getValue();
-    if (value) {
-      const selected = value.filter(data => data[this.keyToDisplay] === selection);
-      return getDeepValue(selected, this.keyToDisplay);
-    }
-  }
-
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe() }
   }
