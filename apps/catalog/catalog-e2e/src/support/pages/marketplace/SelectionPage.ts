@@ -1,5 +1,3 @@
-import FeedbackPage from "./FeedbackPage";
-
 export default class SelectionPage {
   constructor() {
     cy.get('[page-id=catalog-selection]');
@@ -14,8 +12,4 @@ export default class SelectionPage {
     cy.get('mat-option').contains('euro').click();
   }
 
-  public clickSend() {
-    cy.get('[page-id=catalog-selection] button[test-id=selection-send]').click()
-    return new FeedbackPage();
-  }
 }
