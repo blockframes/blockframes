@@ -4,7 +4,6 @@ import SearchPage from './SearchPage'
 import ViewPage from './ViewPage';
 import DistributionPage from './DistributionPage';
 import SelectionPage from './SelectionPage';
-import FeedbackPage from './FeedbackPage';
 import WishlistPage from './WishlistPage';
 
 export {
@@ -14,6 +13,5 @@ export {
   ViewPage,
   DistributionPage,
   SelectionPage,
-  FeedbackPage,
   WishlistPage
 };
