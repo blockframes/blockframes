@@ -7,7 +7,7 @@ import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
-import { getOrgModuleAccess } from '@blockframes/utils/apps';
+import { appName, getOrgModuleAccess } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-users',
@@ -23,7 +23,10 @@ export class UsersComponent implements OnInit {
     'org': 'Organization',
     'email': 'Email',
     'firstConnexion': 'First connexion',
-    'lastConnexion': 'Last connexion'
+    'lastConnexion': 'Last connexion',
+    'pageView': 'Page view',
+    'sessionCount': 'Session count',
+    'createdFrom': 'Created from',
   };
 
   public initialColumns: string[] = [
@@ -34,6 +37,9 @@ export class UsersComponent implements OnInit {
     'email',
     'firstConnexion',
     'lastConnexion',
+    'pageView',
+    'sessionCount',
+    'createdFrom',
   ];
   public rows: any[] = [];
   public orgs: Record<string, Organization> = {};
@@ -61,6 +67,9 @@ export class UsersComponent implements OnInit {
         email: u.email,
         firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
         lastConnexion: this.adminQuery.getLastConnexion(u.uid),
+        pageView: this.adminQuery.getPageView(u.uid),
+        sessionCount: this.adminQuery.getSessionCount(u.uid),
+        createdFrom: !! u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
         org: org,
       }
     });
@@ -96,6 +105,9 @@ export class UsersComponent implements OnInit {
           ...u,
           firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
           lastConnexion: this.adminQuery.getLastConnexion(u.uid),
+          pageView: this.adminQuery.getPageView(u.uid),
+          sessionCount: this.adminQuery.getSessionCount(u.uid),
+          createdFrom: !! u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
           edit: {
             id: u.uid,
             link: `/c/o/admin/panel/user/${u.uid}`,
@@ -121,6 +133,9 @@ export class UsersComponent implements OnInit {
         'email': r.email,
         'first connexion': r.firstConnexion ? r.firstConnexion : '--',
         'last connexion': r.lastConnexion ? r.lastConnexion : '--',
+        'page view': r.pageView ? r.pageView : '--',
+        'session count': r.sessionCount ? r.sessionCount : '--',
+        'created from': r.createdFrom ? r.createdFrom : '--',
       }))
       downloadCsvFromJson(exportedRows, 'user-list');
 
