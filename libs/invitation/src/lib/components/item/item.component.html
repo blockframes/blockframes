@@ -13,13 +13,13 @@
 
               <ng-container *ngIf="fromUser.$ | async as user">
                 <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> invited you to {{ event.type }}
-                <a [routerLink]="['/c/o/marketplace/event', _invitation.docId, 'lobby']" id="link">{{ event.title }}</a>.
+                <a [routerLink]="['/c/o/marketplace/event', _invitation.eventId, 'lobby']" id="link">{{ event.title }}</a>.
               </ng-container>
 
             </ng-container>
             <ng-template #inviteScreening>
               <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a> invited you to
-              <a [routerLink]="['/c/o/marketplace/event', _invitation.docId, 'session']" id="link">{{ event.title }}</a>.
+              <a [routerLink]="['/c/o/marketplace/event', _invitation.eventId, 'session']" id="link">{{ event.title }}</a>.
               ({{event | eventRange }})
             </ng-template>
           </ng-container>
@@ -29,14 +29,14 @@
 
               <ng-container *ngIf="fromUser.$ | async as user">
                 <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> would like to attend {{ event.type }}
-                <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
+                <a [routerLink]="['/c/o/marketplace/event', _invitation.eventId]" id="link">{{ event.title }}</a>.
                 ({{ event | eventRange }})
               </ng-container>
 
             </ng-container>
             <ng-template #requestScreening>
               <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> would like to attend {{ event.type }}
-              <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
+              <a [routerLink]="['/c/o/marketplace/event', _invitation.eventId]" id="link">{{ event.title }}</a>.
               ({{ event | eventRange }})
             </ng-template>
           </ng-template>

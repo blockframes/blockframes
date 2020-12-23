@@ -19,7 +19,7 @@ export class EventInfoComponent implements OnInit {
   set event(event: Event) {
     if (event) {
       this._event = event;
-      this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', event.id));
+      this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('eventId', '==', event.id));
     }
   }
   get event() {

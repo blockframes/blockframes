@@ -9,7 +9,7 @@ import { EventService, Event } from '@blockframes/event/+state';
 export class EventFromInvitationPipe implements PipeTransform {
   constructor(private eventService: EventService) { }
   transform(invitation: Invitation): Observable<Event> {
-    return this.eventService.valueChanges(invitation.docId)
+    return this.eventService.valueChanges(invitation.eventId)
   }
 }
 

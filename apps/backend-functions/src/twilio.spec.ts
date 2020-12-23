@@ -8,7 +8,7 @@ const testInvitations = [
   {
     id: 'invit-A',
     type: 'attendEvent',
-    docId: 'eventTest',
+    eventId: 'eventTest',
     status: 'accepted',
     mode: 'invitation',
     fromOrg: { id: 'org-A' },

@@ -77,8 +77,8 @@ export class InvitationService extends CollectionService<InvitationState> {
   request(who: 'user' | 'org', id: string) {
     return {
       from: (fromType: 'user' | 'org', from?: User | Organization) => ({
-        to: async (type: 'attendEvent' | 'joinOrganization', docId: string, write?: AtomicWrite) => {
-          const base = { mode: 'request', type, docId } as Partial<Invitation>
+        to: async (type: 'attendEvent' | 'joinOrganization', eventId: string, write?: AtomicWrite) => {
+          const base = { mode: 'request', type, eventId } as Partial<Invitation>
           if (who === 'user') {
             base['toUser'] = createPublicUser({ uid: id });
           } else if (who === 'org') {
@@ -104,8 +104,8 @@ export class InvitationService extends CollectionService<InvitationState> {
   invite(who: 'user' | 'org', idOrEmails: string | string[]) {
     return {
       from: (fromType: 'user' | 'org', from?: User | Organization) => ({
-        to: (type: 'attendEvent' | 'joinOrganization', docId: string, write?: AtomicWrite) => {
-          const base = { mode: 'invitation', type, docId } as Partial<Invitation>
+        to: (type: 'attendEvent' | 'joinOrganization', eventId: string, write?: AtomicWrite) => {
+          const base = { mode: 'invitation', type, eventId } as Partial<Invitation>
           if (fromType === 'user') {
             base['fromUser'] = createPublicUser(from || this.authQuery.user);
           } else if (fromType === 'org') {
