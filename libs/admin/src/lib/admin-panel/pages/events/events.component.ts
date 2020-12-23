@@ -47,7 +47,7 @@ export class EventsComponent implements OnInit {
     const promises = events.map(async event => {
       const row = { ...event } as any;
       // Append new data for table display
-      const invitations = await this.invitationService.getValue(ref => ref.where('docId', '==', row.id));
+      const invitations = await this.invitationService.getValue(ref => ref.where('eventId', '==', row.id));
       row.attendees = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
