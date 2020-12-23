@@ -1,5 +1,15 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, TemplateRef, ContentChild, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  ChangeDetectorRef,
+  OnInit,
+  TemplateRef,
+  ContentChild,
+  OnDestroy
+} from '@angular/core';
+
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 
 // Blockframes
@@ -21,7 +31,6 @@ export class MissingControlComponent implements OnInit, OnDestroy {
   @Input() scope: Scope;
   @Input() link: string | string[];
   @Input() fragment: string;
-  @Input() isLast = true;
 
   getStatus = getStatus;
 

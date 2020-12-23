@@ -18,7 +18,7 @@ import { getPrivateVideoUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
-import { getTwilioAccessToken } from './twilio';
+import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { heavyConfig } from '@blockframes/firebase-utils';
 
 
@@ -114,6 +114,7 @@ export const inviteUsers = functions.https.onCall(skipInMaintenance(logErrors(in
 /** Trigger: REST call to create the access token for connection to twilio */
 export const getAccessToken = functions.https.onCall(skipInMaintenance(logErrors(getTwilioAccessToken)));
 
+export const twilioWebhook = functions.https.onRequest(_twilioWebhook);
 
 //--------------------------------
 //   Notifications Management   //

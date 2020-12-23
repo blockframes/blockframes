@@ -19,7 +19,7 @@ export class ActionComponent {
     this.invit = invit;
 
     if (this.requestPending && invit.status === 'accepted') {
-      this.router.navigate(['/c/o/marketplace/event', invit.docId, 'session']);
+      this.router.navigate(['/c/o/marketplace/event', invit.eventId, 'session']);
       this.requestPending = false;
     }
   }

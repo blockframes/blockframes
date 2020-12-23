@@ -9,7 +9,7 @@ export async function hasUserAcceptedEvent(userId: string, eventId: string) {
   const db = admin.firestore();
   const accepted = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('docId', '==', eventId)
+    .where('eventId', '==', eventId)
     .where('status', '==', 'accepted');
   const acceptedInvitations = accepted.where('toUser.uid', '==', userId).where('mode', '==', 'invitation');
   const acceptedRequests = accepted.where('fromUser.uid', '==', userId).where('mode', '==', 'request');

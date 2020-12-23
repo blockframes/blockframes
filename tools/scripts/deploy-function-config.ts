@@ -25,6 +25,7 @@ const functionsConfigMap: Record<string, string> = {
   'algolia.api_key': 'ALGOLIA_API_KEY',
   'imgix.token': 'IMGIX_TOKEN',// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
   'twilio.account.sid': 'TWILIO_ACCOUNT_SID',
+  'twilio.account.secret': 'TWILIO_ACCOUNT_SECRET',
   'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
   'twilio.api.key.sid': 'TWILIO_API_KEY_SID'
 }
