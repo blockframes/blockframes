@@ -1,5 +1,5 @@
 
-import { db, getUserMail, getUser } from './../firebase';
+import { db, getUser } from './../firebase';
 import {
   InvitationDocument,
   InvitationOrUndefined,
