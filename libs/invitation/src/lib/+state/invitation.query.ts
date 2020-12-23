@@ -28,10 +28,6 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
     (invitation.mode === 'invitation' && invitation.toUser.uid === user.uid)
   }
 
-  selectByEventId(eventId: string) {
-    return this.selectEntity((i: Invitation) => i.eventId === eventId);
-  }
-
   /** Query all invitation where current user is a guest */
   whereCurrentUserIsGuest(filter: (invitation: Invitation) => boolean = () => true) {
     return this.selectAll({ filterBy: i => this.currentUserIsGuest(i) && filter(i) });

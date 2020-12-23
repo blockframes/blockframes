@@ -17,7 +17,7 @@ export async function onEventDelete(
     batch.delete(doc.ref);
   }
 
-  const notifsCollectionRef = await db.collection('notifications').where('eventId', '==', event.id).get();
+  const notifsCollectionRef = await db.collection('notifications').where('docId', '==', event.id).get();
   for (const doc of notifsCollectionRef.docs) {
     batch.delete(doc.ref);
   }

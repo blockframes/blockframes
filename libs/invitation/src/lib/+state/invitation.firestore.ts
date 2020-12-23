@@ -30,7 +30,7 @@ export interface InvitationBase<D> {
    * @dev Can only be an eventId.
    * If empty, the invitation is about Organization and we use directly fromOrg.id
    */
-  eventId?: string; // @TODO (#4377) rename to eventId
+  eventId?: string;
   message?: string;
 }
 
