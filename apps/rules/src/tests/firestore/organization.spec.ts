@@ -4,7 +4,7 @@ import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/funct
 
 //TODO: 4197
 describe('Organization Rules Tests', () => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `orgrules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {

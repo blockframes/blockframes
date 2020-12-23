@@ -7,7 +7,7 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
 describe('Notification Rules Tests', () => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `notrules-spec-${Date.now()}`;
   const existingNotif = 'notifications/001';
   let db: Firestore;
 

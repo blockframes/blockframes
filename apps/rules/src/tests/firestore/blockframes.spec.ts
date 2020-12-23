@@ -9,7 +9,7 @@ import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/funct
 
 
 describe('Blockframe In Maintenance', () => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `bfrules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {

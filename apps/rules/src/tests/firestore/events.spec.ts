@@ -7,7 +7,7 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
 describe('Events Rules Tests', () => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `evrules-spec-${Date.now()}`;
   let db: Firestore;
 
   describe('With User in org', () => {

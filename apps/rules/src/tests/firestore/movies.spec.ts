@@ -10,7 +10,7 @@ import { MovieAppAccess } from '@blockframes/utils/apps';
 import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
 
 describe('Movies Rules Tests', () => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `movrules-spec-${Date.now()}`;
   let db: Firestore;
 
   describe('With User in org', () => {

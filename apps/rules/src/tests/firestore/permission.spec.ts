@@ -5,7 +5,7 @@ import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/funct
 
 //TODO: 4198
 describe('Permission Rules Tests', () => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `permrules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {

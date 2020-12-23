@@ -4,7 +4,7 @@ import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/funct
 
 //TODO: 4200
 describe.skip('Contracts Rules Tests', () => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `ctrules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
