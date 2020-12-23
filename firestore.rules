@@ -38,9 +38,9 @@ service cloud.firestore {
     // Commons Collections        //
     ////////////////////////////////
 
-    match/cms/ {
+    match /cms {
       allow read: if true;
-      allow write: isBlockframesAdmin(userId());
+      allow write: if isBlockframesAdmin(userId());
     }
 
     match /docsIndex/{docId} {
