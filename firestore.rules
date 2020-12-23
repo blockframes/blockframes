@@ -38,6 +38,10 @@ service cloud.firestore {
     // Commons Collections        //
     ////////////////////////////////
 
+    match/cms/ {
+      allow read: if true;
+      allow write: isBlockframesAdmin(userId());
+    }
 
     match /docsIndex/{docId} {
       // index of every doc created with a permission doc associated
