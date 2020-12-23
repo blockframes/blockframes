@@ -13,3 +13,18 @@ widget-card {
   margin-right: 24px;
 }
 
+.bf-admin {
+  background-color: rgba($color: #969595, $alpha: 0.1);
+  box-shadow: 1px 2px 2px black;
+  height: fit-content;
+  width: fit-content;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  top: 0;
+  right: 50%;
+  left: 50%;
+  transform: translate(-50%);
+  color: var(--warn);
+}
