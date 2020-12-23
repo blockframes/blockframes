@@ -9,8 +9,8 @@ import { InvitationQuery, InvitationService } from '@blockframes/invitation/+sta
 import { OrganizationService } from '@blockframes/organization/+state';
 
 // RxJs
-import { map, take, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, take, switchMap, delay, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, timer } from 'rxjs';
 
 @Component({
   selector: 'movie-screening',
@@ -70,8 +70,9 @@ export class UpcomingScreeningsComponent implements OnInit {
     this.buttonState$ = this.screenings$.pipe(
       switchMap(screening => {
         return this.invitationQuery.whereCurrentUserIsGuest().pipe(
-          map(invits => !!invits.filter(invit => invit.docId === screening[index].id).length));
-      })
+          map(invits => !!invits.filter(invit => invit.eventId === screening[index].id).length)
+        );
+      }),
     )
   }
 }
