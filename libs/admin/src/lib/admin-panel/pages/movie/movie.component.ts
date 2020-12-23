@@ -159,7 +159,7 @@ export class MovieComponent implements OnInit {
 
     const eventIds = events.map(e => e.id);
 
-    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('docId', '==', e)));
+    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('eventId', '==', e)));
     const invitations = await Promise.all(invitationsPromises);
     const invitationsCount = invitations.flat().length;
 

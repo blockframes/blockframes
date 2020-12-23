@@ -29,7 +29,7 @@ export class ItemComponent {
     } else if (!!invitation.fromOrg) {
       this.fromOrg.value = invitation.fromOrg
 
-      this.eventService.getValue(invitation.docId).then(event => {
+      this.eventService.getValue(invitation.eventId).then(event => {
         if (event.type === 'meeting') {
           this.eventType = 'meeting';
           this.userService.getValue(event.meta.organizerId as string).then(user => {
@@ -56,13 +56,13 @@ export class ItemComponent {
   get eventLink() {
     if (this._invitation.type === 'attendEvent') {
       if (this._invitation.mode === 'request') {
-        return `/c/o/dashboard/event/${this._invitation.docId}/edit`;
+        return `/c/o/dashboard/event/${this._invitation.eventId}/edit`;
       } else {
         if (this.eventType === 'meeting') {
-          return [`/c/o/marketplace/event`, this._invitation.docId, 'lobby'];
+          return [`/c/o/marketplace/event`, this._invitation.eventId, 'lobby'];
         }
         else {
-          return [`/c/o/marketplace/event`, this._invitation.docId, 'session'];
+          return [`/c/o/marketplace/event`, this._invitation.eventId, 'session'];
         }
       }
     } else if (this._invitation.type === 'joinOrganization') {

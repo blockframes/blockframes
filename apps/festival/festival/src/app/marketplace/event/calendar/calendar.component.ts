@@ -39,7 +39,7 @@ export class EventCalendarComponent implements OnInit {
     const allEvents$ = this.invitationQuery.selectAll({
       filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
     }).pipe(
-      map(invitations => invitations.map(i => i.docId)),
+      map(invitations => invitations.map(i => i.eventId)),
       map(eventIds => Array.from(new Set(eventIds))), // Remove duplicated
       switchMap(eventIds => this.service.queryDocs(eventIds))
     );
@@ -62,7 +62,7 @@ export class HideBadgePipe implements PipeTransform {
   constructor(private invitationQuery: InvitationQuery) {}
   transform(event: Event) {
     if (eventTime(event) === 'late') return of(true);
-    return this.invitationQuery.selectEntity(i => i.docId === event.id).pipe(
+    return this.invitationQuery.selectEntity(i => i.eventId === event.id).pipe(
       map(i => i.status !== 'pending')
     );
   }
