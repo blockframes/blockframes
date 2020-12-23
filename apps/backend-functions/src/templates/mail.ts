@@ -255,6 +255,7 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
 
     User informations
 
+    app: ${information.app}
     First name: ${information.firstName}
     Last name: ${information.lastName}
     Email: ${information.email}
