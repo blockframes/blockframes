@@ -117,8 +117,19 @@ export function userJoinedAnOrganization(userEmail: string, url: string = appUrl
 }
 
 /** Send email to org admin to inform him that a new user has joined his org */
-export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailTemplateRequest {
+export function userJoinedYourOrganization(
+  orgAdminEmail: string,
+  adminFirstName: string,
+  orgDenomination: string,
+  userFirstName: string,
+  userLastName: string,
+  userEmail: string):
+EmailTemplateRequest {
   const data = {
+    adminFirstName,
+    orgDenomination,
+    userFirstName,
+    userLastName,
     userEmail
   };
   return { to: orgAdminEmail, templateId: templateIds.org.memberAdded, data };
