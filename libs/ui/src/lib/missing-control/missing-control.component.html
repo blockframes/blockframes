@@ -1,7 +1,7 @@
 <!-- Check if required -->
 <ng-container *ngIf="control?.hasError('required') else notRequired">
   <a [routerLink]="link" [fragment]="fragment" class="mandatory-control">
-    Mandatory{{ isLast ? '' : ', ' }}
+    Mandatory
   </a>
 </ng-container>
 
@@ -14,7 +14,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="'missing'">
       <a [routerLink]="link" [fragment]="fragment" class="missing-control">
-        <span>Missing {{ isLast ? '' : ', ' }}</span>
+        <span>Missing</span>
       </a>
     </ng-container>
     <ng-container *ngSwitchCase="'valid'">
@@ -35,6 +35,6 @@
   </ng-container>
   <!-- if it's not a type string or a static model -->
   <ng-template #withoutType>
-    <span>{{ control.value }}{{ isLast ? '' : ', ' }}</span>
+    <span>{{ control.value }}</span>
   </ng-template>
 </ng-template>

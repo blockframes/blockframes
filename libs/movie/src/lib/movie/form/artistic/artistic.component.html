@@ -7,7 +7,9 @@
       <bf-form-table [columns]="castColumns" [form]="cast" buttonText="Add Cast Member">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
-        <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
+        <ng-template colRef="filmography" let-filmography>
+          <span *ngFor="let film of filmography">{{ film | filmography }} </span>
+        </ng-template>
         <ng-template formView let-castForm>
           <article [formGroup]="castForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -70,7 +72,9 @@
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="role" let-role>{{ role | toLabel:'crewRoles' }}</ng-template>
-        <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
+        <ng-template colRef="filmography" let-filmography>
+          <span *ngFor="let film of filmography">{{ film | filmography }} </span>
+        </ng-template>
         <ng-template formView let-crewForm>
           <article [formGroup]="crewForm" fxLayout="column" fxLayoutGap="24px">
 

@@ -109,7 +109,7 @@ export class TwilioService {
     this.room.on('participantConnected', (participant: RemoteParticipant) => {
       this.twilioStore.upsert(
         participant.sid,
-        { id: participant.sid, kind: 'remote', userName: participant.identity, tracks: {} }
+        { id: participant.sid, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: {} }
       );
     });
 
@@ -121,7 +121,7 @@ export class TwilioService {
         this.twilioStore.upsert(
           participant.sid,
           (entity: RemoteAttendee) => ({ tracks: { ...entity.tracks, ...remoteTracks } }),
-          id => ({ id, kind: 'remote', userName: participant.identity, tracks: remoteTracks })
+          id => ({ id, kind: 'remote', userName: JSON.parse(participant.identity).displayName, tracks: remoteTracks })
         );
       },
     );

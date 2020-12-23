@@ -129,6 +129,11 @@
     },
     "cms": {
       "tags": []
+    },
+    "rules": {
+      "tags": [
+        "shared security rules"
+      ]
     }
   },
   "tasksRunnerOptions": {
