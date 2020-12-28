@@ -34,12 +34,18 @@
 
       <bf-form-list [form]="videoList" listPosition="bottom" autoAdd reverseList>
         <ng-template itemRef let-video>
-          {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
+          {{ video.title }} - {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
         </ng-template>
         <ng-template formView let-activeForm>
-          <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
-            <h3 title>Upload Video</h3>
-          </file-upload>
+          <article fxLayout="column">
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Title</mat-label>
+              <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')"/>
+            </mat-form-field>
+            <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
+              <h3 title>Upload Video</h3>
+            </file-upload>
+          </article>
         </ng-template>
       </bf-form-list>
     </section>
