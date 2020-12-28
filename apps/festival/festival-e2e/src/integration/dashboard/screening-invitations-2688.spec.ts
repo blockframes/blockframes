@@ -39,7 +39,7 @@ describe('Organiser invites other users to private screening', () => {
     p1.clickSignup();
   });
 
-  it('Organiser creates screening & invites 2 users to the screening', () => {
+  it.only('Organiser creates screening & invites 2 users to the screening', () => {
     signIn(users[UserIndex.Organiser]);
     acceptCookie();
 
@@ -61,7 +61,7 @@ describe('Organiser invites other users to private screening', () => {
     p3.saveEvent();
   });
 
-  it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
+  it.only(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
     signIn(users[UserIndex.InvitedUser1]);
     acceptCookie();
 
