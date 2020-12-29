@@ -25,6 +25,12 @@ describe('Invitation Rules Tests', () => {
   test('should allow user to read "attendEvent" type', async () => {
     const notifRef = db.doc('invitations/I001');
     await assertSucceeds(notifRef.get());
-  });  
+  });
+
+  test('should not allow user to read "cancelEvent" type', async () => {
+    const notifRef = db.doc('invitations/I011');
+    await assertFails(notifRef.get());
+  });
+
 });
 

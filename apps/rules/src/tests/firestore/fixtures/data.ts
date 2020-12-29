@@ -129,6 +129,9 @@ export const testFixture = {
   'invitations/I001' : {
     type: 'attendEvent'
   },
+  'invitations/I011' : {
+    type: 'cancelEvent'
+  },  
 };
 
 
