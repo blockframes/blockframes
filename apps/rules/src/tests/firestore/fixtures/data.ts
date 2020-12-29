@@ -124,6 +124,11 @@ export const testFixture = {
     id: 'MI-077',
     orgId: 'MI-UK',
   },
+
+  //Invitations
+  'invitations/I001' : {
+    type: 'attendEvent'
+  },
 };
 
 
