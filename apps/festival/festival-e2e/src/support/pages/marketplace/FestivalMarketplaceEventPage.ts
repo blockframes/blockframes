@@ -37,4 +37,16 @@ export default class FestivalMarketplaceEventPage {
     cy.get('festival-event-view header a').first().click();
     return new FestivalScreeningPage();
   }
+
+  clickPlay() {
+    cy.log('>FestivalMarketplaceScreeningPage: Start Play [test-id=play]');
+    cy.get('festival-session [test-id=play]', { timeout: 3 * SEC })
+      .click();
+    cy.wait(1 * SEC);
+  }
+
+  runVideo() {
+    cy.log('>FestivalMarketplaceScreeningPage: Play video');
+    cy.get('festival-session video', { timeout: 150 * SEC }).click({ force: true });
+  }  
 }

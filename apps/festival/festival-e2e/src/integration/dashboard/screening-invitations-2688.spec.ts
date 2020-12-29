@@ -72,14 +72,14 @@ describe('Organiser invites other users to private screening', () => {
 
     // Assets video runs
     p2.openMoreMenu();
-    const p3: FestivalMarketplaceEventPage = p2.clickGoToEvent();
-    const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
+    const p3: FestivalMarketplaceScreeningPage = p2.clickGoToEvent();
+    //const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
 
     // Save the current url for the next test
     cy.url().then(url => SCREENING_URL = url);
 
-    p4.clickPlay();
-    p4.runVideo();
+    p3.clickPlay();
+    p3.runVideo();
     // TODO: Assert video is running
   });
 
@@ -106,7 +106,7 @@ describe('Organiser invites other users to private screening', () => {
     p2.verifyNotification(users[UserIndex.InvitedUser2].firstName, false);
   });
 
-  it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
+  it.only('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
     signIn(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 
