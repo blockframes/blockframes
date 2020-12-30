@@ -124,6 +124,25 @@ export const testFixture = {
     id: 'MI-077',
     orgId: 'MI-UK',
   },
+
+  //Invitations
+  'invitations/I001' : {
+    type: 'attendEvent',
+    toUser: { uid: 'uid-user2' },
+  },
+  'invitations/I010' : {
+    type: 'cancelEvent',
+  },   
+  'invitations/I011' : {
+    type: 'cancelEvent',
+    fromOrg: { id: 'O011'},
+    fromUser: { uid: 'uid-user2' },
+  },
+  'invitations/I012' : {
+    type: 'cancelEvent',
+    fromOrg: { id: 'O001'},
+    fromUser: { uid: 'uid-user2' },
+  },  
 };
 
 
