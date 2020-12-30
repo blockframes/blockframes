@@ -12,13 +12,9 @@
 
   <h2>Promotional Images</h2>
   <ng-container *ngFor="let still of moviePictureForm.get('still_photos').controls; let i = index">
-    <article>
-      <drop-cropper [storagePath]="movie.id | ref: 'movie' : 'still'" ratio="still" [form]="still">
-        <h3 title>Stills</h3>
-      </drop-cropper>
-      <span class="mat-caption">Please note that this document will be available for download on the
-        marketplace.</span>
-    </article>
+    <drop-cropper [storagePath]="movie.id | ref: 'movie' : 'still'" ratio="still" [form]="still">
+      <h3 title>Stills</h3>
+    </drop-cropper>
   </ng-container>
 
   <article fxLayout="row" fxLayoutAlign="space-around">
