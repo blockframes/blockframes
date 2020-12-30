@@ -7,7 +7,7 @@ import {
   onDocumentWrite,
 } from './utils';
 import { logErrors } from './internals/sentry';
-import { onInvitationWrite } from './invitation';
+import { onInvitationWrite, onInvitationDelete } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
@@ -97,6 +97,9 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',on
 
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
 export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
+
+/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
+export const onInvitationDeleteEvent = onDocumentDelete('invitations/{invitationID}', onInvitationDelete);
 
 //--------------------------------
 //    Events Management          //

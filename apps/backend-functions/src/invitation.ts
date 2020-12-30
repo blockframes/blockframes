@@ -1,5 +1,5 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import { db, functions, getUser } from './internals/firebase';
+import { db, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
@@ -10,8 +10,9 @@ import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
-import { Change } from 'firebase-functions';
 import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { Change, EventContext } from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -97,6 +98,36 @@ interface UserInvitation {
   invitation: Partial<InvitationBase<any>>;
   app?: App;
 }
+
+export async function onInvitationDelete(
+  invitSnapshot: FirebaseFirestore.DocumentSnapshot<InvitationOrUndefined>,
+  context: EventContext
+): Promise<any>{
+  const invitation = invitSnapshot.data() as InvitationOrUndefined;
+  const toUser = invitation.toUser;
+
+  // Remove user in users collection and in authentication part
+  if(invitation.type === "joinOrganization"
+  && !!toUser
+  && (invitation.status === "pending")) {
+
+    // Fetch potential other invitations
+    const invitationCollectionRef = db.collection('invitations')
+      .where('toUser.uid', '==', toUser.uid)
+      .where('mode', '==', 'invitation')
+      .where('type', '==', 'joinOrganization')
+    const invitationsSnap = await invitationCollectionRef.get();
+
+    // If there is an other invitation or the user has already an org, we don't want to delete its account
+    if(invitationsSnap.docs.length > 1 || !!toUser.orgId) {
+      return;
+    }
+
+    admin.auth().deleteUser(toUser.uid);
+    db.doc(`users/${toUser.uid}`).delete();
+  }
+}
+
 
 /**
  * Invite a list of user by email.
