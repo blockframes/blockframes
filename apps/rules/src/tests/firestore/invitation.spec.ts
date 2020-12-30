@@ -5,6 +5,7 @@
 } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
 
 //TODO: 4195
 describe('Invitation Rules Tests', () => {
@@ -56,21 +57,29 @@ describe('Invitation Rules Tests', () => {
       await assertSucceeds(inviteRef.delete());
     });
 
-    test('should allow user to update invitation', async () => {
-      const inviteRef = db.doc('invitations/I001');
-      await assertSucceeds(inviteRef.update({note: 'important'}));
+    describe('Create Invitation', () => {
+      test('should allow user to create invitation status: pending, mode: request', async () => {
+        const newInviteId = 'I002'
+        const createInvite: Partial<Invitation> = {
+          mode: 'request',
+          status: <InvitationStatus>'pending',
+          fromUser: {uid: 'uid-user2', email: 'user2@O001.com'}
+        };
+        const inviteDoc = db.collection('invitations').doc(newInviteId).set(createInvite);
+        await assertSucceeds(inviteDoc);
+      });
     });
 
     describe('Update Invitation', () => {
       const existInviteId = 'I001';
       const fields: any = [
         ['id', 'MI-0xx'],
-        /*['mode', { createdBy: '' }],
-        ['fromOrg', 'drama'],
-        ['fromUser', { appAccess: { catalog: true } }],
-        ['toOrg', { status: 'rejected' }],
-        ['toUser', { storeType: 'blah' }],
-        ['docId', { appAccess: { festival: {} } }],*/
+        ['mode', { createdBy: '' }],
+        ['fromOrg', {id: 'O007'}],
+        ['fromUser', { uid: 'uid-user3' }],
+        ['toOrg', { id: 'O008' }],
+        ['toUser', { uid: 'uid-sAdmin' }],
+        ['docId', 'I002'],
       ];
       test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const inviteRef = db.doc(`invitations/${existInviteId}`);
@@ -79,12 +88,10 @@ describe('Invitation Rules Tests', () => {
         await assertFails(inviteRef.update(details));
       });
 
-      /*
-      test('user valid org, updating unrestricted field should be able', async () => {
-        const inviteRef = db.doc(`movies/${existMovieId}`);
-        const movieDetailsOther = { notes: 'update in unit-test' };
-        await assertSucceeds(inviteRef.update(movieDetailsOther));
-      });*/
+      test('should allow user to update invitation', async () => {
+        const inviteRef = db.doc('invitations/I001');
+        await assertSucceeds(inviteRef.update({note: 'important'}));
+      });
     });
   });
 });
