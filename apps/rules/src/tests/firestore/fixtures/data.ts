@@ -127,10 +127,21 @@ export const testFixture = {
 
   //Invitations
   'invitations/I001' : {
-    type: 'attendEvent'
+    type: 'attendEvent',
+    toUser: { uid: 'uid-user2' },
   },
+  'invitations/I010' : {
+    type: 'cancelEvent',
+  },   
   'invitations/I011' : {
-    type: 'cancelEvent'
+    type: 'cancelEvent',
+    fromOrg: { id: 'O011'},
+    fromUser: { uid: 'uid-user2' },
+  },
+  'invitations/I012' : {
+    type: 'cancelEvent',
+    fromOrg: { id: 'O001'},
+    fromUser: { uid: 'uid-user2' },
   },  
 };
 
