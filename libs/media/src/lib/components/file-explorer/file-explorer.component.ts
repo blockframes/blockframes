@@ -13,7 +13,7 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
+import { sortMovieBy } from '@blockframes/utils/helpers';
 
 // Material
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';

@@ -1,4 +1,5 @@
 <section [fxLayout]="layout[listPosition]">
+
   <!---------->
   <!-- LIST -->
   <!---------->
@@ -15,7 +16,7 @@
           <button mat-icon-button (click)="remove(index)">
             <mat-icon svgIcon="trash"></mat-icon>
           </button>
-          <mat-divider></mat-divider>
+          <mat-divider *ngIf="index < list.length -1"></mat-divider>
         </mat-list-item>
       </mat-list>
     </ng-container>
@@ -33,7 +34,7 @@
   ​<div *ngIf="formItem">
     <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
     </ng-template>
-    
+
     <!-- If we keep the form open, there is no point to have a cancel button -->
     <div fxLayout="row" [fxLayoutAlign]="keepFormOpen ? 'end center' : 'space-between center'">
       <ng-container *ngIf="!keepFormOpen">
@@ -43,16 +44,23 @@
       </ng-container>
       <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
         <mat-icon svgIcon="floppy"></mat-icon>
-        <span>{{ saveButtonText }}</span>
+        <span>
+          <ng-template [ngTemplateOutlet]="saveButtonText  || defaultText"></ng-template>
+        </span>
       </button>
     </div>
   </div>
 
   <footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
     <mat-divider></mat-divider>
-    <span class="mat-caption text-primary">{{ buttonText }}</span>
-    <button test-id="list-save" mat-mini-fab color="primary" (click)="add()" [disabled]="formItem?.invalid && !formItem?.dirty">
+    <span>
+      <ng-template [ngTemplateOutlet]="addButtonText || defaultText"></ng-template>
+    </span>
+    <button test-id="list-save" mat-mini-fab color="primary" (click)="add()"
+      [disabled]="formItem?.invalid && !formItem?.dirty">
       <mat-icon svgIcon="add"></mat-icon>
     </button>
   </footer>
 </section>
+
+<ng-template #defaultText>Add</ng-template>

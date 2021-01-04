@@ -4,7 +4,7 @@
       Privileges are the bonuses that are offered to an investor due to his / hers contribution.
       For example, it can be tickets for your project’s premiere, or goodies.
     </p>
-    <bf-form-table [columns]="columns" [form]="form.get('perks')" buttonText="Add a new Privilege">
+    <bf-form-table [columns]="columns" [form]="form.get('perks')">
       <!-- Columns -->
       <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
       <ng-template colRef="description" let-description>{{ description }}</ng-template>
@@ -81,7 +81,8 @@
                 <mat-label>Amount of Privileges Remaining</mat-label>
                 <input type="number" matInput formControlName="current" [errorStateMatcher]="errorMatcher" min="0" />
                 <mat-hint>Please set an amount remaining for this privilege.</mat-hint>
-                <mat-error *ngIf="perkForm.hasError('min', 'amount.current')">Only positive number are allow.</mat-error>
+                <mat-error *ngIf="perkForm.hasError('min', 'amount.current')">Only positive number are allow.
+                </mat-error>
                 <mat-error *ngIf="perkForm.hasError('amountOverflow')">
                   Remaining amount should be lower than total amount of privileges.
                 </mat-error>
@@ -90,6 +91,10 @@
           </article>
         </form>
       </ng-template>
+
+      <ng-template saveButtonText>Save Privilege</ng-template>
+      <ng-template addButtonText>Add a new Privilege</ng-template>
+
     </bf-form-table>
   </ng-container>
 </tunnel-page>

@@ -1802,8 +1802,8 @@
     },
     "campaign": {
       "projectType": "library",
-      "root": "libsu/campaign",
-      "sourceRoot": "libsu/campaign/src",
+      "root": "libs/campaign",
+      "sourceRoot": "libs/campaign/src",
       "prefix": "campaign",
       "architect": {
         "lint": {
@@ -1964,9 +1964,7 @@
               "extractLicenses": true,
               "inspect": false,
               "fileReplacements": [
-                {
-
-                }
+                {}
               ]
             }
           }
