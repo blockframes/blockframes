@@ -142,7 +142,12 @@ export const testFixture = {
     type: 'cancelEvent',
     fromOrg: { id: 'O001'},
     fromUser: { uid: 'uid-user2' },
-  },  
+  },
+
+  //Public Contracts
+  'publicContracts/PC01' : {
+    id: 'PC01',
+  },
 };
 
 
