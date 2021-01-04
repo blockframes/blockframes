@@ -2,7 +2,6 @@
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
-//TODO: 4200
 describe.skip('Contracts Rules Tests', () => {
   const projectId = `ctrules-spec-${Date.now()}`;
   let db: Firestore;
