@@ -38,7 +38,7 @@ export class EventViewComponent implements OnInit {
     this.accessRoute = `/c/o/marketplace/event/${this.event.id}/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
 
     this.invitation$ = this.invitationQuery.whereCurrentUserIsGuest().pipe(
-      map(invits => invits.find(e => e.docId === this.event.id)),
+      map(invits => invits.find(e => e.eventId === this.event.id)),
       shareReplay(1),
     );
   }

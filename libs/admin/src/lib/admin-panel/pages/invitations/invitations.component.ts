@@ -54,7 +54,7 @@ export class InvitationsComponent implements OnInit {
 
     const orgs = invitations.map(async (invitation : InvitationDetailed) => {
       invitation.org = await this.getOrg(getHost(invitation, 'org').id);
-      invitation.event = await this.getEvent(invitation.docId);
+      invitation.event = await this.getEvent(invitation.eventId);
       const guestOrgId = getGuest(invitation, 'user').orgId;
       if (guestOrgId) {
         invitation.guestOrg = await this.getOrg(guestOrgId);

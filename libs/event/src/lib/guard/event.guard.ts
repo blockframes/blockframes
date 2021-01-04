@@ -40,7 +40,7 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
     }
     const hasUserAccepted = this.invitationQuery.hasEntity((invitation: Invitation) => {
       return (
-        invitation.docId === event.id &&
+        invitation.eventId === event.id &&
         invitation.status === 'accepted' && (
           invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
           invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId

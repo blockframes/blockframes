@@ -32,14 +32,30 @@
     <section>
       <p>Upload other videos such as trailer, teaser, promotional clip, etc...</p>
 
-      <bf-form-list [form]="videoList" listPosition="bottom" autoAdd reverseList>
+      <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
-          {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
+          {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
         </ng-template>
         <ng-template formView let-activeForm>
-          <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
-            <h3 title>Upload Video</h3>
-          </file-upload>
+          <article fxLayout="column">
+            <span fxFlex fxLayout="row" fxLayoutGap="16px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Title</mat-label>
+                <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')"/>
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Video Type</mat-label>
+                <mat-select test-id="video-type" [formControl]="activeForm.get('type')">
+                  <mat-option *ngFor="let type of videoTypes" [value]="type">
+                    {{ type | titlecase }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </span>
+            <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
+              <h3 title>Upload Video</h3>
+            </file-upload>
+          </article>
         </ng-template>
       </bf-form-list>
     </section>

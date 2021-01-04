@@ -21,7 +21,7 @@ export class CampaignFormFundingsComponent implements OnInit {
   storagePath: string;
   columns = columns;
   form = this.shell.getForm('campaign');
-  
+
   constructor(
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
@@ -33,5 +33,13 @@ export class CampaignFormFundingsComponent implements OnInit {
   ngOnInit() {
     const { movieId } = this.route.snapshot.params;
     this.storagePath = `campaigns/${movieId}/files.financingPlan/`;
+  }
+
+  get fundings() {
+    return this.form.get('fundings');
+  }
+
+  get budget() {
+    return this.form.get('budget');
   }
 }

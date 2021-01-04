@@ -1,15 +1,16 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
 import { EventService, Event } from '@blockframes/event/+state';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 // RxJs
-import { map, take } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { map, take, switchMap, delay, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, timer } from 'rxjs';
 
 @Component({
   selector: 'movie-screening',
@@ -20,7 +21,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UpcomingScreeningsComponent {
+export class UpcomingScreeningsComponent implements OnInit {
 
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
@@ -33,14 +34,20 @@ export class UpcomingScreeningsComponent {
 
   public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
 
-  public invitationWasSent = false;
+  public buttonState$: Observable<boolean> = new Observable();
 
   constructor(
     private query: MovieQuery,
     private eventService: EventService,
     private invitationService: InvitationService,
+    private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
-    private cdr: ChangeDetectorRef) { }
+    )
+  { }
+
+  ngOnInit() {
+    this.checkInvitationStatus();
+  }
 
   askForInvitation(events: Event[]) {
     const eventId = events[this.sessionCtrl.value].id;
@@ -48,8 +55,7 @@ export class UpcomingScreeningsComponent {
       orgs.forEach(org => {
         this.invitationService.request('org', org.id).from('user').to('attendEvent', eventId)
       })
-      this.invitationWasSent = true;
-      this.cdr.markForCheck();
+      this.checkInvitationStatus();
     })
   }
 
@@ -57,5 +63,16 @@ export class UpcomingScreeningsComponent {
     if (a.start.getTime() < b.start.getTime()) return -1
     if (a.start.getTime() > b.start.getTime()) return 1
     return 0
+  }
+
+  checkInvitationStatus() {
+    const index = this.sessionCtrl.value;
+    this.buttonState$ = this.screenings$.pipe(
+      switchMap(screening => {
+        return this.invitationQuery.whereCurrentUserIsGuest().pipe(
+          map(invits => !!invits.filter(invit => invit.eventId === screening[index].id).length)
+        );
+      }),
+    )
   }
 }

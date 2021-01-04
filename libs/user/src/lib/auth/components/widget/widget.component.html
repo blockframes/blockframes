@@ -8,7 +8,8 @@
       <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">
         <img asset="profil_user.webp" [ref]="user.avatar" alt="Profile picture">
       </button>
-      <overlay-widget #menu >
+      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin</span>
+      <overlay-widget #menu>
         <widget-card>
           <mat-nav-list>
             <a mat-list-item routerLink="/c/o/account/profile">

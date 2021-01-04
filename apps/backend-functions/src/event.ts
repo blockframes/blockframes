@@ -12,7 +12,7 @@ export async function onEventDelete(
   const event = snap.data() as EventDocument<EventMeta>;
   const batch = db.batch();
 
-  const invitsCollectionRef = await db.collection('invitations').where('docId', '==', event.id).get();
+  const invitsCollectionRef = await db.collection('invitations').where('eventId', '==', event.id).get();
   for (const doc of invitsCollectionRef.docs) {
     batch.delete(doc.ref);
   }
@@ -23,4 +23,3 @@ export async function onEventDelete(
   }
   return batch.commit();
 }
-

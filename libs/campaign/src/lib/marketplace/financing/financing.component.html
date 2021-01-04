@@ -28,7 +28,7 @@
           <tfoot>
             <tr>
               <td>Grand Total Budget</td>
-              <td>{{ campaign.budget | budget | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
+              <td>{{ campaign.budget | budget: campaign.currency }}</td>
             </tr>
           </tfoot>
         </table>
@@ -70,10 +70,10 @@
             <tr>
               <td fxLayout fxLayoutGap="8px">
                 <div class="color" [style.backgroundColor]="options.colors[i]"></div>
-                <span>{{ funding.name }}</span>
+                <span>{{ funding.name }} </span>
               </td>
               <td>{{ funding.status | titlecase }}</td>
-              <td>{{ (funding.amount / (campaign.fundings | totalFundings)) | percent }}</td>
+              <td>{{ (funding.amount / totalFundings) | percent }}</td>
               <td>{{ funding.amount | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
             </tr>
           </ng-container>
@@ -82,7 +82,7 @@
               <td>Total Investment</td>
               <td></td>
               <td></td>
-              <td>{{ campaign.fundings | totalFundings | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
+              <td>{{ campaign.fundings | totalFundings: campaign.currency }}</td>
             </tr>
           </tfoot>
         </table>

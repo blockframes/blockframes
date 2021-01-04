@@ -38,7 +38,7 @@
     <!-- Buttons -->
 
     <div *ngIf="!showButtons">
-      <input-autocomplete test-id="languages" scope="languages" [control]="languageCtrl">
+      <input-autocomplete test-id="languages" scope="languages" [control]="languageCtrl" withoutValues="['all']">
         <mat-label>Languages</mat-label>
       </input-autocomplete>
       <div fxLayout="row" fxLayoutAlign="space-between start">

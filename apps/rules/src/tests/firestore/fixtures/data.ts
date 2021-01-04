@@ -1,4 +1,6 @@
-﻿export const testFixture = {
+﻿import { metaDoc } from '@blockframes/utils/maintenance';
+
+export const testFixture = {
   //Permissions
   'permissions/O001': {
     roles: {
@@ -122,4 +124,28 @@
     id: 'MI-077',
     orgId: 'MI-UK',
   },
+
+  //Invitations
+  'invitations/I001' : {
+    type: 'attendEvent',
+    toUser: { uid: 'uid-user2' },
+  },
+  'invitations/I010' : {
+    type: 'cancelEvent',
+  },   
+  'invitations/I011' : {
+    type: 'cancelEvent',
+    fromOrg: { id: 'O011'},
+    fromUser: { uid: 'uid-user2' },
+  },
+  'invitations/I012' : {
+    type: 'cancelEvent',
+    fromOrg: { id: 'O001'},
+    fromUser: { uid: 'uid-user2' },
+  },  
 };
+
+
+//Meta collection, for maintenance control.
+testFixture[metaDoc] = {};
+testFixture[metaDoc].endedAt = true;

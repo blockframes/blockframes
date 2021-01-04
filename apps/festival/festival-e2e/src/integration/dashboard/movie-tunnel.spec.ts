@@ -169,7 +169,7 @@ val['keyword-summary'] = val['keyword'].substring(0, val['keyword'].indexOf('{')
 
 val = Movie.artisticTeam;
 val['cast-summary'] = `${val['cast-first-name']} ${val['cast-last-name']} ${val['cast-film1']}`;
-val['crew-summary'] = `${val['crew-first-name']} ${val['crew-last-name']} ${val['crew-film1']}`;
+val['crew-summary'] = `${val['crew-first-name']} ${val['crew-last-name']} (${val['crew-role']}) ${val['crew-film1']}`;
 
 const testSteps = [
   {title: 'Production Status', selector: 'movie-form-title-status mat-radio-button',
@@ -297,6 +297,9 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Verify Summary sheet fields are correct
   it('Verify fields in Summary Page', () => {
+    //Uncomment next line to debug summary fields of movie
+    //debugMovieTitle('Nc5uECQYauv3u9xUFSib', 'summary');
+
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: 15 * SEC}).contains('Summary & Submission');
 
