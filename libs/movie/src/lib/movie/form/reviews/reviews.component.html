@@ -2,7 +2,7 @@
   <ng-container tunnel-form>
     <h3>Festival & Awards</h3>
     <section id="festival">
-      <bf-form-list [form]="form.prizes" buttonText="Add a Festival">
+      <bf-form-list [form]="form.prizes">
         <ng-template itemRef let-prizes>{{ prizes | festivalPrize | titlecase}}</ng-template>
         <ng-template formView let-prizesForm>
           <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
@@ -44,6 +44,9 @@
               <span class="mat-caption">Select applying premiere if any.</span>
             </div>
 
+            <ng-template saveButtonText>Save Festival</ng-template>
+            <ng-template addButtonText>Add a Festival</ng-template>
+
           </article>
         </ng-template>
       </bf-form-list>
@@ -54,7 +57,7 @@
     <h3>Other Festival & Awards</h3>
     <section id="custom-festival">
 
-      <bf-form-list [form]="form.customPrizes" buttonText="Add other Festival">
+      <bf-form-list [form]="form.customPrizes">
         <ng-template itemRef let-customPrizes>{{ customPrizes | festivalPrize | titlecase }}</ng-template>
         <ng-template formView let-customPrizesForm>
           <article [formGroup]="customPrizesForm" fxLayout="column" fxLayoutGap="24px">
@@ -95,6 +98,10 @@
               <span class="mat-caption">Select applying premiere if any.</span>
             </div>
           </article>
+
+          <ng-template saveButtonText>Save other Festival</ng-template>
+          <ng-template addButtonText>Add other Festival</ng-template>
+
         </ng-template>
       </bf-form-list>
     </section>
@@ -104,7 +111,7 @@
     <h3>Film Reviews</h3>
     <section id="reviews">
 
-      <bf-form-list [form]="form.review" buttonText="Add a Film Review">
+      <bf-form-list [form]="form.review">
         <ng-template itemRef let-review>{{ review.criticName }} - {{ review.journalName }} -
           {{ review.revueLink | maxLength: 20 }} - {{ review.criticQuote | maxLength: 20 }} </ng-template>
         <ng-template formView let-reviewForm>
@@ -134,6 +141,9 @@
               <mat-label>Quote</mat-label>
               <textarea test-id="quote" matInput formControlName="criticQuote"></textarea>
             </mat-form-field>
+
+            <ng-template saveButtonText>Save Film Review</ng-template>
+            <ng-template addButtonText>Add a Film Review</ng-template>
 
           </article>
         </ng-template>
