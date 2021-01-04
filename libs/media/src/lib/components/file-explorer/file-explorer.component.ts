@@ -139,6 +139,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
       mediaForm = formList.controls.find(control => {
         if (isHostedMediaForm(control)) { // HostedMediaForm
 
+          // TODO issue #4241
           const ref = (row as string);
           return control.get('ref').value === ref;
 

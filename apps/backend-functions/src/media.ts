@@ -28,6 +28,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
     let savedRef: any = get(docData, field);
 
     if (Array.isArray(savedRef)) {
+      // TODO issue #4241
       savedRef = savedRef.map(e => e.ref || e).find(ref => ref === filePath) || '';
     } else if (!!savedRef.ref) {
       savedRef = savedRef.ref;
@@ -277,10 +278,12 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
+    // TODO issue #4241
     if (!!before.banner && (before.banner !== after.banner || after.banner === '')) {
       mediaToDelete.push(before.banner);
     }
 
+      // TODO issue #4241
     if (!!before.poster && (before.poster !== after.poster || after.poster === '')) {
       mediaToDelete.push(before.poster);
     }
@@ -332,10 +335,12 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
   } else { // Deleting
 
+      // TODO issue #4241
     if (!!before.banner) {
       mediaToDelete.push(before.banner);
     }
 
+      // TODO issue #4241
     if (!!before.poster) {
       mediaToDelete.push(before.poster);
     }

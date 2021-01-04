@@ -63,12 +63,14 @@ export class UploadWidgetComponent {
 
     if (Array.isArray(media)) {
       // Still Photos (string[]), Documents (HostedMediaWithMetadata[]), Notes & Statements (MovieNote) or OtherVideos (HostedVideo[])
+      // TODO issue #4241
       const index = media.findIndex(ref => typeof ref === 'string' ? ref === path : ref.ref === path);
       media.splice(index, 1);
       return snapshot.ref.update({ [field]: media });
     } else {
       // Logo, profile image, and more (string), Screener (HostedVideo)
       // Soon we will have files of type HostedMediaWithMetadata here too
+      // TODO issue #4241
       const refField = typeof media === 'string' ? field : `${field}.ref`;
       return snapshot.ref.update({ [refField]: '' });
     }

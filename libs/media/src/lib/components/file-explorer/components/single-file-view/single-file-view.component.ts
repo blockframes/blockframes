@@ -85,6 +85,7 @@ export class SingleFileViewComponent implements OnInit {
     } else {
       form = this.activeForm.controls[this.activeDirectory.fileRefField];
     }
+    // TODO issue #4241
     form = isHostedMediaForm(form) ? form : form.controls.ref;
     if (this.activeDirectory.type === 'image') {
       form.get('cropped').setValidators(Validators.requiredTrue);

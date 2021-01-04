@@ -96,6 +96,7 @@ export class MultipleFilesViewComponent implements OnInit {
           const formList = getFormList(form, this.activeDirectory.storagePath);
 
           const index = formList.controls.findIndex(ctrl => {
+            // TODO issue #4241
             if (isHostedMediaForm(ctrl)) {
               const ref = (row as string);
               return ctrl.get('ref').value === ref;
@@ -132,10 +133,12 @@ export class MultipleFilesViewComponent implements OnInit {
   }
 
   public getFileRef(row: HostedMediaWithMetadata | MovieNote | string) {
+    // TODO issue #4241
     return typeof(row) === "string" ? row : row[this.activeDirectory.fileRefField];
   }
 
   public getTitleRef(row: HostedMediaWithMetadata | MovieNote | string) {
+    // TODO issue #4241
     return typeof(row) === "string" ? row : row[this.activeDirectory.docNameField];
   }
 
