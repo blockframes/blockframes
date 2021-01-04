@@ -1802,30 +1802,30 @@
     },
     "campaign": {
       "projectType": "library",
-      "root": "libs/organization/campaign",
-      "sourceRoot": "libs/organization/campaign/src",
+      "root": "libs/campaign",
+      "sourceRoot": "libs/campaign/src",
       "prefix": "campaign",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/organization/campaign/tsconfig.lib.json",
-              "libs/organization/campaign/tsconfig.spec.json"
+              "libs/campaign/tsconfig.lib.json",
+              "libs/campaign/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/organization/campaign/**/*"
+              "!libs/campaign/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/organization/campaign/jest.config.js",
-            "tsConfig": "libs/organization/campaign/tsconfig.spec.json",
+            "jestConfig": "libs/campaign/jest.config.js",
+            "tsConfig": "libs/campaign/tsconfig.spec.json",
             "passWithNoTests": true,
-            "setupFile": "libs/organization/campaign/src/test-setup.ts"
+            "setupFile": "libs/campaign/src/test-setup.ts"
           }
         }
       },
@@ -1939,6 +1939,62 @@
             ],
             "parallel": false,
             "color": true
+          }
+        }
+      }
+    },
+    "rules": {
+      "root": "apps/rules",
+      "sourceRoot": "apps/rules/src",
+      "projectType": "application",
+      "prefix": "rules",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/rules",
+            "main": "apps/rules/src/main.ts",
+            "tsConfig": "apps/rules/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "rules:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/rules/tsconfig.app.json",
+              "apps/rules/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/rules/jest.config.js",
+            "tsConfig": "apps/rules/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
