@@ -28,6 +28,11 @@ describe('Contracts Rules Tests', () => {
         const contractRef = db.doc('contracts/C001');
         await assertSucceeds(contractRef.get());
       });
+
+      test('should not be able to read contract', async () => {
+        const contractRef = db.doc('contracts/C002');
+        await assertFails(contractRef.get());
+      });
     });
 
     describe.skip('Update Contracts', () => {
