@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angula
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { genres as staticGenre } from '@blockframes/utils/static-model';
-import { sortMovieBy } from '@blockframes/utils/helper';
+import { sortMovieBy } from '@blockframes/utils/helpers';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 interface CarouselSection {
