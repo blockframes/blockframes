@@ -46,19 +46,24 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getEventEmailData(event: Partial<EventDocument<EventMeta>> = {}): EventEmailData {
-  const eventStartDate = event.start.toDate();
-  const eventEndDate = event.end.toDate();
-  /**
-   * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
-   * See the doc here : https://date-fns.org/v2.16.1/docs/format
-   */
-  const eventStart = format(eventStartDate, 'Pppp');
-  const eventEnd = format(eventEndDate, 'Pppp');
+export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): EventEmailData {
+  let eventStart = '';
+  let eventEnd = '';
+  if (!!event) {
+    const eventStartDate = event.start.toDate();
+    const eventEndDate = event.end.toDate();
+
+    /**
+     * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
+     * See the doc here : https://date-fns.org/v2.16.1/docs/format
+     */
+    eventStart = format(eventStartDate, 'Pppp');
+    eventEnd = format(eventEndDate, 'Pppp');
+  }
 
   return {
-    id: event.id,
-    title: event.title,
+    id: event?.id || '',
+    title: event?.title || '',
     start: eventStart,
     end: eventEnd
   }

@@ -68,14 +68,17 @@ export function userInvite(
   orgName: string,
   pageURL: string = appUrl.market,
   templateId: string = templateIds.user.credentials.joinOrganization.festival,
-  eventName?: string
+  eventData?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
     orgName,
-    eventName,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`
+    eventName: eventData.title,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end,
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
+    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
   };
   return { to: email, templateId, data };
 }
