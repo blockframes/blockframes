@@ -1,55 +1,8 @@
-.logo {
-  height: 170px;
-  width: 170px;
-  border-radius: 50%;
-}
-
-mat-card-content {
-  margin: 0;
-  width: 100%;
-}
-
-.information {
-  width: 70%;
-  padding-left: 24px;
-
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    li {
-      line-height: 20px;
-    }
-  }
+main {
+  padding: 40px;
 }
 
 .poster {
   height: 75x;
   width: 50px;
-}
-
-.company-logo {
-  height: 100%;
-}
-
-.main-article {
-  width: 45%;
-}
-
-section, main {
-  margin: 40px;
-}
-
-drop-cropper {
-  h3, p.mat-body-2 {
-    margin-bottom: 4px;
-  }
-  p.mat-caption {
-    margin-bottom: 8px;
-  }
-}
-
-mat-card.file-explorer {
-  min-width: 750px;
-  margin: 40px;
 }
