@@ -5,22 +5,45 @@
 } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
+//import { Contract } from '@blockframes/contract/+state';
 
 describe('Contracts Rules Tests', () => {
   const projectId = `ctrules-spec-${Date.now()}`;
   let db: Firestore;
 
-  describe('With User not in org', () => {
+  describe.only('With User not in org', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('test', async () => {});
+    describe('Read Contracts', () => {
+      test('should be able to read contract if party to it', async () => {
+        const contractRef = db.doc('contracts/C001');
+        await assertSucceeds(contractRef.get());
+      });
+
+      test('should be able to read contract if org has permission', async () => {
+        const contractRef = db.doc('contracts/C001');
+        await assertSucceeds(contractRef.get());
+      });
+    });
+
+    describe.skip('Update Contracts', () => {
+      test('should be able to read movie', async () => {
+        const movieRef = db.doc('movies/M001');
+        await assertSucceeds(movieRef.get());
+      });
+
+      test('should be able to read movie distribution rights', async () => {
+        const movieDRRef = db.doc('movies/M001/distributionRights/DR001');
+        await assertSucceeds(movieDRRef.get());
+      });
+    });    
   });
 
-  describe('With User in org', () => {
+  describe.only('With User in org', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
     });
@@ -29,21 +52,12 @@ describe('Contracts Rules Tests', () => {
 
     test('test', async () => {});
   });
+
 });
 
-describe.only('Public Contracts Rules Tests', () => {
+describe.skip('Public Contracts Rules Tests', () => {
   const projectId = `pctrules-spec-${Date.now()}`;
   let db: Firestore;
-
-  describe.skip('With User not in org', () => {
-    beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
-    });
-
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
-
-    test('test', async () => {});
-  });
 
   describe('With User in org', () => {
     beforeAll(async () => {

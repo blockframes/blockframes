@@ -32,6 +32,9 @@ export const testFixture = {
     canCreate: true,
     ownerId: 'O001',
   },
+  'permissions/O001/documentPermissions/C001': {
+    canCreate: true,
+  },
 
   //Orgs
   'orgs/O001': {
@@ -142,6 +145,15 @@ export const testFixture = {
     type: 'cancelEvent',
     fromOrg: { id: 'O001'},
     fromUser: { uid: 'uid-user2' },
+  },
+
+  //Contracts
+  'contracts/C001': {
+    partyIds: ['O001']
+  },
+  'contracts/C002': {
+    id: 'C002',
+    partyIds: []
   },
 
   //Public Contracts
