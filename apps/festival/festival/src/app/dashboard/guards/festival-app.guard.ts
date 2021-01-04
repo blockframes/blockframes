@@ -16,12 +16,12 @@ export class FestivalAppGuard implements CanActivate {
       } else if (org.appAccess.festival.dashboard) {
         return this.router.parseUrl('c/o/dashboard');
       } else {
-        this.snackBar.open('You don\'t have access to this application.', '', { duration: 10000 });
+        this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
         return false;
       }
     } else {
       if (!org.appAccess.festival.dashboard && !org.appAccess.festival.marketplace) {
-        this.snackBar.open('You don\'t have access to this application.', '', { duration: 10000 });
+        this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
         return false;
       }
       return org.appAccess.festival.dashboard;

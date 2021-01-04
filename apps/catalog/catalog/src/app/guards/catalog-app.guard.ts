@@ -18,12 +18,12 @@ export class CatalogAppGuard implements CanActivate {
     const org = this.query.getActive();
     if (isMarketplace) {
       if(!org.appAccess.catalog.marketplace) {
-        this.snackBar.open('You don\'t have access to this application.', '', { duration: 10000 });
+        this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
         return false
       } else this.router.parseUrl('c/o/dashboard');
     } else {
       if(!org.appAccess.catalog.dashboard) {
-        this.snackBar.open('You don\'t have access to this application.', '', { duration: 10000 });
+        this.snackBar.open('You don\'t have access to this application.', '', { duration: 5000 });
         return false
       } else this.router.parseUrl('c/o/marketplace');
     }
