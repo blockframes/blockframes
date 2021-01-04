@@ -8,6 +8,9 @@ import {
   OnInit,
   ChangeDetectorRef,
   OnDestroy,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,7 +34,7 @@ type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
   styleUrls: ['./file-upload.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileUploadComponent implements OnInit, OnDestroy {
+export class FileUploadComponent implements AfterViewInit, OnDestroy {
   /** firestore path */
   @Input() storagePath: string;
   @Input() set form(form: HostedMediaForm) {
@@ -52,6 +55,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
 
   @ContentChild('onReady') onReadyTemplate: TemplateRef<any>;
   @ContentChild('onFile') onFileTemplate: TemplateRef<any>;
+  @ViewChild('fileExplorer') fileExplorer: ElementRef<HTMLInputElement>;
 
   public accept: string[] = [];
   public types: string[] = [];
@@ -67,7 +71,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
   ) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
 
     // show current file when component loads
     if (!!this.form.blobOrFile.value) {
@@ -112,6 +116,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
       newState = 'file';
     } else {
       newState = 'waiting';
+      this.fileExplorer.nativeElement.value = null;
     }
     this.state = newState;
     this.cdr.markForCheck();
@@ -123,14 +128,24 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     if ('item' in files) {
       if (!files.item(0)) {
         this.snackBar.open('No file found', 'close', { duration: 1000 });
-        this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
+        if (!!this.form.oldRef.value) {
+          this.state = 'file';
+        } else {
+          this.state = 'waiting';
+          this.fileExplorer.nativeElement.value = null;
+        }
         return;
       }
       file = files.item(0);
     } else {
       if (!files) {
         this.snackBar.open('No file found', 'close', { duration: 1000 });
-        this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
+        if (!!this.form.oldRef.value) {
+          this.state = 'file';
+        } else {
+          this.state = 'waiting';
+          this.fileExplorer.nativeElement.value = null;
+        }
         return;
       }
       file = files;
@@ -149,6 +164,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     if (!isFileTypeValid) {
       this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 1000 });
       this.state = 'waiting';
+      this.fileExplorer.nativeElement.value = null;
       return;
     }
 
@@ -169,14 +185,12 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     this.form.markAsDirty();
   }
 
-  public delete(fileExplorer: HTMLInputElement) {
+  public delete() {
     this.form.patchValue({
       ref: '',
       blobOrFile: undefined,
       fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
     });
     this.form.markAsDirty();
-
-    fileExplorer.value = null;
   }
 }

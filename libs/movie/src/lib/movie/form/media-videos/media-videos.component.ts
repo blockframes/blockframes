@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { getFileNameFromPath } from '@blockframes/media/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { allowedFiles } from '@blockframes/utils/utils';
+import { hostedVideoTypes } from '@blockframes/utils/static-model/static-model';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
@@ -18,6 +19,8 @@ export class MovieFormMediaVideosComponent implements OnInit {
 
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
+
+  videoTypes = Object.keys(hostedVideoTypes);
 
   constructor(
     private shell: MovieFormShellComponent,
