@@ -40,10 +40,16 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   @Input() buttonText = 'Add';
   @Input() saveButtonText = 'Save'
   @Input() listPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
-  @Input() @boolean autoAdd: boolean = false;
+
+
+  /** Keep the form open after the user has clicked on the add/save button */
+  @Input() @boolean keepFormOpen: boolean = false;
+
+  /** Reverse the list order: the last added element will appear at the top */
   @Input() set reverseList(shouldReverse: boolean) {
     this.reverseList$.next(coerceBooleanProperty(shouldReverse));
   };
+  private reverseList$ = new BehaviorSubject(false);
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -53,7 +59,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   activeIndex: number;
   activeValue: T
 
-  private reverseList$ = new BehaviorSubject(false);
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -63,7 +68,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       this.reverseList$
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
-    )
+    );
 
     this.add();
   }
@@ -76,7 +81,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     return !this.form.length
   }
 
-  // Add a clean form
+  /** Add a clean form */
   add() {
     this.formItem = this.form.createControl();
   }
@@ -92,9 +97,8 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       }
       delete this.formItem;
       this.cdr.markForCheck();
-      
-      // TODO issue #4293
-      if (this.autoAdd) this.add();
+
+      if (this.keepFormOpen) this.add();
     }
   }
 
