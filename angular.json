@@ -40,7 +40,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/ethers/tsconfig.lib.json",
-            "project": "libs/ethers/ng-package.json"
+            "project": "libs/ethers/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -74,7 +75,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/movie/tsconfig.lib.json",
-            "project": "libs/movie/ng-package.json"
+            "project": "libs/movie/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -108,7 +110,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/organization/tsconfig.lib.json",
-            "project": "libs/organization/ng-package.json"
+            "project": "libs/organization/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -175,7 +178,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/utils/tsconfig.lib.json",
-            "project": "libs/utils/ng-package.json"
+            "project": "libs/utils/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -406,7 +410,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/contract/tsconfig.lib.json",
-            "project": "libs/contract/ng-package.json"
+            "project": "libs/contract/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "test": {
@@ -441,7 +446,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/financial-report/tsconfig.lib.json",
-            "project": "libs/financial-report/ng-package.json"
+            "project": "libs/financial-report/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "test": {
@@ -476,7 +482,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/admin/tsconfig.lib.json",
-            "project": "libs/admin/ng-package.json"
+            "project": "libs/admin/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "test": {
@@ -1544,7 +1551,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/invitation/jest.config.js",
-            "tsConfig": "libs/invitation/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/invitation/src/test-setup.ts"
           }
@@ -1579,7 +1585,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/firebase-utils/jest.config.js",
-            "tsConfig": "libs/firebase-utils/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -1735,7 +1740,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/financiers/financiers/jest.config.js",
-            "tsConfig": "apps/financiers/financiers/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "apps/financiers/financiers/src/test-setup.ts"
           }
@@ -1823,7 +1827,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/campaign/jest.config.js",
-            "tsConfig": "libs/campaign/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/campaign/src/test-setup.ts"
           }
@@ -1964,9 +1967,7 @@
               "extractLicenses": true,
               "inspect": false,
               "fileReplacements": [
-                {
-
-                }
+                {}
               ]
             }
           }
@@ -1993,7 +1994,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/rules/jest.config.js",
-            "tsConfig": "apps/rules/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
