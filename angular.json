@@ -1964,9 +1964,7 @@
               "extractLicenses": true,
               "inspect": false,
               "fileReplacements": [
-                {
-
-                }
+                {}
               ]
             }
           }
