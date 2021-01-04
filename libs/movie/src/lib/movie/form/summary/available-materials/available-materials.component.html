@@ -25,6 +25,7 @@
       <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
       <missing-control [control]="language.value" [link]="link">
         <ng-template let-version>
+          {{ version | json}}
           <span>{{ version | versionPipe }}</span>
         </ng-template>
       </missing-control>
