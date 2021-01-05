@@ -370,7 +370,8 @@
                   "with": "env/env.blockframes-demo-1.ts"
                 }
               ]
-            }
+            },
+            "ci": {}
           }
         },
         "serve": {
