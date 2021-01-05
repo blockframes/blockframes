@@ -7,7 +7,7 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
-import { latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
+import { latestAnonDbFilename, loadAdminServices, runShellCommand } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
@@ -65,6 +65,46 @@ export async function prepareForTesting() {
 }
 
 export async function prepareForTestingNew() {
+  console.log('Importing latest anonymized db from CI...')
+  const cmd = 'gcloud firestore import gs://ci-backups-blockframes/LATEST-ANON-DB'
+  console.log('Running command:', cmd)
+  await runShellCommand(cmd)
+  console.log('DB imported!')
+
+  console.info('Syncing users from db...');
+  await syncUsers();
+  console.info('Users synced!');
+
+  const { db, auth, storage, getCI } = loadAdminServices();
+  console.info('Syncing storage with production backup stored in blockframes-ci...');
+  await restoreStorageFromCi(getCI());
+  console.info('Storage synced!');
+
+  console.info('Preparing database & storage by running migrations...');
+  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
+  console.info('Migrations complete!');
+
+  console.info('Cleaning unused DB data...');
+  await cleanDeprecatedData(db, auth);
+  console.info('DB data clean and fresh!');
+
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(storage.bucket(storageBucket));
+  console.info('Storage data clean and fresh!');
+
+  console.info('Generating fixtures...')
+  await generateFixtures()
+  console.info('Fixtures generated in: tools/fixtures/*.json')
+
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs();
+  await upgradeAlgoliaMovies();
+  await upgradeAlgoliaUsers();
+  console.info('Algolia ready for testing!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks();
+  console.info('Watermarks generated!');
 
 }
 
