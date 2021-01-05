@@ -94,7 +94,7 @@
     "@sendgrid/mail": "^6.4.0",
     "@sentry/browser": "^5.5.0",
     "@sentry/node": "^5.5.0",
-    "akita-ng-fire": "^3.1.6",
+    "akita-ng-fire": "^4.1.0",
     "algoliasearch": "^3.33.0",
     "angular-calendar": "^0.28.5",
     "apexcharts": "^3.15.3",
