@@ -193,17 +193,15 @@ export function requestToAttendEventFromUser(
 export function requestToAttendEventFromUserAccepted(
   toUser: PublicUser,
   organizerOrgName: string,
-  eventName: string,
-  eventStartDate: string,
-  eventEndDate: string
+  eventData: EventEmailData,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     userLastName: toUser.lastName,
     organizerOrgName,
-    eventName,
-    eventStartDate,
-    eventEndDate,
+    eventName: eventData.title,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end,
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }

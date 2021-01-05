@@ -10,7 +10,6 @@ import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firest
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
-import { format } from "date-fns";
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -145,9 +144,6 @@ async function onInvitationToAnEventAccepted({
 
   const notifications: NotificationDocument[] = [];
 
-  // @TODO (#2848) forcing to festival since invitations to events are only on this one
-  const appKey: App = 'festival';
-
   if (!!fromUser) {
     const notification = createNotification({
       toUserId: fromUser.uid,
@@ -158,19 +154,13 @@ async function onInvitationToAnEventAccepted({
     if (!!toUser) {
       notification.user = toUser; // The subject that have accepted the invitation
     } else if (!!toOrg) {
+      // @TODO (#2848) forcing to festival since invitations to events are only on this one
+      const appKey: App = 'festival';
       const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
-      const organizerOrgName = orgName(org);
       const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
-      const eventStartDate = event.start.toDate();
-      const eventEndDate = event.end.toDate();
-      /**
-       * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
-       * See the doc here : https://date-fns.org/v2.16.1/docs/format
-       */
-      const eventStart = format(eventStartDate, 'Pppp');
-      const eventEnd = format(eventEndDate, 'Pppp');
+      const eventData: EventEmailData = getEventEmailData(event);
 
-      const templateRequest = requestToAttendEventFromUserAccepted(fromUser, organizerOrgName, event.title, eventStart, eventEnd);
+      const templateRequest = requestToAttendEventFromUserAccepted(fromUser, orgName(org), eventData);
       await sendMailFromTemplate(templateRequest, appKey);
 
       notification.organization = toOrg; // The subject that have accepted the invitation
