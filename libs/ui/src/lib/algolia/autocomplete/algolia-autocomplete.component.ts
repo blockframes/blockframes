@@ -17,7 +17,6 @@ import { Index } from 'algoliasearch';
 
 // Blockframes
 import { AlgoliaIndex, AlgoliaService} from '@blockframes/utils/algolia';
-import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -87,7 +86,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   @Output() selectionChange = new EventEmitter();
 
   // PRIVATE --------------------------
-
   private sub: Subscription;
 
   /** Holds the results of algolia */
@@ -128,27 +126,11 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     );
   }
 
-
   public selected(result: any) {
     this.selectionChange.emit(result);
     if (this.resetInput) {
       this.control.reset();
     }
-  }
-
-  /**
-   * This function is used internally by the MatAutocomplete to decide
-   * what to display in the input field when an option has been selected
-   */
-  public displayFn() {
-    if (this.resetInput) {
-      return ''
-    }
-    const value = this.lastValue$.getValue();
-    if (value) {
-      return getDeepValue(value[0], this.keyToDisplay);
-    }
-    return this.control.value;
   }
 
   ngOnDestroy() {

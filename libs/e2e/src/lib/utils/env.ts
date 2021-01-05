@@ -5,20 +5,4 @@
 //
 // ***********************************************************
 
-const SEC = 1000;
-
-// Timeout in seconds
-export enum TO {
-  VSLOW_UPDATE = 150 * SEC,
-  PAGE_LOAD = 60 * SEC,
-  PAGE_ELEMENT = 3 * SEC,
-  SLOW_OP = 10 * SEC,
-  FAST_OP = 3 * SEC,
-  FAST_WAIT = 3 * SEC,
-  WAIT_1SEC = 1 * SEC,
-  ONE_SEC = 1 * SEC,
-  THREE_SEC = 3 * SEC,
-  FIFTEEN_SEC = 15 * SEC,
-  THIRTY_SEC = 30 * SEC,
-  HALF_SEC = 0.5 * SEC,
-}
+export const SEC = 1000;

@@ -11,6 +11,7 @@ import { StatusModule } from '@blockframes/invitation/pipes/status.pipe';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { InvitationFormUserModule } from '@blockframes/invitation/form/user/user.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -41,6 +42,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     GuestListModule,
     AppBarModule,
     InvitationFormUserModule,
+    ConfirmModule,
 
     // Material
     MatDividerModule,

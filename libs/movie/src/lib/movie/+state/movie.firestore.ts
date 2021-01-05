@@ -175,7 +175,6 @@ export interface BoxOffice {
 }
 
 export interface MovieLanguageSpecification {
-  original: boolean; // @TODO (#4545) this should be removed ( use isOriginalVersionAvailable instead )
   dubbed: boolean;
   subtitle: boolean;
   caption: boolean;

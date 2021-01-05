@@ -7,7 +7,7 @@
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
         {{ value | toLabel: scope }}
-        <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
+        <mat-icon matChipRemove svgIcon="cancel" *ngIf="removable"></mat-icon>
       </mat-chip>
     </ng-container>
     <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"

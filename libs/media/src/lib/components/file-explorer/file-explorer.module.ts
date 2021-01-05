@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FileExplorerComponent } from './file-explorer.component';
 
 // Blockframes
-import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { FileDialogModule } from '@blockframes/media/components/dialog/file/file.module';
 import { ImageDialogModule } from '@blockframes/media/components/dialog/image/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
@@ -30,7 +29,6 @@ import { MatBadgeModule } from '@angular/material/badge';
     FlexLayoutModule,
 
     // Blockframes
-    ConfirmModule,
     FileDialogModule,
     ImageDialogModule,
     TableFilterModule,

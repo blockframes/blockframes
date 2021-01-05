@@ -40,7 +40,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/ethers/tsconfig.lib.json",
-            "project": "libs/ethers/ng-package.json"
+            "project": "libs/ethers/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -74,7 +75,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/movie/tsconfig.lib.json",
-            "project": "libs/movie/ng-package.json"
+            "project": "libs/movie/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -108,7 +110,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/organization/tsconfig.lib.json",
-            "project": "libs/organization/ng-package.json"
+            "project": "libs/organization/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -175,7 +178,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/utils/tsconfig.lib.json",
-            "project": "libs/utils/ng-package.json"
+            "project": "libs/utils/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "lint": {
@@ -366,7 +370,8 @@
                   "with": "env/env.blockframes-demo-1.ts"
                 }
               ]
-            }
+            },
+            "ci": {}
           }
         },
         "serve": {
@@ -406,7 +411,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/contract/tsconfig.lib.json",
-            "project": "libs/contract/ng-package.json"
+            "project": "libs/contract/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "test": {
@@ -441,7 +447,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/financial-report/tsconfig.lib.json",
-            "project": "libs/financial-report/ng-package.json"
+            "project": "libs/financial-report/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "test": {
@@ -476,7 +483,8 @@
           "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/admin/tsconfig.lib.json",
-            "project": "libs/admin/ng-package.json"
+            "project": "libs/admin/ng-package.json",
+            "buildableProjectDepsInPackageJsonType": "dependencies"
           }
         },
         "test": {
@@ -1544,7 +1552,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/invitation/jest.config.js",
-            "tsConfig": "libs/invitation/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/invitation/src/test-setup.ts"
           }
@@ -1579,7 +1586,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/firebase-utils/jest.config.js",
-            "tsConfig": "libs/firebase-utils/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -1735,7 +1741,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/financiers/financiers/jest.config.js",
-            "tsConfig": "apps/financiers/financiers/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "apps/financiers/financiers/src/test-setup.ts"
           }
@@ -1802,30 +1807,29 @@
     },
     "campaign": {
       "projectType": "library",
-      "root": "libs/organization/campaign",
-      "sourceRoot": "libs/organization/campaign/src",
+      "root": "libs/campaign",
+      "sourceRoot": "libs/campaign/src",
       "prefix": "campaign",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/organization/campaign/tsconfig.lib.json",
-              "libs/organization/campaign/tsconfig.spec.json"
+              "libs/campaign/tsconfig.lib.json",
+              "libs/campaign/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/organization/campaign/**/*"
+              "!libs/campaign/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/organization/campaign/jest.config.js",
-            "tsConfig": "libs/organization/campaign/tsconfig.spec.json",
+            "jestConfig": "libs/campaign/jest.config.js",
             "passWithNoTests": true,
-            "setupFile": "libs/organization/campaign/src/test-setup.ts"
+            "setupFile": "libs/campaign/src/test-setup.ts"
           }
         }
       },
@@ -1897,7 +1901,8 @@
                   "maximumError": "10kb"
                 }
               ]
-            }
+            },
+            "ci": {}
           }
         },
         "serve": {
@@ -1939,6 +1944,59 @@
             ],
             "parallel": false,
             "color": true
+          }
+        }
+      }
+    },
+    "rules": {
+      "root": "apps/rules",
+      "sourceRoot": "apps/rules/src",
+      "projectType": "application",
+      "prefix": "rules",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/rules",
+            "main": "apps/rules/src/main.ts",
+            "tsConfig": "apps/rules/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {}
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "rules:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/rules/tsconfig.app.json",
+              "apps/rules/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/rules/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

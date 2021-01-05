@@ -7,7 +7,7 @@
       <h2>Invite people</h2>
       <mat-card>
         <mat-card-content fxLayout="column">
-          <invitation-form-user [docId]="eventId" [ownerId]="event.ownerId"></invitation-form-user>
+          <invitation-form-user [eventId]="eventId" [ownerId]="event.ownerId"></invitation-form-user>
         </mat-card-content>
       </mat-card>
 
@@ -31,7 +31,7 @@
             </article>
             <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
               <span>Admin edit </span>
-              <mat-icon svgIcon="pencil"></mat-icon>
+              <mat-icon svgIcon="edit"></mat-icon>
             </a>
           </mat-card-content>
         </mat-card>

@@ -6,7 +6,7 @@ import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { EmailRecipient } from '@blockframes/utils/emails/utils';
+import { EmailRecipient, EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
@@ -68,14 +68,17 @@ export function userInvite(
   orgName: string,
   pageURL: string = appUrl.market,
   templateId: string = templateIds.user.credentials.joinOrganization.festival,
-  eventName?: string
+  eventData?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
     orgName,
-    eventName,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`
+    eventName: eventData.title || '',
+    eventStartDate: eventData.start || '',
+    eventEndDate: eventData.end || '',
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
+    sessionURL: eventData.id ? `${pageURL}/c/o/marketplace/event/${eventData.id}` : ''
   };
   return { to: email, templateId, data };
 }
@@ -117,8 +120,19 @@ export function userJoinedAnOrganization(userEmail: string, url: string = appUrl
 }
 
 /** Send email to org admin to inform him that a new user has joined his org */
-export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailTemplateRequest {
+export function userJoinedYourOrganization(
+  orgAdminEmail: string,
+  adminFirstName: string,
+  orgDenomination: string,
+  userFirstName: string,
+  userLastName: string,
+  userEmail: string):
+EmailTemplateRequest {
   const data = {
+    adminFirstName,
+    orgDenomination,
+    userFirstName,
+    userLastName,
     userEmail
   };
   return { to: orgAdminEmail, templateId: templateIds.org.memberAdded, data };
@@ -140,15 +154,18 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
 export function invitationToEventFromOrg(
   recipient: EmailRecipient,
   orgDenomination: string,
-  eventId: string,
+  eventData: EventEmailData,
   link: string,
-  url: string = appUrl.market
+  url: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: recipient.name,
     orgName: orgDenomination,
-    eventName: eventId,
-    pageURL: `${url}/${link}`
+    eventName: eventData.title,
+    pageURL: `${url}/${link}`,
+    sessionURL: `${url}/c/o/marketplace/event/${eventData.id}`,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
@@ -244,6 +261,7 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
 
     User informations
 
+    app: ${information.app}
     First name: ${information.firstName}
     Last name: ${information.lastName}
     Email: ${information.email}

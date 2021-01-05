@@ -5,7 +5,7 @@
     <h6>
       Release
       <a mat-icon-button [routerLink]="link" fragment="release">
-        <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+        <mat-icon svgIcon="edit" color="primary"></mat-icon>
       </a>
     </h6>
     <ul>
@@ -35,7 +35,7 @@
     <h6>
       Box Office
       <a mat-icon-button [routerLink]="link" fragment="box-office">
-        <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+        <mat-icon svgIcon="edit" color="primary"></mat-icon>
       </a>
     </h6>
     <ul>
@@ -76,7 +76,7 @@
     <h6>
       Rating
       <a mat-icon-button [routerLink]="link" fragment="rating">
-        <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+        <mat-icon svgIcon="edit" color="primary"></mat-icon>
       </a>
     </h6>
     <ul>
@@ -103,7 +103,7 @@
   <h6>
     Budget Range
     <a mat-icon-button [routerLink]="link" fragment="budget-range">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range" class="missing-margin">
@@ -116,7 +116,7 @@
   <h6>
     Qualification{ movie.certifications.value.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="qualifications">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <missing-control [control]="movie.certifications" [link]="link" fragments="qualifications" class="missing-margin">
@@ -130,7 +130,7 @@
   <h6>
     Positioning
     <a mat-icon-button [routerLink]="link" fragment="audience-goals">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>

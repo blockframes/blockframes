@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { LandingPage } from '../../support/pages/landing';
-import { HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../../support/pages/marketplace';
+import { HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage } from '../../support/pages/marketplace';
 import { User, Availabilities } from '@blockframes/e2e/utils/type';
 import { AuthLoginPage } from '@blockframes/e2e/pages/auth';
 
@@ -69,8 +69,5 @@ describe('test select movie from catalog', () => {
     const p7: SelectionPage = p6.clickAddDistribution();
     p7.fillOffer();
     p7.selectCurrency();
-    // send offer and go back to homepage
-    const p8: FeedbackPage = p7.clickSend();
-    p8.clickRedirect();
   });
 });

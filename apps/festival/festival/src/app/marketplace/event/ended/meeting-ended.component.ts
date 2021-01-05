@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 
 import { UserService } from '@blockframes/user/+state';
 import { Event, EventQuery } from '@blockframes/event/+state';
@@ -31,6 +31,7 @@ export class MeetingEndedComponent implements OnInit {
     this.duration = Date.now() - localSessionStart;
     this.event$ = this.eventQuery.selectActive();
     this.attendees$ = this.event$.pipe(
+      filter(event => Object.keys(event.meta.attendees).length > 0),
       switchMap(event => Promise.all(
         Object.keys(event.meta.attendees).map(uid => this.userService.getUser(uid))
       )),

@@ -1,4 +1,4 @@
-<chips-autocomplete scope="languages" [form]="selectedLanguages">
+<chips-autocomplete scope="languages" [form]="selectedLanguages" [withoutValues]="['all']">
   <mat-label>Language & Version</mat-label>
 </chips-autocomplete>
 <static-check-boxes fxLayout="row wrap" fxLayoutGap="8px" scope="movieLanguageTypes" [form]="versions">

@@ -334,10 +334,10 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
       return (
         (existingIds.includes(invitation.fromOrg?.id) &&
           existingIds.includes(invitation.toUser?.uid) &&
-          existingIds.includes(invitation.docId)) ||
+          existingIds.includes(invitation.eventId)) ||
         (existingIds.includes(invitation.fromUser?.uid) &&
           existingIds.includes(invitation.toOrg?.id) &&
-          existingIds.includes(invitation.docId))
+          existingIds.includes(invitation.eventId))
       );
     case 'joinOrganization':
       // Cleaning not pending invitations older than n days

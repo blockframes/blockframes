@@ -52,7 +52,7 @@
               <input matInput type="text" disabled [value]="link">
             </mat-form-field>
             <button mat-icon-button [cdkCopyToClipboard]="link" matTooltip="Copy the link">
-              <mat-icon svgIcon="copy"></mat-icon>
+              <mat-icon svgIcon="file_copy"></mat-icon>
             </button>
           </div>
           <mat-form-field appearance="outline">
@@ -99,7 +99,7 @@
                 <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
                 <div mat-line>{{file | filePath: ' > ' | async}}</div>
                 <button mat-icon-button (click)="removeSelectedFile(i, $event)">
-                  <mat-icon svgIcon="trash" color="primary"></mat-icon>
+                  <mat-icon svgIcon="delete" color="primary"></mat-icon>
                 </button>
               </mat-list-item>
             </mat-list>

@@ -3,12 +3,13 @@
   <h6>
     Logline
     <a mat-icon-button [routerLink]="link" fragment="logline">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <li>
-      <missing-control test-id="logline" [control]="movie.get('logline')" [link]="link" fragment="logline"></missing-control>
+      <missing-control test-id="logline" [control]="movie.get('logline')" [link]="link" fragment="logline">
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -18,12 +19,13 @@
   <h6>
     Synopsis
     <a mat-icon-button [routerLink]="link" fragment="synopsis">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <li>
-      <missing-control test-id="synopsis" [control]="movie.get('synopsis')" [link]="link" fragment="synopsis"></missing-control>
+      <missing-control test-id="synopsis" [control]="movie.get('synopsis')" [link]="link" fragment="synopsis">
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -33,12 +35,13 @@
   <h6>
     Key Assets
     <a mat-icon-button [routerLink]="link" fragment="key-assets">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <li>
-      <missing-control test-id="key-assets" [control]="movie.get('keyAssets')" [link]="link" fragment="key-assets"></missing-control>
+      <missing-control test-id="key-assets" [control]="movie.get('keyAssets')" [link]="link" fragment="key-assets">
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -48,16 +51,14 @@
   <h6>
     Keywords
     <a mat-icon-button [routerLink]="link" fragment="keywords">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <li>
       <missing-control test-id="keyword-summary" [control]="movie.get('keywords')" [link]="link" fragment="keywords">
         <ng-template let-keywords>
-          <ng-container *ngFor="let keyword of keywords; let last = last">
-            <span>{{ keyword | titlecase }}{{ last ? '' : ', '}}</span>
-          </ng-container>
+          <span>{{ keywords.join(', ') }}</span>
         </ng-template>
       </missing-control>
     </li>

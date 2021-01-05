@@ -7,6 +7,7 @@ import { PublicOrganization } from '@blockframes/organization/+state/organizatio
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { BehaviorStore } from '@blockframes/utils/helpers';
 
+
 @Component({
   selector: 'invitation-item',
   templateUrl: './item.component.html',
@@ -28,8 +29,9 @@ export class ItemComponent {
     } else if (!!invitation.fromOrg) {
       this.fromOrg.value = invitation.fromOrg
 
-      this.eventService.getValue(invitation.docId).then(event => {
+      this.eventService.getValue(invitation.eventId).then(event => {
         if (event.type === 'meeting') {
+          this.eventType = 'meeting';
           this.userService.getValue(event.meta.organizerId as string).then(user => {
             this.fromUser.value = user;
           })
@@ -42,6 +44,7 @@ export class ItemComponent {
 
   fromOrg = new BehaviorStore<PublicOrganization>(undefined);
   fromUser = new BehaviorStore<PublicUser>(undefined);
+  eventType: string = 'screening';
 
   constructor(
     private invitationService: InvitationService,
@@ -53,13 +56,18 @@ export class ItemComponent {
   get eventLink() {
     if (this._invitation.type === 'attendEvent') {
       if (this._invitation.mode === 'request') {
-        return `/c/o/dashboard/event/${this._invitation.docId}/edit`;
+        return `/c/o/dashboard/event/${this._invitation.eventId}/edit`;
       } else {
-        return `/c/o/marketplace/event/${this._invitation.docId}`;
+        if (this.eventType === 'meeting') {
+          return [`/c/o/marketplace/event`, this._invitation.eventId, 'lobby'];
+        }
+        else {
+          return [`/c/o/marketplace/event`, this._invitation.eventId, 'session'];
+        }
       }
     } else if (this._invitation.type === 'joinOrganization') {
       const orgId = this._invitation.fromOrg ? this._invitation.fromOrg.id : this._invitation.toOrg.id;
-      return `/c/o/organization/${orgId}/view/members`;  
+      return `/c/o/organization/${orgId}/view/members`;
     }
   }
 

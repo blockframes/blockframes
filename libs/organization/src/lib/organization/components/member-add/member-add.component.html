@@ -6,7 +6,7 @@
     <mat-chip-list #chipList aria-label="email selection">
       <mat-chip *ngFor="let email of form.value; let i = index" removable (removed)="form.removeAt(i)">
         <span>{{email}}</span>
-        <mat-icon svgIcon="close" matChipRemove></mat-icon>
+        <mat-icon svgIcon="cancel" matChipRemove></mat-icon>
       </mat-chip>
       <input [formControl]="emailForm" placeholder="Add an email"
              [matChipInputFor]="chipList"

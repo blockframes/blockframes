@@ -14,12 +14,11 @@
       autocorrect="off"
       spellcheck="false"
     />
-    <mat-icon matSuffix svgIcon="cross" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
+    <mat-icon matSuffix svgIcon="close" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
     <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()" class="pointer"></mat-icon>
   </mat-form-field>
   <mat-autocomplete
     #auto="matAutocomplete"
-    [displayWith]="displayFn.bind(this)"
   >
     <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 
@@ -47,10 +46,9 @@
       autocorrect="off"
       spellcheck="false"
     />
-    <mat-icon matSuffix svgIcon="cross" *ngIf="clearable && control.value" (click)="control.reset()" class="pointer"></mat-icon>
+    <mat-icon matSuffix svgIcon="close" *ngIf="clearable && control.value" (click)="control.reset()" class="pointer"></mat-icon>
     <mat-autocomplete
       #auto="matAutocomplete"
-      [displayWith]="displayFn.bind(this)"
     >
       <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (click)="selected(result)">
 

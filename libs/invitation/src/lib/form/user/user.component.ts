@@ -9,7 +9,7 @@ import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: '[docId] invitation-form-user',
+  selector: '[eventId] invitation-form-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   animations: [scaleIn],
@@ -21,7 +21,7 @@ export class UserComponent implements OnInit {
    * Id of the document the invitations will refer to.
    * This can be an Organization or an Event for example.
    */
-  @Input() docId: string;
+  @Input() eventId: string;
 
   @Input() invitations: Invitation[] = [];
 
@@ -32,7 +32,7 @@ export class UserComponent implements OnInit {
   @Input() ownerId: string;
 
   /**
-   * Maximum number of persons that can be invited for a specific `docId`.
+   * Maximum number of persons that can be invited for a specific `eventId`.
    * This limit also take into account the previously sent invitations.
    * The limit input is a _maximum_, it can be reached but not passed.
    *
@@ -56,7 +56,7 @@ export class UserComponent implements OnInit {
 
     this.hasLimit = this.limit !== Infinity;
 
-    const existingInvitationNumber$ = this.invitationQuery.selectAll({filterBy: invitation => invitation.docId === this.docId}).pipe(
+    const existingInvitationNumber$ = this.invitationQuery.selectAll({filterBy: invitation => invitation.eventId === this.eventId}).pipe(
       map(invitations => invitations.length)
     );
     const inFormInvitationNumber$ = this.form.valueChanges.pipe(
@@ -80,7 +80,7 @@ export class UserComponent implements OnInit {
       this.form.reset([]);
       this.sending.next(true);
       const org = this.ownerId ? await this.orgService.getValue(this.ownerId) : undefined;
-      await this.invitationService.invite('user', emails).from('org', org).to('attendEvent', this.docId);
+      await this.invitationService.invite('user', emails).from('org', org).to('attendEvent', this.eventId);
       this.sending.next(false);
     }
   }

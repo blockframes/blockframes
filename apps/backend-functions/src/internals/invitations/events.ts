@@ -7,10 +7,9 @@ import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
-import { EmailRecipient } from "@blockframes/utils/emails/utils";
+import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
-
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -32,17 +31,17 @@ async function onInvitationToAnEventCreate({
   fromUser,
   fromOrg,
   mode,
-  docId
+  eventId
 }: InvitationDocument) {
-  if (!docId) {
-    console.log('docId is not defined');
+  if (!eventId) {
+    console.log('eventId is not defined');
     return;
   }
 
   // Fetch event and verify if it exists
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${docId}`);
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
   if (!event) {
-    throw new Error(`Event ${docId} doesn't exist !`);
+    throw new Error(`Event ${eventId} doesn't exist !`);
   }
 
   if (mode === 'request' && event?.isPrivate === false) {
@@ -84,12 +83,13 @@ async function onInvitationToAnEventCreate({
     const senderName = orgName(org);
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
+    const eventEmailData: EventEmailData = getEventEmailData(event)
 
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => {
-          console.log(`Sending invitation email for an event (${docId}) from ${senderName} to : ${recipient.email}`);
-          const templateInvitation = invitationToEventFromOrg(recipient, senderName, event.title, link, urlToUse);
+          console.log(`Sending invitation email for an event (${eventId}) from ${senderName} to : ${recipient.email}`);
+          const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, appKey);
         }))
       case 'request':
@@ -113,7 +113,7 @@ async function onInvitationToAnEventCreate({
         const notification = createNotification({
           toUserId: fromUser.uid,
           user: fromUser,
-          docId,
+          docId: eventId,
           type: 'requestToAttendEventSent'
         });
 
@@ -121,7 +121,7 @@ async function onInvitationToAnEventCreate({
 
         return Promise.all(recipients.map(recipient => {
           const userName = `${fromUser.firstName} ${fromUser.lastName}`
-          console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
+          console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient.email}`);
           const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, appKey);
         }))
@@ -139,7 +139,7 @@ async function onInvitationToAnEventAccepted({
   fromOrg,
   toUser,
   toOrg,
-  docId,
+  eventId
 }: InvitationDocument) {
 
   const notifications: NotificationDocument[] = [];
@@ -147,7 +147,7 @@ async function onInvitationToAnEventAccepted({
   if (!!fromUser) {
     const notification = createNotification({
       toUserId: fromUser.uid,
-      docId,
+      docId: eventId,
       type: 'invitationToAttendEventAccepted'
     });
 
@@ -165,7 +165,7 @@ async function onInvitationToAnEventAccepted({
     adminIds.forEach(toUserId => {
       const notification = createNotification({
         toUserId,
-        docId,
+        docId: eventId,
         type: 'invitationToAttendEventAccepted'
       });
 
@@ -193,7 +193,7 @@ async function onInvitationToAnEventRejected({
   fromOrg,
   toUser,
   toOrg,
-  docId,
+  eventId,
 }: InvitationDocument) {
 
   const notifications: NotificationDocument[] = [];
@@ -201,7 +201,7 @@ async function onInvitationToAnEventRejected({
   if (!!fromUser) {
     const notification = createNotification({
       toUserId: fromUser.uid,
-      docId,
+      docId: eventId,
       type: 'invitationToAttendEventDeclined'
     });
 
@@ -219,7 +219,7 @@ async function onInvitationToAnEventRejected({
     adminIds.forEach(toUserId => {
       const notification = createNotification({
         toUserId,
-        docId,
+        docId: eventId,
         type: 'invitationToAttendEventDeclined'
       });
 
@@ -266,7 +266,7 @@ export async function createNotificationsForEventsToStart() {
 
   /*const notification = createNotification({
     toUserId: toUser.uid,
-    docId,
+    eventId,
     type: 'eventIsAboutToStart''
   });*/
 
@@ -290,14 +290,14 @@ export async function isUserInvitedToEvent(userId: string, eventId: string) {
 
   const acceptedInvitations = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('docId', '==', eventId)
+    .where('eventId', '==', eventId)
     .where('toUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'invitation');
 
   const acceptedRequests = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('docId', '==', eventId)
+    .where('eventId', '==', eventId)
     .where('fromUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'request');

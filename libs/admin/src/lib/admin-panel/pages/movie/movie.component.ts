@@ -83,10 +83,16 @@ export class MovieComponent implements OnInit {
       return;
     }
 
-    this.movie.storeConfig.status = this.movieForm.get('storeStatus').value;
-    this.movie.storeConfig.storeType = this.movieForm.get('storeType').value;
-    this.movie.productionStatus = this.movieForm.get('productionStatus').value;
-    this.movie.internalRef = this.movieForm.get('internalRef').value;
+    this.movie = {
+      ...this.movie,
+      storeConfig: {
+        ...this.movie.storeConfig,
+        status: this.movieForm.get('storeStatus').value,
+        storeType: this.movieForm.get('storeType').value
+      },
+      productionStatus: this.movieForm.get('productionStatus').value,
+      internalRef: this.movieForm.get('internalRef').value
+    }
 
     const hasCampaign = await this.campaignService.getValue(this.movieId);
 
@@ -141,7 +147,7 @@ export class MovieComponent implements OnInit {
 
   /**
    * Used to see what will be deleted before actual removal
-   * @param movie 
+   * @param movie
    */
   private async simulateDeletion(movie: Movie) {
     const output: string[] = [];
@@ -159,7 +165,7 @@ export class MovieComponent implements OnInit {
 
     const eventIds = events.map(e => e.id);
 
-    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('docId', '==', e)));
+    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('eventId', '==', e)));
     const invitations = await Promise.all(invitationsPromises);
     const invitationsCount = invitations.flat().length;
 
