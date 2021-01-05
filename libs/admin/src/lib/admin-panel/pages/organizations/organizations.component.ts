@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
-import { appName } from '@blockframes/utils/apps';
+import { appName, modules } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organizations',
@@ -81,10 +81,11 @@ export class OrganizationsComponent implements OnInit {
         activity: !! r.activity ? r.activity : '--',
       }
 
-      Object.keys(r.appAccess).forEach(a => {
-        row[`${appName[a]} - dashboard`] = r.appAccess[a].dashboard? 'true' : 'false',
-        row[`${appName[a]} - marketplace`] = r.appAccess[a].dashboard? 'true' : 'false'
-      })
+      for (const app in r.appAccess) {
+        for (const module of modules) {
+          row[`${appName[app]} - ${module}`] = r.appAccess[app][module] ? 'true' : 'false';
+        }
+      }
 
       return row;
     })
