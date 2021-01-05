@@ -69,7 +69,6 @@ export function toDate(date: firestore.Timestamp | Date): Date {
  * @example item = movie, key = 'budget.totalBudget'
  */
 export function getValue(item: any, key: string) {
-  console.log(item, key)
   const path = key.split('.');
   for (let i = 0; i < path.length; i++) {
     item = item?.[path[i]];
