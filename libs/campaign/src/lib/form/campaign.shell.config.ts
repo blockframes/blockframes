@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
-import { FormSaveOptions, FormShellConfig } from '@blockframes/movie/form/shell/shell.component';
+import { FormShellConfig } from '@blockframes/movie/form/shell/shell.component';
 import { CampaignControls, CampaignForm } from './form';
 import { Campaign, CampaignService } from '../+state';
 import { MediaService, extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state';
@@ -27,7 +27,7 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
     return [sub];
   }
 
-  async onSave(options: FormSaveOptions): Promise<any> {
+  async onSave(publishing: boolean): Promise<any> {
     const id: string = this.route.getParams('movieId');
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);

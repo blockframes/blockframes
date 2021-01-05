@@ -2,7 +2,8 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { MovieFormShellComponent, findInvalidControls } from '@blockframes/movie/form/shell/shell.component';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -32,18 +33,18 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.missingFields = findInvalidControls(this.form)
     this.subscription = this.form.valueChanges.subscribe(() => this.missingFields = findInvalidControls(this.form));
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
   public async submit() {
     if (this.form.valid) {
-      await this.shell.update({ publishing: true });
+      await this.shell.layout.update(true);
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         this.router.navigate(['c/o/dashboard/title', this.query.getActiveId()])

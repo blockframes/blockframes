@@ -3,13 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { TunnelLayoutComponent } from './layout.component';
+import { TunnelExitConfirmDirective, TunnelLayoutComponent } from './layout.component';
 import { TunnelNavComponent, StepActivePipe } from './nav/nav.component';
 import { TunnelStepStatComponent } from './step-stat/step-stat.component';
-import { TunnelConfirmComponent } from './confirm/confirm.component';
 import { UploadWidgetModule } from '@blockframes/media/components/upload/widget/upload-widget.module';
-
-import { TunnelExitModule } from '../exit/exit.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -24,13 +21,21 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent, StepActivePipe],
-  exports: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent],
+  declarations: [
+    TunnelLayoutComponent,
+    TunnelNavComponent,
+    TunnelStepStatComponent,
+    StepActivePipe,
+    TunnelExitConfirmDirective],
+  exports: [
+    TunnelLayoutComponent,
+    TunnelNavComponent,
+    TunnelStepStatComponent,
+    TunnelExitConfirmDirective],
   imports: [
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    TunnelExitModule,
     UploadWidgetModule,
     // Material
     MatToolbarModule,

@@ -2,8 +2,8 @@
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <tunnel-step-stat></tunnel-step-stat>
     <app-logo></app-logo>
-    <button test-id="tunnel-step-save" mat-stroked-button color="primary" (click)="save()">
-      <mat-icon svgIcon="save"></mat-icon>
+    <button test-id="tunnel-step-save" mat-stroked-button color="primary" (click)="layout.save()">
+      <mat-icon svgIcon="floppy"></mat-icon>
       <span>Save</span>
     </button>
   </header>
@@ -11,4 +11,8 @@
   <aside>
     <tunnel-nav [steps]="steps$ | async"></tunnel-nav>
   </aside>
+  <ng-template #confirmExit>
+    <h1>Hey</h1>
+    <p>Test</p>
+  </ng-template>
 </tunnel-layout>

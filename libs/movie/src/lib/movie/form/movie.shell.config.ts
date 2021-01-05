@@ -6,7 +6,7 @@ import { mergeDeep } from "@blockframes/utils/helpers";
 import { ProductionStatus } from "@blockframes/utils/static-model";
 import { MovieControl, MovieForm } from "./movie.form";
 import { Movie, MoviePromotionalElements, MovieQuery, MovieService } from "../+state";
-import { FormShellConfig, FormSaveOptions } from './shell/shell.component';
+import { FormShellConfig } from './shell/shell.component';
 import { switchMap, startWith, filter } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
@@ -76,7 +76,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     return [onMovieChanges, onStatusChanges];
   }
 
-  async onSave({ publishing }: FormSaveOptions): Promise<any> {
+  async onSave(publishing: boolean): Promise<any> {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     const base = this.query.getActive();
     const movie = mergeDeep(base, documentToUpdate);

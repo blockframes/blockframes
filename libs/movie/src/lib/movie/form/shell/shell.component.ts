@@ -1,18 +1,13 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { FormArray, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
-import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
-
-// Material
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
 
 // RxJs
-import { switchMap, map, startWith, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { Observable, of, Subscription, combineLatest } from 'rxjs';
 import { ProductionStatus } from '@blockframes/utils/static-model';
 import { EntityControl, FormEntity } from '@blockframes/utils/form';
@@ -110,14 +105,10 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   })
 }
 
-export interface FormSaveOptions {
-  publishing: boolean;
-}
-
 export interface FormShellConfig<Control extends EntityControl<Entity>, Entity> {
   form: FormEntity<Control, Entity>;
   onInit(): Observable<any>[];
-  onSave(options: FormSaveOptions): Promise<any>
+  onSave(publishing: boolean): Promise<any>
 }
 
 export interface ShellConfig {
@@ -134,6 +125,7 @@ export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form manage
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private sub: Subscription;
   steps$: Observable<TunnelStep[]>;
   exitRoute: string;
@@ -142,8 +134,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private query: MovieQuery,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
     private route: RouterQuery,
     private cdr: ChangeDetectorRef
   ) { }
@@ -151,16 +141,16 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ngOnInit() {
     const subs: Observable<any>[] = Object.values(this.configs).map(config => config.onInit()).flat();
     this.sub = combineLatest(subs).subscribe(() => this.cdr.markForCheck());
+    this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
+  }
+
+  ngAfterViewInit() {
     const appSteps = this.route.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');
     this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(
       startWith(movieForm.get('productionStatus').value),
       map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps))
     );
-    this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
-  }
-
-  ngAfterViewInit() {
     const routerSub = this.route.selectFragment().subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
       el?.scrollIntoView({
@@ -191,68 +181,4 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }).observe(this.doc.documentElement, { childList: true, subtree: true });
     });
   }
-
-  /** Update the movie. Used by summaries */
-  public async update(options: FormSaveOptions) {
-    if (options.publishing) {
-      for (const name in this.configs) {
-        const form: FormEntity<any> = this.getForm(name as any);
-        if (form.invalid) {
-          const fields = findInvalidControls(form);
-          throw new Error(`Form "${name}" should be valid before publishing. Invalid fields are: ${fields.join()}`);
-        }
-      }
-    }
-    for (const name in this.configs) {
-      await this.configs[name].onSave(options);
-    }
-  }
-
-  /** Save the form and display feedback to user */
-  public async save() {
-    await this.update({ publishing: false });
-    await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
-    return true;
-  }
-
-  confirmExit() {
-    const isPristine = Object.values(this.configs).every(config => config.form.pristine);
-    if (isPristine) {
-      return of(true);
-    }
-    const dialogRef = this.dialog.open(TunnelConfirmComponent, {
-      width: '80%',
-      data: {
-        title: 'You are going to leave the Movie Form.',
-        subtitle: 'Pay attention, if you leave now your changes will not be saved.'
-      }
-    });
-    return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => {
-        /* Undefined means, user clicked on the backdrop, meaning just close the modal */
-        if (typeof shouldSave === 'undefined') {
-          return of(false)
-        }
-        return shouldSave ? this.save() : of(true)
-      })
-    );
-  }
-}
-
-/* Utils function to get the list of invalid form. Not used yet, but could be useful later */
-export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
-  const recursiveFunc = (form: FormGroup | FormArray) => {
-    const fields = [];
-    for (const field in form.controls) {
-      const control = form.get(field);
-      if (control.invalid) {
-        fields.push(field);
-      }
-      if (control instanceof FormArray || control instanceof FormGroup) {
-        fields.concat(recursiveFunc(control));
-      }
-    }
-    return fields;
-  }
-  return recursiveFunc(formToInvestigate);
 }

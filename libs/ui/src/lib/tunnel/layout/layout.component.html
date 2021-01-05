@@ -5,7 +5,10 @@
     </button>
   </ng-container>
   <ng-content select="header, [tunnel-header]"></ng-content>
-  <tunnel-exit [exitRedirect]="exitRedirect" askForConfirmation></tunnel-exit>
+  <a mat-icon-button (click)="redirect()">
+    <mat-icon svgIcon="cross"></mat-icon>
+  </a>
+
 </mat-toolbar>
 
 <mat-sidenav-container>
