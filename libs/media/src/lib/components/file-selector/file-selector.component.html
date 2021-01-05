@@ -2,7 +2,7 @@
 
 <header fxLayout="row">
   <h2 fxFlex="0 1">Choose your files</h2>
-  <button mat-icon-button fxFlex (click)="closeDialog()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-icon-button fxFlex (click)="closeDialog()"><mat-icon svgIcon="cancel"></mat-icon></button>
 </header>
 
 <mat-divider></mat-divider>
@@ -74,7 +74,7 @@
         <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage : 'icon'"></mat-icon>
         <div mat-line [matTooltip]="file | fileName">{{file | fileName}}</div>
         <button mat-icon-button (click)="toggleSelect($event, file)">
-          <mat-icon svgIcon="cross"></mat-icon>
+          <mat-icon svgIcon="close"></mat-icon>
         </button>
       </mat-list-item>
     </mat-list>

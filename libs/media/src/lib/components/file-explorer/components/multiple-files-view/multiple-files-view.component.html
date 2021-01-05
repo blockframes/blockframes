@@ -11,13 +11,13 @@
     <ng-template colRef="actions" let-item="item">
       <section fxLayout="row" fxLayoutGap="12px">
         <button mat-icon-button (click)="downloadFile(item, $event)">
-          <mat-icon svgIcon="download"></mat-icon>
+          <mat-icon svgIcon="cloud_download"></mat-icon>
         </button>
         <button mat-icon-button (click)="edit(item, $event)">
-          <mat-icon svgIcon="pencil"></mat-icon>
+          <mat-icon svgIcon="edit"></mat-icon>
         </button>
         <button mat-icon-button (click)="deleteFile(item, $event)">
-          <mat-icon svgIcon="trash"></mat-icon>
+          <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </section>
     </ng-template>

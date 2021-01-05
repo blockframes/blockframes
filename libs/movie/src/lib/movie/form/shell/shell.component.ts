@@ -69,7 +69,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
     }]
   }, {
     title: 'Promotional Elements',
-    icon: 'import',
+    icon: 'cloud_upload',
     time: 10,
     routes: [
       {

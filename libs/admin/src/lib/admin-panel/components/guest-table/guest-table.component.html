@@ -12,20 +12,20 @@
   </ng-template>
   <ng-template colRef="org" let-org>
     <a [routerLink]="['/c/o/admin/panel/organization', org.id]">
-      <span>{{ org | orgName:'long' }} </span><mat-icon svgIcon="eye"></mat-icon>
+      <span>{{ org | orgName:'long' }} </span><mat-icon svgIcon="visibility"></mat-icon>
     </a>
   </ng-template>
   <ng-template colRef="guestOrg" let-guestOrg>
     <ng-container *ngIf="guestOrg else noOrg">
       <a [routerLink]="['/c/o/admin/panel/organization', guestOrg.id]">
-        <span>{{ guestOrg | orgName:'long' }} </span><mat-icon svgIcon="eye"></mat-icon>
+        <span>{{ guestOrg | orgName:'long' }} </span><mat-icon svgIcon="visibility"></mat-icon>
       </a>
     </ng-container>
     <ng-template #noOrg>--</ng-template>
   </ng-template>
   <ng-template colRef="event.id" let-eventId>
     <a [routerLink]="['/c/o/admin/panel/event', eventId]">
-      <mat-icon svgIcon="eye"></mat-icon>
+      <mat-icon svgIcon="visibility"></mat-icon>
     </a>
   </ng-template>
   <ng-template colRef="event.start" let-start>
@@ -43,7 +43,7 @@
         <img class="poster" [ref]="poster" asset="empty_poster.webp">
       </ng-container>
       <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
-        <span>{{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')': ''}} </span><mat-icon svgIcon="eye"></mat-icon>
+        <span>{{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')': ''}} </span><mat-icon svgIcon="visibility"></mat-icon>
       </a>
     </div>
     <ng-template #noMovie>--</ng-template>
