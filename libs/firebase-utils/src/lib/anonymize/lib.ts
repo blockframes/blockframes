@@ -16,11 +16,11 @@ import { firestore } from 'firebase-admin';
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
 
-const fakeEmail = (name: string) =>
-  `dev+${name.replace(/\W/g, '').toLowerCase()}-${Math.random()
-    .toString(36)
-    .replace(/[^a-z]+/g, '')
-    .substr(0, 3)}@blockframes.io`;
+export function fakeEmail(name: string) {
+  const random = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 3);
+  const suffix = name.replace(/\W/g, '').toLowerCase();
+  return `dev+${suffix}-${random}@blockframes.io`;
+}
 
 function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T {
   return keys.every((key) => key in doc);
@@ -60,11 +60,13 @@ function processNotification(n: NotificationDocument): NotificationDocument {
 
 function updateUser(user: User | PublicUser) {
   if (!user) return;
-  if (hasKeys<PublicUser>(user, 'uid') && !hasKeys<User>(user, 'watermark')) { // Is public
-    const newUser =  userCache?.[user.uid] || (userCache[user.uid] = processUser(user))
+  if (hasKeys<PublicUser>(user, 'uid') && !hasKeys<User>(user, 'watermark')) {
+    // Is public
+    const newUser = userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
     return createPublicUser(newUser);
     // If not in cache, process the user, write to cache, make it a publicUser and return it
-  } else if (hasKeys<User>(user, 'uid')) {
+  }
+  if (hasKeys<User>(user, 'uid')) {
     return userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
   }
   throw Error(`Unable to process user: ${JSON.stringify(user, null, 4)}`);
@@ -75,7 +77,8 @@ function updateOrg(org: Organization | PublicOrganization) {
   if (hasKeys<PublicOrganization>(org, 'denomination') && !hasKeys<Organization>(org, 'email')) { // Is public
     const newOrg = orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
     return createPublicOrganization(newOrg);
-  } else if (hasKeys<Organization>(org, 'email')) {
+  }
+  if (hasKeys<Organization>(org, 'email')) {
     return orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
   }
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
@@ -120,16 +123,21 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   try {
     if (docPath.includes('users/') && hasKeys<User>(doc, 'uid') && doc?.email) { // USERS
       return { docPath, content: updateUser(doc) };
-    } else if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) { // ORGS
+    }
+    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) { // ORGS
       return { docPath, content: updateOrg(doc) };
-    } else if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
+    }
+    if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
       return { docPath, content: processInvitation(doc) };
-    } else if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
+    }
+    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
-    } else if (docPath.includes('movies/') ) {
+    }
+    if (docPath.includes('movies/') ) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
       return { docPath, content: doc };
-    } else if (docPath.includes('_META')) { // Always set maintenance
+    }
+    if (docPath.includes('_META')) { // Always set maintenance
       if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc)}
       return { docPath, content: doc };
     }

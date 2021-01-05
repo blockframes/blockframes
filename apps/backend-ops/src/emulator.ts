@@ -1,6 +1,6 @@
 import {
   shutdownEmulator,
-  importPrepareFirestoreEmulatorBackup,
+  importFirestoreEmulatorBackup,
   startFirestoreEmulatorWithImport,
   connectEmulator,
   defaultEmulatorBackupPath,
@@ -11,7 +11,7 @@ import {
   loadAdminServices
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
-import { resolve } from 'path';
+import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket } from '@env'
@@ -25,11 +25,9 @@ import { backupBucket } from '@env'
  * If no parameter is provided, it will attempt to find the latest backup out of a number
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
-export async function importEmulatorFromBucket(_bucketUrl: string) {
-  const bucketUrl = _bucketUrl
-    ? _bucketUrl
-    : await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket));
-  await importPrepareFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
+export async function importEmulatorFromBucket(_exportUrl: string) {
+  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket));
+  await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
@@ -51,7 +49,7 @@ export interface StartEmulatorOptions {
  * @param param0 this is a relative path to local Firestore backup to import into emulator
  */
 export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
-  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(process.cwd(), importFrom);
+  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(emulatorPath);
@@ -73,17 +71,20 @@ export async function downloadProdDbBackup(localPath?: string) {
   const cert = getServiceAccountObj(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT);
 
   const prodApp = admin.initializeApp(
-    { storageBucket: prodBackupBucket,
+    {
+      storageBucket: prodBackupBucket,
       projectId: prodFirebase().projectId,
       credential: admin.credential.cert(cert),
-    }, 'production');
+    },
+    'production'
+  );
   const prodStorage = prodApp.storage();
   console.log('Production projectId: ', prodFirebase().projectId);
   console.log('Production backup bucket name: ', prodBackupBucket);
   const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);
   const prodDbURL = await getLatestFolderURL(prodBackupBucketObj);
   console.log('Production Firestore Backup URL:', prodDbURL);
-  await importPrepareFirestoreEmulatorBackup(prodDbURL, localPath || defaultEmulatorBackupPath);
+  await importFirestoreEmulatorBackup(prodDbURL, localPath || defaultEmulatorBackupPath);
 }
 
 /**

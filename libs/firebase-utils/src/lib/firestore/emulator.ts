@@ -33,7 +33,7 @@ export const defaultEmulatorBackupPath = resolve(process.cwd(), 'tmp', 'emulator
  * @param gcsPath full GCS bucket URI to Firestore export
  * @param emulatorBackupPath local path to root Firebase emulator export directory
  */
-export async function importPrepareFirestoreEmulatorBackup(gcsPath: string, emulatorBackupPath: string) {
+export async function importFirestoreEmulatorBackup(gcsPath: string, emulatorBackupPath: string) {
   await downloadFirestoreBackup(gcsPath, emulatorBackupPath);
   createEmulatorMetadataJson(emulatorBackupPath);
 }

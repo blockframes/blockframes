@@ -43,6 +43,12 @@ export function runShellCommandUntil(cmd: string, until: string) {
   return { proc, procPromise }
 }
 
+/**
+ * This function will await a given string to be output to terminal
+ * by supplied process before resolving promise.
+ * @param proc `ChildProcess` object of running process
+ * @param output string to search for to resolve promise upon detection
+ */
 export function awaitProcOutput(proc: ChildProcess, output: string) {
   return new Promise(res => {
     const reg = new RegExp(output, 'i')
