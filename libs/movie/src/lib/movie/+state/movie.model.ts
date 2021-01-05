@@ -179,7 +179,7 @@ export function createMovieOriginalRelease(
   return {
     country: null,
     ...params,
-    date: toDate(params.date) ?? null,
+    date: toDate(params.date),
   };
 }
 
@@ -288,7 +288,7 @@ export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = 
   return {
     event: '',
     ...params,
-    date: toDate(params.date) ?? null
+    date: toDate(params.date)
   }
 }
 

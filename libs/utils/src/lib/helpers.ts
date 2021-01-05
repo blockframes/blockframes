@@ -61,6 +61,9 @@ export function toDate(date: firestore.Timestamp | Date): Date {
   if (typeof date === 'string' || typeof date === 'number') {
     return new Date(date);
   }
+  if (!date) {
+    return null;
+  }
   return date;
 }
 

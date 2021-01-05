@@ -1,6 +1,6 @@
 <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
   <h2>Upload screening</h2>
-  <div [formGroup]="form.screener" fxLayout="column">
+  <div formGroupName="screener" fxLayout="column">
     <mat-form-field appearance="outline">
       <mat-label>Screener title</mat-label>
       <input matInput formControlName="title" >

@@ -1,31 +1,29 @@
-<section fxFlex fxLayout="column">
-  <h2>Poster</h2>
-  <drop-cropper [storagePath]="movie.id | ref: 'movie' : 'poster'" ratio="poster" [form]="moviePictureForm.get('poster')">
-    <h2>Film Poster</h2>
+<h2>Poster</h2>
+<drop-cropper [storagePath]="movie.id | ref: 'movie' : 'poster'" ratio="poster" [form]="moviePictureForm.get('poster')">
+  <h2>Film Poster</h2>
+</drop-cropper>
+
+<h2>Banner</h2>
+<drop-cropper [storagePath]="movie.id | ref: 'movie' : 'banner'" ratio="banner" [form]="moviePictureForm.get('banner')">
+  <h2>Film Poster</h2>
+</drop-cropper>
+
+
+<h2>Promotional Images</h2>
+<ng-container *ngFor="let still of moviePictureForm.get('still_photos').controls; let i = index">
+  <drop-cropper [storagePath]="movie.id | ref: 'movie' : 'still'" ratio="still" [form]="still">
+    <h3 title>Stills</h3>
   </drop-cropper>
+</ng-container>
 
-  <h2>Banner</h2>
-  <drop-cropper [storagePath]="movie.id | ref: 'movie' : 'banner'" ratio="banner" [form]="moviePictureForm.get('banner')">
-    <h2>Film Poster</h2>
-  </drop-cropper>
+<article fxLayout="row" fxLayoutAlign="space-around">
+  <button mat-flat-button color="primary" (click)="uploadPicture()">
+    <span>Update</span>
+    <mat-icon svgIcon="send"></mat-icon>
+  </button>
 
-
-  <h2>Promotional Images</h2>
-  <ng-container *ngFor="let still of moviePictureForm.get('still_photos').controls; let i = index">
-    <drop-cropper [storagePath]="movie.id | ref: 'movie' : 'still'" ratio="still" [form]="still">
-      <h3 title>Stills</h3>
-    </drop-cropper>
-  </ng-container>
-
-  <article fxLayout="row" fxLayoutAlign="space-around">
-    <button mat-flat-button color="primary" (click)="uploadPicture()">
-      <span>Update</span>
-      <mat-icon svgIcon="send"></mat-icon>
-    </button>
-
-    <button mat-flat-button color="accent" (click)="addStill()">
-      <span>Add</span>
-      <mat-icon svgIcon="add"></mat-icon>
-    </button>
-  </article>
-</section>
+  <button mat-flat-button color="accent" (click)="addStill()">
+    <span>Add</span>
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</article>

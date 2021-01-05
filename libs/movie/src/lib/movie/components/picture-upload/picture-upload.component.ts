@@ -39,16 +39,9 @@ export class MoviePictureUploadComponent implements OnInit {
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.moviePictureForm);
 
-    const pictures = {
-      ...documentToUpdate,
-      poster: documentToUpdate.poster,
-      banner: documentToUpdate.banner,
-      still_photos: documentToUpdate.still_photos
-    };
-
-    this.movie.poster = pictures.poster;
-    this.movie.banner = pictures.banner;
-    this.movie.promotional.still_photo = pictures.still_photos;
+    this.movie.poster = documentToUpdate.poster;
+    this.movie.banner = documentToUpdate.banner;
+    this.movie.promotional.still_photo = documentToUpdate.still_photos;
 
     await this.movieService.update(this.movie.id, this.movie);
     this.mediaService.uploadMedias(mediasToUpload);
