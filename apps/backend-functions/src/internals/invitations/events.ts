@@ -159,8 +159,9 @@ async function onInvitationToAnEventAccepted({
       const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
       const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
       const eventData: EventEmailData = getEventEmailData(event);
+      const url = applicationUrl[appKey];
 
-      const templateRequest = requestToAttendEventFromUserAccepted(fromUser, orgName(org), eventData);
+      const templateRequest = requestToAttendEventFromUserAccepted(fromUser, orgName(org), eventData, url);
       await sendMailFromTemplate(templateRequest, appKey);
 
       notification.organization = toOrg; // The subject that have accepted the invitation

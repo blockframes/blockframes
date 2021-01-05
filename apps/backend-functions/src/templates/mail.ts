@@ -194,6 +194,7 @@ export function requestToAttendEventFromUserAccepted(
   toUser: PublicUser,
   organizerOrgName: string,
   eventData: EventEmailData,
+  pageURL: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
@@ -202,6 +203,7 @@ export function requestToAttendEventFromUserAccepted(
     eventName: eventData.title,
     eventStartDate: eventData.start,
     eventEndDate: eventData.end,
+    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
