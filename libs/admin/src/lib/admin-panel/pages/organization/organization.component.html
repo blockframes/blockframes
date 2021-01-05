@@ -1,8 +1,7 @@
-<main fxLayout="column">
+<main fxLayout="column" fxFlex fxLayoutGap="40px">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
-  <section fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
-    <article fxLayout="column" fxLayoutAlign="space-between start" class="main-article">
-
+  <section *ngIf="org" fxLayout="column" fxLayoutGap="40px">
+    <article fxLayout="row" fxLayoutAlign="space-between end">
       <organization-display [organization]="org">
         <mat-card-header>
           <mat-card-title>{{ org | orgName:'long' }} </mat-card-title>
@@ -10,97 +9,79 @@
       </organization-display>
 
       <button mat-flat-button color="warn" (click)="deleteOrg()">Delete this org</button>
-
     </article>
-    <article *ngIf="orgForm" fxLayout="column" class="main-article">
-      <admin-organization-form [form]="orgForm" [orgId]="orgId"></admin-organization-form>
 
-      <form [formGroup]="orgForm">
-        <mat-card>
+      <mat-card *ngIf="orgForm" fxFlex fxLayoutGap="40px">
+        <admin-organization-form [form]="orgForm" [orgId]="orgId"></admin-organization-form>
+
+        <form [formGroup]="orgForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
           <mat-checkbox [formControl]="notifyCheckbox">
             Notify admin(s) of app access changes ?
           </mat-checkbox>
 
-          <mat-card-actions align="end">
-            <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
-          </mat-card-actions>
-        </mat-card>
-      </form>
-    </article>
-  </section>
-  <hr />
-  <section  fxLayout="row" fxLayoutAlign="space-around start">
-    <article fxLayout="column" fxLayoutAlign="space-between start">
-      <member-repertory
-        [members]="members"
-        [isSuperAdmin]="true"
-        [showFilter]="true"
-        [memberColumns]="memberColumns"
-        [memberColumnsIndex]="memberColumnsIndex"
-        (memberRemoved)="removeMember($event)"
-        (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
-        (updatedToAdmin)="updateRole($event, 'admin')"
-        (updatedToMember)="updateRole($event, 'member')">
-      </member-repertory>
-    </article>
-
-    <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-      <article fxLayout="column" fxLayoutAlign="space-between start">
-        <member-pending *ngIf="invitationsMember.length > 0"
-          [invitations]="invitationsMember"
-          (declined)="deleteInvitation($event)"
-          [isAdmin]="true">
-        </member-pending>
-      </article>
-    </ng-container>
-
-    <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-      <article fxLayout="column" fxLayoutAlign="space-between start">
-        <member-request *ngIf="invitations.length > 0"
-          (declined)="declineInvitation($event)"
-          (accepted)="acceptInvitation($event)"
-          [invitations]="invitations"
-          [isAdmin]="true">
-        </member-request>
-      </article>
-    </ng-container>
-    <article fxLayout="column" fxLayoutAlign="space-between start">
-      <member-add [org]="org"></member-add>
-    </article>
-  </section>
-  <hr />
-  <section fxLayout="row" fxLayoutAlign="space-around start">
-    <article fxLayout="column" fxLayoutAlign="space-between start">
-      <h2>Movies</h2>
-      <bf-table-filter
-        [source]="movies"
-        [columns]="versionColumnsMovies"
-        [initialColumns]="initialColumnsMovies"
-        [filterPredicate]="filterPredicateMovies"
-        showFilter
-        showLoader
-        showPaginator
-        clickable
-        (rowClick)="goToMovieEdit($event)">
-        <ng-template colRef="poster" let-posters>
-          <ng-container *ngIf="posters; else noposter">
-            <img class="poster" [ref]="posters" asset="empty_poster.webp">
-          </ng-container>
-          <ng-template #noposter>
-            --
-          </ng-template>
-        </ng-template>
-      </bf-table-filter>
-    </article>
-  </section>
-  <section fxLayout fxLayoutAlign="space-around start">
-    <article fxLayout="column" fxLayoutAlign="space-between start" *ngIf="org">
-      <mat-card class="file-explorer">
-        <mat-card-title>Organization's resources</mat-card-title>
-        <mat-card-content>
-          <file-explorer [org]="org"></file-explorer>
-        </mat-card-content>
+          <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+        </form>
       </mat-card>
-    </article>
   </section>
+
+  <member-repertory
+    [members]="members"
+    [isSuperAdmin]="true"
+    [showFilter]="true"
+    [memberColumns]="memberColumns"
+    [memberColumnsIndex]="memberColumnsIndex"
+    (memberRemoved)="removeMember($event)"
+    (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+    (updatedToAdmin)="updateRole($event, 'admin')"
+    (updatedToMember)="updateRole($event, 'member')">
+  </member-repertory>
+
+  <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+    <member-pending *ngIf="invitationsMember.length > 0"
+      [invitations]="invitationsMember"
+      (declined)="deleteInvitation($event)"
+      [isAdmin]="true">
+    </member-pending>
+  </ng-container>
+
+  <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+    <member-request *ngIf="invitations.length > 0"
+      (declined)="declineInvitation($event)"
+      (accepted)="acceptInvitation($event)"
+      [invitations]="invitations"
+      [isAdmin]="true">
+    </member-request>
+  </ng-container>
+
+  <member-add [org]="org"></member-add>
+
+  <mat-card fxFlex>
+    <h2>Movies</h2>
+    <bf-table-filter
+      [source]="movies"
+      [columns]="versionColumnsMovies"
+      [initialColumns]="initialColumnsMovies"
+      [filterPredicate]="filterPredicateMovies"
+      showFilter
+      showLoader
+      showPaginator
+      clickable
+      (rowClick)="goToMovieEdit($event)">
+      <ng-template colRef="poster" let-posters>
+        <ng-container *ngIf="posters; else noposter">
+          <img class="poster" [ref]="posters" asset="empty_poster.webp">
+        </ng-container>
+        <ng-template #noposter>
+          --
+        </ng-template>
+      </ng-template>
+    </bf-table-filter>
+  </mat-card>
+
+  <mat-card *ngIf="org" class="file-explorer">
+    <mat-card-title>Organization's resources</mat-card-title>
+    <mat-card-content>
+      <file-explorer [org]="org"></file-explorer>
+    </mat-card-content>
+  </mat-card>
 </main>

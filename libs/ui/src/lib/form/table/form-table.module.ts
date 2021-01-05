@@ -10,6 +10,7 @@ import { FormTableComponent, FormViewDirective } from './form-table.component';
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 import { QueryListFindModule } from '@blockframes/utils/pipes/find.pipe';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
+import { ButtonTextModule } from '@blockframes/utils/directives/button-text.directive';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     QueryListFindModule,
     DeepKeyPipeModule,
+    ButtonTextModule,
 
     // Material
     MatButtonModule,
@@ -36,6 +38,6 @@ import { MatDividerModule } from '@angular/material/divider';
     MatDividerModule,
   ],
   declarations: [FormTableComponent, FormViewDirective],
-  exports: [FormTableComponent, FormViewDirective, ColRefModule]
+  exports: [FormTableComponent, FormViewDirective, ColRefModule, ButtonTextModule]
 })
 export class FormTableModule { }
