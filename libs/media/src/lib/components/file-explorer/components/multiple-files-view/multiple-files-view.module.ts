@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 import { MultipleFilesViewComponent } from './multiple-files-view.component';
 
@@ -26,6 +27,7 @@ import { MatButtonModule } from '@angular/material/button';
     FileNameModule,
     DeepKeyPipeModule,
     MediaViewerModule,
+    ConfirmModule,
 
     // Material
     MatButtonModule,
