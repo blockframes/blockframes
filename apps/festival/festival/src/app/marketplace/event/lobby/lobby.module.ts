@@ -7,6 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Components
 import { LobbyComponent } from './lobby.component';
@@ -20,6 +21,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    ConfirmModule,
 
     ImageReferenceModule,
     MeetingVideoModule,
