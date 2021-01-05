@@ -1901,7 +1901,8 @@
                   "maximumError": "10kb"
                 }
               ]
-            }
+            },
+            "ci": {}
           }
         },
         "serve": {
