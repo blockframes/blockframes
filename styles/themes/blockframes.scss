@@ -1,0 +1,113 @@
+// @todo(#4650) remove 100, 400 & 700 as it's only used by light theme primary on background contrast
+$dark-theme: (
+  is-dark: true,
+  primary: (
+    100: #cfd8ff,
+    200: #cfd8ff,
+    400: #9eb1ff,
+    500: #9eb1ff,
+    700: #8298ff,
+    800: #8298ff,
+    contrast: (
+      100: #24374e,
+      200: #24374e,
+      400: #f9f8ff,
+      500: #f9f8ff,
+      700: #f9f8ff,
+      800: #f9f8ff,
+    ),
+  ),
+  accent: (
+    100: #ffb7b0,
+    200: #ffb7b0,
+    400: #ff6e61,
+    500: #ff6e61,
+    700: #ff5145,
+    800: #ff5145,
+    contrast: (
+      100: #272a44,
+      200: #272a44,
+      400: #f9f8ff,
+      500: #f9f8ff,
+      700: #f9f8ff,
+      800: #f9f8ff,
+    ),
+  ),
+  warn: (
+    500: #ff3f33,
+    contrast: (
+      500: #ffffff,
+    ),
+  ),
+  background: (
+    900: #010314,
+    800: #06081c,
+    700: #121424,
+    600: #06081c,
+    500: #1f1f26,
+  ),
+  foreground: (
+    900: #f9f8ff,
+    800: #bbc3e7,
+    700: #9ca3c4,
+    600: #666b81,
+    500: #272a44,
+  ),
+);
+
+
+$light-theme: (
+  is-dark: false,
+  primary: (
+    100: lighten(#8da4fa, 10%),
+    200: #8da4fa,
+    400: lighten(#1a49f5, 10%),
+    500: #1a49f5,
+    700: lighten(#0f31f0, 10%),
+    800: #0f31f0,
+    contrast: (
+      100: #1f2a3b,
+      200: #1f2a3b,
+      400: #ffffff,
+      500: #ffffff,
+      700: #ffffff,
+      800: #ffffff,
+    ),
+  ),
+  accent: (
+    100: #ffb7b0,
+    200: #ffb7b0,
+    400: #ff6e61,
+    500: #ff6e61,
+    700: #ff5145,
+    800: #ff5145,
+    contrast: (
+      100: #1f2a3b,
+      200: #1f2a3b,
+      400: #ffffff,
+      500: #ffffff,
+      700: #ffffff,
+      800: #ffffff,
+    ),
+  ),
+  warn: (
+    500: #ff3f33,
+    contrast: (
+      500: #ffffff,
+    ),
+  ),
+  background: (
+    900: #f4f4f4,
+    800: #ffffff,
+    700: #fdfdfd,
+    600: #e7e7e7,
+    500: #dbdce0,
+  ),
+  foreground: (
+    900: #080b0f,
+    800: #1f2a3b,
+    700: #454e5d,
+    600: #666b81,
+    500: #d3d5dc,
+  ),
+);
