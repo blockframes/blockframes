@@ -74,11 +74,11 @@ export function userInvite(
     userEmail: email,
     userPassword: password,
     orgName,
-    eventName: eventData.title,
-    eventStartDate: eventData.start,
-    eventEndDate: eventData.end,
+    eventName: eventData.title || '',
+    eventStartDate: eventData.start || '',
+    eventEndDate: eventData.end || '',
     pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
-    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
+    sessionURL: eventData.id ? `${pageURL}/c/o/marketplace/event/${eventData.id}` : ''
   };
   return { to: email, templateId, data };
 }
