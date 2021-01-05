@@ -19,6 +19,7 @@ import { startWith, distinctUntilChanged, map } from 'rxjs/operators';
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { AddButtonTextDirective, SaveButtonTextDirective } from '@blockframes/utils/directives/button-text.directive';
 
 @Directive({ selector: '[formView]' })
 export class FormViewDirective { }
@@ -37,8 +38,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   layout = { top: 'column', bottom: 'column-reverse', left: 'row', right: 'row-reverse' };
 
   @Input() form: FormList<T>;
-  @Input() buttonText = 'Add';
-  @Input() saveButtonText = 'Save'
   @Input() listPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
 
 
@@ -53,12 +52,13 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
+  @ContentChild(SaveButtonTextDirective, { read: TemplateRef }) saveButtonText: SaveButtonTextDirective;
+  @ContentChild(AddButtonTextDirective, { read: TemplateRef }) addButtonText: AddButtonTextDirective;
 
   list$: Observable<any[]>;
   formItem: FormEntity<EntityControl<T>, T>;
   activeIndex: number;
   activeValue: T
-
 
   constructor(private cdr: ChangeDetectorRef) { }
 

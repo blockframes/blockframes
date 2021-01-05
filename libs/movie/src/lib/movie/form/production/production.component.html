@@ -4,7 +4,7 @@
     <section id="company">
       <h6 class="mat-caption">Production Company</h6>
 
-      <bf-form-list [form]="productionCompany" buttonText="Add Production Company">
+      <bf-form-list [form]="productionCompany">
         <ng-template itemRef let-productionCompany>
           {{ productionCompany.displayName }} - {{ productionCompany.countries | toLabel: 'territories' }}
         </ng-template>
@@ -17,12 +17,13 @@
                 placeholder="Production Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete test-id="production-country" [form]="productionForm.get('countries')" scope="territories"
-              placeholder="Type and select Country." fxFlex>
+            <chips-autocomplete test-id="production-country" [form]="productionForm.get('countries')"
+              scope="territories" placeholder="Type and select Country." fxFlex>
               <mat-label>Production Country</mat-label>
               <mat-error>Please specify Production Country.</mat-error>
             </chips-autocomplete>
-
+            <ng-template saveButtonText>Save Production Company</ng-template>
+            <ng-template addButtonText>Add Production Company</ng-template>
           </article>
         </ng-template>
       </bf-form-list>
@@ -30,7 +31,7 @@
 
     <section id="co-company">
       <h6 class="mat-caption">Co-Production Company</h6>
-      <bf-form-list [form]="coProductionCompany" buttonText="Add Co-Production Company">
+      <bf-form-list [form]="coProductionCompany">
         <ng-template itemRef let-coProductionCompany>
           {{ coProductionCompany.displayName }} - {{ coProductionCompany.countries | toLabel: 'territories' }}
         </ng-template>
@@ -43,11 +44,14 @@
                 placeholder="Co-Production Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete test-id="co-production-country" [form]="coProductionForm.get('countries')" scope="territories"
-              placeholder="Type and select Country" fxFlex>
+            <chips-autocomplete test-id="co-production-country" [form]="coProductionForm.get('countries')"
+              scope="territories" placeholder="Type and select Country" fxFlex>
               <mat-label>Co-Production Country</mat-label>
               <mat-error>Please specify Co-Production Country.</mat-error>
             </chips-autocomplete>
+
+            <ng-template saveButtonText>Save Co-Production Company</ng-template>
+            <ng-template addButtonText>Add Co-Production Company</ng-template>
 
           </article>
         </ng-template>
@@ -56,7 +60,7 @@
 
     <section id="producers">
       <h6 class="mat-caption">Producer(s)</h6>
-      <bf-form-list [form]="form.producers" buttonText="Add Producer">
+      <bf-form-list [form]="form.producers">
         <ng-template itemRef let-producer>
           {{ producer.firstName }} - {{ producer.lastName}} -
           {{ producer.role | toLabel: 'producerRoles' }}</ng-template>
@@ -65,10 +69,14 @@
 
             <form-display-name [form]="producerForm" labelSuffix="Producer's"></form-display-name>
 
-            <static-select test-id="producer-role" [control]="producerForm.get('role')" scope="producerRoles" [withoutValues]="['']">
+            <static-select test-id="producer-role" [control]="producerForm.get('role')" scope="producerRoles"
+              [withoutValues]="['']">
               <mat-label>Role</mat-label>
               <mat-hint>Please specify producer's role: executive, associate...</mat-hint>
             </static-select>
+
+            <ng-template saveButtonText>Save Producer</ng-template>
+            <ng-template addButtonText>Add Producer</ng-template>
 
           </article>
         </ng-template>
@@ -80,7 +88,7 @@
     <h3>Distributor(s)</h3>
     <section id="distributors">
 
-      <bf-form-list [form]="distributors" buttonText="Add Distribution Company">
+      <bf-form-list [form]="distributors">
         <ng-template itemRef let-distributor>
           {{ distributor.displayName }} -
           {{ distributor.countries | toLabel: 'territories' }}
@@ -94,11 +102,14 @@
                 placeholder="Distribution Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete test-id="distribution-country" [form]="distributorForm.get('countries')" scope="territories"
-              placeholder="Enter Distribution Country/ies" fxFlex>
+            <chips-autocomplete test-id="distribution-country" [form]="distributorForm.get('countries')"
+              scope="territories" placeholder="Enter Distribution Country/ies" fxFlex>
               <mat-label>Enter Distribution Country/ies.</mat-label>
               <mat-error>Please specify Distribution Country.</mat-error>
             </chips-autocomplete>
+
+            <ng-template saveButtonText>Save Distribution Company</ng-template>
+            <ng-template addButtonText>Add Distribution Company</ng-template>
 
           </article>
         </ng-template>
@@ -110,7 +121,7 @@
     <h3>International Sales</h3>
     <section id="sales">
 
-      <bf-form-list [form]="internationalSales" buttonText="Add Sales Company">
+      <bf-form-list [form]="internationalSales">
         <ng-template itemRef let-sales> {{ sales.displayName }} - {{ sales.countries | toLabel: 'territories' }}
         </ng-template>
         <ng-template formView let-salesForm>
@@ -127,6 +138,9 @@
               <mat-label>Sales Company's Nationality</mat-label>
               <mat-error>Please specify Sales Company's Country.</mat-error>
             </chips-autocomplete>
+
+            <ng-template saveButtonText>Save Sales Company</ng-template>
+            <ng-template addButtonText>Add Sales Company</ng-template>
 
           </article>
         </ng-template>

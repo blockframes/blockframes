@@ -10,19 +10,19 @@
           <mat-list-item>
             <mat-icon mat-list-icon [svgIcon]="screenerForm.get('fileName').value | fileTypeImage: 'icon'"></mat-icon>
             <div mat-line>{{screenerForm.get('fileName').value}}</div>
-            <button mat-icon-button (click)="deleteScreener()"><mat-icon svgIcon="trash"></mat-icon></button>
+            <button mat-icon-button (click)="deleteScreener()">
+              <mat-icon svgIcon="trash"></mat-icon>
+            </button>
           </mat-list-item>
         </mat-list>
       </ng-container>
       <ng-template #noScreener>
-        <file-upload
-          [form]="screenerForm"
-          [storagePath]="getPath('screener')"
-          allowedFileType="video"
+        <file-upload [form]="screenerForm" [storagePath]="getPath('screener')" allowedFileType="video"
           filePrivacy="protected">
-            <h3 title>Upload Screener</h3>
+          <h3 title>Upload Screener</h3>
         </file-upload>
-        <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong> outside your organization unless you explicitly invite them to a virtual screening.</p>
+        <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
+          outside your organization unless you explicitly invite them to a virtual screening.</p>
       </ng-template>
     </section>
 
@@ -34,14 +34,15 @@
 
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
-          {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.ref.fileName ? video.ref.fileName : (video.ref.ref | fileName) }}
+          {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.ref.fileName ? video.ref.fileName :
+          (video.ref.ref | fileName) }}
         </ng-template>
         <ng-template formView let-activeForm>
           <article fxLayout="column">
             <span fxFlex fxLayout="row" fxLayoutGap="16px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Title</mat-label>
-                <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')"/>
+                <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
               </mat-form-field>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Video Type</mat-label>
@@ -52,9 +53,13 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video" >
+            <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video">
               <h3 title>Upload Video</h3>
             </file-upload>
+
+            <ng-template saveButtonText>Save Video</ng-template>
+            <ng-template addButtonText>Add a Video</ng-template>
+
           </article>
         </ng-template>
       </bf-form-list>
