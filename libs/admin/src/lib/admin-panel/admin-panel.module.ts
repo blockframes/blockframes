@@ -21,7 +21,7 @@ import { ContractTreeModule } from './components/contract-tree/contract-tree.mod
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.pipe';
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
@@ -32,6 +32,7 @@ import { EventModule } from './pages/event/event.module';
 import { GoToModule } from './components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from './components/organization/forms/organization-form/organization-form.module';
 import { MovieVideoUploadModule } from '@blockframes/movie/components/video-upload/video-upload.module';
+import { MoviePictureUploadModule } from '@blockframes/movie/components/picture-upload/picture-upload.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -112,7 +113,9 @@ export const panelRoutes: Routes = [
     GoToModule,
     AdminOrganizationFormModule,
     MovieVideoUploadModule,
-    CrmFormDialogModule
+    CrmFormDialogModule,
+    AppPipeModule,
+    MoviePictureUploadModule
   ],
   declarations: [
     MoviesComponent,

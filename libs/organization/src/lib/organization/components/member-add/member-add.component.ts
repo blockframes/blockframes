@@ -6,7 +6,7 @@ import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { Organization } from '@blockframes/organization/+state';
 import { FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class MemberAddComponent {
   @Input() org: Organization;
   private _isSending = new BehaviorSubject<boolean>(false);
   public isSending$ = this._isSending.asObservable();
-  public separatorKeysCodes = [COMMA, ENTER];
+  public separatorKeysCodes = [ENTER, COMMA, SEMICOLON, SPACE];
   public emailForm = new FormControl('', Validators.email);
   public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
   public error: string;

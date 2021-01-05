@@ -61,6 +61,10 @@ export function toDate(date: firestore.Timestamp | Date): Date {
   if (typeof date === 'string' || typeof date === 'number') {
     return new Date(date);
   }
+  if (!date) {
+    // Return null to avoid undefined error with firestore
+    return null;
+  }
   return date;
 }
 
@@ -69,7 +73,6 @@ export function toDate(date: firestore.Timestamp | Date): Date {
  * @example item = movie, key = 'budget.totalBudget'
  */
 export function getValue(item: any, key: string) {
-  console.log(item, key)
   const path = key.split('.');
   for (let i = 0; i < path.length; i++) {
     item = item?.[path[i]];
