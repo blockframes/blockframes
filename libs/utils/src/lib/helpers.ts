@@ -1,6 +1,7 @@
 import { firestore } from "firebase/app";
 import { BehaviorSubject, Observable } from "rxjs";
 import { staticModel, Scope } from './static-model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 /**
  * This method is used before pushing data on db
@@ -68,7 +69,6 @@ export function toDate(date: firestore.Timestamp | Date): Date {
  * @example item = movie, key = 'budget.totalBudget'
  */
 export function getValue(item: any, key: string) {
-  console.log(item, key)
   const path = key.split('.');
   for (let i = 0; i < path.length; i++) {
     item = item?.[path[i]];
@@ -186,8 +186,6 @@ export function debounceFactory(func: (...params) => any, wait: number) {
   };
 };
 
-
-
 /**
  * Remove all undefined fields
  * @param value anything
@@ -207,5 +205,24 @@ export function removeUndefined(value: any) {
     return result;
   } else {
     return value;
+  }
+}
+
+export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
+  switch (sortIdentifier) {
+    case 'Title':
+      return a.title.international.localeCompare(b.title.international);
+    case 'Director':
+      return a.directors[0]?.lastName.localeCompare(b.directors[0]?.lastName);
+    case 'Production Year':
+      if (b.release.year < a.release.year) {
+        return -1;
+      }
+      if (b.release.year > a.release.year) {
+        return 1;
+      }
+      return 0;
+    default:
+      return 0;
   }
 }

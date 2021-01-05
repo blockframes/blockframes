@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { FormListComponent, ItemRefDirective, FormViewDirective } from './form-list.component';
+import { ButtonTextModule } from '@blockframes/utils/directives/button-text.directive';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -16,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    ButtonTextModule,
 
     // Material
     MatListModule,
@@ -23,7 +25,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatDividerModule
   ],
-  exports: [FormListComponent, FormViewDirective, ItemRefDirective],
+  exports: [FormListComponent, FormViewDirective, ItemRefDirective, ButtonTextModule],
   declarations: [FormListComponent, FormViewDirective, ItemRefDirective],
 
 })
