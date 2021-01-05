@@ -15,14 +15,14 @@ const cert = getServiceAccountObj(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUN
 
 admin.initializeApp({
   storageBucket: backupBucket,
-  projectId: firebase.projectId,
+  projectId: firebase().projectId,
   credential: admin.credential.cert(cert),
 });
 const storage = admin.storage();
 const folder = join(process.cwd(), 'tmp');
 
 async function getProdBackup() {
-  console.log('Current projectId: ', firebase.projectId);
+  console.log('Current projectId: ', firebase().projectId);
   console.log('Current backup bucket name: ', backupBucket);
   try {
     // Get latest backup DB
