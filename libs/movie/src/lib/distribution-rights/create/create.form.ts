@@ -19,9 +19,9 @@ export function createLanguageControl(
   disableDubbed?: boolean
 ) {
   return {
-    original: new FormControl(language.original),
     dubbed: new FormControl({ value: language.dubbed, disabled: disableDubbed }),
-    subtitle: new FormControl(language.subtitle)
+    subtitle: new FormControl(language.subtitle),
+    caption: new FormControl(language.caption)
   };
 }
 
@@ -116,7 +116,6 @@ export class DistributionRightForm extends FormEntity<DistributionRightControls>
     value: Partial<MovieLanguageSpecification> = {}
   ) {
     if (movie.originalLanguages.includes(language)) {
-      value.original = true;
       (<FormGroup>this.languages).addControl(
         language,
         new FormGroup(createLanguageControl(createMovieLanguageSpecification(value), true))
