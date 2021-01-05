@@ -62,6 +62,7 @@ export function toDate(date: firestore.Timestamp | Date): Date {
     return new Date(date);
   }
   if (!date) {
+    // Return null to avoid undefined error with firestore
     return null;
   }
   return date;
