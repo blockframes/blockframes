@@ -7,10 +7,9 @@ import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
-import { EmailRecipient } from "@blockframes/utils/emails/utils";
+import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
-
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -84,12 +83,13 @@ async function onInvitationToAnEventCreate({
     const senderName = orgName(org);
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
+    const eventEmailData: EventEmailData = getEventEmailData(event)
 
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending invitation email for an event (${eventId}) from ${senderName} to : ${recipient.email}`);
-          const templateInvitation = invitationToEventFromOrg(recipient, senderName, event.title, link, urlToUse);
+          const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, appKey);
         }))
       case 'request':
