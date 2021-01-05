@@ -2,7 +2,7 @@
   <h6>
     Financing Plan
     <a mat-icon-button [routerLink]="link">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
 
@@ -22,7 +22,7 @@
         <ng-template colRef="status" let-status>{{ status | titlecase }}</ng-template>
         <ng-template colRef="edit">
           <a mat-icon-button [routerLink]="link">
-            <mat-icon svgIcon="pencil"></mat-icon>
+            <mat-icon svgIcon="edit"></mat-icon>
           </a>
         </ng-template>
       </bf-table-filter>

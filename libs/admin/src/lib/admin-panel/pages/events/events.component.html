@@ -11,7 +11,7 @@
     [filterPredicate]="filterPredicate" [pageSize]="50" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link">
-        <mat-icon svgIcon="pencil"></mat-icon>
+        <mat-icon svgIcon="edit"></mat-icon>
       </a>
     </ng-template>
     <ng-template colRef="start" let-start>
