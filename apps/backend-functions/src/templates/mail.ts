@@ -189,6 +189,25 @@ export function requestToAttendEventFromUser(
   return { to: recipient.email, templateId: templateIds.request.attendEvent.created, data };
 }
 
+/** Generate an email to inform users that their request to attend an event was accepted */
+export function requestToAttendEventFromUserAccepted(
+  toUser: PublicUser,
+  organizerOrgName: string,
+  eventData: EventEmailData,
+  pageURL: string = appUrl.market,
+): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    userLastName: toUser.lastName,
+    organizerOrgName,
+    eventName: eventData.title,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end,
+    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
+  };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
+}
+
 // ------------------------- //
 //      CASCADE8 ADMIN       //
 // ------------------------- //

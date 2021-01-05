@@ -4,7 +4,7 @@ import { NotificationDocument, OrganizationDocument, PublicUser } from "../../da
 import { createNotification, triggerNotifications } from "../../notification";
 import { db, getUser } from "../firebase";
 import { getAdminIds, getDocument } from "../../data/internals";
-import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
+import { invitationToEventFromOrg, requestToAttendEventFromUser, requestToAttendEventFromUserAccepted } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
@@ -154,6 +154,16 @@ async function onInvitationToAnEventAccepted({
     if (!!toUser) {
       notification.user = toUser; // The subject that have accepted the invitation
     } else if (!!toOrg) {
+      // @TODO (#2848) forcing to festival since invitations to events are only on this one
+      const appKey: App = 'festival';
+      const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
+      const eventData: EventEmailData = getEventEmailData(event);
+      const url = applicationUrl[appKey];
+
+      const templateRequest = requestToAttendEventFromUserAccepted(fromUser, orgName(org), eventData, url);
+      await sendMailFromTemplate(templateRequest, appKey);
+
       notification.organization = toOrg; // The subject that have accepted the invitation
     } else {
       throw new Error('Did not found invitation recipient.');
@@ -172,6 +182,7 @@ async function onInvitationToAnEventAccepted({
       if (!!toUser) {
         notification.user = toUser; // The subject that have accepted the invitation
       } else if (!!toOrg) {
+
         notification.organization = toOrg; // The subject that have accepted the invitation
       } else {
         throw new Error('Did not found invitation recipient.');
