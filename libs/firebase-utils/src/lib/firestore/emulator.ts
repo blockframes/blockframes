@@ -78,8 +78,8 @@ export interface FirestoreEmulator extends FirebaseFirestore.Firestore {
 }
 
 export function connectEmulator(): FirestoreEmulator  {
-  if (firebase.projectId === 'blockframes') throw Error('YOU ARE ON PROD!!');
-  const db = initializeApp(firebase, 'emulator').firestore() as any;
+  if (firebase().projectId === 'blockframes') throw Error('YOU ARE ON PROD!!');
+  const db = initializeApp(firebase(), 'emulator').firestore() as any;
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
   // tslint:disable-next-line: no-eval
   const { emulators: { firestore: { port }} } = eval('require')(firebaseJsonPath)

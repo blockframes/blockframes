@@ -127,8 +127,9 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     } else if (docPath.includes('movies/') ) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
       return { docPath, content: doc };
-    } else if (docPath.includes('_META') && hasKeys<IMaintenanceDoc>(doc, 'endedAt')) { // Always set maintenance
-      return { docPath, content: processMaintenanceDoc(doc)}
+    } else if (docPath.includes('_META')) { // Always set maintenance
+      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc)}
+      return { docPath, content: doc };
     }
   } catch (e) {
     throw [Error(`Error docPath: ${docPath}`), e];
@@ -151,7 +152,7 @@ export async function runAnonymization(db: FirestoreEmulator) {
   throwOnProduction();
   const dbArray = await loadDb(db);
   const orderedDbArray = dbArray.sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath))
-  await db.clearFirestoreData({ projectId: firebase.projectId });
+  await db.clearFirestoreData({ projectId: firebase().projectId });
   const anonDb = orderedDbArray.map(anonymizeDocument)
   await runChunks(anonDb, async ({content, docPath}) => {await db.doc(docPath).set(content)}, 1000)
   console.log('Anonymization Done!')

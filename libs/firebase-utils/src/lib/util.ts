@@ -136,5 +136,5 @@ export async function hasAcceptedMovies(org: OrganizationDocument) {
 }
 
 export function throwOnProduction(): never | void {
-  if (firebase.projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
+  if (firebase().projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
 }

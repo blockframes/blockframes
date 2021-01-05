@@ -66,11 +66,11 @@ export async function anonymizeLatestProdDb() {
 
   const prodApp = admin.initializeApp(
     { storageBucket: prodBackupBucket,
-      projectId: prodFirebase.projectId,
+      projectId: prodFirebase().projectId,
       credential: admin.credential.cert(cert),
     }, 'production');
   const prodStorage = prodApp.storage();
-  console.log('Production projectId: ', prodFirebase.projectId);
+  console.log('Production projectId: ', prodFirebase().projectId);
   console.log('Production backup bucket name: ', prodBackupBucket);
   const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);
   const prodDbURL = await getLatestFolderURL(prodBackupBucketObj);
