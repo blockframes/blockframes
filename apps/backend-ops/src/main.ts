@@ -13,7 +13,7 @@ import { generateFixtures } from './generate-fixtures';
 import { backup } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonymizeLatestProdDb, importEmulatorFromBucket, loadEmulator, uploadBackup } from './emulator';
+import { anonDbLocal, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, uploadBackup } from './emulator';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -38,6 +38,12 @@ async function runCommand() {
       break;
     case 'anonProdDb':
       await anonymizeLatestProdDb();
+      break;
+    case 'downloadProdDbBackup':
+      await downloadProdDbBackup(arg1);
+      break;
+    case 'anonDbLocal':
+      await anonDbLocal();
       break;
     case 'uploadToBucket':
       await uploadBackup({ remoteDir: arg1, localRelPath: arg2 });

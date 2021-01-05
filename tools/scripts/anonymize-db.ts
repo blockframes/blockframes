@@ -105,6 +105,8 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'contracts/',
     'docsIndex/',
     'events/',
+    'cms/',
+    'campaigns/',
     'permissions/',
     'publicContracts/',
   ];

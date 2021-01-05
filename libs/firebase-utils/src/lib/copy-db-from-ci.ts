@@ -54,14 +54,3 @@ export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin
     return destination;
   });
 }
-
-export async function copyAnonBinDbFromCi(ci: admin.app.App) {
-  let prodFirebase;
-  let prodBackupBucket;
-  let prodStorage;
-  console.log('Production projectId: ', prodFirebase.projectId);
-  console.log('Production backup bucket name: ', prodBackupBucket);
-  const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);
-  const prodDbURL = await getLatestFolderURL(prodBackupBucketObj);
-  console.log('Production Firestore Backup URL:', prodDbURL);
-}

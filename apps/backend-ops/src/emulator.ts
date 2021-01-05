@@ -21,6 +21,9 @@ import { backupBucket } from '@env'
  * the emulator and run the emulator without shutting it down. This command can be used to run
  * emulator in background while developing or running other processes.
  * @param bucketUrl GCS bucket URL for the Firestore backup
+ *
+ * If no parameter is provided, it will attempt to find the latest backup out of a number
+ * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
 export async function importEmulatorFromBucket(_bucketUrl: string) {
   const bucketUrl = _bucketUrl
@@ -44,6 +47,7 @@ export interface StartEmulatorOptions {
 /**
  * This function will load the Firestore emulator from a default local path, or use the
  * path provided as an argument without downloading anything from a GCS bucket.
+ * Not much use over manually running the command, other than less flags...
  * @param param0 this is a relative path to local Firestore backup to import into emulator
  */
 export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
@@ -58,7 +62,11 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function anonymizeLatestProdDb() {
+/**
+ * This function will find the latest production backup based on date in folder name,
+ * and download it to the local default folder or specified path.
+ */
+export async function downloadProdDbBackup(localPath?: string) {
   if (!('FIREBASE_PRODUCTION_SERVICE_ACCOUNT' in process.env)) {
     throw new Error('Key "FIREBASE_PRODUCTION_SERVICE_ACCOUNT" does not exist in .env');
   }
@@ -75,13 +83,29 @@ export async function anonymizeLatestProdDb() {
   const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);
   const prodDbURL = await getLatestFolderURL(prodBackupBucketObj);
   console.log('Production Firestore Backup URL:', prodDbURL);
-  await importPrepareFirestoreEmulatorBackup(prodDbURL, defaultEmulatorBackupPath);
+  await importPrepareFirestoreEmulatorBackup(prodDbURL, localPath || defaultEmulatorBackupPath);
+}
+
+/**
+ * This function will run db anonymization on a locally running Firestore emulator database
+ */
+export async function anonDbLocal() {
+  const db = connectEmulator();
+  const o = await db.listCollections();
+  console.log(o.map((snap) => snap.id));
+  await runAnonymization(db);
+}
+
+/**
+ * This will download latest prod db and run the anonymization process in one command,
+ * then shut down the local emulator. If you would like to view the db, you can run
+ * `loadEmulator` afterwards to start the Firestore emulator with import from default path
+ */
+export async function anonymizeLatestProdDb() {
+  await downloadProdDbBackup(defaultEmulatorBackupPath)
   const proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
   try {
-    const db = connectEmulator();
-    const o = await db.listCollections();
-    console.log(o.map((snap) => snap.id));
-    await runAnonymization(db);
+    await anonDbLocal();
   } catch (e) {
     throw e;
   } finally {
@@ -89,6 +113,12 @@ export async function anonymizeLatestProdDb() {
   }
 }
 
+/**
+ * This function takes a local path to the Firestore export (not Firebae emulator backup)
+ * and remote directory name (NOT URI) and uploads the Firestore export to the local env's
+ * backup bucket after converting it back to the live Firestore format.
+ * @param param0 settings object for `localRelPath` and `remoteDir`
+ */
 export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
   await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
 }
