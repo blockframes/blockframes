@@ -26,4 +26,18 @@ export class AdminQuery extends Query<AdminState> {
       return userInfo.firstConnexion;
     }
   }
+
+  getSessionCount(uid: string): number {
+    const userInfo = this.connectedUsers.find(u => u.uid === uid);
+    if (userInfo && userInfo.sessionCount) {
+      return userInfo.sessionCount;
+    }
+  }
+
+  getPageView(uid: string): number {
+    const userInfo = this.connectedUsers.find(u => u.uid === uid);
+    if (userInfo && userInfo.pageView) {
+      return userInfo.pageView;
+    }
+  }
 }
