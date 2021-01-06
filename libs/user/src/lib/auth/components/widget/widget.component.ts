@@ -4,6 +4,7 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
+import { MaintenanceService } from '@blockframes/ui/maintenance/maintenance.service'
 
 @Component({
   selector: 'auth-widget',
@@ -16,13 +17,15 @@ export class AuthWidgetComponent {
   organization$ = this.organizationQuery.selectActive();
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
+  appVersion$ = this.maintenanceService.getAppVersion();
 
   constructor(
     private service: AuthService,
     private query: AuthQuery,
     private organizationQuery: OrganizationQuery,
     private themeService: ThemeService,
-    private userService: UserService
+    private userService: UserService,
+    private maintenanceService: MaintenanceService
   ) { }
 
   public async logout() {
