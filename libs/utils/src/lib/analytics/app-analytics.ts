@@ -1,7 +1,7 @@
 import { AngularFireAnalytics } from '@angular/fire/analytics';
 import { Injectable } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { AnalyticsEvents } from './analyticsEvents';
+import { AnalyticsEvents, AnalyticsUserProperties } from './analytics-model';
 import { centralOrgID } from '@env';
 
 @Injectable({ providedIn: 'root' })
@@ -28,5 +28,9 @@ export class FireAnalytics {
     } catch {
       this.analytics.logEvent(name, { ...params });
     }
+  }
+
+  public setUserProperties(properties: Record<AnalyticsUserProperties, any>) {
+    this.analytics.setUserProperties(properties);
   }
 }

@@ -48,6 +48,7 @@ import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
 import { firebase, production } from '@env';
+import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -103,6 +104,9 @@ export class AppModule {
     const { intercom, yandex } = gdprService.cookieConsent;
     if (yandex) yandexService.insertMetrika();
     intercom && intercomId ? intercomService.enable() : intercomService.disable();
+
+    const browser = getBrowserWithVersion();
+    analytics.setUserProperties({ browser_name: browser.name, browser_version: browser.version });
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
