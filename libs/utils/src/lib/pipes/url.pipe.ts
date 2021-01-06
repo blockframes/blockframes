@@ -4,7 +4,7 @@ import { HttpParams } from '@angular/common/http';
 @Pipe({ name: 'getLink', pure: true })
 export class GetLinkPipe implements PipeTransform {
   transform(link: string, fallback?: string) {
-    const url =  formatUrl(link).url;
+    const url = formatUrl(link).url;
     return url || fallback;
   }
 }
