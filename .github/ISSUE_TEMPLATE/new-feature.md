@@ -1,7 +1,7 @@
 ---
 name: new feature
-about: issue for new feature
-title: ''
+about: new Feature
+title: 'FEATURE: '
 labels: ''
 assignees: ''
 
@@ -10,6 +10,12 @@ assignees: ''
 - [ ] State Epic & User story
 - [ ] Search the current issues, for a similar issue.
 - [ ] Put relevant labels
-- [ ] move to icebox (if it's a low priority) or backlog (for future) or in progress
+- [ ] Move to correct pipeline according to board.
 - [ ] Include relevant screenshots, if possible. Drag your screenshots directly into this text box. 
 - [ ] State the expected behavior and the steps needed to reproduce the problem.
+
+# Description
+
+# What's new
+
+# User scenario

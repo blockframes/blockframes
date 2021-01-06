@@ -5,7 +5,8 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { MovieFormShellComponent, findInvalidControls } from '@blockframes/movie/form/shell/shell.component';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component'
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -44,7 +45,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
-      await this.shell.update({ publishing: true });
+      await this.shell.layout.update({ publishing: true });
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         this.router.navigate(['../', 'end'], { relativeTo: this.route })
