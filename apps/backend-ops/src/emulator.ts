@@ -11,7 +11,7 @@ import {
   loadAdminServices
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket } from '@env'

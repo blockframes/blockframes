@@ -4,7 +4,6 @@ import { backupBucket as backupBucketCI } from 'env/env.blockframes-ci';
 import * as admin from 'firebase-admin';
 import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';
-import { getLatestFolderURL } from './anonymize';
 
 export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl'
 

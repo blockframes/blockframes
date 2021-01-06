@@ -2,7 +2,9 @@ import * as faker from 'faker';
 import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
-import { CollectionReference, DbRecord, QueryDocumentSnapshot, QuerySnapshot, Queue, throwOnProduction } from '@blockframes/firebase-utils';
+import { DbRecord, throwOnProduction } from '../util';
+import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot, } from '../types';
+import { Queue, } from '../queue';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
@@ -133,12 +135,12 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     }
-    if (docPath.includes('movies/') ) {
+    if (docPath.includes('movies/')) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
       return { docPath, content: doc };
     }
     if (docPath.includes('_META')) { // Always set maintenance
-      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc)}
+      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc) }
       return { docPath, content: doc };
     }
   } catch (e) {
@@ -164,7 +166,7 @@ export async function runAnonymization(db: FirestoreEmulator) {
   const orderedDbArray = dbArray.sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath))
   await db.clearFirestoreData({ projectId: firebase().projectId });
   const anonDb = orderedDbArray.map(anonymizeDocument)
-  await runChunks(anonDb, async ({content, docPath}) => {await db.doc(docPath).set(content)}, 1000)
+  await runChunks(anonDb, async ({ content, docPath }) => { await db.doc(docPath).set(content) }, 1000)
   console.log('Anonymization Done!')
 }
 
