@@ -61,7 +61,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private campaignService: CampaignService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading$ = this.movieQuery.selectLoading();
@@ -85,13 +85,13 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     const errorMatcher = new CrossFieldErrorMatcher();
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
       minWidth: '50vw',
-      data: {form, errorMatcher}
+      data: { form, errorMatcher }
     });
   }
 
   async save() {
     this.dialogRef.close();
-    await this.shell.getConfig('campaign').onSave({ publishing: false });
+    await this.shell.getConfig('campaign').onSave(false);
     this.snackbar.open('The funding status has been updated.', null, { duration: 1000 });
   }
 }
