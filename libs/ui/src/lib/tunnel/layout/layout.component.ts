@@ -128,8 +128,9 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   /** Save the form and display feedback to user */
   async save() {
     await this.update({ publishing: false });
-    const configNames = Object.keys(this.configs).map(key => key.charAt(0).toUpperCase().concat(key.substring(1))).join(' & ');
-    await this.snackBar.open(`${configNames} saved`, '', { duration: 1000 }).afterDismissed().toPromise();
+    const configs = Object.keys(this.configs)
+    await this.snackBar.open(`${configs.map(config => this.configs[config].name).join(' & ')
+      } saved`, '', { duration: 1000 }).afterDismissed().toPromise();
     return true;
   }
 
@@ -165,7 +166,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
         const form = this.getForm(name as any);
         if (form.invalid) {
           const fields = findInvalidControls(form);
-          throw new Error(`Form "${name}" should be valid before publishing. Invalid fields are: ${fields.join()}`);
+          throw new Error(`Form "${name}" should be valid before publishing.Invalid fields are: ${fields.join()} `);
         }
       }
     }

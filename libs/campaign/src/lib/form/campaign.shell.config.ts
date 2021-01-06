@@ -11,6 +11,7 @@ import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
 @Injectable({ providedIn: 'root' })
 export class CampaignShellConfig implements FormShellConfig<CampaignControls, Campaign>{
   form = new CampaignForm();
+  name = 'Campaign'
   constructor(
     private route: RouterQuery,
     private service: CampaignService,
