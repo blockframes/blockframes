@@ -14,6 +14,7 @@
       [formControl]="searchCtrl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
+      [matChipInputAddOnBlur]="true"
       [matChipInputSeparatorKeyCodes]="separators"
       (matChipInputTokenEnd)="add($event.value)"
       [placeholder]="placeholder"

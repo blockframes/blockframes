@@ -49,6 +49,8 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   }
 
   /** Get value of item that has value */
+  // Error: Error: 'value' is defined as a property in class 'FormArray', but is overridden here in 'FormList<T, Control>' as an accessor.
+  //  @ts-ignore
   get value() {
     return this._value.filter((value: T) => hasValue(value));
   }

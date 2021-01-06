@@ -105,7 +105,6 @@ export function createLanguageControl(
   disableDubbed?: boolean
 ) {
   return new FormGroup({
-    original: new FormControl(language.original),
     dubbed: new FormControl({ value: language.dubbed, disabled: disableDubbed }),
     subtitle: new FormControl(language.subtitle),
     caption: new FormControl(language.caption)

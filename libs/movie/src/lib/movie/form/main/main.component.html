@@ -179,9 +179,8 @@
     <section id="directors">
       <h3>Director(s)*</h3>
 
-      <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
-        saveButtonText="Save Director">
-        <ng-template colRef="description" let-description>{{ description  | maxLength: 20 }}</ng-template>
+      <bf-form-table [columns]="displayedColumns" [form]="form.directors">
+        <ng-template colRef="description" let-description>{{ description | maxLength: 20 }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
@@ -245,6 +244,10 @@
             </div>
           </article>
         </ng-template>
+
+        <ng-template saveButtonText>Save Director</ng-template>
+        <ng-template addButtonText>Add a Director</ng-template>
+
       </bf-form-table>
     </section>
   </ng-container>
