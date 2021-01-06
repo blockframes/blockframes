@@ -4,6 +4,8 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
 
 @Component({
   selector: 'auth-widget',
@@ -16,8 +18,10 @@ export class AuthWidgetComponent {
   organization$ = this.organizationQuery.selectActive();
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
+  appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
 
   constructor(
+    private db: AngularFirestore,
     private service: AuthService,
     private query: AuthQuery,
     private organizationQuery: OrganizationQuery,
