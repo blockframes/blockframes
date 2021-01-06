@@ -12,14 +12,14 @@
 
     #puppet-player {
       height: 100%;
-  
+
       section {
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100%;
       }
-  
+
       div {
         div.jw-logo.jw-logo-top-right.jw-reset {
           /* We need to use `!important` because jwplayer style is inline */
@@ -32,6 +32,13 @@
         }
       }
     }
+  }
+
+  p {
+    text-align: center;
+  }
+  img {
+    width: 100px;
   }
 
   button.fullscreen {

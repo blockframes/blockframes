@@ -12,6 +12,7 @@ import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
 import { VideoViewerComponent } from './video-viewer/video-viewer.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    MatSnackBarModule,
 
     FileNameModule,
     ImageReferenceModule,
