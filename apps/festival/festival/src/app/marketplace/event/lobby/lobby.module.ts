@@ -7,13 +7,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Components
 import { LobbyComponent } from './lobby.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MeetingVideoModule } from '@blockframes/event/components/meeting/video/video.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 
 @NgModule({
