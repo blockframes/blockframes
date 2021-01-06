@@ -13,7 +13,7 @@
       <li>
         <div class="mat-tree-node">
           <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.id">
-            <mat-icon [svgIcon]="treeControl.isExpanded(node) ? 'chevron_bottom' : 'chevron_right'"></mat-icon>
+            <mat-icon [svgIcon]="treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'"></mat-icon>
           </button>
           <ng-template *ngTemplateOutlet="treeNode; context: {$implicit: node}"></ng-template>
         </div>

@@ -30,7 +30,7 @@ export class StatusIconPipe implements PipeTransform {
     switch(role) {
       case 'confirmed': return 'check_circle';
       case 'target': return 'estimated';
-      case 'looselyAttached': return 'empty_status'
+      case 'looselyAttached': return 'unpublished'
       default: return '';
     }
   }
