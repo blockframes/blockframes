@@ -17,7 +17,7 @@ import { anonDbLocal, anonymizeLatestProdDb, downloadProdDbBackup, importEmulato
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
-const [arg1, arg2, arg3] = flags;
+const [arg1, arg2] = flags;
 
 async function runCommand() {
   const { db } = loadAdminServices();
