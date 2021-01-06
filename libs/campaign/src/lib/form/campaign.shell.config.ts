@@ -6,6 +6,7 @@ import { Campaign, CampaignService } from '../+state';
 import { MediaService, extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from "rxjs";
+import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
 
 @Injectable({ providedIn: 'root' })
 export class CampaignShellConfig implements FormShellConfig<CampaignControls, Campaign>{
@@ -27,7 +28,7 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
     return [sub];
   }
 
-  async onSave(publishing: boolean): Promise<any> {
+  async onSave(options: FormSaveOptions): Promise<any> {
     const id: string = this.route.getParams('movieId');
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);

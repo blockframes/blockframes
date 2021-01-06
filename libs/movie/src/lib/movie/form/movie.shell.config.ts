@@ -11,6 +11,7 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import type { FormShellConfig } from './movie.shell.interfaces'
+import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 
 const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {
@@ -76,7 +77,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     return [onMovieChanges, onStatusChanges];
   }
 
-  async onSave(publishing: boolean): Promise<any> {
+  async onSave(options: FormSaveOptions): Promise<any> {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     const base = this.query.getActive();
     const movie = mergeDeep(base, documentToUpdate);
@@ -99,7 +100,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     dynamicKeyFields.forEach(key => movie[key] = this.form.value[key])
 
     // Specific update if publishing
-    if (publishing) {
+    if (options.publishing) {
       const currentApp: App = this.route.getData('app');
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.storeConfig.appAccess[currentApp] = true;

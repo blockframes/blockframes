@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { TunnelLayoutComponent } from './layout.component';
+import { TunnelConfirmExit, TunnelLayoutComponent } from './layout.component';
 import { TunnelNavComponent, StepActivePipe } from './nav/nav.component';
 import { TunnelStepStatComponent } from './step-stat/step-stat.component';
 import { UploadWidgetModule } from '@blockframes/media/components/upload/widget/upload-widget.module';
@@ -25,12 +25,14 @@ import { MatDividerModule } from '@angular/material/divider';
     TunnelLayoutComponent,
     TunnelNavComponent,
     TunnelStepStatComponent,
-    StepActivePipe
-    ],
+    StepActivePipe,
+    TunnelConfirmExit
+  ],
   exports: [
     TunnelLayoutComponent,
     TunnelNavComponent,
-    TunnelStepStatComponent],
+    TunnelStepStatComponent,
+    TunnelConfirmExit],
   imports: [
     CommonModule,
     RouterModule,

@@ -25,6 +25,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormArray, FormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -42,7 +43,6 @@ function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): 
   }
 }
 
-
 function parseUrlWithoutFragment(url: string): string {
   return url.includes('#') ? url.split('#')[0].split('/').pop() : url.split('/').pop();
 }
@@ -54,6 +54,16 @@ function getStepSnapshot(steps: TunnelStep[], url: string): TunnelStepSnapshot {
     if (route) {
       return { ...step, route };
     }
+  }
+}
+
+@Component({
+  selector: 'tunnel-confirm-exit',
+  template: `<ng-content></ng-content>`
+})
+export class TunnelConfirmExit {
+  constructor() {
+    console.log('INITIALIZED')
   }
 }
 
@@ -80,7 +90,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
 
-  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
+  @ContentChild(TunnelConfirmExit) confirmExitTemplate: TunnelConfirmExit
 
   @Input() steps: TunnelStep[];
 
@@ -127,8 +137,9 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   /** Save the form and display feedback to user */
   async save() {
-    await this.update(false);
-    await this.snackBar.open('Title saved', '', { duration: 1000 }).afterDismissed().toPromise();
+    await this.update({ publishing: false });
+    const configNames = Object.keys(this.configs).map(key => key.charAt(0).toUpperCase().concat(key.substring(1))).join(' & ');
+    await this.snackBar.open(`${configNames} saved`, '', { duration: 1000 }).afterDismissed().toPromise();
     return true;
   }
 
@@ -148,7 +159,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     });
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
-        /* Undefined means, user clicked on the backdrop, meaning just close the modal */
+        /* Undefined means user clicked on the backdrop, meaning just close the modal */
         if (typeof shouldSave === 'undefined') {
           return of(false)
         }
@@ -158,8 +169,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   }
 
   /** Update the movie. Used by summaries */
-  async update(publishing: boolean) {
-    if (publishing) {
+  async update(options: FormSaveOptions) {
+    if (options.publishing) {
       for (const name in this.configs) {
         const form = this.getForm(name as any);
         if (form.invalid) {
@@ -168,9 +179,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
         }
       }
     }
-    for (const name in this.configs) {
-      await this.configs[name].onSave(publishing);
-    }
+    const keys = Object.keys(this.configs);
+    await Promise.all(keys.map(key => this.configs[key].onSave(options.publishing)))
   }
 
   animationOutlet(outlet: RouterOutlet) {
