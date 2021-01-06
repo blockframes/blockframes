@@ -58,16 +58,6 @@ function getStepSnapshot(steps: TunnelStep[], url: string): TunnelStepSnapshot {
 }
 
 @Component({
-  selector: 'tunnel-confirm-exit',
-  template: `<ng-content></ng-content>`
-})
-export class TunnelConfirmExit {
-  constructor() {
-    console.log('INITIALIZED')
-  }
-}
-
-@Component({
   selector: '[exitRedirect] tunnel-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
@@ -90,7 +80,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
 
-  @ContentChild(TunnelConfirmExit) confirmExitTemplate: TunnelConfirmExit
+  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<any>
 
   @Input() steps: TunnelStep[];
 
