@@ -20,10 +20,4 @@ export class MaintenanceService {
       tap(_ => window.location.reload())
     )
   }
-
-  getAppVersion() {
-    return this.db.doc<{ currentVersion: number }>(`${META_COLLECTION_NAME}/_VERSION`).valueChanges().pipe(
-      map(data => data.currentVersion)
-    )
-  }
 }
