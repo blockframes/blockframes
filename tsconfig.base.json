@@ -60,7 +60,7 @@
       "@blockframes/testing/*": ["libs/testing/src/lib/*"],
       "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"],
       "@blockframes/campaign/*": ["libs/organization/campaign/src/lib/*"],
-      "@blockframes/consents": ["libs/consents/src/index.ts"]
+      "@blockframes/consents/*": ["libs/consents/src/lib/*"]
     }
   },
   "angularCompilerOptions": {
