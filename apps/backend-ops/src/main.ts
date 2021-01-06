@@ -4,7 +4,7 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage, prepareForTestingNew } from './firebaseSetup';
+import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage, prepareForTestingBeta } from './firebaseSetup';
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -22,9 +22,9 @@ const [arg1, arg2, arg3] = flags;
 async function runCommand() {
   const { db } = loadAdminServices();
   switch (cmd) {
-    case 'prepareForTestingNew':
+    case 'prepareForTestingBeta':
       await startMaintenance(db);
-      await prepareForTestingNew();
+      await prepareForTestingBeta();
       await endMaintenance(db);
       break;
     case 'prepareForTesting':

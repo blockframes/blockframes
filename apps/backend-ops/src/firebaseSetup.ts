@@ -64,7 +64,7 @@ export async function prepareForTesting() {
 
 }
 
-export async function prepareForTestingNew() {
+export async function prepareForTestingBeta() {
   console.log('Importing latest anonymized db from CI...')
   const cmd = 'gcloud firestore import gs://ci-backups-blockframes/LATEST-ANON-DB'
   console.log('Running command:', cmd)
