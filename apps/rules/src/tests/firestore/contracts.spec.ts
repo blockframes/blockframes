@@ -11,7 +11,7 @@ describe('Contracts Rules Tests', () => {
   const projectId = `ctrules-spec-${Date.now()}`;
   let db: Firestore;
 
-  describe.only('With User not in org', () => {
+  describe('With User not in org', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
     });
@@ -36,16 +36,16 @@ describe('Contracts Rules Tests', () => {
     });
 
     describe.skip('Update Contracts', () => {
-      test('should be able to read movie', async () => {
-        const movieRef = db.doc('movies/M001');
-        await assertSucceeds(movieRef.get());
+      test('should be able to update contract', async () => {
+        const contractRef = db.doc('movies/M001');
+        await assertSucceeds(contractRef.get());
       });
 
       test('should be able to read movie distribution rights', async () => {
-        const movieDRRef = db.doc('movies/M001/distributionRights/DR001');
-        await assertSucceeds(movieDRRef.get());
+        const contractRef = db.doc('movies/M001/distributionRights/DR001');
+        await assertSucceeds(contractRef.get());
       });
-    });    
+    });
   });
 
   describe.only('With User in org', () => {
@@ -55,7 +55,16 @@ describe('Contracts Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('test', async () => {});
+    describe('Read Contracts', () => {
+      test('should be able to read contract', async () => {
+        const contractRef = db.doc('contracts/C001');
+        await assertSucceeds(contractRef.get());
+      });
+    });
+
+    describe.skip('Create Contracts', () => {
+
+    });
   });
 
 });
