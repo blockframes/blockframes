@@ -33,7 +33,6 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   /** the image to display */
   @Input() set ref(image: string) {
-    if (!image) return;
     this.ref$.next(image);
   }
 
@@ -119,13 +118,13 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
         // Next subscription change will be delayed
         _delay = this.delay;
-        this.cdr.markForCheck()
       } else {
 
         // asset
         this.srcset = getAssetPath(asset, theme, this.type);
         this.src = this.srcset;
       }
+      this.cdr.markForCheck()
     });
   }
 

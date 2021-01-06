@@ -18,11 +18,11 @@
         <span mat-line><b>Screening List</b></span>
       </a>
       <a mat-list-item routerLink="event/calendar" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="calendar"></mat-icon>
+        <mat-icon mat-list-icon svgIcon="calendar_today"></mat-icon>
         <span mat-line><b>My Calendar</b></span>
       </a>
       <a mat-list-item routerLink="wishlist" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="heart_fill"></mat-icon>
+        <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
         <span mat-line><b>My Wishlist</b></span>
       </a>
       <ng-container *ngIf="org$ | async | canAccess: 'dashboard'">
@@ -41,7 +41,7 @@
       <img src="assets/images/screen-logo.png" />
     </div>
     <a test-id="heart-icon" mat-icon-button routerLink="event/calendar">
-      <mat-icon svgIcon="calendar"></mat-icon>
+      <mat-icon svgIcon="calendar_today"></mat-icon>
     </a>
   </header>
 

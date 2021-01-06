@@ -53,14 +53,14 @@
                   <mat-icon svgIcon="pause_circle"></mat-icon>
                 </button>
                 <button mat-icon-button (click)="task$.cancel()">
-                  <mat-icon svgIcon="cross_circle"></mat-icon>
+                  <mat-icon svgIcon="cancel"></mat-icon>
                 </button>
               </ng-template>
 
               <!-- Error -->
               <ng-template ngSwitchCase="canceled">
                 <button mat-icon-button (click)="remove(i)">
-                  <mat-icon svgIcon="cross_circle"></mat-icon>
+                  <mat-icon svgIcon="cancel"></mat-icon>
                 </button>
               </ng-template>
 
@@ -70,7 +70,7 @@
                   <mat-icon svgIcon="play_circle"></mat-icon>
                 </button>
                 <button mat-icon-button (click)="cancel(task$)">
-                  <mat-icon svgIcon="cross_circle"></mat-icon>
+                  <mat-icon svgIcon="cancel"></mat-icon>
                 </button>
               </ng-template>
 

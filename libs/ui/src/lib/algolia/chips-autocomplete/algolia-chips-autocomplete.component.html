@@ -5,7 +5,7 @@
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" selectable removable (removed)="form.removeAt(i)" (dblclick)="edit(i)">
         <span>{{ value | deepKey: displayWithPath }}</span>
-        <mat-icon matChipRemove svgIcon="close"></mat-icon>
+        <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
       </mat-chip>
     </ng-container>
     <input #input

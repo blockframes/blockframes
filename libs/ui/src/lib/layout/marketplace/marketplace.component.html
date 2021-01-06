@@ -23,7 +23,7 @@
         </a>
         <ng-content select="header"></ng-content>
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-          <mat-icon svgIcon="heart_fill" [matBadge]="wishlistCount$ | async"
+          <mat-icon svgIcon="favorite" [matBadge]="wishlistCount$ | async"
             [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </a>
@@ -32,19 +32,19 @@
           <!-- Invitations -->
           <a mat-icon-button routerLink="invitations" test-id="invitations-link">
             <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-              <mat-icon svgIcon="add_member" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+              <mat-icon svgIcon="person_add" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
             <ng-template #noInvitation>
-              <mat-icon svgIcon="add_member"></mat-icon>
+              <mat-icon svgIcon="person_add"></mat-icon>
             </ng-template>
           </a>
           <!-- Notifications -->
           <a mat-icon-button routerLink="notifications" test-id="notifications-link">
             <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-              <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+              <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
             <ng-template #noNotification>
-              <mat-icon svgIcon="bell"></mat-icon>
+              <mat-icon svgIcon="notifications"></mat-icon>
             </ng-template>
           </a>
           <auth-widget></auth-widget>
