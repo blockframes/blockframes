@@ -1,4 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Event } from '@blockframes/event/+state';
 import { Invitation, InvitationService } from '../../+state';
@@ -15,10 +16,10 @@ export class ActionComponent {
   public invit: Invitation;
 
   @Input() set invitation(invit: Invitation) {
-    this.invit= invit;
+    this.invit = invit;
 
     if (this.requestPending && invit.status === 'accepted') {
-      this.router.navigate(['/c/o/marketplace/event', invit.docId, 'session']);
+      this.router.navigate(['/c/o/marketplace/event', invit.eventId, 'session']);
       this.requestPending = false;
     }
   }
@@ -27,8 +28,9 @@ export class ActionComponent {
 
   constructor(
     private router: Router,
-    private service: InvitationService
-  ) {}
+    private service: InvitationService,
+    private snackBar: MatSnackBar,
+  ) { }
 
   accept(invitation: Invitation) {
     this.service.acceptInvitation(invitation);
@@ -40,8 +42,11 @@ export class ActionComponent {
 
   /** Request the owner to accept invitation (automatically accepted if event is public) */
   request(event: Event) {
-    const { ownerId, id } = event;
+    const { ownerId, id, isPrivate } = event;
     this.service.request('org', ownerId).from('user').to('attendEvent', id);
+    if (isPrivate) {
+      this.snackBar.open('Your request has been sent to the organizer.', 'close', { duration: 2000 });
+    }
     this.requestPending = true;
   }
 }

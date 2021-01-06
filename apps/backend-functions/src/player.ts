@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToEvent } from './internals/invitations/events';
 import { PublicUser } from './data/types';
-import { jwplayerSecret, jwplayerKey } from './environments/environment';
+import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument, getOrganizationsOfMovie } from './data/internals';
@@ -72,30 +72,30 @@ export const getPrivateVideoUrl = async (
     // CHECK FOR EVENT MEMBER
     if (!access && data.eventId) {
       const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
-    
+
       if (!event) {
         return {
           error: 'UNKNOWN_EVENT',
           result: `There is no event with the ID ${data.eventId}`
         };
       }
-    
+
       if (event.type !== 'screening' && event.type !== 'meeting') {
         return {
           error: 'WRONG_EVENT_TYPE',
           result: `The event ${data.eventId} is a ${event.type} but only 'screening' & 'meeting' are supported.`
         };
       }
-    
+
       const now = firestore.Timestamp.now();
-    
+
       if (now.seconds < event.start.seconds) {
         return {
           error: 'TOO_EARLY',
           result: `The event ${data.eventId} hasn't started yet`
         };
       }
-    
+
       if (now.seconds > event.end.seconds) {
         return {
           error: 'TOO_LATE',
@@ -151,7 +151,7 @@ export const getPrivateVideoUrl = async (
       result: `The file ${data.ref} was pointing to the existing document (${doc.id}), but this document doesn't contain the file or it's not a video`
     }
   }
-  
+
   const jwPlayerId = savedRef.jwPlayerId
 
   // watermark fallback : in case the user's watermark doesn't exist we generate it
@@ -257,7 +257,8 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const [videoUrl] = await file.getSignedUrl({ action: 'read', expires });
 
   const jw = new JWPlayerApi({ apiKey: jwplayerKey, apiSecret: jwplayerSecret });
-  const result = await jw.videos.create({ download_url: videoUrl }).catch(e => ({ status: 'error', message: e.message }));
+  const tags = enableDailyFirestoreBackup ? 'production' : 'test';
+  const result = await jw.videos.create({ download_url: videoUrl, tags }).catch(e => ({ status: 'error', message: e.message }));
 
   if (result.status === 'error' || !result.video || !result.video.key) {
     return { success: false, message: result.message || '' }

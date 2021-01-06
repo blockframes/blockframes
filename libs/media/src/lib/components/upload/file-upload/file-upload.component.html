@@ -39,6 +39,6 @@
   <h3>{{ form.fileName.value }}</h3>
   <span *ngIf="!!localSize" class="mat-body-2">{{ localSize }}</span>
   <button mat-mini-fab color="divider">
-    <mat-icon (click)="delete(fileExplorer)" svgIcon="cross" matTooltip="Delete File"></mat-icon>
+    <mat-icon (click)="delete()" svgIcon="close" matTooltip="Delete File"></mat-icon>
   </button>
 </ng-template>

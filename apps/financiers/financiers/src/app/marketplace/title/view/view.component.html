@@ -20,13 +20,13 @@
       <h1>Project Funding</h1>
       <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
       <ng-container *ngIf="orgs$ | async as orgs">
-        <p class="mat-caption">Meet the fund to have further information</p>
+        <p class="mat-caption">Contact financier for further information</p>
         <button mat-flat-button color="accent" (click)="openForm(orgs)">
           Open discussion
         </button>
       </ng-container>
       <a mat-button class="mat-caption" href="assets/docs/film-industry.pdf" target="_blank">Learn more about investing
-        in cinema industry</a>
+        in the content industry</a>
     </section>
 
   </title-marketplace-shell>
@@ -44,7 +44,6 @@
             <mat-option></mat-option>
             <mat-option value="main">Main</mat-option>
             <mat-option value="artistic">Artistic</mat-option>
-            <mat-option value="artistic">Artistic</mat-option>
             <mat-option value="additional">Additional</mat-option>
             <mat-option value="financial">Financial</mat-option>
             <mat-option value="investment">Investment</mat-option>
@@ -59,10 +58,12 @@
           <mat-form-field fxFlex appearance="outline">
             <mat-label>From</mat-label>
             <input type="number" matInput formControlName="from" min="0" />
+            <mat-icon matPrefix [svgIcon]="(campaign$ | async)?.currency"></mat-icon>
           </mat-form-field>
           <mat-form-field fxFlex appearance="outline">
             <mat-label>To</mat-label>
             <input type="number" matInput formControlName="to" min="0" />
+            <mat-icon matPrefix [svgIcon]="(campaign$ | async)?.currency"></mat-icon>
           </mat-form-field>
         </div>
         <mat-form-field appearance="outline">
@@ -72,7 +73,7 @@
         </mat-form-field>
         <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="32px">
           <button type="submit" mat-stroked-button color="primary" [disabled]="form.invalid">
-            <mat-icon svgIcon="accept"></mat-icon>
+            <mat-icon svgIcon="thumb_up"></mat-icon>
             <span>Send your message</span>
           </button>
           <button type="reset" mat-dialog-close mat-button>Cancel</button>

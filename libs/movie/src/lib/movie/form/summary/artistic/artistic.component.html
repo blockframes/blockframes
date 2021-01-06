@@ -3,21 +3,22 @@
   <h6>
     Cast Members
     <a mat-icon-button [routerLink]="link" fragment="cast-member">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.cast" [link]="link" fragment="cast-member">
       <ng-template let-casts="control">
-        <li test-id="cast-summary" *ngFor="let cast of casts.controls">
-          <strong>
-            <missing-control [control]="cast.get('firstName')" [link]="link" fragment="cast-member"></missing-control>
-          </strong>
-          <span>&nbsp;</span>
-          <strong>
-            <missing-control [control]="cast.get('lastName')" [link]="link" fragment="cast-member"></missing-control>
-          </strong>
-          <span>&nbsp;</span>
+        <li test-id="cast-summary" *ngFor="let cast of casts.controls" fxLayout="column">
+          <article fxLayout="row">
+            <strong>
+              <missing-control [control]="cast.get('firstName')" [link]="link" fragment="cast-member"></missing-control>
+            </strong>
+            <span>&nbsp;</span>
+            <strong>
+              <missing-control [control]="cast.get('lastName')" [link]="link" fragment="cast-member"></missing-control>
+            </strong>
+          </article>
           <missing-control [control]="cast.filmography" [link]="link" fragment="cast-member">
             <ng-template let-filmographies>
               <ng-container *ngFor="let filmography of filmographies">
@@ -25,6 +26,7 @@
               </ng-container>
             </ng-template>
           </missing-control>
+          <missing-control [control]="cast.get('description')" [link]="link" fragment="cast-member"></missing-control>
         </li>
       </ng-template>
     </missing-control>
@@ -36,30 +38,34 @@
   <h6>
     Crew Members
     <a mat-icon-button [routerLink]="link" fragment="crew-member">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.crew" fragment="crew-member" [link]="link">
       <ng-template let-crew="control">
-        <li test-id="crew-summary" *ngFor="let crew of crew.controls">
-          <strong>
-            <missing-control [control]="crew.get('firstName')" [link]="link" fragment="crew-member"></missing-control>
-          </strong>
-          <span>&nbsp;</span>
-          <strong>
-            <missing-control [control]="crew.get('lastName')" [link]="link" fragment="crew-member"></missing-control>
-          </strong>
-          <span>&nbsp;</span>
-          <ng-container *ngFor="let film of crew.filmography.controls; let isLast = last">
-            <span *ngIf="film.get('title').value">
-              <missing-control [control]="film.get('title')" [link]="link" fragment="crew-member"></missing-control>
-              <span>&nbsp;</span>
-              <span>(<missing-control [control]="film.get('year')" [link]="link" fragment="cast-member">
-                </missing-control>)</span>
-              <ng-container>{{ isLast ? '' : ', ' }}</ng-container>
-            </span>
-          </ng-container>
+        <li test-id="crew-summary" *ngFor="let crew of crew.controls" fxLayout="column">
+          <article fxLayout="row">
+            <strong>
+              <missing-control [control]="crew.get('firstName')" [link]="link" fragment="crew-member"></missing-control>
+            </strong>
+            <span>&nbsp;</span>
+            <strong>
+              <missing-control [control]="crew.get('lastName')" [link]="link" fragment="crew-member"></missing-control>
+            </strong>
+            <span>&nbsp;</span>
+            <strong>
+              (<missing-control [control]="crew.get('role')" scope="crewRoles" [link]="link" fragment="crew-member"></missing-control>)
+            </strong>
+          </article>
+          <missing-control [control]="crew.filmography" [link]="link" fragment="crew-member">
+            <ng-template let-filmographies>
+              <ng-container *ngFor="let filmography of filmographies">
+                {{ filmography | filmography }}
+              </ng-container>
+            </ng-template>
+          </missing-control>
+          <missing-control [control]="crew.get('description')" [link]="link" fragment="crew-member"></missing-control>
         </li>
       </ng-template>
     </missing-control>

@@ -6,15 +6,18 @@
 
 <!-- Banner -->
 <ng-template #banner let-section>
-  <header [bgRef]="section.background" bgAsset="banner.png" class="banner dark-contrast-theme">
-    <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
-    <h1 *ngIf="section.title">{{ section.title }}</h1>
-    <p *ngIf="section.description">{{ section.description }}</p>
-    <div class="links" fxLayout fxLayoutGap="16px">
-      <ng-container *ngFor="let link of section.links">
-        <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
-      </ng-container>
+  <header class="banner dark-contrast-theme" [bgRef]="section.background" bgAsset="banner.png">
+    <div class="banner-details">
+      <h4 *ngIf="section.subtitle">{{ section.subtitle }}</h4>
+      <h1 class="mat-display-2" *ngIf="section.title">{{ section.title }}</h1>
+      <p *ngIf="section.description">{{ section.description }}</p>
+      <div class="links" fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
+        <ng-container *ngFor="let link of section.links">
+          <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
+        </ng-container>
+      </div>
     </div>
+    <img *ngIf="section.image" asset="" [ref]="section.image"/>
   </header>
 </ng-template>
 
@@ -23,7 +26,7 @@
   <section class="hero" bgAsset="hero.png" [bgRef]="section.background">
     <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
       <h1 *ngIf="section.title">{{ section.title }}</h1>
-      <h3 *ngIf="section.subtitle">{{ section.subtitle }}</h3>
+      <p *ngIf="section.description">{{ section.description }}</p>
       <div class="links" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
         <ng-container *ngFor="let link of section.links">
           <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
@@ -35,7 +38,7 @@
 
 <!-- Titles -->
 <ng-template #titles let-section>
-  <section class="titles">
+  <section class="titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link || '../title'" color="primary">
@@ -45,7 +48,7 @@
     </header>
     <bf-carousel flex>
       <ng-container *ngFor="let movie of section | queryTitles | async">
-        <movie-card [movie]="movie" [size]="section.mode" [link]="['title', movie.id]" [col]="3" carouselItem>
+        <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]" [col]="3" carouselItem>
         </movie-card>
       </ng-container>
     </bf-carousel>
@@ -54,7 +57,7 @@
 
 <!-- Orgs -->
 <ng-template #orgs let-section>
-  <section class="orgs">
+  <section class="orgs cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link || '../organization'" color="primary">
@@ -96,7 +99,7 @@
 
 <!-- Org Titles -->
 <ng-template #orgTitles let-section>
-  <section class="org-titles">
+  <section class="org-titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link || '../organization'" color="primary">

@@ -4,7 +4,7 @@
       <h3>Release</h3>
       <section id="release">
 
-        <bf-form-list [form]="form.originalRelease" buttonText="Add a Release">
+        <bf-form-list [form]="form.originalRelease">
           <ng-template itemRef let-release>{{ release.country | toLabel: 'territories' }} -
             {{ release.media | toLabel: 'medias' }} - {{ release.date | date: 'shortDate' }}</ng-template>
           <ng-template formView let-releaseForm>
@@ -24,10 +24,13 @@
                 <input matInput test-id="release-date" formControlName="date" [matDatepicker]="datePicker"
                   placeholder="YYYY/MM/DD">
                 <mat-datepicker-toggle matSuffix [for]="datePicker">
-                  <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+                  <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
                 </mat-datepicker-toggle>
                 <mat-datepicker #datePicker></mat-datepicker>
               </mat-form-field>
+
+              <ng-template saveButtonText>Save Release</ng-template>
+              <ng-template addButtonText>Add a Release</ng-template>
 
             </article>
           </ng-template>
@@ -49,7 +52,7 @@
       <h3>Box Office</h3>
       <section id="box-office" *ngIf="units$ | async as units">
 
-        <bf-form-list [form]="form.boxOffice" buttonText="Add a Box Office">
+        <bf-form-list [form]="form.boxOffice">
           <ng-template itemRef let-boxOffice>
             <span>
               {{ boxOffice.territory | toLabel: 'territories' }} -
@@ -88,11 +91,14 @@
                   Please enter box office figures.
                 </mat-error>
                 {{ boxOfficeForm.get('value').controls }}
-                <span *ngIf="units[boxOfficeForm.get('value')] === '$'"
-                  matPrefix>{{ units[boxOfficeForm.get('value')] }}&nbsp;</span>
-                <span *ngIf="units[boxOfficeForm.get('value')] !== '$'"
-                  matSuffix>&nbsp;{{ units[boxOfficeForm.get('value')] }}</span>
+                <span *ngIf="units[boxOfficeForm.get('value')] === '$'" matPrefix>{{ units[boxOfficeForm.get('value')]
+                  }}&nbsp;</span>
+                <span *ngIf="units[boxOfficeForm.get('value')] !== '$'" matSuffix>&nbsp;{{
+                  units[boxOfficeForm.get('value')] }}</span>
               </mat-form-field>
+
+              <ng-template saveButtonText>Save Box Office</ng-template>
+              <ng-template addButtonText>Add a Box Office</ng-template>
 
             </article>
           </ng-template>
@@ -105,7 +111,7 @@
     <ng-container *ngIf="form | hasStatus: ['finished', 'released']">
       <h3>Rating</h3>
       <section id="rating">
-        <bf-form-list [form]="form.rating" buttonText="Add a Rating">
+        <bf-form-list [form]="form.rating">
           <ng-template itemRef let-rating> {{ rating.value }} - {{ rating.country | toLabel: 'territories'}}
           </ng-template>
           <ng-template formView let-ratingForm>
@@ -120,6 +126,10 @@
                 <mat-hint>Please specify country applying rating system.</mat-hint>
               </form-country>
             </div>
+
+            <ng-template saveButtonText>Save Rating</ng-template>
+            <ng-template addButtonText>Add a Rating</ng-template>
+
           </ng-template>
         </bf-form-list>
       </section>
@@ -133,7 +143,7 @@
         <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
           <ng-container *ngFor="let certification of certifications; index as i">
-            <mat-button-toggle [attr.test-id]= "'certification' + (i + 1)" [value]="certification">
+            <mat-button-toggle [attr.test-id]="'certification' + (i + 1)" [value]="certification">
               {{ certification | toLabel: 'certifications' }}
             </mat-button-toggle>
           </ng-container>
@@ -147,15 +157,20 @@
 
     <section id="audience-goals" fxLayout="column">
       <h3>Positioning</h3>
-      <bf-form-list [form]="audience.get('targets')" buttonText="Add a Target">
+      <bf-form-list [form]="audience.get('targets')">
         <ng-template itemRef let-target>{{ target }}</ng-template>
         <ng-template formView let-targetForm>
           <div fxLayout>
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Target Audience (optional)</mat-label>
-              <input test-id="target-audience" matInput type="text" placeholder="Target Audience" [formControl]="targetForm" />
+              <input test-id="target-audience" matInput type="text" placeholder="Target Audience"
+                [formControl]="targetForm" />
             </mat-form-field>
           </div>
+
+          <ng-template saveButtonText>Save Target</ng-template>
+          <ng-template addButtonText>Add a Target</ng-template>
+
         </ng-template>
       </bf-form-list>
 

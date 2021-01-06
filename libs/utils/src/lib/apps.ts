@@ -7,8 +7,9 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
 export interface AppMailSetting {
-  name: AppNameValue,
+  description: string,
   logo: AppLogoValue,
+  name: AppNameValue,
   url?: string,
 }
 
@@ -35,14 +36,19 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
-// TODO #4206 Use PNG logo, Gmail doesn't support SVG picture
 export const appLogo = {
-  catalog: `${appUrl.content}/assets/logo/dark/archipel_content_logo.svg`,
-  festival: `${appUrl.market}/assets/logo/dark/logo_archipel_market_outline.svg`,
-  financiers: `${appUrl.financiers}/assets/logo/dark/logo_media_financiers.svg`,
+  catalog: `${appUrl.content}/assets/logo/light/content-primary-blue.png`,
+  festival: `${appUrl.market}/assets/logo/light/market-primary-blue.png`,
+  financiers: `${appUrl.financiers}/assets/logo/light/mf-primary-blue.png`,
 };
-type AppLogo = keyof typeof appLogo;
-type AppLogoValue = typeof appLogo[AppLogo];
+type AppLogoValue = typeof appLogo[App];
+
+// TODO #4510 add text description
+export const appDescription = {
+  catalog: '',
+  festival: '',
+  financiers: '',
+};
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;

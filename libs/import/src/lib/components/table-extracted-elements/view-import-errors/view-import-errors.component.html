@@ -9,7 +9,7 @@
         </mat-panel-title>
         <mat-panel-description [style.color]="error.type === 'error' ? 'red' : 'orange'">
           {{ error.reason }}
-          <mat-icon [svgIcon]="error.type === 'error' ? 'close' : 'refuse' "></mat-icon>
+          <mat-icon [svgIcon]="error.type === 'error' ? 'cancel' : 'block' "></mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
       <p><strong>{{ error.field }} : </strong> {{ error.hint }}</p>

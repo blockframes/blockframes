@@ -18,10 +18,12 @@ section {
 
 a {
   color: var(--primary);
+  cursor: pointer;
 }
 
 .mat-icon-button {
   width: 48px;
+  height: 100%;
   margin-bottom: 8px;
   .add-files-icon {
     width: 100%;

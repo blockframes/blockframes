@@ -3,6 +3,11 @@
   padding: 24px;
 }
 
+media-player {
+  display: block;
+  width: 500px;
+}
+
 mat-divider {
   margin: 24px 0;
 }
@@ -22,5 +27,13 @@ h5 {
   }
   p {
     width: 50%;
+  }
+}
+
+@import '~@angular/flex-layout/mq';
+
+@include layout-bp(lt-md) {
+  media-player {
+    width: 100%;
   }
 }

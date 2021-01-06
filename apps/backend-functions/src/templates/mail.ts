@@ -6,7 +6,7 @@ import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { EmailRecipient } from '@blockframes/utils/emails/utils';
+import { EmailRecipient, EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
@@ -67,13 +67,18 @@ export function userInvite(
   password: string,
   orgName: string,
   pageURL: string = appUrl.market,
-  templateId: string = templateIds.user.credentials.joinOrganization.festival
+  templateId: string = templateIds.user.credentials.joinOrganization,
+  eventData?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
     orgName,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`
+    eventName: eventData.title || '',
+    eventStartDate: eventData.start || '',
+    eventEndDate: eventData.end || '',
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
+    sessionURL: eventData.id ? `${pageURL}/c/o/marketplace/event/${eventData.id}` : ''
   };
   return { to: email, templateId, data };
 }
@@ -95,13 +100,10 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   return { to: email, templateId: templateIds.request.joinOrganization.pending, data };
 }
 
-// TODO #4206 Update and delete the appLabel parameter
-// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Email to let org admin knows that his/her organization has access to a new app */
-export function organizationAppAccessChanged(admin: PublicUser, appLabel: string, url: string): EmailTemplateRequest {
+export function organizationAppAccessChanged(admin: PublicUser, url: string): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
-    appName: appLabel,
     url
   }
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
@@ -118,8 +120,19 @@ export function userJoinedAnOrganization(userEmail: string, url: string = appUrl
 }
 
 /** Send email to org admin to inform him that a new user has joined his org */
-export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: string): EmailTemplateRequest {
+export function userJoinedYourOrganization(
+  orgAdminEmail: string,
+  adminFirstName: string,
+  orgDenomination: string,
+  userFirstName: string,
+  userLastName: string,
+  userEmail: string):
+EmailTemplateRequest {
   const data = {
+    adminFirstName,
+    orgDenomination,
+    userFirstName,
+    userLastName,
     userEmail
   };
   return { to: orgAdminEmail, templateId: templateIds.org.memberAdded, data };
@@ -137,34 +150,30 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
   return { to: request.adminEmail, templateId: templateIds.request.joinOrganization.created, data };
 }
 
-// TODO #4206 Update and delete the appLabel parameter
-// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Generates an email for user invited by an organization to an event. */
 export function invitationToEventFromOrg(
   recipient: EmailRecipient,
   orgDenomination: string,
-  appLabel: string,
-  eventId: string,
+  eventData: EventEmailData,
   link: string,
-  url: string = appUrl.market
+  url: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: recipient.name,
     orgName: orgDenomination,
-    appName: appLabel,
-    eventName: eventId,
-    pageURL: `${url}/${link}`
+    eventName: eventData.title,
+    pageURL: `${url}/${link}`,
+    sessionURL: `${url}/c/o/marketplace/event/${eventData.id}`,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
 
-// TODO #4206 Update and delete the appLabel parameter
-// TODO as the app.name will be able inside the appMailSetting object directly in snedMailFromTemplate function
 /** Generates an email for user requesting to attend an event. */
 export function requestToAttendEventFromUser(
   fromUserFirstname: string,
   fromUserOrgName: string,
-  appLabel: string,
   recipient: EmailRecipient,
   eventTitle: string,
   link: string,
@@ -174,11 +183,29 @@ export function requestToAttendEventFromUser(
     adminFirstName: recipient.name,
     userFirstName: fromUserFirstname,
     orgName: fromUserOrgName,
-    appName: appLabel,
     eventName: eventTitle,
     pageURL: `${url}/${link}`
   };
   return { to: recipient.email, templateId: templateIds.request.attendEvent.created, data };
+}
+
+/** Generate an email to inform users that their request to attend an event was accepted */
+export function requestToAttendEventFromUserAccepted(
+  toUser: PublicUser,
+  organizerOrgName: string,
+  eventData: EventEmailData,
+  pageURL: string = appUrl.market,
+): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    userLastName: toUser.lastName,
+    organizerOrgName,
+    eventName: eventData.title,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end,
+    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
+  };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
 
 // ------------------------- //
@@ -253,6 +280,7 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
 
     User informations
 
+    app: ${information.app}
     First name: ${information.firstName}
     Last name: ${information.lastName}
     Email: ${information.email}

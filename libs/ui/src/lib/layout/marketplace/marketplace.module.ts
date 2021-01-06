@@ -24,8 +24,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 
-
-
 @NgModule({
   declarations: [MarketplaceComponent],
   exports: [MarketplaceComponent],

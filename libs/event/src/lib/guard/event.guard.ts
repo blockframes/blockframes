@@ -7,6 +7,7 @@ import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { Meeting } from '../+state/event.firestore';
 
 
 @Injectable({ providedIn: 'root' })
@@ -39,7 +40,7 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
     }
     const hasUserAccepted = this.invitationQuery.hasEntity((invitation: Invitation) => {
       return (
-        invitation.docId === event.id &&
+        invitation.eventId === event.id &&
         invitation.status === 'accepted' && (
           invitation.mode === 'request' && invitation.fromUser.uid === this.authQuery.userId ||
           invitation.mode === 'invitation' && invitation.toUser.uid === this.authQuery.userId
@@ -74,6 +75,9 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
       return true;
     } else {
       const event = this.eventQuery.getActive();
+      if (event.type === 'meeting') {
+        if ((event.meta as Meeting).attendees[this.authQuery.userId] === 'ended') return true;
+      }
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: {
           title: 'Are you sure ?',

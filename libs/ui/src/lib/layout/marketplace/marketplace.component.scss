@@ -14,15 +14,15 @@ mat-sidenav-content {
   header {
     width: 100%;
 
-    /* We can't use the fxLayoutGap directive because it set the margin right
-    property to the specified value. But we need to use margin-right:auto to split 
-    the content and we don't want to use !important */
-    * {
+    :first-child {
       margin-right: 24px;
     }
 
-    button mat-icon {
-      margin-right: 0px;
+    /* We can't use the fxLayoutGap directive because it set the margin right
+    property to the specified value. But we need to use margin-right:auto to split
+    the content and we don't want to use !important */
+    a {
+      margin-right: 24px;
     }
 
     a:first-of-type {
@@ -35,7 +35,7 @@ mat-sidenav-content {
     overflow: auto;
 
     .page {
-      min-height: 100%;
+      min-height: calc(100% - 140px); /** 140px : bf-footer height . This will need an update if footer height is changed **/
     }
   }
 }

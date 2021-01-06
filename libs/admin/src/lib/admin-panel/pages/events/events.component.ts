@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { EventService, Event } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
+import { Router } from '@angular/router';
+import { OrganizationService, orgName } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'admin-events',
@@ -11,15 +13,16 @@ import { InvitationService } from '@blockframes/invitation/+state';
 })
 export class EventsComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'title': 'Title',
     'type': 'Type',
     'start': 'Start',
     'end': 'End',
-    'attendees': 'Number of attendees',
+    'hostedBy': 'Hosted by',
+    'invited': 'Number of invitations',
     'confirmed': 'Confirmed',
     'pending': 'Pending',
-    'edit': 'Edit',
+    'privacyStatus': 'Privacy status'
   };
 
   public initialColumns: string[] = [
@@ -28,10 +31,11 @@ export class EventsComponent implements OnInit {
     'type',
     'start',
     'end',
-    'attendees',
+    'hostedBy',
+    'invited',
     'confirmed',
     'pending',
-    'edit',
+    'privacyStatus'
   ];
   public rows: any[] = [];
   public eventListLoaded = false;
@@ -40,6 +44,8 @@ export class EventsComponent implements OnInit {
     private eventService: EventService,
     private invitationService: InvitationService,
     private cdRef: ChangeDetectorRef,
+    private router: Router,
+    private orgService: OrganizationService,
   ) { }
 
   async ngOnInit() {
@@ -47,16 +53,12 @@ export class EventsComponent implements OnInit {
     const promises = events.map(async event => {
       const row = { ...event } as any;
       // Append new data for table display
-      row.edit = {
-        id: row.id,
-        link: `/c/o/admin/panel/event/${row.id}`,
-      }
-
-      const invitations = await this.invitationService.getValue(ref => ref.where('docId', '==', row.id));
-      row.attendees = invitations.length;
+      const invitations = await this.invitationService.getValue(ref => ref.where('eventId', '==', row.id));
+      row.hostedBy = event.ownerId ? await this.orgService.getValue(event.ownerId) : undefined;
+      row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
-
+      row.privacyStatus = event.isPrivate ? 'private' : 'public';
       return row;
     });
 
@@ -65,11 +67,17 @@ export class EventsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
+  goToEdit(event) {
+    this.router.navigate([`/c/o/admin/panel/event/${event.id}`])
+  }
+
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
       'title',
       'type',
+      'privacyStatus',
+      'hostedBy',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
@@ -82,10 +90,11 @@ export class EventsComponent implements OnInit {
       'event type': i.type,
       'start date': i.start,
       'end date': i.end,
-      'attendees': i.attendees,
+      'hosted by': i.hostedBy ? orgName(i.hostedBy, 'full') : '--',
+      'invited': i.invited,
       'confirmed': i.confirmed,
       'pending': i.pending,
-      'privacy status': i.isPrivate ? 'private' : 'public',
+      'privacy status': i.privacyStatus,
     }))
     downloadCsvFromJson(exportedRows, 'invitations-list');
   }

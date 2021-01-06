@@ -42,21 +42,21 @@
         <mat-card [col]="3" *ngIf="movie.promotional.presentation_deck as deck">
           <img asset="deck.webp" />
           <a mat-button [href]="deck | getUrl | async" target="_blank">
-            <mat-icon svgIcon="download"></mat-icon>
+            <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Presentation Deck</span>
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="movie.promotional.scenario as scenario">
           <img asset="scenario.webp" />
           <a mat-button [href]="scenario | getUrl | async" target="_blank">
-            <mat-icon svgIcon="download"></mat-icon>
+            <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Script</span>
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="movie.promotional.moodboard as moodboard">
           <img asset="moodboard.webp" />
           <a mat-button [href]="moodboard | getUrl | async" target="_blank">
-            <mat-icon svgIcon="download"></mat-icon>
+            <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Moodboard</span>
           </a>
         </mat-card>

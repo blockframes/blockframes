@@ -1,33 +1,31 @@
 
-<section fxLayout="column" fxLayoutAlign="space-between">
-  <article class="file">
-    <ng-container *ngIf="!!event.meta.selectedFile">
-      <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
-        <ng-container *ngSwitchCase="'image'">
-          <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
-        </ng-container>
-        <ng-container *ngSwitchCase="'pdf'">
-          <event-pdf-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></event-pdf-viewer>
-        </ng-container>
-        <ng-container *ngSwitchCase="'video'">
-          <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          <article class="noFile">
-            <h3>Sorry</h3>
-            <img asset="no_titles.webp" alt="Flying saucer">
-            <p>We don't know how to display this file.</p>
-            <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
-          </article>
-        </ng-container>
+<section fxLayout="column" fxLayoutAlign="space-between" [ngClass]="{ owner: event.isOwner }">
+  <ng-container *ngIf="!!event.meta.selectedFile">
+    <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
+      <ng-container *ngSwitchCase="'image'">
+        <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
+      </ng-container>
+      <ng-container *ngSwitchCase="'pdf'">
+        <event-pdf-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></event-pdf-viewer>
+      </ng-container>
+      <ng-container *ngSwitchCase="'video'">
+        <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <article class="noFile">
+          <h3>Sorry</h3>
+          <img asset="no_titles.webp" alt="Flying saucer">
+          <p>We don't know how to display this file.</p>
+          <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
+        </article>
       </ng-container>
     </ng-container>
-  </article>
+  </ng-container>
   <ng-container *ngIf="event.isOwner">
-    <article class="stop" fxLayout="column" fxLayoutAlign="center center">
+    <article fxLayout="column" fxLayoutAlign="center center">
       <mat-divider></mat-divider>
       <button mat-button (click)="stop()">
-        <mat-icon svgIcon="cross_circle"></mat-icon>
+        <mat-icon svgIcon="cancel"></mat-icon>
         <span>Stop Sharing</span>
       </button>
     </article>

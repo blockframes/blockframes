@@ -3,7 +3,7 @@
   <h6>
     Reference
     <a mat-icon-button [routerLink]="link" fragment="reference">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
@@ -38,14 +38,14 @@
   <h6>
     Images
     <a mat-icon-button [routerLink]="link" fragment="images" reference="images">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [form]="movie.banner" [link]="link"><strong> Film Page Banner Image </strong></bf-preview-modal>
       <!-- test-id="banner-image" -->
-      <missing-control  [control]="movie.banner.ref" [link]="link" fragments="images">
+      <missing-control [control]="movie.banner.ref" [link]="link" fragments="images">
         <ng-template let-banner>
           {{ banner | fileName | maxLength: 30 }}
         </ng-template>
@@ -68,14 +68,15 @@
   <h6>
     General Information
     <a mat-icon-button [routerLink]="link" fragment="general-information">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <li>
       <strong>Release Date </strong>
-      <missing-control test-id="release-year" [control]="movie.release.get('year')"></missing-control>
-      (<missing-control [control]="movie.release.get('status')">
+      <missing-control test-id="release-year" [control]="movie.release.get('year')" [link]="link"
+        fragment="general-information"></missing-control>
+      (<missing-control [control]="movie.release.get('status')" [link]="link" fragment="general-information">
         <ng-template let-releaseStatus>{{ releaseStatus | toLabel: "screeningStatus"}}</ng-template>
       </missing-control>)
     </li>
@@ -99,7 +100,7 @@
     </li>
     <li test-id="info-runtime">
       <strong>Running Time </strong>
-      <missing-control [control]="movie.runningTime">
+      <missing-control [control]="movie.runningTime" [link]="link" fragment="general-information">
         <ng-template let-runningTime>{{ runningTime | getRunningTime }}</ng-template>
       </missing-control>
     </li>
@@ -111,13 +112,13 @@
   <h6>
     Director{ movie.directors.controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="directors">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.directors" [link]="link" fragment="directors">
       <ng-template let-directors="control">
-        <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]= "'dir-info' + (i + 1)">
+        <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]="'dir-info' + (i + 1)">
           <strong>
             <missing-control [control]="director.get('firstName')"></missing-control>
             <span>&nbsp;</span>

@@ -8,15 +8,16 @@
       <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">
         <img asset="profil_user.webp" [ref]="user.avatar" alt="Profile picture">
       </button>
-      <overlay-widget #menu >
+      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin</span>
+      <overlay-widget #menu>
         <widget-card>
           <mat-nav-list>
             <a mat-list-item routerLink="/c/o/account/profile">
-              <mat-icon matListIcon svgIcon="profile"></mat-icon>
+              <mat-icon matListIcon svgIcon="account_circle"></mat-icon>
               <span matLine>Profile</span>
             </a>
             <a mat-list-item [routerLink]="['/c/o/organization', organization.id]">
-              <mat-icon matListIcon svgIcon="building"></mat-icon>
+              <mat-icon matListIcon svgIcon="business"></mat-icon>
               <span matLine>Organization</span>
             </a>
             <mat-list-item *ngIf="theme$ | async as theme">
@@ -39,6 +40,6 @@
 
 <ng-template #login>
   <a test-id="profile" mat-icon-button routerLink="/c">
-    <mat-icon svgIcon="profile"></mat-icon>
+    <mat-icon svgIcon="account_circle"></mat-icon>
   </a>
 </ng-template>

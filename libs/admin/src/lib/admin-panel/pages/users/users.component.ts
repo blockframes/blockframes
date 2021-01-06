@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { getValue, downloadCsvFromJson, BehaviorStore } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
@@ -6,7 +7,7 @@ import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
-import { getOrgModuleAccess } from '@blockframes/utils/apps';
+import { appName, getOrgModuleAccess } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-users',
@@ -16,14 +17,16 @@ import { getOrgModuleAccess } from '@blockframes/utils/apps';
 })
 export class UsersComponent implements OnInit {
   public versionColumns = {
-    'uid': 'Id',
+    'uid': { value: 'Id', disableSort: true },
     'firstName': 'FirstName',
     'lastName': 'LastName',
     'org': 'Organization',
     'email': 'Email',
     'firstConnexion': 'First connexion',
     'lastConnexion': 'Last connexion',
-    'edit': 'Edit',
+    'pageView': 'Page view',
+    'sessionCount': 'Session count',
+    'createdFrom': 'Created from',
   };
 
   public initialColumns: string[] = [
@@ -34,7 +37,9 @@ export class UsersComponent implements OnInit {
     'email',
     'firstConnexion',
     'lastConnexion',
-    'edit',
+    'pageView',
+    'sessionCount',
+    'createdFrom',
   ];
   public rows: any[] = [];
   public orgs: Record<string, Organization> = {};
@@ -46,7 +51,8 @@ export class UsersComponent implements OnInit {
     private adminService: AdminService,
     private adminQuery: AdminQuery,
     private orgService: OrganizationService,
-  ) { }
+    private router: Router,
+    ) { }
 
   async ngOnInit() {
     await this.adminService.loadAnalyticsData();
@@ -61,16 +67,19 @@ export class UsersComponent implements OnInit {
         email: u.email,
         firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
         lastConnexion: this.adminQuery.getLastConnexion(u.uid),
-        edit: {
-          id: u.uid,
-          link: `/c/o/admin/panel/user/${u.uid}`,
-        },
+        pageView: this.adminQuery.getPageView(u.uid),
+        sessionCount: this.adminQuery.getSessionCount(u.uid),
+        createdFrom: !! u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
         org: org,
       }
     });
 
     this.rows = await Promise.all(rows);
     this.cdRef.markForCheck();
+  }
+
+  public goToEdit(user) {
+    this.router.navigate([`c/o/admin/panel/user/${user.uid}`]);
   }
 
   public filterPredicate(data: any, filter: string) {
@@ -96,6 +105,9 @@ export class UsersComponent implements OnInit {
           ...u,
           firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
           lastConnexion: this.adminQuery.getLastConnexion(u.uid),
+          pageView: this.adminQuery.getPageView(u.uid),
+          sessionCount: this.adminQuery.getSessionCount(u.uid),
+          createdFrom: !! u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
           edit: {
             id: u.uid,
             link: `/c/o/admin/panel/user/${u.uid}`,
@@ -117,9 +129,13 @@ export class UsersComponent implements OnInit {
         'country': r.org?.addresses.main.country ?? '--',
         'role': r.userOrgRole ? r.userOrgRole : '--',
         'position': r.position ? r.position : '--',
+        'org activity': r.org ? r.org.activity : '--', 
         'email': r.email,
         'first connexion': r.firstConnexion ? r.firstConnexion : '--',
         'last connexion': r.lastConnexion ? r.lastConnexion : '--',
+        'page view': r.pageView ? r.pageView : '--',
+        'session count': r.sessionCount ? r.sessionCount : '--',
+        'created from': r.createdFrom ? r.createdFrom : '--',
       }))
       downloadCsvFromJson(exportedRows, 'user-list');
 

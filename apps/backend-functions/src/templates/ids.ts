@@ -12,16 +12,8 @@ export const templateIds = {
 
     // Templates for informing new user that his account have been created
     credentials: {
-      attendEvent: {
-        catalog: 'd-ce3e57248a694cefacad49bc4c820078',
-        festival: 'd-ce3e57248a694cefacad49bc4c820078',
-        financiers: 'd-ce3e57248a694cefacad49bc4c820078',
-      },
-      joinOrganization: {
-        catalog: 'd-a34ce9ea59c5477f9feae8f556157b6b',
-        festival: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
-        financiers: 'd-4b8c8ebb99464f87b8eaf8223ba4b562',
-      }
+      attendEvent: 'd-ce3e57248a694cefacad49bc4c820078',
+      joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
     },
   },
   // Templates for the org management flow
@@ -38,7 +30,8 @@ export const templateIds = {
       accepted: 'd-d32b25a504874a708de6bfc50a1acba7',
     },
     attendEvent: {
-      created: 'd-07f5e3cc6796455097b6082c22568d9e'
+      created: 'd-07f5e3cc6796455097b6082c22568d9e',
+      accepted: 'd-df7b0a372b994a3090a48dc6cf17ba3e',
     }
   },
   // Templates for invitations

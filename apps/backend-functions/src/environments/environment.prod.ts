@@ -19,7 +19,7 @@ export {
 } from '@env';
 
 import { firebase } from '@env';
-export const { storageBucket } = firebase;
+export const { projectId, storageBucket } = firebase();
 
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;
@@ -32,6 +32,7 @@ export const jwplayerKey = functions.config().jwplayer.key;
 export const imgixToken = functions.config().imgix.token;
 
 export const twilioAccountSid = functions.config().twilio.account.sid;
+export const twilioAccountSecret = functions.config().twilio.account.secret;
 export const twilioApiKeySecret = functions.config().twilio.api.key.secret;
 export const twilioApiKeySid = functions.config().twilio.api.key.sid;
 

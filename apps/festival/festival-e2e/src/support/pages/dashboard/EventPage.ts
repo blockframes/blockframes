@@ -1,5 +1,5 @@
 ﻿import EventEditPage from './EventEditPage';
-import { TO } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 
 export default class EventPage {
   constructor() {
@@ -40,17 +40,17 @@ export default class EventPage {
   createDetailedEvent(date: Date, eventType: string = 'Screening') {
     const day = date.getDay();
     if (day === 0) {
-      cy.get('button[test-id=arrow_forward]', {timeout: TO.PAGE_ELEMENT})
+      cy.get('button[test-id=arrow_forward]', {timeout: 3 * SEC})
         .click();
-      cy.wait(TO.ONE_SEC);
+      cy.wait(1 * SEC);
     }
     cy.get('div [class=cal-day-columns]').children().eq(day)
       .find('mwl-calendar-week-view-hour-segment').first()
       .click();
-    cy.get('mat-select[test-id="event-type"]', {timeout: TO.PAGE_ELEMENT})
+    cy.get('mat-select[test-id="event-type"]', {timeout: 3 * SEC})
       .first()
       .click({force: true});
-    cy.get('mat-option', {timeout: TO.PAGE_ELEMENT})
+    cy.get('mat-option', {timeout: 3 * SEC})
       .contains(eventType).click({force: true}); 
 
     cy.get('button[test-id=more-details]')

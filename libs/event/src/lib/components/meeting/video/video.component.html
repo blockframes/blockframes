@@ -1,5 +1,5 @@
 
-<video #video></video>
+<video #video [ngClass]="{ hidden: !(remoteTrackState$.video | async) || !(localTrackState$.video | async) }"></video>
 <audio #audio></audio>
 
 <svg *ngIf="!(remoteTrackState$.video | async) || !(localTrackState$.video | async)" viewBox="0 0 100 100">
@@ -11,12 +11,12 @@
 
 <div class="controls" *ngIf="!local">
   <button mat-icon-button (click)="toggleLocalState('audio')" [disabled]="!(remoteTrackState$.audio | async)">
-    <mat-icon *ngIf="localTrackState$.audio | async" svgIcon="volume"></mat-icon>
+    <mat-icon *ngIf="localTrackState$.audio | async" svgIcon="volume_up"></mat-icon>
     <mat-icon *ngIf="!(localTrackState$.audio | async)" svgIcon="volume_off"></mat-icon>
   </button>
   <button mat-icon-button (click)="toggleLocalState('video')" [disabled]="!(remoteTrackState$.video | async)">
-    <mat-icon *ngIf="localTrackState$.video | async" svgIcon="eye"></mat-icon>
-    <mat-icon *ngIf="!(localTrackState$.video | async)" svgIcon="blind_eye"></mat-icon>
+    <mat-icon *ngIf="localTrackState$.video | async" svgIcon="visibility"></mat-icon>
+    <mat-icon *ngIf="!(localTrackState$.video | async)" svgIcon="visibility_off"></mat-icon>
   </button>
 </div>
 

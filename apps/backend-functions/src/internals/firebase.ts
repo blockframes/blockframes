@@ -1,7 +1,8 @@
 import { region, config } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-export const functions = region('europe-west1')
+export const functionRegion = 'europe-west1';
+export const functions = region(functionRegion);
 
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
@@ -57,7 +58,7 @@ db.collection(META_COLLECTION_NAME)
   .onSnapshot(
     (snap) => {
       const maintenanceDoc = snap.data() as IMaintenanceDoc;
-      maintenanceActive = _isInMaintenance(maintenanceDoc);
+      maintenanceActive = _isInMaintenance(maintenanceDoc, 0);
     },
     // If there is an error, revert back to old method to prevent stuck functions
     () => (maintenanceActive = null)

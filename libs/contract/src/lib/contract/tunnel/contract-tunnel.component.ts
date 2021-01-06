@@ -1,11 +1,9 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, createContract, TitlesAndRights } from '../+state';
 import { ContractType } from '@blockframes/utils/static-model/types';
-import { MatDialog } from '@angular/material/dialog';
 import { DistributionRightForm } from '@blockframes/distribution-rights/form/distribution-right.form';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
@@ -16,6 +14,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
 
 const steps: TunnelStep[] = [{
   title: 'Step 1',
@@ -60,6 +59,7 @@ export type RightControls = Record<string, FormList<DistributionRight, Distribut
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractTunnelComponent implements OnInit {
+  @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   /** Keep track of the rights removed */
   private removedRights: Record<string, string[]> = {};
   public steps$: Observable<TunnelStep[]>;
@@ -77,7 +77,6 @@ export class ContractTunnelComponent implements OnInit {
     private query: ContractQuery,
     private movieService: MovieService,
     private rightService: DistributionRightService,
-    private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     private db: AngularFirestore,
@@ -209,21 +208,5 @@ export class ContractTunnelComponent implements OnInit {
     this.rightForms.markAsPristine();
     await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
-  }
-
-  confirmExit() {
-    if (this.contractForm.pristine && this.rightForms.pristine) {
-      return of(true);
-    }
-    const dialogRef = this.dialog.open(TunnelConfirmComponent, {
-      width: '80%',
-      data: {
-        title: 'You are going to leave the Movie Form.',
-        subtitle: 'Pay attention, if you leave now your changes will not be saved.'
-      }
-    });
-    return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => shouldSave ? this.save() : of(false))
-    );
   }
 }

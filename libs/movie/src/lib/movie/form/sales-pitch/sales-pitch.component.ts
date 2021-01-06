@@ -12,18 +12,21 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormSalesPitchComponent {
   form = this.shell.getForm('movie');
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService) {
+  constructor(
+    private shell: MovieFormShellComponent,
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService,
+  ) {
     this.dynTitle.setPageTitle('Sales Pitch')
-  }
-
-  public getPath() {
-    const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.sales_pitch/`;
   }
 
   get salesPitch() {
     return this.form.promotional.get('salesPitch');
+  }
+
+  public getPath() {
+    const { movieId } = this.route.snapshot.params;
+    return `movies/${movieId}/promotional.salesPitch/`;
   }
 
 }

@@ -5,8 +5,7 @@
       <h3>Sales Pitch</h3>
 
       <p class="mat-body-2">
-        If you don't have a Sales Pitch video to upload, or if you wish to add a description to your video, you can
-        write a text below to enhance your project.
+        Please provide your sales presentation description to interest buyers and investors
       </p>
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Description</mat-label>
@@ -15,6 +14,12 @@
       </mat-form-field>
     </section>
 
+    <section id="sales-video-pitch" fxLayout="column">
+      <h3>Sales Video Pitch</h3>
+      <file-upload [form]="salesPitch.get('ref')" [storagePath]="getPath()" allowedFileType="video" >
+        <h3 title>Sales Video Pitch</h3>
+      </file-upload>
+    </section>
 
   </ng-container>
 </tunnel-page>

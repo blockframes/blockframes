@@ -4,7 +4,7 @@ import { ViewComponent } from '../view/view.component';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
+import { sortMovieBy } from '@blockframes/utils/helpers';
 import { Observable } from 'rxjs';
 
 @Component({

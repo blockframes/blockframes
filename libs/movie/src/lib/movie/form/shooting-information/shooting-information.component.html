@@ -10,7 +10,8 @@
 
         <!-- Shooting completed -->
         <article fxLayout="column">
-          <mat-radio-button test-id="shooting-completed" class="mat-body-2" color="primary" value="completed">Shooting completed :
+          <mat-radio-button test-id="shooting-completed" class="mat-body-2" color="primary" value="completed">Shooting
+            completed :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Date</mat-label>
@@ -18,7 +19,7 @@
               [formControl]="form.shooting.get('dates').get('completed')">
             <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="completedPicker">
-              <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+              <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #completedPicker></mat-datepicker>
           </mat-form-field>
@@ -26,14 +27,15 @@
 
         <!-- Shooting in progress -->
         <article fxLayout="column">
-          <mat-radio-button test-id="shooting-progress" class="mat-body-2" color="primary" value="progress">Shooting in progress :
+          <mat-radio-button test-id="shooting-progress" class="mat-body-2" color="primary" value="progress">Shooting in
+            progress :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Approximate end date</mat-label>
             <input matInput [matDatepicker]="progressPicker" [formControl]="form.shooting.get('dates').get('progress')">
             <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="progressPicker">
-              <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+              <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #progressPicker></mat-datepicker>
           </mat-form-field>
@@ -41,9 +43,10 @@
 
         <!-- Shooting planned -->
         <article fxLayout="column">
-          <mat-radio-button test-id="shooting-planned" class="mat-body-2" color="primary" value="planned">Shooting planned :
+          <mat-radio-button test-id="shooting-planned" class="mat-body-2" color="primary" value="planned">Shooting
+            planned :
           </mat-radio-button>
-          <div fxLayout="row wrap" fxFlex>
+          <div fxLayout="row wrap" fxFlex fxLayoutGap="24px">
 
             <div fxLayout="column" fxFlex>
               <span class="mat-body-2">From :</span>
@@ -106,14 +109,15 @@
 
     <section id="shooting-locations" fxLayout="column">
       <h6 class="mat-caption">Shooting Locations</h6>
-      <bf-form-list [form]="form.shooting.get('locations')" buttonText="Add a Location">
+      <bf-form-list [form]="form.shooting.get('locations')">
         <ng-template itemRef let-location>
           {{ location.country | toLabel: 'territories' }} -
           {{ location.cities.join(', ') | titlecase }}
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
-            <static-select test-id="country" scope="territories" [control]="locationForm.get('country')" [withoutValues]="['world']">
+            <static-select test-id="country" scope="territories" [control]="locationForm.get('country')"
+              [withoutValues]="['world']">
               <mat-label>Country</mat-label>
             </static-select>
 
@@ -123,7 +127,7 @@
                 <ng-container *ngFor="let city of locationForm.get('cities').value; let i = index">
                   <mat-chip removable="true" (removed)="remove(i, locationForm.get('cities'))">
                     <span>{{ city | titlecase }}</span>
-                    <mat-icon matChipRemove svgIcon="close"></mat-icon>
+                    <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
                   </mat-chip>
                 </ng-container>
               </mat-chip-list>
@@ -132,6 +136,10 @@
                 (matChipInputTokenEnd)="add($event, locationForm.get('cities'))" />
               <mat-hint>Use commas or press Enter key to separate cities.</mat-hint>
             </mat-form-field>
+
+            <ng-template saveButtonText>Save Location</ng-template>
+            <ng-template addButtonText>Add a Location</ng-template>
+
           </article>
         </ng-template>
       </bf-form-list>
@@ -142,14 +150,16 @@
       <article fxLayout="row" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Event</mat-label>
-          <input test-id="event-premiere" matInput type="text" [formControl]="form.expectedPremiere.get('event')" placeholder="Event">
+          <input test-id="event-premiere" matInput type="text" [formControl]="form.expectedPremiere.get('event')"
+            placeholder="Event">
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Approximate Date</mat-label>
-          <input test-id="event-date" matInput [matDatepicker]="eventDate" [formControl]="form.expectedPremiere.get('date')">
+          <input test-id="event-date" matInput [matDatepicker]="eventDate"
+            [formControl]="form.expectedPremiere.get('date')">
           <mat-datepicker-toggle matSuffix [for]="eventDate">
-            <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+            <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
           <mat-datepicker #eventDate></mat-datepicker>
         </mat-form-field>

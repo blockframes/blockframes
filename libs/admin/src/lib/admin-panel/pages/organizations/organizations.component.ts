@@ -1,8 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
+import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
+import { appName, modules } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organizations',
@@ -12,15 +15,14 @@ import { OrganizationCreateComponent } from '../../components/organization/creat
 })
 export class OrganizationsComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'status': 'Status',
-    'logo': 'Logo',
+    'logo': { value: 'Logo', disableSort: true },
     'denomination.full': 'Company name',
     'denomination.public': 'Short name',
     'addresses.main.country': 'Country',
     'email': 'Email',
-    'appAccess': 'Authorizations',
-    'edit': 'Edit',
+    'appAccess': { value: 'Authorizations', disableSort: true } 
   };
 
   public initialColumns: string[] = [
@@ -32,28 +34,25 @@ export class OrganizationsComponent implements OnInit {
     'status',
     'email',
     'appAccess',
-    'edit',
   ];
-  public rows: any[] = [];
+  public rows: OrganizationDocumentWithDates[] = [];
   public orgListLoaded = false;
 
   constructor(
     private organizationService: OrganizationService,
     private cdRef: ChangeDetectorRef,
     private dialog: MatDialog,
+    private router: Router
   ) { }
 
   async ngOnInit() {
-    const orgs = await this.organizationService.getValue();
-    this.rows = orgs.map(o => ({
-      ...o,
-      edit: {
-        id: o.id,
-        link: `/c/o/admin/panel/organization/${o.id}`,
-      }
-    }));
+    this.rows = await this.organizationService.getValue();
     this.orgListLoaded = true;
     this.cdRef.markForCheck();
+  }
+
+  goToEdit(org: OrganizationDocumentWithDates) {
+    this.router.navigate([`/c/o/admin/panel/organization/${org.id}`]);
   }
 
   public filterPredicate(data: any, filter: string) {
@@ -70,16 +69,26 @@ export class OrganizationsComponent implements OnInit {
   }
 
   public exportTable() {
-    const exportedRows = this.rows.map(r => ({
-      id: r.id,
-      fullDenomination: r.denomination.full,
-      publicDenormination: r.denomination.public,
-      status: r.status,
-      country: r && r.addresses.main.country ? r.addresses.main.country : '--',
-      email: r.email,
-      catalog: `dashboard: ${r.appAccess.catalog.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.catalog.marketplace ? 'yes' : 'no'}`,
-      festival: `dashboard: ${r.appAccess.festival.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.festival.marketplace ? 'yes' : 'no'}`
-    }))
+    const exportedRows = this.rows.map(r => {
+      const row = {
+        id: r.id,
+        fullDenomination: r.denomination.full,
+        publicDenormination: r.denomination.public,
+        status: r.status,
+        country: r && r.addresses.main.country ? r.addresses.main.country : '--',
+        email: r.email,
+        memberCount: r.userIds.length,
+        activity: !! r.activity ? r.activity : '--',
+      }
+
+      for (const app in r.appAccess) {
+        for (const module of modules) {
+          row[`${appName[app]} - ${module}`] = r.appAccess[app][module] ? 'true' : 'false';
+        }
+      }
+
+      return row;
+    })
     downloadCsvFromJson(exportedRows, 'org-list');
   }
 

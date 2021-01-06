@@ -8,10 +8,10 @@
   </article>
 
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
-    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
+    [filterPredicate]="filterPredicate" [pageSize]="50" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link">
-        <mat-icon svgIcon="pencil"></mat-icon>
+        <mat-icon svgIcon="edit"></mat-icon>
       </a>
     </ng-template>
     <ng-template colRef="start" let-start>
@@ -19,6 +19,9 @@
     </ng-template>
     <ng-template colRef="end" let-end>
       {{ end | date: 'medium'}}
+    </ng-template>
+    <ng-template colRef="hostedBy" let-hostedBy>
+      {{ hostedBy ? (hostedBy | orgName:'long') : '--'}}
     </ng-template>
   </bf-table-filter>
 </main>

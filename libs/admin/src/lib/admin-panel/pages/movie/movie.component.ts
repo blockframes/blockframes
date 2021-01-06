@@ -33,16 +33,14 @@ export class MovieComponent implements OnInit {
   public storeType = storeType;
   public storeStatus = storeStatus;
   public staticConsts = staticModel;
-  public rows: any[] = [];
   public app = app;
-  private rights: DistributionRightDocumentWithDates[] = [];
+  public rights: DistributionRightDocumentWithDates[] = [];
 
   public versionColumnsTable = {
-    'id': 'Id',
+    'id': { value: 'Id', disableSort: true },
     'status': 'Status',
     'contractId': 'Contract Id',
     'terms': 'Scope',
-    'rightLink': 'Edit'
   };
 
   public initialColumnsTable: string[] = [
@@ -50,7 +48,6 @@ export class MovieComponent implements OnInit {
     'status',
     'contractId',
     'terms',
-    'rightLink',
   ];
 
   constructor(
@@ -76,7 +73,6 @@ export class MovieComponent implements OnInit {
     this.movieAppAccessForm = new MovieAppAccessAdminForm(this.movie);
 
     this.rights = await this.distributionRightService.getMovieDistributionRights(this.movieId);
-    this.rows = this.rights.map(d => ({ ...d, rightLink: { id: d.id, movieId: this.movieId } }));
 
     this.cdRef.markForCheck();
   }
@@ -87,10 +83,16 @@ export class MovieComponent implements OnInit {
       return;
     }
 
-    this.movie.storeConfig.status = this.movieForm.get('storeStatus').value;
-    this.movie.storeConfig.storeType = this.movieForm.get('storeType').value;
-    this.movie.productionStatus = this.movieForm.get('productionStatus').value;
-    this.movie.internalRef = this.movieForm.get('internalRef').value;
+    this.movie = {
+      ...this.movie,
+      storeConfig: {
+        ...this.movie.storeConfig,
+        status: this.movieForm.get('storeStatus').value,
+        storeType: this.movieForm.get('storeType').value
+      },
+      productionStatus: this.movieForm.get('productionStatus').value,
+      internalRef: this.movieForm.get('internalRef').value
+    }
 
     const hasCampaign = await this.campaignService.getValue(this.movieId);
 
@@ -145,7 +147,7 @@ export class MovieComponent implements OnInit {
 
   /**
    * Used to see what will be deleted before actual removal
-   * @param movie 
+   * @param movie
    */
   private async simulateDeletion(movie: Movie) {
     const output: string[] = [];
@@ -163,7 +165,7 @@ export class MovieComponent implements OnInit {
 
     const eventIds = events.map(e => e.id);
 
-    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('docId', '==', e)));
+    const invitationsPromises = eventIds.map(e => this.invitationService.getValue(ref => ref.where('eventId', '==', e)));
     const invitations = await Promise.all(invitationsPromises);
     const invitationsCount = invitations.flat().length;
 
@@ -189,6 +191,10 @@ export class MovieComponent implements OnInit {
     }
 
     return output;
+  }
+
+  goToRights(right: DistributionRightDocumentWithDates) {
+    this.router.navigate([`/c/o/admin/panel/right/${right.id}/m/${this.movieId}`]);
   }
 
 }

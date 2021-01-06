@@ -1,8 +1,8 @@
-import { TO } from '@blockframes/e2e/utils/env';
+import { SEC } from '@blockframes/e2e/utils/env';
 
 export default class TunnelStorylinePage {
   constructor() {
-    cy.get('catalog-tunnel-synopsis', { timeout: TO.PAGE_LOAD });
+    cy.get('catalog-tunnel-synopsis', { timeout: 60 * SEC });
   }
 
   public static navigateToPage(movieId: string) {

@@ -3,13 +3,13 @@
   <h6>
     Production Compan{ movie.stakeholders.get('productionCompany').controls.length, plural, =0 {y} =1 {y} other {ies}}
     <a mat-icon-button [routerLink]="link" fragment="company">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.stakeholders.get('productionCompany')" [link]="link" fragment="company">
       <ng-template let-prodCompany="control">
-        <li test-id="prod-co-summary" *ngFor="let producer of prodCompany.controls; let isLast = last">
+        <li test-id="prod-co-summary" *ngFor="let producer of prodCompany.controls">
           <ng-container *ngIf="producer.get('countries').value.length">
             <strong *ngIf="producer.get('countries').value.length">
               <missing-control [control]="producer.get('countries')" [link]="link" fragment="company"
@@ -18,7 +18,6 @@
           </ng-container>
           <span>&nbsp;</span>
           <missing-control [control]="producer.get('displayName')"></missing-control>
-          <span>{{ isLast ? '' : ', '}}</span>
         </li>
       </ng-template>
     </missing-control>
@@ -30,20 +29,19 @@
   <h6>Co-production Compan{ movie.stakeholders.get('coProductionCompany').controls.length, plural, =0 {y} =1 {y} other
     {ies}}
     <a mat-icon-button [routerLink]="link" fragment="co-company">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.stakeholders.get('coProductionCompany')" [link]="link" fragment="co-company">
       <ng-template let-coProdCompany="control">
-        <li test-id="coprod-co-summary" *ngFor="let coProducer of coProdCompany.controls; let isLast = last">
+        <li test-id="coprod-co-summary" *ngFor="let coProducer of coProdCompany.controls">
           <strong>
             <missing-control [control]="coProducer.get('countries')" [link]="link" fragment="co-company"
               scope="territories"></missing-control>
           </strong>
           <span>&nbsp;</span>
           <missing-control [control]="coProducer.get('displayName')"></missing-control>
-          <span>{{ isLast ? '' : ', '}}</span>
         </li>
       </ng-template>
     </missing-control>
@@ -55,13 +53,13 @@
   <h6>
     Producer{ movie.producers.controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="producers">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.producers" [link]="link" fragment="producers">
       <ng-template let-producers="control">
-        <li test-id="producer-summary" *ngFor="let producer of producers.controls; let isLast = last">
+        <li test-id="producer-summary" *ngFor="let producer of producers.controls">
           <strong>
             <missing-control [control]="producer.get('role')" [link]="link" type="producerRoles" scope="producerRoles">
             </missing-control>
@@ -70,7 +68,6 @@
           <missing-control [control]="producer.get('firstName')"></missing-control>
           <span>&nbsp;</span>
           <missing-control [control]="producer.get('lastName')"></missing-control>
-          <span>{{ isLast ? '' : ', '}}</span>
         </li>
       </ng-template>
     </missing-control>
@@ -82,20 +79,19 @@
   <h6>
     Distributor{ movie.stakeholders.get('distributor').controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="distributors">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.stakeholders.get('distributor')" [link]="link" fragment="distributors">
       <ng-template let-distributors="control">
-        <li test-id="distributor-summary" *ngFor="let distributor of distributors.controls; let isLast = last">
+        <li test-id="distributor-summary" *ngFor="let distributor of distributors.controls">
           <strong>
             <missing-control [control]="distributor.get('countries')" scope="territories" [link]="link">
             </missing-control>
           </strong>
           <span>&nbsp;</span>
           <missing-control [control]="distributor.get('displayName')"></missing-control>
-          <span>{{ isLast ? '' : ', '}}</span>
         </li>
       </ng-template>
     </missing-control>
@@ -107,19 +103,18 @@
   <h6>
     International Sales
     <a mat-icon-button [routerLink]="link" fragment="sales">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <missing-control [control]="movie.stakeholders.get('salesAgent')" [link]="link" fragment="sales">
       <ng-template let-salesAgents="control">
-        <li test-id="salesAgent-summary" *ngFor="let saleAgent of salesAgents.controls; let isLast = last">
+        <li test-id="salesAgent-summary" *ngFor="let saleAgent of salesAgents.controls">
           <strong>
             <missing-control [control]="saleAgent.get('countries')" scope="territories" [link]="link"></missing-control>
           </strong>
           <span>&nbsp;</span>
           <span>{{ saleAgent.get('displayName').value }}</span>
-          <span>{{ isLast ? '' : ', '}}</span>
         </li>
       </ng-template>
     </missing-control>

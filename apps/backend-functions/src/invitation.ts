@@ -11,6 +11,7 @@ import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
 import { Change } from 'firebase-functions';
+import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -114,31 +115,37 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
 
     // Ensure that we are not violating invitations limit
     if (invitation.type === 'attendEvent') {
-      const docId = invitation.docId;
-      if (!!docId) {
+      const eventId = invitation.eventId;
+      if (!!eventId) {
 
-        const event = await getDocument<EventDocument<EventMeta>>(`events/${docId}`);
+        const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
 
         // for now only meetings have a limitation
         if (event.type === 'meeting') {
 
           // count the number of already existing invitations
-          const query = db.collection('invitations').where('docId', '==', docId);
+          const query = db.collection('invitations').where('eventId', '==', eventId);
           const querySnap = await query.get();
 
           // assert that we don"t go over the limit
           if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
             throw new Error(
-`MEETING MAX INVITATIONS EXCEEDED : Meeting ${docId} has already ${querySnap.size} invitations
+              `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
 and user ${user.uid} tried to add ${data.emails.length} new invitations.
-That would have exceeded the current limit witch is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
+That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
           }
         }
       }
     }
 
+    let eventData: EventEmailData = getEventEmailData();
+    if (invitation.type === 'attendEvent' && !!invitation.eventId) {
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+      eventData = getEventEmailData(event);
+    }
+
     for (const email of data.emails) {
-      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app)
+      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app, eventData)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;

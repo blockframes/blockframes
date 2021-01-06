@@ -2,13 +2,13 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TunnelStepData, TunnelStep } from '../../tunnel.model';
 import { TunnelLayoutComponent } from '../layout.component';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 /**
  * Set the position of the page on the current panel
  * @example { index: 1, length: 3 } will look like 1/3 in the UI
  */
-function getPageData(steps: TunnelStep[], url: string): TunnelStepData {
+function getPageData(url: string, steps: TunnelStep[]): TunnelStepData {
   const pageUrl = url.split('/').pop();
   const step = steps.find(({ routes }) => routes.find(r => r.path === pageUrl));
   if (step) {
@@ -34,8 +34,8 @@ export class TunnelStepStatComponent implements OnInit {
 
   ngOnInit() {
     this.stepData$ = this.layout.urlBynav$.pipe(
-      map(([ url, steps ]) => getPageData(steps, url))
+      filter(([url, steps]) => !!url && !!steps),
+      map(([url, steps]) => getPageData(url, steps))
     );
   }
-
 }

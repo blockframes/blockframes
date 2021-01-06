@@ -104,7 +104,7 @@
       </article>
 
       <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="territories"
-        placeholder="Enter Country/ies of Origin" [withoutValues]="['world']">
+        placeholder="Enter Country/ies of Origin" [withoutValues]="['world']" uniqueValues>
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
         <mat-hint>
@@ -113,7 +113,7 @@
       </chips-autocomplete>
 
       <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="languages"
-        placeholder="Enter Original Language(s)" [withoutValues]="['all']">
+        placeholder="Enter Original Language(s)" [withoutValues]="['all']" uniqueValues>
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
         <mat-hint>
@@ -122,7 +122,7 @@
       </chips-autocomplete>
 
       <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)"
-        [withoutValues]="['']">
+        [withoutValues]="['']" uniqueValues>
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
@@ -136,7 +136,7 @@
           <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
             <mat-chip removable="true" (removed)="removeCustomGenre(i)">
               <span>{{ value }}</span>
-              <mat-icon matChipRemove svgIcon="close"></mat-icon>
+              <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
             </mat-chip>
           </ng-container>
         </mat-chip-list>
@@ -179,9 +179,8 @@
     <section id="directors">
       <h3>Director(s)*</h3>
 
-      <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
-        saveButtonText="Save Director">
-        <ng-template colRef="description" let-description>{{ description  | maxLength: 20 }}</ng-template>
+      <bf-form-table [columns]="displayedColumns" [form]="form.directors">
+        <ng-template colRef="description" let-description>{{ description | maxLength: 20 }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
@@ -245,6 +244,10 @@
             </div>
           </article>
         </ng-template>
+
+        <ng-template saveButtonText>Save Director</ng-template>
+        <ng-template addButtonText>Add a Director</ng-template>
+
       </bf-form-table>
     </section>
   </ng-container>

@@ -8,7 +8,7 @@ const testInvitations = [
   {
     id: 'invit-A',
     type: 'attendEvent',
-    docId: 'eventTest',
+    eventId: 'eventTest',
     status: 'accepted',
     mode: 'invitation',
     fromOrg: { id: 'org-A' },
@@ -37,7 +37,7 @@ const testUsers = [{ uid: 'uidUserTest', email: 'A@fake.com' }];
 const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
 const testRequestAccessToken:RequestAccessToken = { eventId: 'eventTest'};
 
-describe('Twilio test script', () => {
+describe.skip('Twilio test script', () => {
 
   beforeAll(async () => {
     initFunctionsTestMock();

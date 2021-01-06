@@ -175,11 +175,6 @@ export interface BoxOffice {
 }
 
 export interface MovieLanguageSpecification {
-  // The original version is a gross version of the movie, without dubbed, subtitle, etc.
-  // So for example if a movie has 2 original languages, we will hear the two languages in the movie, without dubbed for one of the language
-  // In the form, we don't care of the language for the original version parameter.
-  // If this version is available, so every languages registered in the originalLanguage field will have a `original: true` data here.
-  original: boolean;
   dubbed: boolean;
   subtitle: boolean;
   caption: boolean;
@@ -285,7 +280,8 @@ export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> { 
 
 export interface MovieSalesPitch {
   description?: string,
-  file?: string, // hosted media
+  ref?: string, // hosted media
+  jwPlayerId?: string;
 }
 
 export interface MovieGoalsAudience {

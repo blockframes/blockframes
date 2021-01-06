@@ -2,14 +2,16 @@ import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/ak
 import { Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { toDate } from '@blockframes/utils/helpers';
-import { MovieQuery } from '@blockframes/movie/+state';
-import { Event } from '@blockframes/event/+state';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Event } from '@blockframes/event/+state/event.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
+import { AuthService } from '@blockframes/auth/+state';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -24,13 +26,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   private appName;
 
   constructor(
+    private auth: AuthService,
     private movieQuery: MovieQuery,
     private firestore: AngularFirestore,
     private routerQuery: RouterQuery,
     private orgService: OrganizationService
   ) {
     super(initialState);
-    this.appName = appName[getCurrentApp(this.routerQuery)]
+    this.appName = appName[getCurrentApp(this.routerQuery)];
+    this.auth.signedOut.subscribe(() => this.remove());
   }
 
   public formatNotification(notification: Notification): Partial<Notification> {
@@ -93,12 +97,21 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieAccepted':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              imgRef: movie?.poster ?? 'empty_poster.webp',
+              message: `${movie.title.international} was successfully published on the marketplace.`,
+            };
+          })
+        })
         return {
           date: toDate(notification.date),
           message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}/details`,
+          url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'eventIsAboutToStart':
 
@@ -132,7 +145,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} has accepted your invitation to event "${notification.docId}".`,
+          message: `Someone has accepted your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
@@ -152,7 +165,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} has declined your invitation to event "${notification.docId}".`,
+          message: `Someone has declined your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`

@@ -1,9 +1,9 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, setForm } from '@blockframes/e2e/utils/functions';
+import { acceptCookie, clearDataAndPrepareTest, clickOnMenu, setForm } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { TO } from '@blockframes/e2e/utils';
+import { SEC } from '@blockframes/e2e/utils';
 
 /**
  * To debug a particular step, turn debug_mode = true and
@@ -153,8 +153,8 @@ const Movie = {
 }
 
 let val:any = Movie.mainInfo;
-val['info-runtime'] = `${val['status']} - ${val['run-time']}min`;
-val['dir-info1'] = `${val['first-name']}${val['last-name']} (${val['director-category']}) ${val['director-desc']}`;
+val['info-runtime'] = `${val['run-time']} min (${val['status']})`;
+val['dir-info1'] = `${val['first-name']} ${val['last-name']} (${val['director-category']}) ${val['director-desc']}`;
 
 val = Movie.production;
 val['prod-co-summary'] = `${val['production-country']} ${val['production-company-name']}`;
@@ -169,7 +169,7 @@ val['keyword-summary'] = val['keyword'].substring(0, val['keyword'].indexOf('{')
 
 val = Movie.artisticTeam;
 val['cast-summary'] = `${val['cast-first-name']} ${val['cast-last-name']} ${val['cast-film1']}`;
-val['crew-summary'] = `${val['crew-first-name']} ${val['crew-last-name']} ${val['crew-film1']}`;
+val['crew-summary'] = `${val['crew-first-name']} ${val['crew-last-name']} (${val['crew-role']}) ${val['crew-film1']}`;
 
 const testSteps = [
   {title: 'Production Status', selector: 'movie-form-title-status mat-radio-button',
@@ -217,23 +217,46 @@ const MovieFormSummary = [
     input: Movie.techSpec, debug: false },
 ];
 
+// Note: set debugMovieId to movie document ID to debug the tests.
+//  for normal runs, do not set a value for the movie ID.
+//  also use it.skip tests that are required to be run.
+const debugMovieId = '';
+
+/**
+ * debugMovieTitle : Helper function to test a movie title for any step
+ *    Within any test call it like this: debugMovieTitle(titleId, 'summary')
+ * @param id : movie doc ID
+ * @param loc : tunnel path (main / summary / etc) to debug.
+ */
+const debugMovieTitle = (id: string, loc: string) => {
+  cy.log('Check movie:', id);
+
+  //GoTo movie loc (summary, main ..)
+  const path = `http://localhost:4200/c/o/dashboard/tunnel/movie/${id}/${loc}`;
+
+  cy.visit(path, {timeout: 150 * SEC});
+  cy.wait(10 * SEC);
+  acceptCookie();
+}
+
 describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
   it('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');
-    signInAndNavigateToMain(users[0]);
+    signInAndNavigateToMain(users[0], debugMovieId);
   });
 
   //Summary - Verification
   it('Fill all fields & navigate to Summary Page', () => {
-    cy.wait(TO.FIFTEEN_SEC);
+    cy.wait(0.5 * SEC);
+    cy.get('h1', {timeout: 150 * SEC})
+      .contains('Production Status');
+
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
       movieURL = url;
       console.log("movie :", url);
     });
-
-    cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 
     const skipSteps = getStepsToSkip(Movie);
 
@@ -245,7 +268,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       if (!debug_mode || (debug_mode && step.debug)) {
         //Fill the form for this step..
         cy.log(`=> Step : [${step.title}]`);
-        cy.get('h1', {timeout: TO.PAGE_ELEMENT}).contains(step.title);
+        cy.get('h1', {timeout: 3 * SEC}).contains(step.title);
         setForm(step.selector, {inputValue: Movie[step.input]});
 
         //If there are component saves, click them..
@@ -258,15 +281,15 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
         //Save this step
         if (step.save_form) {
-          cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
+          cy.get('button[test-id="tunnel-step-save"]', {timeout: 3 * SEC})
             .click();
-          cy.wait(TO.WAIT_1SEC);
+          cy.wait(1 * SEC);
         }
       }
       //Proceed to next step.
-      cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
+      cy.get('a[test-id="next"]', {timeout: 3 * SEC})
         .click();
-      cy.wait(TO.WAIT_1SEC);
+      cy.wait(1 * SEC);
     });
 
     cy.log('=>Reach Summary Page');
@@ -274,8 +297,11 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Verify Summary sheet fields are correct
   it('Verify fields in Summary Page', () => {
+    //Uncomment next line to debug summary fields of movie
+    //debugMovieTitle('Nc5uECQYauv3u9xUFSib', 'summary');
+
     cy.log('[Summary Page]: Check for mandatory and missing fields');
-    cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary & Submission');
+    cy.get('h1', {timeout: 15 * SEC}).contains('Summary & Submission');
 
     MovieFormSummary.forEach(section => {
       //If debug_mode is on and section is debug: false, then skip
@@ -292,5 +318,40 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       })
     })
   });
-  
+
+  it('Publish the movie to the market', () => {
+    //Note : to debug only publish you can uncomment the following:
+    //debugMovieTitle(debugMovieId, 'summary');
+
+    //After filling all required fields, movie can be published.
+    cy.log('[Summary Page]: Publish the movie');
+    cy.get('button[test-id=publish]')
+      .click();
+    
+    cy.log('Reach Festival Title View Page');
+    cy.get('festival-dashboard-title-view h1', {timeout: 60 * SEC})
+      .contains(Movie.mainInfo["international-title"]);
+  });
+
+  it('checks published movie is listed', () => {
+    cy.log('Navigate to My Titles page');
+    cy.get(`festival-dashboard button[test-id="menu"]`, {timeout: 3 * SEC})
+      .first().click();
+    clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
+    cy.wait(1 * SEC);
+
+    cy.get('festival-dashboard-title-list h1', {timeout: 60 * SEC})
+      .contains('My Titles');
+    
+    //Search the movie
+    cy.get('input[test-id="filter-input"]', {timeout: 60 * SEC})
+      .type(Movie.mainInfo["international-title"]);
+
+    //After filling all required fields, movie can be published.
+    cy.get('table tr').each(($e) => {
+      const row = cy.wrap($e);
+      row.get('td:nth-child(1)').contains(Movie.mainInfo["international-title"]);
+      row.get('td:nth-child(5)').contains('Accepted');
+    });
+  });
 });

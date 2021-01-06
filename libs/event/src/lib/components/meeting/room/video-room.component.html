@@ -7,7 +7,12 @@
   <footer *ngIf="(local$ | async) as local">
 
     <ng-container *ngIf="local.tracks.video as videoTrack">
-      <button mat-fab color="primary" (click)="toggleLocalTrack('video')">
+      <button
+        mat-fab
+        color="primary"
+        [matTooltip]="'Turn ' + (videoTrack.isEnabled ? 'off' : 'on') + ' camera'"
+        (click)="toggleLocalTrack('video')"
+      >
         <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
         <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
       </button>
@@ -22,16 +27,21 @@
     </ng-container>
 
     <ng-container *ngIf="local.tracks.audio as audioTrack">
-      <button mat-fab color="primary" (click)="toggleLocalTrack('audio')">
-        <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
-        <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
+      <button
+        mat-fab
+        color="primary"
+        [matTooltip]="'Turn ' + (audioTrack.isEnabled ? 'off' : 'on') + ' mic'"
+        (click)="toggleLocalTrack('audio')"
+      >
+        <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="mic"></mat-icon>
+        <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mic_off"></mat-icon>
       </button>
     </ng-container>
     <ng-container *ngIf="!local.tracks.audio">
       <!-- We put the tooltip on a parent <span> because tooltip are not displayed on disabled buttons -->
       <span matTooltip="Your browser doesn't allow us to access your microphone. To activate it, please change your browser preferences.">
         <button mat-fab disabled>
-          <mat-icon svgIcon="unmute"></mat-icon>
+          <mat-icon svgIcon="mic"></mat-icon>
         </button>
       </span>
     </ng-container>

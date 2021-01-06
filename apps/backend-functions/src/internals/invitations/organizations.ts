@@ -1,5 +1,5 @@
 
-import { db, getUserMail, getUser } from './../firebase';
+import { db, getUser } from './../firebase';
 import {
   InvitationDocument,
   InvitationOrUndefined,
@@ -15,6 +15,7 @@ import {
 } from '../../templates/mail';
 import { getAdminIds, getDocument, getAppUrl, getOrgAppKey } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
+import { orgName } from "@blockframes/organization/+state/organization.firestore";
 
 async function addUserToOrg(userId: string, organizationId: string) {
   if (!organizationId || !userId) {
@@ -66,16 +67,18 @@ async function addUserToOrg(userId: string, organizationId: string) {
 }
 
 async function mailOnInvitationAccept(userId: string, organizationId: string) {
-  const userEmail = await getUserMail(userId);
+  const org = await getDocument<OrganizationDocument>(`orgs/${organizationId}`);
+  const orgDenomination = orgName(org);
+  const user = await getUser(userId);
   const adminIds = await getAdminIds(organizationId);
-  const adminEmails = await Promise.all(adminIds.map(id => getUserMail(id)));
+  const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const app = await getOrgAppKey(organizationId);
-  const adminEmailPromises = adminEmails
+  const adminPromises = admins
     .filter(mail => !!mail)
-    .map(adminEmail => userJoinedYourOrganization(adminEmail!, userEmail!))
+    .map(admin => userJoinedYourOrganization(admin!.email, admin!.firstName, orgDenomination, user!.firstName, user!.lastName, user!.email))
     .map(template => sendMailFromTemplate(template, app));
 
-  return Promise.all(adminEmailPromises);
+  return Promise.all(adminPromises);
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */

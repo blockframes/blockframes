@@ -49,6 +49,8 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   }
 
   /** Get value of item that has value */
+  // Error: Error: 'value' is defined as a property in class 'FormArray', but is overridden here in 'FormList<T, Control>' as an accessor.
+  //  @ts-ignore
   get value() {
     return this._value.filter((value: T) => hasValue(value));
   }
@@ -111,16 +113,13 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     value.forEach((newValue, index) => {
       // If there is a form already patch it
       if (this.at(index)) {
-        if (this.at(index)['patchAllValue']) {
+        if (this.at(index).hasOwnProperty('patchAllValue')) {
           this.at(index)['patchAllValue'](newValue, {
             onlySelf: true,
             emitEvent: options.emitEvent
           });
         } else {
-          this.at(index).patchValue(newValue, {
-            onlySelf: true,
-            emitEvent: options.emitEvent
-          });
+          this.setControl(index, this.createControl(newValue));
         }
         // else create one
       } else {

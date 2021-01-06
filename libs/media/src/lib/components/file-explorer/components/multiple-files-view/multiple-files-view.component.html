@@ -1,7 +1,7 @@
 <ng-container *ngIf="active$ | async | deepKey:getDeepPath(activeDirectory.storagePath) as data">
   <bf-table-filter [source]="data | toArray" [columns]="columns" [initialColumns]="initialColumns" (rowClick)="previewFile(getFileRef($event))" clickable>
     <ng-template colRef="ref" let-item="item">
-      <img [asset]="getFileRef(item) | fileTypeImage">
+      <mat-icon [svgIcon]="getFileRef(item) | fileTypeImage: 'icon'"></mat-icon>
     </ng-template>
     <ng-template colRef="main" let-item="item">
       <span (click)="previewFile(getFileRef(item))">
@@ -11,15 +11,21 @@
     <ng-template colRef="actions" let-item="item">
       <section fxLayout="row" fxLayoutGap="12px">
         <button mat-icon-button (click)="downloadFile(item, $event)">
-          <mat-icon svgIcon="download"></mat-icon>
+          <mat-icon svgIcon="cloud_download"></mat-icon>
         </button>
         <button mat-icon-button (click)="edit(item, $event)">
-          <mat-icon svgIcon="pencil"></mat-icon>
+          <mat-icon svgIcon="edit"></mat-icon>
         </button>
         <button mat-icon-button (click)="deleteFile(item, $event)">
-          <mat-icon svgIcon="trash"></mat-icon>
+          <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </section>
     </ng-template>
   </bf-table-filter>
+  <ng-container *ngIf="!data || !data.length">
+    <section fxLayout="column" fxLayoutAlign="center center">
+      <span>There is no file here yet.</span>
+      <img asset="feature_key3.webp" alt="No files"/>
+    </section>
+  </ng-container>
 </ng-container>

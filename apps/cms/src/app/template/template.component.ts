@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRe
 import { ActivatedRoute } from '@angular/router';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { FormGroupSchema, FormEntity, createForms } from 'ng-form-factory';
-import { CmsTemplate, Section, TemplateParams, templateSchema } from './template.model';
+import { CmsTemplate, Section, TemplateParams } from '@blockframes/admin/cms';
+import { templateSchema } from './template.model';
 import { CmsService, CmsParams } from '../cms.service'
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';

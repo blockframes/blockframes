@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Library
-import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
@@ -68,7 +67,6 @@ export const organizationRoutes: Routes = [
 
     // Library
     EditableSidenavModule,
-    FeedbackMessageModule,
     AvatarListModule,
     UploadModule,
     PasswordConfirmModule,

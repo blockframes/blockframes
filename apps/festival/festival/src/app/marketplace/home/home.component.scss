@@ -8,15 +8,17 @@
 .banner {
   background-size: cover;
   background-position: center;
-
-  h3 {
-    margin-bottom: 0;
-  }
-  p {
-    width: 50%;
-  }
-  .links {
-    margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  .banner-details {
+    h4 {
+      margin-bottom: 0;
+    }
+    .links {
+      margin-top: 24px;
+    }
   }
 }
 
@@ -24,20 +26,27 @@
   padding: 40px;
   background-image: url("/assets/images/banner_empty.png");
   background-size: cover;
+  min-height: 236px;
 
   h1 {
     margin-bottom: 0;
+    text-align: center;
   }
   .links {
     margin-top: 24px;
   }
 }
 
-.titles, .orgs, .org-titles {
-  padding-bottom: 24px;
+.cards {
+  padding: 48px 0;
   header {
-    padding: 24px;
+    margin: 8px 24px;
   }
+}
+
+// two consecutive list of cards (titles, orgs, org-titles) should not cumulate their paddings
+.cards + .cards {
+  padding-top: 0;
 }
 
 .org-titles {
@@ -52,10 +61,30 @@ movie-slide {
   .banner, movie-slide {
     padding: 80px;
   }
-
+  .banner {
+    flex-direction: row;
+    .banner-details {
+      width: 50%;
+    }
+    img {
+      margin-left: 24px;
+      width: 500px;
+      max-width: 50%;
+    }
+  }
 }
 @include layout-bp(lt-md) {
   .banner, movie-slide {
     padding: 24px;
+  }
+  .banner {
+    flex-direction: column;
+    .banner-details {
+      width: 100%;
+    }
+    img {
+      margin-top: 24px;
+      max-width: 80%;
+    }
   }
 }

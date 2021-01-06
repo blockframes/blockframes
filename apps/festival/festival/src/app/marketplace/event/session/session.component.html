@@ -12,7 +12,7 @@
               <h2>by {{ event.movie.directors | displayName }}</h2>
               <span class="mat-caption">Screening now</span>
               <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">
-                <mat-icon svgIcon="play"></mat-icon>
+                <mat-icon svgIcon="play_arrow"></mat-icon>
                 <span>Play</span>
               </button>
             </div>
@@ -34,26 +34,29 @@
     </section>
 
     <!-- MEETING TYPE -->
-    <section *ngSwitchCase="'meeting'" class="meeting">
+    <ng-container *ngSwitchCase="'meeting'">
+      <section class="meeting">
 
-      <div class="meeting-container">
+        <div class="meeting-container">
 
-        <ng-container *ngIf="!!event.meta.selectedFile">
-          <media-viewer [event]="event" [style]="{width: mediaContainerSize}"></media-viewer>
+          <ng-container *ngIf="!!event.meta.selectedFile">
+            <media-viewer [event]="event" [style]="{width: mediaContainerSize}"></media-viewer>
+          </ng-container>
+          <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
+
+        </div>
+        <ng-container *ngIf="event.isOwner">
+          <media-control
+            [event]="event"
+            *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
+          ></media-control>
+          <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
         </ng-container>
-        <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
+      </section>
 
-      </div>
-      <ng-container *ngIf="event.isOwner">
-        <media-control
-          [event]="event"
-          *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
-        ></media-control>
-        <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
-      </ng-container>
       <img *ngIf="!event.isOwner" asset="meeting.webp" alt="Meeting room">
 
-    </section>
+    </ng-container>
   </ng-container>
 </ng-container>
 
@@ -64,3 +67,4 @@
   </section>
 </ng-template>
 
+<video #autotester src="/assets/videos/blank.mp4" muted hidden></video>

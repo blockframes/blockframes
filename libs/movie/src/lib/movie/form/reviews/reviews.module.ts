@@ -19,7 +19,7 @@ import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chi
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-
+import { PrizePipeModule } from '../../pipes/display-prize.pipe';
 import { MovieFormReviewscComponent } from './reviews.component';
 
 @NgModule({
@@ -36,6 +36,7 @@ import { MovieFormReviewscComponent } from './reviews.component';
     FormListModule,
     MaxLengthModule,
     ToLabelModule,
+    PrizePipeModule,
 
     // Material
     MatFormFieldModule,

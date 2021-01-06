@@ -28,7 +28,7 @@ import {
 
 const columns = { 
   ref: { value: 'Type', disableSort: true },
-  main: { value: 'Document Name', disableSort: false },
+  main: { value: 'Document Name', disableSort: true },
   actions: { value: 'Actions', disableSort: true } 
 };
 
@@ -126,7 +126,7 @@ export class MultipleFilesViewComponent implements OnInit {
 
   public async downloadFile(item: Partial<HostedMediaWithMetadata | OrganizationDocumentWithDates>, event: Event) {
     event.stopPropagation();
-    const ref = item[this.activeDirectory.fileRefField];
+    const ref = this.activeDirectory.fileRefField ? item[this.activeDirectory.fileRefField] : item;
     const url = await this.mediaService.generateImgIxUrl(ref);
     window.open(url);
   }

@@ -57,7 +57,7 @@
           <ng-container *ngFor="let value of values$ | async; let i = index">
             <mat-chip removable="true" (removed)="remove(i)">
               <span>{{ value }}</span>
-              <mat-icon matChipRemove svgIcon="close"></mat-icon>
+              <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
             </mat-chip>
           </ng-container>
         </mat-chip-list>

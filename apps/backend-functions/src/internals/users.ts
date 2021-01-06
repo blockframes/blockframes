@@ -9,6 +9,7 @@ import { auth } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { EventEmailData } from '@blockframes/utils/emails/utils';
 
 interface UserProposal {
   uid: string;
@@ -24,7 +25,7 @@ const generatePassword = () =>
 /**
  * Get user by email & create one if there is no user for this email
  */
-export const getOrInviteUserByMail = async (email: string, fromOrgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
+export const getOrInviteUserByMail = async (email: string, fromOrgId: string, invitationType: InvitationType, app: App = 'catalog', eventData: EventEmailData): Promise<UserProposal | PublicUser> => {
 
   try {
     const { uid } = await auth.getUserByEmail(email);
@@ -37,8 +38,8 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
     const urlToUse = applicationUrl[app];
 
-    const templateId = templateIds.user.credentials[invitationType][app];
-    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId);
+    const templateId = templateIds.user.credentials[invitationType];
+    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
     await sendMailFromTemplate(template, app);
     return newUser.user;
   }
