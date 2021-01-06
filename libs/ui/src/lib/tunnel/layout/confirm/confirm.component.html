@@ -1,8 +1,0 @@
-<h1>{{ data.title }}</h1>
-<p>{{ data.subtitle }}</p>
-<button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
-  {{ !!data.accept ? data.accept : 'Save & Exit' }}
-</button>
-<button class="text-primary" mat-button [mat-dialog-close]="false">
-  {{ !!data.cancel ? data.cancel : 'Close without saving' }}
-</button>

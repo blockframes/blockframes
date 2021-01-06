@@ -8,8 +8,7 @@ import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { TerritoryValue, Territory } from '@blockframes/utils/static-model';
 import { arrayAdd } from '@datorama/akita';
 import { areTermsValid } from '@blockframes/distribution-rights/form/terms/terms.form';
-import { territories } from '@blockframes/utils/static-model';
-import { getIsoA3bySlug, getSlugByIsoA3 } from '@blockframes/utils/static-model/staticModels';
+import { territories, territoriesISOA3 } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -42,13 +41,13 @@ export class MarketplaceMovieAvailsComponent {
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: Territory) {
-    const territorySlug = getSlugByIsoA3(territory['iso_a3']);
+    const territorySlug = territoriesISOA3[territory];
     this.availsForm.addTerritory(territorySlug);
   }
 
   /** Get a list of iso_a3 strings from the territories of the form. */
   public get territoriesIsoA3(): string[] {
-    return this.availsForm.territory.value.map(territorySlug => getIsoA3bySlug(territorySlug));
+    return this.availsForm.territory.value.map(territorySlug => territoriesISOA3[territorySlug]);
   }
 
   public trackByTag(tag) {

@@ -1,6 +1,17 @@
 <div id="player">
   <!-- everything in the div will be destroyed when the player is loaded -->
-  <section>
-    <mat-spinner></mat-spinner>
+  <section fxLayout="column">
+    <ng-container *ngIf="loading$ | async; else error">
+      <mat-spinner></mat-spinner>
+    </ng-container>
+    <ng-template #error>
+      <img asset="add_organization.webp" />
+      <p>Ooops ! Sorry, something broke.</p>
+      <p>Please contact us if you keep seeing this error.</p>
+      <button mat-flat-button (click)="refresh()">
+        <mat-icon svgIcon="refresh"></mat-icon>
+        <span>Retry</span>
+      </button>
+    </ng-template>
   </section>
 </div>
