@@ -20,8 +20,9 @@ export function isSafari() {
  * More details about the code below here : https://stackoverflow.com/questions/5916900/how-can-you-detect-the-version-of-a-browser
  */
 export function getBrowserWithVersion(): { browser_name: string, browser_version: string } {
-  var ua = navigator.userAgent, tem, 
-  M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+  const ua = navigator.userAgent
+  let tem
+  let M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
   if (/trident/i.test(M[1])) {
     tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
     return { browser_name: 'IE', browser_version: (tem[1] || '') };
