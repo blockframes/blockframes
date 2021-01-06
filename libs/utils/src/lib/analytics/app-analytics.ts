@@ -30,7 +30,7 @@ export class FireAnalytics {
     }
   }
 
-  public setUserProperties(properties: Record<AnalyticsUserProperties, any>) {
+  public setUserProperties(properties: Partial<AnalyticsUserProperties>) {
     this.analytics.setUserProperties(properties);
   }
 }

@@ -105,8 +105,7 @@ export class AppModule {
     if (yandex) yandexService.insertMetrika();
     intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
-    const browser = getBrowserWithVersion();
-    analytics.setUserProperties({ browser_name: browser.name, browser_version: browser.version });
+    analytics.setUserProperties(getBrowserWithVersion());
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {

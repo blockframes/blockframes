@@ -76,8 +76,7 @@ export class AuthService extends FireAuthService<AuthState> {
   onSignin(userCredential: UserCredential) {
     this.updateIntercom(userCredential);
 
-    const browser = getBrowserWithVersion();
-    this.analytics.setUserProperties({ browser_name: browser.name, browser_version: browser.version });
+    this.analytics.setUserProperties(getBrowserWithVersion());
   }
 
   onSignup(userCredential: UserCredential) {

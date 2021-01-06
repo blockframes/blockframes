@@ -17,9 +17,7 @@ export const analyticsEvents = [
 
 export type AnalyticsEvents = typeof analyticsEvents[number];
 
-export const analyticsUserProperties = [
-  'browser_name',
-  'browser_version'
-] as const;
-
-export type AnalyticsUserProperties = typeof analyticsUserProperties[number];
+export interface AnalyticsUserProperties {
+  browser_name: string;
+  browser_version: string;
+}
