@@ -5,18 +5,12 @@
 import { backup, restore } from './admin';
 import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from "@blockframes/firebase-utils";
 import { last } from 'lodash';
+import { dbVersionDoc } from '@blockframes/utils/maintenance';
 
 export const VERSION_ZERO = 2;
 
-export interface IVersionDoc {
-  currentVersion: number;
-}
-
 export async function loadDBVersion(db: Firestore): Promise<number> {
-  const version = await db
-    .collection('_META')
-    .doc('_VERSION')
-    .get();
+  const version = await db.doc(dbVersionDoc).get();
 
   if (!version.exists) {
     return VERSION_ZERO;

@@ -5,19 +5,16 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TunnelPageComponent } from './page.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-const material = [
-  MatButtonModule,
-  MatIconModule
-]
 
 @NgModule({
-  declarations: [ TunnelPageComponent ],
+  declarations: [TunnelPageComponent],
   imports: [
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ...material
+    MatButtonModule,
+    MatIconModule
   ],
   exports: [TunnelPageComponent]
 })
-export class TunnelPageModule {}
+export class TunnelPageModule { }

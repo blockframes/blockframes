@@ -3,8 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { ShellConfig, FORMS_CONFIG } from '../../form/shell/shell.component';
 import { MovieQuery } from '@blockframes/movie/+state';
+import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 
 @Component({
   selector: '[routes] title-dashboard-shell',
@@ -22,7 +22,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private query: MovieQuery,
-  ) {}
+  ) { }
 
   ngOnInit() {
     const obs = Object.keys(this.configs).map(name => this.configs[name].onInit()).flat();

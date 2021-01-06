@@ -21,5 +21,7 @@ export interface TunnelStepSnapshot {
 }
 
 export interface TunnelRoot {
-  confirmExit: () => Observable<boolean>;
+  layout: {
+    confirmExit: () => Observable<boolean>;
+  }
 }
