@@ -29,6 +29,8 @@ export class VideoViewerComponent implements AfterViewInit {
   private signalPlayerReady: () => void;
   private waitForPlayerReady: Promise<void>;
 
+  public loading$ = new BehaviorSubject(true);
+
   private _ref: string;
   get ref() { return this._ref; }
   @Input() set ref(value: string) {
@@ -58,8 +60,6 @@ export class VideoViewerComponent implements AfterViewInit {
   trackFullScreenMode() {
     this.fullScreen = !this.fullScreen;
   }
-
-  public loading$ = new BehaviorSubject(true);
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
