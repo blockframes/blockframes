@@ -18,6 +18,7 @@ import { UploadModule } from '@blockframes/media/components/upload/upload.module
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [MovieFormMediaVideosComponent],
@@ -38,6 +39,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    MatSelectModule,
 
     // Route
     RouterModule.forChild([{ path: '', component: MovieFormMediaVideosComponent }])

@@ -3,7 +3,7 @@
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1 i18n *ngIf="count$ | async as count">{{count}} title{count, plural, =0 {} =1 {} other {s}} in the cart</h1>
       <a mat-button color="primary" routerLink="../deals">
-        <mat-icon svgIcon="wallet"></mat-icon>
+        <mat-icon svgIcon="account_balance_wallet"></mat-icon>
         <span>Consult your Current Offers and Deals</span>
       </a>
     </header>
@@ -14,7 +14,7 @@
         <movie-banner-actions fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="16px">
           <wishlist-button [movieId]="title.movieId" (added)="removeTitle($event)"></wishlist-button>
           <button mat-button color="warn" (click)="removeTitle(title.movieId)">
-            <mat-icon svgIcon="trash"></mat-icon>
+            <mat-icon svgIcon="delete"></mat-icon>
             <span>Remove Title</span>
           </button>
           <a mat-button color="primary" [routerLink]="['../title', title.movieId, 'avails']">

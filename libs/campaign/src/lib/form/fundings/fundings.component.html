@@ -6,13 +6,15 @@
     <section id="fundings">
       <h3>Financing plan</h3>
       <p>
-        Please <b>fill in the form below</b> to inform your future investors of the main sources of funding for this project and choose the currency that will be applied to your financing plan.
+        Please <b>fill in the form below</b> to inform your future investors of the main sources of funding for this
+        project and choose the currency that will be applied to your financing plan.
       </p>
-      <bf-form-table [columns]="columns" [form]="form.get('fundings')" buttonText="Add an Organization">
+      <bf-form-table [columns]="columns" [form]="form.get('fundings')">
         <!-- Columns -->
         <ng-template colRef="name" let-name><b>{{ name }}</b></ng-template>
         <ng-template colRef="kind" let-kind>{{ kind }}</ng-template>
-        <ng-template colRef="amount" let-amount>{{ amount | currency: form.getCurrency() : 'symbol' : '1.0-0' }}</ng-template>
+        <ng-template colRef="amount" let-amount>{{ amount | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
+        </ng-template>
         <ng-template colRef="status" let-status>{{ status | titlecase }}</ng-template>
 
         <!-- Local Form -->
@@ -22,12 +24,13 @@
             <div fxLayout fxLayoutGap="16px">
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Organization Name</mat-label>
-                <input matInput formControlName="name"/>
+                <input matInput formControlName="name" />
               </mat-form-field>
 
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Nature</mat-label>
-                <input matInput formControlName="kind" placeholder="e.g. Executive producer, television co-production"/>
+                <input matInput formControlName="kind"
+                  placeholder="e.g. Executive producer, television co-production" />
               </mat-form-field>
             </div>
 
@@ -35,7 +38,7 @@
             <div fxLayout fxLayoutGap="16px">
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Amount</mat-label>
-                <input type="number" matInput formControlName="amount" min="0"/>
+                <input type="number" matInput formControlName="amount" min="0" />
                 <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
                 <mat-error *ngIf="fundinForm.hasError('min', 'amount')">Only positive numbers are allowed.</mat-error>
               </mat-form-field>
@@ -52,6 +55,10 @@
           </form>
 
         </ng-template>
+
+        <ng-template saveButtonText>Save Organization</ng-template>
+        <ng-template addButtonText>Add an Organization</ng-template>
+
       </bf-form-table>
       <p class="mat-body-2 total">
         <b>Your total financing plan is: {{ fundings.value | totalFundings: form.getCurrency() }}</b>
@@ -65,12 +72,12 @@
 
     <section id="financing-plan">
       <h3 fxLayout fxLayoutAlign="start center">
-        <mat-icon svgIcon="upload"></mat-icon>
+        <mat-icon svgIcon="cloud_upload"></mat-icon>
         <span>Upload document</span>
       </h3>
       <p>
         Please <b>upload your detailed financing plan</b>
-        <br/>
+        <br />
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
       <file-upload [form]="form.get('files').get('financingPlan')" [storagePath]="storagePath" allowedFileType="pdf">

@@ -17,7 +17,6 @@ import { Index } from 'algoliasearch';
 
 // Blockframes
 import { AlgoliaIndex, AlgoliaService} from '@blockframes/utils/algolia';
-import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';

@@ -19,6 +19,7 @@ export class AdminService {
           uid: r.user_id,
           firstConnexion: r.first_connexion.value,
           lastConnexion: r.last_connexion.value,
+          sessionCount: r.session_count,
           pageView: r.page_view,
         }))
       }

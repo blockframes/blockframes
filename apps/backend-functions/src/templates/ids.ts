@@ -38,7 +38,8 @@ export const templateIds = {
       accepted: 'd-d32b25a504874a708de6bfc50a1acba7',
     },
     attendEvent: {
-      created: 'd-07f5e3cc6796455097b6082c22568d9e'
+      created: 'd-07f5e3cc6796455097b6082c22568d9e',
+      accepted: 'd-df7b0a372b994a3090a48dc6cf17ba3e',
     }
   },
   // Templates for invitations

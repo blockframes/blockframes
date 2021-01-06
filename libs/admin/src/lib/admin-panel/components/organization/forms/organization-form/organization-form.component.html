@@ -1,23 +1,21 @@
-<form [formGroup]="form" fxLayout="column">
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="40px">
 
-  <!-- Contact Information -->
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Contact Information</mat-card-title>
-    </mat-card-header>
-    <mat-card-content fxLayout="column">
-      <article formGroupName="denomination">
-        <mat-form-field appearance="outline" class="full-width">
+  <section fxLayout="row" fxFlex fxLayoutGap="32px">
+    <!-- Contact Information -->
+    <article fxLayout="column" fxFlex>
+      <h2>Contact Information</h2>
+      <div formGroupName="denomination" fxLayout="column">
+        <mat-form-field appearance="outline">
           <mat-label>Company Name</mat-label>
           <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
           <mat-error *ngIf="form.get('denomination').hasError('required')">Company name is required</mat-error>
           <mat-error *ngIf="form.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline">
           <mat-label>Company Public Name</mat-label>
           <input test-id="public-name" matInput placeholder="Company Public Name" formControlName="public" type="text"/>
         </mat-form-field>
-      </article>
+      </div>
       <mat-form-field appearance="outline">
         <mat-label>Contact Email Address</mat-label>
         <input
@@ -29,49 +27,40 @@
         />
         <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
       </mat-form-field>
-    </mat-card-content>
-  </mat-card>
+    </article>
 
-  <!-- Company Logo -->
-  <mat-card class="company-logo" *ngIf="!disableCropper">
-    <mat-card-header>
-      <mat-card-title>Company Logo</mat-card-title>
-      <mat-card-subtitle>Upload company Logo</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
+    <!-- Company Logo -->
+    <article *ngIf="!disableCropper" fxFlex>
+      <h2>Company Logo</h2>
+      <h5>Upload company Logo</h5>
+
       <drop-cropper ratio="square" [storagePath]="storagePath" [form]="form.get('logo')">
         <h3 title>Logo</h3>
       </drop-cropper>
-    </mat-card-content>
-  </mat-card>
+    </article>
+  </section>
 
-  <!-- Legal Entity -->
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Company Description</mat-card-title>
-    </mat-card-header>
-    <mat-card-content fxLayout="column">
+  <section fxLayout="row" fxFlex fxLayoutGap="32px">
+    <article fxLayout="column" fxFlex>
+      <!-- Legal Entity -->
+      <h2>Company Description</h2>
       <organization-form-description
-      [activity]="form.get('activity')"
-      [fiscalNumber]="form.get('fiscalNumber')"
-      [description]="form.get('description')">
-    </organization-form-description>
-    </mat-card-content>
-  </mat-card>
+        [activity]="form.get('activity')"
+        [fiscalNumber]="form.get('fiscalNumber')"
+        [description]="form.get('description')">
+      </organization-form-description>
+    </article>
 
-  <!-- Headquarters Address -->
-  <mat-card class="company-address">
-    <mat-card-content>
+    <!-- Headquarters Address -->
+    <article fxFlex>
       <organization-form-address [form]="form.get('addresses').get('main')"></organization-form-address>
-    </mat-card-content>
-  </mat-card>
+    </article>
+  </section>
 
   <!-- Admin settings -->
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Admin settings</mat-card-title>
-    </mat-card-header>
-    <mat-card-content fxLayout="column">
+  <section fxLayout="row" fxFlex fxLayoutGap="32px">
+    <article fxFlex fxLayout="column">
+      <h2>Admin settings</h2>
       <mat-form-field appearance="outline">
         <mat-label>Org Status</mat-label>
         <mat-select formControlName="status" required>
@@ -80,7 +69,9 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+    </article>
 
+    <article fxFlex fxLayout="column">
       <h2>Application Access</h2>
       <div *ngFor="let a of app">
         <div [formGroup]="form.appAccess.get(a)">
@@ -93,7 +84,6 @@
           </mat-checkbox>
         </div>
       </div>
-
-    </mat-card-content>
-  </mat-card>
+    </article>
+  </section>
 </form>

@@ -122,11 +122,11 @@ export class FileTypeImagePipe implements PipeTransform {
       case 'xls':
         return kind === 'image' ? 'xls.webp' : 'document';
       case 'image':
-        return kind === 'image' ? 'image.webp' : 'picture' ;
+        return kind === 'image' ? 'image.webp' : 'image' ;
       case 'pdf':
         return kind === 'image' ? 'pdf.webp' : 'pdf';
       case 'video':
-        return kind === 'image' ? 'image.webp' : 'film';
+        return kind === 'image' ? 'image.webp' : 'movie';
       default:
         return kind === 'image' ? 'image.webp' : 'document';
     }

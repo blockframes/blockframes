@@ -35,7 +35,7 @@
     </ng-template>
     <ng-template colRef="org" let-org>
       <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
-        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="eye"></mat-icon>
+        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="visibility"></mat-icon>
       </a>
       <ng-template #noOrg>--</ng-template>
     </ng-template>

@@ -3,10 +3,11 @@ import { StoreConfig, Store } from '@datorama/akita';
 
 
 export interface ConnectedUserInfo {
-  uid : string;
-  firstConnexion: Date;
-  lastConnexion: Date;
-  pageView: number;
+  uid : string,
+  firstConnexion: Date,
+  lastConnexion: Date,
+  pageView: number,
+  sessionCount: number,
 }
 
 export interface AdminState {
