@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 
-@Pipe({ name: 'getLink', pure: true })
+@Pipe({ name: 'getLink' })
 export class GetLinkPipe implements PipeTransform {
   transform(link: string, fallback?: string) {
     const url = formatUrl(link).url;
@@ -9,7 +9,7 @@ export class GetLinkPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'getParams', pure: true })
+@Pipe({ name: 'getParams' })
 export class GetParamsPipe implements PipeTransform {
   transform(link: string) {
     return formatUrl(link).params
