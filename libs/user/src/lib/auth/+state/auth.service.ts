@@ -16,6 +16,8 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 import { intercomId } from '@env';
 import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta';
 import { Subject } from 'rxjs';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -29,6 +31,7 @@ export class AuthService extends FireAuthService<AuthState> {
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery,
     private gdprService: GDPRService,
+    private analytics: FireAnalytics,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
@@ -72,6 +75,8 @@ export class AuthService extends FireAuthService<AuthState> {
 
   onSignin(userCredential: UserCredential) {
     this.updateIntercom(userCredential);
+
+    this.analytics.setUserProperties(getBrowserWithVersion());
   }
 
   onSignup(userCredential: UserCredential) {
