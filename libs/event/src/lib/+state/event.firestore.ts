@@ -1,5 +1,5 @@
 import { firestore } from 'firebase/app';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 
 type Timestamp = firestore.Timestamp;
 
