@@ -7,7 +7,7 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
 export interface AppMailSetting {
-  description: AppDescriptionValue,
+  description: string,
   logo: AppLogoValue,
   name: AppNameValue,
   url?: string,
@@ -43,12 +43,12 @@ export const appLogo = {
 };
 type AppLogoValue = typeof appLogo[App];
 
+// TODO #4510 add text description
 export const appDescription = {
   catalog: '',
   festival: '',
   financiers: '',
 };
-type AppDescriptionValue = typeof appDescription[App];
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
