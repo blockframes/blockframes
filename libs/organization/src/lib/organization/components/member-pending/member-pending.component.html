@@ -6,7 +6,7 @@
         <mat-divider *ngIf="first" matSubheader></mat-divider>
         <span matLine>{{ invitation.toUser.email }}</span>
         <button class="mat-elevation-z0" *ngIf="isAdmin" mat-mini-fab color="warn" (click)="declined.emit(invitation)">
-          <mat-icon svgIcon="cross"></mat-icon>
+          <mat-icon svgIcon="close"></mat-icon>
         </button>
         <mat-divider></mat-divider>
       </mat-list-item>

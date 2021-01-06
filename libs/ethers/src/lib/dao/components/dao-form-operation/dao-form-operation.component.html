@@ -15,7 +15,7 @@
       <mat-list-item *ngFor="let member of control.value.members">
         <span>{{member.firstName}}</span>
         <button mat-icon-button (click)="removeMember(member.uid)">
-          <mat-icon svgIcon="trash"></mat-icon>
+          <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </mat-list-item>
     </mat-list>

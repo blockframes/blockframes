@@ -8,7 +8,7 @@
 <mat-tab-group headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon svgIcon="profile"></mat-icon>
+      <mat-icon svgIcon="account_circle"></mat-icon>
     </ng-template>
     <div class="tab-content">
       <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
@@ -22,7 +22,7 @@
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon svgIcon="film"></mat-icon>
+      <mat-icon svgIcon="movie"></mat-icon>
     </ng-template>
     <!-- We want to use slice to be sure to have 3 elements/placeholders -->
     <div class="tab-content" *ngIf="org.id | orgMovies:3 | async as movies">

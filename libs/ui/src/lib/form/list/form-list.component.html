@@ -11,10 +11,10 @@
           <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item }" matLine>
           </ng-template>
           <button mat-icon-button (click)="edit(index)">
-            <mat-icon svgIcon="pencil"></mat-icon>
+            <mat-icon svgIcon="edit"></mat-icon>
           </button>
           <button mat-icon-button (click)="remove(index)">
-            <mat-icon svgIcon="trash"></mat-icon>
+            <mat-icon svgIcon="delete"></mat-icon>
           </button>
           <mat-divider *ngIf="index < list.length -1"></mat-divider>
         </mat-list-item>
@@ -39,11 +39,11 @@
     <div fxLayout="row" [fxLayoutAlign]="keepFormOpen ? 'end center' : 'space-between center'">
       <ng-container *ngIf="!keepFormOpen">
         <button test-id="row-cancel" mat-stroked-button [disabled]="form.controls.length < 1" (click)="cancel()">
-          <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
+          <mat-icon svgIcon="close"></mat-icon><span>Cancel</span>
         </button>
       </ng-container>
       <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
-        <mat-icon svgIcon="floppy"></mat-icon>
+        <mat-icon svgIcon="save"></mat-icon>
         <span>
           <ng-template [ngTemplateOutlet]="saveButtonText  || defaultText"></ng-template>
         </span>

@@ -24,7 +24,7 @@
               <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
             </div>
             <button mat-mini-fab (click)="deleteLanguage(language.key)" color="warn">
-              <mat-icon svgIcon="trash"></mat-icon>
+              <mat-icon svgIcon="delete"></mat-icon>
             </button>
           </div>
           <ng-container *ngIf="language.value.hasError('noVersion')">
@@ -44,7 +44,7 @@
       <div fxLayout="row" fxLayoutAlign="space-between start">
         <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
           [disabled]="!languageCtrl.value">
-          <mat-icon svgIcon="floppy"></mat-icon>
+          <mat-icon svgIcon="save"></mat-icon>
           <span>Save Language</span>
         </button>
       </div>

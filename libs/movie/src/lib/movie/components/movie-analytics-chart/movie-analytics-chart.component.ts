@@ -9,7 +9,7 @@ const chartInfo = [
   {
     eventName: 'movieViews',
     title: 'Page views',
-    icon: 'eye'
+    icon: 'visibility'
   },
   {
     eventName: 'addedToWishlist',

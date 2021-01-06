@@ -65,10 +65,11 @@ const queryAnalyticsActiveUsers = `
   SELECT
     count(*) as page_view,
     user_id,
+    (SELECT count(distinct(params.value.int_value)) as session_count FROM \`${bigQueryAnalyticsTable}*\`, UNNEST(event_params) AS params WHERE user_id = main.user_id  AND params.key = 'ga_session_id') AS session_count,
     TIMESTAMP_MICROS(MIN(event_timestamp)) as first_connexion,
     TIMESTAMP_MICROS(MAX(event_timestamp)) as last_connexion
   FROM
-    \`${bigQueryAnalyticsTable}*\`,
+    \`${bigQueryAnalyticsTable}*\` as main,
     UNNEST(event_params) AS params
   WHERE event_name = 'pageView'
   AND user_id is not null
