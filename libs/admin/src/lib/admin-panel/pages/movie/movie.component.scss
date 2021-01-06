@@ -1,10 +1,13 @@
-main {
+:host {
+  display: flex;
+  flex-direction: column;
   margin: 40px;
-  mat-card {
-    margin-bottom: 20px;
-    mat-card-actions {
-      margin: 0;
-      padding: 0;
-    }
+}
+
+article {
+  width: 100%;
+  margin-bottom: 40px;
+  &.surface {
+    padding: 24px;
   }
 }

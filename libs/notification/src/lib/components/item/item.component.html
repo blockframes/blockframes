@@ -7,13 +7,13 @@
   </span>
   <button mat-button (click)="markAsRead(notification)">
     <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
-      <mat-icon svgIcon="read"></mat-icon>
+      <mat-icon svgIcon="drafts"></mat-icon>
       Mark as read
     </div>
   </button>
   <a mat-button [routerLink]="notification.url">
     <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
-      <mat-icon svgIcon="dot_menu"></mat-icon>
+      <mat-icon svgIcon="pending"></mat-icon>
       More
     </div>
   </a>

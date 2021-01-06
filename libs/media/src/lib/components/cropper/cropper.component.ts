@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject } from 'rxjs';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
@@ -88,7 +88,7 @@ export class CropperComponent implements OnInit {
         break;
       default:
         throw new Error('Unknown ratio');
-    }    
+    }
   }
   @Input() form?: HostedMediaForm;
   @Input() setWidth?: number;
@@ -99,6 +99,8 @@ export class CropperComponent implements OnInit {
   @Input() filePrivacy: Privacy = 'public';
   @Input() types: string[] = ['image/jpeg', 'image/png'];
   @Input() accept: string[] = ['.jpg', '.png'];
+
+  @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
   constructor(
     private mediaService: MediaService,
@@ -177,6 +179,7 @@ export class CropperComponent implements OnInit {
     } else {
       this.nextStep('crop');
       this.form.patchValue({ cropped: false });
+      this.fileUploader.nativeElement.value = null;
     }
 
   }
@@ -196,8 +199,10 @@ export class CropperComponent implements OnInit {
 
       this.nextStep('show');
 
-      // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
-      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp'));
+      // regexp selects part of string after the last . in the string (which is always the file extension)
+      // replaces this by '.webp'
+      // and also postfix file name with a small random id allow the same image to be cropped several time without collision
+      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, `-${Math.random().toString(36).substr(2)}.webp`));
 
       this.form.patchValue({
         ref: getStoragePath(this.storagePath, this.filePrivacy),
@@ -219,6 +224,7 @@ export class CropperComponent implements OnInit {
 
     this.form.patchValue({ ref: '', blobOrFile: undefined });
     this.form.markAsDirty();
+    this.fileUploader.nativeElement.value = null;
 
     this.nextStep('drop');
   }

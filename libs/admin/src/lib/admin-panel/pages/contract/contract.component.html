@@ -31,7 +31,7 @@
         <ng-container *ngFor="let partyDetails of contract.parties; let i = index">
           <section fxLayout="row" fxLayoutAlign="space-between start">
             <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
-            <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon svgIcon="pencil"></mat-icon></button>
+            <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon svgIcon="edit"></mat-icon></button>
           </section>
           <ul>
             <li><strong>Status : </strong>{{ partyDetails.status | toLabel: 'contractStatus' }}</li>
@@ -186,7 +186,7 @@
             </ng-template>
           </ng-template>
           <ng-template colRef="explorerights" let-rightslink>
-            <a [routerLink]="rightslink"><mat-icon svgIcon="eye"></mat-icon></a>
+            <a [routerLink]="rightslink"><mat-icon svgIcon="visibility"></mat-icon></a>
           </ng-template>
           <ng-template colRef="movie.storeConfig.status" let-storeStatus>
             {{ storeStatus | toLabel: 'storeStatus' }}
@@ -195,7 +195,7 @@
             {{ storeType | toLabel: 'storeType' }}
           </ng-template>
           <ng-template colRef="edit" let-edit>
-            <button mat-icon-button color="accent" (click)="editTitle(edit)"><mat-icon svgIcon="pencil"></mat-icon></button>
+            <button mat-icon-button color="accent" (click)="editTitle(edit)"><mat-icon svgIcon="edit"></mat-icon></button>
           </ng-template>
         </bf-table-filter>
         <button mat-flat-button color="primary" (click)="addTitle()">

@@ -19,7 +19,7 @@
               [formControl]="form.shooting.get('dates').get('completed')">
             <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="completedPicker">
-              <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+              <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #completedPicker></mat-datepicker>
           </mat-form-field>
@@ -35,7 +35,7 @@
             <input matInput [matDatepicker]="progressPicker" [formControl]="form.shooting.get('dates').get('progress')">
             <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="progressPicker">
-              <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+              <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
             </mat-datepicker-toggle>
             <mat-datepicker #progressPicker></mat-datepicker>
           </mat-form-field>
@@ -127,7 +127,7 @@
                 <ng-container *ngFor="let city of locationForm.get('cities').value; let i = index">
                   <mat-chip removable="true" (removed)="remove(i, locationForm.get('cities'))">
                     <span>{{ city | titlecase }}</span>
-                    <mat-icon matChipRemove svgIcon="close"></mat-icon>
+                    <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
                   </mat-chip>
                 </ng-container>
               </mat-chip-list>
@@ -159,7 +159,7 @@
           <input test-id="event-date" matInput [matDatepicker]="eventDate"
             [formControl]="form.expectedPremiere.get('date')">
           <mat-datepicker-toggle matSuffix [for]="eventDate">
-            <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+            <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
           <mat-datepicker #eventDate></mat-datepicker>
         </mat-form-field>
