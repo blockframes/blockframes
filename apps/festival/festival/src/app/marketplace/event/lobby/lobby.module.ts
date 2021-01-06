@@ -21,7 +21,6 @@ import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ConfirmModule,
 
     ImageReferenceModule,
     MeetingVideoModule,
