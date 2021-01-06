@@ -39,7 +39,7 @@ describe('Organiser invites other users to private screening', () => {
     p1.clickSignup();
   });
 
-  it.only('Organiser creates screening & invites 2 users to the screening', () => {
+  it('Organiser creates screening & invites 2 users to the screening', () => {
     signIn(users[UserIndex.Organiser]);
     acceptCookie();
 
@@ -61,7 +61,7 @@ describe('Organiser invites other users to private screening', () => {
     p3.saveEvent();
   });
 
-  it.only(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
+  it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
     signIn(users[UserIndex.InvitedUser1]);
     acceptCookie();
 
@@ -73,7 +73,6 @@ describe('Organiser invites other users to private screening', () => {
     // Assets video runs
     p2.openMoreMenu();
     const p3: FestivalMarketplaceScreeningPage = p2.clickGoToEvent();
-    //const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
 
     // Save the current url for the next test
     cy.url().then(url => SCREENING_URL = url);
@@ -106,7 +105,7 @@ describe('Organiser invites other users to private screening', () => {
     p2.verifyNotification(users[UserIndex.InvitedUser2].firstName, false);
   });
 
-  it.only('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
+  it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
     signIn(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 

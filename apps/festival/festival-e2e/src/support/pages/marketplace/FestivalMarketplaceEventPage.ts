@@ -4,9 +4,7 @@ import { SEC } from "@blockframes/e2e/utils";
 
 export default class FestivalMarketplaceEventPage {
   constructor() {
-    //cy.wait(3 * SEC);
-    cy.waitUntil(() => cy.get('festival-marketplace-home').contains('festival-event-view'));
-    //cy.get('festival-event-view', {timeout: 90 * SEC});
+    cy.waitUntil(() => cy.get('festival-event-view'));
   }
 
   assertScreeningExist(movieTitle: string) {
