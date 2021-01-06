@@ -6,11 +6,11 @@ import { mergeDeep } from "@blockframes/utils/helpers";
 import { ProductionStatus } from "@blockframes/utils/static-model";
 import { MovieControl, MovieForm } from "./movie.form";
 import { Movie, MoviePromotionalElements, MovieQuery, MovieService } from "../+state";
-import { FormShellConfig } from './shell/shell.component';
 import { switchMap, startWith, filter } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import type { FormShellConfig } from './movie.shell.interfaces'
 
 const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
-import { FormShellConfig } from '@blockframes/movie/form/shell/shell.component';
+import type { FormShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { CampaignControls, CampaignForm } from './form';
 import { Campaign, CampaignService } from '../+state';
 import { MediaService, extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state';

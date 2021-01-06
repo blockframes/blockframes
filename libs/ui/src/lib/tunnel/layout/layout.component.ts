@@ -1,4 +1,15 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation, ViewChild, OnDestroy, ContentChild, Inject, TemplateRef, Directive } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  ViewChild,
+  OnDestroy,
+  ContentChild,
+  Inject,
+  TemplateRef
+} from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep, TunnelStepSnapshot } from '../tunnel.model';
@@ -12,7 +23,8 @@ import { routeAnimation } from '@blockframes/utils/animations/router-animations'
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormArray, FormGroup } from '@angular/forms';
-import { FORMS_CONFIG, ShellConfig } from '@blockframes/movie/form/shell/shell.component';
+import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
+import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -45,11 +57,6 @@ function getStepSnapshot(steps: TunnelStep[], url: string): TunnelStepSnapshot {
   }
 }
 
-@Directive({ selector: 'tunnel-confirm-exit' })
-export class TunnelExitConfirmDirective {
-  constructor(public template: TemplateRef<any>) { }
-}
-
 @Component({
   selector: '[exitRedirect] tunnel-layout',
   templateUrl: './layout.component.html',
@@ -73,7 +80,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
 
-  @ContentChild('confirmExit') confirmExitTemplate: TunnelExitConfirmDirective;
+  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
 
   @Input() steps: TunnelStep[];
 
@@ -109,18 +116,17 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
         this.sidenavContent.scrollTo({ top: 0 })
         this.getRoute();
       })
-    this.getRoute();
   }
 
   private getRoute() {
     const url = this.routerQuery.getValue().state.url;
-    /*      this.currentStep = getStepSnapshot(this.steps, url);
-         this.next = getPage(this.steps, url, 1);
-         this.previous = getPage(this.steps, url, -1); */
+    this.currentStep = getStepSnapshot(this.steps, url);
+    this.next = getPage(this.steps, url, 1);
+    this.previous = getPage(this.steps, url, -1);
   }
 
   /** Save the form and display feedback to user */
-  private async save() {
+  async save() {
     await this.update(false);
     await this.snackBar.open('Title saved', '', { duration: 1000 }).afterDismissed().toPromise();
     return true;
@@ -137,13 +143,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     if (isPristine) {
       return of(true);
     }
-    console.log(this.confirmExit)
     const dialogRef = this.dialog.open(this.confirmExitTemplate, {
-      width: '80%',
-      /*    data: {
-           title: 'You are going to leave the Movie Form.',
-           subtitle: 'Pay attention, if you leave now your changes will not be saved.'
-         } */
+      width: '80%'
     });
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
