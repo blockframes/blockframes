@@ -6,8 +6,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { GetMediaUrlModule } from '@blockframes/media/pipes/get-media-url.pipe';
+import { PdfModule } from '@blockframes/media/components/pdf/pdf.module';
+import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
 import { PreviewModalComponent } from './preview.component';
+import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+
 
 @NgModule({
   imports: [
@@ -18,7 +21,9 @@ import { PreviewModalComponent } from './preview.component';
     MatDialogModule,
     MatButtonModule,
     ImageReferenceModule,
-    GetMediaUrlModule
+    FileNameModule,
+    PdfModule,
+    MediaPlayerModule,
   ],
   exports: [PreviewModalComponent],
   declarations: [PreviewModalComponent],
