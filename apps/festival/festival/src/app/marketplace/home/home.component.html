@@ -41,7 +41,7 @@
   <section class="titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
-      <a mat-button [routerLink]="section.link || '../title'" color="primary">
+      <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary">
         <span>See all</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
@@ -60,7 +60,7 @@
   <section class="orgs cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
-      <a mat-button [routerLink]="section.link || '../organization'" color="primary">
+      <a mat-button [routerLink]="section.link | getLink: '../organization'" [queryParams]="section.link | getParams" color="primary">
         <span>See all</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>

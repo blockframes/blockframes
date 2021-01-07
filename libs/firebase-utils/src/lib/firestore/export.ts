@@ -1,7 +1,7 @@
 import { backupBucket } from '@env';
 import { Writable } from "stream";
 import { Queue } from '../queue';
-import { JsonlDbRecord, loadAdminServices } from '../util';
+import { DbRecord, loadAdminServices } from '../util';
 import type { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import type { Bucket } from "@google-cloud/storage";
 import type { storage } from 'firebase-admin';
@@ -52,7 +52,7 @@ export async function exportFirestoreToBucket(db: FirebaseFirestore.Firestore, b
       // Store the data
       const docPath: string = doc.ref.path;
       const content: any = doc.data();
-      const stored: JsonlDbRecord = { docPath, content };
+      const stored: DbRecord = { docPath, content };
 
       stream.write(JSON.stringify(stored));
       stream.write('\n');
