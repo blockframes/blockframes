@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 import { FinanciersAppGuard } from './dashboard/guards/financiers-app.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
+import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 const routes: Routes = createRoutes({
   appName: 'financiers',
@@ -33,14 +34,15 @@ const routes: Routes = createRoutes({
 @NgModule({
   declarations: [],
   exports: [RouterModule],
-  imports: [RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled',
-    anchorScrolling: 'enabled',
-    onSameUrlNavigation: 'reload',
-    paramsInheritanceStrategy: 'always',
-    relativeLinkResolution: 'corrected',
-    // @todo(#3907) Use idle state to preload modules
-    // preloadingStrategy: PreloadAllModules
-  })],
+  imports: [
+    IdlePreloadModule.forRoot(),
+    RouterModule.forRoot(routes, {
+      initialNavigation: 'enabled',
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      paramsInheritanceStrategy: 'always',
+      relativeLinkResolution: 'corrected',
+      preloadingStrategy: IdlePreload
+    })],
 })
 export class FinanciersModule { }
