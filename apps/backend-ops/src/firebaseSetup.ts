@@ -15,6 +15,7 @@ import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 export const { storageBucket } = firebase();
 export { restore } from './admin';
+import { backupBucket } from 'env/env.blockframes-ci';
 
 export async function prepareForTesting() {
   const { db, auth, storage, getCI } = loadAdminServices();
@@ -66,7 +67,7 @@ export async function prepareForTesting() {
 
 export async function prepareForTestingBeta() {
   console.log('Importing latest anonymized db from CI...')
-  const cmd = 'gcloud firestore import gs://ci-backups-blockframes/LATEST-ANON-DB'
+  const cmd = `gcloud firestore import gs://${backupBucket}/LATEST-ANON-DB`;
   console.log('Running command:', cmd)
   await runShellCommand(cmd)
   console.log('DB imported!')
