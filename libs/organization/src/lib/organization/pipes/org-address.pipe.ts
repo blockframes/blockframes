@@ -13,7 +13,6 @@ export class OrgAddressPipe implements PipeTransform {
     if (!!country) {
       return territories[country];
     }
-
   }
 }
 
