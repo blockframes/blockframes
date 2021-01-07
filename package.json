@@ -179,6 +179,7 @@
     "concurrently": "^5.0.0",
     "cross-env": "^7.0.2",
     "cypress": "^5.2.0",
+    "cypress-wait-until": "^1.7.1",
     "dotenv": "8.2.0",
     "faker": "^5.1.0",
     "firebase-functions-test": "^0.2.1",
