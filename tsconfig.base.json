@@ -59,6 +59,7 @@
       "@blockframes/media/*": ["libs/media/src/lib/*"],
       "@blockframes/testing/*": ["libs/testing/src/lib/*"],
       "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"],
+      "@blockframes/consents/*": ["libs/consents/src/lib/*"],
       "@blockframes/campaign/*": ["libs/campaign/src/lib/*"]
     }
   },
