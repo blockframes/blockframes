@@ -35,26 +35,26 @@
   $primary: map-get($theme, 'primary');
   $accent: map-get($theme, 'accent');
 
-  $primary-contrast: (
-    200: mat-color($primary, 100),
-    500: mat-color($primary, 400),
-    800: mat-color($primary, 700),
-    contrast: (
-      200: mat-color(map-get($primary, contrast), 100),
-      500: mat-color(map-get($primary, contrast), 400),
-      800: mat-color(map-get($primary, contrast), 700),
-    )
-  );
-  $accent-contrast: (
-    200: mat-color($accent, 100),
-    500: mat-color($accent, 400),
-    800: mat-color($accent, 700),
-    contrast: (
-      200: mat-color(map-get($accent, contrast), 100),
-      500: mat-color(map-get($accent, contrast), 400),
-      800: mat-color(map-get($accent, contrast), 700),
-    )
-  );
+  // $primary-contrast: (
+  //   200: mat-color($primary, 100),
+  //   500: mat-color($primary, 400),
+  //   800: mat-color($primary, 700),
+  //   contrast: (
+  //     200: mat-color(map-get($primary, contrast), 100),
+  //     500: mat-color(map-get($primary, contrast), 400),
+  //     800: mat-color(map-get($primary, contrast), 700),
+  //   )
+  // );
+  // $accent-contrast: (
+  //   200: mat-color($accent, 100),
+  //   500: mat-color($accent, 400),
+  //   800: mat-color($accent, 700),
+  //   contrast: (
+  //     200: mat-color(map-get($accent, contrast), 100),
+  //     500: mat-color(map-get($accent, contrast), 400),
+  //     800: mat-color(map-get($accent, contrast), 700),
+  //   )
+  // );
 
   $foreground-contrast: (
 		900: #ffffff,
@@ -65,8 +65,8 @@
   );
   @return (
     is-dark: map-get($theme, 'is-dark'),
-    primary: $primary-contrast,
-    accent: $accent-contrast,
+    primary: $primary,
+    accent: $accent,
     warn: map-get($theme, 'warn'),
     background: map-get($theme, 'background'),
     foreground: $foreground-contrast,
