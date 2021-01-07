@@ -1,4 +1,4 @@
-import FestivalMarketplaceEventPage from "../marketplace/FestivalMarketplaceEventPage";
+import FestivalMarketplaceScreeningPage from "../marketplace/FestivalMarketplaceScreeningPage";
 import { SEC } from '@blockframes/e2e/utils';
 
 const ACCEPTED = 'Accepted';
@@ -31,6 +31,6 @@ export default class FestivalInvitationsPage {
 
   clickGoToEvent() {
     cy.get('[test-id=go-to-event]').click();
-    return new FestivalMarketplaceEventPage();
+    return new FestivalMarketplaceScreeningPage();
   }
 }
