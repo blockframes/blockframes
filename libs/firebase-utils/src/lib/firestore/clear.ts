@@ -2,6 +2,9 @@ import { META_COLLECTION_NAME } from "@blockframes/utils/maintenance";
 import { runChunks } from "../firebase-utils";
 import { Queue } from "../queue";
 import { CollectionReference, DocumentReference, Firestore } from "../types";
+import { firebase } from '@env';
+import { throwOnProduction } from "../util";
+import { execSync } from "child_process";
 
 export async function clear(db: FirebaseFirestore.Firestore) {
   const processingQueue = new Queue();
@@ -42,3 +45,15 @@ const clearedCollection = async (firestore: Firestore): Promise<CollectionRefere
   // we disabled that, and this function might be useless now.
   return (await firestore.listCollections()).filter(x => x.id !== META_COLLECTION_NAME);
 };
+
+export async function clearDbCLI(db: FirebaseFirestore.Firestore) {
+  throwOnProduction();
+  const collections = (await db.listCollections()).map((ref) => ref.id).filter((name) => name !== '_META');
+  const cmds = collections.map(collection => `firebase firestore:delete -P ${firebase().projectId} -r -y ${collection}`)
+  for (const cmd of cmds) {
+    console.log('Run:', cmd);
+    execSync(cmd);
+  }
+  await db.collection('_META').doc('_VERSION').delete()
+  console.log('Deleted Version in _META')
+}
