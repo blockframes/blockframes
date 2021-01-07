@@ -1,4 +1,4 @@
-<div id="player">
+<div [id]="playerContainerId">
   <!-- everything in the div will be destroyed when the player is loaded -->
   <section fxLayout="column">
     <ng-container *ngIf="loading$ | async; else error">

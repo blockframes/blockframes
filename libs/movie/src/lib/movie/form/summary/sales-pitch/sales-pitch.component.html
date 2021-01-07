@@ -7,12 +7,12 @@
     </a>
   </h6>
   <ul>
-    <li>
+    <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <strong>Description </strong>
       <missing-control [control]="salesPitch.get('description')" [link]="link" fragment="sales-pitch"></missing-control>
     </li>
-    <li>
-      <strong>Video </strong>
+    <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <bf-preview-modal [ref]="salesPitch.get('ref').get('ref').value"><strong>Video </strong></bf-preview-modal>
       <missing-control [control]="salesPitch.get('ref').get('ref')" [link]="link" fragment="sales-pitch">
         <ng-template let-ref>{{ ref | fileName }}</ng-template>
       </missing-control>

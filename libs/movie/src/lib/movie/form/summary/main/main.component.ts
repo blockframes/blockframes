@@ -15,7 +15,7 @@ export class SummaryMainComponent {
     return this.movie.get('title');
   }
 
-  public get genres() {
+  get genres() {
     return [this.movie.get('genres'), ...this.movie.get('customGenres').controls];
   }
 
