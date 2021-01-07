@@ -61,7 +61,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private campaignService: CampaignService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading$ = this.movieQuery.selectLoading();
@@ -85,7 +85,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     const errorMatcher = new CrossFieldErrorMatcher();
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
       minWidth: '50vw',
-      data: {form, errorMatcher}
+      data: { form, errorMatcher }
     });
   }
 

@@ -21,7 +21,7 @@ export class PromotionalLinksPipe implements PipeTransform {
         const url = useImgIx ? await this.mediaService.generateImgIxUrl(ref) : ref;
         if (!!url) {
           const linkLabel = promotionalElementTypes[link];
-          const icon = useImgIx ? 'download' : 'play';
+          const icon = useImgIx ? 'cloud_download' : 'play_arrow';
           const label = useImgIx ? `Download ${linkLabel}` : `Watch ${linkLabel}`;
           return { url, icon, label };
         }

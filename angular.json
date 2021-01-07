@@ -2000,6 +2000,35 @@
           }
         }
       }
+    },
+    "consents": {
+      "projectType": "library",
+      "root": "libs/consents",
+      "sourceRoot": "libs/consents/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/consents/tsconfig.lib.json", "libs/consents/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/consents/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/consents/jest.config.js",
+            "tsConfig": "libs/consents/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/consents/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

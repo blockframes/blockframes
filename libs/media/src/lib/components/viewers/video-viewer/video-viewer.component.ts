@@ -1,11 +1,13 @@
 import { DOCUMENT } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { MediaService } from "@blockframes/media/+state/media.service";
 import { ImageParameters } from "@blockframes/media/directives/image-reference/imgix-helpers";
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
+import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen  } from '../utils';
 
 declare const jwplayer: any;
@@ -26,6 +28,8 @@ export class VideoViewerComponent implements AfterViewInit {
   private player: any;
   private signalPlayerReady: () => void;
   private waitForPlayerReady: Promise<void>;
+
+  public loading$ = new BehaviorSubject(true);
 
   private _ref: string;
   get ref() { return this._ref; }
@@ -62,38 +66,43 @@ export class VideoViewerComponent implements AfterViewInit {
     private authQuery: AuthQuery,
     private mediaService: MediaService,
     private functions: AngularFireFunctions,
+    private snackBar: MatSnackBar,
   ) { }
 
   async initPlayer() {
+    try {
+      const privateVideo = this.functions.httpsCallable('privateVideo');
+      const { error, result } = await privateVideo({ eventId: this.eventId, ref: this.ref }).toPromise();
 
-    const privateVideo = this.functions.httpsCallable('privateVideo');
-    const { error, result } = await privateVideo({ eventId: this.eventId, ref: this.ref }).toPromise();
-
-    if (!!error) {
-      // if error is set, result will contain the error message
-      throw new Error(result);
-    } else {
-      const parameters: ImageParameters = {
-        auto: 'compress,format',
-        fit: 'crop',
-      };
-      const watermarkRef = this.authQuery.user.watermark;
-      if (!watermarkRef) {
-        throw new Error('We cannot load video without watermark.');
-      }
-      const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
-
-      this.player = jwplayer('puppet-player');
-      this.player.setup({
-        controls: false,
-        file: result.signedUrl,
-        logo: {
-          file: watermarkUrl,
+      if (!!error) {
+        // if error is set, result will contain the error message
+        throw new Error(result);
+      } else {
+        const parameters: ImageParameters = {
+          auto: 'compress,format',
+          fit: 'crop',
+        };
+        const watermarkRef = this.authQuery.user.watermark;
+        if (!watermarkRef) {
+          throw new Error('We cannot load video without watermark.');
         }
-      });
+        const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
 
-      this.player.on('ready', () => this.signalPlayerReady());
-      this.updatePlayer();
+        this.player = jwplayer('puppet-player');
+        this.player.setup({
+          controls: false,
+          file: result.signedUrl,
+          logo: {
+            file: watermarkUrl,
+          }
+        });
+
+        this.player.on('ready', () => this.signalPlayerReady());
+        this.updatePlayer();
+      }
+    } catch(error) {
+      this.loading$.next(false);
+      this.snackBar.open('Error while playing the video: ' + error, 'close', { duration: 8000 });
     }
   }
 

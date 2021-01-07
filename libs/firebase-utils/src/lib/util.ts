@@ -32,7 +32,7 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
   }
 }
 
-export interface JsonlDbRecord {
+export interface DbRecord {
   docPath: string;
   content: { [key: string]: any };
 }
@@ -42,7 +42,7 @@ export function readJsonlFile(dbBackupPath: string) {
   return file
     .split('\n')
     .filter((str) => !!str) // remove last line
-    .map((str) => JSON.parse(str) as JsonlDbRecord);
+    .map((str) => JSON.parse(str) as DbRecord);
 }
 
 let missingVarsMessageShown = false;
@@ -133,4 +133,8 @@ export async function hasAcceptedMovies(org: OrganizationDocument) {
     .where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.storeConfig?.status === 'accepted')
+}
+
+export function throwOnProduction(): never | void {
+  if (firebase().projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
 }

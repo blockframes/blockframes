@@ -293,10 +293,11 @@ jobs:
   push-anon-db-to-ci:
     executor: blockframes-ci
     steps:
-      - checkout_project
+      - prepare_environment
       - run: npm run db:download-prod
       - run: npm run db:anonymize
       - run: npm run db:upload-anon-db-ci
+      - run: npm run firestore:run-db-anon-process
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:

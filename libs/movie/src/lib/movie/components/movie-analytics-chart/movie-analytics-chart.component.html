@@ -8,10 +8,10 @@
         </div>
         <div class="mat-caption" *ngIf="info.percentage">
           <ng-container *ngIf="info.percentage> 0; else down">
-            <mat-icon color="primary" svgIcon="arrow_closed"></mat-icon>
+            <mat-icon color="primary" svgIcon="arrow_drop_up"></mat-icon>
           </ng-container>
           <ng-template #down>
-            <mat-icon color="accent" svgIcon="arrow_open"></mat-icon>
+            <mat-icon color="accent" svgIcon="arrow_drop_down"></mat-icon>
           </ng-template>
           <span>{{ info.percentage }} %</span>
         </div>
