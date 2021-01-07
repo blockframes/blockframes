@@ -274,24 +274,19 @@ export async function createNotificationsForEventsToStart() {
   // 2 Fetch attendees (invitations accepted)
   // 3 Create notifications
 
-  const notificationsCollection = await getCollection<NotificationDocument[]>('notifications');
+  const beginningDate = Date.now() + 86400000;
+  const beginningDateObject = new Date(beginningDate);
 
+  const eventsCollection = await db.collection('events').where('date', '<', beginningDateObject).get();
+  const events = eventsCollection.docs.map(doc => doc.data());
 
-  /*   const notification = createNotification({
-      toUserId: toUser.uid,
-      eventId,
-      type: 'eventIsAboutToStart'
-    }); */
+  const notifications = events.map(event => createNotification({
+    toUserId: event.toUser.uid,
+    docId: event.id,
+    type: 'eventIsAboutToStart'
+  }));
 
-  /*if (!!fromUser) {
-    notification.user = fromUser;
-  } else if (!!fromOrg) {
-    notification.organization = fromOrg;
-  } else {
-    throw new Error('Did not found invitation sender');
-  }*/
-
-  //return triggerNotifications([notification])
+  return triggerNotifications(notifications)
 }
 
 /**
