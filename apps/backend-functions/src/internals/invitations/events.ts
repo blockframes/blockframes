@@ -10,6 +10,7 @@ import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firest
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
+import { getCollection } from "@blockframes/firebase-utils";
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -269,17 +270,18 @@ export async function onInvitationToAnEventUpdate(
 }
 
 export async function createNotificationsForEventsToStart() {
-  // @TODO (#2555)
-
   // 1 Fetch events that are about to start
   // 2 Fetch attendees (invitations accepted)
   // 3 Create notifications
 
-  /*const notification = createNotification({
-    toUserId: toUser.uid,
-    eventId,
-    type: 'eventIsAboutToStart''
-  });*/
+  const notificationsCollection = await getCollection<NotificationDocument[]>('notifications');
+
+
+  /*   const notification = createNotification({
+      toUserId: toUser.uid,
+      eventId,
+      type: 'eventIsAboutToStart'
+    }); */
 
   /*if (!!fromUser) {
     notification.user = fromUser;
