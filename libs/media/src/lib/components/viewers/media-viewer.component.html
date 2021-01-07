@@ -12,7 +12,7 @@
         <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
       </ng-container>
       <ng-container *ngSwitchDefault>
-        <article class="noFile">
+        <article>
           <h3>Sorry</h3>
           <img asset="no_titles.webp" alt="Flying saucer">
           <p>We don't know how to display this file.</p>
