@@ -36,9 +36,9 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'bruce_festival_org',
-    financiers: 'bruce_financiers_org',
-    catalog: 'bruce_catalog_org'
+    festival: 'remco_festival_org',
+    financiers: 'remco_financiers_org',
+    catalog: 'remco_catalog_org'
   },
   indexNameMovies: {
     festival: 'remco_festival_movies',
