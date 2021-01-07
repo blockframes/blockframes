@@ -4,8 +4,7 @@ import { HttpParams } from '@angular/common/http';
 @Pipe({ name: 'getLink' })
 export class GetLinkPipe implements PipeTransform {
   transform(link: string, fallback?: string) {
-    const url = formatUrl(link).url;
-    return url || fallback;
+    return formatUrl(link).url || fallback
   }
 }
 
@@ -22,17 +21,12 @@ export class GetParamsPipe implements PipeTransform {
 })
 export class GetLinkModule { }
 
-function formatUrl(_url: string) {
-  let params = {};
-  if (_url.includes('?')) {
-    const httpParams = new HttpParams({ fromString: _url.split('?')[1] });
-    httpParams.keys().forEach(k => {
-      params[k] = httpParams.get(k)
-    });
+function formatUrl(path: string) {
+  const params = {};
+  const [url, paramsUrl = ''] = path.split('?');
+  const httpParams = new HttpParams({ fromString: paramsUrl });
+  for (const key of httpParams.keys()) {
+    params[key] = httpParams.get(key);
   }
-
-  return {
-    url: _url.split('?')[0],
-    params
-  }
+  return { url, params }
 }
