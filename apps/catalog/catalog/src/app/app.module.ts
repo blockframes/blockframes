@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -79,16 +80,18 @@ import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
     AkitaNgRouterStoreModule,
 
     // Router
+    IdlePreloadModule.forRoot(),
     RouterModule.forRoot([{
       path: '',
       loadChildren: () => import('./catalog.module').then(m => m.CatalogModule)
     }], {
+      preloadingStrategy: IdlePreload,
       initialNavigation: 'enabled',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',
       relativeLinkResolution: 'corrected',
-      scrollPositionRestoration: 'enabled'
+      scrollPositionRestoration: 'enabled',
     }),
     MatNativeDateModule,
 

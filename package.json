@@ -100,6 +100,7 @@
     "akita-ng-fire": "^4.1.0",
     "algoliasearch": "^3.33.0",
     "angular-calendar": "^0.28.5",
+    "angular-idle-preload": "^3.0.0",
     "apexcharts": "^3.15.3",
     "core-js": "^3.3.2",
     "date-fns": "^2.11.0",
