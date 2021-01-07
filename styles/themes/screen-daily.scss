@@ -1,34 +1,22 @@
 $dark-theme: (
   is-dark: true,
   primary: (
-    100: #2A3052,
-    200: #2A3052,
-    400: #9eb1ff,
+    200: #2a3052,
     500: #9eb1ff,
-    700: #8298ff,
     800: #8298ff,
     contrast: (
-      100: #F9F8FF,
-      200: #F9F8FF,
-      400: #f9f8ff,
-      500: #f9f8ff,
-      700: #f9f8ff,
-      800: #f9f8ff,
-    )
+      200: #f9f8ff,
+      500: #2a3052,
+      800: #2a3052,
+    ),
   ),
   accent: (
-    100: #581B1E,
     200: #581B1E,
-    400: #A81C22,
     500: #A81C22,
-    700: #D01B22,
     800: #D01B22,
     contrast: (
-      100: #1F2A3B,
       200: #1F2A3B,
-      400: #FFFFFF,
       500: #FFFFFF,
-      700: #FFFFFF,
       800: #FFFFFF,
     )
   ),
@@ -59,34 +47,22 @@ $dark-theme: (
 $light-theme: (
   is-dark: false,
   primary: (
-    100: lighten(#8DA4FA, 10%),
-    200: #8DA4FA,
-    400: lighten(#1A49F5, 10%),
-    500: #1A49F5,
-    700:  lighten(#0F31F0, 10%),
-    800:  #0F31F0,
+    200: #8da4fa,
+    500: #3C64F7,
+    800: #0f31f0,
     contrast: (
-      100: #1F2A3B,
-      200: #1F2A3B,
-      400: #FFFFFF,
-      500: #FFFFFF,
-      700: #FFFFFF,
-      800: #FFFFFF,
-    )
+      200: #1f2a3b,
+      500: #ffffff,
+      800: #ffffff,
+    ),
   ),
   accent: (
-    100: #FFB7B0,
     200: #FFB7B0,
-    400: #A81C22,
     500: #A81C22,
-    700: #D01B22,
     800: #D01B22,
     contrast: (
-      100: #1F2A3B,
       200: #1F2A3B,
-      400: #FFFFFF,
       500: #FFFFFF,
-      700: #FFFFFF,
       800: #FFFFFF,
     )
   

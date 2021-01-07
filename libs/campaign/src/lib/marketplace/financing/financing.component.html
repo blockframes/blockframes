@@ -33,8 +33,14 @@
           </tfoot>
         </table>
 
-        <apx-chart [chart]="{ type: 'pie' }" [series]="options.series" [labels]="options.labels"
-          [colors]="options.colors" [tooltip]="{y: formatter.currency(campaign)}"></apx-chart>
+        <apx-chart
+          [chart]="{ type: 'pie' }"
+          [series]="options.series"
+          [labels]="options.labels"
+          [colors]="options.colors"
+          [stroke]="{ colors: 'var(--foreground-divider)', width: 1 }"
+          [tooltip]="{y: formatter.currency(campaign)}">
+        </apx-chart>
       </article>
       <mat-divider></mat-divider>
       <div fxLayout fxLayoutGap="8px">
@@ -87,8 +93,14 @@
           </tfoot>
         </table>
 
-        <apx-chart [chart]="{ type: 'pie' }" [series]="options.series" [labels]="options.labels"
-          [colors]="options.colors" [tooltip]="{y: formatter.currency(campaign)}"></apx-chart>
+        <apx-chart
+          [chart]="{ type: 'pie' }"
+          [series]="options.series"
+          [labels]="options.labels"
+          [colors]="options.colors"
+          [stroke]="{ colors: 'var(--foreground-divider)', width: 1 }"
+          [tooltip]="{y: formatter.currency(campaign)}">
+        </apx-chart>
       </article>
       <mat-divider></mat-divider>
       <div fxLayout fxLayoutGap="8px">
