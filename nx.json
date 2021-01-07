@@ -130,6 +130,9 @@
     "cms": {
       "tags": []
     },
+    "consents": {
+      "tags": []
+    },
     "rules": {
       "tags": [
         "shared security rules"

@@ -8,7 +8,7 @@
       <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">
         <img asset="profil_user.webp" [ref]="user.avatar" alt="Profile picture">
       </button>
-      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin</span>
+      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin (db v{{ (appVersion$ | async)?.currentVersion }})</span>
       <overlay-widget #menu>
         <widget-card>
           <mat-nav-list>

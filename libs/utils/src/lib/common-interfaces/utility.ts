@@ -46,3 +46,7 @@ export function createBankAccount(params: Partial<BankAccount> = {}): BankAccoun
 }
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
+
+export interface FormSaveOptions {
+  publishing: boolean;
+}

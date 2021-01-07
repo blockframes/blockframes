@@ -38,7 +38,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
     const urlToUse = applicationUrl[app];
 
-    const templateId = templateIds.user.credentials[invitationType][app];
+    const templateId = templateIds.user.credentials[invitationType];
     const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
     await sendMailFromTemplate(template, app);
     return newUser.user;
