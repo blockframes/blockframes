@@ -4,7 +4,7 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
+import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage, prepareForTestingBeta } from './firebaseSetup';
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -13,14 +13,20 @@ import { generateFixtures } from './generate-fixtures';
 import { backup } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { importEmulatorFromBucket } from './emulator';
+import { anonDbLocal, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, uploadBackup } from './emulator';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
+const [arg1, arg2] = flags;
 
 async function runCommand() {
   const { db } = loadAdminServices();
   switch (cmd) {
+    case 'prepareForTestingBeta':
+      await startMaintenance(db);
+      await prepareForTestingBeta();
+      await endMaintenance(db);
+      break;
     case 'prepareForTesting':
       await startMaintenance(db);
       await prepareForTesting();
@@ -29,11 +35,26 @@ async function runCommand() {
     case 'displayCredentials':
       await displayCredentials();
       break;
+    case 'loadEmulator':
+      await loadEmulator({ importFrom: arg1 });
+      break;
     case 'importEmulator':
-      await importEmulatorFromBucket(flags.pop());
+      await importEmulatorFromBucket(arg1);
+      break;
+    case 'anonProdDb':
+      await anonymizeLatestProdDb();
+      break;
+    case 'downloadProdDbBackup':
+      await downloadProdDbBackup(arg1);
+      break;
+    case 'anonDbLocal':
+      await anonDbLocal();
+      break;
+    case 'uploadToBucket':
+      await uploadBackup({ remoteDir: arg1, localRelPath: arg2 });
       break;
     case 'use':
-      await selectEnvironment(flags.pop());
+      await selectEnvironment(arg1);
       break;
     case 'prepareDb':
       await startMaintenance(db);

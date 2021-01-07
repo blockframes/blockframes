@@ -3,7 +3,7 @@ import type { Bucket, File as GFile } from '@google-cloud/storage';
 import admin from 'firebase-admin';
 import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import { getLatestFile, runChunks } from '../firebase-utils';
-import { JsonlDbRecord } from '../util';
+import { DbRecord } from '../util';
 import { clear } from './clear';
 
 const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
@@ -63,7 +63,7 @@ export async function importFirestoreFromGFile(firestoreBackupFile: GFile, db: F
 
 export function importFirestoreBackup(jsonl: string[], db: FirebaseFirestore.Firestore) {
   return runChunks( jsonl, (line: string) => {
-      const stored = JSON.parse(line) as JsonlDbRecord;
+      const stored = JSON.parse(line) as DbRecord;
       if (stored.docPath !== '_META/_MAINTENANCE') {
         return db.doc(stored.docPath).set(reEncodeObject(stored.content));
       }
