@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Route } from '@angular/router';
 import { createAdminRoutes } from '@blockframes/utils/routes/create-routes';
+import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 const routes: Route[] = createAdminRoutes({
   appName: 'cms',
@@ -13,12 +14,15 @@ const routes: Route[] = createAdminRoutes({
 @NgModule({
   declarations: [],
   exports: [RouterModule],
-  imports: [RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled',
-    anchorScrolling: 'enabled',
-    onSameUrlNavigation: 'reload',
-    paramsInheritanceStrategy: 'always',
-    relativeLinkResolution: 'corrected'
-  })],
+  imports: [
+    IdlePreloadModule.forRoot(),
+    RouterModule.forRoot(routes, {
+      initialNavigation: 'enabled',
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      paramsInheritanceStrategy: 'always',
+      relativeLinkResolution: 'corrected',
+      preloadingStrategy: IdlePreload
+    })],
 })
 export class CmsModule { }
