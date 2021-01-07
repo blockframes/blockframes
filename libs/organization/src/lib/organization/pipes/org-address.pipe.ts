@@ -13,7 +13,7 @@ export class OrgAddressPipe implements PipeTransform {
     if (!!country) {
       return territories[country];
     }
-    return 'No address provided';
+
   }
 }
 
