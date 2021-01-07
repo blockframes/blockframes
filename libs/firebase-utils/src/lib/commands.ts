@@ -1,4 +1,4 @@
-import { ChildProcess, spawn, SpawnOptions } from 'child_process';
+import { ChildProcess, spawn, SpawnOptions, exec } from 'child_process';
 
 export function runShellCommand(cmd: string) {
   process.env.FORCE_COLOR = 'true';
@@ -43,7 +43,13 @@ export function runShellCommandUntil(cmd: string, until: string) {
   return { proc, procPromise }
 }
 
-export function waitForProcOutput(proc: ChildProcess, output: string) {
+/**
+ * This function will await a given string to be output to terminal
+ * by supplied process before resolving promise.
+ * @param proc `ChildProcess` object of running process
+ * @param output string to search for to resolve promise upon detection
+ */
+export function awaitProcOutput(proc: ChildProcess, output: string) {
   return new Promise(res => {
     const reg = new RegExp(output, 'i')
     proc.stdout.on('data', (out: Buffer) => {
@@ -52,4 +58,21 @@ export function waitForProcOutput(proc: ChildProcess, output: string) {
       if (match) res();
     });
   })
+}
+
+/**
+ * This is a backup method when shell output does not work. This method will return the shell output as a
+ * string. It returns a promise and also the proc, to enable multi-tasking.
+ * NOTE: This may still be 'blocking' as it might not spawn a new thread.
+ * @param cmd shell cmd to run
+ */
+export function runInBackground(cmd: string) {
+  let proc: ChildProcess;
+  const procPromise = new Promise((res, rej) => {
+    proc = exec(cmd, (err, stdout, stderr) => {
+      if (err || stderr) rej(err || stderr);
+      res(stdout);
+    })
+  })
+  return { proc, procPromise }
 }

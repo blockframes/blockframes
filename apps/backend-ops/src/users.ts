@@ -6,7 +6,7 @@
 import { differenceBy } from 'lodash';
 import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
-import { Auth, UserRecord, upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
+import { Auth, UserRecord, upsertWatermark, runChunks, DbRecord } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 import * as env from '@env';
 import { User } from '@blockframes/user/types';
@@ -82,7 +82,7 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
   return;
 }
 
-function readUsersFromJsonlFixture(db: JsonlDbRecord[]): UserConfig[] {
+function readUsersFromJsonlFixture(db: DbRecord[]): UserConfig[] {
   return db
     .filter((doc) => doc.docPath.includes('users/'))
     .filter((userDoc) => 'email' in userDoc.content)
@@ -108,7 +108,7 @@ async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
  * If `jsonl` param is not provided, the function will read users from local Firestore
  * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
  */
-export async function syncUsers(jsonl?: JsonlDbRecord[]): Promise<any> {
+export async function syncUsers(jsonl?: DbRecord[]): Promise<any> {
   const { auth, db } = loadAdminServices();
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   await deleteAllUsers(auth);
