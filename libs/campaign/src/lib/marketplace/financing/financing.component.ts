@@ -5,6 +5,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
+import { ThemeService } from '@blockframes/ui/theme';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -58,13 +59,17 @@ export class MarketplaceFinancingComponent implements OnInit {
 
 @Pipe({ name: 'apexBudget' })
 export class ApexBudgetPipe implements PipeTransform {
+
+  constructor(private themeService: ThemeService) {}
+
   transform(budget: Budget) {
     const data = budgetData.filter(b => !!budget[b.serie]);
     if (!data.length) return;
+    const l = this.themeService.theme === 'dark' ? '45%' : '65%';
     return {
       series: data.map(b => budget[b.serie]),
       labels: data.map(b => b.label),
-      colors: data.map((_, i) => `hsl(235, ${100 * ((i + 1) / data.length)}%, 50%)`),
+      colors: data.map((_, i) => `hsl(${200 + ((270 - 200) * (i / data.length))}, 100%, ${l})`),
       data
     };
   }
@@ -72,12 +77,15 @@ export class ApexBudgetPipe implements PipeTransform {
 
 @Pipe({ name: 'apexFunding' })
 export class ApexFundingPipe implements PipeTransform {
+  constructor(private themeService: ThemeService) {}
+
   transform(fundings: Funding[]) {
     if (!fundings.length) return;
+    const l = this.themeService.theme === 'dark' ? '45%' : '65%';
     return {
       series: fundings.map(f => f.amount),
       labels: fundings.map(f => f.name),
-      colors: fundings.map((_, i) => `hsl(235, ${100 * ((i + 1) / fundings.length)}%, 50%)`),
+      colors: fundings.map((_, i) => `hsl(${200 + ((270 - 200) * (i / fundings.length))}, 100%, ${l})`),
     };
   }
 }
