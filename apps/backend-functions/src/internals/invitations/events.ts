@@ -10,7 +10,6 @@ import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firest
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
-import { getCollection } from "@blockframes/firebase-utils";
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -288,8 +287,6 @@ export async function createNotificationsForEventsToStart() {
     docId: invitation.eventId,
     type: 'eventIsAboutToStart'
   }));
-
-  console.log(notifications, events)
   return triggerNotifications(notifications);
 }
 
