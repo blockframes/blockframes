@@ -250,8 +250,8 @@ jobs:
     steps:
       - slack/notify:
           message: 'Deploying to demo1...'
-      - replace_prod_files
       - prepare_environment
+      - replace_prod_files
       - build_deploy_prepare
   deploy-to-demo2:
     executor: blockframes-ci
