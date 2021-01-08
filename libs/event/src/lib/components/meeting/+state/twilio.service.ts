@@ -9,10 +9,8 @@ import {
   connect,
   LocalAudioTrack,
   LocalVideoTrack,
-  RemoteAudioTrack,
   RemoteParticipant,
   RemoteTrackPublication,
-  RemoteVideoTrack,
   Room,
   RemoteTrack,
 } from 'twilio-video';
