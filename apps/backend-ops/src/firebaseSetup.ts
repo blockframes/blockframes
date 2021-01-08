@@ -69,7 +69,7 @@ export async function prepareForTestingBeta() {
   await copyFirestoreExportFromCiBucket();
   console.log('Copied!');
 
-  console.log('Importing latest anonymized db...');
+  console.log('Clearing Firestore db and importing latest anonymized db...');
   await importFirestore(latestAnonDbDir);
   console.log('DB imported!');
 
@@ -77,7 +77,7 @@ export async function prepareForTestingBeta() {
   await syncUsers();
   console.info('Users synced!');
 
-  const { db, auth, storage, getCI } = loadAdminServices();
+  const { storage, getCI } = loadAdminServices();
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   await restoreStorageFromCi(getCI());
   console.info('Storage synced!');
@@ -85,10 +85,6 @@ export async function prepareForTestingBeta() {
   console.info('Preparing database & storage by running migrations...');
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Migrations complete!');
-
-  console.info('Cleaning unused DB data...');
-  await cleanDeprecatedData(db, auth);
-  console.info('DB data clean and fresh!');
 
   console.info('Cleaning unused storage data...');
   await cleanStorage(storage.bucket(storageBucket));
