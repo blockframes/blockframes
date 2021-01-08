@@ -1,20 +1,36 @@
-<header @slideDown class="dark-contrast-theme">
-  <a mat-icon-button (click)="goBack()">
-    <mat-icon svgIcon="arrow_back"></mat-icon>
-  </a>
-  <h1 class="mat-display-2">Screening List</h1>
-</header>
+<list-page [items]="timeFrames">
+  <list-page-title>
+    <h1 class="mat-display-2 page-title">Screening List</h1>
+  </list-page-title>
 
-<ng-container *ngIf="events$ | async as events">
-  <ng-container *ngIf="events.length; else empty">
-    <event-list [events]="events">
-      <ng-template let-event>
-        <event-screening-item [event]="event"></event-screening-item>
-      </ng-template>
-    </event-list>
+  <list-filter>
+    <ng-template filter label="Sales Agents" [form]="searchForm">
+      <algolia-chips-autocomplete index="org" displayWithPath="name"
+        [filters]="['appModule:dashboard']" [form]="searchForm"
+        label="Search for a Sales Agent" placeholder="Sales Agent"></algolia-chips-autocomplete>
+    </ng-template>
+  </list-filter>
+
+  <ng-container *ngIf="events$ | async as events">
+    <ng-template listPageListItem let-timeFrame>
+      <ng-container *ngIf="events | filterByDate: timeFrame : 'start' : 'end' as eventList">
+
+        <h2 *ngIf="eventList.length">
+          {{ timeFrame | labelByDate }}
+        </h2>
+
+        <ng-container *ngFor="let event of eventList">
+          <event-screening-item [event]="event"></event-screening-item>
+        </ng-container>
+
+      </ng-container>
+    </ng-template>
   </ng-container>
-</ng-container>
+    
+  <ng-template listPageEmpty>
+    <div class="loading">
+      <mat-spinner color="primary"></mat-spinner>
+    </div>
+  </ng-template>
 
-<ng-template #empty>
-  <event-empty type="screening"></event-empty>
-</ng-template>
+</list-page>

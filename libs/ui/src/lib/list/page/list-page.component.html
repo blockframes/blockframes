@@ -37,7 +37,7 @@
 
 <!-- Items -->
 <section>
-  <ng-container *ngIf="items.length; else empty">
+  <ng-container *ngIf="!!items && items.length; else empty">
     <div fxLayout="row" fxLayoutAlign="end start">
       <ng-content select="list-page-description"></ng-content>
     </div>

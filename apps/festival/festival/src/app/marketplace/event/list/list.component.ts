@@ -1,10 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Event, EventService } from '@blockframes/event/+state';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { slideDown } from '@blockframes/utils/animations/fade';
-import { map, tap } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { FormList } from '@blockframes/utils/form';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { ascTimeFrames } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'festival-event-list',
@@ -13,19 +16,28 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   animations: [slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit {
-  events$: Observable<Event[]>;
+export class ListComponent implements OnInit, OnDestroy {
+  private _events = new BehaviorSubject<Event[]>([]);
+  private allEvents: Event[] = [];
+
+  timeFrames = ascTimeFrames;
+
+  public events$ = this._events.asObservable();
+
+  public searchForm = FormList.factory<AlgoliaOrganization>([]);
+
+  private sub: Subscription;
 
   constructor(
     private service: EventService,
     private location: Location,
     private dynTitle: DynamicTitleService,
-    ) { }
+  ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     const query = ref => ref.orderBy('end').startAt(new Date());
 
-    this.events$ = this.service.queryByType(['screening'], query).pipe(
+    this.sub = this.service.queryByType(['screening'], query).pipe(
       // We can't filter by meta.titleId directly in the query because
       // firestore supports only one orderBy if it uses .where()
       map(events => events.filter(event => !!event.meta.titleId)),
@@ -34,7 +46,25 @@ export class ListComponent implements OnInit {
           this.dynTitle.setPageTitle('Screening List') :
           this.dynTitle.setPageTitle('Screening List', 'Empty');
       }),
-    );
+      // Putting the events in their timeframes
+      tap(events => this.allEvents = events),
+      switchMap(() => this.searchForm.valueChanges.pipe(
+        startWith(this.searchForm.value)
+      )),
+      map(results => results.map(result => result.objectID)),
+      tap(results => {
+        if (!results.length) {
+          this._events.next(this.allEvents)
+        } else {
+          const events = this.allEvents.filter(event => results.includes(event.org.id))
+          this._events.next(events)
+        }
+      })
+    ).subscribe();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   goBack() {
