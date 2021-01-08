@@ -2,11 +2,12 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith, map, switchMap, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { getMovieTotalViews, Movie, MovieAnalytics } from '@blockframes/movie/+state/movie.model';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MovieQuery } from '@blockframes/movie/+state';
 
 const columns = {
   'title.international': 'Title',
@@ -15,6 +16,13 @@ const columns = {
   productionStatus: 'Production Status',
   'storeConfig.status': 'Status'
 };
+
+function createTitleView(movie: Movie, analytics: MovieAnalytics[]) {
+  return {
+    view: getMovieTotalViews(analytics, movie.id)?.toString(),
+    ...movie
+  }
+}
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -37,16 +45,17 @@ export class ListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private movieQuery: MovieQuery
   ) { }
 
   ngOnInit() {
     this.sub = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
       switchMap(movies => this.service.syncWithAnalytics(movies.map(m => m.id)))
     ).subscribe();
-
-    this.titles$ = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
-      map(movies => movies.filter(movie => !!movie)),
-      map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
+    const movieAnalytics$ = this.movieQuery.analytics.selectAll();
+    this.titles$ = combineLatest([this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)), movieAnalytics$]).pipe(
+      map(([movies, analytics]) => movies.filter(movie => movie.storeConfig.appAccess.festival).map(movie =>
+        createTitleView(movie, analytics))),
       tap(movies => {
         movies.length ?
           this.dynTitle.setPageTitle('My titles') :
