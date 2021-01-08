@@ -3,8 +3,10 @@ import type { Bucket, File as GFile } from '@google-cloud/storage';
 import admin from 'firebase-admin';
 import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import { getLatestFile, runChunks } from '../firebase-utils';
-import { DbRecord } from '../util';
-import { clear } from './clear';
+import { DbRecord, loadAdminServices } from '../util';
+import { clear, clearDbCLI } from './clear';
+import { backupBucket } from '@env';
+import { execSync } from 'child_process';
 
 const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
 
@@ -100,4 +102,16 @@ function reEncodeObject(x: any): any {
   } else {
     return x;
   }
+}
+
+export async function importFirestoreFromBucket(dirName: string) {
+  const url = `gs://${backupBucket}/${dirName}`;
+  const cmd = `gcloud firestore import ${url}`;
+
+  const { db } = loadAdminServices();
+  await clearDbCLI(db);
+
+  console.log('Run:', cmd);
+  const out = execSync(cmd);
+  console.log(out);
 }

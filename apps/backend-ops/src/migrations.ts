@@ -38,12 +38,15 @@ function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[]
   }));
 }
 
-export async function migrate(withBackup: boolean = true) {
+export async function migrate(
+  withBackup: boolean = true,
+  db = loadAdminServices().db,
+  storage = loadAdminServices().storage
+) {
   console.info('start the migration process...');
-  const { db, storage } = loadAdminServices();
+  // const { db, storage } = loadAdminServices();
 
   try {
-
     const currentVersion = await loadDBVersion(db);
     const migrations = selectAndOrderMigrations(currentVersion);
 
@@ -62,7 +65,7 @@ export async function migrate(withBackup: boolean = true) {
 
     const lastVersion = last(migrations).version;
 
-    console.info(`Running migrations: ${migrations.map(x => x.version).join(', ')}`);
+    console.info(`Running migrations: ${migrations.map((x) => x.version).join(', ')}`);
 
     for (const migration of migrations) {
       console.info(`applying migration: ${migration.version}`);
@@ -73,7 +76,7 @@ export async function migrate(withBackup: boolean = true) {
     await updateDBVersion(db, lastVersion);
   } catch (e) {
     console.error(e);
-    console.error('the migration failed, revert\'ing!');
+    console.error("the migration failed, revert'ing!");
     await restore();
     throw e;
   } finally {

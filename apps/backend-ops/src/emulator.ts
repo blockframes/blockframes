@@ -8,13 +8,17 @@ import {
   getLatestFolderURL,
   getServiceAccountObj,
   uploadDbBackupToBucket,
-  loadAdminServices
+  loadAdminServices,
+  restoreStorageFromCi
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket } from '@env'
+import { migrate } from './migrations';
+import { syncUsers } from './users';
+import { cleanDeprecatedData } from './db-cleaning';
 
 /**
  * This function will download the Firestore backup from specified bucket, import it into
@@ -95,6 +99,26 @@ export async function anonDbLocal() {
   const o = await db.listCollections();
   console.log(o.map((snap) => snap.id));
   await runAnonymization(db);
+  console.log('Anonymization complete!')
+
+  console.info('Syncing users from db...');
+  const p1 = syncUsers();
+
+  console.info('Syncing storage with production backup stored in blockframes-ci...');
+  const { getCI, storage, auth } = loadAdminServices();
+  const p2 = restoreStorageFromCi(getCI());
+
+  await Promise.all([p1, p2]);
+  console.info('Storage synced!');
+  console.info('Users synced!');
+
+  console.info('Preparing database & storage by running migrations...');
+  await migrate(false, db, storage); // run the migration, do not trigger a backup before, since we already have it!
+  console.info('Migrations complete!');
+
+  console.info('Cleaning unused DB data...');
+  await cleanDeprecatedData(db, auth);
+  console.info('DB data clean and fresh!');
 }
 
 /**
