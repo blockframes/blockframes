@@ -27,4 +27,10 @@
       </ng-container>
     </ng-template>
   </ng-container>
+
+  <ng-template listPageEmpty *ngIf="loading">
+    <div class="loading">
+      <mat-spinner color="primary"></mat-spinner>
+    </div>
+  </ng-template>
 </list-page>
