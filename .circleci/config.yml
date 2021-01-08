@@ -228,6 +228,7 @@ jobs:
       - slack/notify:
           message: '🚚 Deploying to production...'
       - prepare_environment
+      - replace_prod_files
       - build_deploy_upgrade
   deploy-to-staging:
     executor: blockframes-ci
@@ -251,7 +252,6 @@ jobs:
       - slack/notify:
           message: 'Deploying to demo1...'
       - prepare_environment
-      - replace_prod_files
       - build_deploy_prepare
   deploy-to-demo2:
     executor: blockframes-ci
