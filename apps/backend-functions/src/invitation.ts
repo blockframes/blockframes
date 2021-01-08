@@ -107,19 +107,24 @@ export async function onInvitationDelete(
   const toUser = invitation.toUser;
 
   // Remove user in users collection and in authentication part
-  if(invitation.type === "joinOrganization"
-  && !!toUser
-  && (invitation.status === "pending")) {
+  if(invitation.mode === "invitation" && !!toUser) {
 
-    // Fetch potential other invitations
+    // Fetch potential other invitations to join org
     const invitationCollectionRef = db.collection('invitations')
       .where('toUser.uid', '==', toUser.uid)
       .where('mode', '==', 'invitation')
-      .where('type', '==', 'joinOrganization')
-    const invitationsSnap = await invitationCollectionRef.get();
+      .where('type', '==', 'joinOrganization');
+    const existingInvitationToJoinOrg = await invitationCollectionRef.get();
+
+    // Fetch potential invitations to attend event
+    const invitationEventCollectionRef = db.collection('invitations')
+      .where('toUser.uid', '==', toUser.uid)
+      .where('mode', '==', 'invitation')
+      .where('type', '==', 'attendEvent');
+    const existingInvitationToAttendEvent = await invitationEventCollectionRef.get();
 
     // If there is an other invitation or the user has already an org, we don't want to delete its account
-    if(invitationsSnap.docs.length > 1 || !!toUser.orgId) {
+    if(existingInvitationToJoinOrg.docs.length > 1 || existingInvitationToAttendEvent.docs.length > 1 || !!toUser.orgId) {
       return;
     }
 
@@ -193,4 +198,20 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
         });
     }
   })
+}
+
+export async function isInvitationToJoinOrgExists(userEmails: string[]) {
+  let invitationExists = false;
+  for (let email of userEmails) {
+    const invitationRef = db.collection('invitations')
+    .where('type', '==', 'joinOrganization')
+    .where('toUser.email', '==', email);
+    const invitationDocs = await invitationRef.get();
+
+    if(invitationDocs.docs.length) {
+      invitationExists = true
+    }
+    return invitationExists;
+  }
+  return invitationExists;
 }

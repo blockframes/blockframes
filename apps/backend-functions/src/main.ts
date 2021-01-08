@@ -98,8 +98,11 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',on
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
 export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
 
-/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
+/** Trigger: when an invitation is deleted. */
 export const onInvitationDeleteEvent = onDocumentDelete('invitations/{invitationID}', onInvitationDelete);
+
+/** Used to check if users have already an invitation to join org existing */
+export const isInvitationToJoinOrgExisted = functions.https.onCall(invitations.isInvitationToJoinOrgExists);
 
 //--------------------------------
 //    Events Management          //

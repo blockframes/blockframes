@@ -56,14 +56,8 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Return true if there is already a pending invitation for a list of users */
   public async orgInvitationExists(userEmails: string[]): Promise<boolean> {
-    const orgId = this.authQuery.orgId;
-    const orgInvitations = await this.getValue(ref => ref.where('mode', '==', 'invitation')
-      .where('type', '==', 'joinOrganization')
-      .where('fromOrg.id', '==', orgId));
-
-    return orgInvitations.some(
-      invitation => userEmails.includes(invitation.toUser.email) && invitation.status === 'pending'
-    );
+    const f = this.functions.httpsCallable('isInvitationToJoinOrgExisted');
+    return f(userEmails).toPromise();
   }
 
   public isInvitationForMe(invitation: Invitation): boolean {
