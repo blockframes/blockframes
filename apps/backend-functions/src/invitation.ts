@@ -33,8 +33,27 @@ export async function onInvitationWrite(
   const invitationDocBefore = before.data() as InvitationOrUndefined;
   const invitationDoc = after.data() as InvitationOrUndefined;
 
-  // Doc was deleted, ignoring...
-  if (!invitationDoc) { return; }
+  // Doc was deleted
+  if (!invitationDoc) {
+    const user = await getUser(invitationDocBefore.toUser.uid)
+
+    // Remove user in users collection
+    if(invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
+
+      // Fetch potential other invitations to join org
+      const invitationCollectionRef = db.collection('invitations')
+        .where('toUser.uid', '==', user.uid)
+        .where('mode', '==', 'invitation')
+      const existingInvitation = await invitationCollectionRef.get();
+
+      // If there is an other invitation or the user has already an org, we don't want to delete its account
+      if(existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
+        return;
+      }
+
+      db.doc(`users/${user.uid}`).delete();
+    }
+  }
 
   // Because of rules restrictions, event creator might not have access to other informations than the id.
   // We consolidate invitation document here.
@@ -98,41 +117,6 @@ interface UserInvitation {
   invitation: Partial<InvitationBase<any>>;
   app?: App;
 }
-
-export async function onInvitationDelete(
-  invitSnapshot: FirebaseFirestore.DocumentSnapshot<InvitationOrUndefined>,
-  context: EventContext
-): Promise<any>{
-  const invitation = invitSnapshot.data() as InvitationOrUndefined;
-  const toUser = invitation.toUser;
-
-  // Remove user in users collection and in authentication part
-  if(invitation.mode === "invitation" && !!toUser) {
-
-    // Fetch potential other invitations to join org
-    const invitationCollectionRef = db.collection('invitations')
-      .where('toUser.uid', '==', toUser.uid)
-      .where('mode', '==', 'invitation')
-      .where('type', '==', 'joinOrganization');
-    const existingInvitationToJoinOrg = await invitationCollectionRef.get();
-
-    // Fetch potential invitations to attend event
-    const invitationEventCollectionRef = db.collection('invitations')
-      .where('toUser.uid', '==', toUser.uid)
-      .where('mode', '==', 'invitation')
-      .where('type', '==', 'attendEvent');
-    const existingInvitationToAttendEvent = await invitationEventCollectionRef.get();
-
-    // If there is an other invitation or the user has already an org, we don't want to delete its account
-    if(existingInvitationToJoinOrg.docs.length > 1 || existingInvitationToAttendEvent.docs.length > 1 || !!toUser.orgId) {
-      return;
-    }
-
-    admin.auth().deleteUser(toUser.uid);
-    db.doc(`users/${toUser.uid}`).delete();
-  }
-}
-
 
 /**
  * Invite a list of user by email.
@@ -200,18 +184,16 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
   })
 }
 
-export async function isInvitationToJoinOrgExists(userEmails: string[]) {
-  let invitationExists = false;
-  for (let email of userEmails) {
+export async function isInvitationToJoinOrgExist(userEmails: string[]) {
+  for (const email of userEmails) {
     const invitationRef = db.collection('invitations')
     .where('type', '==', 'joinOrganization')
     .where('toUser.email', '==', email);
     const invitationDocs = await invitationRef.get();
 
     if(invitationDocs.docs.length) {
-      invitationExists = true
+      return true
     }
-    return invitationExists;
   }
-  return invitationExists;
+  return false;
 }

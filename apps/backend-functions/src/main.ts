@@ -7,7 +7,7 @@ import {
   onDocumentWrite,
 } from './utils';
 import { logErrors } from './internals/sentry';
-import { onInvitationWrite, onInvitationDelete } from './invitation';
+import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
@@ -98,11 +98,8 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',on
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
 export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
 
-/** Trigger: when an invitation is deleted. */
-export const onInvitationDeleteEvent = onDocumentDelete('invitations/{invitationID}', onInvitationDelete);
-
 /** Used to check if users have already an invitation to join org existing */
-export const isInvitationToJoinOrgExisted = functions.https.onCall(invitations.isInvitationToJoinOrgExists);
+export const isInvitationToJoinOrgExist = functions.https.onCall(invitations.isInvitationToJoinOrgExist);
 
 //--------------------------------
 //    Events Management          //

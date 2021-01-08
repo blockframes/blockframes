@@ -15,6 +15,8 @@ import { getCurrentApp } from '@blockframes/utils/apps';
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
+  private isInvitationToJoinOrgExist = this.functions.httpsCallable('isInvitationToJoinOrgExist');
+
   constructor(
     store: InvitationStore,
     private authQuery: AuthQuery,
@@ -56,8 +58,7 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Return true if there is already a pending invitation for a list of users */
   public async orgInvitationExists(userEmails: string[]): Promise<boolean> {
-    const f = this.functions.httpsCallable('isInvitationToJoinOrgExisted');
-    return f(userEmails).toPromise();
+    return this.isInvitationToJoinOrgExist(userEmails).toPromise();
   }
 
   public isInvitationForMe(invitation: Invitation): boolean {
