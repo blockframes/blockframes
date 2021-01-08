@@ -1,12 +1,12 @@
 <list-page [items]="movies$ | async">
 
   <!-- App Bar Search -->
-  <list-page-app-bar>
+  <ng-template listPageAppBar>
     <form class="app-bar" [formGroup]="searchForm">
       <input type="text" formControlName="query" [value]="searchForm.query.value"
         placeholder="Search for titles, directors, keywords, ...">
     </form>
-  </list-page-app-bar>
+  </ng-template>
 
   <list-page-title>
     <h1 class="mat-display-2 page-title">All Projects</h1>

@@ -1,11 +1,11 @@
 <list-page [items]="orgs$ | async">
 
-  <list-page-app-bar>
+  <ng-template listPageAppBar>
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
       <mat-icon matPrefix svgIcon="search"></mat-icon>
       <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Search for a sales company...">
     </form>
-  </list-page-app-bar>
+  </ng-template>
 
   <list-page-title>
     <h1 class="mat-display-2 page-title">Partners</h1>

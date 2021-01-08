@@ -13,7 +13,7 @@ import {
 // Blockframes
 import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
 
-@Directive({ selector: 'list-page-app-bar' })
+@Directive({ selector: '[listPageAppBar]' })
 export class PageAppBarSearchDirective { }
 
 @Directive({ selector: 'list-page-title' })
@@ -47,6 +47,7 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageCardDirective, { read: TemplateRef }) cardTemplate: PageCardDirective;
   @ContentChild(PageListItemDirective, { read: TemplateRef }) listItemTemplate: PageListItemDirective;
   @ContentChild(PageEmptyDirective, { read: TemplateRef }) listPageEmptyTemplate: PageEmptyDirective;
+  @ContentChild(PageAppBarSearchDirective, { read: TemplateRef }) appBar: PageAppBarSearchDirective;
 
   @Input() items: unknown[];
 
