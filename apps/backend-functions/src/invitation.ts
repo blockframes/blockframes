@@ -44,6 +44,7 @@ export async function onInvitationWrite(
       const invitationCollectionRef = db.collection('invitations')
         .where('toUser.uid', '==', user.uid)
         .where('mode', '==', 'invitation')
+        .where('status', '==', 'pending')
       const existingInvitation = await invitationCollectionRef.get();
 
       // If there is an other invitation or the user has already an org, we don't want to delete its account
