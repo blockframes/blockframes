@@ -81,6 +81,12 @@ commands:
       - checkout_project
       - prepare_gcloud
       - run: cp $ENV_TS ./env/env.ts
+  replace_prod_files:
+    description: 'Replace files for production'
+    steps:
+      - run: cp assets/robots.prod.txt apps/catalog/catalog/src/robots.txt
+      - run: cp assets/robots.prod.txt apps/festival/festival/src/robots.txt
+      - run: cp assets/robots.prod.txt apps/financiers/financiers/src/robots.txt
   deploy:
     description: 'Run full deployment'
     steps:
@@ -222,6 +228,7 @@ jobs:
       - slack/notify:
           message: '🚚 Deploying to production...'
       - prepare_environment
+      - replace_prod_files
       - build_deploy_upgrade
   deploy-to-staging:
     executor: blockframes-ci
