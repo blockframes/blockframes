@@ -81,6 +81,12 @@ commands:
       - checkout_project
       - prepare_gcloud
       - run: cp $ENV_TS ./env/env.ts
+  replace_prod_files:
+    description: 'Replace files for production'
+    steps:
+      - run: cp assets/robots.prod.txt apps/catalog/catalog/src/robots.txt
+      - run: cp assets/robots.prod.txt apps/festival/festival/src/robots.txt
+      - run: cp assets/robots.prod.txt apps/financiers/financiers/src/robots.txt
   deploy:
     description: 'Run full deployment'
     steps:
@@ -244,6 +250,7 @@ jobs:
     steps:
       - slack/notify:
           message: 'Deploying to demo1...'
+      - replace_prod_files
       - prepare_environment
       - build_deploy_prepare
   deploy-to-demo2:
