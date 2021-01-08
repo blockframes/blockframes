@@ -276,7 +276,6 @@ export async function createNotificationsForEventsToStart() {
   const startDate = new Date(Date.now() + (86400 * 1000)); // now plus 1 day
 
   const eventsCollection = await db.collection('events').where('start', '<', startDate).get();
-  const events = eventsCollection.docs.map(doc => doc.data());
   const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
   const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
   const [invitationsRef] = await Promise.all(promises);
