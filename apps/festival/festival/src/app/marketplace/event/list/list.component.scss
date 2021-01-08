@@ -1,25 +1,11 @@
-header {
-  background-image: url('/assets/images/banner_soft.png');
-  background-size: cover;
-  background-position: top;
-  padding: 60px;
-  h1 {
-    text-align: center;
-  }
-  mat-icon {
-    cursor: pointer;
-  }
-}
-
 .page-title {
   text-align: center;
 }
 
-event-list {
-  display: block;
-  margin: 0 24px;
+event-screening-item {
+  margin-bottom: 16px;
 }
 
-event-empty {
-  margin: 24px;
+mat-divider {
+  margin-bottom: 16px;
 }
