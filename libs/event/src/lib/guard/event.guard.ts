@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Meeting } from '../+state/event.firestore';
+import { TwilioService } from '../components/meeting/+state/twilio.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -19,6 +20,7 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
     private eventQuery: EventQuery,
     private router: Router,
     private dialog: MatDialog,
+    private twilioService: TwilioService,
   ) {}
 
   async canActivate(next: ActivatedRouteSnapshot,): Promise<boolean | UrlTree> {
@@ -67,16 +69,21 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
     // i.e. if the user navigate  lobby <-> session
     const nextPage = nextState.url.split('/').pop();
     if (nextPage === 'session' || nextPage === 'lobby') {
+      this.twilioService.disconnect();
       return true;
     }
 
     // If userId = null, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
     if(this.authQuery.userId === null) {
+      this.twilioService.disconnect();
       return true;
     } else {
       const event = this.eventQuery.getActive();
       if (event.type === 'meeting') {
-        if ((event.meta as Meeting).attendees[this.authQuery.userId] === 'ended') return true;
+        if ((event.meta as Meeting).attendees[this.authQuery.userId] === 'ended') {
+          this.twilioService.disconnect();
+          return true;
+        }
       }
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: {
