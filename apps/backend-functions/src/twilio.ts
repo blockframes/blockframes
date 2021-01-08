@@ -68,9 +68,10 @@ export const getTwilioAccessToken = async (
     };
   }
 
+  const user = await getUser(context.auth.uid);
+
   const isOwner = async () => {
     if (event.meta.organizerId === context.auth.uid) return true;
-    const user = await getUser(context.auth.uid);
     return user.orgId === event.ownerId;
   }
 
@@ -82,7 +83,6 @@ export const getTwilioAccessToken = async (
     };
   }
 
-  const user = await getUser(context.auth.uid);
   const identity = JSON.stringify({ id: user.uid, displayName: displayName(user) });
 
   // Create access token with twilio global var et identity of the user as identity of token
