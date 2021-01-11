@@ -53,7 +53,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
           ).jwPlayerId;
           console.log('update', latestJwPlayerId);
           otherVideoControl.jwPlayerId.setValue(latestJwPlayerId);
-          console.log(this.form);
         }
       });
     });
