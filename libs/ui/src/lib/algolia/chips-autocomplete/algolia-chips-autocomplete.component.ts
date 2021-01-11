@@ -80,6 +80,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
    * Using an attribute that hasnt been used before? make sure to add it to Facets on Algolia */
   @Input() @boolean unique;
 
+  @Input() @boolean addOnBlur = false;
+
+  /**
+   * Set whether it is allowed to add manually typed values instead of Algolia results only
+   */
+  @Input() @boolean manualInput = false;
+
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
@@ -117,7 +124,12 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  add(value: any) {
+  /**
+   * @param removePrevious With onBlur on input the typed value is added before the selected value and therefore needs to be removed 
+   */
+  add(value: any, removePrevious: boolean = false) {
+    if (removePrevious) this.form.removeAt(this.form.length - 1);
+
     const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
     for (const v of values) {
       if (this.unique && !!v && !!v[this.displayWithPath]) this.addedFilters.push(v[this.displayWithPath]);
