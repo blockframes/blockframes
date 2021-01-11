@@ -1,13 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Event, EventService } from '@blockframes/event/+state';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { slideDown } from '@blockframes/utils/animations/fade';
-import { map, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormList } from '@blockframes/utils/form';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
-import { ascTimeFrames } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'festival-event-list',
@@ -16,17 +15,10 @@ import { ascTimeFrames } from '@blockframes/utils/pipes';
   animations: [slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
-  private _events = new BehaviorSubject<Event[]>([]);
-  private allEvents: Event[] = [];
-
-  timeFrames = [];
-
-  public events$ = this._events.asObservable();
+export class ListComponent implements OnInit {
+  public events$: Observable<Event[]>;
   public searchForm = FormList.factory<AlgoliaOrganization>([]);
   public loading = true;
-
-  private sub: Subscription;
 
   constructor(
     private service: EventService,
@@ -35,41 +27,26 @@ export class ListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    const query = ref => ref.orderBy('end').startAt(new Date());
+    const orgIds$ = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value));
+    const query = ref => ref.where('meta.titleId', '!=', '').orderBy('meta.titleId').orderBy('end').startAt(new Date());
+    const events$ = this.service.queryByType(['screening'], query);
 
-    this.sub = this.service.queryByType(['screening'], query).pipe(
-      // We can't filter by meta.titleId directly in the query because
-      // firestore supports only one orderBy if it uses .where()
-      map(events => events.filter(event => !!event.meta.titleId)),
+    this.events$ = combineLatest(events$, orgIds$).pipe(
+      map(([ events, orgs ]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
       tap(events => {
-        if (!!events.length) {
-          this.timeFrames = ascTimeFrames;
-          this.loading = false;
-          this.dynTitle.setPageTitle('Screening List');
-        } else {
-          this.dynTitle.setPageTitle('Screening List', 'Empty');
-        }
-      }),
-      // Putting the events in their timeframes
-      tap(events => this.allEvents = events),
-      switchMap(() => this.searchForm.valueChanges.pipe(
-        startWith(this.searchForm.value)
-      )),
-      map(results => results.map(org => org.objectID)),
-      tap(orgIds => {
-        if (!!orgIds.length) {
-          const events = this.allEvents.filter(event => orgIds.includes(event.org.id))
-          this._events.next(events)
-        } else {
-          this._events.next(this.allEvents)
-        }
-        this.timeFrames = this._events.value.length ? ascTimeFrames : [];
+        this.loading = false;
+        this.setTitle(events.length)
       })
-    ).subscribe();
+    )
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  filterByOrgIds(events: Event[], orgIds: string[]) {
+    if (!orgIds.length) return events;
+    return events.filter(event => orgIds.includes(event.org.id));
+  }
+
+  setTitle(amount: number) {
+    amount === 0 ? this.dynTitle.setPageTitle('Screening List', 'Empty') : this.dynTitle.setPageTitle('Screening List');
   }
 
   goBack() {

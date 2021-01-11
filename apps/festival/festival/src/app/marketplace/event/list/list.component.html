@@ -1,4 +1,4 @@
-<list-page [items]="timeFrames">
+<list-page [items]="events$ | async | eventsToTimeFrame">
   <list-page-title>
     <h1 class="mat-display-2 page-title">Screening List</h1>
   </list-page-title>
@@ -11,22 +11,16 @@
     </ng-template>
   </list-filter>
 
-  <ng-container *ngIf="events$ | async as events">
-    <ng-template listPageListItem let-timeFrame>
-      <ng-container *ngIf="events | filterByDate: timeFrame : 'start' : 'end' as eventList">
+  <ng-template listPageListItem let-timeFrame>
+    <h2 *ngIf="!!timeFrame.events.length">
+      {{ timeFrame | labelByDate }}
+    </h2>
 
-        <h2 *ngIf="eventList.length">
-          {{ timeFrame | labelByDate }}
-        </h2>
-
-        <ng-container *ngFor="let event of eventList">
-          <event-screening-item [event]="event"></event-screening-item>
-          <mat-divider></mat-divider>
-        </ng-container>
-
-      </ng-container>
-    </ng-template>
-  </ng-container>
+    <ng-container *ngFor="let event of timeFrame.events">
+      <event-screening-item [event]="event"></event-screening-item>
+      <mat-divider></mat-divider>
+    </ng-container>
+  </ng-template>
 
   <ng-template listPageEmpty *ngIf="loading">
     <div class="loading">

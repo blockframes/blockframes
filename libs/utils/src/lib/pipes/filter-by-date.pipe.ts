@@ -41,6 +41,22 @@ export const ascTimeFrames: TimeFrame[] = [
   { type: 'months', from: 3, to: 4 },
 ];
 
+function filterByDate(value: any[], timeFrame: TimeFrame, key: string = 'date', keyFinish?: string) {
+  if (!Array.isArray(value)) {
+    return value;
+  }
+  const { from, to, type } = timeFrame;
+  const now = startOfDay(Date.now());
+  const fromDate = add({ [type]: from }, now);
+  const toDate = add({ [type]: to }, now);
+  return value.filter(v => {
+    if (!!keyFinish) {
+      return v[key] < toDate && v[keyFinish] >= fromDate;
+    }
+    return v[key] >= fromDate && v[key] < toDate;
+  });
+}
+
 @Pipe({ name: 'filterByDate', pure: true })
 export class FilterByDatePipe implements PipeTransform {
   /**
@@ -51,19 +67,7 @@ export class FilterByDatePipe implements PipeTransform {
    * @param keyFinish The key where to find the end date value. If used, date found at key is used as starting date.
    */
   transform(value: any[], timeFrame: TimeFrame, key: string = 'date', keyFinish?: string) {
-    if (!Array.isArray(value)) {
-      return value;
-    }
-    const { from, to, type } = timeFrame;
-    const now = startOfDay(Date.now());
-    const fromDate = add({ [type]: from }, now);
-    const toDate = add({ [type]: to }, now);
-    return value.filter(v => {
-      if (!!keyFinish) {
-        return v[key] < toDate && v[keyFinish] >= fromDate;
-      }
-      return v[key] >= fromDate && v[key] < toDate;
-    });
+    return filterByDate(value, timeFrame, key, keyFinish);
   }
 }
 
@@ -85,8 +89,19 @@ export class LabelByDatePipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'eventsToTimeFrame', pure: true })
+export class EventsToTimeFramePipe implements PipeTransform {
+  transform(events: Event[], order: 'asc' | 'desc' = 'asc') {
+    const timeFrames = order === 'asc' ? ascTimeFrames : descTimeFrames;
+    return timeFrames.map(timeFrame => {
+      timeFrame['events'] = filterByDate(events, timeFrame, 'start', 'end');
+      return timeFrame
+    }).filter(timeFrame => !!timeFrame['events']?.length)
+  }
+}
+
 @NgModule({
-  declarations: [FilterByDatePipe, LabelByDatePipe],
-  exports: [FilterByDatePipe, LabelByDatePipe]
+  declarations: [FilterByDatePipe, LabelByDatePipe, EventsToTimeFramePipe],
+  exports: [FilterByDatePipe, LabelByDatePipe, EventsToTimeFramePipe]
 })
 export class FilterByDateModule {}
