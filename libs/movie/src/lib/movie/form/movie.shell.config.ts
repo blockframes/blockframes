@@ -82,6 +82,10 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     const base = this.query.getActive();
     const movie = mergeDeep(base, documentToUpdate);
+    console.log(documentToUpdate);
+    console.log(base);
+    console.log(movie);
+    console.log(mediasToUpload);
 
     // -- Post merge operations -- //
 
