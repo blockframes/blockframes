@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { add, startOfDay } from 'date-fns/fp'
+import { Event } from '@blockframes/event/+state';
 
 export interface TimeFrame {
   label?: string;
