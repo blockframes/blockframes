@@ -179,6 +179,7 @@ export const hostedVideoTypes = {
 // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
 export const languages = {
   all: 'All languages',
+  afrikaans: 'Afrikaans',
   albanian: 'Albanian',
   arabic: 'Arabic',
   armenian: 'Armenian',
@@ -196,6 +197,7 @@ export const languages = {
   czech: 'Czech',
   danish: 'Danish',
   dutch: 'Dutch',
+  dyula: 'Dyula',
   english: 'English',
   estonian: 'Estonian',
   filipino: 'Filipino',
@@ -208,6 +210,7 @@ export const languages = {
   german: 'German',
   greek: 'Greek',
   gujarati: 'Gujarati',
+  haussa: 'Haussa',
   hebrew: 'Hebrew',
   hindi: 'Hindi',
   hungarian: 'Hungarian',
