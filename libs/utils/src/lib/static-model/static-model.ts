@@ -248,7 +248,7 @@ export const languages = {
   romanian: 'Romanian',
   russian: 'Russian',
   serbian: 'Serbian',
-  'Serbo-Croatian': 'Serbo-Croatian',
+  'serbo-croatian': 'Serbo-Croatian',
   slovak: 'Slovak',
   slovene: 'Slovene',
   spanish: 'Spanish',
