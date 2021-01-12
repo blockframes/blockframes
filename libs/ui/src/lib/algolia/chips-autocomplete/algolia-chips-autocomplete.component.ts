@@ -125,10 +125,10 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @param removePrevious With onBlur on input the typed value is added before the selected value and therefore needs to be removed 
+   * @param replaceLastValue Set whether the last value in the form has to be replaced. This hides a bug caused by OnBlur adding the typed value when an autocomplete-option is selected.
    */
-  add(value: any, removePrevious: boolean = false) {
-    if (removePrevious) this.form.removeAt(this.form.length - 1);
+  add(value: any, replaceLastValue = false) {
+    if (replaceLastValue) this.form.removeAt(this.form.length - 1);
 
     const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
     for (const v of values) {
