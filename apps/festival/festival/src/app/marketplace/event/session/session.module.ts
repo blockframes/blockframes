@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
+
 @NgModule({
   declarations: [SessionComponent],
   imports: [
