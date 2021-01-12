@@ -19,7 +19,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { KeyManagerModule } from '../key-manager/key-manager.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
@@ -80,7 +80,7 @@ export const walletRoutes: Routes = [
     MatCardModule,
     MatSlideToggleModule,
     MatStepperModule,
-    UploadModule,
+    FileUploaderModule,
     RouterModule.forChild(walletRoutes),
     PasswordConfirmModule,
     FeedbackMessageModule,

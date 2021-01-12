@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FileUploadComponent } from './file-upload/file-upload.component';
+import { FileUploaderComponent } from './file-uploader.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '../../directives/image-reference/image-reference.module';
 
@@ -25,10 +25,10 @@ import { FileNameModule } from '@blockframes/utils/pipes';
     FileNameModule,
   ],
   declarations: [
-    FileUploadComponent
+    FileUploaderComponent
   ],
   exports: [
-    FileUploadComponent
+    FileUploaderComponent
   ]
 })
-export class UploadModule { }
+export class FileUploaderModule { }

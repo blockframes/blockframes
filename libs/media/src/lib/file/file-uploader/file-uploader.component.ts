@@ -29,12 +29,12 @@ import { startWith, switchMap } from 'rxjs/operators';
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
 @Component({
-  selector: '[form] [storagePath] file-upload',
-  templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.scss'],
+  selector: '[form] [storagePath] file-uploader',
+  templateUrl: './file-uploader.component.html',
+  styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileUploadComponent implements AfterViewInit, OnDestroy {
+export class FileUploaderComponent implements AfterViewInit, OnDestroy {
   /** firestore path */
   @Input() storagePath: string;
   @Input() set form(form: HostedMediaForm) {
