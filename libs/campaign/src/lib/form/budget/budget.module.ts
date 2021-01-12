@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CampaignFormBudgetComponent } from './budget.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { BudgetPipeModule } from '../../pipes/budget.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
@@ -28,7 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     TunnelPageModule,
     StaticSelectModule,
-    UploadModule,
+    FileUploaderModule,
     BudgetPipeModule,
     ToLabelModule,
 
