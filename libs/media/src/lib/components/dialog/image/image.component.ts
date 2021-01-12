@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaRatioType } from '../../cropper/cropper.component';
-import { isHostedMediaForm } from '../../file-explorer/file-explorer.model';
+import { isHostedMediaForm } from '../../../file/explorer/explorer.model';
 
 @Component({
   selector: 'image-dialog',

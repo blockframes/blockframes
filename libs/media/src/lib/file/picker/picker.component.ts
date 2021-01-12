@@ -6,15 +6,15 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '@blockframes/media/+state/media.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { ViewerDialogComponent } from '../dialog/file-viewer/viewer.component';
+import { ViewerDialogComponent } from '../../components/dialog/file-viewer/viewer.component';
 
 @Component({
-  selector: 'media-file-selector',
-  templateUrl: './file-selector.component.html',
-  styleUrls: ['./file-selector.component.scss'],
+  selector: 'file-picker',
+  templateUrl: './picker.component.html',
+  styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileSelectorComponent implements OnInit, OnDestroy {
+export class FilePickerComponent implements OnInit, OnDestroy {
 
   orgFiles: { path: string, isSelected: boolean }[];
   movies: Movie[];
@@ -27,7 +27,7 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
     private orgQuery: OrganizationQuery,
     private movieService: MovieService,
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<FileSelectorComponent>,
+    private dialogRef: MatDialogRef<FilePickerComponent>,
     private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: { selectedFiles: string[] }
   ) { }

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { FileExplorerComponent } from './file-explorer.component';
+import { FileExplorerComponent } from './explorer.component';
 
 // Blockframes
 import { FileDialogModule } from '@blockframes/media/components/dialog/file/file.module';

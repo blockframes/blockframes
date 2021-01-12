@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Blockframes
-import { FileExplorerModule } from '@blockframes/media/components/file-explorer/file-explorer.module';
+import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.module';
 
 import { FilesViewComponent } from './files.component';
 

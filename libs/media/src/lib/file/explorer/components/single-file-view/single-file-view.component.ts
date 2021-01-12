@@ -11,14 +11,14 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 // File Explorer
-import { 
+import {
   getCollection,
   getId,
   isHostedMediaForm,
   MediaFormTypes,
   SubDirectoryFile,
   SubDirectoryImage
-} from '../../file-explorer.model';
+} from '../../explorer.model';
 
 @Component({
   selector: 'file-explorer-single-file-view',
@@ -40,7 +40,7 @@ export class SingleFileViewComponent implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
 
-  async ngOnInit() { 
+  async ngOnInit() {
     const id = getId(this.activeDirectory.storagePath);
     const collection = getCollection(this.activeDirectory.storagePath);
 
