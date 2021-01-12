@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieFormShellComponent, findInvalidControls } from '@blockframes/movie/form/shell/shell.component';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -45,9 +46,9 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     try {
-      await this.shell.update({ publishing: true });
+      await this.shell.layout.update({ publishing: true });
       const ref = this.snackBar.open('Your title was successfully submitted!', '', { duration: 1000 });
-      ref.afterDismissed().subscribe(_ => this.router.navigate(['../end'], { relativeTo: this.route}))
+      ref.afterDismissed().subscribe(_ => this.router.navigate(['../end'], { relativeTo: this.route }))
     } catch (err) {
       console.error(err);
       // Log the invalid forms

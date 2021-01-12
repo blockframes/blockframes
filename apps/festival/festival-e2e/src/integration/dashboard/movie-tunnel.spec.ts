@@ -73,7 +73,7 @@ const Movie = {
     "cast-status": 'Confirmed',
     "cast-description": 'Elegant Nicole Kidman is known as one of Hollywood\'s top Australian imports.',
     "cast-film1": 'Bombshell',
-    "cast-year1": '2018',    
+    "cast-year1": '2018',
     "crew-first-name": 'Karl',
     "crew-last-name": 'Lagerfeld',
     "crew-role": 'Costume Designer',
@@ -134,7 +134,7 @@ const Movie = {
   },
   notesStatements: {
     "first-name": 'Rodolphe',
-    "last-name": 'Marconi',    
+    "last-name": 'Marconi',
     "role": 'Other',
     "intent-note": JSON.stringify({type: 'app/pdf', filename: '1234.pdf'})
   },
@@ -174,17 +174,17 @@ val['crew-summary'] = `${val['crew-first-name']} ${val['crew-last-name']} (${val
 const testSteps = [
   {title: 'Production Status', selector: 'movie-form-title-status mat-radio-button',
     input: 'productionStatus', comp_save: [], save_form: true, debug: true},
-  {title: 'Main Information', selector: 'movie-form-main input, textarea, static-select, chips-autocomplete', 
+  {title: 'Main Information', selector: 'movie-form-main input, textarea, static-select, chips-autocomplete',
     input: 'mainInfo', comp_save: [], save_form: true, debug: false},
   {title: 'Storyline Elements', selector: 'movie-form-story-elements textarea, input',
     input: 'storyElements', comp_save: [], save_form: true, debug: false},
-  {title: 'Production Information', selector: 'movie-form-production input, static-select, mat-select, chips-autocomplete', 
+  {title: 'Production Information', selector: 'movie-form-production input, static-select, mat-select, chips-autocomplete',
     input: 'production', comp_save: ['row-save'], save_form: true, debug: false},
   {title: 'Artistic Team', selector: 'movie-form-artistic input, textarea, static-select',
     input: 'artisticTeam', comp_save: ['table-save'], save_form: true, debug: false},
   {title: 'Selection & Reviews', selector: 'movie-form-reviews static-select, input, textarea',
     input: 'reviews', comp_save: [], save_form: true, debug: false},
-  {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select', 
+  {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select',
     input: 'additionalInfo', comp_save: [], save_form: true, debug: false},
   {title: 'Shooting Information', selector: 'movie-shooting-information mat-radio-button, static-select, input',
     input: 'shootingInformation', comp_save: [], save_form: true, debug: false},
@@ -194,9 +194,9 @@ const testSteps = [
     input: 'availableMaterials', comp_save: [], save_form: true, debug: false},
   {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select',
     input: 'salesPitch', comp_save: [], save_form: true, debug: false},
-  {title: 'Files', selector: 'movie-form-media-files file-upload',
+  {title: 'Files', selector: 'movie-form-media-files file-uploader',
     input: 'files',  comp_save: [], save_form: true, debug: false},
-  {title: 'Notes & Statements', selector: 'movie-form-media-notes input, mat-select, file-upload',
+  {title: 'Notes & Statements', selector: 'movie-form-media-notes input, mat-select, file-uploader',
     input: 'notesStatements', comp_save: [], save_form: true, debug: false},
   {title: 'Images', selector: 'movie-form-media-images',
     input: 'promoElements', comp_save: [], save_form: true, debug: false},
@@ -211,7 +211,7 @@ const MovieFormSummary = [
     input: Movie.storyElements, debug: false },
   {title: 'Production Information', selector: '#production-information [test-id]',
     input: Movie.production, debug: false },
-  {title: 'Artistic Team', selector: '#artistic-team [test-id]', 
+  {title: 'Artistic Team', selector: '#artistic-team [test-id]',
     input: Movie.artisticTeam, debug: false },
   {title: 'Technical Information', selector: '#technical-information [test-id]',
     input: Movie.techSpec, debug: false },
@@ -327,7 +327,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     cy.log('[Summary Page]: Publish the movie');
     cy.get('button[test-id=publish]')
       .click();
-    
+
     cy.log('Reach Festival Title View Page');
     cy.get('festival-dashboard-title-view h1', {timeout: 60 * SEC})
       .contains(Movie.mainInfo["international-title"]);
@@ -342,7 +342,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
     cy.get('festival-dashboard-title-list h1', {timeout: 60 * SEC})
       .contains('My Titles');
-    
+
     //Search the movie
     cy.get('input[test-id="filter-input"]', {timeout: 60 * SEC})
       .type(Movie.mainInfo["international-title"]);

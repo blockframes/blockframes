@@ -19,7 +19,7 @@
         </button>
         <!--TODO#2728: improve component with filters-->
         <!-- <algolia-autocomplete
-          index="movie" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international">
+          index="movie" mode="standard" resetInput native prefixIcon="search" clearable keyToDisplay="title.international">
           <ng-template let-result>
             <a [routerLink]="['title', result.objectID]" class="algolia-result">{{ result.title.international }}</a>
           </ng-template>
@@ -29,19 +29,19 @@
           <!-- Invitations -->
           <a mat-icon-button routerLink="invitations" test-id="invitations-link">
             <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-              <mat-icon svgIcon="add_member" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+              <mat-icon svgIcon="person_add" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
             <ng-template #noInvitation>
-              <mat-icon svgIcon="add_member"></mat-icon>
+              <mat-icon svgIcon="person_add"></mat-icon>
             </ng-template>
           </a>
           <!-- Notifications -->
           <a mat-icon-button routerLink="notifications" test-id="notifications-link">
             <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-              <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+              <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
             <ng-template #noNotification>
-              <mat-icon svgIcon="bell"></mat-icon>
+              <mat-icon svgIcon="notifications"></mat-icon>
             </ng-template>
           </a>
           <auth-widget></auth-widget>

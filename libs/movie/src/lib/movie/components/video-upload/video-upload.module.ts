@@ -15,10 +15,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 
 // Modules
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
-// Components 
+// Components
 import { MovieVideoUploadComponent } from './video-upload.component';
 
 @NgModule({
@@ -39,7 +39,7 @@ import { MovieVideoUploadComponent } from './video-upload.component';
     MatSelectModule,
 
     // Modules
-    UploadModule,
+    FileUploaderModule,
     ToLabelModule,
   ],
   declarations: [MovieVideoUploadComponent],

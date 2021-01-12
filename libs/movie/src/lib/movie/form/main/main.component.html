@@ -136,7 +136,7 @@
           <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
             <mat-chip removable="true" (removed)="removeCustomGenre(i)">
               <span>{{ value }}</span>
-              <mat-icon matChipRemove svgIcon="close"></mat-icon>
+              <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
             </mat-chip>
           </ng-container>
         </mat-chip-list>

@@ -5,7 +5,7 @@
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <movie-banner *ngIf="movie$ | async as movie" [movie]="movie"></movie-banner>
       <button mat-button color="warn" (click)="removeTitle()">
-        <mat-icon svgIcon="trash"></mat-icon><span>Remove Title</span>
+        <mat-icon svgIcon="delete"></mat-icon><span>Remove Title</span>
       </button>
     </div>
     <h2>Exploitation Rights</h2>
@@ -56,7 +56,7 @@
           <ng-container *ngFor="let holdback of holdbacks(control).controls; let holdbackIndex = index">
             <distribution-form-holdbacks [form]="holdback"></distribution-form-holdbacks>
             <button mat-mini-fab color="warn" (click)="removeHoldback(control, holdbackIndex)">
-              <mat-icon svgIcon="trash"></mat-icon>
+              <mat-icon svgIcon="delete"></mat-icon>
             </button>
           </ng-container>
           <button mat-mini-fab color="primary" (click)="addHoldback(control)">
@@ -84,7 +84,7 @@
           </div>
           <div fxLayout="row" fxLayoutAlign="center start">
             <button mat-mini-fab matTooltip="Delete TV Criteria" (click)="removeTVCriteria(control)" color="warn">
-              <mat-icon svgIcon="trash"></mat-icon>
+              <mat-icon svgIcon="delete"></mat-icon>
             </button>
           </div>
         </ng-container>
@@ -100,7 +100,7 @@
   </mat-accordion>
   <div fxLayout="row" fxLayoutAlign="center start">
     <button mat-stroked-button color="warn" color="warn" (click)="removeRight(index)">
-      <mat-icon svgIcon="trash"></mat-icon>
+      <mat-icon svgIcon="delete"></mat-icon>
       <span>Delete Exploitation Rights</span>
     </button>
   </div>

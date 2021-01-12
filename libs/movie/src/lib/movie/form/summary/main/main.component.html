@@ -3,7 +3,7 @@
   <h6>
     Reference
     <a mat-icon-button [routerLink]="link" fragment="reference">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
@@ -38,12 +38,12 @@
   <h6>
     Images
     <a mat-icon-button [routerLink]="link" fragment="images" reference="images">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [form]="movie.banner" [link]="link"><strong> Film Page Banner Image </strong></bf-preview-modal>
+      <bf-preview-modal [ref]="movie.banner.ref.value"><strong> Film Page Banner Image </strong></bf-preview-modal>
       <!-- test-id="banner-image" -->
       <missing-control [control]="movie.banner.ref" [link]="link" fragments="images">
         <ng-template let-banner>
@@ -52,7 +52,7 @@
       </missing-control>
     </li>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [form]="movie.poster" [link]="link"><strong> Poster Image </strong></bf-preview-modal>
+      <bf-preview-modal [ref]="movie.poster.ref.value"><strong> Poster Image </strong></bf-preview-modal>
       <!-- test-id="poster-image" -->
       <missing-control [control]="movie.poster.ref" [link]="link">
         <ng-template let-poster>
@@ -68,7 +68,7 @@
   <h6>
     General Information
     <a mat-icon-button [routerLink]="link" fragment="general-information">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>
@@ -112,7 +112,7 @@
   <h6>
     Director{ movie.directors.controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="directors">
-      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
   <ul>

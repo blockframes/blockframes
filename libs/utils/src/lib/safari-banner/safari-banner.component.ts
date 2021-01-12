@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { isSafari } from './safari.utils';
+import { isSafari } from '../browser/utils';
 
 @Component({
   selector: 'safari-banner',

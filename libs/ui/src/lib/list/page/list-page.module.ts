@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 
 // Blockframes
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
@@ -42,7 +43,8 @@ import {
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatRippleModule
   ],
   declarations: [
     ListPageComponent,

@@ -17,7 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 
 export const profileRoutes: Routes = [
@@ -43,7 +43,7 @@ export const profileRoutes: Routes = [
     MatMenuModule,
     EditableSidenavModule,
     PasswordConfirmModule,
-    UploadModule,
+    FileUploaderModule,
     RouterModule.forChild(profileRoutes),
   ],
   declarations: [],

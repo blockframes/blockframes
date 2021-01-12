@@ -1,8 +1,8 @@
+<input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
 <section [ngSwitch]="step$ | async">
 
   <!-- Drop -->
   <article *ngSwitchCase="'drop'" class="drop-zone">
-    <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
     <button mat-icon-button aria-label="file upload button" (click)="fileUploader.click()">
       <img class="add-files-icon" asset="add_files.webp" alt="upload image">
     </button>
@@ -27,7 +27,7 @@
         <mat-icon (click)="cropIt()" svgIcon="check"></mat-icon>
       </button>
       <button mat-mini-fab color="warn">
-        <mat-icon (click)="nextStep('drop')" svgIcon="cross">cancel</mat-icon>
+        <mat-icon (click)="nextStep('drop')" svgIcon="close">cancel</mat-icon>
       </button>
     </div>
   </article>
@@ -37,9 +37,8 @@
     <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" />
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
       <ng-container *ngIf="useFileUploader">
-        <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
         <button mat-mini-fab color="primary">
-          <mat-icon (click)="fileUploader.click()" svgIcon="picture" matTooltip="Select new picture"></mat-icon>
+          <mat-icon (click)="fileUploader.click()" svgIcon="image" matTooltip="Select new picture"></mat-icon>
         </button>
       </ng-container>
       <button mat-mini-fab color="accent" *ngIf="(previewUrl$ | async) as url">
@@ -47,7 +46,7 @@
       </button>
       <ng-container *ngIf="useDelete">
         <button mat-mini-fab color="warn">
-          <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete current picture"></mat-icon>
+          <mat-icon (click)="delete()" svgIcon="delete" matTooltip="Delete current picture"></mat-icon>
         </button>
       </ng-container>
     </div>

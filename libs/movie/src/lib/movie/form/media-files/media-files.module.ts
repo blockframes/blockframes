@@ -15,7 +15,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { PromotionalLinksModule } from '@blockframes/movie/form/links/promotional-links.module';
 
 // Blockframes Media
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 
 import { MovieFormMediaFilesComponent } from './media-files.component';
 
@@ -27,7 +27,7 @@ import { MovieFormMediaFilesComponent } from './media-files.component';
     ReactiveFormsModule,
     TunnelPageModule,
     PromotionalLinksModule,
-    UploadModule,
+    FileUploaderModule,
 
     // Material
     MatIconModule,

@@ -1,0 +1,44 @@
+<ng-container [ngSwitch]="state">
+  <input #fileExplorer [accept]="accept" type="file" (change)="selected($event.target.files)" />
+
+  <!-- Waiting -->
+  <section *ngSwitchCase="'waiting'" class="drop-zone">
+    <label class="upload-button-container">
+      <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
+        <img asset="add_files.webp" alt="upload image">
+      </button>
+
+    </label>
+    <ng-content select="[title]"></ng-content>
+    <p class="mat-caption">Accepted Formats: {{ accept.join(', ') }}</p>
+    <p class="mat-caption">Drag and drop a file here or
+      <a (click)="fileExplorer.click()">browse</a>
+    </p>
+  </section>
+
+  <!-- Hovering -->
+  <section *ngSwitchCase="'hovering'" class="drop-zone">
+    <img asset="add_files.webp" alt="upload image" class="picture-hover">
+    <h3>Drop your file here</h3>
+  </section>
+
+  <!-- Ready -->
+  <section *ngSwitchCase="'ready'">
+    <ng-template [ngTemplateOutlet]="onReadyTemplate || default"></ng-template>
+  </section>
+
+  <!-- File -->
+  <section *ngSwitchCase="'file'">
+    <ng-template [ngTemplateOutlet]="onFileTemplate || default"></ng-template>
+  </section>
+
+</ng-container>
+
+<ng-template #default>
+  <img [asset]="form.fileName.value | fileTypeImage" alt="file image" class="file-uploaded">
+  <h3>{{ form.fileName.value }}</h3>
+  <span *ngIf="!!localSize" class="mat-body-2">{{ localSize }}</span>
+  <button mat-mini-fab color="divider">
+    <mat-icon (click)="delete()" svgIcon="close" matTooltip="Delete File"></mat-icon>
+  </button>
+</ng-template>

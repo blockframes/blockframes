@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormDisplayNameModule } from '@blockframes/ui/form/display-name/display-name.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
@@ -28,7 +28,7 @@ import { MovieFormMediaNotesComponent } from './notes.component';
     FlexLayoutModule,
     FormDisplayNameModule,
     FormListModule,
-    UploadModule,
+    FileUploaderModule,
     FileNameModule,
     MaxLengthModule,
 

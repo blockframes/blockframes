@@ -10,7 +10,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { UploadData, HostedMediaFormValue } from "./media.firestore";
 
 // Blockframes
-import { UploadWidgetComponent } from "../components/upload/widget/upload-widget.component";
+import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 import { delay, BehaviorStore } from "@blockframes/utils/helpers";
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from "../directives/image-reference/imgix-helpers";
 import { clamp } from '@blockframes/utils/utils';

@@ -12,7 +12,7 @@
         <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
       </ng-container>
       <ng-container *ngSwitchDefault>
-        <article class="noFile">
+        <article>
           <h3>Sorry</h3>
           <img asset="no_titles.webp" alt="Flying saucer">
           <p>We don't know how to display this file.</p>
@@ -25,7 +25,7 @@
     <article fxLayout="column" fxLayoutAlign="center center">
       <mat-divider></mat-divider>
       <button mat-button (click)="stop()">
-        <mat-icon svgIcon="cross_circle"></mat-icon>
+        <mat-icon svgIcon="cancel"></mat-icon>
         <span>Stop Sharing</span>
       </button>
     </article>

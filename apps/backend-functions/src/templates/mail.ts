@@ -6,7 +6,7 @@ import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { EmailRecipient } from '@blockframes/utils/emails/utils';
+import { EmailRecipient, EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
@@ -67,15 +67,18 @@ export function userInvite(
   password: string,
   orgName: string,
   pageURL: string = appUrl.market,
-  templateId: string = templateIds.user.credentials.joinOrganization.festival,
-  eventName?: string
+  templateId: string = templateIds.user.credentials.joinOrganization,
+  eventData?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
     orgName,
-    eventName,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`
+    eventName: eventData.title || '',
+    eventStartDate: eventData.start || '',
+    eventEndDate: eventData.end || '',
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
+    sessionURL: eventData.id ? `${pageURL}/c/o/marketplace/event/${eventData.id}` : ''
   };
   return { to: email, templateId, data };
 }
@@ -151,15 +154,18 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
 export function invitationToEventFromOrg(
   recipient: EmailRecipient,
   orgDenomination: string,
-  eventId: string,
+  eventData: EventEmailData,
   link: string,
-  url: string = appUrl.market
+  url: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: recipient.name,
     orgName: orgDenomination,
-    eventName: eventId,
-    pageURL: `${url}/${link}`
+    eventName: eventData.title,
+    pageURL: `${url}/${link}`,
+    sessionURL: `${url}/c/o/marketplace/event/${eventData.id}`,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
@@ -181,6 +187,25 @@ export function requestToAttendEventFromUser(
     pageURL: `${url}/${link}`
   };
   return { to: recipient.email, templateId: templateIds.request.attendEvent.created, data };
+}
+
+/** Generate an email to inform users that their request to attend an event was accepted */
+export function requestToAttendEventFromUserAccepted(
+  toUser: PublicUser,
+  organizerOrgName: string,
+  eventData: EventEmailData,
+  pageURL: string = appUrl.market,
+): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    userLastName: toUser.lastName,
+    organizerOrgName,
+    eventName: eventData.title,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end,
+    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
+  };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
 
 // ------------------------- //

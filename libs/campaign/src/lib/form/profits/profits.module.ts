@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CampaignFormProfitsComponent } from './profits.component';
 
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,7 @@ import { MatDividerModule } from '@angular/material/divider';
     ReactiveFormsModule,
     FlexLayoutModule,
     TunnelPageModule,
-    UploadModule,
+    FileUploaderModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
