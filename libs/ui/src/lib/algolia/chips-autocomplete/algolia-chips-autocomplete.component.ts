@@ -83,9 +83,9 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Input() @boolean addOnBlur = false;
 
   /**
-   * Set whether it is allowed to add manually typed values instead of Algolia results only
+   * Set whether it is allowed to add custom values instead of Algolia results only
    */
-  @Input() @boolean manualInput = false;
+  @Input() @boolean customInput = false;
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;

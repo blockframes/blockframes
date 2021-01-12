@@ -15,7 +15,7 @@
       [filters]="invitations | deepKey:'toUser.email || fromUser.email'"
       unique
       addOnBlur
-      manualInput
+      customInput
     >
       <ng-template let-user>
         <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">

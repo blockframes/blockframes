@@ -16,7 +16,7 @@
       [matChipInputFor]="chipList"
       [matChipInputAddOnBlur]="addOnBlur"
       [matChipInputSeparatorKeyCodes]="separators"
-      (matChipInputTokenEnd)="manualInput ? add($event.value) : undefined"
+      (matChipInputTokenEnd)="customInput ? add($event.value) : undefined"
       [placeholder]="placeholder"
       autocapitalize="off"
       autocorrect="off"
