@@ -11,11 +11,11 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { ViewerDialogComponent } from '../../../dialog/file-viewer/viewer.component';
+import { ViewerDialogComponent } from '../../../../components/dialog/file-viewer/viewer.component';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 // File explorer
-import { 
+import {
   getCollection,
   getFormList,
   getId,
@@ -24,12 +24,12 @@ import {
   SubDirectoryFile,
   SubDirectoryImage,
   getDeepPath
-} from '../../file-explorer.model';
+} from '../../explorer.model';
 
-const columns = { 
+const columns = {
   ref: { value: 'Type', disableSort: true },
   main: { value: 'Document Name', disableSort: true },
-  actions: { value: 'Actions', disableSort: true } 
+  actions: { value: 'Actions', disableSort: true }
 };
 
 @Component({

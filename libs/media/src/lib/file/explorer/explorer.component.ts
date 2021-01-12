@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
 
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
@@ -19,8 +18,8 @@ import { sortMovieBy } from '@blockframes/utils/helpers';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 // File Explorer
-import { ImageDialogComponent } from '../dialog/image/image.component';
-import { FileDialogComponent } from '../dialog/file/file.component';
+import { ImageDialogComponent } from '../../components/dialog/image/image.component';
+import { FileDialogComponent } from '../../components/dialog/file/file.component';
 import {
   createMovieFileStructure,
   createOrgFileStructure,
@@ -33,15 +32,15 @@ import {
   MediaFormTypes,
   SubDirectoryFile,
   SubDirectoryImage
-} from './file-explorer.model';
+} from './explorer.model';
 
 // RxJs
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[org] file-explorer',
-  templateUrl: 'file-explorer.component.html',
-  styleUrls: ['./file-explorer.component.scss'],
+  templateUrl: 'explorer.component.html',
+  styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileExplorerComponent implements OnInit, OnDestroy {

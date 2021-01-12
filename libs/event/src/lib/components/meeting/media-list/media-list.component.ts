@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { FileSelectorComponent } from '@blockframes/media/components/file-selector/file-selector.component';
+import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
 import { Event, EventService } from '@blockframes/event/+state';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
 import { MatDialog } from '@angular/material/dialog';
@@ -40,7 +40,7 @@ export class MeetingMediaListComponent {
   }
 
   openFileSelector() {
-    this.dialog.open(FileSelectorComponent, {
+    this.dialog.open(FilePickerComponent, {
       width: '80%',
       height: '80%',
       disableClose: true,
