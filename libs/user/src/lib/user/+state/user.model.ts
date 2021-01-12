@@ -1,20 +1,9 @@
 import { UserRole } from "@blockframes/permissions/types";
-import { User } from "@blockframes/auth/+state/auth.store";
-
+import { User, PublicUser } from "./user.firestore";
 export * from './user.firestore';
 
-export interface OrganizationMemberRequest {
-  email: string;
-  roles: string[];
-}
-
-export interface OrganizationMember extends OrganizationMemberRequest {
-  uid: string;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  watermark?: string;
-  role?: UserRole;
+export interface OrganizationMember extends PublicUser {
+  role?: UserRole; // Role of the user in his organization
 }
 
 /** A factory function that creates an OrganizationMember */
@@ -26,7 +15,6 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
     avatar: user.avatar ?? '',
     watermark: user.watermark ?? '',
     email: user.email,
-    roles: [],
     role,
   };
 }
