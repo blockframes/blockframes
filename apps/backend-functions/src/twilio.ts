@@ -68,15 +68,21 @@ export const getTwilioAccessToken = async (
     };
   }
 
+  const user = await getUser(context.auth.uid);
+
+  const isOwner = async () => {
+    if (event.meta.organizerId === context.auth.uid) return true;
+    return user.orgId === event.ownerId;
+  }
+
   // Check if user is owner or is invited to event
-  if (!(event.meta.organizerId === context.auth.uid || await hasUserAcceptedEvent(context.auth.uid, eventId))) {
+  if (!(await isOwner() || await hasUserAcceptedEvent(context.auth.uid, eventId))) {
     return {
       error: 'NOT_ACCEPTED',
       result: `You are not the owner of the event or you have not been invited to see this meeting`
     };
   }
 
-  const user = await getUser(context.auth.uid);
   const identity = JSON.stringify({ id: user.uid, displayName: displayName(user) });
 
   // Create access token with twilio global var et identity of the user as identity of token
