@@ -18,7 +18,6 @@ import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 export class ListComponent implements OnInit {
   public events$: Observable<Event[]>;
   public searchForm = FormList.factory<AlgoliaOrganization>([]);
-  public loading = true;
 
   constructor(
     private service: EventService,
@@ -33,10 +32,7 @@ export class ListComponent implements OnInit {
 
     this.events$ = combineLatest(events$, orgIds$).pipe(
       map(([ events, orgs ]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
-      tap(events => {
-        this.loading = false;
-        this.setTitle(events.length)
-      })
+      tap(events => this.setTitle(events.length))
     )
   }
 

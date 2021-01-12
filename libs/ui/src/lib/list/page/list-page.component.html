@@ -39,36 +39,45 @@
 
 <!-- Items -->
 <section>
-  <ng-container *ngIf="items.length; else empty">
-    <div fxLayout="row" fxLayoutAlign="end start">
-      <ng-content select="list-page-description"></ng-content>
-    </div>
-    <ng-container *ngIf="!listView; else displayList">
-      <div grid [@fadeList]="items.length">
-        <ng-container *ngFor="let item of items; trackBy:trackById">
-          <div [col]="3">
-
-            <!-- INSERT CARD -->
-            <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
-            </ng-template>
-          </div>
-        </ng-container>
+  <ng-container *ngIf="!!items; else loading">
+    <ng-container *ngIf="items.length; else empty">
+      <div fxLayout="row" fxLayoutAlign="end start">
+        <ng-content select="list-page-description"></ng-content>
       </div>
+      <ng-container *ngIf="!listView; else displayList">
+        <div grid [@fadeList]="items.length">
+          <ng-container *ngFor="let item of items; trackBy:trackById">
+            <div [col]="3">
+
+              <!-- INSERT CARD -->
+              <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
+              </ng-template>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #displayList>
+        <div *ngFor="let item of items">
+
+          <!-- INSERT LIST ITEM -->
+          <ng-template [ngTemplateOutlet]="listItemTemplate" [ngTemplateOutletContext]="{$implicit: item}">
+          </ng-template>
+
+        </div>
+      </ng-template>
+
     </ng-container>
-    <ng-template #displayList>
-      <div *ngFor="let item of items">
-
-        <!-- INSERT LIST ITEM -->
-        <ng-template [ngTemplateOutlet]="listItemTemplate" [ngTemplateOutletContext]="{$implicit: item}">
-        </ng-template>
-
-      </div>
-    </ng-template>
-
   </ng-container>
 
   <!-- PROGRESS -->
   <ng-content select="list-page-progress"></ng-content>
+
+  <!-- LOADING -->
+  <ng-template #loading>
+    <div fxLayout fxLayoutAlign="center">
+      <mat-spinner color="primary"></mat-spinner>
+    </div>
+  </ng-template>
 
   <!-- ERROR HANDLING -->
   <ng-template #empty>

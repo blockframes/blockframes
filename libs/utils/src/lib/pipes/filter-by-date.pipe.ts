@@ -93,11 +93,12 @@ export class LabelByDatePipe implements PipeTransform {
 @Pipe({ name: 'eventsToTimeFrame', pure: true })
 export class EventsToTimeFramePipe implements PipeTransform {
   transform(events: Event[], order: 'asc' | 'desc' = 'asc') {
+    if (!events) return;
     const timeFrames = order === 'asc' ? ascTimeFrames : descTimeFrames;
     return timeFrames.map(timeFrame => {
       timeFrame['events'] = filterByDate(events, timeFrame, 'start', 'end');
-      return timeFrame
-    }).filter(timeFrame => !!timeFrame['events']?.length)
+      return timeFrame;
+    }).filter(timeFrame => !!timeFrame['events']?.length);
   }
 }
 
