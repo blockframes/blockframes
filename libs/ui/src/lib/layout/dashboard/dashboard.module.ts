@@ -7,7 +7,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
-import { UploadWidgetModule } from '@blockframes/media/components/upload/widget/upload-widget.module';
+import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
 
 import { DashboardComponent } from './dashboard.component';
 
