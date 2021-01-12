@@ -12,7 +12,7 @@ import { HostedVideo, MovieNote } from '@blockframes/movie/+state/movie.firestor
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 
 @Component({
-  selector: 'bf-upload-widget',
+  selector: 'file-upload-widget',
   templateUrl: 'upload-widget.component.html',
   styleUrls: ['./upload-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,7 +50,7 @@ export class UploadWidgetComponent {
   }
 
   /**
-   * Removes the already-set References in the db 
+   * Removes the already-set References in the db
    */
   async removeReference(task: AngularFireUploadTask) {
 

@@ -8,8 +8,8 @@ import { UploadWidgetComponent } from './upload-widget.component';
 
 // Blockframes
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
-import { TaskProgressModule } from '../../../pipes/task-progress.pipe';
-import { TaskSnapshotModule } from '../../../pipes/task-state.pipe';
+import { TaskProgressModule } from '../../pipes/task-progress.pipe';
+import { TaskSnapshotModule } from '../../pipes/task-state.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
