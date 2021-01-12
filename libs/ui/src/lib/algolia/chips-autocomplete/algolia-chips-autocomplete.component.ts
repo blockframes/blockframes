@@ -127,7 +127,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * @param replaceLastValue Set whether the last value in the form has to be replaced. This hides a bug caused by OnBlur adding the typed value when an autocomplete-option is selected.
    */
-  add(value: any, replaceLastValue = false) {
+  add(value: any, source: 'autocomplete' | 'input', replaceLastValue = false) {
+    if (source === 'input' && !this.customInput) return;
     if (replaceLastValue) this.form.removeAt(this.form.length - 1);
 
     const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
