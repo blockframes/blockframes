@@ -195,34 +195,38 @@ describe('DB cleaning script', () => {
   });
 
   it('should clean organizations', async () => {
-    const testUsers = [{ uid: 'A', email: 'A@fake.com' }, { uid: 'B', email: 'B@fake.com' }];
+    const testUsers = [{ uid: 'A', email: 'A@fake.com' }, { uid: 'B', email: 'B@fake.com' }, { uid: 'C', email: 'C@fake.com' }, { uid: 'D', email: 'D@fake.com' }];
+    const testMovies = [{ id: 'mov-A', storeConfig: { status: 'accepted' } }, { id: 'mov-B', storeConfig: { status: 'draft' } }, { id: 'mov-C', storeConfig: { status: 'refused' } }];
 
     const testOrgs = [
       { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid] },
-      { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'C'] }
+      { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'fakeUid'] },
+      { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['A', 'C', 'D'] },
+      { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['B', 'A'] }
     ];
-
 
     // Load our test set
     await populate('users', testUsers);
     await populate('orgs', testOrgs);
+    await populate('movies', testMovies);
 
-
-    const [users, organizationsBefore] = await Promise.all([
+    const [users, organizationsBefore, movies] = await Promise.all([
       getCollectionRef('users'),
-      getCollectionRef('orgs')
+      getCollectionRef('orgs'),
+      getCollectionRef('movies')
     ]);
 
     // Check if data have been correctly added
-    expect(users.docs.length).toEqual(2);
+    expect(users.docs.length).toEqual(4);
     expect(organizationsBefore.docs.length).toEqual(2);
+    expect(movies.docs.length).toEqual(3);
 
     const userIds = users.docs.map(ref => ref.id);
 
-    await cleanOrganizations(organizationsBefore, userIds);
+    await cleanOrganizations(organizationsBefore, userIds, movies);
 
     const organizationsAfter: Snapshot = await getCollectionRef('orgs');
-    const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds)).length;
+    const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movies)).length;
     expect(cleanedOrgs).toEqual(testOrgs.length);
   });
 
@@ -611,16 +615,30 @@ function isMovieClean(d: any) {
   return d.data().distributionRights === undefined;
 }
 
-function isOrgClean(doc: any, existingUserIds: string[]) {
+function isOrgClean(
+  doc: any,
+  existingUserIds: string[],
+  existingMovies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+) {
   const o = doc.data();
   if (o.members !== undefined) {
     return false;
   }
 
-  const { userIds } = o;
+  const existingAndValidMovieIds = existingMovies.docs.filter(m => {
+    const movie = m.data();
+    return movie.storeConfig.status === 'accepted'
+  }).map(m => m.id);
+
+  const { userIds, whislist } = o;
   const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
+  const validMovieIds = userIds.filter(movieId => existingAndValidMovieIds.includes(movieId));
 
   if (validUserIds.length !== userIds.length) {
+    return false;
+  }
+
+  if (validMovieIds.length !== whislist.length) {
     return false;
   }
 

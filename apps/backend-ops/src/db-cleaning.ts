@@ -47,7 +47,7 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
   // Compare and update/delete documents with references to non existing documents
   await cleanUsers(users, organizationIds, auth, db);
   console.log('Cleaned users');
-  await cleanOrganizations(organizations, userIds);
+  await cleanOrganizations(organizations, userIds, movies);
   console.log('Cleaned orgs');
 
   // Getting all collections we need to reload
@@ -216,7 +216,8 @@ export async function cleanUsers(
 
 export function cleanOrganizations(
   organizations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingUserIds: string[]
+  existingUserIds: string[],
+  existingMovies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
 ) {
   return runChunks(organizations.docs, async (orgDoc) => {
     const org = orgDoc.data();
@@ -226,12 +227,21 @@ export function cleanOrganizations(
       await orgDoc.ref.set(org);
     }
 
-    const { userIds } = org as OrganizationDocument;
-
+    const { userIds, wishlist } = org as OrganizationDocument;
 
     const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
     if (validUserIds.length !== userIds.length) {
       await orgDoc.ref.update({ userIds: validUserIds });
+    }
+
+    const existingAndValidMovieIds = existingMovies.docs.filter(m => {
+      const movie = m.data();
+      return movie.storeConfig.status === 'accepted'
+    }).map(m => m.id);
+
+    const validMovieIds = wishlist.filter(movieId => existingAndValidMovieIds.includes(movieId));
+    if (validMovieIds.length !== wishlist.length) {
+      await orgDoc.ref.update({ wishlist: validMovieIds });
     }
   });
 }
