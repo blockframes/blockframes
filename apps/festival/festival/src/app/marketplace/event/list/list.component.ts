@@ -1,10 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Event, EventService } from '@blockframes/event/+state';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { slideDown } from '@blockframes/utils/animations/fade';
-import { map, tap } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { FormList } from '@blockframes/utils/form';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'festival-event-list',
@@ -14,27 +16,33 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  events$: Observable<Event[]>;
+  public events$: Observable<Event[]>;
+  public searchForm = FormList.factory<AlgoliaOrganization>([]);
 
   constructor(
     private service: EventService,
     private location: Location,
     private dynTitle: DynamicTitleService,
-    ) { }
+  ) { }
 
-  ngOnInit(): void {
-    const query = ref => ref.orderBy('end').startAt(new Date());
+  ngOnInit() {
+    const orgIds$ = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value));
+    const query = ref => ref.where('meta.titleId', '!=', '').orderBy('meta.titleId').orderBy('end').startAt(new Date());
+    const events$ = this.service.queryByType(['screening'], query);
 
-    this.events$ = this.service.queryByType(['screening'], query).pipe(
-      // We can't filter by meta.titleId directly in the query because
-      // firestore supports only one orderBy if it uses .where()
-      map(events => events.filter(event => !!event.meta.titleId)),
-      tap(events => {
-        !!events.length ?
-          this.dynTitle.setPageTitle('Screening List') :
-          this.dynTitle.setPageTitle('Screening List', 'Empty');
-      }),
-    );
+    this.events$ = combineLatest(events$, orgIds$).pipe(
+      map(([ events, orgs ]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
+      tap(events => this.setTitle(events.length))
+    )
+  }
+
+  filterByOrgIds(events: Event[], orgIds: string[]) {
+    if (!orgIds.length) return events;
+    return events.filter(event => orgIds.includes(event.org.id));
+  }
+
+  setTitle(amount: number) {
+    amount === 0 ? this.dynTitle.setPageTitle('Screening List', 'Empty') : this.dynTitle.setPageTitle('Screening List');
   }
 
   goBack() {
