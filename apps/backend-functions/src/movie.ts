@@ -64,8 +64,8 @@ export async function onMovieDelete(
   // Delete permissions
   const orgsPromises = movie.orgIds.map(o => db.collection('orgs').where('id', '==', o).get());
   const _orgs = await Promise.all(orgsPromises);
-  const orgIds :string[]= [];
-  _orgs.forEach(s => { s.docs.forEach(d => orgIds.push(d.id))});
+  const orgIds: string[] = [];
+  _orgs.forEach(s => { s.docs.forEach(d => orgIds.push(d.id)) });
   const permissionsPromises = orgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`).get());
   const permissions = await Promise.all(permissionsPromises);
   permissions.forEach(p => batch.delete(p.ref));
@@ -135,6 +135,11 @@ export async function onMovieUpdate(
       });
 
     await triggerNotifications(notifications);
+  }
+
+  // If movie was accepted but not anymore
+  if (before.storeConfig.status === 'accepted' && after.storeConfig.status !== before.storeConfig.status) {
+    // @TODO clean wishlist
   }
 
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
