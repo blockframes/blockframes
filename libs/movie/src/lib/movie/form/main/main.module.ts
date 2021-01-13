@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 
 // Blockframes Media
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
 import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 
 // Blockframes UI

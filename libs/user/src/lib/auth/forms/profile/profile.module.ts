@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileFormComponent } from './profile.component';

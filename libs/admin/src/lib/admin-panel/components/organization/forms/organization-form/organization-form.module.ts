@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-// Components 
+// Components
 import { AdminOrganizationFormComponent } from './organization-form.component';
 
 // Material
@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 // Modules
 import { OrganizationFormAddressModule } from '@blockframes/organization/forms/organization-form-address/organization-form-address.module';
 import { OrganizationFormDescriptionModule } from '@blockframes/organization/forms/organization-form-description/organization-form-description.module';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
 
 
 @NgModule({
@@ -26,7 +26,7 @@ import { CropperModule } from '@blockframes/media/components/cropper/cropper.mod
     ReactiveFormsModule,
     RouterModule,
     FlexLayoutModule,
-    
+
     // Material
     MatCardModule,
     MatFormFieldModule,

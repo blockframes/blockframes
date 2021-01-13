@@ -3,7 +3,7 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject } from 'rxjs';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { getStoragePath, sanitizeFileName, Privacy, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';

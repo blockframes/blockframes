@@ -28,7 +28,7 @@ import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -45,7 +45,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     LanguageFilterModule,
     BudgetFilterModule,
     StaticCheckBoxesModule,
-    ImageReferenceModule,
+    ImageModule,
 
     // Material
     MatIconModule,

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmptyComponent } from './empty.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [EmptyComponent],
   exports: [EmptyComponent],
   imports: [
-    ImageReferenceModule,
+    ImageModule,
     CommonModule,
   ]
 })

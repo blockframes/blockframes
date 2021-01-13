@@ -4,7 +4,7 @@ import { get, isEqual } from 'lodash';
 import { createHash } from 'crypto';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { imgixToken } from './environments/environment';
-import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { getDocAndPath } from '@blockframes/firebase-utils';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';

@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { SessionComponent } from './session.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MediaControlModule } from '@blockframes/media/components/controls/media-control.module';
 import { MediaViewerModule } from '@blockframes/media/components/viewers/media-viewer.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
@@ -30,7 +30,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     CommonModule,
     FlexLayoutModule,
     // Components
-    ImageReferenceModule,
+    ImageModule,
     DisplayNameModule,
     EventTimeModule,
     OrgNameModule,

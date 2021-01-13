@@ -4,8 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -31,7 +31,7 @@ export const profileRoutes: Routes = [
     ReactiveFormsModule,
     FlexLayoutModule,
     CropperModule,
-    ImageReferenceModule,
+    ImageModule,
     MatListModule,
     MatCardModule,
     MatButtonModule,

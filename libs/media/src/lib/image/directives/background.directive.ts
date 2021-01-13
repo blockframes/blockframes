@@ -10,7 +10,7 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 @Directive({
   selector: '[bgRef] [bgAsset], [bgAsset]'
 })
-export class BackgroundReferenceDirective implements OnInit, OnDestroy {
+export class BackgroundDirective implements OnInit, OnDestroy {
   private sub: Subscription;
   private asset$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');

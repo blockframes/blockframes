@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsul
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { loadJWPlayerScript } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';

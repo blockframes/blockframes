@@ -10,8 +10,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Components
-import { CropperComponent } from '@blockframes/media/components/cropper/cropper.component';
-import { ImageReferenceModule } from '../../directives/image-reference/image-reference.module';
+import { CropperComponent } from './cropper.component';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [CropperComponent],
@@ -19,7 +19,7 @@ import { ImageReferenceModule } from '../../directives/image-reference/image-ref
     CommonModule,
     FlexLayoutModule,
     ImageCropperModule,
-    ImageReferenceModule,
+    ImageModule,
 
     // Material
     MatIconModule,

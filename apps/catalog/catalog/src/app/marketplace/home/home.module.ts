@@ -15,7 +15,7 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
 
 // Pipes
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';

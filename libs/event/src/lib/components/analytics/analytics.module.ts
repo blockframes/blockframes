@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventAnalyticsComponent } from './analytics.component';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 import { MatCardModule } from '@angular/material/card';
@@ -15,7 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   declarations: [EventAnalyticsComponent],
   imports: [
     CommonModule,
-    ImageReferenceModule,
+    ImageModule,
     TableFilterModule,
     FlexLayoutModule,
     MatCardModule,

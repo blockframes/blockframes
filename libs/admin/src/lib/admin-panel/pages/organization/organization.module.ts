@@ -19,8 +19,8 @@ import { OrganizationComponent } from './organization.component';
 // Modules
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationDisplayModule } from '@blockframes/organization/components/organization-display/organization-display.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
 import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
 import { MemberPendingModule } from '@blockframes/organization/components/member-pending/member-pending.module';
 import { MemberRequestModule } from '@blockframes/organization/components/member-request/member-request.module';
@@ -46,7 +46,7 @@ import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.mo
     FlexLayoutModule,
     OrganizationDisplayModule,
     TableFilterModule,
-    ImageReferenceModule,
+    ImageModule,
     CropperModule,
     MemberRepertoryModule,
     MemberPendingModule,

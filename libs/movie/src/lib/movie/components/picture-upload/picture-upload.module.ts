@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { MoviePictureUploadComponent } from './picture-upload.component';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
 import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 
 @NgModule({

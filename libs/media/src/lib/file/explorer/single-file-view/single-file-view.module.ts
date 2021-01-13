@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { SingleFileViewComponent } from './single-file-view.component';
 
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 
 import { MatIconModule } from '@angular/material/icon';

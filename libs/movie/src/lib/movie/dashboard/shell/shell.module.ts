@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardTitleShellComponent } from './shell.component';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
 
 // Material
@@ -27,7 +27,7 @@ import { MatButtonModule } from '@angular/material/button';
     MovieFeatureModule,
     ToLabelModule,
     DisplayNameModule,
-    ImageReferenceModule,
+    ImageModule,
     // Material
     MatTabsModule,
     MatIconModule,

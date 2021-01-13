@@ -12,7 +12,7 @@ import { AppBarModule } from '@blockframes/ui/app-bar';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
@@ -34,7 +34,7 @@ import { MatCardModule } from '@angular/material/card';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     MovieHeaderModule,
     OrgChipModule,
     WishlistButtonModule,

@@ -15,7 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Modules
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
@@ -96,7 +96,7 @@ export const panelRoutes: Routes = [
     MatCheckboxModule,
     FlexLayoutModule,
     TableFilterModule,
-    ImageReferenceModule,
+    ImageModule,
     AlgoliaAutocompleteModule,
     ContractTreeModule,
     EditTitleModule,

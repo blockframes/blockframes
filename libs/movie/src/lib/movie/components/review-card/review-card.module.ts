@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReviewCardComponent } from './review-card.component';
 
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 
 import { MatCardModule } from '@angular/material/card';
@@ -17,7 +17,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     MaxLengthModule,
     MatCardModule,
     MatButtonModule,

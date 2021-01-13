@@ -6,7 +6,7 @@ import { FilePreviewComponent } from './preview.component';
 import { PdfModule } from '@blockframes/media/components/pdf/pdf.module';
 import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatDialogModule } from '@angular/material/dialog';
@@ -18,7 +18,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     PdfModule,
     MediaPlayerModule,
     FileNameModule,
-    ImageReferenceModule,
+    ImageModule,
 
     MatDialogModule
   ],
