@@ -20,7 +20,7 @@ import { StoreStatus } from '@blockframes/utils/static-model/types';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-  private movieResultsState = new BehaviorSubject<Movie[]>([]);
+  private movieResultsState = new BehaviorSubject<Movie[]>(null);
 
   public movies$: Observable<Movie[]>;
   public storeStatus: StoreStatus = 'accepted';
@@ -32,8 +32,6 @@ export class ListComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private loadMoreToggle: boolean;
   private lastPage: boolean;
-
-  public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -54,7 +52,6 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
-      tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search()),
@@ -77,7 +74,6 @@ export class ListComponent implements OnInit, OnDestroy {
         this.searchForm.page.setValue(0);
       }
       this.lastPage = this.hitsViewed === this.nbHits;
-      this.loading$.next(false)
     });;
   }
 

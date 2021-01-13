@@ -36,12 +36,6 @@
     <org-card [org]="org"></org-card>
   </ng-template>
 
-  <ng-template listPageEmpty *ngIf="loading$ | async">
-    <div class="loading">
-      <mat-spinner color="primary"></mat-spinner>
-    </div>
-  </ng-template>
-
   <list-page-progress *ngIf="nbHits" [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
     <span>You've viewed {{ hitsViewed }} of {{ nbHits }} partners.</span>
   </list-page-progress>

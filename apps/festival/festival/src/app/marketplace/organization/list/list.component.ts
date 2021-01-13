@@ -20,11 +20,9 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public orgs$: Observable<Organization[]>;
 
-  private orgResultsState = new BehaviorSubject<Organization[]>([]);
+  private orgResultsState = new BehaviorSubject<Organization[]>(null);
 
   public searchForm = new OrganizationSearchForm('festival');
-
-  public loading$ = new BehaviorSubject<boolean>(false);
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -45,7 +43,6 @@ export class ListComponent implements OnInit, OnDestroy {
     this.searchForm.setValue({ ...search, country: '' });
     this.sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),
-      tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search()),
@@ -70,7 +67,6 @@ export class ListComponent implements OnInit, OnDestroy {
         this.searchForm.page.setValue(0);
       }
       this.lastPage = this.hitsViewed === this.nbHits;
-      this.loading$.next(false)
     });
   }
 
