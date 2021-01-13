@@ -199,10 +199,10 @@ describe('DB cleaning script', () => {
     const testMovies = [{ id: 'mov-A', storeConfig: { status: 'accepted' } }, { id: 'mov-B', storeConfig: { status: 'draft' } }, { id: 'mov-C', storeConfig: { status: 'refused' } }];
 
     const testOrgs = [
-      { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid] },
-      { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'fakeUid'] },
-      { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['A', 'C', 'D'] },
-      { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['B', 'A'] }
+      { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid], wishlist: [] },
+      { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'fakeUid'], wishlist: [] },
+      { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['mov-C', 'mov-D', 'mov-A'] },
+      { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['mov-B'] }
     ];
 
     // Load our test set
@@ -218,7 +218,7 @@ describe('DB cleaning script', () => {
 
     // Check if data have been correctly added
     expect(users.docs.length).toEqual(4);
-    expect(organizationsBefore.docs.length).toEqual(2);
+    expect(organizationsBefore.docs.length).toEqual(4);
     expect(movies.docs.length).toEqual(3);
 
     const userIds = users.docs.map(ref => ref.id);
@@ -226,8 +226,23 @@ describe('DB cleaning script', () => {
     await cleanOrganizations(organizationsBefore, userIds, movies);
 
     const organizationsAfter: Snapshot = await getCollectionRef('orgs');
-    const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movies)).length;
-    expect(cleanedOrgs).toEqual(testOrgs.length);
+    const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movies));
+    expect(cleanedOrgs.length).toEqual(testOrgs.length);
+
+    const orgA = cleanedOrgs.find(o => o.data().id === 'org-A');
+    expect(orgA.data().wishlist.length).toEqual(0);
+    expect(orgA.data().userIds.length).toEqual(1);
+
+    const orgB = cleanedOrgs.find(o => o.data().id === 'org-B');
+    expect(orgB.data().wishlist.length).toEqual(0);
+    expect(orgB.data().userIds.length).toEqual(1);
+
+    const orgC = cleanedOrgs.find(o => o.data().id === 'org-C');
+    expect(orgC.data().wishlist.length).toEqual(1);
+    expect(orgC.data().wishlist[0]).toEqual('mov-A');
+
+    const orgD = cleanedOrgs.find(o => o.data().id === 'org-D');
+    expect(orgD.data().wishlist.length).toEqual(0);
   });
 
   it('should remove permissions not belonging to existing org', async () => {
@@ -630,15 +645,15 @@ function isOrgClean(
     return movie.storeConfig.status === 'accepted'
   }).map(m => m.id);
 
-  const { userIds, whislist } = o;
+  const { userIds, wishlist } = o;
   const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
-  const validMovieIds = userIds.filter(movieId => existingAndValidMovieIds.includes(movieId));
+  const validMovieIds = wishlist.filter(movieId => existingAndValidMovieIds.includes(movieId));
 
   if (validUserIds.length !== userIds.length) {
     return false;
   }
 
-  if (validMovieIds.length !== whislist.length) {
+  if (validMovieIds.length !== wishlist.length) {
     return false;
   }
 

@@ -229,7 +229,7 @@ export function cleanOrganizations(
 
     const { userIds, wishlist } = org as OrganizationDocument;
 
-    const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
+    const validUserIds = (userIds || []).filter(userId => existingUserIds.includes(userId));
     if (validUserIds.length !== userIds.length) {
       await orgDoc.ref.update({ userIds: validUserIds });
     }
@@ -239,7 +239,7 @@ export function cleanOrganizations(
       return movie.storeConfig.status === 'accepted'
     }).map(m => m.id);
 
-    const validMovieIds = wishlist.filter(movieId => existingAndValidMovieIds.includes(movieId));
+    const validMovieIds = (wishlist || []).filter(movieId => existingAndValidMovieIds.includes(movieId));
     if (validMovieIds.length !== wishlist.length) {
       await orgDoc.ref.update({ wishlist: validMovieIds });
     }
