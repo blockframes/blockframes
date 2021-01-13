@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // Components
@@ -42,7 +42,7 @@ const routes: Routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     // Material
     MatProgressSpinnerModule,
     MatSelectModule,

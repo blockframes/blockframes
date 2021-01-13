@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CardComponent } from './card.component';
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
 
@@ -16,7 +16,7 @@ import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
   exports: [CardComponent],
   imports: [
     CommonModule,
-    ImageReferenceModule,
+    ImageModule,
     FlexLayoutModule,
     MaxLengthModule
   ]

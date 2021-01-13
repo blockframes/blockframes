@@ -13,7 +13,7 @@ import {
 
 // Blockframes
 import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FlexLayoutModule,
     DisplayNameModule,
-    ImageReferenceModule,
+    ImageModule,
     MovieTitleFeaturesModule,
     MatIconModule
   ],

@@ -9,7 +9,7 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 @Directive({
   selector: 'img[ref][asset], img[asset]'
 })
-export class ImageReferenceDirective implements OnInit, OnDestroy {
+export class ImageDirective implements OnInit, OnDestroy {
   private sub: Subscription;
 
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);

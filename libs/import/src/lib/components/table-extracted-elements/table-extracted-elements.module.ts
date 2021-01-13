@@ -17,7 +17,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 // Libraries
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
@@ -44,7 +44,7 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    
+
     // Material
     MatIconModule,
     MatFormFieldModule,
@@ -59,7 +59,7 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
     MatProgressSpinnerModule,
 
     // Librairies
-    ImageReferenceModule,
+    ImageModule,
     TermDateModule,
     ToLabelModule,
   ],

@@ -11,7 +11,7 @@ import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Components
 import { LobbyComponent } from './lobby.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MeetingVideoModule } from '@blockframes/event/components/meeting/video/video.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
@@ -22,7 +22,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     CommonModule,
     FlexLayoutModule,
 
-    ImageReferenceModule,
+    ImageModule,
     MeetingVideoModule,
 
     MatProgressSpinnerModule,

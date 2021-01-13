@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild } from '@angular/core';
 import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../utils';
 

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileUploaderComponent } from './file-uploader.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageReferenceModule } from '../../directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -21,7 +21,7 @@ import { FileNameModule } from '@blockframes/utils/pipes';
     MatSnackBarModule,
     MatButtonModule,
     MatTooltipModule,
-    ImageReferenceModule,
+    ImageModule,
     FileNameModule,
   ],
   declarations: [

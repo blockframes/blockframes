@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LandingComponent } from './landing.component';
 import { LandingShellModule } from '@blockframes/landing/shell/shell.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Material
@@ -22,7 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     FlexLayoutModule,
     LandingShellModule,
     ReactiveFormsModule,
-    ImageReferenceModule,
+    ImageModule,
     AppLogoModule,
 
     // Material

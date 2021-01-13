@@ -7,12 +7,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: '[event] event-meeting-media-list',
-  templateUrl: './media-list.component.html',
-  styleUrls: ['./media-list.component.scss'],
+  selector: '[event] file-carousel',
+  templateUrl: './carousel.component.html',
+  styleUrls: ['./carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MeetingMediaListComponent {
+export class FileCarouselComponent {
 
   editPage: string;
 

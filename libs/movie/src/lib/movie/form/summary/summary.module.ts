@@ -27,9 +27,6 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
 import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
 
-// Blockframes Media
-import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
-
 // Summary Components
 import { SummaryMainComponent } from './main/main.component';
 import { SummarySynopsisComponent } from './synopsis/synopsis.component';
@@ -71,7 +68,6 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
 
     MissingControlModule,
     ToLabelModule,
-    EmptyImagePipeModule,
     VersionPipeModule,
     RunningTimePipeModule,
     FileNameModule,

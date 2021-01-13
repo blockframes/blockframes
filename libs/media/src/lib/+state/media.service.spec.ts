@@ -6,7 +6,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorage } from "@angular/fire/storage";
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/testing';
-import { ImageParameters, formatParameters } from "../directives/image-reference/imgix-helpers";
+import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
 
 describe('Media Service Test Suite', () => {
@@ -50,14 +50,14 @@ describe('Media Service Test Suite', () => {
   })
 
   it('Upload a blob & verify storage upload is invoked', async () => {
-    TESTDATA.data = new Blob([JSON.stringify({ blockframes: 'movies' })], 
+    TESTDATA.data = new Blob([JSON.stringify({ blockframes: 'movies' })],
                               { type: 'application/json' });
     await service.upload(TESTDATA);
     expect(storage.upload).toHaveBeenCalled();
   });
 
   it('Upload a file & verify storage upload is invoked', async () => {
-    TESTDATA.data = new File([JSON.stringify({ blockframes: 'movies' })], 
+    TESTDATA.data = new File([JSON.stringify({ blockframes: 'movies' })],
                               'test');
     await service.upload(TESTDATA);
     expect(storage.upload).toHaveBeenCalled();
@@ -65,7 +65,7 @@ describe('Media Service Test Suite', () => {
 
   it('Verify generated ImgIx URL', async () => {
     const imgParam: ImageParameters = {
-      auto: 'format', fit: 'facearea', w: 123, h: 321, page: 99, 
+      auto: 'format', fit: 'facearea', w: 123, h: 321, page: 99,
       s: 'FOO123bar'
     }
     const query = formatParameters(imgParam);
