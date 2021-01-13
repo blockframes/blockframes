@@ -2,18 +2,18 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { MediaRatioType } from '../../cropper/cropper.component';
-import { isHostedMediaForm } from '../../../file/explorer/explorer.model';
+import { MediaRatioType } from '../../../../components/cropper/cropper.component';
+import { isHostedMediaForm } from '../../explorer.model';
 
 @Component({
-  selector: 'image-dialog',
-  templateUrl: 'image.component.html',
-  styleUrls: ['./image.component.scss']
+  selector: 'file-explorer-cropper-dialog',
+  templateUrl: 'cropper-dialog.component.html',
+  styleUrls: ['./cropper-dialog.component.scss']
 })
-export class ImageDialogComponent implements OnInit {
+export class FileExplorerCropperDialogComponent implements OnInit {
 
   constructor(
-    private dialogRef: MatDialogRef<ImageDialogComponent>,
+    private dialogRef: MatDialogRef<FileExplorerCropperDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { form: HostedMediaForm, ratio: MediaRatioType, storagePath: string }
   ) { }
 
