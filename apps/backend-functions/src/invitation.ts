@@ -11,8 +11,8 @@ import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
 import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
-import { Change, EventContext } from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import { Change } from 'firebase-functions';
+import { invitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -34,7 +34,7 @@ export async function onInvitationWrite(
   const invitationDoc = after.data() as InvitationOrUndefined;
 
   // Doc was deleted
-  if (!invitationDoc) {
+  if (!invitationDoc && !!invitationDocBefore.toUser) {
     const user = await getUser(invitationDocBefore.toUser.uid)
 
     // Remove user in users collection
@@ -54,6 +54,8 @@ export async function onInvitationWrite(
 
       db.doc(`users/${user.uid}`).delete();
     }
+
+    return;
   }
 
   // Because of rules restrictions, event creator might not have access to other informations than the id.
@@ -186,15 +188,13 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
 }
 
 export async function isInvitationToJoinOrgExist(userEmails: string[]) {
-  for (const email of userEmails) {
-    const invitationRef = db.collection('invitations')
-    .where('type', '==', 'joinOrganization')
-    .where('toUser.email', '==', email);
-    const invitationDocs = await invitationRef.get();
 
-    if(invitationDocs.docs.length) {
-      return true
-    }
-  }
-  return false;
+  const invitationPromises = userEmails.map(email => db.collection('invitations')
+    .where('type', '==', 'joinOrganization')
+    .where('toUser.email', '==', email)
+    .where('status', 'in', invitationStatus.filter(s => s !== 'declined'))
+    .get());
+  const invitationQuery = await Promise.all(invitationPromises);
+  const isInvitationExist = invitationQuery.some(d => d.docs.length > 0)
+  return isInvitationExist;
 }
