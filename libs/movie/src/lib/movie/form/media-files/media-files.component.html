@@ -3,28 +3,28 @@
 
     <section id="presentation-deck">
       <h3>Presentation Deck</h3>
-      <file-upload test-id="presentation-deck" [form]="form.promotional.get('presentation_deck')"
+      <file-uploader test-id="presentation-deck" [form]="form.promotional.get('presentation_deck')"
         [storagePath]="getPath('presentation_deck')" allowedFileType="pdf">
         <h3 title>Upload Presentation Deck</h3>
-      </file-upload>
+      </file-uploader>
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
     <section id="scenario">
       <h3>Scenario</h3>
-      <file-upload test-id="scenario" [form]="form.promotional.get('scenario')" [storagePath]="getPath('scenario')"
+      <file-uploader test-id="scenario" [form]="form.promotional.get('scenario')" [storagePath]="getPath('scenario')"
         allowedFileType="pdf">
         <h3 title>Upload Scenario</h3>
-      </file-upload>
+      </file-uploader>
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
     <section id="moodboard">
       <h3>Moodboard / Artistic Deck</h3>
-      <file-upload test-id="moodboard" [form]="form.promotional.get('moodboard')" [storagePath]="getPath('moodboard')"
+      <file-uploader test-id="moodboard" [form]="form.promotional.get('moodboard')" [storagePath]="getPath('moodboard')"
         allowedFileType="pdf">
         <h3 title>Upload Moodboard / Artistic Deck</h3>
-      </file-upload>
+      </file-uploader>
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
   </ng-container>

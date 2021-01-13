@@ -20,7 +20,7 @@
                 <b>Organization : </b>
                 <span>{{ userOrg | orgName:'long' }}</span>
                 <button mat-icon-button color="primary" [routerLink]="['/c/o/admin/panel/organization', userOrg.id]">
-                  <mat-icon svgIcon="eye"></mat-icon>
+                  <mat-icon svgIcon="visibility"></mat-icon>
                 </button>
               </li>
               <li *ngIf="userOrgRole">
@@ -28,7 +28,7 @@
                 <span>{{ userOrgRole }}</span>
                 <member-permissions
                   [uid]="userId"
-                  icon="pencil"
+                  icon="edit"
                   (memberRemoved)="removeMember($event)"
                   (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
                   (updatedToAdmin)="updateRole($event, 'admin')"

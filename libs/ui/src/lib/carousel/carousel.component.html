@@ -2,7 +2,7 @@
   <ng-content></ng-content>
 </div>
 <ng-container *ngIf="(amount$ | async) | isAbove: min">
-  <ng-container *ngIf="showBack ">
+  <ng-container *ngIf="showBack">
     <button mat-fab (click)="scrollTo('left')" class="previous direction active">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </button>

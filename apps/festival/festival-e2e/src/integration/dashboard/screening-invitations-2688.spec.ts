@@ -72,14 +72,13 @@ describe('Organiser invites other users to private screening', () => {
 
     // Assets video runs
     p2.openMoreMenu();
-    const p3: FestivalMarketplaceEventPage = p2.clickGoToEvent();
-    const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
+    const p3: FestivalMarketplaceScreeningPage = p2.clickGoToEvent();
 
     // Save the current url for the next test
     cy.url().then(url => SCREENING_URL = url);
 
-    p4.clickPlay();
-    p4.runVideo();
+    p3.clickPlay();
+    p3.runVideo();
     // TODO: Assert video is running
   });
 

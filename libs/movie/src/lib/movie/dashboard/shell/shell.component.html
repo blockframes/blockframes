@@ -15,10 +15,14 @@
           </p>
         </article>
       </section>
-      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start end" fxLayoutGap="16px">
+      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start end" fxLayoutGap="8px">
         <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-          <mat-icon svgIcon="pencil"></mat-icon>
+          <mat-icon svgIcon="edit"></mat-icon>
           <span>Edit</span>
+        </a>
+        <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+          <mat-icon svgIcon="marketplace"></mat-icon>
+          <span>See on the marketplace</span>
         </a>
         <ng-content></ng-content>
       </aside>

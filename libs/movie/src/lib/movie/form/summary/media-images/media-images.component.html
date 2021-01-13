@@ -1,13 +1,13 @@
 <h6>
   Images
   <a mat-icon-button [routerLink]="link">
-    <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    <mat-icon svgIcon="edit" color="primary"></mat-icon>
   </a>
 </h6>
 <missing-control [control]="stillPhoto" [link]="link">
   <ng-template let-images="control">
     <article fxLayout fxLayoutAlign="start center" *ngFor="let image of images.controls">
-      <bf-preview-modal [form]="image" [link]="link"></bf-preview-modal>
+      <bf-preview-modal [ref]="image.ref.value"></bf-preview-modal>
       <span>{{ image.value.ref | fileName | maxLength: 30 }}</span>
     </article>
   </ng-template>

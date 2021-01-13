@@ -6,10 +6,10 @@ import { CommonModule } from '@angular/common';
 @Pipe({ name: 'statusIcon', pure: true })
 export class StatusIconPipe implements PipeTransform {
 
-  transform(status: InvitationStatus): 'check_circle' | 'cross' | 'access_time' {
+  transform(status: InvitationStatus): 'check_circle' | 'close' | 'access_time' {
     switch (status) {
       case 'accepted': return 'check_circle';
-      case 'declined': return 'cross';
+      case 'declined': return 'close';
       case 'pending': return 'access_time';
     }
   }

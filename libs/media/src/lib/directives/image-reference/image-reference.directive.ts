@@ -25,7 +25,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   @HostBinding('srcset') srcset: string;
   @HostBinding('src') src: string;
   @HostBinding('alt') alt: string;
-  @HostBinding('loading') loading = 'lazy';
+  @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy';
 
   // -----------------------------------
   //           MEDIA IMAGE INPUT
@@ -33,8 +33,11 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   /** the image to display */
   @Input() set ref(image: string) {
-    if (!image) return;
     this.ref$.next(image);
+  }
+
+  @Input() set loading(strategy: 'lazy' | 'eager') {
+    this._loading = strategy;
   }
 
   // -----------------------------------
@@ -119,13 +122,13 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
         // Next subscription change will be delayed
         _delay = this.delay;
-        this.cdr.markForCheck()
       } else {
 
         // asset
         this.srcset = getAssetPath(asset, theme, this.type);
         this.src = this.srcset;
       }
+      this.cdr.markForCheck()
     });
   }
 

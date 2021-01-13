@@ -11,6 +11,7 @@ import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
 import { Change } from 'firebase-functions';
+import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -137,14 +138,14 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
       }
     }
 
-    let eventName = '';
+    let eventData: EventEmailData = getEventEmailData();
     if (invitation.type === 'attendEvent' && !!invitation.eventId) {
       const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-      eventName = event.title;
+      eventData = getEventEmailData(event);
     }
 
     for (const email of data.emails) {
-      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app, eventName)
+      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app, eventData)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;

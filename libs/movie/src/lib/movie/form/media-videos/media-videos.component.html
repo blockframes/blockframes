@@ -11,16 +11,16 @@
             <mat-icon mat-list-icon [svgIcon]="screenerForm.get('fileName').value | fileTypeImage: 'icon'"></mat-icon>
             <div mat-line>{{screenerForm.get('fileName').value}}</div>
             <button mat-icon-button (click)="deleteScreener()">
-              <mat-icon svgIcon="trash"></mat-icon>
+              <mat-icon svgIcon="delete"></mat-icon>
             </button>
           </mat-list-item>
         </mat-list>
       </ng-container>
       <ng-template #noScreener>
-        <file-upload [form]="screenerForm" [storagePath]="getPath('screener')" allowedFileType="video"
+        <file-uploader [form]="screenerForm" [storagePath]="getPath('screener')" allowedFileType="video"
           filePrivacy="protected">
           <h3 title>Upload Screener</h3>
-        </file-upload>
+        </file-uploader>
         <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
           outside your organization unless you explicitly invite them to a virtual screening.</p>
       </ng-template>
@@ -53,9 +53,9 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <file-upload [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video">
+            <file-uploader [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video">
               <h3 title>Upload Video</h3>
-            </file-upload>
+            </file-uploader>
 
             <ng-template saveButtonText>Save Video</ng-template>
             <ng-template addButtonText>Add a Video</ng-template>

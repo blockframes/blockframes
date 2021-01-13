@@ -6,7 +6,7 @@ import { resolve } from 'path';
 import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
-import { JsonlDbRecord } from '@blockframes/firebase-utils';
+import { DbRecord } from '@blockframes/firebase-utils';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
@@ -98,13 +98,15 @@ function processMovie(movie: Movie): Movie {
   return movie;
 }
 
-function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
+function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   const ignorePaths = [
     '_META/',
     'blockframesAdmin/',
     'contracts/',
     'docsIndex/',
     'events/',
+    'cms/',
+    'campaigns/',
     'permissions/',
     'publicContracts/',
   ];
@@ -147,10 +149,10 @@ const dest = resolve(process.cwd(), process.argv[3] || 'tmp/restore-ci.jsonl');
 const file = readFileSync(src, 'utf-8');
 const msg = 'Db anonymization time';
 console.time(msg);
-const db: JsonlDbRecord[] = file
+const db: DbRecord[] = file
   .split('\n')
   .filter((str) => !!str)
-  .map((str) => JSON.parse(str) as JsonlDbRecord);
+  .map((str) => JSON.parse(str) as DbRecord);
 const output = db
   .sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath))
   .map((json) => anonymizeDocument(json))

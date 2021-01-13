@@ -15,6 +15,7 @@ import { MediaPlayerModule } from '@blockframes/media/components/player/player.m
 import { MeetingMediaListModule } from '@blockframes/event/components/meeting/media-list/media-list.module';
 import { MeetingVideoRoomModule } from '@blockframes/event/components/meeting/room/video-room.module';
 import { DoorbellBottomSheetModule } from '@blockframes/event/components/doorbell/doorbell.module';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';

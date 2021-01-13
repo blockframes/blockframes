@@ -23,7 +23,7 @@ import {
 import { NumberRange } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
@@ -175,7 +175,6 @@ export interface BoxOffice {
 }
 
 export interface MovieLanguageSpecification {
-  original: boolean; // @TODO (#4545) this should be removed ( use isOriginalVersionAvailable instead )
   dubbed: boolean;
   subtitle: boolean;
   caption: boolean;

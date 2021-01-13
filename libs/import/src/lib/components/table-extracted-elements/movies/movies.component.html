@@ -4,7 +4,7 @@
     <button mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
       (click)="createSelectedMovies()">
       <ng-container *ngIf="processedTitles === 0 else createinprogress">
-        <mat-icon svgIcon="floppy"></mat-icon>
+        <mat-icon svgIcon="save"></mat-icon>
         <span>Save & finish later</span>
       </ng-container>
       <ng-template #createinprogress>
@@ -108,7 +108,7 @@
       <ng-template #create>
         <button mat-stroked-button color="primary" [disabled]="isSaveOrUpdateDisabledForTitle(element)"
           (click)="createMovie(element)">
-          <mat-icon svgIcon="floppy"></mat-icon>
+          <mat-icon svgIcon="save"></mat-icon>
           <span>Save</span>
         </button>
       </ng-template>

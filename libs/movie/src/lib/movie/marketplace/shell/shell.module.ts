@@ -18,6 +18,7 @@ import { PromotionalLinksModule } from '@blockframes/movie/components/promotiona
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { HasKeysModule } from '@blockframes/utils/pipes';
 import { DownloadModule } from '@blockframes/media/pipes/download.pipe';
+import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -43,6 +44,7 @@ import { MatCardModule } from '@angular/material/card';
     MatLayoutModule,
     HasKeysModule,
     DownloadModule,
+    MediaPlayerModule,
 
     // Material
     MatChipsModule,

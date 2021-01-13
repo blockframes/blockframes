@@ -29,7 +29,7 @@
   <!-- Description -->
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon svgIcon="profile"></mat-icon>
+      <mat-icon svgIcon="account_circle"></mat-icon>
     </ng-template>
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
       <ng-container *ngIf="credit.description; else empty">
@@ -46,7 +46,7 @@
   <!-- Filmography -->
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon svgIcon="film"></mat-icon>
+      <mat-icon svgIcon="movie"></mat-icon>
     </ng-template>
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
       <ng-container *ngIf="credit.filmography | hasFilmography; else emptyFilmography">

@@ -1,9 +1,10 @@
 import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
-import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
+import { isSafari } from '@blockframes/utils/browser/utils';
 import { cloneDeep } from 'lodash';
 import type { MovieForm, MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
 import type { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import type { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import type { MoviePictureAdminForm } from '@blockframes/admin/admin-panel/forms/movie-admin.form';
 import type { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
 import type { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
 import type { CampaignForm } from '@blockframes/campaign/form/form'
@@ -19,7 +20,8 @@ export function extractMediaFromDocumentBeforeUpdate(
     OrganizationAdminForm |
     OrganizationMediasForm |
     MovieHostedVideosForm |
-    CampaignForm
+    CampaignForm |
+    MoviePictureAdminForm
 ): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
   const cleanedDocument = cloneDeep(form.value);

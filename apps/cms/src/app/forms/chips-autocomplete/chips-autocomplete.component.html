@@ -5,7 +5,7 @@
       <ng-container *ngFor="let key of form.value; let i = index">
         <mat-chip removable (removed)="remove(i)">
           <span>{{ displayLabel(options[key]) }}</span>
-          <mat-icon matChipRemove svgIcon="close"></mat-icon>
+          <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
         </mat-chip>
       </ng-container>
       <input matInput [disabled]="form.disabled"

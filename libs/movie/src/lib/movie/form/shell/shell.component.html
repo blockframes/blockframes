@@ -2,8 +2,8 @@
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <tunnel-step-stat></tunnel-step-stat>
     <app-logo></app-logo>
-    <button test-id="tunnel-step-save" mat-stroked-button color="primary" (click)="save()">
-      <mat-icon svgIcon="floppy"></mat-icon>
+    <button test-id="tunnel-step-save" mat-stroked-button color="primary" (click)="layout.save()">
+      <mat-icon svgIcon="save"></mat-icon>
       <span>Save</span>
     </button>
   </header>
@@ -11,4 +11,17 @@
   <aside>
     <tunnel-nav [steps]="steps$ | async"></tunnel-nav>
   </aside>
+  <ng-template #confirmExit>
+    <div class="confirm-exit" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <h1>You are going to leave the Movie Form.</h1>
+      <p>Pay attention, if you leave now your changes will not be saved.</p>
+      <div fxLayout="row" fxLayoutAlign="center">
+        <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
+          Save & Exit</button>
+        <button class="text-primary" mat-button [mat-dialog-close]="false">
+          Close without saving
+        </button>
+      </div>
+    </div>
+  </ng-template>
 </tunnel-layout>

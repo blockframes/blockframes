@@ -1,7 +1,8 @@
-import { loadAdminServices, MIGRATIONS } from "@blockframes/firebase-utils";
+import { loadAdminServices, MIGRATIONS, startMaintenance } from "@blockframes/firebase-utils";
 import { resolve } from "path";
 import { loadDBVersion } from "./migrations";
 import { firebase } from '@env'
+import { IMaintenanceDoc } from "@blockframes/utils/maintenance";
 
 export function showHelp() {
   console.log('TODO: write a documentation');
@@ -37,4 +38,20 @@ export async function displayCredentials() {
   console.log('Using default service account:\n', GAP);
 
   console.log('Local env.ts:\n', firebase())
+}
+
+export async function ensureMaintenanceMode(db: FirebaseFirestore.Firestore) {
+  console.log('Ensuring maintenance mode stays active in Firestore');
+  const maintenanceRef = db.collection('_META').doc('_MAINTENANCE');
+  await startMaintenance(db)
+  const unsubscribe = maintenanceRef.onSnapshot(async snap => {
+    const maintenance = snap.data() as IMaintenanceDoc;
+    if (maintenance.endedAt || !maintenance.startedAt) {
+      await startMaintenance(db)
+    }
+  })
+  return function () {
+    unsubscribe();
+    console.log('Maintenance mode insurance ended')
+  }
 }

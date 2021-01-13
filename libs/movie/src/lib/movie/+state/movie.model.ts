@@ -147,7 +147,6 @@ export function createMovieLanguageSpecification(
   params: Partial<MovieLanguageSpecification> = {}
 ): MovieLanguageSpecification {
   return {
-    original: false,
     dubbed: false,
     subtitle: false,
     caption: false,

@@ -5,7 +5,7 @@
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" selectable removable (removed)="form.removeAt(i)" (dblclick)="edit(i)">
         <span>{{ value | deepKey: displayWithPath }}</span>
-        <mat-icon matChipRemove svgIcon="close"></mat-icon>
+        <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
       </mat-chip>
     </ng-container>
     <input #input
@@ -14,8 +14,9 @@
       [formControl]="searchCtrl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
+      [matChipInputAddOnBlur]="addOnBlur"
       [matChipInputSeparatorKeyCodes]="separators"
-      (matChipInputTokenEnd)="add($event.value)"
+      (matChipInputTokenEnd)="add($event.value, 'input')"
       [placeholder]="placeholder"
       autocapitalize="off"
       autocorrect="off"
@@ -24,7 +25,7 @@
   </mat-chip-list>
 </mat-form-field>
 
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="add($event.option.value)">
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="add($event.option.value, 'autocomplete', addOnBlur)">
   <ng-container *ngFor="let result of algoliaSearchResults$ | async">
     <mat-option [value]="result">
       <ng-template

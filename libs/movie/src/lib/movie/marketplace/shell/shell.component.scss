@@ -16,8 +16,16 @@ footer {
   }
 
   bf-carousel {
+    margin-bottom: 24px;
     img {
       height: 100%; // Only necessary for Safari
+    }
+  }
+
+  .video-container {
+    p {
+      padding-top: 8px;
+      text-align: center;
     }
   }
 }

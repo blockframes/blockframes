@@ -31,6 +31,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    ConfirmModule,
 
     RouterModule.forChild([{ path: '', component: LobbyComponent }])
   ]

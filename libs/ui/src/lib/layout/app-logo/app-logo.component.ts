@@ -7,7 +7,7 @@ const appLogos: Record<App | 'crm', string> = {
   catalog: 'archipel_content_logo.svg',
   festival: 'logo_archipel_market_outline.svg',
   financiers: 'logo_media_financiers.svg',
-  crm: 'logo_archipel_market_outline.svg' // @TODO (#3081) change logo
+  crm: 'logo_archipel_market_outline.svg'
 };
 
 @Component({

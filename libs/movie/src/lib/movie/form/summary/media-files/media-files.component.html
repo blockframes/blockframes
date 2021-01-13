@@ -1,29 +1,29 @@
 <h6>
   Files
   <a mat-icon-button [routerLink]="link" fragment="files">
-    <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    <mat-icon svgIcon="edit" color="primary"></mat-icon>
   </a>
 </h6>
 <ul>
   <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <strong> Presentation Deck </strong>
-    <missing-control [control]="movie.promotional.get('presentation_deck').get('ref')" [link]="link" fragment="files">
+    <bf-preview-modal [ref]="movie.promotional.get('presentation_deck').ref.value"><strong> Presentation Deck </strong></bf-preview-modal>
+    <missing-control [control]="movie.promotional.get('presentation_deck').ref" [link]="link" fragment="files">
       <ng-template let-deck>
         {{ deck | fileName | maxLength: 30  }}
       </ng-template>
     </missing-control>
   </li>
   <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <strong> Scenario </strong>
-    <missing-control [control]="movie.promotional.get('scenario').get('ref')" fragment="files" [link]="link">
+    <bf-preview-modal [ref]="movie.promotional.get('scenario').ref.value"><strong> Scenario </strong></bf-preview-modal>
+    <missing-control [control]="movie.promotional.get('scenario').ref" fragment="files" [link]="link">
       <ng-template let-scenario>
         {{ scenario | fileName | maxLength: 30  }}
       </ng-template>
     </missing-control>
   </li>
   <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <strong> Moodboard / Artistic Deck </strong>
-    <missing-control [control]="movie.promotional.get('moodboard').get('ref')" fragment="files" [link]="link">
+    <bf-preview-modal [ref]="movie.promotional.get('moodboard').ref.value"><strong> Moodboard / Artistic Deck </strong></bf-preview-modal>
+    <missing-control [control]="movie.promotional.get('moodboard').ref" fragment="files" [link]="link">
       <ng-template let-moodboard>
         {{ moodboard | fileName | maxLength: 30  }}
       </ng-template>

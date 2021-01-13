@@ -4,17 +4,17 @@
 
     <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
       <button mat-stroked-button color="primary" (click)="downloadTemplate('movie')">
-        <mat-icon svgIcon="import"></mat-icon><span>Download our template to import in bulk</span>
+        <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our template to import in bulk</span>
       </button>
       <ng-container *ngIf="isUserBlockframesAdmin">
         <button mat-stroked-button color="primary" (click)="downloadTemplate('rights')">
-          <mat-icon svgIcon="import"></mat-icon><span>Download our excel distribution rights template</span>
+          <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our excel distribution rights template</span>
         </button>
         <button mat-stroked-button color="primary" (click)="downloadTemplate('contracts')">
-          <mat-icon svgIcon="import"></mat-icon><span>Download our excel contracts template</span>
+          <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our excel contracts template</span>
         </button>
         <button mat-stroked-button color="primary" (click)="downloadTemplate('organizations')">
-          <mat-icon svgIcon="import"></mat-icon><span>Download our excel organization template</span>
+          <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our excel organization template</span>
         </button>
       </ng-container>
     </div>
@@ -47,11 +47,11 @@
     </ng-container>
 
     <ng-template #fileUpload>
-      <file-upload [allowedFileType]="['xls', 'csv']"
+      <file-uploader [allowedFileType]="['xls', 'csv']"
         [storagePath]=""
         [form]="excelForm">
         <h3 title>Upload File</h3>
-      </file-upload>
+      </file-uploader>
 
     </ng-template>
   </section>
@@ -61,7 +61,7 @@
     <section fxLayout="row" fxLayoutAlign="end center">
       <ng-container *ngIf="sheets.length">
         <button mat-flat-button color="warn" (click)="removeFile()">
-          <mat-icon svgIcon="trash"></mat-icon>
+          <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-container>
 
