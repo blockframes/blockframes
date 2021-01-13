@@ -12,7 +12,7 @@ import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
-import { MeetingMediaListModule } from '@blockframes/event/components/meeting/media-list/media-list.module';
+import { FileCarouselModule } from '@blockframes/media/file/carousel/carousel.module';
 import { MeetingVideoRoomModule } from '@blockframes/event/components/meeting/room/video-room.module';
 import { DoorbellBottomSheetModule } from '@blockframes/event/components/doorbell/doorbell.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
@@ -35,7 +35,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     EventTimeModule,
     OrgNameModule,
     MediaPlayerModule,
-    MeetingMediaListModule,
+    FileCarouselModule,
     FileNameModule,
     MediaControlModule,
     MediaViewerModule,
