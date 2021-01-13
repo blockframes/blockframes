@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileFormComponent } from './profile.component';
@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    CropperModule,
+    ImageUploaderModule,
     ReactiveFormsModule,
     ReferencePathModule,
     // Material

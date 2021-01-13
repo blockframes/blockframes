@@ -10,7 +10,7 @@ import { MarketplaceMovieViewComponent } from './view.component';
 
 // Custom Modules
 import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
@@ -76,7 +76,7 @@ const routes = [
     ReactiveFormsModule,
     FlexLayoutModule,
     MovieShellModule,
-    ImageReferenceModule,
+    ImageModule,
     MovieHeaderModule,
     OrgChipModule,
     WishlistButtonModule,

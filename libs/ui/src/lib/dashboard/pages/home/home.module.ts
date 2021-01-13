@@ -18,7 +18,7 @@ import { HomeComponent } from './home.component';
 
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 @NgModule({
@@ -27,9 +27,9 @@ import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-
     CommonModule,
     FlexLayoutModule,
     MovieAnalyticsChartModule,
-    ImageReferenceModule,
+    ImageModule,
     NoTitleModule,
-    
+
     // Material
     MatButtonModule,
     MatIconModule,

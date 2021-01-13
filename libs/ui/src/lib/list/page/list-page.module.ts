@@ -13,7 +13,7 @@ import { MatRippleModule } from '@angular/material/core';
 
 // Blockframes
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 
 // Component and Directives
@@ -34,9 +34,8 @@ import {
     CommonModule,
     RouterModule,
     MatLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     FlexLayoutModule,
-    ImageReferenceModule,
     AppBarModule,
 
     // Material

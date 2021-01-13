@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
 import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
 
@@ -41,7 +41,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     SearchWidgetModule,
     AuthWidgetModule,
     AlgoliaAutocompleteModule,
-    ImageReferenceModule,
+    ImageModule,
     AppBarModule,
     ScrollingModule,
     AppLogoModule,

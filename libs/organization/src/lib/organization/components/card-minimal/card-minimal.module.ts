@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationCardMinimalComponent } from './card-minimal.component';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 
@@ -15,7 +15,7 @@ import { OrgNameModule } from '../../pipes/org-name.pipe';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     OrgNameModule,
   ]
 })

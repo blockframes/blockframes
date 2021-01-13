@@ -5,7 +5,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { MediaService } from "@blockframes/media/+state/media.service";
-import { ImageParameters } from "@blockframes/media/directives/image-reference/imgix-helpers";
+import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen  } from '../utils';

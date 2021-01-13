@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 import { LandingShellModule } from '@blockframes/landing/shell/shell.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Pages
 import { CatalogLandingComponent } from './landing.component';
@@ -36,7 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
     AppLogoModule,
     TelInputModule,
     LandingShellModule,
-    ImageReferenceModule,
+    ImageModule,
 
     // Material
     MatIconModule,

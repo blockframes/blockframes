@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { OrgNameModule, OrgAddressModule } from '@blockframes/organization/pipes';
@@ -25,7 +25,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     AppBarModule,
     ToLabelModule,
     OrgNameModule,

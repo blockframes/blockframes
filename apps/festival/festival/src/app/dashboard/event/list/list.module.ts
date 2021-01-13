@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { EventLinkModule } from '@blockframes/event/pipes/event-link.pipe';
 import { AppBarModule } from '@blockframes/ui/app-bar';
@@ -25,7 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
     FlexLayoutModule,
     ReactiveFormsModule,
     EventModule,
-    ImageReferenceModule,
+    ImageModule,
     DisplayNameModule,
     EventLinkModule,
     EventCardModule,

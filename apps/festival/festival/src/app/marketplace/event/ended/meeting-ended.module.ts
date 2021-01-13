@@ -7,7 +7,7 @@ import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 
 import { MeetingEndedComponent } from './meeting-ended.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [ MeetingEndedComponent ],
@@ -15,7 +15,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     CommonModule,
     DurationModule,
     EventRangeModule,
-    ImageReferenceModule,
+    ImageModule,
 
     RouterModule.forChild([{ path: '', component: MeetingEndedComponent }])
   ],

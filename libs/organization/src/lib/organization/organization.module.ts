@@ -7,8 +7,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Library
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
@@ -70,8 +70,8 @@ export const organizationRoutes: Routes = [
     AvatarListModule,
     FileUploaderModule,
     PasswordConfirmModule,
-    CropperModule,
-    ImageReferenceModule,
+    ImageUploaderModule,
+    ImageModule,
     OrganizationFormModule,
     TableFilterModule,
     OrganizationDisplayModule,
