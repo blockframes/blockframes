@@ -28,7 +28,6 @@ import { SummaryBudgetComponent } from './budget/budget.component';
     MaxLengthModule,
     PerksPipeModule,
     FundingsPipeModule,
-    EmptyImagePipeModule,
     BudgetPipeModule,
     FlexLayoutModule,
     TableFilterModule,
