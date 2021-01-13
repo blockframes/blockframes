@@ -11,7 +11,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { FilePreviewDialogComponent } from '../../preview-dialog/preview-dialog.component';
+import { FilePreviewComponent } from '../../preview/preview.component';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 // File explorer
@@ -140,6 +140,6 @@ export class MultipleFilesViewComponent implements OnInit {
   }
 
   public previewFile(ref: string) {
-    this.dialog.open(FilePreviewDialogComponent, { data: { ref }, width: '80vw', height: '80vh' })
+    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 }

@@ -7,7 +7,7 @@ import { EditComponent } from './edit.component';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { FilePickerModule } from '@blockframes/media/file/picker/picker.module';
 import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
-import { FilePreviewDialogModule } from '@blockframes/media/file/preview-dialog/preview-dialog.module';
+import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';
@@ -36,7 +36,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FilePickerModule,
     FileNameModule,
     ClipboardModule,
-    FilePreviewDialogModule,
+    FilePreviewModule,
 
     // Material
     MatProgressSpinnerModule,

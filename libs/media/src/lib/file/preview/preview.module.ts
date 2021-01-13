@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { FilePreviewDialogComponent } from './preview-dialog.component';
+import { FilePreviewComponent } from './preview.component';
 
 import { PdfModule } from '@blockframes/media/components/pdf/pdf.module';
 import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
@@ -23,6 +23,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatDialogModule
   ],
   exports: [],
-  declarations: [FilePreviewDialogComponent],
+  declarations: [FilePreviewComponent],
 })
-export class FilePreviewDialogModule { }
+export class FilePreviewModule { }
