@@ -54,7 +54,7 @@ export async function upgrade(db: Firestore) {
         }
 
         if(data.promotional?.videos?.screener?.type === trailerTypo as any) {
-            data.promotional.videos.screener.type === 'trailer';
+            data.promotional.videos.screener.type = 'trailer';
         }
 
         if(data.promotional?.videos?.otherVideos?.length) {
