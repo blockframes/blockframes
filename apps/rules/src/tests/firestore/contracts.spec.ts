@@ -6,6 +6,14 @@
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 //import { Contract } from '@blockframes/contract/+state';
+import path from 'path';
+
+console.log(path.dirname('.'));
+console.log(process.cwd());
+
+
+
+const rulesPath = `../../firestore.rules`;
 
 describe('Contracts Rules Tests', () => {
   const projectId = `ctrules-spec-${Date.now()}`;
@@ -13,7 +21,7 @@ describe('Contracts Rules Tests', () => {
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
+      db = await initFirestoreApp(projectId, rulesPath, testFixture, { uid: 'uid-sAdmin' });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -50,7 +58,7 @@ describe('Contracts Rules Tests', () => {
 
   describe.only('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, rulesPath, testFixture, { uid: 'uid-user2' });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -75,7 +83,7 @@ describe.skip('Public Contracts Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, rulesPath, testFixture, { uid: 'uid-user2' });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
