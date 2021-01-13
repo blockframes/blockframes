@@ -179,16 +179,20 @@ function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfi
 }
 
 async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {
-  const orgsWithWishlists = await db.collection('orgs').where('wishlist', 'array-contains', movie.id).get();
-
+  const collection = db.collection('orgs');
+  const orgsWithWishlists = await collection.where('wishlist', 'array-contains', movie.id).get();
+  const updates: Promise<any>[] = [];
   for (const o of orgsWithWishlists.docs) {
     const org = o.data();
     org.wishlist = org.wishlist.filter(movieId => movieId !== movie.id);
     if (batch) {
       batch.update(o.ref, org);
     } else {
-      await db.collection('orgs').doc(org.id).set({ wishlist: org.wishlist }, { merge: true });
+      const update = collection.doc(org.id).set({ wishlist: org.wishlist }, { merge: true });
+      updates.push(update);
     }
   }
-
+  if (updates.length) {
+    await (Promise as any).allSettled(updates);
+  }
 }

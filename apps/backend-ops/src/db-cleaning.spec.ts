@@ -199,7 +199,7 @@ describe('DB cleaning script', () => {
     const testMovies = [{ id: 'mov-A', storeConfig: { status: 'accepted' } }, { id: 'mov-B', storeConfig: { status: 'draft' } }, { id: 'mov-C', storeConfig: { status: 'refused' } }];
 
     const testOrgs = [
-      { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid], wishlist: [] },
+      { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid] },
       { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'fakeUid'], wishlist: [] },
       { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['mov-C', 'mov-D', 'mov-A'] },
       { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['mov-B'] }
@@ -230,7 +230,6 @@ describe('DB cleaning script', () => {
     expect(cleanedOrgs.length).toEqual(testOrgs.length);
 
     const orgA = cleanedOrgs.find(o => o.data().id === 'org-A');
-    expect(orgA.data().wishlist.length).toEqual(0);
     expect(orgA.data().userIds.length).toEqual(1);
 
     const orgB = cleanedOrgs.find(o => o.data().id === 'org-B');
@@ -645,7 +644,7 @@ function isOrgClean(
     return movie.storeConfig.status === 'accepted'
   }).map(m => m.id);
 
-  const { userIds, wishlist } = o;
+  const { userIds = [], wishlist = [] } = o;
   const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
   const validMovieIds = wishlist.filter(movieId => existingAndValidMovieIds.includes(movieId));
 
