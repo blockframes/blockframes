@@ -26,7 +26,7 @@ export class CatalogLandingComponent {
   public sellerFeatures = [
     {
       title: 'Import your content easily',
-      imgAsset: 'bulk_import.webp',
+      imgAsset: 'add_files.webp',
       description: 'Upload your films’ data, promotional elements and rights availabilities directly on the platform or by uploading an Excel template.'
     },
     {
