@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FileExplorerComponent } from './explorer.component';
 
 // Blockframes
-import { FileDialogModule } from '@blockframes/media/components/dialog/file/file.module';
+import { FileExplorerUploaderDialogModule } from './components/uploader-dialog/uploader-dialog.module';
 import { ImageDialogModule } from '@blockframes/media/components/dialog/image/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
@@ -29,7 +29,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     FlexLayoutModule,
 
     // Blockframes
-    FileDialogModule,
+    FileExplorerUploaderDialogModule,
     ImageDialogModule,
     TableFilterModule,
     MaxLengthModule,
