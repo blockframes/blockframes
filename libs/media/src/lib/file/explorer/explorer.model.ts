@@ -1,6 +1,6 @@
 import { Privacy } from "@blockframes/utils/file-sanitizer";
 import { FormList } from "@blockframes/utils/form";
-import { MediaRatioType } from "../cropper/cropper.component";
+import { MediaRatioType } from "../../components/cropper/cropper.component";
 import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { isMediaForm } from "@blockframes/media/+state/media.model";

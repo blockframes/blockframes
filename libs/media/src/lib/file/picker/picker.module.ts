@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Blockframes
 import { MediaViewerModule } from '@blockframes/media/components/dialog/file-viewer/viewer.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { FileSelectorComponent } from './file-selector.component';
+import { FilePickerComponent } from './picker.component';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 
 // Material
@@ -21,7 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [FileSelectorComponent],
+  declarations: [FilePickerComponent],
   imports: [
     CommonModule,
     FileNameModule,
@@ -40,6 +40,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatTooltipModule,
     MatProgressSpinnerModule,
   ],
-  exports: [FileSelectorComponent],
+  exports: [FilePickerComponent],
 })
-export class FileSelectorModule { }
+export class FilePickerModule { }

@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
-import { FileSelectorComponent } from '@blockframes/media/components/file-selector/file-selector.component';
+import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
 import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { ViewerDialogComponent } from '@blockframes/media/components/dialog/file-viewer/viewer.component';
@@ -76,7 +76,7 @@ export class EditComponent implements OnInit, OnDestroy {
       const app = getCurrentApp(this.routerQuery);
       const url = applicationUrl[app];
       this.link = `${url}/c/o/marketplace/event/${event.id}/lobby`;
- 
+
       this.type = event.type;
       this.form = new EventForm(event);
 
@@ -112,13 +112,13 @@ export class EditComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
     this.files.removeAt(index);
   }
-  
+
   previewFile(ref: string) {
     this.dialog.open(ViewerDialogComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 
   openFileSelector() {
-    this.dialog.open(FileSelectorComponent, {
+    this.dialog.open(FilePickerComponent, {
       width: '80%',
       height: '80%',
       disableClose: true,

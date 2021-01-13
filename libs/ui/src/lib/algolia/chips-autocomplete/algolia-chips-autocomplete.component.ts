@@ -80,6 +80,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
    * Using an attribute that hasnt been used before? make sure to add it to Facets on Algolia */
   @Input() @boolean unique;
 
+  @Input() @boolean addOnBlur = false;
+
+  /**
+   * Set whether it is allowed to add custom values instead of Algolia results only
+   */
+  @Input() @boolean customInput = false;
+
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
@@ -117,7 +124,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  add(value: any) {
+  /**
+   * @param replaceLastValue Set whether the last value in the form has to be replaced. This hides a bug caused by OnBlur adding the typed value when an autocomplete-option is selected.
+   */
+  add(value: any, source: 'autocomplete' | 'input', replaceLastValue = false) {
+    if (source === 'input' && !this.customInput) return;
+    if (replaceLastValue) this.form.removeAt(this.form.length - 1);
+
     const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
     for (const v of values) {
       if (this.unique && !!v && !!v[this.displayWithPath]) this.addedFilters.push(v[this.displayWithPath]);
