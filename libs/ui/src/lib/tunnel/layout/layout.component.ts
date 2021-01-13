@@ -14,7 +14,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep, TunnelStepSnapshot } from '../tunnel.model';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent } from '@angular/material/sidenav';
 import { Router, NavigationEnd, RouterOutlet, ActivatedRoute } from '@angular/router';
@@ -113,7 +113,10 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     console.log('à l\'initialization :', this.steps);
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd))
+      tap(_=>console.log('avant filter')),
+
+      filter(event => event instanceof NavigationEnd),
+      tap(_=>console.log('après filter')))
       .subscribe(() => {
         this.sidenavContent.scrollTo({ top: 0 })
         this.getRoute();
