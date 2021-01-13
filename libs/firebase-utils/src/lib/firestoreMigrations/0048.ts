@@ -29,33 +29,27 @@ export async function upgrade(db: Firestore) {
         }
 
         if (data?.originalRelease.length) {
-            data.originalRelease = data.originalRelease.map(release => {
-                return {
+            data.originalRelease = data.originalRelease.map(release => ({
                     ...release,
                     country: patchKey(release.country),
-                }
-            })
+                }))
          }
 
         if (data?.shooting?.locations.length) {
-            data.shooting.locations = data.shooting.locations.map(location => {
-                return {
+            data.shooting.locations = data.shooting.locations.map(location => ({
                     ...location,
                     country: patchKey(location.country),
-                }
-            })
+            }))
         }
 
         const stakeholdersKeys = Object.keys(data?.stakeholders);
 
         if (stakeholdersKeys.length) {
             stakeholdersKeys.forEach(stakeholder => {
-                data.stakeholders[stakeholder] = data.stakeholders[stakeholder].map(holder => {
-                    return {
+                data.stakeholders[stakeholder] = data.stakeholders[stakeholder].map(holder => ({
                         ...holder,
                         countries: holder.countries.map(patchKey),
-                    }
-                })
+                    }))
             })
         }
 
