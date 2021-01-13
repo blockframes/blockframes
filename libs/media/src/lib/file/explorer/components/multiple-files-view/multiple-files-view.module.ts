@@ -10,7 +10,7 @@ import { ToArrayPipeModule } from '@blockframes/utils/pipes/to-array.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
-import { MediaViewerModule } from '@blockframes/media/components/dialog/file-viewer/viewer.module';
+import { FilePreviewDialogModule } from '../../../preview-dialog/preview-dialog.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     ToArrayPipeModule,
     FileNameModule,
     DeepKeyPipeModule,
-    MediaViewerModule,
+    FilePreviewDialogModule,
     ConfirmModule,
 
     // Material

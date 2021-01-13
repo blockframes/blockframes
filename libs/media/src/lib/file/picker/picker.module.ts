@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { MediaViewerModule } from '@blockframes/media/components/dialog/file-viewer/viewer.module';
+import { FilePreviewDialogModule } from '@blockframes/media/file/preview-dialog/preview-dialog.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { FilePickerComponent } from './picker.component';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
@@ -27,7 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FileNameModule,
     MaxLengthModule,
     FlexLayoutModule,
-    MediaViewerModule,
+    FilePreviewDialogModule,
 
     MatExpansionModule,
     MatIconModule,

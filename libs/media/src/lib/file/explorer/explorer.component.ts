@@ -18,8 +18,8 @@ import { sortMovieBy } from '@blockframes/utils/helpers';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 // File Explorer
-import { ImageDialogComponent } from '../../components/dialog/image/image.component';
-import { FileDialogComponent } from '../../components/dialog/file/file.component';
+import { FileExplorerCropperDialogComponent } from './components/cropper-dialog/cropper-dialog.component';
+import { FileExplorerUploaderDialogComponent } from './components/uploader-dialog/uploader-dialog.component';
 import {
   createMovieFileStructure,
   createOrgFileStructure,
@@ -160,9 +160,9 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     }
 
     // opening file/image upload dialog
-    let dialog: MatDialogRef<FileDialogComponent | ImageDialogComponent>;
+    let dialog: MatDialogRef<FileExplorerUploaderDialogComponent | FileExplorerCropperDialogComponent>;
     if (this.activeDirectory.type === 'file') {
-      dialog = this.dialog.open(FileDialogComponent, {
+      dialog = this.dialog.open(FileExplorerUploaderDialogComponent, {
         width: '60vw',
         data: {
           form: mediaForm,
@@ -172,7 +172,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
         },
       });
     } else if (this.activeDirectory.type === 'image') {
-      dialog = this.dialog.open(ImageDialogComponent, {
+      dialog = this.dialog.open(FileExplorerCropperDialogComponent, {
         width: '60vw',
         data: {
           form: mediaForm,

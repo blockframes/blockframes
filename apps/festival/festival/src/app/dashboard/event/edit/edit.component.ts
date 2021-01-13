@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
 import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { ViewerDialogComponent } from '@blockframes/media/components/dialog/file-viewer/viewer.component';
+import { FilePreviewDialogComponent } from '@blockframes/media/file/preview-dialog/preview-dialog.component';
 
 @Component({
   selector: 'festival-event-edit',
@@ -114,7 +114,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   previewFile(ref: string) {
-    this.dialog.open(ViewerDialogComponent, { data: { ref }, width: '80vw', height: '80vh' })
+    this.dialog.open(FilePreviewDialogComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 
   openFileSelector() {
