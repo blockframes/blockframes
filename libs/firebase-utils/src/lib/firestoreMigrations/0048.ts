@@ -6,58 +6,76 @@ import { OrganizationDocument } from '@blockframes/organization/+state/organizat
 
 const coteDIvoire = 'cote-d-ivoire' as Territory;
 const antartica = 'antartica' as Territory;
+const trailerTypo = 'tailer';
 
 export async function upgrade(db: Firestore) {
     const movies = await db.collection('movies').get();
     const orgs = await db.collection('orgs').get();
 
     const patchKey = (country: Territory) => {
-        if(country === coteDIvoire) {
+        if (country === coteDIvoire) {
             return 'ivory-coast-cote-d-ivoire'
         } else if (country === antartica) {
             return 'antarctica'
-        } 
+        }
         return country
     }
 
     await runChunks(movies.docs, async (movie) => {
         const data = movie.data() as MovieDocument;
 
-        if(data.originCountries.includes(coteDIvoire) || data.originCountries.includes(antartica)) {
+        if (data.originCountries.includes(coteDIvoire) || data.originCountries.includes(antartica)) {
             data.originCountries = data.originCountries.map(patchKey)
         }
 
-        if(data?.originalRelease.length) {
+        if (data?.originalRelease.length) {
             data.originalRelease = data.originalRelease.map(release => {
-             return {
-                country: patchKey(release.country),
-                 ...release
-                }  
+                return {
+                    ...release,
+                    country: patchKey(release.country),
+                }
             })
-        }
+         }
 
-        if(data?.shooting?.locations.length) {
+        if (data?.shooting?.locations.length) {
             data.shooting.locations = data.shooting.locations.map(location => {
                 return {
-                    country:  patchKey(location.country),
-                    ...location
+                    ...location,
+                    country: patchKey(location.country),
                 }
             })
         }
 
         const stakeholdersKeys = Object.keys(data?.stakeholders);
 
-        if(stakeholdersKeys.length) {
+        if (stakeholdersKeys.length) {
             stakeholdersKeys.forEach(stakeholder => {
                 data.stakeholders[stakeholder] = data.stakeholders[stakeholder].map(holder => {
                     return {
+                        ...holder,
                         countries: holder.countries.map(patchKey),
-                        ...holder
                     }
                 })
             })
         }
-       await movie.ref.set(data);
+
+        if(data.promotional?.videos?.screener?.type === trailerTypo as any) {
+            data.promotional.videos.screener.type === 'trailer';
+        }
+
+        if(data.promotional?.videos?.otherVideos?.length) {
+            data.promotional.videos.otherVideos = data.promotional.videos.otherVideos.map(video => {
+                if (video.type === trailerTypo as any) {
+                    return {
+                        ...video,
+                        type: 'trailer'
+                    }
+                } 
+                return video
+            })
+        }
+
+        await movie.ref.set(data);
     })
 
     return runChunks(orgs.docs, async (org) => {
@@ -65,12 +83,12 @@ export async function upgrade(db: Firestore) {
 
         const addressesKeys = Object.keys(data.addresses);
 
-        if(addressesKeys.length) {
+        if (addressesKeys.length) {
             addressesKeys.forEach(address => {
                 data.addresses[address].country = patchKey(data.addresses[address].country);
             })
         }
 
-      await org.ref.set(data);
+        await org.ref.set(data);
     })
 }
