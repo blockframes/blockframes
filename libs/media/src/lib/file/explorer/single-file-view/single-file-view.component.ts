@@ -18,7 +18,7 @@ import {
   MediaFormTypes,
   SubDirectoryFile,
   SubDirectoryImage
-} from '../../explorer.model';
+} from '../explorer.model';
 
 @Component({
   selector: 'file-explorer-single-file-view',
