@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FileExplorerCropperDialogComponent } from './cropper-dialog.component';
 
 // Blockframes
-import { CropperModule } from '../../../../components/cropper/cropper.module';
+import { CropperModule } from '../../../components/cropper/cropper.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

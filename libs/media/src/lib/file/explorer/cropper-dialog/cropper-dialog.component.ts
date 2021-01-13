@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { MediaRatioType } from '../../../../components/cropper/cropper.component';
-import { isHostedMediaForm } from '../../explorer.model';
+import { MediaRatioType } from '../../../components/cropper/cropper.component';
+import { isHostedMediaForm } from '../explorer.model';
 
 @Component({
   selector: 'file-explorer-cropper-dialog',

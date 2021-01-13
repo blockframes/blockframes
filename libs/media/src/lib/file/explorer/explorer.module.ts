@@ -5,15 +5,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FileExplorerComponent } from './explorer.component';
 
 // Blockframes
-import { FileExplorerUploaderDialogModule } from './components/uploader-dialog/uploader-dialog.module';
-import { FileExplorerCropperDialogModule } from './components/cropper-dialog/cropper-dialog.module';
+import { FileExplorerUploaderDialogModule } from './uploader-dialog/uploader-dialog.module';
+import { FileExplorerCropperDialogModule } from './cropper-dialog/cropper-dialog.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // File explorer
-import { MultipleFilesViewModule } from './components/multiple-files-view/multiple-files-view.module';
-import { SingleFileViewModule } from './components/single-file-view/single-file-view.module';
+import { MultipleFilesViewModule } from './multiple-files-view/multiple-files-view.module';
+import { SingleFileViewModule } from './single-file-view/single-file-view.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';

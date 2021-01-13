@@ -11,7 +11,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { FilePreviewDialogComponent } from '../../../preview-dialog/preview-dialog.component';
+import { FilePreviewDialogComponent } from '../../preview-dialog/preview-dialog.component';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 // File explorer
@@ -24,7 +24,7 @@ import {
   SubDirectoryFile,
   SubDirectoryImage,
   getDeepPath
-} from '../../explorer.model';
+} from '../explorer.model';
 
 const columns = {
   ref: { value: 'Type', disableSort: true },

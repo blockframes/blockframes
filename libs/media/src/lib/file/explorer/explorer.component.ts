@@ -18,8 +18,8 @@ import { sortMovieBy } from '@blockframes/utils/helpers';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 // File Explorer
-import { FileExplorerCropperDialogComponent } from './components/cropper-dialog/cropper-dialog.component';
-import { FileExplorerUploaderDialogComponent } from './components/uploader-dialog/uploader-dialog.component';
+import { FileExplorerCropperDialogComponent } from './cropper-dialog/cropper-dialog.component';
+import { FileExplorerUploaderDialogComponent } from './uploader-dialog/uploader-dialog.component';
 import {
   createMovieFileStructure,
   createOrgFileStructure,
