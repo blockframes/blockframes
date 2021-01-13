@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { FormDisplayNameModule } from '@blockframes/ui/form/display-name/display-name.module';
 
-import { FileDialogComponent } from './file.component';
+import { FileExplorerUploaderDialogComponent } from './uploader-dialog.component';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
-  declarations: [FileDialogComponent],
+  declarations: [FileExplorerUploaderDialogComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -37,4 +37,4 @@ import { MatSelectModule } from '@angular/material/select';
     MatSelectModule
   ],
 })
-export class FileDialogModule { }
+export class FileExplorerUploaderDialogModule { }

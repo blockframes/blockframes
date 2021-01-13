@@ -9,13 +9,13 @@ import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-
 import { AllowedFileType } from '@blockframes/utils/utils';
 
 @Component({
-  selector: 'file-dialog',
-  templateUrl: 'file.component.html',
-  styleUrls: ['./file.component.scss'],
+  selector: 'file-explorer-uploader-dialog',
+  templateUrl: 'uploader-dialog.component.html',
+  styleUrls: ['./uploader-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FileDialogComponent implements OnInit {
+export class FileExplorerUploaderDialogComponent implements OnInit {
 
   hostedMediaWithMetadataForm: HostedMediaWithMetadataForm;
   movieNotesForm: MovieNotesForm;
@@ -24,7 +24,7 @@ export class FileDialogComponent implements OnInit {
   roles = ['producer', 'director', 'other'];
 
   constructor(
-    private dialogRef: MatDialogRef<FileDialogComponent>,
+    private dialogRef: MatDialogRef<FileExplorerUploaderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { form: HostedMediaWithMetadataForm | MovieNotesForm | MovieHostedVideoForm, privacy: Privacy, storagePath: string, acceptedFileType: AllowedFileType}
   ) {}
 
