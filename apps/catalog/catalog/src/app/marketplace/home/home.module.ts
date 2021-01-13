@@ -15,7 +15,7 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
-import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 
 // Pipes
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
@@ -24,7 +24,7 @@ import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
   declarations: [MarketplaceHomeComponent],
   imports: [
     CommonModule,
-    CropperModule,
+    ImageUploaderModule,
     MatButtonModule,
     FlexLayoutModule,
     SliderModule,

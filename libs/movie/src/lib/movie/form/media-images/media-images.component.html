@@ -7,9 +7,9 @@
       <h6 class="mat-caption">Promotional Images</h6>
       <ng-container *ngFor="let still of stillPhoto.controls; let i = index; trackBy: trackByFn">
         <article>
-          <drop-cropper [storagePath]="movieId | ref: 'movie' : 'still'" ratio="still" [form]="still">
+          <image-uploader [storagePath]="movieId | ref: 'movie' : 'still'" ratio="still" [form]="still">
             <h3 title>Stills</h3>
-          </drop-cropper>
+          </image-uploader>
           <span class="mat-caption">Please note that this document will be available for download on the
             marketplace.</span>
         </article>

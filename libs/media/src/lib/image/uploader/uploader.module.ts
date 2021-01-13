@@ -10,11 +10,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Components
-import { CropperComponent } from './cropper.component';
+import { ImageUploaderComponent } from './uploader.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
-  declarations: [CropperComponent],
+  declarations: [ ImageUploaderComponent ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -27,6 +27,6 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     MatTooltipModule,
     ClipboardModule
   ],
-  exports: [CropperComponent]
+  exports: [ ImageUploaderComponent ]
 })
-export class CropperModule { }
+export class ImageUploaderModule { }

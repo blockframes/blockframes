@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +30,7 @@ export const profileRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    CropperModule,
+    ImageUploaderModule,
     ImageModule,
     MatListModule,
     MatCardModule,

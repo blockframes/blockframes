@@ -52,9 +52,9 @@
           The poster image will be used as the main image to represent your film on the marketplace, and, more
           generally, for all film components requiring vertical formats on the marketplace.
         </p>
-        <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
+        <image-uploader [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 title>Film Poster</h3>
-        </drop-cropper>
+        </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the
           marketplace.</span>
       </article>
@@ -65,9 +65,9 @@
           The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
           for all film components requiring horizontal formats on the marketplace.
         </p>
-        <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
+        <image-uploader [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
           <h3 title>Film Banner Image</h3>
-        </drop-cropper>
+        </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the
           marketplace.</span>
       </article>

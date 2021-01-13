@@ -20,7 +20,7 @@ import { OrganizationComponent } from './organization.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationDisplayModule } from '@blockframes/organization/components/organization-display/organization-display.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
 import { MemberPendingModule } from '@blockframes/organization/components/member-pending/member-pending.module';
 import { MemberRequestModule } from '@blockframes/organization/components/member-request/member-request.module';
@@ -47,7 +47,7 @@ import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.mo
     OrganizationDisplayModule,
     TableFilterModule,
     ImageModule,
-    CropperModule,
+    ImageUploaderModule,
     MemberRepertoryModule,
     MemberPendingModule,
     MemberRequestModule,

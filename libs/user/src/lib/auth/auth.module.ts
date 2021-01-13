@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
-import { CropperModule } from '@blockframes/media/image/cropper/cropper.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Angular Fire
@@ -59,7 +59,7 @@ export const AuthRoutes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    CropperModule,
+    ImageUploaderModule,
     TermsConditionsModule,
     PrivacyPolicyModule,
     AcceptConditionsModule,

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { MediaRatioType } from '../../../image/cropper/cropper.component';
+import { MediaRatioType } from '../../../image/uploader/uploader.component';
 import { isHostedMediaForm } from '../explorer.model';
 
 @Component({

@@ -34,12 +34,12 @@ function b64toBlob(data: string) {
   return new Blob([ab], { type });
 }
 @Component({
-  selector: 'drop-cropper',
-  templateUrl: './cropper.component.html',
-  styleUrls: ['./cropper.component.scss'],
+  selector: 'image-uploader',
+  templateUrl: './uploader.component.html',
+  styleUrls: ['./uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CropperComponent implements OnInit {
+export class ImageUploaderComponent implements OnInit {
 
   ////////////////////////
   // Private Variables //
