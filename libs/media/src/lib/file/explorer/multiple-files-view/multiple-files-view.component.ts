@@ -6,7 +6,7 @@ import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firesto
 import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -42,7 +42,7 @@ export class MultipleFilesViewComponent implements OnInit {
 
   public getDeepPath = getDeepPath
 
-  public active$: Observable<Movie | OrganizationDocumentWithDates>
+  public active$: Observable<Movie | Organization>
 
   public columns = columns;
   public initialColumns = Object.keys(columns);
@@ -124,7 +124,7 @@ export class MultipleFilesViewComponent implements OnInit {
     });
   }
 
-  public async downloadFile(item: Partial<HostedMediaWithMetadata | OrganizationDocumentWithDates>, event: Event) {
+  public async downloadFile(item: Partial<HostedMediaWithMetadata | Organization>, event: Event) {
     event.stopPropagation();
     const ref = this.activeDirectory.fileRefField ? item[this.activeDirectory.fileRefField] : item;
     const url = await this.mediaService.generateImgIxUrl(ref);
@@ -132,11 +132,11 @@ export class MultipleFilesViewComponent implements OnInit {
   }
 
   public getFileRef(row: HostedMediaWithMetadata | MovieNote | string) {
-    return typeof(row) === "string" ? row : row[this.activeDirectory.fileRefField];
+    return typeof (row) === "string" ? row : row[this.activeDirectory.fileRefField];
   }
 
   public getTitleRef(row: HostedMediaWithMetadata | MovieNote | string) {
-    return typeof(row) === "string" ? row : row[this.activeDirectory.docNameField];
+    return typeof (row) === "string" ? row : row[this.activeDirectory.docNameField];
   }
 
   public previewFile(ref: string) {
