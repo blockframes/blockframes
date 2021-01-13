@@ -25,7 +25,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   @HostBinding('srcset') srcset: string;
   @HostBinding('src') src: string;
   @HostBinding('alt') alt: string;
-  @HostBinding('loading') loading = 'lazy';
+  @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy';
 
   // -----------------------------------
   //           MEDIA IMAGE INPUT
@@ -34,6 +34,10 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   /** the image to display */
   @Input() set ref(image: string) {
     this.ref$.next(image);
+  }
+
+  @Input() set loading(strategy: 'lazy' | 'eager') {
+    this._loading = strategy;
   }
 
   // -----------------------------------
