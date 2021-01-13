@@ -21,7 +21,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ConfirmModule,
 
     ImageReferenceModule,
     MeetingVideoModule,
