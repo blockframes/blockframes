@@ -6,7 +6,7 @@
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
           <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
-            <span>Contact Sales Agent</span>
+            <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </ng-container>
