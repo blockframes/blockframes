@@ -7,6 +7,7 @@ import { MovieService } from '@blockframes/movie/+state';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';
+import { ConsentsService } from '../../../../../../consents/src/lib/+state/consents.service';
 
 @Component({
   selector: 'movie-form-start-tunnel',
@@ -18,7 +19,7 @@ export class MovieFormStartTunnelComponent {
 
   public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(private movieService: MovieService, private router: Router) { }
+  constructor(private movieService: MovieService, private consentsService: ConsentsService, private router: Router) { }
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
@@ -29,5 +30,12 @@ export class MovieFormStartTunnelComponent {
       this.loadingTunnel.next(false);
       console.error(err);
     }
+  }
+
+  async navigateToTunnel2() {
+
+   await this.consentsService.createConsent('access | share','ip', 'docId');
+   return "Consent succefully created !";
+
   }
 }

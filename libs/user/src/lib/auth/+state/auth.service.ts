@@ -1,5 +1,4 @@
 import { Injectable, Optional } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -18,6 +17,7 @@ import { createDocumentMeta, DocumentMeta } from '@blockframes/utils/models-meta
 import { Subject } from 'rxjs';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
+import { IpService } from '@blockframes/utils/ip';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -26,12 +26,12 @@ export class AuthService extends FireAuthService<AuthState> {
 
   constructor(
     protected store: AuthStore,
-    private http: HttpClient,
     private query: AuthQuery,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery,
     private gdprService: GDPRService,
     private analytics: FireAnalytics,
+    private ipService: IpService,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
@@ -145,10 +145,9 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   public async getPrivacyPolicy() {
-    const { ip } = await this.http.get<{ ip: string }>(`https://api.ipify.org/?format=json`).toPromise();
     return {
       date: new Date(),
-      ip: ip
+      ip: await this.ipService.get()
     }
   }
 

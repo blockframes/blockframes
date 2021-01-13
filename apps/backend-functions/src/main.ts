@@ -1,5 +1,6 @@
 import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
+import * as consent from './consent';
 import * as invitations from './invitation';
 import {
   onDocumentCreate,
@@ -157,6 +158,10 @@ export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors
  */
 export const onContractWriteEvent = onDocumentWrite('contracts/{contractId}', onContractWrite);
 
+//--------------------------------
+//   Consents Management   //
+//--------------------------------
+export const createConsent = functions.https.onCall(skipInMaintenance(logErrors(consent.createConsent)));
 //--------------------------------
 //       Apps Management        //
 //--------------------------------
