@@ -28,8 +28,9 @@ export type NotificationType =
   'invitationToAttendEventDeclined'
   ;
 
-/** Minimum required information to create a Notification. */
-export interface NotificationOptions {
+/** Generic informations for a Notification. */
+export interface NotificationBase<D> {
+  id: string;
   /** @dev Recipient of the notification */
   toUserId?: string;
   /** @dev Possible subjects of the notification */
@@ -39,11 +40,11 @@ export interface NotificationOptions {
   organization?: PublicOrganization;
   /** @dev Type of the notification */
   type: NotificationType;
-}
-
-/** Generic informations for a Notification. */
-export interface NotificationDocument<D extends Date | firestore.Timestamp = firestore.Timestamp> extends NotificationOptions {
-  id: string;
   isRead: boolean;
   date: D;
-};
+}
+
+type Timestamp = firestore.Timestamp;
+
+export interface NotificationDocument extends NotificationBase<Timestamp> {
+}

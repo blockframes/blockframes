@@ -1,5 +1,5 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import { db, functions, getUser } from './internals/firebase';
+import { db, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
