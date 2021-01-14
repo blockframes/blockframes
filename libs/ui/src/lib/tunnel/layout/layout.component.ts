@@ -110,13 +110,9 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay(1))
     this.getRoute();
 
-    console.log('à l\'initialization :', this.steps);
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
-      tap(_=>console.log('avant filter')),
-
-      filter(event => event instanceof NavigationEnd),
-      tap(_=>console.log('après filter')))
+      filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         this.sidenavContent.scrollTo({ top: 0 })
         this.getRoute();
