@@ -4,7 +4,7 @@ import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
-import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
+import { Organization } from '@blockframes/organization/+state';
 import { appName, modules } from '@blockframes/utils/apps';
 
 @Component({
@@ -22,7 +22,7 @@ export class OrganizationsComponent implements OnInit {
     'denomination.public': 'Short name',
     'addresses.main.country': 'Country',
     'email': 'Email',
-    'appAccess': { value: 'Authorizations', disableSort: true } 
+    'appAccess': { value: 'Authorizations', disableSort: true }
   };
 
   public initialColumns: string[] = [
@@ -35,7 +35,7 @@ export class OrganizationsComponent implements OnInit {
     'email',
     'appAccess',
   ];
-  public rows: OrganizationDocumentWithDates[] = [];
+  public rows: Organization[] = [];
   public orgListLoaded = false;
 
   constructor(
@@ -51,7 +51,7 @@ export class OrganizationsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  goToEdit(org: OrganizationDocumentWithDates) {
+  goToEdit(org: Organization) {
     this.router.navigate([`/c/o/admin/panel/organization/${org.id}`]);
   }
 
@@ -78,7 +78,7 @@ export class OrganizationsComponent implements OnInit {
         country: r && r.addresses.main.country ? r.addresses.main.country : '--',
         email: r.email,
         memberCount: r.userIds.length,
-        activity: !! r.activity ? r.activity : '--',
+        activity: !!r.activity ? r.activity : '--',
       }
 
       for (const app in r.appAccess) {
@@ -98,5 +98,5 @@ export class OrganizationsComponent implements OnInit {
       width: '60vw',
     });
   }
-  
+
 }

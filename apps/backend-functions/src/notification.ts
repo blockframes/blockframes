@@ -1,4 +1,4 @@
-import { NotificationDocument, NotificationOptions } from './data/types';
+import { NotificationDocument } from './data/types';
 import { db } from './internals/firebase';
 import { firestore } from 'firebase-admin';
 
@@ -15,8 +15,9 @@ export function triggerNotifications(notifications: NotificationDocument[]): Pro
 }
 
 /** Create a Notification with required and generic information. */
-export function createNotification(notification: NotificationOptions): NotificationDocument {
+export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
   return {
+    type: 'movieAccepted', // We need a default value for backend-function strict mode
     toUserId: '',
     id: db.collection('notifications').doc().id,
     isRead: false,

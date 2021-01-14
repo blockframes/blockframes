@@ -1,7 +1,8 @@
 /**
  * Apps definition
  */
-import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
+import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { Organization } from "@blockframes/organization/+state/organization.model";
 import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
@@ -111,7 +112,7 @@ export function getAppName(slug: App) {
  * getOrgAppAccess(orgA); // ['catalog', 'festival']
  * getOrgAppAccess(orgB); // ['festival']
  */
-export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocumentWithDates, first: App = 'festival'): App[] {
+export function getOrgAppAccess(org: OrganizationDocument | Organization, first: App = 'festival'): App[] {
   const apps: App[] = [];
   for (const a of app) {
     const hasAccess = modules.some(m => !!org.appAccess[a]?.[m]);
@@ -139,7 +140,7 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
  * getOrgModuleAccess(orgB); // ['marketplace']
  */
-export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocumentWithDates, _a?: App): Module[] {
+export function getOrgModuleAccess(org: OrganizationDocument | Organization, _a?: App): Module[] {
   const allowedModules = {} as Record<Module, boolean>;
 
   if (_a) {

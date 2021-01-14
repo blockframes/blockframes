@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 import { fromOrg, MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
@@ -45,7 +45,7 @@ import { Subscription } from 'rxjs';
 })
 export class FileExplorerComponent implements OnInit, OnDestroy {
 
-  @Input() org: OrganizationDocumentWithDates;
+  @Input() org: Organization;
 
   public directories: Directory[] = [];
   public activeDirectory: Directory | SubDirectoryImage | SubDirectoryFile;
