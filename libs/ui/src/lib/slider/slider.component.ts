@@ -4,7 +4,6 @@ import { Subject, BehaviorSubject, Observable, interval } from 'rxjs';
 
 // Custom
 import { SlideComponent } from './slide/slide.component';
-import { ThemeService } from '@blockframes/ui/theme';
 import { Slider } from './slider.interface';
 
 // Angular
@@ -150,6 +149,10 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
       takeUntil(this.destroy$),
       filter(value => value && value < this.slides.length)
     ).subscribe(value => this.resetSlides(value));
+
+    this.slides.changes.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(slides => this.hideArrows = slides.length === 1);
   }
 
   ngAfterContentInit() {
