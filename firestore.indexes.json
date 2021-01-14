@@ -19,11 +19,20 @@
     "collectionGroup": "movies",
     "queryScope": "COLLECTION",
     "fields": [
+      { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "storeConfig.appAccess.festival", "order": "ASCENDING" },
+      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
+    ]
+  }, {
+    "collectionGroup": "movies",
+    "queryScope": "COLLECTION",
+    "fields": [
       { "fieldPath": "storeConfig.appAccess.festival", "order": "ASCENDING" },
       { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
       { "fieldPath": "release.year", "order": "DESCENDING" }
     ]
-  },{
+  }, {
     "collectionGroup": "events",
     "queryScope": "COLLECTION",
     "fields": [

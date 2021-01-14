@@ -17,8 +17,8 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { HasKeysModule } from '@blockframes/utils/pipes';
-import { DownloadModule } from '@blockframes/media/pipes/download.pipe';
-import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
+import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
+import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -43,8 +43,8 @@ import { MatCardModule } from '@angular/material/card';
     CarouselModule,
     MatLayoutModule,
     HasKeysModule,
-    DownloadModule,
-    MediaPlayerModule,
+    DownloadPipeModule,
+    VideoViewerModule,
 
     // Material
     MatChipsModule,
