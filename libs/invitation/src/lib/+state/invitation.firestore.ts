@@ -4,9 +4,9 @@ import { PublicUser } from "@blockframes/user/+state/user.firestore";
 
 type Timestamp = firestore.Timestamp;
 
-/** 
+/**
  * Raw type for Invitation.
- * 
+ *
  * For Events:
  *  When a invitation is created, a backend function will check if:
  *  If we have an user or an org we can create a notification.
@@ -39,7 +39,8 @@ export type InvitationDocument = InvitationBase<Timestamp>;
 export type InvitationOrUndefined = InvitationDocument | undefined;
 
 /** Status of an Invitation. Set to pending by default, get erased if accepted, archived if declined. */
-export type InvitationStatus = 'accepted' | 'declined' | 'pending';
+export const invitationStatus = ['accepted', 'declined', 'pending'] as const;
+export type InvitationStatus = typeof invitationStatus[number];
 
 /** Type of Invitation depending of its purpose. */
 export type InvitationType = 'attendEvent' | 'joinOrganization';

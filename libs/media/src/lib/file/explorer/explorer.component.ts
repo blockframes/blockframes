@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 import { fromOrg, MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
@@ -18,8 +18,8 @@ import { sortMovieBy } from '@blockframes/utils/helpers';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 // File Explorer
-import { ImageDialogComponent } from '../../components/dialog/image/image.component';
-import { FileDialogComponent } from '../../components/dialog/file/file.component';
+import { FileExplorerCropperDialogComponent } from './cropper-dialog/cropper-dialog.component';
+import { FileExplorerUploaderDialogComponent } from './uploader-dialog/uploader-dialog.component';
 import {
   createMovieFileStructure,
   createOrgFileStructure,
@@ -45,7 +45,7 @@ import { Subscription } from 'rxjs';
 })
 export class FileExplorerComponent implements OnInit, OnDestroy {
 
-  @Input() org: OrganizationDocumentWithDates;
+  @Input() org: Organization;
 
   public directories: Directory[] = [];
   public activeDirectory: Directory | SubDirectoryImage | SubDirectoryFile;
@@ -160,9 +160,9 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
     }
 
     // opening file/image upload dialog
-    let dialog: MatDialogRef<FileDialogComponent | ImageDialogComponent>;
+    let dialog: MatDialogRef<FileExplorerUploaderDialogComponent | FileExplorerCropperDialogComponent>;
     if (this.activeDirectory.type === 'file') {
-      dialog = this.dialog.open(FileDialogComponent, {
+      dialog = this.dialog.open(FileExplorerUploaderDialogComponent, {
         width: '60vw',
         data: {
           form: mediaForm,
@@ -172,7 +172,7 @@ export class FileExplorerComponent implements OnInit, OnDestroy {
         },
       });
     } else if (this.activeDirectory.type === 'image') {
-      dialog = this.dialog.open(ImageDialogComponent, {
+      dialog = this.dialog.open(FileExplorerCropperDialogComponent, {
         width: '60vw',
         data: {
           form: mediaForm,

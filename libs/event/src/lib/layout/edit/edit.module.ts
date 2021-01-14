@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventEditComponent } from './edit.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module'
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 import { StatusModule } from '@blockframes/invitation/pipes/status.pipe';
@@ -36,7 +36,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     ReactiveFormsModule,
     TimePickerModule,
     RouterModule,
-    ImageReferenceModule,
+    ImageModule,
     DisplayNameModule,
     StatusModule,
     GuestListModule,

@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { AvatarListComponent } from "./avatar-list.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatIconModule } from "@angular/material/icon";
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [AvatarListComponent],
@@ -11,7 +11,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     CommonModule,
     FlexLayoutModule,
     MatIconModule,
-    ImageReferenceModule,
+    ImageModule,
   ],
   exports: [AvatarListComponent],
 })

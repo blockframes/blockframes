@@ -1,6 +1,6 @@
 import { Privacy } from "@blockframes/utils/file-sanitizer";
 import { FormList } from "@blockframes/utils/form";
-import { MediaRatioType } from "../../components/cropper/cropper.component";
+import { MediaRatioType } from '../../image/uploader/uploader.component';
 import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { isMediaForm } from "@blockframes/media/+state/media.model";
@@ -8,7 +8,7 @@ import { MovieForm, MovieNotesForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
 import { AllowedFileType } from "@blockframes/utils/utils";
 import { Movie } from "@blockframes/movie/+state";
-import { OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
+import { Organization } from "@blockframes/organization/+state/organization.model";
 
 type DirectoryType = 'directory' | 'file' | 'image';
 
@@ -86,7 +86,7 @@ export function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMedia
   return !!(form as HostedMediaWithMetadataForm).get('title');
 }
 
-export function createOrgFileStructure(org: OrganizationDocumentWithDates): Directory {
+export function createOrgFileStructure(org: Organization): Directory {
   return {
     name: 'Company Files',
     type: 'directory',
@@ -101,7 +101,7 @@ export function createOrgFileStructure(org: OrganizationDocumentWithDates): Dire
         fileRefField: 'ref',
         storagePath: `orgs/${org.id}/documents.notes`,
         privacy: 'protected',
-        path: [0,0],
+        path: [0, 0],
         hasFile: org.documents?.notes.length
       },
       {
@@ -113,7 +113,7 @@ export function createOrgFileStructure(org: OrganizationDocumentWithDates): Dire
         fileRefField: 'logo',
         storagePath: `orgs/${org.id}/logo`,
         privacy: 'public',
-        path: [0,1],
+        path: [0, 1],
         hasFile: !!org.logo
       }
     ]

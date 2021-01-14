@@ -1,5 +1,5 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import { db, functions, getUser } from './internals/firebase';
+import { db, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
@@ -10,8 +10,9 @@ import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
-import { Change } from 'firebase-functions';
 import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { Change } from 'firebase-functions';
+import { invitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -32,8 +33,33 @@ export async function onInvitationWrite(
   const invitationDocBefore = before.data() as InvitationOrUndefined;
   const invitationDoc = after.data() as InvitationOrUndefined;
 
-  // Doc was deleted, ignoring...
-  if (!invitationDoc) { return; }
+  // Doc was deleted
+  if (!invitationDoc) {
+
+    if(!!invitationDocBefore.toUser) {
+      const user = await getUser(invitationDocBefore.toUser.uid)
+
+      // Remove user in users collection
+      if(invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
+
+        // Fetch potential other invitations to join org
+        const invitationCollectionRef = db.collection('invitations')
+          .where('toUser.uid', '==', user.uid)
+          .where('mode', '==', 'invitation')
+          .where('status', '==', 'pending')
+        const existingInvitation = await invitationCollectionRef.get();
+
+        // If there is an other invitation or the user has already an org, we don't want to delete its account
+        if(existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
+          return;
+        }
+
+        db.doc(`users/${user.uid}`).delete();
+      }
+    }
+
+    return;
+  }
 
   // Because of rules restrictions, event creator might not have access to other informations than the id.
   // We consolidate invitation document here.
@@ -162,4 +188,15 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
         });
     }
   })
+}
+
+export async function isInvitationToJoinOrgExist(userEmails: string[]) {
+
+  const invitationPromises = userEmails.map(email => db.collection('invitations')
+    .where('type', '==', 'joinOrganization')
+    .where('toUser.email', '==', email)
+    .where('status', 'in', invitationStatus.filter(s => s !== 'declined'))
+    .get());
+  const invitationQuery = await Promise.all(invitationPromises);
+  return invitationQuery.some(d => d.docs.length > 0);
 }

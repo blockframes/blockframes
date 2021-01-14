@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ImageDialogComponent } from './image.component';
+import { FileExplorerCropperDialogComponent } from './cropper-dialog.component';
 
 // Blockframes
-import { CropperModule } from '../../cropper/cropper.module';
+import { ImageUploaderModule } from '../../../image/uploader/uploader.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -15,14 +15,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [ImageDialogComponent],
+  declarations: [FileExplorerCropperDialogComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
 
     // Blockframes
-    CropperModule,
+    ImageUploaderModule,
 
     // Material
     MatButtonModule,
@@ -31,4 +31,4 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule
   ],
 })
-export class ImageDialogModule { }
+export class FileExplorerCropperDialogModule { }

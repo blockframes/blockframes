@@ -7,10 +7,10 @@ import { MultipleFilesViewComponent } from './multiple-files-view.component';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ToArrayPipeModule } from '@blockframes/utils/pipes/to-array.pipe';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
-import { MediaViewerModule } from '@blockframes/media/components/dialog/file-viewer/viewer.module';
+import { FilePreviewModule } from '../../preview/preview.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -21,12 +21,12 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     TableFilterModule,
     ToArrayPipeModule,
     FileNameModule,
     DeepKeyPipeModule,
-    MediaViewerModule,
+    FilePreviewModule,
     ConfirmModule,
 
     // Material

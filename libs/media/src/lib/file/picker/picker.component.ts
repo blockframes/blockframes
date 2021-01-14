@@ -6,7 +6,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '@blockframes/media/+state/media.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { ViewerDialogComponent } from '../../components/dialog/file-viewer/viewer.component';
+import { FilePreviewComponent } from '../preview/preview.component';
 
 @Component({
   selector: 'file-picker',
@@ -100,7 +100,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   previewFile(ref: string) {
-    this.dialog.open(ViewerDialogComponent, { data: { ref }, width: '70vw', height: '70vh' })
+    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '70vw', height: '70vh' })
   }
 
   closeDialog() {

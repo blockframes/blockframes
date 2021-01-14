@@ -1,19 +1,19 @@
 <h2>Poster</h2>
-<drop-cropper [storagePath]="movie.id | ref: 'movie' : 'poster'" ratio="poster" [form]="moviePictureForm.get('poster')">
+<image-uploader [storagePath]="movie.id | ref: 'movie' : 'poster'" ratio="poster" [form]="moviePictureForm.get('poster')">
   <h2>Film Poster</h2>
-</drop-cropper>
+</image-uploader>
 
 <h2>Banner</h2>
-<drop-cropper [storagePath]="movie.id | ref: 'movie' : 'banner'" ratio="banner" [form]="moviePictureForm.get('banner')">
+<image-uploader [storagePath]="movie.id | ref: 'movie' : 'banner'" ratio="banner" [form]="moviePictureForm.get('banner')">
   <h2>Film Poster</h2>
-</drop-cropper>
+</image-uploader>
 
 
 <h2>Promotional Images</h2>
 <ng-container *ngFor="let still of moviePictureForm.get('still_photos').controls; let i = index">
-  <drop-cropper [storagePath]="movie.id | ref: 'movie' : 'still'" ratio="still" [form]="still">
+  <image-uploader [storagePath]="movie.id | ref: 'movie' : 'still'" ratio="still" [form]="still">
     <h3 title>Stills</h3>
-  </drop-cropper>
+  </image-uploader>
 </ng-container>
 
 <article fxLayout="row" fxLayoutAlign="space-around">
