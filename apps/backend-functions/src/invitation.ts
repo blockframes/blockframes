@@ -34,25 +34,28 @@ export async function onInvitationWrite(
   const invitationDoc = after.data() as InvitationOrUndefined;
 
   // Doc was deleted
-  if (!invitationDoc && !!invitationDocBefore.toUser) {
-    const user = await getUser(invitationDocBefore.toUser.uid)
+  if (!invitationDoc) {
 
-    // Remove user in users collection
-    if(invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
+    if(!!invitationDocBefore.toUser) {
+      const user = await getUser(invitationDocBefore.toUser.uid)
 
-      // Fetch potential other invitations to join org
-      const invitationCollectionRef = db.collection('invitations')
-        .where('toUser.uid', '==', user.uid)
-        .where('mode', '==', 'invitation')
-        .where('status', '==', 'pending')
-      const existingInvitation = await invitationCollectionRef.get();
+      // Remove user in users collection
+      if(invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
 
-      // If there is an other invitation or the user has already an org, we don't want to delete its account
-      if(existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
-        return;
+        // Fetch potential other invitations to join org
+        const invitationCollectionRef = db.collection('invitations')
+          .where('toUser.uid', '==', user.uid)
+          .where('mode', '==', 'invitation')
+          .where('status', '==', 'pending')
+        const existingInvitation = await invitationCollectionRef.get();
+
+        // If there is an other invitation or the user has already an org, we don't want to delete its account
+        if(existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
+          return;
+        }
+
+        db.doc(`users/${user.uid}`).delete();
       }
-
-      db.doc(`users/${user.uid}`).delete();
     }
 
     return;
@@ -195,6 +198,5 @@ export async function isInvitationToJoinOrgExist(userEmails: string[]) {
     .where('status', 'in', invitationStatus.filter(s => s !== 'declined'))
     .get());
   const invitationQuery = await Promise.all(invitationPromises);
-  const isInvitationExist = invitationQuery.some(d => d.docs.length > 0)
-  return isInvitationExist;
+  return invitationQuery.some(d => d.docs.length > 0);
 }
