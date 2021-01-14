@@ -6,12 +6,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { SessionComponent } from './session.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { MediaControlModule } from '@blockframes/media/components/controls/media-control.module';
-import { MediaViewerModule } from '@blockframes/media/components/viewers/media-viewer.module';
+import { FileControlsModule } from '@blockframes/media/file/controls/controls.module';
+import { FilePuppetsModule } from '@blockframes/media/file/puppets/puppets.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
+import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 import { FileCarouselModule } from '@blockframes/media/file/carousel/carousel.module';
 import { MeetingVideoRoomModule } from '@blockframes/event/components/meeting/room/video-room.module';
 import { DoorbellBottomSheetModule } from '@blockframes/event/components/doorbell/doorbell.module';
@@ -34,11 +34,11 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     DisplayNameModule,
     EventTimeModule,
     OrgNameModule,
-    MediaPlayerModule,
+    VideoViewerModule,
     FileCarouselModule,
     FileNameModule,
-    MediaControlModule,
-    MediaViewerModule,
+    FileControlsModule,
+    FilePuppetsModule,
     MeetingVideoRoomModule,
     DoorbellBottomSheetModule,
     ConfirmModule,
