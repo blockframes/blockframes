@@ -10,7 +10,7 @@ import { TitleListComponent } from './list.component';
 // Blockframes
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -27,7 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     TableFilterModule,
     ToLabelModule,
-    ImageReferenceModule,
+    ImageModule,
     // Material
     MatButtonModule,
     MatTabsModule,

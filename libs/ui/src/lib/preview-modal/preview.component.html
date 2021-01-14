@@ -1,12 +1,36 @@
-<button mat-icon-button (click)="openModal()" [disabled]="!form.ref.value" matTooltip="Click to see preview"
-  [matTooltipDisabled]="!form.ref.value">
+<button mat-icon-button (click)="openModal()" [disabled]="!ref" matTooltip="Click to see preview"
+  [matTooltipDisabled]="!ref">
   <mat-icon svgIcon="visibility" color="primary"></mat-icon>
 </button>
 <ng-content></ng-content>
 
 <ng-template #dialogTemplate let-ref>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <img [ref]="ref | getMediaUrl" asset="empty_banner.webp"/>
-    <!-- Implement PDF viewer when its ready TODO #4072 -->
+    <ng-container [ngSwitch]="ref | fileType">
+
+      <ng-container *ngSwitchCase="'image'">
+        <img [ref]="ref" asset="empty_banner.webp"/>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'pdf'">
+        <media-pdf [ref]="ref"></media-pdf>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'video'">
+        <!-- The player component has no size, we use a container div to set a size that the player will fill -->
+        <div class="video-container">
+          <media-player [ref]="ref"></media-player>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+
+        <h3>Sorry</h3>
+        <img class="unknown-type" asset="no_titles.webp" alt="Flying saucer">
+        <p>We don't know how to display this file.</p>
+        <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
+
+      </ng-container>
+    </ng-container>
   </article>
 </ng-template>

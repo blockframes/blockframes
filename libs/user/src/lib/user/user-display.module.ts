@@ -4,8 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 
 export const profileRoutes: Routes = [
@@ -30,8 +30,8 @@ export const profileRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    CropperModule,
-    ImageReferenceModule,
+    ImageUploaderModule,
+    ImageModule,
     MatListModule,
     MatCardModule,
     MatButtonModule,
@@ -43,7 +43,7 @@ export const profileRoutes: Routes = [
     MatMenuModule,
     EditableSidenavModule,
     PasswordConfirmModule,
-    UploadModule,
+    FileUploaderModule,
     RouterModule.forChild(profileRoutes),
   ],
   declarations: [],

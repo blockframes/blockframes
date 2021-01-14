@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
-import { AttendeeStatus, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'

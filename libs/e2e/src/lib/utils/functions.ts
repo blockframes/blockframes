@@ -41,15 +41,15 @@ export function uploadFile(p: string, type: string, testId: string): any {
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(testfile);
 
-      return cy.get(`file-upload[test-id=${testId}] section`).trigger('drop', { dataTransfer });
+      return cy.get(`file-uploader[test-id=${testId}] section`).trigger('drop', { dataTransfer });
     });
 }
 
 export function assertUploadStatus(content: string, testId: string) {
-  return cy.get(`file-upload[test-id=${testId}] section h3`).contains(content);
+  return cy.get(`file-uploader[test-id=${testId}] section h3`).contains(content);
 }
 
-export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]', 
+export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]',
                                     {waitTime: 1 * SEC, message: 'Accepting all cookies'});
 
 /**
@@ -57,8 +57,8 @@ export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]
  * @param element : string for selecting button on the page
  * @param Option : timeouts for button, wait & logging message
  */
-export function selectAction(element: string, 
-  Option: { waitTime?: number, timeout?: number, message?: string } = 
+export function selectAction(element: string,
+  Option: { waitTime?: number, timeout?: number, message?: string } =
     {waitTime : 0, timeout: 3 * SEC, message: ''}) {
   if (Option.message !== '') {
     cy.log(Option.message);
@@ -104,7 +104,7 @@ export function getTomorrowDay(date: Date) {
 export interface FormOptions {
   inputValue: any;
   specialIds?: string[];
-  fieldHandler? <E extends HTMLElement>($formEl: JQuery<E>, key: string): [boolean, string] 
+  fieldHandler? <E extends HTMLElement>($formEl: JQuery<E>, key: string): [boolean, string]
 }
 
 interface FormData {
@@ -119,7 +119,7 @@ function handleFormElement(el:any, id: string, value: string) {
   let doClick = true;
 
   //Handle file uploads
-  if (el.is('file-upload')) {
+  if (el.is('file-uploader')) {
     const uploadProps = JSON.parse(value);
     const title =  uploadProps.title || randomID();
     createFakeScript(title).then(path => {
@@ -147,7 +147,7 @@ function handleFormElement(el:any, id: string, value: string) {
     cy.get(`[test-id="${id}"] input`, {timeout: 1 * SEC})
       .type(value, {force: true});
   }
-  
+
   if (el.is('static-select')) {
     cy.get(`[test-id="${id}"] .mat-form-field-outline`, {timeout: 1 * SEC})
       .first()
@@ -160,7 +160,7 @@ function handleFormElement(el:any, id: string, value: string) {
   }
 
   cy.get('mat-option', {timeout: 1 * SEC})
-    .contains(value).click({force: true});  
+    .contains(value).click({force: true});
 }
 
 /**
@@ -194,8 +194,8 @@ export function setForm(selector: string, formOpt: FormOptions) {
     formElements.push($formEl);
 
     if (keyBag === undefined) {
-      formelData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
-                                   $formEl.attr('aria-label') || 
+      formelData.testId = `undefined-[${$formEl.attr('formcontrolname') ||
+                                   $formEl.attr('aria-label') ||
                                    $formEl.attr('data-placeholder')}]`;
       formelData.value = 'untouched';
       cy.log(JSON.stringify(formelData));
@@ -208,7 +208,7 @@ export function setForm(selector: string, formOpt: FormOptions) {
       vault = vault[keyBunch[i]];
     }
 
-    /* 
+    /*
      * Perform some extra handling on the input if needed..
      */
     let needsHandling = true, setValue;

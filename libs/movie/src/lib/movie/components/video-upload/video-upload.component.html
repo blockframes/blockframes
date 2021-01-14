@@ -9,13 +9,13 @@
       <mat-label>Screener description</mat-label>
       <input matInput formControlName="description" >
     </mat-form-field>
-    <file-upload
+    <file-uploader
       [form]="form.screener.get('ref')"
       [storagePath]="getPath('screener')"
       allowedFileType="video"
       [filePrivacy]="filePrivacy">
         <h3 title>Upload Screener</h3>
-    </file-upload>
+    </file-uploader>
   </div>
 
   <h2>Upload other videos</h2>
@@ -35,13 +35,13 @@
           <mat-option *ngFor="let type of hostedVideoTypes" [value]="type">{{ type | toLabel: 'hostedVideoTypes' }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <file-upload
+      <file-uploader
         [form]="otherVideo.get('ref')"
         [storagePath]="getPath('otherVideos')"
         allowedFileType="video"
         [filePrivacy]="filePrivacy">
           <h3 title>Upload Video</h3>
-      </file-upload>
+      </file-uploader>
     </article>
   </ng-container>
 

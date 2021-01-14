@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // BlockFrames
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationBannerComponent } from './banner.component';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 
     // Blockframes
     OrgNameModule,
-    ImageReferenceModule,
+    ImageModule,
     MovieCardModule,
     MatLayoutModule,
     MatButtonModule,

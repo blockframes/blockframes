@@ -13,13 +13,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 // Libraries
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { ViewExtractedElementsModule } from './components/view-extracted-elements/view-extracted-elements.module';
 
 // Components
 import { ImportContainerComponent } from './pages/import-container/import-container.component';
 import { ImportSpreadsheetComponent } from './components/import-spreadsheet/import-spreadsheet.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Guards
 import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
@@ -54,9 +54,9 @@ const routes: Routes = [
     MatButtonModule,
 
     // Librairies
-    UploadModule,
+    FileUploaderModule,
     ViewExtractedElementsModule,
-    ImageReferenceModule
+    ImageModule
   ]
 })
 export class ImportModule { }

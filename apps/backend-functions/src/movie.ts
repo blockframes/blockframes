@@ -45,13 +45,7 @@ export async function onMovieDelete(
   const batch = db.batch();
 
   // Clean wishlists
-  const orgsWithWishlists = await db.collection('orgs').where('wishlist', 'array-contains', movie.id).get();
-
-  orgsWithWishlists.docs.forEach(o => {
-    const org = o.data();
-    org.wishlist = org.wishlist.filter(movieId => movieId !== movie.id);
-    batch.update(o.ref, org);
-  });
+  await removeMovieFromWishlists(movie, batch);
 
   // Delete events
   const events = await db.collection('events').where('meta.titleId', '==', movie.id).get();
@@ -64,8 +58,8 @@ export async function onMovieDelete(
   // Delete permissions
   const orgsPromises = movie.orgIds.map(o => db.collection('orgs').where('id', '==', o).get());
   const _orgs = await Promise.all(orgsPromises);
-  const orgIds :string[]= [];
-  _orgs.forEach(s => { s.docs.forEach(d => orgIds.push(d.id))});
+  const orgIds: string[] = [];
+  _orgs.forEach(s => { s.docs.forEach(d => orgIds.push(d.id)) });
   const permissionsPromises = orgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`).get());
   const permissions = await Promise.all(permissionsPromises);
   permissions.forEach(p => batch.delete(p.ref));
@@ -137,6 +131,11 @@ export async function onMovieUpdate(
     await triggerNotifications(notifications);
   }
 
+  // If movie was accepted but is not anymore, clean wishlists
+  if (before.storeConfig.status === 'accepted' && after.storeConfig.status !== before.storeConfig.status) {
+    await removeMovieFromWishlists(after);
+  }
+
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
   const creator = await getDocument<PublicUser>(`users/${after._meta!.createdBy}`);
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
@@ -177,4 +176,23 @@ function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfi
     (afterStore && afterStore.status === 'accepted');
 
   return acceptedInCatalog || acceptedInFestival;
+}
+
+async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {
+  const collection = db.collection('orgs');
+  const orgsWithWishlists = await collection.where('wishlist', 'array-contains', movie.id).get();
+  const updates: Promise<any>[] = [];
+  for (const o of orgsWithWishlists.docs) {
+    const org = o.data();
+    org.wishlist = org.wishlist.filter(movieId => movieId !== movie.id);
+    if (batch) {
+      batch.update(o.ref, org);
+    } else {
+      const update = collection.doc(org.id).set({ wishlist: org.wishlist }, { merge: true });
+      updates.push(update);
+    }
+  }
+  if (updates.length) {
+    await (Promise as any).allSettled(updates);
+  }
 }

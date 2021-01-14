@@ -19,8 +19,8 @@ import { OrganizationComponent } from './organization.component';
 // Modules
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationDisplayModule } from '@blockframes/organization/components/organization-display/organization-display.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
 import { MemberPendingModule } from '@blockframes/organization/components/member-pending/member-pending.module';
 import { MemberRequestModule } from '@blockframes/organization/components/member-request/member-request.module';
@@ -28,7 +28,7 @@ import { MemberAddModule } from '@blockframes/organization/components/member-add
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../../components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from '../../components/organization/forms/organization-form/organization-form.module';
-import { FileExplorerModule } from '@blockframes/media/components/file-explorer/file-explorer.module';
+import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.module';
 
 @NgModule({
   imports: [
@@ -46,8 +46,8 @@ import { FileExplorerModule } from '@blockframes/media/components/file-explorer/
     FlexLayoutModule,
     OrganizationDisplayModule,
     TableFilterModule,
-    ImageReferenceModule,
-    CropperModule,
+    ImageModule,
+    ImageUploaderModule,
     MemberRepertoryModule,
     MemberPendingModule,
     MemberRequestModule,

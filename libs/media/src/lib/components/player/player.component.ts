@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsul
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { loadJWPlayerScript } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,6 +25,10 @@ export class MediaPlayerComponent implements AfterViewInit, OnDestroy {
   @Input() ref: string;
   @Input() eventId: string;
 
+  // in order to have several player displayed in the same page
+  // we need to randomize the html id,
+  // otherwise all the players will be in the same div, each overwriting the previous one
+  public playerContainerId = Math.random().toString(36).substr(2); // small random string composed of letters & numbers
   public loading$ = new BehaviorSubject(true);
 
   constructor(
@@ -62,7 +66,7 @@ export class MediaPlayerComponent implements AfterViewInit, OnDestroy {
 
         this.timeout = window.setTimeout(() => window.location.reload(), refreshCountdown);
 
-        this.player = jwplayer('player');
+        this.player = jwplayer(this.playerContainerId);
         this.player.setup({
           file: result.signedUrl,
           logo: {

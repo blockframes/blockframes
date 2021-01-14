@@ -47,6 +47,7 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageCardDirective, { read: TemplateRef }) cardTemplate: PageCardDirective;
   @ContentChild(PageListItemDirective, { read: TemplateRef }) listItemTemplate: PageListItemDirective;
   @ContentChild(PageEmptyDirective, { read: TemplateRef }) listPageEmptyTemplate: PageEmptyDirective;
+  @ContentChild(PageAppBarSearchDirective) appBar: PageAppBarSearchDirective;
 
   @Input() items: unknown[];
 

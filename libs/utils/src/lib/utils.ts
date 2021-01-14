@@ -42,8 +42,8 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
     extension: ['jpg', 'jpeg', 'png', 'webp'],
   },
   video: {
-    mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4'],
-    extension: ['avi', 'mkv', 'mp4'],
+    mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4', 'video/3gpp', 'video/quicktime', 'video/x-ms-wmv'],
+    extension: ['avi', 'mkv', 'mp4', '3gp', 'mov', 'wmv'],
   },
   docx: {
     mime: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],

@@ -50,7 +50,7 @@
             [event]="event"
             *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
           ></media-control>
-          <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
+          <file-carousel fxFlex="35%" [event]="event"></file-carousel>
         </ng-container>
       </section>
 

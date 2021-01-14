@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MainComponent } from './main.component';
 
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule, HasKeysModule } from '@blockframes/utils/pipes';
 import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
@@ -30,7 +30,7 @@ import { MatDividerModule } from '@angular/material/divider';
     HasKeysModule,
     ToLabelModule,
     HasStatusModule,
-    ImageReferenceModule,
+    ImageModule,
     MatLayoutModule,
     PrizeCardModule,
     CreditCardModule,
