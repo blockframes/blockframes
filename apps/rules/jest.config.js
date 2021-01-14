@@ -11,5 +11,4 @@
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/rules',
-  testEnvironment: 'node',
 };
