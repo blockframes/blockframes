@@ -1,11 +1,11 @@
-import { EventContext } from 'firebase-functions';
 import * as functions from 'firebase-functions';
-import { db, getStorageBucketName } from './internals/firebase';
-import { getDocument } from './data/internals';
-
-import { Consents } from '@blockframes/consents/+state/consents.firestore';
+import { db } from './internals/firebase';
 import { PublicUser } from './data/types';
-import { createAccess, createShare } from '@blockframes/consents/+state/consents.model';
+import {
+  createAccess,
+  createShare,
+  createConsent as _createConsent,
+} from '@blockframes/consents/+state/consents.firestore';
 
 type CallableContext = functions.https.CallableContext;
 
@@ -16,7 +16,7 @@ type CallableContext = functions.https.CallableContext;
 export const createConsent = async (
   data: { consentType: 'access' | 'share'; ip: string; docId: string; filePath?: string },
   context: CallableContext
-): Promise<Consents<Date>> => {
+): Promise<boolean> => {
   const { consentType, ip, docId, filePath } = data;
 
   if (!context?.auth) {
@@ -41,6 +41,18 @@ export const createConsent = async (
     throw new Error('Undefined ip');
   }
 
+  let consent = _createConsent({
+    id: userData.orgId,
+  });
+
+  const consentDocRef = db.doc(`consents/${consent.id}`);
+  const consentSnap = await consentDocRef.get();
+  const consentData = consentSnap.data() as any;
+
+  if (!!consentData) {
+    consent = _createConsent(consentData);
+  }
+
   if (consentType === 'access') {
     if (!filePath) {
       throw new Error('Invalid filePath');
@@ -56,10 +68,9 @@ export const createConsent = async (
       docId,
       ip,
     });
-  }
 
-  if (consentType === 'share') {
-
+    consent.access.push(access);
+  } else if (consentType === 'share') {
     const share = createShare({
       lastName: userData.lastName,
       firstName: userData.firstName,
@@ -68,22 +79,14 @@ export const createConsent = async (
       date: new Date(),
       docId,
       ip,
-    })
+    });
+
+    consent.share.push(share);
   }
 
-  const newConsent = await db.collection('consents').doc(userData.orgId).set(data);
-  const saveConsent = db.batch();
-  console.log(newConsent);
+  const batch = db.batch();
+  batch.set(consentDocRef, consent);
+  await batch.commit();
 
-  return;
+  return true;
 };
-
-export async function onDocumentPermissionCreate(
-  _: FirebaseFirestore.DocumentSnapshot,
-  context: EventContext
-) {
-  const { docID, orgID } = context.params;
-
-  // if the permission let you write the document, it means that you are the first owner.
-  return db.doc(`consents/${docID}`).set({ authorOrgId: orgID }, { merge: true });
-}

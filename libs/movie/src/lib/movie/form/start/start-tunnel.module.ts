@@ -9,6 +9,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [MovieFormStartTunnelComponent],
@@ -20,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     // Material
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
 
     // Router
     RouterModule.forChild([{ path: '', component: MovieFormStartTunnelComponent }])

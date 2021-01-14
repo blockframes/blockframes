@@ -159,9 +159,15 @@ export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors
 export const onContractWriteEvent = onDocumentWrite('contracts/{contractId}', onContractWrite);
 
 //--------------------------------
-//   Consents Management   //
+//     Consents Management      //
 //--------------------------------
+
+/**
+ * Trigger: when a consent is created
+ */
 export const createConsent = functions.https.onCall(skipInMaintenance(logErrors(consent.createConsent)));
+
+
 //--------------------------------
 //       Apps Management        //
 //--------------------------------

@@ -1,5 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 // Blockframes
@@ -7,7 +8,7 @@ import { MovieService } from '@blockframes/movie/+state';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';
-import { ConsentsService } from '../../../../../../consents/src/lib/+state/consents.service';
+import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 
 @Component({
   selector: 'movie-form-start-tunnel',
@@ -19,7 +20,7 @@ export class MovieFormStartTunnelComponent {
 
   public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(private movieService: MovieService, private consentsService: ConsentsService, private router: Router) { }
+  constructor(private movieService: MovieService, private consentsService: ConsentsService, private router: Router, private snackbar: MatSnackBar) { }
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
@@ -32,10 +33,12 @@ export class MovieFormStartTunnelComponent {
     }
   }
 
-  async navigateToTunnel2() {
+  async consent() {
 
-   await this.consentsService.createConsent('access | share','ip', 'docId');
-   return "Consent succefully created !";
+   const status = await this.consentsService.createConsent('share', 'Ar293JRrE20');
+   if (status === true) {
+    this.snackbar.open("Consent succefully created !", 'close', { duration: 5000 });
+   } else { this.snackbar.open('Consent has not been created.', 'close', { duration: 5000 }); }
 
   }
 }

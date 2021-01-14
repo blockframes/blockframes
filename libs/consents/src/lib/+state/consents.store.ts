@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityStore, StoreConfig, EntityState, ActiveState } from '@datorama/akita';
-import { access } from 'fs-extra';
-import { Access, Share, Consents } from './consents.firestore';
-import { createAccess, createConsent } from './consents.model';
-
+import { Consents } from './consents.firestore';
 export interface ConsentsState extends EntityState<Consents<Date>, string>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
@@ -13,9 +10,5 @@ export class ConsentsStore extends EntityStore<ConsentsState> {
 
   constructor() {
     super();
-  }
-
-  akitaPreAddEntity(consent: Partial<Consents<Date>>) {
-    return createConsent(consent);
   }
 }

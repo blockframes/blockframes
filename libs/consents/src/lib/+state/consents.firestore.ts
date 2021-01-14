@@ -1,8 +1,9 @@
+import { toDate } from '@blockframes/utils/helpers';
 
 export interface Consents<D> {
-  access: Access<D>[],
-  id: string, // Id of consents document should be the orgId or uId
-  share: Share<D>[]
+  access: Access<D>[];
+  id: string; // Id of consents document should be the orgId or uId
+  share: Share<D>[];
 }
 
 export interface Access<D> {
@@ -26,4 +27,38 @@ export interface Share<D> {
   userId: string;
 }
 
+export function createAccess(access: Partial<Access<Date>> = {}): Access<Date> {
+  return {
+    docId: '',
+    email: '',
+    filePath: '',
+    firstName: '',
+    ip: '',
+    lastName: '',
+    userId: '',
+    ...access,
+    date: toDate(access.date),
+  };
+}
 
+export function createShare(share: Partial<Share<Date>> = {}): Share<Date> {
+  return {
+    docId: '',
+    email: '',
+    firstName: '',
+    ip: '',
+    lastName: '',
+    userId: '',
+    ...share,
+    date: toDate(share.date),
+  };
+}
+
+export function createConsent(consent: Partial<Consents<Date>> = {}): Consents<Date> {
+  return {
+    access: [],
+    id: '',
+    share: [],
+    ...consent,
+  };
+}
