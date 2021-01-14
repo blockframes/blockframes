@@ -121,7 +121,6 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   private getRoute() {
     const url = this.routerQuery.getValue().state.url;
-    console.log('Dans getRoute() :', this.steps);
     this.currentStep = getStepSnapshot(this.steps, url);
     this.next = getPage(this.steps, url, 1);
     this.previous = getPage(this.steps, url, -1);
