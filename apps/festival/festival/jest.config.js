@@ -9,7 +9,7 @@
   transform: {
     '^.+\\.[tj]s$': 'ts-jest',
   },
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   moduleFileExtensions: ['ts', 'js', 'html'],
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/apps/festival/festival',
 };

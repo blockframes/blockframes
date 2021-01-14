@@ -10,5 +10,6 @@
     '^.+\\.(ts|html)$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/backend-functions',
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  coverageDirectory: '../../coverage/libs/import',
 };
