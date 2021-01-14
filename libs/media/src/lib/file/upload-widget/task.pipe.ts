@@ -1,10 +1,21 @@
-import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 import { UploadTaskSnapshot } from '@angular/fire/storage/interfaces';
 
 // Rxjs
-import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+@Pipe({
+  name: 'progress'
+})
+export class TaskProgressPipe implements PipeTransform {
+  transform(task: AngularFireUploadTask): Observable<number> {
+    return task.percentageChanges().pipe(
+      catchError(err => of(0))
+    );
+  }
+}
 
 @Pipe({
   name: 'state'
@@ -32,9 +43,4 @@ export class TaskStatePipe implements PipeTransform {
   }
 }
 
-@NgModule({
-  declarations: [TaskStatePipe],
-  imports: [CommonModule],
-  exports: [TaskStatePipe]
-})
-export class TaskSnapshotModule { }
+

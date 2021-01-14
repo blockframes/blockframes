@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { MediaService } from '../+state/media.service';
+import { MediaService } from '../../+state/media.service';
 
 
 @Pipe({ name: 'getUrl' })
@@ -27,4 +27,4 @@ export class ToBlobPipe implements PipeTransform {
   declarations: [GetUrlPipe, ToBlobPipe],
   exports: [GetUrlPipe, ToBlobPipe]
 })
-export class DownloadModule { }
+export class DownloadPipeModule { }

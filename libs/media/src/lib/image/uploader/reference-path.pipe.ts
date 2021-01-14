@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 const referencesPaths = {
     movie: {
@@ -30,9 +30,3 @@ export class ReferencePipe implements PipeTransform {
     return getRef(docId)
   }
 }
-
-@NgModule({
-  exports: [ReferencePipe],
-  declarations: [ReferencePipe],
-})
-export class ReferencePathModule { }

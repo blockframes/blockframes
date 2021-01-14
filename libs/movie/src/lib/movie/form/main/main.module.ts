@@ -16,7 +16,6 @@ import { MatChipsModule } from '@angular/material/chips';
 
 // Blockframes Media
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
-import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 
 // Blockframes UI
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
@@ -44,7 +43,6 @@ import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe
     // Other Modules
     TunnelPageModule,
     ChipsAutocompleteModule,
-    ReferencePathModule,
     ImageUploaderModule,
     StaticSelectModule,
     FormTableModule,

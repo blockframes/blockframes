@@ -9,12 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
-// Components
-import { ImageUploaderComponent } from './uploader.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
+// Components
+import { ImageUploaderComponent } from './uploader.component';
+import { ReferencePipe } from './reference-path.pipe';
+
 @NgModule({
-  declarations: [ ImageUploaderComponent ],
+  declarations: [ ImageUploaderComponent, ReferencePipe ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -27,6 +29,6 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     MatTooltipModule,
     ClipboardModule
   ],
-  exports: [ ImageUploaderComponent ]
+  exports: [ ImageUploaderComponent, ReferencePipe ]
 })
 export class ImageUploaderModule { }
