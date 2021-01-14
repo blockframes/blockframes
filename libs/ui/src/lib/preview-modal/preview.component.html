@@ -13,13 +13,13 @@
       </ng-container>
 
       <ng-container *ngSwitchCase="'pdf'">
-        <media-pdf [ref]="ref"></media-pdf>
+        <pdf-viewer [ref]="ref"></pdf-viewer>
       </ng-container>
 
       <ng-container *ngSwitchCase="'video'">
         <!-- The player component has no size, we use a container div to set a size that the player will fill -->
         <div class="video-container">
-          <media-player [ref]="ref"></media-player>
+          <video-viewer [ref]="ref"></video-viewer>
         </div>
       </ng-container>
 

@@ -1,10 +1,10 @@
 
 <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
   <ng-container *ngSwitchCase="'pdf'">
-    <media-pdf-control [event]="event"></media-pdf-control>
+    <pdf-control [event]="event"></pdf-control>
   </ng-container>
   <ng-container *ngSwitchCase="'video'">
-    <media-video-control [event]="event"></media-video-control>
+    <video-control [event]="event"></video-control>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <!-- No controls to display -->

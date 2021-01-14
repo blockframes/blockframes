@@ -7,18 +7,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
-import { MediaViewerComponent } from './media-viewer.component';
-import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
-import { VideoViewerComponent } from './video-viewer/video-viewer.component';
+import { FilePuppetsComponent } from './puppets.component';
+import { PdfPuppetComponent } from '../../pdf/puppet/puppet.component';
+import { VideoPuppetComponent } from '../../video/puppet/puppet.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
-    MediaViewerComponent,
-    PdfViewerComponent,
-    VideoViewerComponent,
+    FilePuppetsComponent,
+    PdfPuppetComponent,
+    VideoPuppetComponent,
   ],
   imports: [
     CommonModule,
@@ -34,6 +34,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FileNameModule,
     ImageModule,
   ],
-  exports: [ MediaViewerComponent, PdfViewerComponent ],
+  exports: [ FilePuppetsComponent, VideoPuppetComponent, PdfPuppetComponent ],
 })
-export class MediaViewerModule {}
+export class FilePuppetsModule {}

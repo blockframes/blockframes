@@ -9,9 +9,9 @@ import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
-  selector: '[event] media-video-control',
-  templateUrl: './video-control.component.html',
-  styleUrls: ['./video-control.component.scss'],
+  selector: '[event] video-control',
+  templateUrl: './control.component.html',
+  styleUrls: ['./control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoControlComponent {

@@ -6,10 +6,10 @@
         <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
       </ng-container>
       <ng-container *ngSwitchCase="'pdf'">
-        <event-pdf-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></event-pdf-viewer>
+        <pdf-puppet [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></pdf-puppet>
       </ng-container>
       <ng-container *ngSwitchCase="'video'">
-        <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
+        <video-puppet [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></video-puppet>
       </ng-container>
       <ng-container *ngSwitchDefault>
         <article>

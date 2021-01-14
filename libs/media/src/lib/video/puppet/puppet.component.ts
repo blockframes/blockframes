@@ -8,19 +8,19 @@ import { MediaService } from "@blockframes/media/+state/media.service";
 import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
-import { toggleFullScreen  } from '../utils';
+import { toggleFullScreen  } from '../../file/puppets/utils';
 
 declare const jwplayer: any;
 
 @Component({
   // ! Warning if you change the selector, be sure to also change it in the .scss
-  selector: '[eventId] [ref] [control] event-video-viewer',
-  templateUrl: './video-viewer.component.html',
-  styleUrls: ['./video-viewer.component.scss'],
+  selector: '[eventId] [ref] [control] video-puppet',
+  templateUrl: './puppet.component.html',
+  styleUrls: ['./puppet.component.scss'],
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VideoViewerComponent implements AfterViewInit {
+export class VideoPuppetComponent implements AfterViewInit {
 
   @ViewChild('container') playerContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;

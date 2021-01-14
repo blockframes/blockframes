@@ -4,12 +4,12 @@ import { Event } from '@blockframes/event/+state';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
 
 @Component({
-  selector: '[event] media-control',
-  templateUrl: './media-control.component.html',
-  styleUrls: ['./media-control.component.scss'],
+  selector: '[event] file-controls',
+  templateUrl: './controls.component.html',
+  styleUrls: ['./controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaControlComponent {
+export class FileControlsComponent {
 
   @Input() event: Event<Meeting>;
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MediaPlayerComponent } from './player.component';
+import { VideoViewerComponent } from './viewer.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -9,8 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [MediaPlayerComponent],
-  exports: [MediaPlayerComponent],
+  declarations: [ VideoViewerComponent ],
+  exports: [ VideoViewerComponent ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -22,4 +22,4 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatProgressSpinnerModule,
   ]
 })
-export class MediaPlayerModule { }
+export class VideoViewerModule { }

@@ -10,13 +10,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
-import { MediaControlComponent } from './media-control.component';
-import { PdfControlComponent } from './pdf-control/pdf-control.component';
-import { VideoControlComponent } from './video-control/video-control.component';
+import { FileControlsComponent } from './controls.component';
+import { PdfControlComponent } from '../../pdf/control/control.component';
+import { VideoControlComponent } from '../../video/control/control.component';
 
 @NgModule({
   declarations: [
-    MediaControlComponent,
+    FileControlsComponent,
     PdfControlComponent,
     VideoControlComponent,
   ],
@@ -32,6 +32,6 @@ import { VideoControlComponent } from './video-control/video-control.component';
     FileNameModule,
     DurationModule,
   ],
-  exports: [ MediaControlComponent ],
+  exports: [ FileControlsComponent ],
 })
-export class MediaControlModule {}
+export class FileControlsModule {}

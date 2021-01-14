@@ -5,7 +5,7 @@
   </div>
 </ng-container>
 <ng-template #ready>
-  <event-pdf-viewer [ref]="ref" [control]="control">
+  <pdf-puppet [ref]="ref" [control]="control">
     <div fxLayout="row" fxLayoutAlign="center center">
       <button mat-icon-button (click)="previous()" [disabled]="previousDisable$ | async">
         <mat-icon svgIcon="arrow_left"></mat-icon>
@@ -15,5 +15,5 @@
         <mat-icon svgIcon="arrow_right"></mat-icon>
       </button>
     </div>
-  </event-pdf-viewer>
+  </pdf-puppet>
 </ng-template>

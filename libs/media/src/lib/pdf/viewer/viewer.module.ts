@@ -4,22 +4,22 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MediaViewerModule } from '../viewers/media-viewer.module';
+import { FilePuppetsModule } from '../../file/puppets/puppets.module'
 
-import { PdfComponent } from './pdf.component';
+import { PdfViewerComponent } from './viewer.component';
 
 @NgModule({
-  declarations: [ PdfComponent ],
+  declarations: [ PdfViewerComponent ],
   imports: [
     CommonModule,
     FlexLayoutModule,
 
-    MediaViewerModule,
+    FilePuppetsModule,
 
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
   ],
-  exports: [ PdfComponent ],
+  exports: [ PdfViewerComponent ],
 })
-export class PdfModule { }
+export class PdfViewerModule { }

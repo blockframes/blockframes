@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { createEvent, Event, EventService } from '@blockframes/event/+state';
 import { Meeting, MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
-import { MediaService } from '../../../+state/media.service';
+import { MediaService } from '../../+state/media.service';
 
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: '[event] media-pdf-control',
-  templateUrl: './pdf-control.component.html',
-  styleUrls: ['./pdf-control.component.scss'],
+  selector: '[event] pdf-control',
+  templateUrl: './control.component.html',
+  styleUrls: ['./control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PdfControlComponent {

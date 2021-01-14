@@ -5,12 +5,12 @@ import { MediaService } from '@blockframes/media/+state';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: '[ref] media-pdf',
-  templateUrl: './pdf.component.html',
-  styleUrls: ['./pdf.component.scss'],
+  selector: '[ref] pdf-viewer',
+  templateUrl: './viewer.component.html',
+  styleUrls: ['./viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PdfComponent implements OnInit {
+export class PdfViewerComponent implements OnInit {
 
   @Input() ref: string;
 

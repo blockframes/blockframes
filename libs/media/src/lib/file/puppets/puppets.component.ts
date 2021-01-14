@@ -4,12 +4,12 @@ import { Event, EventService } from '@blockframes/event/+state';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
 
 @Component({
-  selector: '[event] media-viewer',
-  templateUrl: './media-viewer.component.html',
-  styleUrls: ['./media-viewer.component.scss'],
+  selector: '[event] file-puppets',
+  templateUrl: './puppets.component.html',
+  styleUrls: ['./puppets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaViewerComponent {
+export class FilePuppetsComponent {
 
   constructor(private eventService: EventService) {}
 

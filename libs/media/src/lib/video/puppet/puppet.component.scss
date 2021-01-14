@@ -4,7 +4,7 @@
  * so it cannot be cropped out.
  * We need to use ViewEncapsulation.None, that's why we don't use :host { }
  */
- event-video-viewer {
+ video-puppet {
   height: 100%;
 
   section {

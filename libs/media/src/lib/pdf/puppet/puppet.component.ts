@@ -4,15 +4,15 @@ import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { BehaviorSubject } from 'rxjs';
-import { toggleFullScreen } from '../utils';
+import { toggleFullScreen } from '../../file/puppets/utils';
 
 @Component({
-  selector: '[ref] [control] event-pdf-viewer',
-  templateUrl: './pdf-viewer.component.html',
-  styleUrls: ['./pdf-viewer.component.scss'],
+  selector: '[ref] [control] pdf-puppet',
+  templateUrl: './puppet.component.html',
+  styleUrls: ['./puppet.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PdfViewerComponent {
+export class PdfPuppetComponent {
 
   @ViewChild('container') pdfContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;

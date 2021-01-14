@@ -4,7 +4,7 @@
  * so it cannot be cropped out.
  * We need to use ViewEncapsulation.None, that's why we don't use :host { }
  */
-media-player {
+ video-viewer {
   height: 100%;
   #player {
     height: 100%;
