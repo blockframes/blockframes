@@ -32,8 +32,7 @@ export class ListComponent implements OnInit {
 
     this.events$ = combineLatest(events$, orgIds$).pipe(
       map(([ events, orgs ]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
-     // We can't filter by meta.titleId directly in the query because
-     // it will neglect the function of .startAt(new Date()) to only query events in the future
+     // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
       map(events => events.filter(event => !!event.meta.titleId)),
       tap(events => this.setTitle(events.length))
     )
