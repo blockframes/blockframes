@@ -17,6 +17,7 @@
       [matChipInputAddOnBlur]="addOnBlur"
       [matChipInputSeparatorKeyCodes]="separators"
       (matChipInputTokenEnd)="add($event.value, 'input')"
+      (focus)="focus()"
       [placeholder]="placeholder"
       autocapitalize="off"
       autocorrect="off"

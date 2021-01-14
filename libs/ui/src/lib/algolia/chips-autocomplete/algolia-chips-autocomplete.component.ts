@@ -114,7 +114,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     // perform search
     this.algoliaSearchResults$ = this.searchCtrl.valueChanges.pipe(
       debounceTime(300),
-      filter(text => typeof text === 'string' && !!text.trim()),
+      filter(text => typeof text === 'string'),
       distinctUntilChanged(),
       switchMap(text => (!!this.facet?.trim()) ? facetSearch(text) : regularSearch(text)),
     );
@@ -149,6 +149,10 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     this.searchCtrl.setValue(value);
     this.input.nativeElement.value = value;
     this.form.removeAt(index);
+  }
+
+  focus() {
+    this.searchCtrl.setValue('');
   }
 
   private getFilter() {
