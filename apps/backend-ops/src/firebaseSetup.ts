@@ -106,16 +106,12 @@ export async function prepareForTestingBeta() {
 }
 
 export async function prepareDb() {
-  const { db, auth } = loadAdminServices();
   console.warn('This script only restores the DB - does NOT refresh Firebase Auth, Sync storage, generate fixtures.');
   console.warn('Nor does this script check for a new/updated anonymized db from the ci environment - latest from storage backup used');
   console.log('Restoring latest db from storage...')
-  await restore(latestAnonDbFilename);
+  await importFirestore(latestAnonDbDir);
   console.log('Anonymized DB restored. Migrating...');
   await migrate(false);
-  console.log('DB migration complete. Cleaning up...');
-  await cleanDeprecatedData(db, auth);
-  console.log('Deprecated data removed!');
 }
 
 export async function prepareStorage() {
