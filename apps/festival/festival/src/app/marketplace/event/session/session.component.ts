@@ -167,7 +167,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   select(file: string) {
-    // TODO check if getActive retrieve the latest event
     const event: Event<Meeting> = this.eventQuery.getActive();
     const meta = { ...event.meta };
     meta.selectedFile = file;
@@ -175,7 +174,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   picked(files: string[]) {
-    // TODO check if getActive retrieve the latest event
     const event: Event<Meeting> = this.eventQuery.getActive();
     const meta = { ...event.meta };
     meta.files = files;
