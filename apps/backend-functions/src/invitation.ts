@@ -196,14 +196,9 @@ export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
   .where('email', '==', email)
   .get());
   const userQuery = await Promise.all(userPromises);
-  const orgIdExists = [];
-  userQuery.forEach(d => d.docs.forEach(u => {
-    const data = u.data();
-    orgIdExists.push(!!data.orgId);
-    return orgIdExists;
-  }));
 
-  const isUserOrgIdExist = orgIdExists.some(d => !!d);
+  const hasUserAlreadyAnOrg = userQuery.some(d => d.docs && d.docs.some(u => !!u.data().orgId));
+  if(hasUserAlreadyAnOrg) return true;
 
   const invitationPromises = userEmails.map(email => db.collection('invitations')
     .where('type', '==', 'joinOrganization')
@@ -212,9 +207,5 @@ export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
     .get());
   const invitationQuery = await Promise.all(invitationPromises);
 
-  const isInvitationExist = invitationQuery.some(d => d.docs.length > 0);
-
-  if (isUserOrgIdExist === true && isInvitationExist === true) return true;
-  if (isUserOrgIdExist === true || isInvitationExist === true) return true;
-  else return false;
+  return invitationQuery.some(d => d.docs.length > 0);
 }

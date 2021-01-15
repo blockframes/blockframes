@@ -57,7 +57,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   /** Return true if there is already a pending invitation for a list of users */
-  public async orgInvitationExists(userEmails: string[]): Promise<boolean> {
+  public async orgInvitationOrUserOrgIdExists(userEmails: string[]): Promise<boolean> {
     return await this.hasUserAnOrgOrIsAlreadyInvited(userEmails).toPromise();
   }
 
