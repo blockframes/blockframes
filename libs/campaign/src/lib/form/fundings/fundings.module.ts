@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { FundingsPipeModule } from '../../pipes/fundings.pipe';
 import { BudgetPipeModule } from '../../pipes/budget.pipe';
 
@@ -25,7 +25,7 @@ import { MatDividerModule } from '@angular/material/divider';
     ReactiveFormsModule,
     TunnelPageModule,
     FormTableModule,
-    UploadModule,
+    FileUploaderModule,
     FundingsPipeModule,
     BudgetPipeModule,
     MatFormFieldModule,

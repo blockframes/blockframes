@@ -18,7 +18,7 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 // Blockframes Media
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 
 import { MovieFormSalesPitchComponent } from './sales-pitch.component';
 
@@ -29,7 +29,7 @@ import { MovieFormSalesPitchComponent } from './sales-pitch.component';
     CommonModule,
     ReactiveFormsModule,
     TunnelPageModule,
-    UploadModule,
+    FileUploaderModule,
     FlexLayoutModule,
     FormListModule,
     StaticSelectModule,

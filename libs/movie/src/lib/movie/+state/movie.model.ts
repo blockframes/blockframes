@@ -3,7 +3,6 @@ import {
   MovieLanguageSpecificationContainer,
   Title,
   StoreConfig,
-  MovieDocumentWithDates,
   MovieAnalytics,
   MovieLegalDocuments,
   MovieStakeholders,
@@ -24,7 +23,8 @@ import {
   MovieSalesPitch,
   MovieNote,
   HostedVideos,
-  HostedVideo
+  HostedVideo,
+  MovieBase
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -42,7 +42,7 @@ export {
   MovieReview
 } from './movie.firestore';
 
-export interface Movie extends MovieDocumentWithDates {
+export interface Movie extends MovieBase<Date> {
   distributionRights?: DistributionRight[]
 }
 

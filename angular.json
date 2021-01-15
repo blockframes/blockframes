@@ -538,6 +538,7 @@
               "apps/catalog/catalog/src/favicon.ico",
               "apps/catalog/catalog/src/assets",
               "apps/catalog/catalog/src/manifest.webmanifest",
+              "apps/catalog/catalog/src/robots.txt",
               {
                 "glob": "**/*",
                 "input": "./assets",
@@ -792,6 +793,7 @@
             "assets": [
               "apps/festival/festival/src/favicon.ico",
               "apps/festival/festival/src/assets",
+              "apps/festival/festival/src/robots.txt",
               {
                 "glob": "**/*",
                 "input": "./assets",
@@ -1286,6 +1288,7 @@
             "assets": [
               "apps/crm/crm/src/favicon.ico",
               "apps/crm/crm/src/assets",
+              "apps/crm/crm/src/robots.txt",
               {
                 "glob": "**/*",
                 "input": "./assets",
@@ -1615,6 +1618,7 @@
               "apps/financiers/financiers/src/favicon.ico",
               "apps/financiers/financiers/src/assets",
               "apps/financiers/financiers/src/manifest.webmanifest",
+              "apps/financiers/financiers/src/robots.txt",
               {
                 "glob": "**/*",
                 "input": "./assets",
@@ -1862,6 +1866,7 @@
             "assets": [
               "apps/cms/src/favicon.ico",
               "apps/cms/src/assets",
+              "apps/cms/src/robots.txt",
               {
                 "glob": "**/*",
                 "input": "./assets",

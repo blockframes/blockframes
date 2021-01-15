@@ -9,8 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { MoviePictureUploadComponent } from './picture-upload.component';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
-import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 
 @NgModule({
   imports: [
@@ -18,8 +17,7 @@ import { ReferencePathModule } from '@blockframes/media/directives/media/referen
     ReactiveFormsModule,
     RouterModule,
     FlexLayoutModule,
-    CropperModule,
-    ReferencePathModule,
+    ImageUploaderModule,
     MatButtonModule,
     MatIconModule
   ],

@@ -5,9 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { GetMediaUrlModule } from '@blockframes/media/pipes/get-media-url.pipe';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { PdfViewerModule } from '@blockframes/media/pdf/viewer/viewer.module';
+import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 import { PreviewModalComponent } from './preview.component';
+import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+
 
 @NgModule({
   imports: [
@@ -17,8 +20,10 @@ import { PreviewModalComponent } from './preview.component';
     MatTooltipModule,
     MatDialogModule,
     MatButtonModule,
-    ImageReferenceModule,
-    GetMediaUrlModule
+    ImageModule,
+    FileNameModule,
+    PdfViewerModule,
+    VideoViewerModule,
   ],
   exports: [PreviewModalComponent],
   declarations: [PreviewModalComponent],

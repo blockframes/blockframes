@@ -15,8 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 
 // Blockframes Media
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
-import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 
 // Blockframes UI
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
@@ -44,8 +43,7 @@ import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe
     // Other Modules
     TunnelPageModule,
     ChipsAutocompleteModule,
-    ReferencePathModule,
-    CropperModule,
+    ImageUploaderModule,
     StaticSelectModule,
     FormTableModule,
     HasStatusModule,

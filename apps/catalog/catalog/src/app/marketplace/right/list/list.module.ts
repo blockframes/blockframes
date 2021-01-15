@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RightListComponent } from './list.component';
 
 import { ContractTableModule } from '@blockframes/contract/contract/components';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -21,7 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     ReactiveFormsModule,
     ContractTableModule,
-    ImageReferenceModule,
+    ImageModule,
 
     // Material
     MatTabsModule,

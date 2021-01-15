@@ -68,7 +68,7 @@ export function awaitProcOutput(proc: ChildProcess, output: string) {
  */
 export function runInBackground(cmd: string) {
   let proc: ChildProcess;
-  const procPromise = new Promise((res, rej) => {
+  const procPromise = new Promise<string>((res, rej) => {
     proc = exec(cmd, (err, stdout, stderr) => {
       if (err || stderr) rej(err || stderr);
       res(stdout);

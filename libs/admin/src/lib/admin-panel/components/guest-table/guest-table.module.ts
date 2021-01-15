@@ -9,9 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 // Modules
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
-// Components 
+// Components
 import { GuestTableComponent } from './guest-table.component';
 
 @NgModule({
@@ -24,7 +24,7 @@ import { GuestTableComponent } from './guest-table.component';
     OrgNameModule,
     MatIconModule,
     RouterModule,
-    ImageReferenceModule,
+    ImageModule,
   ]
 })
 export class GuestTableModule { }

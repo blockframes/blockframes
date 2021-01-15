@@ -1,11 +1,16 @@
 import { join } from 'path';
-import { backupBucket } from 'env/env';
 import { backupBucket as backupBucketCI } from 'env/env.blockframes-ci';
 import * as admin from 'firebase-admin';
 import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';
+import { getLatestFolderURL } from './anonymize';
+import { backupBucket } from '@env';
+import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
+import { runShellCommand } from './commands';
 
-export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl'
+export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl';
+
+export const latestAnonDbDir = 'LATEST-ANON-DB';
 
 export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin.app.App) {
   const folder = join(process.cwd(), 'tmp');
@@ -52,4 +57,17 @@ export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin
     console.log('File uploaded as', result[0].name);
     return destination;
   });
+}
+
+export async function copyFirestoreExportFromCiBucket() {
+  const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
+  const localBucketURL = `gs://${backupBucket}`;
+
+  let cmd = `gsutil -m -q rm -r "gs://${backupBucket}/${latestAnonDbDir}/*"`;
+  console.log('Clearing old golden data:', cmd);
+  await runShellCommand(cmd);
+
+  cmd = `gsutil -m -q cp -r ${anonBackupURL} ${localBucketURL}`;
+  console.log('Copying golden data from CI', cmd);
+  await runShellCommand(cmd);
 }

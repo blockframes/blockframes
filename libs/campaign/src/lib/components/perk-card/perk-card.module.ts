@@ -6,7 +6,7 @@ import { PerkCardComponent } from './perk-card.component';
 
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { PerksPipeModule } from '@blockframes/campaign/pipes/perks.pipe';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ import { MatDialogModule } from '@angular/material/dialog';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     PerksPipeModule,
     MaxLengthModule,
     MatButtonModule,

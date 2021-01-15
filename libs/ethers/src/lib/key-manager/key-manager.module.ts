@@ -16,7 +16,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { KeyManagerListComponent } from "./key-manager-list/key-manager-list.component";
 import { KeyManagerItemComponent } from "./key-manager-item/key-manager-item.component";
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { PasswordConfirmModule } from "@blockframes/ui/form/password-confirm/password-confirm.module";
 
 @NgModule({
@@ -36,7 +36,7 @@ import { PasswordConfirmModule } from "@blockframes/ui/form/password-confirm/pas
     MatInputModule,
     MatTabsModule,
     PasswordConfirmModule,
-    UploadModule,
+    FileUploaderModule,
   ],
   declarations: [
     KeyManagerListComponent,

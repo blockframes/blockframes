@@ -47,7 +47,7 @@
       "tags": []
     },
     "backend-ops": {
-      "tags": []
+      "tags": ["backend-ops", "ops"]
     },
     "notification": {
       "tags": [

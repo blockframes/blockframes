@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
-import { AttendeeStatus, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
@@ -165,4 +165,17 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
     this.dialogSub?.unsubscribe();
   }
+
+  select(selectedFile: string) {
+    const event: Event<Meeting> = this.eventQuery.getActive();
+    const meta = { ...event.meta, selectedFile };
+    this.service.update(event.id, { meta });
+  }
+
+  picked(files: string[]) {
+    const event: Event<Meeting> = this.eventQuery.getActive();
+    const meta = { ...event.meta, files };
+    this.service.update(event.id, { meta })
+  }
+
 }
