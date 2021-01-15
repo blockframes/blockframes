@@ -190,7 +190,20 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
   })
 }
 
-export async function isInvitationToJoinOrgExist(userEmails: string[]) {
+export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
+
+  const userPromises = userEmails.map(email => db.collection('users')
+  .where('email', '==', email)
+  .get());
+  const userQuery = await Promise.all(userPromises);
+  const orgIdExists = [];
+  userQuery.forEach(d => d.docs.forEach(u => {
+    const data = u.data();
+    orgIdExists.push(!!data.orgId);
+    return orgIdExists;
+  }));
+
+  const isUserOrgIdExist = orgIdExists.some(d => !!d);
 
   const invitationPromises = userEmails.map(email => db.collection('invitations')
     .where('type', '==', 'joinOrganization')
@@ -198,5 +211,10 @@ export async function isInvitationToJoinOrgExist(userEmails: string[]) {
     .where('status', 'in', invitationStatus.filter(s => s !== 'declined'))
     .get());
   const invitationQuery = await Promise.all(invitationPromises);
-  return invitationQuery.some(d => d.docs.length > 0);
+
+  const isInvitationExist = invitationQuery.some(d => d.docs.length > 0);
+
+  if (isUserOrgIdExist === true && isInvitationExist === true) return true;
+  if (isUserOrgIdExist === true || isInvitationExist === true) return true;
+  else return false;
 }
