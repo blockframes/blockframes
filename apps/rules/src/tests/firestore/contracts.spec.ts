@@ -11,6 +11,7 @@ describe('Contracts Rules Tests', () => {
   const projectId = `ctrules-spec-${Date.now()}`;
   let db: Firestore;
 
+  //User may not be in same org but could be party to the contract 
   describe('With User not in org', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin' });
@@ -35,17 +36,6 @@ describe('Contracts Rules Tests', () => {
       });
     });
 
-    describe.skip('Update Contracts', () => {
-      it('should be able to update contract', async () => {
-        const contractRef = db.doc('movies/M001');
-        await assertSucceeds(contractRef.get());
-      });
-
-      it('should be able to read movie distribution rights', async () => {
-        const contractRef = db.doc('movies/M001/distributionRights/DR001');
-        await assertSucceeds(contractRef.get());
-      });
-    });
   });
 
   describe('With User in org', () => {
@@ -63,6 +53,8 @@ describe('Contracts Rules Tests', () => {
     });
 
     describe('Version', () => {
+      //TODO: This test is currently failing
+      // It will be fixed for the new rewrite.
       it.skip('contract party should be able to read version doc', async () => {
         const contractRef = db.doc('contracts/C001/version/v1');
         await assertFails(contractRef.get());
