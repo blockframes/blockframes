@@ -149,7 +149,10 @@ export const testFixture = {
 
   //Contracts
   'contracts/C001': {
-    partyIds: ['O001']
+    partyIds: ['O001'],
+    'versions/v1': {
+      id: 'v1',
+    },    
   },
   'contracts/C002': {
     id: 'C002',
