@@ -165,4 +165,21 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
     this.dialogSub?.unsubscribe();
   }
+
+  select(file: string) {
+    // TODO check if getActive retrieve the latest event
+    const event: Event<Meeting> = this.eventQuery.getActive();
+    const meta = { ...event.meta };
+    meta.selectedFile = file;
+    this.service.update(event.id, { meta });
+  }
+
+  picked(files: string[]) {
+    // TODO check if getActive retrieve the latest event
+    const event: Event<Meeting> = this.eventQuery.getActive();
+    const meta = { ...event.meta };
+    meta.files = files;
+    this.service.update(event.id, { meta })
+  }
+
 }
