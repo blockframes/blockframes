@@ -6,6 +6,8 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
+import { emulators } from '@env';
+import { doc } from 'akita-ng-fire';
 
 @Component({
   selector: 'auth-widget',
@@ -36,5 +38,20 @@ export class AuthWidgetComponent {
   setTheme({ checked }: MatSlideToggleChange) {
     const mode = checked ? 'dark' : 'light';
     this.themeService.theme = mode;
+  }
+
+  getEmulators(): string {
+    const enabledEmulators = [];
+    Object.keys(emulators).forEach(k => {
+      if (emulators[k]) {
+        enabledEmulators.push[k];
+      }
+    });
+
+    if (enabledEmulators.length) {
+      return enabledEmulators.join(' - ');
+    } else {
+      return 'none';
+    }
   }
 }
