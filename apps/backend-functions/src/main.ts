@@ -99,7 +99,7 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',on
 export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
 
 /** Used to check if users have already an invitation to join org existing */
-export const isInvitationToJoinOrgExist = functions.https.onCall(invitations.isInvitationToJoinOrgExist);
+export const hasUserAnOrgOrIsAlreadyInvited = functions.https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
 
 //--------------------------------
 //    Events Management          //
