@@ -7,20 +7,20 @@ import { emulators } from '@env';
  * @see firebase.json for ports
  */
 export function getEmulatorsConfig() {
-  
-  const FIREBASE_EMULATORS = [];
+
+  const enabledEmulators = [];
 
   if (emulators.auth) {
-    FIREBASE_EMULATORS.push({ provide: USE_AUTH_EMULATOR, useValue: ['localhost', 9099] });
+    enabledEmulators.push({ provide: USE_AUTH_EMULATOR, useValue: ['localhost', 9099] });
   }
 
   if (emulators.firestore) {
-    FIREBASE_EMULATORS.push({ provide: USE_FIRESTORE_EMULATOR, useValue: ['localhost', 8080] });
+    enabledEmulators.push({ provide: USE_FIRESTORE_EMULATOR, useValue: ['localhost', 8080] });
   }
 
   if (emulators.functions) {
-    FIREBASE_EMULATORS.push({ provide: USE_FUNCTIONS_EMULATOR, useValue: ['localhost', 5001] });
+    enabledEmulators.push({ provide: USE_FUNCTIONS_EMULATOR, useValue: ['localhost', 5001] });
   }
 
-  return FIREBASE_EMULATORS;
+  return enabledEmulators;
 }

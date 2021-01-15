@@ -49,7 +49,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 
 import { firebase, production } from '@env';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
-import { getEmulatorsConfig } from '@blockframes/firebase-utils';
+import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
 
 @NgModule({
   declarations: [AppComponent],

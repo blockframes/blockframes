@@ -47,7 +47,7 @@ import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-bann
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
-import { getEmulatorsConfig } from '@blockframes/firebase-utils';
+import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
 
 @NgModule({
   declarations: [AppComponent],

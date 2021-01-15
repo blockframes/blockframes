@@ -34,7 +34,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
 
 import { MatNativeDateModule } from '@angular/material/core';
-import { getEmulatorsConfig } from '@blockframes/firebase-utils';
+import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
 
 @NgModule({
   declarations: [AppComponent],
