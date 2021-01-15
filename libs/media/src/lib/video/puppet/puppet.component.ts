@@ -94,7 +94,8 @@ export class VideoPuppetComponent implements AfterViewInit {
           file: result.signedUrl,
           logo: {
             file: watermarkUrl,
-          }
+          },
+          image: `https://cdn.jwplayer.com/thumbs/${result.info.key}.jpg`,
         });
 
         this.player.on('ready', () => this.signalPlayerReady());
