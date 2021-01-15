@@ -1,42 +1,39 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
-import { Event, EventService } from '@blockframes/event/+state';
-import { Meeting } from '@blockframes/event/+state/event.firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: '[event] file-carousel',
+  selector: '[files] file-carousel',
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileCarouselComponent {
 
-  editPage: string;
+  /** Array of file path to display in the Carousel */
+  @Input() files: string[];
 
-  @Input() event: Event<Meeting>;
+  /** Emit the file path that has been selected by the user */
+  @Output() select = new EventEmitter<string>();
+
+  /** Emit the new files list (array) that has been picked by the user */
+  @Output() picked = new EventEmitter<string[]>();
+
+  private selectedFile: string;
 
   constructor(
     private dialog: MatDialog,
-    private eventService: EventService
   ) { }
 
   isSelected(file: string) {
-    return this.event.meta.selectedFile === file;
+    return this.selectedFile === file;
   }
 
-  select(file: string) {
-    const meta = { ...this.event.meta };
-    meta.selectedFile = file;
-    this.eventService.update(this.event.id, { meta });
-  }
-
-  stop() {
-    const meta = { ...this.event.meta };
-    meta.selectedFile = '';
-    this.eventService.update(this.event.id, { meta });
+  selectFile(file: string) {
+    this.selectedFile = file;
+    this.select.emit(file);
   }
 
   openFileSelector() {
@@ -45,12 +42,10 @@ export class FileCarouselComponent {
       height: '80%',
       disableClose: true,
       data: {
-        selectedFiles: this.event.meta.files,
+        selectedFiles: this.files,
       }
-    }).afterClosed().pipe(take(1)).subscribe(result => {
-      const meta = { ...this.event.meta };
-      meta.files = result;
-      this.eventService.update(this.event.id, { meta })
+    }).afterClosed().subscribe((result: string[]) => {
+      this.picked.emit(result);
     });
   }
 }
