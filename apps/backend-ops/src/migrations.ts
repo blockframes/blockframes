@@ -3,7 +3,7 @@
  * to the LAST version.
  */
 import { backup, restore, exportFirestore, importFirestore } from './admin';
-import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from "@blockframes/firebase-utils";
+import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, getFirestoreExportDirname } from "@blockframes/firebase-utils";
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
 
@@ -44,7 +44,6 @@ export async function migrate(
   storage = loadAdminServices().storage
 ) {
   console.info('start the migration process...');
-  // const { db, storage } = loadAdminServices();
 
   try {
     const currentVersion = await loadDBVersion(db);
@@ -96,7 +95,8 @@ export async function migrateBeta(
   storage = loadAdminServices().storage
 ) {
   console.info('start the migration process...');
-  // const { db, storage } = loadAdminServices();
+
+  const backupDir = `pre-migration-${getFirestoreExportDirname(new Date())}`;
 
   try {
     const currentVersion = await loadDBVersion(db);
@@ -109,7 +109,7 @@ export async function migrateBeta(
 
     if (withBackup) {
       console.info('backup the database before doing anything');
-      await exportFirestore();
+      await exportFirestore(backupDir);
       console.info('backup done, moving on to the migrations...');
     } else {
       console.warn('⚠️ skipping the backup before running migrations, are you sure?');
@@ -128,13 +128,13 @@ export async function migrateBeta(
     await updateDBVersion(db, lastVersion);
   } catch (e) {
     console.error(e);
-    console.error("the migration failed, revert'ing!");
-    await importFirestore();
+    console.error("the migration failed, reverting!");
+    await importFirestore(backupDir);
     throw e;
   } finally {
     if (withBackup) {
       console.info('running a backup post-migration');
-      await exportFirestore();
+      await exportFirestore(`post-migration-${getFirestoreExportDirname(new Date())}`);
       console.info('done with the backup post-migration');
     }
     console.info('end the migration process...');
