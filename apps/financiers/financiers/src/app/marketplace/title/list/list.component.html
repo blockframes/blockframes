@@ -79,12 +79,6 @@
     </movie-card>
   </ng-template>
 
-  <ng-template listPageEmpty *ngIf="loading$ | async">
-    <div class="loading">
-      <mat-spinner color="primary"></mat-spinner>
-    </div>
-  </ng-template>
-
   <list-page-progress *ngIf="nbHits" [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
     You've viewed {{ hitsViewed }} of {{ nbHits }} titles
   </list-page-progress>

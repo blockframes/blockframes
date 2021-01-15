@@ -4,9 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrganizationFormAddressModule } from '../organization-form-address/organization-form-address.module';
 import { OrganizationFormDescriptionModule } from '../organization-form-description/organization-form-description.module';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { FormCountryModule } from '@blockframes/ui/form/country/country.module';
-import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -23,11 +22,11 @@ import { OrganizationFormComponent } from './organization-form.component';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    CropperModule,
+    ImageUploaderModule,
     OrganizationFormAddressModule,
     OrganizationFormDescriptionModule,
     FormCountryModule,
-    ReferencePathModule,
+
     // Material
     MatFormFieldModule,
     MatDividerModule,

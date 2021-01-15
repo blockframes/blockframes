@@ -14,7 +14,7 @@ import { FileNameModule } from '@blockframes/utils/pipes';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,7 +29,7 @@ import { MatSelectModule } from '@angular/material/select';
     FlexLayoutModule,
     FormListModule,
     MaxLengthModule,
-    UploadModule,
+    FileUploaderModule,
     FileNameModule,
 
     // Material

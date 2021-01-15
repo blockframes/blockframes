@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Blockframes
 import { InvitationComponent } from './invitation.component';
 import { InvitationListModule } from './components/list/list.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CommonModule,
     FlexLayoutModule,
     InvitationListModule,
-    ImageReferenceModule,
+    ImageModule,
     MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: InvitationComponent }]),
 

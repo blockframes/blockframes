@@ -108,6 +108,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.routeBeforeTunnel = this.exitRedirect || '/c/o/';
     this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay(1))
+    this.getRoute();
 
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(

@@ -5,9 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EditComponent } from './edit.component';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { FileSelectorModule } from '@blockframes/media/components/file-selector/file-selector.module';
+import { FilePickerModule } from '@blockframes/media/file/picker/picker.module';
 import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
-import { MediaViewerModule } from '@blockframes/media/components/dialog/file-viewer/viewer.module';
+import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';
@@ -33,10 +33,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     LayoutEventEditModule,
     EventAnalyticsModule,
     DisplayNameModule,
-    FileSelectorModule,
+    FilePickerModule,
     FileNameModule,
     ClipboardModule,
-    MediaViewerModule,
+    FilePreviewModule,
 
     // Material
     MatProgressSpinnerModule,

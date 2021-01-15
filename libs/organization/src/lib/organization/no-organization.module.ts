@@ -5,9 +5,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { WorkspacePipeModule } from '@blockframes/utils/pipes';
 
@@ -83,9 +83,9 @@ export const noOrganizationRoutes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     FlexLayoutModule,
-    CropperModule,
+    ImageUploaderModule,
     OrganizationFormModule,
-    ImageReferenceModule,
+    ImageModule,
     AlgoliaAutocompleteModule,
     WorkspacePipeModule,
 

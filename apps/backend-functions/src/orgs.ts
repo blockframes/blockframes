@@ -11,7 +11,7 @@ import { organizationCreated, organizationWasAccepted, organizationRequestedAcce
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, modules, getAppName, getSendgridFrom } from '@blockframes/utils/apps';
+import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';

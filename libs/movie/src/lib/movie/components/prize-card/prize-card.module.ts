@@ -6,13 +6,13 @@ import { CommonModule } from '@angular/common';
 import { PrizeCardComponent } from './prize-card.component';
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
-    ImageReferenceModule,
+    ImageModule,
     ToLabelModule,
   ],
   exports: [PrizeCardComponent],

@@ -1,16 +1,15 @@
-module.exports = {
+﻿module.exports = {
   name: 'backend-functions',
-  preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/backend-functions',
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsConfig: '<rootDir>/tsconfig.spec.json',
-      stringifyContentPathRegex: '\\.(html|svg)$',
-      astTransformers: [
-        'jest-preset-angular/build/InlineFilesTransformer',
-        'jest-preset-angular/build/StripStylesTransformer',
-      ],
     },
   },
+  transform: {
+    '^.+\\.(ts|html)$': 'ts-jest',
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  coverageDirectory: '../../coverage/libs/import',
 };

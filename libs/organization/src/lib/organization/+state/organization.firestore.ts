@@ -25,7 +25,7 @@ export interface OrgMedias {
 };
 
 /** Document model of an Organization */
-interface OrganizationBase<D> extends PublicOrganization {
+export interface OrganizationBase<D> extends PublicOrganization {
   _meta?: DocumentMeta<D>;
   activity?: OrgActivity;
   addresses: AddressSet;
@@ -42,9 +42,7 @@ interface OrganizationBase<D> extends PublicOrganization {
   documents?: OrgMedias;
 }
 
-export interface OrganizationDocument extends OrganizationBase<Timestamp> { }
-
-export interface OrganizationDocumentWithDates extends OrganizationBase<Date> { }
+export interface OrganizationDocument extends OrganizationBase<Timestamp> { };
 
 export interface AddressSet {
   main: Location;

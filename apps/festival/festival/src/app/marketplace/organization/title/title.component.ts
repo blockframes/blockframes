@@ -30,7 +30,9 @@ export class TitleComponent implements OnInit {
         return this.service.valueChanges(ref => ref
           .where('orgIds', 'array-contains', org.id)
           .where('storeConfig.status', '==', 'accepted')
-          .where('storeConfig.appAccess.festival', '==', true))
+          .where('storeConfig.appAccess.festival', '==', true)
+          .orderBy('_meta.createdAt', 'desc')
+          )
       }),
       map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year')))
     );

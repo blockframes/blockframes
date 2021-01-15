@@ -15,10 +15,10 @@
       </mat-slide-toggle>
     </div>
     <ng-container *ngIf="!isMnemonic; else: mnemonicImport">
-      <file-upload
+      <file-uploader
         allowedFileType="json"
         (uploaded)="importedJson($event)"
-      ></file-upload>
+      ></file-uploader>
     </ng-container>
     <ng-template #mnemonicImport>
       <mat-form-field appearance="outline">

@@ -9,7 +9,7 @@ import { DashboardComponent } from './dashboard.component';
 
 // Blockframes
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
@@ -157,7 +157,7 @@ const routes: Routes = [
     CommonModule,
     FlexLayoutModule,
     DashboardLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
     OrgNameModule,
     ToLabelModule,
     MovieFormShellModule,
