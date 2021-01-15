@@ -9,7 +9,8 @@ import {
   getServiceAccountObj,
   uploadDbBackupToBucket,
   loadAdminServices,
-  restoreStorageFromCi
+  restoreStorageFromCi,
+  startMaintenance
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join } from 'path';
@@ -146,4 +147,23 @@ export async function anonymizeLatestProdDb() {
  */
 export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
   await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
+}
+
+/**
+ * This function will launch the emulator and switch on maintenance mode, then exit
+ * @param param0 settings object
+ * Provide a local path to the firestore export dir for which to switch on maintenance mode
+ */
+export async function switchOnMaintenance({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
+  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
+  let proc: ChildProcess;
+  try {
+    proc = await startFirestoreEmulatorWithImport(emulatorPath);
+    const db = connectEmulator();
+    startMaintenance(db);
+  } catch (e) {
+    throw e;
+  } finally {
+    await shutdownEmulator(proc);
+  }
 }

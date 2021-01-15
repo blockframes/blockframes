@@ -10,10 +10,10 @@ import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHe
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
-import { backup } from './admin';
+import { backup, exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonDbLocal, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, uploadBackup } from './emulator';
+import { anonDbLocal, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, switchOnMaintenance, uploadBackup } from './emulator';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -53,6 +53,9 @@ async function runCommand() {
     case 'uploadToBucket':
       await uploadBackup({ remoteDir: arg1, localRelPath: arg2 });
       break;
+    case 'switchOnMaintenance':
+      await switchOnMaintenance({ importFrom: arg1 });
+      break;
     case 'use':
       await selectEnvironment(arg1);
       break;
@@ -85,6 +88,12 @@ async function runCommand() {
       await startMaintenance(db);
       await restore();
       await endMaintenance(db);
+      break;
+    case 'exportFirestore':
+      await exportFirestore(arg1)
+      break;
+    case 'importFirestore':
+      await importFirestore(arg1)
       break;
     case 'startMaintenance':
       await startMaintenance();
