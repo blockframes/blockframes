@@ -27,9 +27,9 @@ export class MovieFeaturePipe implements PipeTransform {
           if (!productionCountries.includes(country)) productionCountries.push(country);
         }
       }
-      productionCountries.forEach((value, index) => {
-        if (index === 0) displayedProductionCountries += territoriesISOA2[value];
-        if (index === 1) displayedProductionCountries += `, ${territoriesISOA2[value]}`;
+      productionCountries.forEach((country, index) => {
+        if (index === 0) displayedProductionCountries += territoriesISOA2[country];
+        if (index === 1) displayedProductionCountries += `, ${territoriesISOA2[country]}`;
         if (index === 2) displayedProductionCountries += `, ...`;
       })
     }
