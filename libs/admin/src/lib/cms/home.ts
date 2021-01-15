@@ -1,5 +1,6 @@
 import { Section } from "./template";
 import { FirestoreQuery, Link } from './utils';
+import { SortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
 
 export interface BannerSection extends Section {
   _type: 'banner',
@@ -47,6 +48,7 @@ export interface TitlesSection extends Section {
   title: string;
   link: string;
   mode: 'poster' | 'banner';
+  sorting: SortingOptions;
   titleIds: string[];
   query: FirestoreQuery;
 }
