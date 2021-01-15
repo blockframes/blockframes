@@ -1,6 +1,5 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 // Blockframes
@@ -8,7 +7,6 @@ import { MovieService } from '@blockframes/movie/+state';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';
-import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 
 @Component({
   selector: 'movie-form-start-tunnel',
@@ -19,12 +17,7 @@ import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 export class MovieFormStartTunnelComponent {
   public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(
-    private movieService: MovieService,
-    private consentsService: ConsentsService,
-    private router: Router,
-    private snackbar: MatSnackBar
-  ) {}
+  constructor(private movieService: MovieService, private router: Router) {}
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
