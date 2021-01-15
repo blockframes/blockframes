@@ -3,10 +3,10 @@
     <img [ref]="data.ref" asset="no_titles.webp" />
   </ng-container>
   <ng-container *ngSwitchCase="'pdf'">
-    <media-pdf [ref]="data.ref"></media-pdf>
+    <pdf-viewer [ref]="data.ref"></pdf-viewer>
   </ng-container>
   <ng-container *ngSwitchCase="'video'">
-    <media-player [ref]="data.ref"></media-player>
+    <video-viewer [ref]="data.ref"></video-viewer>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <p>Sorry, we don't know how to display this file.</p>

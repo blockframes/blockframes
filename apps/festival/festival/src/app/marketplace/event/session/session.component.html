@@ -21,7 +21,7 @@
 
         <ng-template #showVideo>
           <article class="screen">
-            <media-player [ref]="screeningFileRef" [eventId]="event.id" class="overlay"></media-player>
+            <video-viewer [ref]="screeningFileRef" [eventId]="event.id" class="overlay"></video-viewer>
           </article>
         </ng-template>
 
@@ -40,16 +40,16 @@
         <div class="meeting-container">
 
           <ng-container *ngIf="!!event.meta.selectedFile">
-            <media-viewer [event]="event" [style]="{width: mediaContainerSize}"></media-viewer>
+            <file-puppets [event]="event" [style]="{width: mediaContainerSize}"></file-puppets>
           </ng-container>
           <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
 
         </div>
         <ng-container *ngIf="event.isOwner">
-          <media-control
+          <file-controls
             [event]="event"
             *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
-          ></media-control>
+          ></file-controls>
           <file-carousel fxFlex="35%" [event]="event"></file-carousel>
         </ng-container>
       </section>
