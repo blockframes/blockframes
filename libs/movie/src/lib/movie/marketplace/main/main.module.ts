@@ -8,7 +8,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule, HasKeysModule } from '@blockframes/utils/pipes';
 import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
-import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
+import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 
 import { PrizeCardModule } from '../../components/prize-card/prize-card.module';
 import { CreditCardModule } from '../../components/credit-card/credit-card.module';
@@ -36,7 +36,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CreditCardModule,
     ReviewCardModule,
     RunningTimePipeModule,
-    MediaPlayerModule,
+    VideoViewerModule,
     // Material
     MatIconModule,
     MatButtonModule,

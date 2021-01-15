@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { FilePreviewComponent } from './preview.component';
 
-import { PdfModule } from '@blockframes/media/components/pdf/pdf.module';
-import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
+import { PdfViewerModule } from '@blockframes/media/pdf/viewer/viewer.module';
+import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
@@ -15,8 +15,8 @@ import { MatDialogModule } from '@angular/material/dialog';
   imports: [
     CommonModule,
 
-    PdfModule,
-    MediaPlayerModule,
+    PdfViewerModule,
+    VideoViewerModule,
     FileNameModule,
     ImageModule,
 

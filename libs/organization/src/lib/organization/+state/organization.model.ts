@@ -1,9 +1,9 @@
 /** Gives information about an application */
 import {
-  OrganizationDocumentWithDates,
   createOrganizationBase,
   PublicOrganization,
   createDenomination,
+  OrganizationBase,
 } from './organization.firestore';
 
 export {
@@ -14,7 +14,8 @@ export { OrganizationStatus } from '@blockframes/utils/static-model/types';
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
-export type Organization = OrganizationDocumentWithDates;
+export interface Organization extends OrganizationBase<Date> {
+};
 
 export interface OrganizationForm {
   name: string;

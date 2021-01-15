@@ -4,12 +4,11 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
+import { TaskProgressPipe, TaskStatePipe } from './task.pipe';
 import { UploadWidgetComponent } from './upload-widget.component';
 
 // Blockframes
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
-import { TaskProgressModule } from '../../pipes/task-progress.pipe';
-import { TaskSnapshotModule } from '../../pipes/task-state.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
@@ -27,8 +26,6 @@ import { MatDividerModule } from '@angular/material/divider';
 
     // Pipe
     MaxLengthModule,
-    TaskProgressModule,
-    TaskSnapshotModule,
     FileNameModule,
 
     // Blockframes
@@ -42,6 +39,6 @@ import { MatDividerModule } from '@angular/material/divider';
     MatDividerModule
   ],
   exports: [UploadWidgetComponent],
-  declarations: [UploadWidgetComponent],
+  declarations: [ UploadWidgetComponent, TaskProgressPipe, TaskStatePipe ],
 })
 export class UploadWidgetModule { }

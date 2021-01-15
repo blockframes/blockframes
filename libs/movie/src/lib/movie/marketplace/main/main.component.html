@@ -6,7 +6,7 @@
     <section id="sales-pitch" *ngIf="movie.promotional.salesPitch as salesPitch">
       <h2>Sales Pitch</h2>
       <article *ngIf="salesPitch.description" fxLayout="row" fxLayoutGap="16px">
-        <media-player [ref]="salesPitch.ref" *ngIf="salesPitch.jwPlayerId"></media-player>
+        <video-viewer [ref]="salesPitch.ref" *ngIf="salesPitch.jwPlayerId"></video-viewer>
         <p>{{ salesPitch.description }}</p>
       </article>
       <mat-divider></mat-divider>

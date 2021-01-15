@@ -35,7 +35,7 @@ import { DocumentMeta } from "@blockframes/utils/models-meta";
 //////////////////
 
 /** Generic interface of a Movie */
-interface MovieRaw<D> {
+export interface MovieBase<D> {
   // Every field concerning the document
   _type: 'movies';
   _meta?: DocumentMeta<D>;
@@ -91,11 +91,7 @@ interface MovieRaw<D> {
 }
 
 /** Document model of a Movie */
-export interface MovieDocument extends MovieRaw<Timestamp> {
-}
-
-/** Document model of a Movie with Dates (type Date) */
-export interface MovieDocumentWithDates extends MovieRaw<Date> {
+export interface MovieDocument extends MovieBase<Timestamp> {
 }
 
 /** Public interface of a movie (to notifications). */
