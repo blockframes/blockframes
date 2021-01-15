@@ -20,6 +20,8 @@ export class AuthWidgetComponent {
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
+  emulatorList = Object.entries(emulators).filter(([_, value]) => !!value).map(([key, _]) => key);
+  emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
 
   constructor(
     private db: AngularFirestore,
@@ -37,20 +39,5 @@ export class AuthWidgetComponent {
   setTheme({ checked }: MatSlideToggleChange) {
     const mode = checked ? 'dark' : 'light';
     this.themeService.theme = mode;
-  }
-
-  getEmulators(): string {
-    const enabledEmulators = [];
-    Object.keys(emulators).forEach(k => {
-      if (emulators[k]) {
-        enabledEmulators.push(k);
-      }
-    });
-
-    if (enabledEmulators.length) {
-      return enabledEmulators.join(' - ');
-    } else {
-      return 'none';
-    }
   }
 }
