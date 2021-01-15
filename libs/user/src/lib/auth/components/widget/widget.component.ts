@@ -7,7 +7,6 @@ import { UserService } from '@blockframes/user/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
 import { emulators } from '@env';
-import { doc } from 'akita-ng-fire';
 
 @Component({
   selector: 'auth-widget',
@@ -44,7 +43,7 @@ export class AuthWidgetComponent {
     const enabledEmulators = [];
     Object.keys(emulators).forEach(k => {
       if (emulators[k]) {
-        enabledEmulators.push[k];
+        enabledEmulators.push(k);
       }
     });
 
