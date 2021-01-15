@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { switchMap, filter, tap, map } from 'rxjs/operators';
+import { switchMap, filter, tap } from 'rxjs/operators';
 import {
   createMovie,
   Movie,
@@ -18,7 +18,7 @@ import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { firestore } from 'firebase/app';
+import type firebase from 'firebase';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -79,7 +79,7 @@ export class MovieService extends CollectionService<MovieState> {
     const user = await this.userService.getUser(userId);
     const ref = this.getRef(movie.id);
     write.update(ref, { '_meta.createdAt': new Date() });
-    return this.permissionsService.addDocumentPermissions(movie.id, write as firestore.Transaction, user.orgId);
+    return this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, user.orgId);
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {

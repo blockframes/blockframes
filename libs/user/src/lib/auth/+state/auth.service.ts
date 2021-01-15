@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { User as FireBaseUser } from 'firebase';
+import type firebase from 'firebase';
 import { UserCredential } from '@firebase/auth-types';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -41,7 +41,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @dev This populates the RoleState part of the AuthState.
    * Used to check if logged in user is blockframesAdmin or not.
    */
-  selectRoles(user: FireBaseUser) {
+  selectRoles(user: firebase.User) {
     return this.db.collection('blockframesAdmin').doc(user.uid).valueChanges().pipe(
       map(doc => ({ blockframesAdmin: doc !== undefined ? true : false }))
     );

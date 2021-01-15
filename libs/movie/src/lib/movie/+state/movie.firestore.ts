@@ -22,7 +22,7 @@ import {
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
-import { firestore } from "firebase/app";
+import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { MovieAppAccess } from "@blockframes/utils/apps";
@@ -147,7 +147,7 @@ export interface MoviePromotionalElements {
 // MOVIE DETAILS //
 ////////////////////
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 export interface StoreConfig {
   status: StoreStatus,
