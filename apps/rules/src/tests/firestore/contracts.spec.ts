@@ -62,10 +62,6 @@ describe('Contracts Rules Tests', () => {
       });
     });
 
-    describe.skip('Create Contracts', () => {
-
-    });
-
     describe('Version', () => {
       it.skip('contract party should be able to read version doc', async () => {
         const contractRef = db.doc('contracts/C001/version/v1');
