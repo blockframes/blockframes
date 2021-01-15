@@ -8,7 +8,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, intercomId, persistenceSettings } from '@env';
+import { firebase, firebaseRegion, intercomId, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -34,7 +34,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
 
 import { MatNativeDateModule } from '@angular/material/core';
-
+import { getEmulatorsConfig } from '@blockframes/firebase-utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -72,7 +72,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   ],
   providers: [
     ScreenTrackingService, UserTrackingService,
-    { provide: REGION, useValue: 'europe-west1' },
+    { provide: REGION, useValue: firebaseRegion },
+    ...getEmulatorsConfig()
   ],
   bootstrap: [AppComponent]
 })

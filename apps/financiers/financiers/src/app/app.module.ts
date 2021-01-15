@@ -9,7 +9,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { persistenceSettings } from '@env';
+import { firebaseRegion, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -49,6 +49,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 
 import { firebase, production } from '@env';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
+import { getEmulatorsConfig } from '@blockframes/firebase-utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -87,7 +88,8 @@ import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
-    { provide: REGION, useValue: 'europe-west1' },
+    { provide: REGION, useValue: firebaseRegion },
+    ...getEmulatorsConfig()
   ],
   bootstrap: [AppComponent]
 })
