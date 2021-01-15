@@ -44,7 +44,7 @@ export class FileCarouselComponent {
       data: {
         selectedFiles: this.files,
       }
-    }).afterClosed().pipe(take(1)).subscribe((result: string[]) => {
+    }).afterClosed().subscribe((result: string[]) => {
       this.picked.emit(result);
     });
   }
