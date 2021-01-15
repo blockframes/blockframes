@@ -36,13 +36,4 @@ export class MovieFormStartTunnelComponent {
       console.error(err);
     }
   }
-
-  async consent() {
-    const status = await this.consentsService.createConsent('share', 'Ar293JRrE20');
-    if (status === true) {
-      this.snackbar.open('Consent succefully created !', 'close', { duration: 5000 });
-    } else {
-      this.snackbar.open('Consent has not been created.', 'close', { duration: 5000 });
-    }
-  }
 }

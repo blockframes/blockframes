@@ -14,9 +14,6 @@
   <ng-container *ngIf="!(loadingTunnel.asObservable() | async); else loading">
     <a mat-flat-button color="accent" (click)="navigateToTunnel()">Start</a>
   </ng-container>
-  <ng-container *ngIf="!(loadingTunnel.asObservable() | async); else loading">
-    <a mat-flat-button color="accent" (click)="consent()">Consent!</a>
-  </ng-container>
   <span class="mat-body-2 center">This process should take about 30 minutes to complete.</span>
 </section>
 <img asset="movie_form_illustration.svg" loading="lazy">
