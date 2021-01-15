@@ -71,7 +71,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
           file: result.signedUrl,
           logo: {
             file: watermarkUrl,
-          }
+          },
+          image: `https://cdn.jwplayer.com/thumbs/${result.info.key}.jpg`,
         });
       }
     } catch(error) {
