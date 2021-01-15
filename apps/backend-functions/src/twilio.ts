@@ -9,7 +9,7 @@ import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, t
 import { hasUserAcceptedEvent } from "./internals/invitations/meetings";
 import Twilio from "twilio/lib/rest/Twilio";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
-import { db, functionRegion, getUser } from "./internals/firebase";
+import { db, firebaseRegion, getUser } from "./internals/firebase";
 import { Request, Response } from "firebase-functions";
 
 export interface RequestAccessToken {
@@ -97,7 +97,7 @@ export const getTwilioAccessToken = async (
   if (!roomAlreadyExists) {
     await client.video.rooms.create({
       uniqueName: eventId,
-      statusCallback: `https://${functionRegion}-${projectId}.cloudfunctions.net/twilioWebhook`,
+      statusCallback: `https://${firebaseRegion}-${projectId}.cloudfunctions.net/twilioWebhook`,
       statusCallbackMethod: 'POST',
     });
   }

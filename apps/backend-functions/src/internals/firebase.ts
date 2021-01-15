@@ -1,6 +1,7 @@
 import { region, config } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { firebaseRegion } from '@env';
+export { firebaseRegion } from '@env';
 export const functions = region(firebaseRegion);
 
 import { backupBucket, storageBucket } from '../environments/environment';
