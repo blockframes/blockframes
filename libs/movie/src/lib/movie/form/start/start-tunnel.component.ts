@@ -17,10 +17,14 @@ import { ConsentsService } from '@blockframes/consents/+state/consents.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormStartTunnelComponent {
-
   public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(private movieService: MovieService, private consentsService: ConsentsService, private router: Router, private snackbar: MatSnackBar) { }
+  constructor(
+    private movieService: MovieService,
+    private consentsService: ConsentsService,
+    private router: Router,
+    private snackbar: MatSnackBar
+  ) {}
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
@@ -34,11 +38,11 @@ export class MovieFormStartTunnelComponent {
   }
 
   async consent() {
-
-   const status = await this.consentsService.createConsent('share', 'Ar293JRrE20');
-   if (status === true) {
-    this.snackbar.open("Consent succefully created !", 'close', { duration: 5000 });
-   } else { this.snackbar.open('Consent has not been created.', 'close', { duration: 5000 }); }
-
+    const status = await this.consentsService.createConsent('share', 'Ar293JRrE20');
+    if (status === true) {
+      this.snackbar.open('Consent succefully created !', 'close', { duration: 5000 });
+    } else {
+      this.snackbar.open('Consent has not been created.', 'close', { duration: 5000 });
+    }
   }
 }
