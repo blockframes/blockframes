@@ -5,16 +5,16 @@
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </section>
-<ng-container *ngIf="event.meta?.files?.length; else noFiles">
+<ng-container *ngIf="files.length; else noFiles">
   <bf-carousel flex>
 
-    <button carouselItem mat-button (click)="stop()" [disabled]="isSelected('')" matTooltip="Stop presenting file">
+    <button carouselItem mat-button (click)="selectFile('')" [disabled]="isSelected('')" matTooltip="Stop presenting file">
       <mat-icon svgIcon="cancel"></mat-icon>
       <p>Stop</p>
     </button>
 
-    <ng-container *ngFor="let file of event.meta.files">
-      <button carouselItem class="file" (click)="select(file)" [disabled]="isSelected(file)" matTooltip="Share on screen">
+    <ng-container *ngFor="let file of files">
+      <button carouselItem class="file" (click)="selectFile(file)" [disabled]="isSelected(file)" matTooltip="Share on screen">
         <mat-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
         <p>{{ file | fileName }}</p>
       </button>
