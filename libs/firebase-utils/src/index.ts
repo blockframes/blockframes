@@ -11,6 +11,6 @@ export * from './lib/types';
 export * from './lib/algolia/algolia';
 export * from './lib/commands';
 export * from './lib/anonymize';
-export * from './lib/types';
-export * from './lib/algolia/algolia';
-export * from './lib/commands';
+export * from './lib/types'
+export * from './lib/algolia/algolia'
+export * from './lib/commands'
