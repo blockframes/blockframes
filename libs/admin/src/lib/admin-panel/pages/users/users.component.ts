@@ -57,7 +57,7 @@ export class UsersComponent implements OnInit {
 
     const [users, orgs] = await Promise.all([this.userService.getAllUsers(), this.orgService.getValue()]);
     this.rows = users.map(u => {
-      const org = orgs.find(org => org.id === u.orgId);
+      const org = orgs.find(o => o.id === u.orgId);
       return { 
         uid: u.uid,
         firstName: u.firstName,
@@ -97,7 +97,7 @@ export class UsersComponent implements OnInit {
 
       const [users, orgs] = await Promise.all([this.userService.getAllUsers(), this.orgService.getValue()]);
       const promises = users.map(async u => {
-        const org = orgs.find(org => org.id === u.orgId);
+        const org = orgs.find(o => o.id === u.orgId);
         return {
           ...u,
           firstConnexion: this.adminQuery.getFirstConnexion(u.uid),

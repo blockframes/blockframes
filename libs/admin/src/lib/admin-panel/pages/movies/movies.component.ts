@@ -47,7 +47,7 @@ export class MoviesComponent implements OnInit {
     const orgs = await this.orgService.getValue(orgIds);
 
     this.rows = movies.map(movie => {
-      const org = orgs.find(org => org.id === movie.orgIds[0]);
+      const org = orgs.find(o => o.id === movie.orgIds[0]);
       return { org, ...movie };
     })
     this.cdRef.markForCheck();
