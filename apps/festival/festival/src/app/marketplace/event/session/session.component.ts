@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
-import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { Meeting, MeetingMediaControl, MeetingPdfControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
@@ -13,7 +13,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { getFileExtension } from '@blockframes/utils/file-sanitizer';
+import { extensionToType } from '@blockframes/utils/utils';
+import { MediaService } from '@blockframes/media/+state';
 
 @Component({
   selector: 'festival-session',
@@ -42,6 +44,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     private eventQuery: EventQuery,
     private service: EventService,
     private movieService: MovieService,
+    private mediaService: MediaService,
     private authQuery: AuthQuery,
     private bottomSheet: MatBottomSheet,
     private userService: UserService,
@@ -55,26 +58,31 @@ export class SessionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.service.startLocalSession();
     this.event$ = this.service.queryDocs(this.eventQuery.getActiveId());
-    this.sub = this.event$.subscribe(async event => {
-      const fileSelected = !!event?.meta?.selectedFile;
-      if (!fileSelected) {
-        this.visioContainerSize = '100%';
-      } else if (event.isOwner) {
-        this.mediaContainerSize = '40%';
-        this.visioContainerSize = '60%';
-      } else {
-        this.mediaContainerSize = '60%';
-        this.visioContainerSize = '40%';
-      }
 
+    this.sub = this.event$.subscribe(async event => {
+
+      // SCREENING
       if (event.type === 'screening') {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
+
+      // MEETING
       } else if (event.type === 'meeting') {
         this.dynTitle.setPageTitle(event.title, 'Meeting');
+
+        const fileSelected = !!event?.meta?.selectedFile;
+        if (!fileSelected) {
+          this.visioContainerSize = '100%';
+        } else if (event.isOwner) {
+          this.mediaContainerSize = '40%';
+          this.visioContainerSize = '60%';
+        } else {
+          this.mediaContainerSize = '60%';
+          this.visioContainerSize = '40%';
+        }
 
         // Check for the autoplay
         try {
@@ -100,7 +108,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           });
         }
 
-        // Manage behavior depending on attendees status
+        // Manage redirect depending on attendees status & presence of meeting owners
         const uid = this.authQuery.userId;
         if (event.isOwner) {
           const attendees = (event.meta as Meeting).attendees;
@@ -132,6 +140,25 @@ export class SessionComponent implements OnInit, OnDestroy {
             }
           }
         }
+
+        // If the current selected file hasn't any controls yet we should create them
+        if (!!(event as Event<Meeting>).meta.selectedFile) {
+          const file = (event as Event<Meeting>).meta.selectedFile;
+          if (!(event as Event<Meeting>).meta.controls[file]) {
+            const fileType = extensionToType(getFileExtension(file));
+            let control: MeetingMediaControl;
+            let meta: Meeting;
+            switch (fileType) {
+              case 'pdf':
+                  control = await this.createPdfControl(file, event.id);
+                  meta  = { ...event.meta, controls: { ...event.meta.controls, [event.meta.selectedFile]: control } };
+                  await this.service.update(event.id, { meta });
+                break;
+              default: break;
+            }
+          }
+        }
+
       }
     })
   }
@@ -176,6 +203,17 @@ export class SessionComponent implements OnInit, OnDestroy {
     const event: Event<Meeting> = this.eventQuery.getActive();
     const meta = { ...event.meta, files };
     this.service.update(event.id, { meta })
+  }
+
+  async createPdfControl(ref: string, eventId: string): Promise<MeetingPdfControl> {
+    // locally download the pdf file to count it's number of pages
+    const url = await this.mediaService.generateImgIxUrl(ref, {}, eventId);
+    const response = await fetch(url);
+    const textResult = await response.text();
+    // this actually count the number of pages, the regex comes from stack overflow
+    const totalPages = textResult.match(/\/Type[\s]*\/Page[^s]/g).length;
+
+    return { type: 'pdf', currentPage: 1, totalPages };
   }
 
 }

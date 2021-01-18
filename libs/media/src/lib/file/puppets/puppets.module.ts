@@ -8,7 +8,8 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
 import { FilePuppetsComponent } from './puppets.component';
-import { PdfPuppetComponent } from '../../pdf/puppet/puppet.component';
+import { PdfViewerModule } from '../../pdf/viewer/viewer.module';
+import { PdfControlModule } from '../../pdf/control/control.module';
 import { VideoPuppetComponent } from '../../video/puppet/puppet.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -17,7 +18,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     FilePuppetsComponent,
-    PdfPuppetComponent,
     VideoPuppetComponent,
   ],
   imports: [
@@ -33,7 +33,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
     FileNameModule,
     ImageModule,
+    PdfControlModule,
+    PdfViewerModule,
   ],
-  exports: [ FilePuppetsComponent, VideoPuppetComponent, PdfPuppetComponent ],
+  exports: [ FilePuppetsComponent, VideoPuppetComponent ],
 })
 export class FilePuppetsModule {}

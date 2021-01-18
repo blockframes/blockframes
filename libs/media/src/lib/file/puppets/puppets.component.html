@@ -6,7 +6,7 @@
         <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
       </ng-container>
       <ng-container *ngSwitchCase="'pdf'">
-        <pdf-puppet [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></pdf-puppet>
+        <pdf-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></pdf-viewer>
       </ng-container>
       <ng-container *ngSwitchCase="'video'">
         <video-puppet [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></video-puppet>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { Event } from '@blockframes/event/+state';
-import { Meeting } from '@blockframes/event/+state/event.firestore';
+import { Event, EventService } from '@blockframes/event/+state';
+import { Meeting, MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 
 @Component({
   selector: '[event] file-controls',
@@ -13,4 +13,20 @@ export class FileControlsComponent {
 
   @Input() event: Event<Meeting>;
 
+  constructor(
+    private eventService: EventService,
+  ) { }
+
+  controlChange(control: MeetingPdfControl) {
+    this.eventService.update({
+      ...this.event,
+      meta: {
+        ...this.event.meta,
+        controls: {
+          ...this.event.meta.controls,
+          [this.event.meta.selectedFile]: control,
+        },
+      }
+    });
+  }
 }

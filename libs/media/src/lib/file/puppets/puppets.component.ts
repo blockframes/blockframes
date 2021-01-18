@@ -13,7 +13,11 @@ export class FilePuppetsComponent {
 
   constructor(private eventService: EventService) {}
 
-  @Input() event: Event<Meeting>;
+  private _event: Event<Meeting>;
+  get event() { return this._event; }
+  @Input() set event(value: Event<Meeting>) {
+    this._event = value;
+  }
 
   stop() {
     if (!this.event.isOwner) return;
