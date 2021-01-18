@@ -22,7 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule,
 
     // Router
-    RouterModule.forChild([{ path: '', component: MovieFormStartTunnelComponent }]),
+    RouterModule.forChild([{ path: '', component: MovieFormStartTunnelComponent }])
   ],
 })
-export class StartTunnelModule {}
+export class StartTunnelModule { }

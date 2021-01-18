@@ -1,6 +1,5 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class IpService {
@@ -8,13 +7,9 @@ export class IpService {
   constructor(private http: HttpClient) {}
 
   public get(): Promise<string> {
-    return this.http.get<{ ip: string }>(this.api)
-    .toPromise()
-    .then(data => {
-      return data.ip;
-    });
+    return this.http
+      .get<{ ip: string }>(this.api)
+      .toPromise()
+      .then(data => data.ip)
   }
-
 }
-
-

@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionConfig } from 'akita-ng-fire';
 import { QueryFn } from '@angular/fire/firestore';
-import { ConsentsState, ConsentsStore } from './consents.store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { IpService } from '@blockframes/utils/ip';
+import { ConsentType } from './consents.firestore'
 
 export const fromOrg = (orgId: string): QueryFn => (ref) =>
   ref.where('orgIds', 'array-contains', orgId);
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
-export class ConsentsService extends CollectionService<ConsentsState> {
+export class ConsentsService {
   constructor(
-    protected store: ConsentsStore,
     private functions: AngularFireFunctions,
     private ipService: IpService
-  ) {
-    super(store);
-  }
+  ) {}
 
   async createConsent(
-    consentType: 'access' | 'share',
+    consentType: ConsentType,
     docId: string,
     filePath?: string
   ): Promise<boolean> {
