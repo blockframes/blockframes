@@ -51,7 +51,7 @@ export class EventsComponent implements OnInit {
   async ngOnInit() {
     const [events, invites] = await Promise.all([
       this.eventService.getValue(),
-      this.invitationService.getValue()
+      this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'))
     ]);
 
     const ownerIds = events.map(event => event.ownerId);
