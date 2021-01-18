@@ -14,7 +14,6 @@ import { MatListModule } from '@angular/material/list';
     FlexLayoutModule,
     FilterByDateModule,
     MatListModule,
-    
   ]
 })
 export class EventListModule { }

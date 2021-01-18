@@ -1,0 +1,34 @@
+/**
+ * This is used to override JWPlayer watermark style.
+ * We use it to be sure that the watermark is always centered
+ * so it cannot be cropped out.
+ * We need to use ViewEncapsulation.None, that's why we don't use :host { }
+ */
+ video-viewer {
+  height: 100%;
+  div.jwplayer {
+    height: 100%;
+    section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    div {
+      div.jw-logo.jw-logo-top-right.jw-reset {
+        /* We need to use `!important` because jwplayer style is inline */
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        background-position: 80% 25%;
+        background-size: 50%;
+        pointer-events: none;
+      }
+    }
+  }
+
+  img {
+    width: 200px;
+  }
+}

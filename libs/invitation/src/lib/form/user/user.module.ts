@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { UserComponent } from './user.component';
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { AlgoliaChipsAutocompleteModule } from '@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
@@ -22,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     // Blockframes
-    ImageReferenceModule,
+    ImageModule,
     AlgoliaChipsAutocompleteModule,
     DisplayNameModule,
     DeepKeyPipeModule,

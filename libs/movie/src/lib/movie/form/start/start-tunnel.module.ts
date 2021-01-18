@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MovieFormStartTunnelComponent } from './start-tunnel.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImageModule,
 
     // Material
     MatButtonModule,

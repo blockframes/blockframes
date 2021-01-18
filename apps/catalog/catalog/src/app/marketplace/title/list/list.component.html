@@ -70,13 +70,7 @@
     </movie-card>
   </ng-template>
 
-  <ng-template listPageEmpty *ngIf="loading$.value">
-    <div class="loading">
-      <mat-spinner color="primary"></mat-spinner>
-    </div>
-  </ng-template>
-
-  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
     You've viewed {{ hitsViewed }} of {{ nbHits }} titles
   </list-page-progress>
 

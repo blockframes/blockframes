@@ -1,0 +1,24 @@
+<ng-container *ngIf="!!this.activeForm">
+  <section fxLayout="column" fxLayoutGap="24px">
+    <ng-container *ngIf="activeDirectory.type === 'image'">
+      <image-uploader [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
+        <h3 title>{{ activeDirectory.name }}</h3>
+      </image-uploader>
+    </ng-container>
+
+    <ng-container *ngIf="activeDirectory.type === 'file'">
+      <file-uploader
+        [form]="getSingleMediaForm()"
+        [storagePath]="activeDirectory.storagePath"
+        [allowedFileType]="activeDirectory.acceptedFileType"
+        [filePrivacy]="activeDirectory.privacy">
+        <h3 title>Upload {{ activeDirectory.name }}</h3>
+      </file-uploader>
+    </ng-container>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <button mat-stroked-button color="primary" (click)="update()" [disabled]="getSingleMediaForm().invalid || getSingleMediaForm().pristine">
+        <span>Update</span>
+      </button>
+    </div>
+  </section>
+</ng-container>

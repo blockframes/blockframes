@@ -108,7 +108,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
+export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private sub: Subscription;
   steps$: Observable<TunnelStep[]>;
@@ -126,9 +126,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     const subs: Observable<any>[] = Object.values(this.configs).map((config: any) => config.onInit()).flat();
     this.sub = combineLatest(subs).subscribe(() => this.cdr.markForCheck());
     this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
-  }
 
-  ngAfterViewInit() {
+
     const appSteps = this.route.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');
     this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(

@@ -11,7 +11,7 @@ import { ListComponent } from './list.component';
 // Blocfkrames
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 // Material
@@ -29,7 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     FlexLayoutModule,
     TableFilterModule,
-    ImageReferenceModule,
+    ImageModule,
     NoTitleModule,
     ToLabelModule,
     // Material

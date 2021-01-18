@@ -11,7 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { MovieSlideModule } from '@blockframes/movie/components/slide/slide.module'
@@ -42,7 +42,7 @@ import { HomeComponent } from './home.component';
     OrganizationCardMinimalModule,
     OrganizationBannerModule,
     CampaignPipeModule,
-    ImageReferenceModule,
+    ImageModule,
 
     // Material
     MatButtonModule,

@@ -41,7 +41,10 @@ service firebase.storage {
       return (
           request.resource.contentType.matches('video/x-msvideo') || 
           request.resource.contentType.matches('video/x-matroska') || 
-          request.resource.contentType.matches('video/mp4')
+          request.resource.contentType.matches('video/mp4') ||
+          request.resource.contentType.matches('video/3gpp') ||
+          request.resource.contentType.matches('video/quicktime') ||
+          request.resource.contentType.matches('video/x-ms-wmv')
         ) 
         && request.resource.size < 50 * 1024 * 1024 * 1024;
     }

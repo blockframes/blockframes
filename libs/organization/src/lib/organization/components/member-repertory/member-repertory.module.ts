@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 // Modules
 import { MemberPermissionsModule } from '../member-permissions/member-permissions.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Components
 import { MemberRepertoryComponent } from './member-repertory.component';
@@ -25,7 +25,7 @@ import { RouterModule } from '@angular/router';
     TableFilterModule,
     RouterModule,
     MemberPermissionsModule,
-    ImageReferenceModule,
+    ImageModule,
     // Material
     MatButtonModule,
     MatIconModule,

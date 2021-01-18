@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TunnelLayoutComponent } from './layout.component';
 import { TunnelNavComponent, StepActivePipe } from './nav/nav.component';
 import { TunnelStepStatComponent } from './step-stat/step-stat.component';
-import { UploadWidgetModule } from '@blockframes/media/components/upload/widget/upload-widget.module';
+import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
