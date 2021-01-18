@@ -4,7 +4,6 @@ import { getValue, downloadCsvFromJson, BehaviorStore } from '@blockframes/utils
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
 import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
-import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
 import { appName, getOrgModuleAccess } from '@blockframes/utils/apps';
@@ -42,7 +41,6 @@ export class UsersComponent implements OnInit {
     'createdFrom',
   ];
   public rows: any[] = [];
-  public orgs: Record<string, Organization> = {};
   public exporting =  new BehaviorStore(false);
 
   constructor(
@@ -57,10 +55,10 @@ export class UsersComponent implements OnInit {
   async ngOnInit() {
     await this.adminService.loadAnalyticsData();
 
-    const users = await this.userService.getAllUsers();
-    const rows = users.map(async u => {
-      const org = u.orgId ? await this.getOrg(u.orgId) : undefined;
-      return {
+    const [users, orgs] = await Promise.all([this.userService.getAllUsers(), this.orgService.getValue()]);
+    this.rows = users.map(u => {
+      const org = orgs.find(org => org.id === u.orgId);
+      return { 
         uid: u.uid,
         firstName: u.firstName,
         lastName: u.lastName,
@@ -71,10 +69,9 @@ export class UsersComponent implements OnInit {
         sessionCount: this.adminQuery.getSessionCount(u.uid),
         createdFrom: !! u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
         org: org,
-      }
-    });
+      };
+    })
 
-    this.rows = await Promise.all(rows);
     this.cdRef.markForCheck();
   }
 
@@ -98,9 +95,9 @@ export class UsersComponent implements OnInit {
     try {
       this.exporting.value = true;
 
-      const users = await this.userService.getAllUsers();
+      const [users, orgs] = await Promise.all([this.userService.getAllUsers(), this.orgService.getValue()]);
       const promises = users.map(async u => {
-        const org = u.orgId ? await this.getOrg(u.orgId) : undefined;
+        const org = orgs.find(org => org.id === u.orgId);
         return {
           ...u,
           firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
@@ -117,7 +114,7 @@ export class UsersComponent implements OnInit {
           userOrgRole: org ? await this.orgService.getMemberRole(org, u.uid) : undefined,
           type: org ? (getOrgModuleAccess(org).includes('dashboard') ? 'seller' : 'buyer') : undefined
         }
-      });
+      })
       const data = await Promise.all(promises);
       const exportedRows = data.map(r => ({
         'userId': r.uid,
@@ -144,13 +141,4 @@ export class UsersComponent implements OnInit {
       this.exporting.value = false;
     }
   }
-
-  private async getOrg(id: string): Promise<Organization> {
-    if (!this.orgs[id]) {
-      this.orgs[id] = await this.orgService.getValue(id);
-    }
-
-    return this.orgs[id];
-  }
-
 }
