@@ -1,6 +1,6 @@
 import { App } from "./apps";
-import { firestore } from 'firebase/app';
-type Timestamp = firestore.Timestamp;
+import type firebase from 'firebase';
+type Timestamp = firebase.firestore.Timestamp;
 
 export interface DocumentMeta<D> {
   createdBy: string,

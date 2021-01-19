@@ -1,11 +1,11 @@
-import { firestore } from "firebase";
+import type firebase from 'firebase';
 import { Expense } from "@blockframes/utils/common-interfaces/price";
 import { RawRange } from '@blockframes/utils/common-interfaces/range';
 import { MovieCurrencies } from "@blockframes/utils/static-model/types";
 import { ScheduledDateWithCounterRaw, TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Location } from "@blockframes/utils/common-interfaces/utility";
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 export const sendType = {
   email: 'Email',

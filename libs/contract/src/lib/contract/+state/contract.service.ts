@@ -13,7 +13,7 @@ import {
 } from './contract.model';
 
 import { ContractDocumentWithDates, ContractDocument } from './contract.firestore';
-import { firestore } from 'firebase/app';
+import type firebase from 'firebase';
 import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
@@ -41,7 +41,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   onCreate(contract: Contract, { write }: WriteOptions) {
     // When a contract is created, we also create a permissions document for each parties.
-    return this.permissionsService.addDocumentPermissions(contract.id, write as firestore.Transaction)
+    return this.permissionsService.addDocumentPermissions(contract.id, write as firebase.firestore.Transaction)
   }
 
   /**
