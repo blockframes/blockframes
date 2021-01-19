@@ -10,16 +10,13 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { FilePuppetsComponent } from './puppets.component';
 import { PdfViewerModule } from '../../pdf/viewer/viewer.module';
 import { PdfControlModule } from '../../pdf/control/control.module';
-import { VideoPuppetComponent } from '../../video/puppet/puppet.component';
+import { VideoPuppetModule } from '../../video/puppet/puppet.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [
-    FilePuppetsComponent,
-    VideoPuppetComponent,
-  ],
+  declarations: [ FilePuppetsComponent ],
   imports: [
     CommonModule,
 
@@ -35,7 +32,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ImageModule,
     PdfControlModule,
     PdfViewerModule,
+    VideoPuppetModule,
   ],
-  exports: [ FilePuppetsComponent, VideoPuppetComponent ],
+  exports: [ FilePuppetsComponent ],
 })
 export class FilePuppetsModule {}
