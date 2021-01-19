@@ -1,8 +1,8 @@
 import { region, config } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-
-export const functionRegion = 'europe-west1';
-export const functions = region(functionRegion);
+import { firebaseRegion } from '@env';
+export { firebaseRegion } from '@env';
+export const functions = region(firebaseRegion);
 
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
