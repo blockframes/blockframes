@@ -92,7 +92,7 @@ const Movie = {
     "quote": 'Best film of the year. Can drive away your Corona Blues'
   },
   additionalInfo: {
-    "release-country": 'United States of America (the)',
+    "release-country": 'France',
     "release-media": 'Video',
     "boxoffice-territory": 'France',
     "release-date": '01/01/2020',
