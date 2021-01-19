@@ -10,7 +10,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { FilePuppetsComponent } from './puppets.component';
 import { PdfViewerModule } from '../../pdf/viewer/viewer.module';
 import { PdfControlModule } from '../../pdf/control/control.module';
-import { VideoPuppetModule } from '../../video/puppet/puppet.module';
+import { VideoViewerModule } from '../../video/viewer/viewer.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -32,7 +32,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ImageModule,
     PdfControlModule,
     PdfViewerModule,
-    VideoPuppetModule,
+    VideoViewerModule,
   ],
   exports: [ FilePuppetsComponent ],
 })

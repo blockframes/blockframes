@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
-import { Meeting, MeetingMediaControl, MeetingPdfControl, Screening } from '@blockframes/event/+state/event.firestore';
+import { Meeting, MeetingMediaControl, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'festival-session',
@@ -41,6 +42,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   private countdownId: number = undefined;
 
   constructor(
+    private functions: AngularFireFunctions,
     private eventQuery: EventQuery,
     private service: EventService,
     private movieService: MovieService,
@@ -150,9 +152,14 @@ export class SessionComponent implements OnInit, OnDestroy {
             let meta: Meeting;
             switch (fileType) {
               case 'pdf':
-                  control = await this.createPdfControl(file, event.id);
-                  meta  = { ...event.meta, controls: { ...event.meta.controls, [event.meta.selectedFile]: control } };
-                  await this.service.update(event.id, { meta });
+                control = await this.createPdfControl(file, event.id);
+                meta  = { ...event.meta, controls: { ...event.meta.controls, [event.meta.selectedFile]: control } };
+                await this.service.update(event.id, { meta });
+                break;
+              case 'video':
+                control = await this.createVideoControl(file, event.id);
+                meta  = { ...event.meta, controls: { ...event.meta.controls, [event.meta.selectedFile]: control } };
+                await this.service.update(event.id, { meta }); 
                 break;
               default: break;
             }
@@ -216,4 +223,16 @@ export class SessionComponent implements OnInit, OnDestroy {
     return { type: 'pdf', currentPage: 1, totalPages };
   }
 
+  async createVideoControl(ref: string, eventId: string): Promise<MeetingVideoControl> {
+    const getVideoInfo = this.functions.httpsCallable('privateVideo');
+
+    const { error, result} = await getVideoInfo({ ref, eventId }).toPromise();
+    if (!!error) {
+      // if error is set, result will contain the error message
+      throw new Error(result);
+    }
+
+    const duration = parseFloat(result.info.duration);
+    return { type: 'video', isPlaying: false, position: 0, duration };
+  }
 }

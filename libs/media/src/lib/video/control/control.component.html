@@ -4,8 +4,9 @@
     <mat-progress-spinner mode="indeterminate" [diameter]="50"></mat-progress-spinner>
   </section>
 </ng-container>
+
 <ng-template #ready>
-  <ng-container *ngIf="localControl$ | async as control">
+  <ng-container *ngIf="control$ | async as control">
     <button mat-icon-button (click)="toggle()">
       <ng-container *ngIf="control.isPlaying; else pause">
         <mat-icon svgIcon="pause_circle"></mat-icon>

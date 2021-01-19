@@ -4,7 +4,7 @@
     <pdf-control [control]="event.meta.controls[event.meta.selectedFile]" (controlChange)="controlChange($event)"></pdf-control>
   </ng-container>
   <ng-container *ngSwitchCase="'video'">
-    <video-control [event]="event"></video-control>
+    <video-control [control]="event.meta.controls[event.meta.selectedFile]" (controlChange)="controlChange($event)"></video-control>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <!-- No controls to display -->
