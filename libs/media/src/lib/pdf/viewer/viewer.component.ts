@@ -1,9 +1,12 @@
+
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, Output, ViewChild } from '@angular/core';
-import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
+import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
+
 import { toggleFullScreen } from '../../file/puppets/utils';
 
 @Component({
@@ -12,7 +15,7 @@ import { toggleFullScreen } from '../../file/puppets/utils';
   styleUrls: ['./viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PdfViewerComponent {
+export class PdfViewerComponent implements OnInit {
 
   @ViewChild('container') pdfContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;
