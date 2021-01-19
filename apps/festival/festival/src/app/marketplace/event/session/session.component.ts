@@ -148,18 +148,21 @@ export class SessionComponent implements OnInit, OnDestroy {
           const file = (event as Event<Meeting>).meta.selectedFile;
           if (!(event as Event<Meeting>).meta.controls[file]) {
             const fileType = extensionToType(getFileExtension(file));
-            let control: MeetingMediaControl;
             let meta: Meeting;
+            let controls: Record<string, MeetingMediaControl>;
+            let control: MeetingMediaControl;
             switch (fileType) {
               case 'pdf':
                 control = await this.createPdfControl(file, event.id);
-                meta  = { ...event.meta, controls: { ...event.meta.controls, [event.meta.selectedFile]: control } };
+                controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
                 break;
               case 'video':
                 control = await this.createVideoControl(file, event.id);
-                meta  = { ...event.meta, controls: { ...event.meta.controls, [event.meta.selectedFile]: control } };
-                await this.service.update(event.id, { meta }); 
+                controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                meta  = { ...event.meta, controls };
+                await this.service.update(event.id, { meta });
                 break;
               default: break;
             }
