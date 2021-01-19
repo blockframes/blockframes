@@ -13,7 +13,7 @@ import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { production, firebase, persistenceSettings } from '@env';
+import { production, firebase, persistenceSettings, firebaseRegion } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -50,6 +50,7 @@ import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-bann
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
+import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
 
 @NgModule({
   declarations: [AppComponent],
@@ -101,7 +102,8 @@ import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
-    { provide: REGION, useValue: 'europe-west1' },
+    { provide: REGION, useValue: firebaseRegion },
+    ...getEmulatorsConfig()
   ],
   bootstrap: [AppComponent]
 })

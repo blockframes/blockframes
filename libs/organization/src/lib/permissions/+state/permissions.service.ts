@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
-import { firestore } from 'firebase/app';
+import type firebase from 'firebase';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { UserService } from '@blockframes/user/+state';
 
@@ -32,7 +32,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   ) {
     const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
-    (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
+    (write as firebase.firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
   public async getDocumentPermissions(docId: string, orgId: string = this.organizationQuery.getActiveId()) {
