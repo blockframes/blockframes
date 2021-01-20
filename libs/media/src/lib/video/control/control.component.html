@@ -1,29 +1,22 @@
 
-<ng-container *ngIf="loading$ | async; else ready">
-  <section fxLayout fxLayoutAlign="center">
-    <mat-progress-spinner mode="indeterminate" [diameter]="50"></mat-progress-spinner>
-  </section>
+<ng-container *ngIf="control$ | async as control">
+  <button mat-icon-button (click)="toggle()">
+    <ng-container *ngIf="control.isPlaying; else pause">
+      <mat-icon svgIcon="pause_circle"></mat-icon>
+    </ng-container>
+    <ng-template #pause>
+      <mat-icon svgIcon="play_circle"></mat-icon>
+    </ng-template>
+  </button>
+  {{ control.position | timecode }}
+  <mat-slider
+    [min]="0"
+    [step]="1"
+    [max]="control.duration"
+    [value]="control.position"
+    (input)="seekPosition($event)"
+    (change)="seekPosition($event)"
+  ></mat-slider>
+  {{ control.duration | timecode }}
 </ng-container>
 
-<ng-template #ready>
-  <ng-container *ngIf="control$ | async as control">
-    <button mat-icon-button (click)="toggle()">
-      <ng-container *ngIf="control.isPlaying; else pause">
-        <mat-icon svgIcon="pause_circle"></mat-icon>
-      </ng-container>
-      <ng-template #pause>
-        <mat-icon svgIcon="play_circle"></mat-icon>
-      </ng-template>
-    </button>
-    {{ control.position | timecode }}
-    <mat-slider
-      [min]="0"
-      [step]="1"
-      [max]="control.duration"
-      [value]="control.position"
-      (input)="seekPosition($event)"
-      (change)="seekPosition($event)"
-    ></mat-slider>
-    {{ control.duration | timecode }}
-  </ng-container>
-</ng-template>

@@ -41,7 +41,14 @@
 
           <ng-container *ngIf="!!event.meta.selectedFile">
             <article [style]="{width: mediaContainerSize}">
-              <file-viewers [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
+              <ng-container *ngIf="creatingControl$ | async; else controlReady">
+                <span>
+                  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+                </span>
+              </ng-container>
+              <ng-template #controlReady>
+                <file-viewers [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
+              </ng-template>
               <section *ngIf="event.isOwner">
                 <mat-divider></mat-divider>
                 <button mat-button (click)="select('')">

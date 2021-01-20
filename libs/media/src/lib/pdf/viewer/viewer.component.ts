@@ -80,25 +80,29 @@ export class PdfViewerComponent implements OnInit {
       const totalPages = textResult.match(/\/Type[\s]*\/Page[^s]/g).length;
 
       this.control = { type: 'pdf', currentPage: 1, totalPages };
-      this.loading$.next(false);
     }
   }
 
   async generatePdfUrl() {
-    if (!this.ref || !this.control || this.control.type !== 'pdf') {
+
+    this.isPuppet$.next(true);
+
+    const isLoading = !this.ref || !this.control || this.control.type !== 'pdf';
+    if (isLoading) {
       this.pdfUrl$.next('');
       this.loading$.next(true);
-    } else {
-      this.fetching$.next(true);
-      const param: ImageParameters = {
-        page: this.control.currentPage,
-        auto: 'compress,format'
-      }
-      const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
-      this.pdfUrl$.next(url);
-      this.loading$.next(false);
-      this.fetching$.next(false);
+      return;
     }
+
+    this.fetching$.next(true);
+    const param: ImageParameters = {
+      page: this.control.currentPage,
+      auto: 'compress,format'
+    }
+    const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
+    this.pdfUrl$.next(url);
+    this.fetching$.next(false);
+    this.loading$.next(false);
   }
 
   toggleFullScreen() {

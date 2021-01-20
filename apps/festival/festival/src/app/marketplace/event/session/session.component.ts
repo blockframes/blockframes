@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -31,6 +31,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   public mediaContainerSize: string;
   public visioContainerSize: string;
   public screeningFileRef: string;
+
+  public creatingControl$ = new BehaviorSubject(false);
 
   private sub: Subscription;
   private dialogSub: Subscription;
@@ -94,20 +96,22 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.isAutoPlayEnabled = true;
           }
         } catch (error) {
-          this.confirmDialog = this.dialog.open(ConfirmComponent, {
-            data: {
-              title: 'Your browser might be blocking autoplay',
-              question: 'This can result in poor viewing experience during your meeting.\nYou can try to unblock autoplay by clicking the following button. If it doesn\'t work, please change your browser settings to allow autoplay.',
-              buttonName: 'Unblock autoplay',
-              onConfirm: () => {
-                this.autoPlayTester.nativeElement.play();
-                this.autoPlayTester.nativeElement.pause();
+          if (!this.confirmDialog) {
+            this.confirmDialog = this.dialog.open(ConfirmComponent, {
+              data: {
+                title: 'Your browser might be blocking autoplay',
+                question: 'This can result in poor viewing experience during your meeting.\nYou can try to unblock autoplay by clicking the following button. If it doesn\'t work, please change your browser settings to allow autoplay.',
+                buttonName: 'Unblock autoplay',
+                onConfirm: () => {
+                  this.autoPlayTester.nativeElement.play();
+                  this.autoPlayTester.nativeElement.pause();
+                },
               },
-            },
-          });
-          this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
-            this.isAutoPlayEnabled = !!confirmed;
-          });
+            });
+            this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
+              this.isAutoPlayEnabled = !!confirmed;
+            });
+          }
         }
 
         // Manage redirect depending on attendees status & presence of meeting owners
@@ -150,16 +154,20 @@ export class SessionComponent implements OnInit, OnDestroy {
             const fileType = extensionToType(getFileExtension(file));
             switch (fileType) {
               case 'pdf': {
+                this.creatingControl$.next(true);
                 const control = await this.createPdfControl(file, event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
+                this.creatingControl$.next(false);
                 break;
               } case 'video': {
+                this.creatingControl$.next(true);
                 const control = await this.createVideoControl(file, event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
+                this.creatingControl$.next(false);
                 break;
               } default: break;
             }

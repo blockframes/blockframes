@@ -3,7 +3,7 @@
   <button mat-icon-button (click)="previous()" [disabled]="previousDisable$ | async">
     <mat-icon svgIcon="arrow_left"></mat-icon>
   </button>
-  {{ control.currentPage }} / {{ control.totalPages }}
+  <span>{{ control.currentPage }} / {{ control.totalPages }}</span>
   <button mat-icon-button (click)="next()" [disabled]="nextDisable$ | async">
     <mat-icon svgIcon="arrow_right"></mat-icon>
   </button>

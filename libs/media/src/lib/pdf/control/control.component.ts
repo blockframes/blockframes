@@ -16,6 +16,12 @@ export class PdfControlComponent {
   control$ = new BehaviorSubject<MeetingPdfControl>(undefined);
   @Input() set control(value: MeetingPdfControl) {
     this.control$.next(value);
+
+    if (value.currentPage > 1) this.previousDisable$.next(false);
+    else this.previousDisable$.next(true);
+
+    if (value.currentPage < value.totalPages) this.nextDisable$.next(false);
+    else this.nextDisable$.next(true);
   }
 
   @Output() controlChange = new EventEmitter<MeetingPdfControl>();

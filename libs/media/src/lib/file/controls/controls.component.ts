@@ -22,16 +22,9 @@ export class FileControlsComponent {
   ) { }
 
   updateRemoteControl(control: MeetingMediaControl) {
-    this.eventService.update({
-      ...this.event,
-      meta: {
-        ...this.event.meta,
-        controls: {
-          ...this.event.meta.controls,
-          [this.event.meta.selectedFile]: control,
-        },
-      }
-    });
+    const controls = { ...this.event.meta.controls, [this.event.meta.selectedFile]: control };
+    const meta = { ...this.event.meta, controls };
+    this.eventService.update({ ...this.event, meta });
   }
 
   controlChange(control: MeetingMediaControl) {

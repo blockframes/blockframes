@@ -23,8 +23,6 @@ export class VideoControlComponent {
 
   @Output() controlChange = new EventEmitter<MeetingVideoControl>();
 
-  /** Loading flag for the html template */
-  loading$ = new BehaviorSubject(true);
 
   /**
    * Hold the id of the setInterval callback that is used to

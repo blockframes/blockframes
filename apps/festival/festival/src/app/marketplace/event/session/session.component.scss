@@ -70,6 +70,13 @@ p {
       border-radius: 4px;
       background-color: var(--background-card);
 
+      span {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        place-content: center;
+      }
+
       file-viewers {
         height: 100%;
         width: 100%;
