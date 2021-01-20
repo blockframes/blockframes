@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { Query, QueryFn } from '@angular/fire/firestore';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -51,3 +51,9 @@ export class HomeGetOrgPipe implements PipeTransform {
     return this.service.valueChanges(orgId);
   }
 }
+
+@NgModule({
+  declarations: [HomeGetOrgPipe, HomeQueryOrgsPipe, HomeQueryTitlesPipe],
+  exports: [HomeGetOrgPipe, HomeQueryOrgsPipe, HomeQueryTitlesPipe]
+})
+export class CMSPipeModule{}

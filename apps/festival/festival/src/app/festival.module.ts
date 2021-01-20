@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
-import { FestivalAppGuard } from './dashboard/guards/festival-app.guard';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
@@ -22,12 +22,12 @@ const routes: Routes = createRoutes({
     },
     {
       path: 'marketplace',
-      canActivate: [FestivalAppGuard],
+      canActivate: [AppGuard],
       loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
     },
     {
       path: 'dashboard',
-      canActivate: [FestivalAppGuard],
+      canActivate: [AppGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
     }
   ]

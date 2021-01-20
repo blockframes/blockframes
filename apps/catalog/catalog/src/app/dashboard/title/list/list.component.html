@@ -1,4 +1,4 @@
-<ng-container *ngIf="!(allMoviesLoading$ | async)">
+<ng-container *ngIf="loading$ | async">
   <ng-container *ngIf="(allMovies$ | async).length; else noTitle">
     <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
       <h1>My Titles</h1>

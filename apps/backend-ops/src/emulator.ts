@@ -9,7 +9,8 @@ import {
   getServiceAccountObj,
   uploadDbBackupToBucket,
   loadAdminServices,
-  restoreStorageFromCi
+  restoreStorageFromCi,
+  startMaintenance
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join } from 'path';
@@ -29,12 +30,12 @@ import { cleanDeprecatedData } from './db-cleaning';
  * If no parameter is provided, it will attempt to find the latest backup out of a number
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
-export async function importEmulatorFromBucket(_exportUrl: string, exportOnExit = true) {
+export async function importEmulatorFromBucket(_exportUrl: string) {
   const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket));
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
-    proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath, exportOnExit);
+    proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
     await new Promise(() => { });
   } catch (e) {
     await shutdownEmulator(proc);
@@ -44,7 +45,6 @@ export async function importEmulatorFromBucket(_exportUrl: string, exportOnExit 
 
 export interface StartEmulatorOptions {
   importFrom: 'defaultImport' | string,
-  exportOnExit: boolean
 }
 
 /**
@@ -53,11 +53,11 @@ export interface StartEmulatorOptions {
  * Not much use over manually running the command, other than less flags...
  * @param param0 this is a relative path to local Firestore backup to import into emulator
  */
-export async function loadEmulator({ importFrom = 'defaultImport', exportOnExit = true }: StartEmulatorOptions) {
+export async function loadEmulator({ importFrom = 'defaultImport'}: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
-    proc = await startFirestoreEmulatorWithImport(emulatorPath, exportOnExit);
+    proc = await startFirestoreEmulatorWithImport(emulatorPath);
     await new Promise(() => { });
   } catch (e) {
     await shutdownEmulator(proc)
@@ -147,4 +147,23 @@ export async function anonymizeLatestProdDb() {
  */
 export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
   await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
+}
+
+/**
+ * This function will launch the emulator and switch on maintenance mode, then exit
+ * @param param0 settings object
+ * Provide a local path to the firestore export dir for which to switch on maintenance mode
+ */
+export async function switchOnMaintenance({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
+  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
+  let proc: ChildProcess;
+  try {
+    proc = await startFirestoreEmulatorWithImport(emulatorPath);
+    const db = connectEmulator();
+    startMaintenance(db);
+  } catch (e) {
+    throw e;
+  } finally {
+    await shutdownEmulator(proc);
+  }
 }
