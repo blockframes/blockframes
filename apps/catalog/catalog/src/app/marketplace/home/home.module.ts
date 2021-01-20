@@ -18,6 +18,7 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationBannerModule} from '@blockframes/organization/components/banner/banner.module';
 import { MovieSlideModule } from '@blockframes/movie/components/slide/slide.module'
 import { OrganizationCardMinimalModule} from '@blockframes/organization/components/card-minimal/card-minimal.module'
+import { SortByPipeModule } from '@blockframes/utils/pipes/sort-array.pipe';
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
@@ -45,6 +46,7 @@ import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
+    SortByPipeModule,
     RouterModule.forChild([
       {
         path: '',
