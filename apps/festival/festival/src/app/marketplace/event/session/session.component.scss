@@ -1,10 +1,5 @@
 @import '~@angular/flex-layout/mq';
 
-:host {
-  height: 100%;
-  padding: 24px;
-}
-
 h4 {
   text-transform: uppercase;
 }
@@ -21,6 +16,7 @@ p {
 }
 
 .screening {
+  padding-top: 24px;
   height: 100%;
   width: 100%;
   text-align: center;
@@ -57,8 +53,6 @@ p {
 }
 
 .meeting {
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
 
@@ -67,26 +61,32 @@ p {
     display: flex;
     align-items: stretch;
 
-    media-viewer {
-      width: 40%;
-    }
-    meeting-video-room {
-      width: 60%;
+    article {
+      margin: 8px 0 8px 16px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      border: solid 1px var(--foreground-divider);
+      border-radius: 4px;
+      background-color: var(--background-card);
+
+      file-viewers {
+        height: 100%;
+        width: 100%;
+        // css is a totally degenerated monstrosity,
+        // remove the line bellow to break everything
+        min-height: 0;
+      }
     }
   }
 
-  img {
-    width: 100%;
-  }
-
-  media-control {
+  file-controls {
     display: flex;
     justify-content: center;
   }
 
-  media-viewer,
   meeting-video-room,
-  media-control,
+  file-controls,
   file-carousel {
     margin: 8px 16px;
   }

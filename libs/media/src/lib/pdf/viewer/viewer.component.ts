@@ -7,7 +7,7 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 
-import { toggleFullScreen } from '../../file/puppets/utils';
+import { toggleFullScreen } from '../../file/viewers/utils';
 
 @Component({
   selector: '[ref] pdf-viewer',

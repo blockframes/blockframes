@@ -40,18 +40,31 @@
         <div class="meeting-container">
 
           <ng-container *ngIf="!!event.meta.selectedFile">
-            <file-puppets [event]="event" [style]="{width: mediaContainerSize}"></file-puppets>
+            <article [style]="{width: mediaContainerSize}">
+              <file-viewers [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
+              <section *ngIf="event.isOwner">
+                <mat-divider></mat-divider>
+                <button mat-button (click)="select('')">
+                  <mat-icon svgIcon="cancel"></mat-icon>
+                  <span>Stop Sharing</span>
+                </button>
+              </section>
+            </article>
           </ng-container>
+
           <meeting-video-room [style]="{width: visioContainerSize}"></meeting-video-room>
 
         </div>
+
         <ng-container *ngIf="event.isOwner">
           <file-controls
             [event]="event"
             *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
           ></file-controls>
+
           <file-carousel fxFlex="35%" [files]="event.meta.files" (select)="select($event)" (picked)="picked($event)"></file-carousel>
         </ng-container>
+
       </section>
 
       <img *ngIf="!event.isOwner" asset="meeting.webp" alt="Meeting room">

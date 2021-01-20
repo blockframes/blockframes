@@ -8,7 +8,7 @@ import { MediaService } from "@blockframes/media/+state/media.service";
 import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
-import { toggleFullScreen  } from '../../file/puppets/utils';
+import { toggleFullScreen  } from '../../file/viewers/utils';
 
 declare const jwplayer: any;
 
