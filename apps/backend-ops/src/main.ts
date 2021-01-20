@@ -36,10 +36,10 @@ async function runCommand() {
       await displayCredentials();
       break;
     case 'loadEmulator':
-      await loadEmulator({ importFrom: arg1, exportOnExit: ['false', '0'].includes(arg2) ? false : true });
+      await loadEmulator({ importFrom: arg1});
       break;
     case 'importEmulator':
-      await importEmulatorFromBucket(arg1, ['false', '0'].includes(arg2) ? false : true);
+      await importEmulatorFromBucket(arg1);
       break;
     case 'anonProdDb':
       await anonymizeLatestProdDb();
