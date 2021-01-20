@@ -54,7 +54,6 @@ export function createInvitation(params: Partial<InvitationBase<Date>> = {}): In
     id: '',
     mode: 'invitation',   // We need a default value for backend-function strict mode
     type: 'attendEvent',  // We need a default value for backend-function strict mode
-    eventId: '',
     status: 'pending',
     date: new Date(),
     ...params,
