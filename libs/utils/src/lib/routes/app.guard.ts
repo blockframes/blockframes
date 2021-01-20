@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getCurrentApp} from '@blockframes/utils/apps';
-import { RouterQuery} from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Injectable({ providedIn: 'root' })
 export class AppGuard implements CanActivate {
-    constructor(protected router: Router, private query: OrganizationQuery, private snackBar: MatSnackBar,
+    constructor(
+        protected router: Router,
+        private query: OrganizationQuery,
+        private snackBar: MatSnackBar,
         private routerQuery: RouterQuery) { }
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {

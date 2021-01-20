@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { startWith, switchMap, map } from 'rxjs/operators';
-import { Observable, combineLatest, Subscription } from 'rxjs';
+import { startWith, switchMap, map, tap } from 'rxjs/operators';
+import { Observable, combineLatest, Subscription, BehaviorSubject } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
@@ -61,7 +61,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   allMovies$ = this.query.selectAll();
-  allMoviesLoading$ = this.query.selectLoading();
+  loading$ = new BehaviorSubject(true)
 
   private sub: Subscription;
   private titleSub: Subscription;
@@ -94,7 +94,8 @@ export class TitleListComponent implements OnInit, OnDestroy {
     this.titles$ = combineLatest([movies$, this.contractQuery.selectAll(), moviesAnalytics$]).pipe(
       map(([movies, contracts, analytics]) =>
         movies.map(movie => createTitleView(movie, contracts, analytics))
-      )
+      ),
+      tap(movies => this.loading$.next(!!movies.length))
     );
     this.titleSub = this.query.selectCount().subscribe(count => {
       count ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('No titles')
