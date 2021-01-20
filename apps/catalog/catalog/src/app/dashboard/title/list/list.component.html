@@ -1,57 +1,52 @@
-<ng-container *ngIf="loading$ | async">
-  <ng-container *ngIf="(allMovies$ | async).length; else noTitle">
-    <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
-      <h1>My Titles</h1>
+<ng-container *ngIf="(movies$ | async)?.length; else isLoading">
+  <ng-container *ngIf="(titles$ | async) as titles; else noTitle">
+    <h1>My Titles</h1>
 
-      <div fxLayout="row" fxLayoutAlign="end center">
-        <a mat-flat-button color="primary" routerLink="lobby" test-id="add-movie">
-          <span>New Movie</span>
-          <mat-icon svgIcon="add"></mat-icon>
-        </a>
-      </div>
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <a mat-flat-button color="primary" routerLink="lobby" test-id="add-movie">
+        <span>New Movie</span>
+        <mat-icon svgIcon="add"></mat-icon>
+      </a>
+    </div>
 
-      <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-        <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All</button>
-        <button mat-tab-link (click)="applyFilter('library')" [active]="(filter$ | async) === 'library'">Library</button>
-        <button mat-tab-link (click)="applyFilter('line_up')" [active]="(filter$ | async) === 'line_up'">Line-up</button>
-      </header>
+    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All</button>
+      <button mat-tab-link (click)="applyFilter('library')" [active]="(filter$ | async) === 'library'">Library</button>
+      <button mat-tab-link (click)="applyFilter('line_up')" [active]="(filter$ | async) === 'line_up'">Line-up</button>
+    </header>
 
-      <mat-card>
-        <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
-          clickable
-          showFilter
-          showPaginator
-          (rowClick)="goToTitle($event)">
-          <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-          <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
-          <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
-        </bf-table-filter>
-      </mat-card>
-    </ng-container>
-
-    <ng-template #isLoading>
-      <mat-spinner></mat-spinner>
-    </ng-template>
+    <mat-card>
+      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
+        showPaginator (rowClick)="goToTitle($event)">
+        <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
+        <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
+        <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+      </bf-table-filter>
+    </mat-card>
   </ng-container>
-
-  <ng-template #noTitle>
-    <section fxLayout="column" fxLayoutAlign="center center">
-      <h1>You have no titles to sell yet</h1>
-      <p class="mat-body-1">
-        You may add several titles at once or just one at a time.
-        <br>
-        All titles are subject to validation and a contract with Archipel Content.
-      </p>
-      <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
-        <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
-          <img asset="add_title.webp" alt="Add title image">
-          <a routerLink="lobby" mat-stroked-button color="primary">Add one title</a>
-        </mat-card>
-        <mat-card class="no-title-card" fxLayout="column" >
-          <img asset="upload_files.webp" alt="Upload files image">
-          <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
-        </mat-card>
-      </article>
-    </section>
-  </ng-template>
 </ng-container>
+
+<ng-template #isLoading>
+  <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #noTitle>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <h1>You have no titles to sell yet</h1>
+    <p class="mat-body-1">
+      You may add several titles at once or just one at a time.
+      <br>
+      All titles are subject to validation and a contract with Archipel Content.
+    </p>
+    <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
+      <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
+        <img asset="add_title.webp" alt="Add title">
+        <a routerLink="lobby" mat-stroked-button color="primary">Add one title</a>
+      </mat-card>
+      <mat-card class="no-title-card" fxLayout="column">
+        <img asset="upload_files.webp" alt="Upload files">
+        <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
+      </mat-card>
+    </article>
+  </section>
+</ng-template>

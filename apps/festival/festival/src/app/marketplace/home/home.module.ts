@@ -19,6 +19,7 @@ import { OrganizationCardMinimalModule } from '@blockframes/organization/compone
 import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
+import { SortByPipeModule } from '@blockframes/utils/pipes/sort-array.pipe';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -43,6 +44,7 @@ import { HomeComponent } from './home.component';
     OrganizationBannerModule,
     GetLinkModule,
     CMSPipeModule,
+    SortByPipeModule,
 
     // Material
     MatButtonModule,
