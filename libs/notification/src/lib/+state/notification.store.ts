@@ -120,6 +120,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
+              imgRef: this.getPoster(event.meta.titleId),
               message: `REMINDER - Your ${event.type} "${event.title}" is about to start.`
             };
           });
