@@ -158,7 +158,6 @@ describe('Movies Rules Tests', () => {
     });
   });
 
-  // User not owner of movie
   describe('User without rights to edit movie', () => {
     const draftMovieId = 'MI-077';
     const acceptedMovieId = 'M001';
