@@ -21,16 +21,11 @@ import { ImportContainerComponent } from './pages/import-container/import-contai
 import { ImportSpreadsheetComponent } from './components/import-spreadsheet/import-spreadsheet.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
-// Guards
-import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
-
 
 const routes: Routes = [
   {
     path: '',
-    component: ImportContainerComponent,
-    canActivate: [MovieOrganizationListGuard],
-    canDeactivate: [MovieOrganizationListGuard],
+    component: ImportContainerComponent
   }
 ];
 

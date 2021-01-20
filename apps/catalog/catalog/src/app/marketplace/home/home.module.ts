@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 //Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Libraries
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
@@ -45,8 +44,6 @@ import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
     OrganizationCardMinimalModule,
     MatIconModule,
     MatButtonModule,
-    MatSnackBarModule,
-    SortByPipeModule,
     RouterModule.forChild([
       {
         path: '',
