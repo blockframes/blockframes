@@ -4,6 +4,7 @@
 </header>
 <article>
   <form-select [form]="form.get('mode')"></form-select>
+  <form-select [form]="form.get('sorting')"></form-select>
 </article>
 <article>
   <mat-radio-group [value]="queryMode" (change)="select($event)">
