@@ -1,9 +1,9 @@
 import { DistributionRightStatus, Language, MediaValue, Territory } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { TermsRaw } from '@blockframes/utils/common-interfaces/terms';
-import { firestore } from 'firebase/app';
+import type firebase from 'firebase';
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 export interface HoldbackRaw<D> {
   terms: TermsRaw<D>;

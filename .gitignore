@@ -50,6 +50,7 @@ ui-debug.log
 .tern-port
 .eslintcache
 database-debug.log
+pubsub-debug.log
 
 # To remove when Angular fix the bug
 env/__ngcc_entry_points__.json

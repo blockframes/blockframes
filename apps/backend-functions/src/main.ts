@@ -1,5 +1,6 @@
 import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
+import * as consent from './consent';
 import * as invitations from './invitation';
 import {
   onDocumentCreate,
@@ -99,7 +100,7 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',on
 export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
 
 /** Used to check if users have already an invitation to join org existing */
-export const isInvitationToJoinOrgExist = functions.https.onCall(invitations.isInvitationToJoinOrgExist);
+export const hasUserAnOrgOrIsAlreadyInvited = functions.https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
 
 //--------------------------------
 //    Events Management          //
@@ -159,6 +160,16 @@ export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors
  * Trigger: when a contract is created/updated/deleted
  */
 export const onContractWriteEvent = onDocumentWrite('contracts/{contractId}', onContractWrite);
+
+//--------------------------------
+//     Consents Management      //
+//--------------------------------
+
+/**
+ * Trigger: when a consent is created
+ */
+export const createConsent = functions.https.onCall(skipInMaintenance(logErrors(consent.createConsent)));
+
 
 //--------------------------------
 //       Apps Management        //

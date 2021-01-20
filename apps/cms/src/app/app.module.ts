@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CmsModule } from './cms.module';
-
+import { REGION } from '@angular/fire/functions';
 import { AppComponent } from './app.component';
 
 import { AngularFireModule } from '@angular/fire';
@@ -12,9 +12,10 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
-import { firebase } from '@env';
+import { firebase, firebaseRegion } from '@env';
 
 import { FormFactoryModule } from 'ng-form-factory';
+import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +32,10 @@ import { FormFactoryModule } from 'ng-form-factory';
     AngularFirePerformanceModule,
     FormFactoryModule,
   ],
-  providers: [],
+  providers: [
+    { provide: REGION, useValue: firebaseRegion },
+    ...getEmulatorsConfig()
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

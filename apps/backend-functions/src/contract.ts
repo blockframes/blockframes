@@ -1,4 +1,4 @@
-import { functions, db } from './internals/firebase';
+import { db } from './internals/firebase';
 import { ContractDocument, PublicContractDocument, OrganizationDocument } from './data/types';
 import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { getOrganizationsOfContract, getDocument, createPublicOrganizationDocument } from './data/internals';
@@ -8,6 +8,7 @@ import { isEqual, uniqBy, flatten } from 'lodash';
 import { firestore } from 'firebase-admin';
 import { Change } from 'firebase-functions';
 import { DocumentReference } from '@blockframes/firebase-utils';
+import type firebase from 'firebase';
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<number> {
   return (await _getVersionCount(contractId, tx));

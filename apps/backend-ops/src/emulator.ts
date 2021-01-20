@@ -30,13 +30,13 @@ import { cleanDeprecatedData } from './db-cleaning';
  * If no parameter is provided, it will attempt to find the latest backup out of a number
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
-export async function importEmulatorFromBucket(_exportUrl: string) {
+export async function importEmulatorFromBucket(_exportUrl: string, exportOnExit = true) {
   const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket));
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
-    proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
-    await new Promise(() => {});
+    proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath, exportOnExit);
+    await new Promise(() => { });
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;
@@ -44,7 +44,8 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
 }
 
 export interface StartEmulatorOptions {
-  importFrom: 'defaultImport' | string
+  importFrom: 'defaultImport' | string,
+  exportOnExit: boolean
 }
 
 /**
@@ -53,12 +54,12 @@ export interface StartEmulatorOptions {
  * Not much use over manually running the command, other than less flags...
  * @param param0 this is a relative path to local Firestore backup to import into emulator
  */
-export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
+export async function loadEmulator({ importFrom = 'defaultImport', exportOnExit = true }: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
-    proc = await startFirestoreEmulatorWithImport(emulatorPath);
-    await new Promise(() => {});
+    proc = await startFirestoreEmulatorWithImport(emulatorPath, exportOnExit);
+    await new Promise(() => { });
   } catch (e) {
     await shutdownEmulator(proc)
     throw e;
