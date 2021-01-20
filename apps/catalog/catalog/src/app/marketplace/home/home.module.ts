@@ -14,17 +14,16 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
-import { OrganizationBannerModule} from '@blockframes/organization/components/banner/banner.module';
+import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
 import { MovieSlideModule } from '@blockframes/movie/components/slide/slide.module'
-import { OrganizationCardMinimalModule} from '@blockframes/organization/components/card-minimal/card-minimal.module'
-import { SortByPipeModule } from '@blockframes/utils/pipes/sort-array.pipe';
+import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module'
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Pipes
-import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
+import { GetLinkModule, CMSPipeModule, SortByPipeModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [MarketplaceHomeComponent],
@@ -44,6 +43,7 @@ import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
     OrganizationCardMinimalModule,
     MatIconModule,
     MatButtonModule,
+    SortByPipeModule,
     RouterModule.forChild([
       {
         path: '',
