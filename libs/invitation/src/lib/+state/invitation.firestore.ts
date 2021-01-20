@@ -27,7 +27,7 @@ export interface InvitationBase<D> {
   toOrg?: PublicOrganization,
   toUser?: PublicUser,
   /**
-   * If empty, the invitation is about Organization and we use directly fromOrg.id org toOrg.id
+   * If empty, the invitation is about Organization and we use directly fromOrg.id or toOrg.id
    */
   eventId?: string;
   message?: string;
