@@ -285,7 +285,7 @@ service cloud.firestore {
 
     match /movies/{movieId} {
     	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
-      allow read: if userHasValidOrg() && notInMaintenance();
+      allow read: if userHasValidOrg() && notInMaintenance() && ( existingData().storeConfig.status == 'accepted' || isAllowedToUpdateMovie() );
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
       	&& isRequestFieldValueEqualToOrNotSetted(['id'], movieId)

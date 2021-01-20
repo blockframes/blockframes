@@ -121,7 +121,7 @@ describe('Movies Rules Tests', () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertFails(movieRef.delete());
     });
-  });
+  }); 
 
   describe('With User not in org', () => {
     const newMovieId = 'MI-007';
@@ -149,6 +149,24 @@ describe('Movies Rules Tests', () => {
     test("user without valid org shouldn't be able to delete movie title", async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertFails(movieRef.delete());
+    });
+  });
+
+  // User not owner of movie
+  describe('User without rights to edit movie', () => {
+    const draftMovieId = 'MI-077';
+    
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-user3'
+      })
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test("user without rights to edit movie shouldn't be able to read movie title when in draft", async () => {
+      const movieRef = db.doc(`movies/${draftMovieId}`);
+      await assertFails(movieRef.get());
     });
   });
 });

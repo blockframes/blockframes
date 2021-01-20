@@ -40,6 +40,9 @@ export const testFixture = {
   'orgs/O001': {
     status: 'accepted', //belongs to O001
   },
+  'orgs/O002': {
+    status: 'accepted'
+  },
 
   //Users Collection
   'users/uid-bfAdmin': {
@@ -70,6 +73,11 @@ export const testFixture = {
     email: 'tom@no-org.com',
     uid: 'uid-peeptom',
   },
+  'users/uid-user3': {
+    email: 'u3@cascade8.com',
+    uid: 'uid-user3',
+    orgId: 'O002'
+  },
 
   //Blockframes Admin
   'blockframesAdmin/uid-bfAdmin': {},
@@ -83,12 +91,22 @@ export const testFixture = {
     'distributionRights/DR001': {
       id: 'DR001',
     },
+    storeConfig: {
+      appAccess: { festival: true },
+      status: 'accepted'
+    },
+    orgIds: ['O001']
   },
   'movies/MI-0d7': {
     id: 'MI-0d7',
     title: {
       original: 'UnitTest Eraser',
     },
+    storeConfig: {
+      appAccess: { festival: true },
+      status: 'accepted'
+    },
+    orgIds: ['O001']
   },
   'movies/MI-077': {
     id: 'MI-077',
@@ -100,8 +118,11 @@ export const testFixture = {
       status: 'draft',
     },
     note: '',
+    orgIds: ['O001']
   },
 
+
+  // Events
   'events/E001': {
     id: 'E001',
   },
