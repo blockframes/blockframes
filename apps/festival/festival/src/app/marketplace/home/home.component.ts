@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public page$: Observable<CmsPage>;
   public templates: Record<string, TemplateRef<any>> = {};
 
+
   constructor(
     private dynTitle: DynamicTitleService,
     private db: AngularFirestore

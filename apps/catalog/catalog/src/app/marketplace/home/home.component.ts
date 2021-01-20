@@ -21,6 +21,7 @@ export class MarketplaceHomeComponent implements OnInit {
 
   public page$: Observable<CmsPage>;
   public templates: Record<string, TemplateRef<any>> = {};
+  trackByIndex = (index: number) => index;
 
   constructor(
     private dynTitle: DynamicTitleService,

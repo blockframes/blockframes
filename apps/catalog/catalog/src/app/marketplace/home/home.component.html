@@ -1,5 +1,5 @@
 <ng-container *ngIf="page$ | async as page">
-  <ng-container *ngFor="let section of page.sections">
+  <ng-container *ngFor="let section of page.sections; trackBy: trackByIndex">
     <ng-container *ngTemplateOutlet="templates[section._type]; context: {$implicit: section}"></ng-container>
   </ng-container>
 </ng-container>

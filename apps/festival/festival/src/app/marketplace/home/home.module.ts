@@ -22,11 +22,10 @@ import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
 
 // Page
 import { HomeComponent } from './home.component';
-import { HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe } from './home.pipe';
 
 
 @NgModule({
-  declarations: [HomeComponent, HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe],
+  declarations: [HomeComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([{ path: '', component: HomeComponent }]),
