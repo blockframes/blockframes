@@ -18,7 +18,7 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module';
 import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { GetLinkModule } from '@blockframes/utils/pipes/url.pipe';
+import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -43,6 +43,7 @@ import { HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe } from './home.p
     OrganizationCardMinimalModule,
     OrganizationBannerModule,
     GetLinkModule,
+    CMSPipeModule,
 
     // Material
     MatButtonModule,

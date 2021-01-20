@@ -31,7 +31,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
     private service: CmsService,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {    console.log('here') }
 
   get sections() {
     return this.form?.get('sections');

@@ -1,5 +1,8 @@
 import { App } from '@blockframes/utils/apps';
+import { HomeSection } from '@blockframes/admin/cms';
 
+
+export type CmsPage = CmsTemplate<HomeSection>;
 export interface CmsTemplate<S extends Section = Section> {
   id: string;
   title: string;

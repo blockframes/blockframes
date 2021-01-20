@@ -6,9 +6,7 @@ import { Observable } from 'rxjs';
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CmsTemplate, HomeSection } from '@blockframes/admin/cms';
-
-type CmsPage = CmsTemplate<HomeSection>;
+import { CmsPage } from '@blockframes/admin/cms/template';
 
 @Component({
   selector: 'festival-marketplace-home',
