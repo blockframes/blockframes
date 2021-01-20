@@ -28,6 +28,14 @@
     }
   }
 
+  div:not(.jw-display-icon-container):not(.jw-icon):not(.jw-reset) {
+    height: 100%;
+    section {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
   img {
     width: 200px;
   }
