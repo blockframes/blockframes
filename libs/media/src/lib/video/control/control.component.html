@@ -8,7 +8,7 @@
       <mat-icon svgIcon="play_circle"></mat-icon>
     </ng-template>
   </button>
-  {{ control.position | timecode }}
+  <span>{{ control.position | timecode }}</span>
   <mat-slider
     [min]="0"
     [step]="1"
@@ -17,6 +17,6 @@
     (input)="seekPosition($event)"
     (change)="seekPosition($event)"
   ></mat-slider>
-  {{ control.duration | timecode }}
+  <span>{{ control.duration | timecode }}</span>
 </ng-container>
 

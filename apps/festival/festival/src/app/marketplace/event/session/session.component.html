@@ -42,9 +42,9 @@
           <ng-container *ngIf="!!event.meta.selectedFile">
             <article [style]="{width: mediaContainerSize}">
               <ng-container *ngIf="creatingControl$ | async; else controlReady">
-                <span>
+                <section class="control-spinner">
                   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-                </span>
+                </section>
               </ng-container>
               <ng-template #controlReady>
                 <file-viewers [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>

@@ -62,7 +62,8 @@ p {
     align-items: stretch;
 
     article {
-      margin: 8px 0 8px 16px;
+      margin: 8px 16px;
+      margin-right: 0;
       display: flex;
       align-items: center;
       flex-direction: column;
@@ -70,17 +71,18 @@ p {
       border-radius: 4px;
       background-color: var(--background-card);
 
-      span {
+      .control-spinner {
         height: 100%;
         display: flex;
         flex-direction: column;
-        place-content: center;
+        justify-content: center;
       }
 
       file-viewers {
         height: 100%;
         width: 100%;
         // css is a totally degenerated monstrosity,
+        // when used in a flex parent, we NEED to set min-height: 0;
         // remove the line bellow to break everything
         min-height: 0;
       }
