@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ChangeDetectionStrategy, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
@@ -10,7 +10,7 @@ import { CmsPage } from '@blockframes/admin/cms/template';
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceHomeComponent implements OnInit {
+export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
   @HostBinding('test-id="content"') testId
   @ViewChild('banner') banner?: TemplateRef<any>;
   @ViewChild('hero') hero?: TemplateRef<any>;
