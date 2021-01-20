@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap } from 'rxjs/operators';
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, StoreType } from '@blockframes/utils/static-model/types';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
@@ -53,7 +53,7 @@ export class TitleListComponent implements OnInit {
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$: Observable<StoreType> = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  loading$ = new BehaviorSubject(true)
+  movies$: Observable<Movie[]>;
 
   constructor(
     private contractQuery: ContractQuery,
@@ -65,10 +65,10 @@ export class TitleListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId()));
+    this.movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId()));
     // TODO #4797 Implement analytics when ready
     // Transform movies into a TitleView
-    this.titles$ = combineLatest([movies$, this.contractQuery.selectAll(), this.filter$]).pipe(
+    this.titles$ = combineLatest([this.movies$, this.contractQuery.selectAll(), this.filter$]).pipe(
       map(([movies, contracts, filter]) => movies.map(movie =>
         movie.storeConfig.storeType === filter || filter === null
           ? createTitleView(movie, contracts)
@@ -79,7 +79,7 @@ export class TitleListComponent implements OnInit {
   }
 
   /** Dynamic filter of movies for each tab. */
-  applyFilter(filter?: Movie['storeConfig']['storeType']) {
+  applyFilter(filter?: StoreType) {
     this.filter.setValue(filter);
     filter === 'library'
       ? this.dynTitle.setPageTitle('Library titles')
