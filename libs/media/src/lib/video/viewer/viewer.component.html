@@ -11,7 +11,7 @@
         <p>Ooops ! Sorry, something broke.</p>
         <p>Please contact us if you keep seeing this error.</p>
 
-        <button mat-flat-button (click)="refresh()">
+        <button *ngIf="!control" mat-flat-button (click)="refresh()">
           <mat-icon svgIcon="refresh"></mat-icon>
           <span>Retry</span>
         </button>

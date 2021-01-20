@@ -17,7 +17,6 @@ import { toggleFullScreen } from '../../file/viewers/utils';
 })
 export class PdfViewerComponent implements OnInit {
 
-  @ViewChild('container') pdfContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;
 
   private _ref: string;
@@ -56,6 +55,7 @@ export class PdfViewerComponent implements OnInit {
   }
 
   constructor(
+    private el: ElementRef,
     private mediaService: MediaService,
     @Inject(DOCUMENT) private document: Document,
   ) { }
@@ -85,8 +85,6 @@ export class PdfViewerComponent implements OnInit {
 
   async generatePdfUrl() {
 
-    this.isPuppet$.next(true);
-
     const isLoading = !this.ref || !this.control || this.control.type !== 'pdf';
     if (isLoading) {
       this.pdfUrl$.next('');
@@ -106,7 +104,7 @@ export class PdfViewerComponent implements OnInit {
   }
 
   toggleFullScreen() {
-    toggleFullScreen(this.pdfContainer, this.document, this.fullScreen);
+    toggleFullScreen(this.el, this.document, this.fullScreen);
   }
 
   handleControlChange(control: MeetingPdfControl) {

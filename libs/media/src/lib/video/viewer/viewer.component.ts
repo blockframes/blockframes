@@ -1,3 +1,4 @@
+
 import { DOCUMENT } from "@angular/common";
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnDestroy, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";

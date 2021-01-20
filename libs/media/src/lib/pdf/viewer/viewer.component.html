@@ -1,26 +1,25 @@
 
-<!-- We need to have div container in order to have the "fullscreen" feature -->
-<div #container>
-  <ng-container *ngIf="(loading$ | async); else loaded">
+<ng-container *ngIf="(loading$ | async); else loaded">
+  <section>
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </section>
+</ng-container>
+<ng-template #loaded>
+  <mat-progress-bar *ngIf="fetching$ | async" mode="indeterminate"></mat-progress-bar>
+
+  <!-- This is not a regular image, don't use the ImageDirective on it -->
+  <img [src]="pdfUrl$ | async" alt="current page of the pdf" />
+
+  <ng-container *ngIf="!(isPuppet$ | async)">
+    <pdf-control [control]="control" (controlChange)="handleControlChange($event)"></pdf-control>
   </ng-container>
-  <ng-template #loaded>
-    <mat-progress-bar *ngIf="fetching$ | async" mode="indeterminate"></mat-progress-bar>
 
-    <!-- This is not a regular image, don't use the ImageDirective on it -->
-    <img [src]="pdfUrl$ | async" alt="current page of the pdf" />
+  <button *ngIf="!fullScreen" (click)="toggleFullScreen()" mat-icon-button>
+    <mat-icon svgIcon="fullscreen"></mat-icon>
+  </button>
 
-    <ng-container *ngIf="!(isPuppet$ | async)">
-      <pdf-control [control]="control" (controlChange)="handleControlChange($event)"></pdf-control>
-    </ng-container>
+  <button *ngIf="fullScreen" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button>
+    <mat-icon svgIcon="fullscreen_exit"></mat-icon>
+  </button>
 
-    <button *ngIf="!fullScreen" (click)="toggleFullScreen()" mat-icon-button>
-      <mat-icon svgIcon="fullscreen"></mat-icon>
-    </button>
-
-    <button *ngIf="fullScreen" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button>
-      <mat-icon svgIcon="fullscreen_exit"></mat-icon>
-    </button>
-
-  </ng-template>
-</div>
+</ng-template>
