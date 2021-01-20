@@ -3,14 +3,15 @@ import { initializeApp } from 'firebase-admin'
 import { clearFirestoreData } from '@firebase/rules-unit-testing'
 import { ClearFirestoreDataOptions } from '@firebase/rules-unit-testing/dist/src/api';
 import { ChildProcess, execSync } from 'child_process';
-import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync} from 'fs';
-import { join, resolve, sep} from 'path';
+import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
+import { join, resolve, sep } from 'path';
 import { runShellCommand, runShellCommandUntil, awaitProcOutput } from '../commands';
+import { getFirestoreExportDirname } from './export';
 
 const firestoreExportFolder = 'firestore_export';
 
 const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
-const getEmulatorMetadataJsonPath = (emulatorPath: string) =>join(emulatorPath, 'firebase-export-metadata.json');
+const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
 
 /**
  * This function will get the filename of the Firestore export metadata json file.
@@ -25,7 +26,7 @@ function getFirestoreMetadataJsonFilename(firestorePath: string) {
  * This is a "default" path used by scripts and commands to store Firestore backups when running
  * various processes, such as PFT or db anonymization.
  */
-export const defaultEmulatorBackupPath = resolve(process.cwd(), 'tmp', 'emulator');
+export const defaultEmulatorBackupPath = resolve(process.cwd(), '.firebase', 'firestore');
 
 /**
  * This function will download and convert a Firestore export saved in a GCS bucket to
@@ -112,7 +113,7 @@ export function shutdownEmulator(proc: ChildProcess) {
 }
 
 export interface FirestoreEmulator extends FirebaseFirestore.Firestore {
- clearFirestoreData(options: ClearFirestoreDataOptions): Promise<void>
+  clearFirestoreData(options: ClearFirestoreDataOptions): Promise<void>
 }
 
 /**
@@ -120,12 +121,12 @@ export interface FirestoreEmulator extends FirebaseFirestore.Firestore {
  * the local emulator. It also adds on a fast`clearFirestoreData` method for
  * clearing the local emulator.
  */
-export function connectEmulator(): FirestoreEmulator  {
+export function connectEmulator(): FirestoreEmulator {
   if (firebase().projectId === 'blockframes') throw Error('YOU ARE ON PROD!!');
   const db = initializeApp(firebase(), 'emulator').firestore() as any;
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
   // tslint:disable-next-line: no-eval
-  const { emulators: { firestore: { port }} } = eval('require')(firebaseJsonPath)
+  const { emulators: { firestore: { port } } } = eval('require')(firebaseJsonPath);
   db.settings({
     port,
     merge: true,
@@ -152,15 +153,14 @@ export function connectEmulator(): FirestoreEmulator  {
  *
  * `localPath` is the local relative or absolute path where to find a FIRESTORE (not Firebase emulator) backup folder
  */
-export function uploadDbBackupToBucket({ bucketName, remoteDir, localPath }: { bucketName: string; remoteDir?: string; localPath?: string; }) {
+export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath }: { bucketName: string; remoteDir?: string; localPath?: string; }) {
   const firestoreExportAbsPath = localPath
     ? join(process.cwd(), localPath)
     : getFirestoreExportPath(defaultEmulatorBackupPath);
   const firestoreMetadataFilename = getFirestoreMetadataJsonFilename(firestoreExportAbsPath);
   const firestoreMetadataAbsPath = join(firestoreExportAbsPath, firestoreMetadataFilename);
 
-  const d = new Date();
-  const _remoteDir = remoteDir || `firestore-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+  const _remoteDir = remoteDir || getFirestoreExportDirname(new Date);
   const newFirestoreMetaFilename = `${_remoteDir}.overall_export_metadata`
   const newFirestoreMetadataAbsPath = join(firestoreExportAbsPath, newFirestoreMetaFilename);
   renameSync(firestoreMetadataAbsPath, newFirestoreMetadataAbsPath);
@@ -174,7 +174,13 @@ export function uploadDbBackupToBucket({ bucketName, remoteDir, localPath }: { b
   emulatorMetaData.firestore.metadata_file = join(firestoreFolderName, newFirestoreMetaFilename)
   writeFileSync(emulatorMetadataJsonPath, JSON.stringify(emulatorMetaData, null, 4), 'utf-8');
 
-  const cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${_remoteDir}"`;
+  if (!_remoteDir) throw Error('remoteDir is empty... this will clear the entire bucket!');
+
+  let cmd = `gsutil -m rm -r "gs://${bucketName}/${_remoteDir}"`;
+  console.log('Running command:', cmd)
+  await runShellCommand(cmd);
+
+  cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${_remoteDir}"`;
   console.log('Running command:', cmd)
   return runShellCommand(cmd);
 }

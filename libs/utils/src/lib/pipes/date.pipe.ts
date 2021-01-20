@@ -1,11 +1,11 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { toDate } from '../helpers';
-import type { firestore } from "firebase/app";
+import type firebase from 'firebase';
 
 @Pipe({ name: 'toDate' })
 export class ToDatePipe implements PipeTransform {
 
-  transform(date: Date | firestore.Timestamp) {
+  transform(date: Date | firebase.firestore.Timestamp) {
     return toDate(date);
   }
 }

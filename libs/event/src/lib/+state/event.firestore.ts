@@ -1,7 +1,7 @@
-import { firestore } from 'firebase/app';
+import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';

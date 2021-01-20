@@ -18,15 +18,15 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module';
 import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { GetLinkModule } from '@blockframes/utils/pipes/url.pipe';
+import { GetLinkModule, CMSPipeModule } from '@blockframes/utils/pipes';
+import { SortByPipeModule } from '@blockframes/utils/pipes/sort-array.pipe';
 
 // Page
 import { HomeComponent } from './home.component';
-import { HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe } from './home.pipe';
 
 
 @NgModule({
-  declarations: [HomeComponent, HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe],
+  declarations: [HomeComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([{ path: '', component: HomeComponent }]),
@@ -43,6 +43,8 @@ import { HomeQueryTitlesPipe, HomeQueryOrgsPipe, HomeGetOrgPipe } from './home.p
     OrganizationCardMinimalModule,
     OrganizationBannerModule,
     GetLinkModule,
+    CMSPipeModule,
+    SortByPipeModule,
 
     // Material
     MatButtonModule,

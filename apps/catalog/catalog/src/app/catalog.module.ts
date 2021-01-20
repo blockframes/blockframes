@@ -4,7 +4,7 @@ import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 
 // Guards
-import { CatalogAppGuard } from './guards/catalog-app.guard';
+import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 
 const routes: Routes = createRoutes({
@@ -21,13 +21,13 @@ const routes: Routes = createRoutes({
   },
   {
     path: 'marketplace',
-    canActivate: [CatalogAppGuard, MovieCollectionGuard],
+    canActivate: [AppGuard, MovieCollectionGuard],
     canDeactivate: [MovieCollectionGuard],
     loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
   },
   {
     path: 'dashboard',
-    canActivate: [CatalogAppGuard],
+    canActivate: [AppGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   }]
 });

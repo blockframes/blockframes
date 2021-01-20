@@ -3,7 +3,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue, downloadCsvFromJson, BehaviorStore } from '@blockframes/utils/helpers';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { OrganizationService, orgName, Organization } from '@blockframes/organization/+state';
+import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 
 @Component({
@@ -29,7 +29,6 @@ export class MoviesComponent implements OnInit {
     'storeConfig.status'
   ];
   public rows: any[] = [];
-  public orgs: Record<string, Organization> = {};
   public exporting = new BehaviorStore(false);
 
   constructor(
@@ -43,14 +42,14 @@ export class MoviesComponent implements OnInit {
 
   async ngOnInit() {
     const movies = await this.movieService.getAllMovies();
+    // movie.orgIds is an array but in the front-end we only display one
+    const orgIds = movies.map(movie => movie.orgIds[0]);
+    const orgs = await this.orgService.getValue(orgIds);
 
-    const promises = movies.map(async (row :any) => {
-      row.org = await this.getOrg(row.id);
-      return row;
+    this.rows = movies.map(movie => {
+      const org = orgs.find(o => o.id === movie.orgIds[0]);
+      return { org, ...movie };
     })
-
-    this.rows = await Promise.all(promises);
-
     this.cdRef.markForCheck();
   }
 
@@ -115,14 +114,5 @@ export class MoviesComponent implements OnInit {
       this.exporting.value = false;
     }
 
-  }
-
-  private async getOrg(id: string): Promise<Organization> {
-    if (!this.orgs[id]) {
-      const orgs = await this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', id));
-      this.orgs[id] = orgs.pop();
-    }
-
-    return this.orgs[id];
   }
 }
