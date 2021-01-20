@@ -1,6 +1,6 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
-import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
+import { NotificationDocument, NotificationType, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db, getUser } from "../firebase";
 import { getAdminIds, getDocument } from "../../data/internals";
@@ -268,23 +268,50 @@ export async function onInvitationToAnEventUpdate(
   }
 }
 
+/**
+ * Notify users with accepted invitation to events that are starting in 1 day
+ */
 export async function createNotificationsForEventsToStart() {
-  // 1 Fetch events that are about to start
-  // 2 Fetch attendees (invitations accepted)
-  // 3 Create notifications
-  const startDate = new Date(Date.now() + (86400 * 1000)); // now plus 1 day
+  const oneHour = 3600 * 1000;
+  const oneDay = 24 * oneHour;
+  const notificationType: NotificationType = 'eventIsAboutToStart';
 
-  const eventsCollection = await db.collection('events').where('start', '<', startDate).get();
+  // 1 Fetch events that are about to start
+  const eventsCollection = await db.collection('events')
+    .where('start', '>=', new Date(Date.now() + oneDay)) // Event starts in one day or more
+    .where('start', '<', new Date(Date.now() + oneDay + oneHour)) // but not more than 1 day + 1 hour
+    .get();
+
+  // 2 Fetch attendees (invitations accepted)
   const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
   const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
-  const [invitationsRef] = await Promise.all(promises);
-  const invitations = invitationsRef.docs.map(doc => doc.data());
-  const notifications = invitations.map(invitation => createNotification({
-    toUserId: invitation.toUser.uid,
-    docId: invitation.eventId,
-    type: 'eventIsAboutToStart'
-  }));
-  return triggerNotifications(notifications);
+  const invitationsSnaps = await Promise.all(promises);
+  const invitations: InvitationDocument[] = [];
+
+  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
+
+  // 3 Create notifications if not already exists
+  // @TODO #4046
+  const notifications = [];
+  for (const invitation of invitations) {
+    const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
+    const existingNotifications = await db.collection('notifications')
+      .where('docId', '==', invitation.eventId)
+      .where('toUserId', '==', toUserId)
+      .where('type', '==', notificationType)
+      .get();
+
+    // There is no existing notification for this user
+    if (existingNotifications.empty) {
+      notifications.push(createNotification({
+        toUserId: invitation.toUser.uid,
+        docId: invitation.eventId,
+        type: notificationType
+      }));
+    }
+  }
+
+  return notifications.length ? triggerNotifications(notifications) : undefined;
 }
 
 /**

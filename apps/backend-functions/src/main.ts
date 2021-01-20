@@ -90,7 +90,7 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
 );
 
 /** Trigger: when a permission document is deleted. */
-export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',onPermissionDelete);
+export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}', onPermissionDelete);
 
 //--------------------------------
 //    Invitations Management    //
@@ -127,7 +127,7 @@ export const twilioWebhook = functions.https.onRequest(_twilioWebhook);
 /**
  * Creates notifications when an event is about to start
  */
-export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// every day at 4 AM
+export const scheduledNotifications = functions.pubsub.schedule('*/30 * * * *') // every 30 minutes
   .onRun(skipInMaintenance(_ => createNotificationsForEventsToStart()));
 
 //--------------------------------
