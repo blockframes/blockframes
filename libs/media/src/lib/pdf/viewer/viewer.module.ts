@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { FilePuppetsModule } from '../../file/puppets/puppets.module'
+import { PdfControlModule } from '../control/control.module';
 
 import { PdfViewerComponent } from './viewer.component';
 
@@ -14,10 +15,11 @@ import { PdfViewerComponent } from './viewer.component';
     CommonModule,
     FlexLayoutModule,
 
-    FilePuppetsModule,
+    PdfControlModule,
 
     MatIconModule,
     MatButtonModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
   ],
   exports: [ PdfViewerComponent ],
