@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
 import { Observable, Subscription } from 'rxjs';
-import { Meeting, MeetingMediaControl, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
+import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
@@ -148,23 +148,20 @@ export class SessionComponent implements OnInit, OnDestroy {
           const file = (event as Event<Meeting>).meta.selectedFile;
           if (!(event as Event<Meeting>).meta.controls[file]) {
             const fileType = extensionToType(getFileExtension(file));
-            let meta: Meeting;
-            let controls: Record<string, MeetingMediaControl>;
-            let control: MeetingMediaControl;
             switch (fileType) {
-              case 'pdf':
-                control = await this.createPdfControl(file, event.id);
-                controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                meta  = { ...event.meta, controls };
+              case 'pdf': {
+                const control = await this.createPdfControl(file, event.id);
+                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
                 break;
-              case 'video':
-                control = await this.createVideoControl(file, event.id);
-                controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                meta  = { ...event.meta, controls };
+              } case 'video': {
+                const control = await this.createVideoControl(file, event.id);
+                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
                 break;
-              default: break;
+              } default: break;
             }
           }
         }
