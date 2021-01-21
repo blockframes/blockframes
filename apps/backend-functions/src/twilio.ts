@@ -9,7 +9,9 @@ import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, t
 import { hasUserAcceptedEvent } from "./internals/invitations/meetings";
 import Twilio from "twilio/lib/rest/Twilio";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
-import { db, firebaseRegion, getUser } from "./internals/firebase";
+import { firebaseRegion } from "./internals/utils";
+import * as admin from 'firebase-admin';
+import { getUser } from "./internals/utils";
 import { Request, Response } from "firebase-functions";
 
 export interface RequestAccessToken {
@@ -72,7 +74,7 @@ export const getTwilioAccessToken = async (
 
   const isOwner = async () => {
     if (event.meta.organizerId === context.auth.uid) return true;
-    return user.orgId === event.ownerId;
+    return !!user && !!user.orgId && user.orgId === event.ownerId;
   }
 
   // Check if user is owner or is invited to event
@@ -110,6 +112,7 @@ export const getTwilioAccessToken = async (
 
 /** This function will be called directly by the Twilio servers each time an event happens in a Video Room */
 export const twilioWebhook = async (req: Request, res: Response) => {
+  const db = admin.firestore();
   try {
 
     if (

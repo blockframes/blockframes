@@ -27,8 +27,6 @@ describe('DB cleaning script', () => {
     initFunctionsTestMock();
     const adminServices = loadAdminServices();
     db = adminServices.db;
-    // To be sure that tests are not polluted
-    await clearFirestoreData({ projectId: getTestingProjectId() });
     adminAuth = new AdminAuthMocked() as any;
   });
 

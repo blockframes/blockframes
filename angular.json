@@ -312,7 +312,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy": {
@@ -396,7 +397,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-ops/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         }
       }

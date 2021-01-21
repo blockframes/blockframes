@@ -1926,9 +1926,9 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
   }
   return {
     [territory]: territory,
-    'iso-a2': territoriesISOA2[territory],
-    'iso-3': territoriesISOA3[territory],
-    'numCode': territoriesNUMCODE[territory],
-    'fr': territoriesFR[territory],
+    iso_a2: territoriesISOA2[territory],
+    iso_3: territoriesISOA3[territory],
+    numCode: territoriesNUMCODE[territory],
+    fr: territoriesFR[territory],
   }
 }

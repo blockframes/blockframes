@@ -147,11 +147,11 @@ export class MovieAnalyticsChartComponent {
     const current = getSum(currentHits);
     const past = getSum(pastHits);
     if (current && past && (current > past)) {
-      return (current - past) / past * 100
+      return Math.round((current - past) / past * 100);
     } else if (past > current) {
-      return - (past - current) / past * 100
+      return - Math.round((past - current) / past * 100);
     } else {
-      return 0
+      return 0;
     }
   }
 }
