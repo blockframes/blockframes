@@ -1,5 +1,6 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import { db, getUser } from './internals/firebase';
+import * as admin from 'firebase-admin';
+import { getUser } from "./internals/utils";
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
@@ -23,6 +24,7 @@ import { invitationStatus } from '@blockframes/invitation/+state/invitation.fire
 export async function onInvitationWrite(
   change: Change<FirebaseFirestore.DocumentSnapshot>
 ) {
+  const db = admin.firestore();
   const before = change.before;
   const after = change.after;
 
@@ -129,6 +131,7 @@ interface UserInvitation {
  * @dev this function polyfills the Promise.allSettled
  */
 export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<any> => {
+  const db = admin.firestore();
   return new Promise(async (res) => {
 
     if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
@@ -191,7 +194,7 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
 }
 
 export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
-
+  const db = admin.firestore();
   const userPromises = userEmails.map(email => db.collection('users')
   .where('email', '==', email)
   .get());

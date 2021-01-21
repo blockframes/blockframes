@@ -3,7 +3,7 @@
  *
  * This code deals directly with the low level parts of firebase,
  */
-import { db } from '../internals/firebase';
+import * as admin from 'firebase-admin';
 import { OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -49,6 +49,7 @@ export async function getOrganizationsOfContract(contract: ContractDocument): Pr
  * @returns the organizations that have movie id in organization.movieIds
  */
 export async function getOrganizationsOfMovie(movieId: string): Promise<OrganizationDocument[]> {
+  const db = admin.firestore();
   const movie = await db.doc(`movies/${movieId}`).get();
   const orgIds = movie.data().orgIds;
   const promises = orgIds.map(id => db.doc(`orgs/${id}`).get())
@@ -58,6 +59,7 @@ export async function getOrganizationsOfMovie(movieId: string): Promise<Organiza
 
 /** Get the number of elements in a firestore collection */
 export function getCount(collection: string): Promise<number> {
+  const db = admin.firestore();
   // TODO: implement counters to make this function scalable. => ISSUE#646
   // relevant docs: https://firebase.google.com/docs/firestore/solutions/counters
   return db
