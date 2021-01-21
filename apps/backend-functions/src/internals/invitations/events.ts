@@ -307,7 +307,7 @@ export async function createNotificationsForEventsToStart() {
     // There is no existing notification for this user
     if (existingNotifications.empty) {
       notifications.push(createNotification({
-        toUserId: invitation.toUser.uid,
+        toUserId,
         docId: invitation.eventId,
         type: notificationType
       }));
