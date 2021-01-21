@@ -69,12 +69,13 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
     );
-
-    this.add();
+    if (!this.form.controls.length) {
+      this.add();
+    }
   }
 
   ngOnDestroy() {
-    if (this.formItem?.dirty) this.save()
+    if (this.formItem?.dirty) this.save();
   }
 
   get isFormEmpty() {
@@ -83,7 +84,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   /** Add a clean form */
   add() {
-    this.formItem = this.form.createControl();
+   return this.formItem = this.form.createControl();
   }
 
   save() {
@@ -107,6 +108,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     this.formItem = this.form.at(index);
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
+
   }
 
   cancel() {
@@ -124,7 +126,8 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       this.activeIndex--;
     }
     if (this.isFormEmpty) {
-      this.add();
+     this.add();
+     delete this.formItem;
     }
   }
 }
