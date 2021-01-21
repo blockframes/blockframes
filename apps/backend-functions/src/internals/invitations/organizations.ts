@@ -77,7 +77,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const app = await getOrgAppKey(organizationId);
   const adminPromises = admins
     .filter(mail => !!mail)
-    .map(admin => userJoinedYourOrganization(admin!.email, admin!.firstName, orgDenomination, user!.firstName, user!.lastName, user!.email))
+    .map(a => userJoinedYourOrganization(a!.email, a!.firstName, orgDenomination, user!.firstName, user!.lastName, user!.email))
     .map(template => sendMailFromTemplate(template, app));
 
   return Promise.all(adminPromises);
@@ -125,9 +125,9 @@ async function onRequestFromUserToJoinOrgCreate({
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
   return Promise.all(
-    admins.map(admin => userRequestedToJoinYourOrg({
-      adminEmail: admin.email,
-      adminName: admin.firstName!,
+    admins.map(a => userRequestedToJoinYourOrg({
+      adminEmail: a.email,
+      adminName: a.firstName!,
       organizationName: toOrg.denomination.full,
       organizationId: toOrg.id,
       userFirstname: userData.firstName!,
