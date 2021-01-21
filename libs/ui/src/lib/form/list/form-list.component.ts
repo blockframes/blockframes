@@ -69,7 +69,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
     );
-    if (!this.form.controls.length) {
+    if (this.isFormEmpty) {
       this.add();
     }
   }
@@ -84,7 +84,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   /** Add a clean form */
   add() {
-   return this.formItem = this.form.createControl();
+   this.formItem = this.form.createControl();
   }
 
   save() {
@@ -108,7 +108,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     this.formItem = this.form.at(index);
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
-
   }
 
   cancel() {
@@ -124,10 +123,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     this.form.removeAt(index);
     if (this.activeIndex > index) {
       this.activeIndex--;
-    }
-    if (this.isFormEmpty) {
-     this.add();
-     delete this.formItem;
     }
   }
 }
