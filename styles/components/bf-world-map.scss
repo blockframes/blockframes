@@ -39,7 +39,6 @@ $bf-light-world-map: (
 
   world-map {
     background-color: mat-color($primary, 500, 0.05);
-    // TODO  #2218 remove these variables and replace colors when Mathilde find color that correspond to the world-map
     --color-1: #{mat-color($primary, 900, 0.5)};
     --color-2: #{mat-color($primary, 500, 0.3)};
     --color-3: #{mat-color($primary, 100, 0.3)};
