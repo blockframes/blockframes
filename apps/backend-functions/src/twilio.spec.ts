@@ -42,8 +42,6 @@ describe('Twilio test script', () => {
 
   beforeAll(async () => {
     initFunctionsTestMock();
-    // To be sure that tests are not polluted
-    await clearFirestoreData({ projectId: getTestingProjectId() });
   });
 
   afterEach(async () => {

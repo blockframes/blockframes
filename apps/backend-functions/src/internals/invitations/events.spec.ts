@@ -9,8 +9,6 @@ describe('Events tests', () => {
   beforeAll(async () => {
     initFunctionsTestMock();
     loadAdminServices();
-    // To be sure that tests are not polluted
-    await clearFirestoreData({ projectId: getTestingProjectId() });
   });
 
   afterEach(async () => {

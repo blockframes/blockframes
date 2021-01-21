@@ -11,6 +11,6 @@
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/import',
   testEnvironment: 'node',
+  coverageDirectory: '../../coverage/apps/backend-functions',
 };
