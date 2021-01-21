@@ -1,5 +1,6 @@
 
-import { db, getUser } from './../firebase';
+import * as admin from 'firebase-admin';
+import { getUser } from "./../utils";
 import {
   InvitationDocument,
   InvitationOrUndefined,
@@ -18,6 +19,7 @@ import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { orgName } from "@blockframes/organization/+state/organization.firestore";
 
 async function addUserToOrg(userId: string, organizationId: string) {
+  const db = admin.firestore();
   if (!organizationId || !userId) {
     throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);
   }

@@ -2,7 +2,7 @@ import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitati
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, NotificationType, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
-import { db, getUser } from "../firebase";
+import { getUser } from "../utils";
 import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser, requestToAttendEventFromUserAccepted } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
@@ -10,6 +10,7 @@ import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firest
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
+import * as admin from 'firebase-admin';
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -33,6 +34,7 @@ async function onInvitationToAnEventCreate({
   mode,
   eventId
 }: InvitationDocument) {
+  const db = admin.firestore();
   if (!eventId) {
     console.log('eventId is not defined');
     return;
@@ -272,6 +274,7 @@ export async function onInvitationToAnEventUpdate(
  * Notify users with accepted invitation to events that are starting in 1 day
  */
 export async function createNotificationsForEventsToStart() {
+  const db = admin.firestore();
   const oneHour = 3600 * 1000;
   const oneDay = 24 * oneHour;
   const notificationType: NotificationType = 'eventIsAboutToStart';
@@ -320,7 +323,7 @@ export async function createNotificationsForEventsToStart() {
  * @param eventId
  */
 export async function isUserInvitedToEvent(userId: string, eventId: string) {
-
+  const db = admin.firestore();
   const acceptedInvitations = db.collection('invitations')
     .where('type', '==', 'attendEvent')
     .where('eventId', '==', eventId)

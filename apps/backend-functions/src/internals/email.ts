@@ -5,7 +5,7 @@ import { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/ut
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db } from './firebase';
+import * as admin from 'firebase-admin';
 import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo, applicationUrl, appDescription } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 
@@ -71,13 +71,13 @@ export const sendMailAsAdmin = async (
   data: { request: EmailRequest, from?: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-
+  const db = admin.firestore();
   if (!context?.auth) {
     throw new Error('Permission denied: missing auth context.');
   }
 
-  const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
+  const bfadmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
+  if (!bfadmin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
   try {
     await sendMail(data.request, data.from || getSendgridFrom());
