@@ -2,17 +2,15 @@ import { Firestore } from '@blockframes/firebase-utils';
 import { runChunks } from '../firebase-utils';
 
 /**
- * Replace data.docId by data.eventId
- * @see 0050.ts for fix
+ * Remove data.eventId on joinOrganization invitations
+ * This fix incorrect migration 0047
 */
 export async function upgrade(db: Firestore) {
-  const invitations = await db.collection('invitations').get();
+  const invitations = await db.collection('invitations').where('type', '==', 'joinOrganization').get();
 
   return runChunks(invitations.docs, async (invitationsDoc) => {
-
     const data = invitationsDoc.data();
-    data['eventId'] = data.docId;
-    delete data.docId;
+    delete data.eventId;
     await invitationsDoc.ref.set(data);
   });
 }

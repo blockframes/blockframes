@@ -27,8 +27,7 @@ export interface InvitationBase<D> {
   toOrg?: PublicOrganization,
   toUser?: PublicUser,
   /**
-   * @dev Can only be an eventId.
-   * If empty, the invitation is about Organization and we use directly fromOrg.id
+   * If empty, the invitation is about Organization and we use directly fromOrg.id or toOrg.id
    */
   eventId?: string;
   message?: string;
@@ -54,7 +53,6 @@ export function createInvitation(params: Partial<InvitationBase<Date>> = {}): In
     id: '',
     mode: 'invitation',   // We need a default value for backend-function strict mode
     type: 'attendEvent',  // We need a default value for backend-function strict mode
-    eventId: '',
     status: 'pending',
     date: new Date(),
     ...params,
