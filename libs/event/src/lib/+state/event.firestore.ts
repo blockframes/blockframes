@@ -31,7 +31,7 @@ export interface MeetingVideoControl {
   duration: number;
 }
 
-type MeetingMediaControl = MeetingPdfControl | MeetingVideoControl;
+export type MeetingMediaControl = MeetingPdfControl | MeetingVideoControl;
 
 /** Maximum number of invitations that can be sent for a given Meeting */
 export const MEETING_MAX_INVITATIONS_NUMBER = 9;

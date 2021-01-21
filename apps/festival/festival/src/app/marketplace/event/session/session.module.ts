@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SessionComponent } from './session.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FileControlsModule } from '@blockframes/media/file/controls/controls.module';
-import { FilePuppetsModule } from '@blockframes/media/file/puppets/puppets.module';
+import { FileViewersModule } from '@blockframes/media/file/viewers/viewers.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -38,7 +39,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     FileCarouselModule,
     FileNameModule,
     FileControlsModule,
-    FilePuppetsModule,
+    FileViewersModule,
     MeetingVideoRoomModule,
     DoorbellBottomSheetModule,
     ConfirmModule,
@@ -47,6 +48,8 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatDividerModule,
+
     RouterModule.forChild([{ path: '', component: SessionComponent }])
   ]
 })
