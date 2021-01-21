@@ -2,6 +2,7 @@
 
 import { NotificationService } from './notification.service';
 import { NotificationStore } from './notification.store';
+import { Notification } from './notification.model';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
@@ -53,13 +54,14 @@ describe('Notifications Test Suite', () => {
     await db.doc('notifications/1').set({ isRead: false });
     await service.readNotification({ id: '1' });
     const doc = await db.doc('notifications/1').ref.get();
-    expect(doc.data().isRead).toBeTruthy();
+    const notification = doc.data() as Notification;
+    expect(notification.isRead).toBeTruthy();
   });
 
   it('Formats notification', () => {
-    const ns = TestBed.inject(NotificationStore)
-    ns.formatNotification = jest.fn();
+    const notificationStore = TestBed.inject(NotificationStore)
+    notificationStore.formatNotification = jest.fn();
     service.formatFromFirestore({} as any);
-    expect(ns.formatNotification).toHaveBeenCalled();
+    expect(notificationStore.formatNotification).toHaveBeenCalled();
   });
 });
