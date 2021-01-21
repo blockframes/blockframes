@@ -1,4 +1,44 @@
 
-.load {
+:host {
   height: 100%;
+  position: relative;
+
+  section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+
+    /*
+      This is needed because pdf have transparent background,
+      Text is usually black, and when user go to full screen the background is also black
+    */
+    background-color: #fff;
+  }
+
+  pdf-control {
+    padding: 8px 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  button.fullscreen {
+    background: #000;
+    margin: 24px;
+  }
 }

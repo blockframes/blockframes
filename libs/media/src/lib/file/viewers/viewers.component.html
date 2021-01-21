@@ -1,0 +1,23 @@
+
+<ng-container *ngIf="!!ref">
+  <ng-container [ngSwitch]="ref | fileType">
+    <ng-container *ngSwitchCase="'image'">
+      <img [ref]="ref" asset="no_titles.webp" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'pdf'">
+      <pdf-viewer [eventId]="eventId" [ref]="ref" [control]="control"></pdf-viewer>
+    </ng-container>
+    <ng-container *ngSwitchCase="'video'">
+      <video-viewer [eventId]="eventId" [ref]="ref" [control]="control"></video-viewer>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <article>
+        <h3>Sorry</h3>
+        <img asset="no_titles.webp" alt="Flying saucer">
+        <p>We don't know how to display this file.</p>
+        <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
+      </article>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
