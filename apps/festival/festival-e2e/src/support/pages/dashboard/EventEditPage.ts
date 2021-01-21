@@ -78,6 +78,7 @@ export default class EventEditPage {
   }
 
   saveEvent() {
+    cy.pause();
     cy.get('button[test-id=event-save]', { timeout: 1 * SEC }).click();
     cy.wait(2 * SEC);
   }
