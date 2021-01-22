@@ -68,7 +68,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
   });
 }
 
-async function mailOnInvitationAccept(userId: string, organizationId: string) {
+async function mailOnInvitationAccept(userId: string, organizationId: string) { // @TODO #4046 not need anymore? cf onOrgUpdate
   const org = await getDocument<OrganizationDocument>(`orgs/${organizationId}`);
   const orgDenomination = orgName(org);
   const user = await getUser(userId);
@@ -90,9 +90,7 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
     return;
   }
 
-  // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(toUser.uid, fromOrg.id);
-  // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(toUser.uid, fromOrg.id);
 }
 

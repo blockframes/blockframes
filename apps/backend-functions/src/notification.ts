@@ -63,6 +63,7 @@ function createNotificationMeta(meta: Partial<NotificationMeta<Timestamp>> = {})
     email: {
       active: false,
       sent: false,
+      error: false,
     },
     app: {
       active: false,
@@ -91,7 +92,7 @@ export async function sendNotificationEmails() {
   const notificationsCollection = await collection
     .where('_meta.email.active', '==', true)
     .where('_meta.email.sent', '==', false)
-    .where('_meta.email.error', '!=', true)
+    .where('_meta.email.error', '==', false)
     .get();
 
   for (const n of notificationsCollection.docs) {

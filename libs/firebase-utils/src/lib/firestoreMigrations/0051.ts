@@ -16,6 +16,7 @@ export async function upgrade(db: Firestore) {
       email: {
         active: false,
         sent: false,
+        error: false,
       },
       app: {
         active: true,
