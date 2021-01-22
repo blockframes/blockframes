@@ -18,7 +18,6 @@ const isAcceptedInApp = movie => movie.storeConfig.status === 'accepted' && movi
 export class HomeComponent implements OnInit, OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public movies$ = this.movieQuery.selectAll({ filterBy: isAcceptedInApp });
-  public moviesLoading$ = this.movieQuery.selectLoading();
   private sub: Subscription;
 
   constructor(

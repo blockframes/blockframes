@@ -23,8 +23,8 @@
         </a>
         <ng-content select="header"></ng-content>
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-          <mat-icon svgIcon="favorite" [matBadge]="wishlistCount$ | async"
-            [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+          <mat-icon svgIcon="favorite" [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)"
+            matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </a>
         <div fxLayout="row" fxLayoutGap="24px">
@@ -41,7 +41,8 @@
           <!-- Notifications -->
           <a mat-icon-button routerLink="notifications" test-id="notifications-link">
             <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-              <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+              <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small">
+              </mat-icon>
             </ng-container>
             <ng-template #noNotification>
               <mat-icon svgIcon="notifications"></mat-icon>

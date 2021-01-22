@@ -18,25 +18,27 @@
   <ng-content select="movie-header"></ng-content>
 
   <!-- Content -->
-  <nav id="nav" mat-tab-nav-bar>
-    <ng-container *ngFor="let link of routes">
-      <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
-        <a mat-tab-link [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
-          [active]="rla.isActive">
-          {{link.label}}
-        </a>
+  <div #main>
+    <nav id="nav" mat-tab-nav-bar>
+      <ng-container *ngFor="let link of routes">
+        <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
+          <a mat-tab-link [routerLink]="link.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+            {{link.label}}
+          </a>
+        </ng-container>
       </ng-container>
-    </ng-container>
-  </nav>
-  <section [@routeAnimation]="animationOutlet(outlet)">
-    <router-outlet #outlet="outlet"></router-outlet>
-  </section>
+    </nav>
+    <section [@routeAnimation]="animationOutlet(outlet)" (@routeAnimation.start)="onDone()">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </section>
+  </div>
 
   <ng-content></ng-content>
 
   <!-- Footer -->
   <footer>
-    <article *ngIf="movie | hasKeys: ['promotional.scenario', 'promotional.moodboard', 'promotional.presentation_deck']">
+    <article
+      *ngIf="movie | hasKeys: ['promotional.scenario', 'promotional.moodboard', 'promotional.presentation_deck']">
       <h2>Files</h2>
       <div grid>
         <mat-card [col]="3" *ngIf="movie.promotional.presentation_deck as deck">

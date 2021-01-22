@@ -3,13 +3,14 @@ import { FormControl } from '@angular/forms';
 import { startWith, map, tap } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { StoreStatus, StoreType } from '@blockframes/utils/static-model/types';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Movie, getMovieReceipt } from '@blockframes/movie/+state/movie.model';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { storeStatus } from '@blockframes/utils/static-model';
 
 interface TitleView {
   id: string;
@@ -52,8 +53,9 @@ export class TitleListComponent implements OnInit {
   initialColumns = ['title', 'sales', 'receipt', 'status'];
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
-  filter$: Observable<StoreType> = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  movies$: Observable<Movie[]>;
+  filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  hasMovies: boolean = false;
+  movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId()));
 
   constructor(
     private contractQuery: ContractQuery,
@@ -65,25 +67,22 @@ export class TitleListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId()));
     // TODO #4797 Implement analytics when ready
     // Transform movies into a TitleView
     this.titles$ = combineLatest([this.movies$, this.contractQuery.selectAll(), this.filter$]).pipe(
-      map(([movies, contracts, filter]) => movies.map(movie =>
-        movie.storeConfig.storeType === filter || filter === null
+      tap(([movies]) => this.hasMovies = !!movies.length),
+      map(([movies, contracts, filter]) => movies.map((movie: Movie) =>
+        movie.storeConfig.status === filter || filter === null
           ? createTitleView(movie, contracts)
           : null)
         .filter(movie => !!movie)),
       tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('No titles')));
-
   }
 
   /** Dynamic filter of movies for each tab. */
-  applyFilter(filter?: StoreType) {
+  applyFilter(filter?: StoreStatus) {
     this.filter.setValue(filter);
-    filter === 'library'
-      ? this.dynTitle.setPageTitle('Library titles')
-      : this.dynTitle.setPageTitle('Line-up titles')
+    this.dynTitle.setPageTitle(storeStatus[filter])
   }
 
   public resetFilter() {
