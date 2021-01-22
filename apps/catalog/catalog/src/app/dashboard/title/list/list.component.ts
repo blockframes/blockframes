@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { startWith, map, tap } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
+import { startWith, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -55,7 +55,7 @@ export class TitleListComponent {
     this.dynTitle.setPageTitle(storeStatus[filter])
   }
 
-  filterByMovie(movie: Movie, index: number, value: any) {
+  filterByMovie(movie: Movie, index: number, value: any): boolean {
     return value ? movie.storeConfig.status === value : true;
   }
 
