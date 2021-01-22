@@ -11,6 +11,7 @@ import { TitleListComponent } from './list.component';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -28,6 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TableFilterModule,
     ToLabelModule,
     ImageModule,
+    FilterByModule,
     // Material
     MatButtonModule,
     MatTabsModule,

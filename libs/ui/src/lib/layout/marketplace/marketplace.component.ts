@@ -1,12 +1,12 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 // Blockframes
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -22,7 +22,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MarketplaceComponent implements OnInit {
   private routerSub: Subscription;
   public user$ = this.authQuery.select('profile');
   public wishlistCount$: Observable<number>;
@@ -39,7 +39,6 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     private invitationQuery: InvitationQuery,
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
-    private router: Router
   ) { }
 
   ngOnInit() {
@@ -48,21 +47,12 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngAfterViewInit() {
-    // https://github.com/angular/components/issues/4280
-    this.routerSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((route: any) => {
-      /* We don't want to jump onto the top urls with title */
-      if (!route.url.includes('title')) {
-        this.cdkScrollable.scrollTo({ top: 0 });
-      }
+  scrollToTop() {
+    /* When the component is init, the cdk is not ready yet */
+    if (this.cdkScrollable) {
+      this.cdkScrollable.scrollTo({ top: 0 });
       this.sidenav.close();
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.routerSub) { this.routerSub.unsubscribe(); }
+    }
   }
 
   animationOutlet(outlet: RouterOutlet) {

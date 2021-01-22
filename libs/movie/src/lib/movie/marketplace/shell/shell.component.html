@@ -30,7 +30,7 @@
       </ng-container>
     </nav>
     <section [@routeAnimation]="animationOutlet(outlet)" (@routeAnimation.start)="scrollIntoView()">
-      <router-outlet #outlet="outlet"></router-outlet>
+      <router-outlet #outlet="outlet" (activate)="scrollIntoView()"></router-outlet>
     </section>
   </div>
 
