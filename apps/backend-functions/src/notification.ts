@@ -2,8 +2,9 @@ import { NotificationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationMeta, NotificationType } from '@blockframes/notification/types';
-import { getDocument } from './data/internals';
+import { getDocument, getOrgAppKey } from './data/internals';
 import { User } from '@blockframes/user/types';
+import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 
 type Timestamp = admin.firestore.Timestamp;
 
@@ -82,4 +83,36 @@ export function createNotification(notification: Partial<NotificationDocument> =
     id: db.collection('notifications').doc().id,
     ...notification
   };
+}
+
+export async function sendNotificationEmails() {
+  const db = admin.firestore();
+  const collection = db.collection('notifications');
+  const notificationsCollection = await collection
+    .where('_meta.email.active', '==', true)
+    .where('_meta.email.sent', '==', false)
+    .where('_meta.email.error', '!=', true)
+    .get();
+
+  for (const n of notificationsCollection.docs) {
+    const notification = createNotification(n.data());
+    if (customizableNotificationsTypes.includes(notification.type)) {
+      const user = await getDocument<User>(`users/${notification.toUserId}`);
+
+      // Send email
+      // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
+      // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
+      const sent = await sendMail({ to: user.email, subject: notification.type, text: 'test' });
+
+      notification._meta.email.sent = sent;
+      if(!sent){
+        notification._meta.email.error = true;
+      }
+    } else {
+      notification._meta.email.error = true;
+    }
+
+    // Update notification state
+    await collection.doc(n.id).set({ _meta: notification._meta }, { merge: true });
+  }
 }

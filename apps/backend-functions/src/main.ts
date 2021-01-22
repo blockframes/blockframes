@@ -21,6 +21,7 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { heavyConfig } from '@blockframes/firebase-utils';
+import { sendNotificationEmails as _sendNotificationEmails } from './notification';
 
 
 //--------------------------------
@@ -194,6 +195,12 @@ export const sendMailAsAdmin = functions.https.onCall(skipInMaintenance(_sendMai
  * Trigger: when a regular user wants to send an email.
  */
 export const sendMailWithTemplate = functions.https.onCall(skipInMaintenance(_sendMailWithTemplate));
+
+/**
+ * Look at notifications collection to find emails to send
+ */
+export const sendNotificationEmails = functions.pubsub.schedule('*/5 * * * *') // every 5 minutes
+  .onRun(skipInMaintenance(_ => _sendNotificationEmails()));
 
 //--------------------------------
 //       Orgs Management        //

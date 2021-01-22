@@ -33,6 +33,7 @@ export interface NotificationMeta<D> extends DocumentMeta<D> {
   email: {
     active: boolean,
     sent: boolean,
+    error?: boolean,
   },
   app: {
     active: boolean,
