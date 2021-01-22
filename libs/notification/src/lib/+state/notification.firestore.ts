@@ -2,6 +2,7 @@ import { PublicOrganization } from '@blockframes/organization/+state/organizatio
 import { PublicMovie } from '@blockframes/movie/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { firestore } from 'firebase-admin';
+import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 /** Type of Notification depending of its origin. */
 export type NotificationType =
@@ -28,11 +29,23 @@ export type NotificationType =
   'invitationToAttendEventDeclined'
   ;
 
+export interface NotificationMeta<D> extends DocumentMeta<D> {
+  email: {
+    active: boolean,
+    sent: boolean,
+  },
+  app: {
+    active: boolean,
+    isRead: boolean;
+  }
+}
+
 /** Generic informations for a Notification. */
 export interface NotificationBase<D> {
+  _meta: NotificationMeta<D>;
   id: string;
   /** @dev Recipient of the notification */
-  toUserId?: string;
+  toUserId: string;
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
   docId?: string;
@@ -40,8 +53,6 @@ export interface NotificationBase<D> {
   organization?: PublicOrganization;
   /** @dev Type of the notification */
   type: NotificationType;
-  isRead: boolean;
-  date: D;
 }
 
 type Timestamp = firestore.Timestamp;

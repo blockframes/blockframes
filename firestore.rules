@@ -101,13 +101,13 @@ service cloud.firestore {
     /// FUNCTIONS ///
 
     function isOnlyMarkingNofitifcationAsRead() {
-      // Only "isRead" can be updated.
+      // Only "_meta.app.isRead" can be updated.
       return userId() == existingData().toUserId
         && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['date'])
+        && isNotUpdatingField(['_meta','createdAt'])
         && isNotUpdatingField(['toUserId'])
         && isNotUpdatingField(['type'])
-        // Notifcations subjects
+        // Notifications subjects
         && isNotUpdatingField(['docId'])
         && isNotUpdatingField(['user'])
         && isNotUpdatingField(['organization'])

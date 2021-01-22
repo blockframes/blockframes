@@ -13,7 +13,13 @@ export class NotificationService extends CollectionService<NotificationState> {
   }
 
   public readNotification(notification: Partial<Notification>) {
-    return this.update(notification.id, { isRead: true });
+    return this.update({
+      ...notification,
+      _meta: {
+        ...notification._meta,
+        app: { ...notification._meta.app, isRead: true }
+      }
+    });
   }
 
   formatFromFirestore(notification: Notification): Notification {

@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
 // Blockframes
-import { NotificationsSettings, NotificationsForm } from './notifications.form';
+import { NotificationsForm } from './notifications.form';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { UserNotificationsSettings } from '@blockframes/user/+state/user.model';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -42,12 +43,12 @@ export class NotificationsFormComponent implements OnInit, OnDestroy {
 
   masterToggle(event: MatRadioChange) {
     for (const key in this.form.controls) {
-      this.form.get(key as keyof NotificationsSettings).setValue(event.value);
+      this.form.get(key as keyof UserNotificationsSettings).setValue(event.value);
     }
   }
 
   toggleCookie(event: MatSlideToggleChange) {
-    this.form.get(event.source.name as keyof NotificationsSettings).setValue(event.checked);
+    this.form.get(event.source.name as keyof UserNotificationsSettings).setValue(event.checked);
   }
 
 }
