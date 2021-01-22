@@ -34,8 +34,7 @@
 
             <h6 class="mat-caption">Premiere</h6>
             <div fxLayout="column" class="toggle-btn">
-              <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere"
-              (change)="isChecked($event, prizesForm)">
+              <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere">
                     {{ premiere | toLabel: 'premiereType' }}
@@ -89,7 +88,7 @@
             <h6 class="mat-caption">Premiere</h6>
             <div fxLayout="column" class="toggle-btn">
               <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere"
-                aria-label="Premiere"  (change)="isChecked($event, customPrizesForm)">
+                aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere">
                     {{ premiere | toLabel: 'premiereType' }}

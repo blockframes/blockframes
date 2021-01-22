@@ -56,7 +56,7 @@ export class TitleListComponent {
   }
 
   filterByMovie(movie: Movie, index: number, value: any) {
-    return value ? movie.storeConfig.status === value : movie;
+    return value ? movie.storeConfig.status === value : true;
   }
 
   resetFilter() {
