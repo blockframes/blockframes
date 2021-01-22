@@ -32,7 +32,6 @@ export class TitleMarketplaceShellComponent {
   }
 
   scrollIntoView() {
-    console.log(this.navClicked)
     /* Don't want to trigger the animation when the user just arrived on the page */
     if (this.navClicked) {
       this.main.nativeElement.scrollIntoView({ behavior: 'smooth' });
