@@ -19,7 +19,6 @@ export async function triggerNotifications(notifications: NotificationDocument[]
     batch.set(notificationRef, notification);
   }
 
-
   return batch.commit();
 }
 
@@ -65,7 +64,7 @@ function createNotificationMeta(meta: Partial<NotificationMeta<Timestamp>> = {})
       sent: false,
     },
     app: {
-      active: true,
+      active: false,
       isRead: false,
     },
     ...meta,

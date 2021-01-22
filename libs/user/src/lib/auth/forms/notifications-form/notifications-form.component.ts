@@ -13,7 +13,7 @@ import { startWith } from 'rxjs/operators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
-  selector: '[form] notifications-form',
+  selector: '[form] user-notifications-form',
   templateUrl: './notifications-form.component.html',
   styleUrls: ['./notifications-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
