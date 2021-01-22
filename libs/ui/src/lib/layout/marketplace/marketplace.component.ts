@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
@@ -53,6 +53,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     this.routerSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((route: any) => {
+      /* We don't want to jump onto the top urls with title */
       if (!route.url.includes('title')) {
         this.cdkScrollable.scrollTo({ top: 0 });
       }

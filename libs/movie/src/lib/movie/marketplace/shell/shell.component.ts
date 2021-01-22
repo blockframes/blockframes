@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, AfterContentInit, AfterContentChecked } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -14,14 +14,12 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleMarketplaceShellComponent implements OnInit, AfterViewInit {
+export class TitleMarketplaceShellComponent implements AfterContentChecked {
   public movie$: Observable<Movie>;
+  public navClicked = false;
 
   @Input() routes: RouteDescription[];
   @ViewChild('main') main: ElementRef<HTMLDivElement>;
-
-
-  private routerSub: Subscription;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -33,13 +31,16 @@ export class TitleMarketplaceShellComponent implements OnInit, AfterViewInit {
     this.movie$ = this.movieQuery.selectActive();
   }
 
-  onDone() { this.main.nativeElement.scrollIntoView({ behavior: 'smooth' }); }
+
+  scrollIntoView() {
+    console.log(this.navClicked)
+    /* Don't want to trigger the animation when the user just arrived on the page */
+    if (this.navClicked) {
+      this.main.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
-  }
-
-  ngOnDestroy() {
-    if (this.routerSub) { this.routerSub.unsubscribe(); }
   }
 }
