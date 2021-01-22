@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, AfterContentInit, AfterContentChecked } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Observable, } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -14,7 +14,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleMarketplaceShellComponent implements AfterContentChecked {
+export class TitleMarketplaceShellComponent {
   public movie$: Observable<Movie>;
   public navClicked = false;
 
@@ -30,7 +30,6 @@ export class TitleMarketplaceShellComponent implements AfterContentChecked {
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
   }
-
 
   scrollIntoView() {
     console.log(this.navClicked)
