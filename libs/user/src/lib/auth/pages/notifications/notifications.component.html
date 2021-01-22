@@ -1,0 +1,11 @@
+<mat-card>
+  <mat-card-content>
+    <notifications-form [form]="form"></notifications-form>
+  </mat-card-content>
+</mat-card>
+<footer fxLayout fxLayoutAlign="center center">
+  <button mat-flat-button color="accent" (click)="update()">
+    <mat-icon svgIcon="save"></mat-icon>
+    <span>Update</span>
+  </button>
+</footer>

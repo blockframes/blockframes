@@ -14,7 +14,13 @@ export interface User extends PublicUser {
   privacyPolicy: {
     date: Date;
     ip: string;
-  }
+  },
+  notificationsSettings: UserNotificationsSettings
+}
+
+export interface UserNotificationsSettings {
+  allEmail: boolean,
+  allInApp: boolean,
 }
 
 
