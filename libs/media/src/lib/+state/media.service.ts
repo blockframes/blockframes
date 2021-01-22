@@ -15,11 +15,13 @@ import { delay, BehaviorStore } from "@blockframes/utils/helpers";
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 import { clamp } from '@blockframes/utils/utils';
 import { tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
   private _tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
+  private _tasksState = new BehaviorStore<any[]>([]);
 
   private breakpoints = [600, 1024, 1440, 1920];
 
@@ -46,9 +48,13 @@ export class MediaService {
      * Then a backend functions performs a check on DB document to check if
      * file have to be moved to correct folder or deleted.
      */
-    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data));
+    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data))
+    const tasksState = tasks.map(task => getTaskStateObservable(task).toPromise());
+
     this.addTasks(tasks);
-    (Promise as any).allSettled(tasks)
+    this.addTasksState(tasksState);
+
+    (Promise as any).allSettled(tasksState)
       .then(() => delay(3000))
       .then(() => this.detachWidget());
     this.showWidget();
@@ -57,18 +63,28 @@ export class MediaService {
   private addTasks(tasks: AngularFireUploadTask[]) {
     const t = this._tasks.value;
     t.push(...tasks);
-    this._tasks.value = t
+    this._tasks.value = t;
   }
 
-  private detachWidget() {
+  private addTasksState(tasksState: any) {
+    const t = this._tasksState.value;
+    t.push(...tasksState);
+    this._tasksState.value = t;
+  }
+
+  private async detachWidget() {
     if (!this.overlayRef) return;
 
-    const canClose = this._tasks.value.every(task => task.task.snapshot.state === 'success');
+    const states = await Promise.all(this._tasksState.value)
+    const canClose = states.every(state => state === 'success');
+
+    console.log(this._tasks.value)
+
     if (canClose) {
       this.overlayRef.detach();
       delete this.overlayRef;
-      const tasks = this._tasks.value.filter(task => task.task.snapshot.state !== 'success');
-      this._tasks.value = tasks;
+      this._tasks.value = [];
+      this._tasksState.value = [];
     }
   }
 

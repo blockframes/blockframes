@@ -42,9 +42,9 @@ export class UploadWidgetComponent {
     task.cancel();
   }
 
-  remove(index: number) {
+  remove(index: number, removeReference = false) {
     const tasks = this.tasks.value;
-    this.removeReference(tasks[index]);
+    if (removeReference) this.removeReference(tasks[index]);
     tasks.splice(index, 1);
     this.tasks.value = tasks;
   }
