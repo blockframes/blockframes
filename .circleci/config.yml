@@ -167,6 +167,11 @@ jobs:
             done;
       - run: npm run affected:lint --base=origin/develop
       - run:
+          name: Run unit-tests on affected apps
+          command: |
+            # Run npm command to unit tests on affected apps
+            npm run affected:test
+      - run:
           name: Check size of apps being build
           command: |
             # Generate default json for bundlesize
