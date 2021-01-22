@@ -1,5 +1,6 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
-
+import { NotificationType } from '@blockframes/notification/types';
+import { InvitationType } from "@blockframes/invitation/+state/invitation.firestore";
 export interface User extends PublicUser {
   financing: {
     rank: string
@@ -19,10 +20,10 @@ export interface User extends PublicUser {
 }
 
 export interface UserNotificationsSettings {
-  allEmail: boolean,
-  allInApp: boolean,
+  email: boolean,
+  app: boolean,
+  custom?: Record<NotificationType | InvitationType, { email: boolean, app: boolean }>
 }
-
 
 /** A user interface with public information */
 export interface PublicUser {
@@ -36,7 +37,7 @@ export interface PublicUser {
   orgId?: string;
 }
 
-export function createPublicUser(user: Partial<User> = {}) : PublicUser{
+export function createPublicUser(user: Partial<User> = {}): PublicUser {
   return {
     uid: user.uid ?? '',
     email: user.email ?? '',

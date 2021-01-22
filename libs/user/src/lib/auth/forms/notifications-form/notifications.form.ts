@@ -4,8 +4,8 @@ import { EntityControl, FormEntity } from '@blockframes/utils/form/forms/entity.
 
 function createNotificationsSettings(params?: Partial<UserNotificationsSettings>): UserNotificationsSettings {
   return {
-    allEmail: true,
-    allInApp: true,
+    email: true,
+    app: true,
     ...params,
   }
 }
@@ -13,8 +13,8 @@ function createNotificationsSettings(params?: Partial<UserNotificationsSettings>
 function createNotificationsControls(entity: Partial<UserNotificationsSettings>): EntityControl<UserNotificationsSettings> {
   const settings = createNotificationsSettings(entity);
   return {
-    allEmail: new FormControl(settings.allEmail, Validators.required),
-    allInApp: new FormControl(settings.allInApp, Validators.required),
+    email: new FormControl(settings.email, Validators.required),
+    app: new FormControl(settings.app, Validators.required),
   }
 }
 

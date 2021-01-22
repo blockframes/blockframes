@@ -17,8 +17,8 @@
 
   <div fxLayout fxLayoutAlign="space-between">
     <p>Send all notifications by</p>
-    <mat-slide-toggle [checked]="form.get('allEmail').value" name="allEmail" (change)="toggleCookie($event)">Email</mat-slide-toggle>
-    <mat-slide-toggle [checked]="form.get('allInApp').value" name="allInApp" (change)="toggleCookie($event)">App</mat-slide-toggle>
+    <mat-slide-toggle [checked]="form.get('email').value" name="email" (change)="toggleCookie($event)">Email</mat-slide-toggle>
+    <mat-slide-toggle [checked]="form.get('app').value" name="app" (change)="toggleCookie($event)">App</mat-slide-toggle>
   </div>
 </section>
 
