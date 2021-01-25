@@ -4,13 +4,14 @@ import { NotificationDocument, NotificationType, OrganizationDocument, PublicUse
 import { createNotification, triggerNotifications } from "../../notification";
 import { getUser } from "../utils";
 import { getAdminIds, getDocument } from "../../data/internals";
-import { invitationToEventFromOrg, requestToAttendEventFromUser, requestToAttendEventFromUserAccepted } from '../../templates/mail';
+import { invitationToEventFromOrg, requestToAttendEventFromUser, requestToAttendEventFromUserAccepted, reminderEventToUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
 import * as admin from 'firebase-admin';
+import { templateIds } from "../../templates/ids";
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -272,6 +273,7 @@ export async function onInvitationToAnEventUpdate(
 
 /**
  * Notify users with accepted invitation to events that are starting in 1 day
+ * Send also a reminder email
  */
 export async function createNotificationsForEventsToStart() {
   const db = admin.firestore();
@@ -294,6 +296,10 @@ export async function createNotificationsForEventsToStart() {
   invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
 
   // 3 Create notifications if not already exists
+  // @TODO (#2848) forcing to festival since invitations to events are only on this one
+  const appKey: App = 'festival';
+  let eventData: EventEmailData = getEventEmailData();
+  // @TODO #4046
   const notifications = [];
   for (const invitation of invitations) {
     const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
@@ -310,10 +316,53 @@ export async function createNotificationsForEventsToStart() {
         docId: invitation.eventId,
         type: notificationType
       }));
+
+      // Send reminder email to invited users a day before event start
+      const toUser = invitation.toUser ?? invitation.fromUser;
+      const org = invitation.toOrg ?? invitation.fromOrg;
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+      eventData = getEventEmailData(event);
+
+      const template = reminderEventToUser(toUser, orgName(org), eventData, templateIds.eventReminder.oneDay);
+      await sendMailFromTemplate(template, appKey);
     }
   }
 
   return notifications.length ? triggerNotifications(notifications) : undefined;
+}
+
+/** Send a reminder email one hour before event start */
+export async function createOneHourReminderEmail() {
+  const db = admin.firestore();
+  const oneHour = 3600 * 1000;
+
+  //? Ne faut-il pas préciser une fin pour ne pas envoyer d'email pour les événements passés ?
+  // Fetch event that will start in one hour or less
+  const eventsCollection = await db.collection('events')
+    .where('start', '>=', new Date(Date.now() + oneHour))
+    .get();
+
+  // Get all attendees for those events
+  const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
+  const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+  const invitationsSnaps = await Promise.all(promises);
+  const invitations: InvitationDocument[] = [];
+
+  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
+
+  // @TODO (#2848) forcing to festival since invitations to events are only on this one
+  const appKey: App = 'festival';
+  let eventData: EventEmailData = getEventEmailData();
+
+  for (const invitation of invitations) {
+    const toUser = invitation.toUser ?? invitation.fromUser;
+    const org = invitation.toOrg ?? invitation.fromOrg;
+    const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+    eventData = getEventEmailData(event);
+
+    const template = reminderEventToUser(toUser, orgName(org), eventData, templateIds.eventReminder.oneHour);
+    await sendMailFromTemplate(template, appKey);
+  }
 }
 
 /**
