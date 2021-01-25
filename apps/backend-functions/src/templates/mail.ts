@@ -208,6 +208,23 @@ export function requestToAttendEventFromUserAccepted(
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
 
+export function reminderEventToUser(
+  toUser: PublicUser,
+  organizerOrgName: string,
+  eventData: EventEmailData,
+  template: string,
+  url: string = appUrl.market
+): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    organizerOrgName,
+    eventName: eventData.title,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end,
+    pageURL: eventData.id ? `${url}/c/o/marketplace/event/${eventData.id}` : ''
+  };
+  return { to: toUser.email, templateId: template, data };
+}
 // ------------------------- //
 //      CASCADE8 ADMIN       //
 // ------------------------- //
