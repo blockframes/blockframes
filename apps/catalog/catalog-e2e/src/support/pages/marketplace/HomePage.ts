@@ -5,12 +5,12 @@ import { SEC } from '@blockframes/e2e/utils/env';
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('catalog-home', {timeout: 60 * SEC});
+    cy.get('catalog-home', {timeout: 120 * SEC});
   }
 
   public clickViewTheLibrary() {
-    cy.get('catalog-home a[test-id=library]', {timeout: 3 * SEC})
-      .click();
+    cy.get('a[test-id="library"]', {timeout: 60 * SEC})
+      .click({force: true});
     cy.wait(1 * SEC);
     return new SearchPage();
   }
