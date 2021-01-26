@@ -22,14 +22,6 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select test-id="content-type" scope="contentType" [control]="form.contentType" fxFlex
-          [withoutValues]="['volume', 'episode', 'collection']">
-          <mat-label>Content Type</mat-label>
-          <mat-error *ngIf="form.contentType.hasError('required')">
-            Please specify your project's content type.
-          </mat-error>
-        </static-select>
-
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Title Reference</mat-label>
           <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="form.internalRef" />
@@ -38,6 +30,14 @@
             30 characters maximum.
           </mat-error>
         </mat-form-field>
+
+        <static-select test-id="content-type" scope="contentType" [control]="form.contentType" fxFlex
+          [withoutValues]="['volume', 'episode', 'collection']">
+          <mat-label>Content Type</mat-label>
+          <mat-error *ngIf="form.contentType.hasError('required')">
+            Please specify your project's content type.
+          </mat-error>
+        </static-select>
       </article>
 
       <ng-container *ngIf="form.contentType.valueChanges | async | isSeries">
