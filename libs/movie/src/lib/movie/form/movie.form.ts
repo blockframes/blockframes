@@ -525,10 +525,11 @@ export class TitleForm extends FormEntity<TitleFormControl> {
 }
 
 function createTitleFormControl(title?: Partial<Movie['title']>) {
-  const { original, international } = createTitle(title);
+  const { original, international, series } = createTitle(title);
   return {
     original: new FormControl(original),
     international: new FormControl(international, Validators.required),
+    series: new FormControl(series),
   }
 }
 
@@ -565,10 +566,11 @@ export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
 }
 
 function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']>) {
-  const { time, status } = runningTime;
+  const { time, status, episodeCount } = runningTime;
   return {
     time: new FormControl(time, [Validators.min(1)]),
     status: new FormControl(status),
+    episodeCount: new FormControl(episodeCount, [Validators.min(1)])
   }
 }
 

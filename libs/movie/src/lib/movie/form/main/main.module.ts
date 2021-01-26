@@ -31,6 +31,7 @@ import { MovieFormMainComponent } from './main.component';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
+import { SeriesPipeModule } from '@blockframes/movie/pipes/is-series.pipe';
 
 @NgModule({
   declarations: [MovieFormMainComponent],
@@ -51,6 +52,7 @@ import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe
     FormDisplayNameModule,
     MaxLengthModule,
     ToLabelModule,
+    SeriesPipeModule,
 
     // Material
     MatDividerModule,
