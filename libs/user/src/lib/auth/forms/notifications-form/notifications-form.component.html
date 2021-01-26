@@ -10,8 +10,8 @@
   <article fxLayout="row" fxLayoutAlign="space-between">
     <p>Receive notifications via :</p>
     <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('email').value" name="email" (change)="toggleCookie($event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('app').value" name="app" (change)="toggleCookie($event)">App :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('default').get('email').value" name="email" (change)="toggleCookie($event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('default').get('app').value" name="app" (change)="toggleCookie($event)">App :</mat-slide-toggle>
     </div>
   </article>
 </section>

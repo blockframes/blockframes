@@ -21,20 +21,31 @@ export interface User extends PublicUser {
 }
 
 export interface UserSettings {
-  notifications: Record<NotificationType | InvitationType | 'default', { email: boolean, app: boolean }>
+  notifications: NotificationSettings,
+}
+
+export interface NotificationSettingsTemplate { email: boolean, app: boolean } ;
+
+export type NotificationSettings = Record<NotificationType | InvitationType | 'default', NotificationSettingsTemplate>;
+
+export function createNotificationSettings(notifications: Partial<NotificationSettings> = {}): Partial<NotificationSettings> {
+  return {
+    default: {
+      email: false,
+      app: true,
+    },
+    // @TODO #4046 add default (existing) settings for invitationType and notificationType
+    ...notifications
+  }
 }
 
 export function createUserSettings(settings: Partial<UserSettings> = {}): UserSettings {
   return {
+    ...settings,
     notifications: {
-      default: {
-        email: false,
-        app: true,
-      },
-      // @TODO #4046 add default (existing) settings for invitationType and notificationType
-      ...settings.notifications
+      ...settings.notifications,
+      ...createNotificationSettings(),
     },
-    ...settings
   }
 }
 

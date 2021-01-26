@@ -20,13 +20,13 @@ export class NotificationsComponent {
     private authService: AuthService,
     private snackBar: MatSnackBar,
   ) {
-    this.form = new NotificationsForm(this.authQuery.user.notificationsSettings);
+    this.form = new NotificationsForm(this.authQuery.user.settings?.notifications);
   }
 
   public async update() {
-    const notificationsSettings = this.form.value;
+    const notifications = this.form.value;
     const uid = this.authQuery.userId;
-    await this.authService.update({ uid, notificationsSettings });
+    await this.authService.update({ uid, settings: { notifications } });
 
     this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
   }
