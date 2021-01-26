@@ -17,7 +17,7 @@
         <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
         <span mat-line>Wishlist</span>
       </a>
-      <a mat-list-item routerLink="deals" routerLinkActive="active">
+      <a mat-list-item routerLink="deals" routerLinkActive="active" *ngIf="canAccessDeals">
         <mat-icon mat-list-icon svgIcon="account_balance_wallet"></mat-icon>
         <span mat-line>Offers & Deals</span>
       </a>
