@@ -31,7 +31,7 @@ import { cleanDeprecatedData } from './db-cleaning';
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
 export async function importEmulatorFromBucket(_exportUrl: string) {
-  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket));
+  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
@@ -87,7 +87,7 @@ export async function downloadProdDbBackup(localPath?: string) {
   console.log('Production projectId: ', prodFirebase().projectId);
   console.log('Production backup bucket name: ', prodBackupBucket);
   const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);
-  const prodDbURL = await getLatestFolderURL(prodBackupBucketObj);
+  const prodDbURL = await getLatestFolderURL(prodBackupBucketObj, 'firestore');
   console.log('Production Firestore Backup URL:', prodDbURL);
   await importFirestoreEmulatorBackup(prodDbURL, localPath || defaultEmulatorBackupPath);
 }

@@ -14,6 +14,7 @@ import { backup, exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
 import { anonDbLocal, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, switchOnMaintenance, uploadBackup } from './emulator';
+import { backupEnv } from './backup';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -95,6 +96,8 @@ async function runCommand() {
     case 'importFirestore':
       await importFirestore(arg1)
       break;
+    case 'backupEnv':
+      await backupEnv()
     case 'startMaintenance':
       await startMaintenance();
       break;

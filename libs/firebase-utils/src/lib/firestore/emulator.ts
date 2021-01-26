@@ -8,7 +8,7 @@ import { join, resolve, sep } from 'path';
 import { runShellCommand, runShellCommandUntil, awaitProcOutput } from '../commands';
 import { getFirestoreExportDirname } from './export';
 
-const firestoreExportFolder = 'firestore_export';
+const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 
 const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
 const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
@@ -50,7 +50,7 @@ export async function startFirestoreEmulatorWithImport(emuPath: string) {
   const cmd = `firebase emulators:start --only firestore --import ${emuPath} --export-on-exit`;
   console.log('Running command:', cmd);
   const { proc, procPromise } = runShellCommandUntil(cmd, 'All emulators ready');
-  process.on('SIGINT', async () => (await shutdownEmulator(proc)))
+  process.on('SIGINT', async () => await shutdownEmulator(proc));
   await procPromise;
   return proc;
 }
