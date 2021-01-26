@@ -4,7 +4,7 @@ import { SEC } from "@blockframes/e2e/utils/env";
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('catalog-marketplace', {timeout: 10 * SEC});
+    cy.get('catalog-marketplace', {timeout: 60 * SEC});
   }
 
   public openProfileMenu(){
