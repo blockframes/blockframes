@@ -67,7 +67,7 @@ describe('Invitations Test Suite', () => {
       date: new Date()
     });
     const doc = await db.doc('invitations/1').ref.get();
-    expect(doc.data().status).toBe('accepted');
+    expect((doc.data() as any).status).toBe('accepted');
   });
 
   it('Should invitation status become declined', async () => {
@@ -80,7 +80,7 @@ describe('Invitations Test Suite', () => {
       date: new Date()
     });
     const doc = await db.doc('invitations/2').ref.get();
-    expect(doc.data().status).toBe('declined');
+    expect((doc.data() as any).status).toBe('declined');
   });
 
   // TODO: issue#3415 implements tests for others functions
