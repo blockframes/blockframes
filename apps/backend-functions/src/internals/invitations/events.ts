@@ -325,6 +325,7 @@ export async function createNotificationsForEventsToStart() {
 
       const template = reminderEventToUser(toUser, orgName(org), eventData, templateIds.eventReminder.oneDay);
       await sendMailFromTemplate(template, appKey);
+      console.log('!!!!!!!!!!!!!!!! after email in notification part')
     }
   }
 
@@ -335,11 +336,12 @@ export async function createNotificationsForEventsToStart() {
 export async function createOneHourReminderEmail() {
   const db = admin.firestore();
   const oneHour = 3600 * 1000;
+  const halfHour = 1800 * 1000;
 
-  //? Ne faut-il pas préciser une fin pour ne pas envoyer d'email pour les événements passés ?
-  // Fetch event that will start in one hour or less
+  // Fetch event that will start in one hour
   const eventsCollection = await db.collection('events')
     .where('start', '>=', new Date(Date.now() + oneHour))
+    .where('start', '<', new Date(Date.now() + oneHour + halfHour))
     .get();
 
   // Get all attendees for those events
