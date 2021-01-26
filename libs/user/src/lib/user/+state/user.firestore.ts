@@ -13,18 +13,20 @@ export interface User extends PublicUser {
   orgId: string;
   avatar: string;
   watermark: string;
-  privacyPolicy: {
-    date: Date;
-    ip: string;
-  },
+  privacyPolicy: PrivacyPolicy;
   settings: UserSettings
+}
+
+export interface PrivacyPolicy {
+  date: Date;
+  ip: string;
 }
 
 export interface UserSettings {
   notifications: NotificationSettings,
 }
 
-export interface NotificationSettingsTemplate { email: boolean, app: boolean } ;
+export interface NotificationSettingsTemplate { email: boolean, app: boolean };
 
 export type NotificationSettings = Record<NotificationType | InvitationType | 'default', NotificationSettingsTemplate>;
 
