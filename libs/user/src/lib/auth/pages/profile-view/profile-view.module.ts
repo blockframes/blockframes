@@ -31,6 +31,10 @@ const routes: Routes = [{
       loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
     },
     {
+      path: 'notifications',
+      loadChildren: () => import('../notifications-settings/notifications-settings.module').then(m => m.NotificationSettingsModule)
+    },
+    {
       path: 'cookies',
       loadChildren: () => import('../profile-cookie/profile-cookie.module').then(m => m.ProfileCookieModule)
     },
