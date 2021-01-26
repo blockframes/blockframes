@@ -19,10 +19,6 @@ const navLinks = [
   {
     path: 'cookies',
     label: 'Cookie Preferences'
-  },
-  {
-    path: 'notifications',
-    label: 'Notifications'
   }
 ];
 

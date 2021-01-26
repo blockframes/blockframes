@@ -1,7 +1,16 @@
-mat-radio-button {
-  margin: 16px;
+:host {
+  display: flex;
+  flex-direction: column;
 }
 
-.divider {
-  margin: 16px 0;
+section {
+  margin-bottom: 36px;
+}
+
+mat-checkbox {
+  margin-bottom: 24px;
+}
+
+button.mat-flat-button {
+  margin: 136px 0 36px;
 }
