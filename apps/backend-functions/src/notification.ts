@@ -93,6 +93,6 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       notification.email.error = '@TODO #4046 errorCode "notificationType" not handled';
     }
     const db = admin.firestore();
-    await db.collection('notifications').doc(notification.id).set({ _meta: notification._meta }, { merge: true });
+    await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
 }
