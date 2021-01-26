@@ -57,15 +57,6 @@
       { "fieldPath": "type", "order": "ASCENDING" },
       { "fieldPath": "end", "order": "ASCENDING" }
     ]
-  },
-  {
-    "collectionGroup": "notifications",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "_meta.email.active", "order": "ASCENDING" },
-      { "fieldPath": "_meta.email.sent", "order": "ASCENDING" },
-      { "fieldPath": "_meta.email.error", "order": "ASCENDING" }
-    ]
   }],
   "fieldOverrides": []
 }
