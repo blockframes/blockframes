@@ -29,21 +29,10 @@ export type NotificationType =
   'invitationToAttendEventDeclined'
   ;
 
-export interface NotificationMeta<D> extends DocumentMeta<D> {
-  email: {
-    active: boolean,
-    sent: boolean,
-    error: boolean,
-  },
-  app: {
-    active: boolean,
-    isRead: boolean;
-  }
-}
 
 /** Generic informations for a Notification. */
 export interface NotificationBase<D> {
-  _meta: NotificationMeta<D>;
+  _meta: DocumentMeta<D>;
   id: string;
   /** @dev Recipient of the notification */
   toUserId: string;
@@ -54,6 +43,13 @@ export interface NotificationBase<D> {
   organization?: PublicOrganization;
   /** @dev Type of the notification */
   type: NotificationType;
+  email?: {
+    isSent: boolean;
+    error?: string;
+  },
+  app?: {
+    isRead: boolean;
+  }
 }
 
 type Timestamp = firestore.Timestamp;

@@ -15,8 +15,7 @@ export class NotificationsGuard extends CollectionGuard<NotificationState> {
   sync() {
     return this.service.syncCollection(ref => ref
       .where('toUserId', '==', this.authQuery.userId)
-      .where('_meta.app.isRead', '==', false)
-      .where('_meta.app.active', '==', true)
+      .where('app.isRead', '==', false)
     );
   }
 }

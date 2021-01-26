@@ -31,7 +31,7 @@ describe('Notification Rules Tests', () => {
     const fields: any = [
       ['id', '001'],
       ['toUserId', 'uid-002'],
-      ['_meta.app.isRead', true],
+      ['app.isRead', true],
     ];
     test.each(fields)(
       "updating restricted '%s' field shouldn't be able to update notification",
@@ -81,9 +81,9 @@ describe('Notification Rules Tests', () => {
       }
     );
 
-    test("User should be able to update '_meta.app.isRead' field in notification", async () => {
+    test("User should be able to update 'app.isRead' field in notification", async () => {
       const notifRef = db.doc(existingNotif);
-      const details = { _meta: { app: { isRead: true } } };
+      const details = { app: { isRead: true } };
       await assertSucceeds(notifRef.update(details));
     });
 

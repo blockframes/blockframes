@@ -45,6 +45,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
 async function send(msg: MailDataRequired): Promise<boolean> {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
+    // @TODO #4046 return errorCode
     return false;
   }
 
@@ -52,8 +53,10 @@ async function send(msg: MailDataRequired): Promise<boolean> {
   return SendGrid.send(msg).then(_ => true).catch(e => {
     if (e.message === 'Unauthorized') {
       console.log('API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0 ');
+      // @TODO #4046 return errorCode
     } else {
       console.log(`Unexpected error while sending mail : ${e.message}`);
+      // @TODO #4046 return errorCode
     }
     return false;
   });

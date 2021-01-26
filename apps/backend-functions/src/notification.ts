@@ -1,7 +1,7 @@
 import { NotificationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { NotificationMeta, NotificationType } from '@blockframes/notification/types';
+import { NotificationType } from '@blockframes/notification/types';
 import { getDocument, getOrgAppKey } from './data/internals';
 import { User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
@@ -32,18 +32,21 @@ async function appendNotificationSettings(notification: NotificationDocument) {
 
   if (customizableNotificationsTypes.includes(notification.type)) {
     // @TODO #4046 add other checks with notification.type
-    if (user.notificationsSettings?.email) {
-      notification._meta.email.active = true;
+    if (user.settings?.notifications?.default.email) {
+      notification.email = {
+        isSent: false,
+      };
     }
 
-    if (user.notificationsSettings?.app) {
-      notification._meta.app.active = true;
+    if (user.settings?.notifications?.default.app) {
+      notification.app = {
+        isRead: false,
+      };
     }
 
   } else {
     // default is "in app" notifications only
-    notification._meta.app.active = true;
-    notification._meta.email.active = false;
+    notification.app = { isRead: false };
   }
 
   return notification;
@@ -51,26 +54,9 @@ async function appendNotificationSettings(notification: NotificationDocument) {
 
 function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}): DocumentMeta<Timestamp> {
   return {
-    createdBy: '',
+    createdBy: 'internal',
     createdAt: admin.firestore.Timestamp.now(),
     ...meta
-  }
-}
-
-function createNotificationMeta(meta: Partial<NotificationMeta<Timestamp>> = {}): NotificationMeta<Timestamp> {
-  return {
-    ...createDocumentMeta(meta),
-    email: {
-      active: false,
-      sent: false,
-      error: false,
-    },
-    app: {
-      active: false,
-      isRead: false,
-    },
-    ...meta,
-    createdBy: 'internal' // Always created in backend
   }
 }
 
@@ -78,7 +64,7 @@ function createNotificationMeta(meta: Partial<NotificationMeta<Timestamp>> = {})
 export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
   const db = admin.firestore();
   return {
-    _meta: createNotificationMeta(),
+    _meta: createDocumentMeta(),
     type: 'movieAccepted', // We need a default value for backend-function strict mode
     toUserId: '',
     id: db.collection('notifications').doc().id,
@@ -86,17 +72,11 @@ export function createNotification(notification: Partial<NotificationDocument> =
   };
 }
 
-export async function sendNotificationEmails() {
-  const db = admin.firestore();
-  const collection = db.collection('notifications');
-  const notificationsCollection = await collection
-    .where('_meta.email.active', '==', true)
-    .where('_meta.email.sent', '==', false)
-    .where('_meta.email.error', '==', false)
-    .get();
+export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
+  const notification = snap.data() as NotificationDocument;
 
-  for (const n of notificationsCollection.docs) {
-    const notification = createNotification(n.data());
+  if (notification.email?.isSent === false) {
+    // Update notification state
     if (customizableNotificationsTypes.includes(notification.type)) {
       const user = await getDocument<User>(`users/${notification.toUserId}`);
 
@@ -105,15 +85,14 @@ export async function sendNotificationEmails() {
       // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
       const sent = await sendMail({ to: user.email, subject: notification.type, text: 'test' });
 
-      notification._meta.email.sent = sent;
-      if(!sent){
-        notification._meta.email.error = true;
+      notification.email.isSent = sent;
+      if (!sent) {
+        notification.email.error = '@TODO #4046 errorCode';
       }
     } else {
-      notification._meta.email.error = true;
+      notification.email.error = '@TODO #4046 errorCode "notificationType" not handled';
     }
-
-    // Update notification state
-    await collection.doc(n.id).set({ _meta: notification._meta }, { merge: true });
+    const db = admin.firestore();
+    await db.collection('notifications').doc(notification.id).set({ _meta: notification._meta }, { merge: true });
   }
 }

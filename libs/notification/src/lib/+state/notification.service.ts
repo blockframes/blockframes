@@ -15,10 +15,7 @@ export class NotificationService extends CollectionService<NotificationState> {
   public readNotification(notification: Partial<Notification>) {
     return this.update({
       id: notification.id,
-      _meta: {
-        ...notification._meta,
-        app: { ...notification._meta.app, isRead: true }
-      }
+      app: { isRead: true }
     });
   }
 

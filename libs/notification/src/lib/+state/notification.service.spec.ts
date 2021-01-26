@@ -52,18 +52,14 @@ describe('Notifications Test Suite', () => {
 
   it('Should mark notifications as read', async () => {
     const notif = {
-      id: '1', _meta: {
-        createdAt: new Date(),
-        createdBy: 'unit-test',
-        app: { isRead: false, active: true },
-        email: { active: false, sent: false }
-      }
+      id: '1',
+      app: { isRead: false },
     };
     await db.doc('notifications/1').set(notif);
     await service.readNotification(notif);
     const doc = await db.doc('notifications/1').ref.get();
     const notification = doc.data() as Notification;
-    expect(notification._meta.app.isRead).toBeTruthy();
+    expect(notification.app.isRead).toBeTruthy();
   });
 
   it('Formats notification', () => {

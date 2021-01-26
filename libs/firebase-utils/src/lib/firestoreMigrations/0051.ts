@@ -1,4 +1,5 @@
 import { Firestore } from '@blockframes/firebase-utils';
+import { createUserSettings } from '@blockframes/user/types';
 import { runChunks } from '../firebase-utils';
 
 /**
@@ -10,21 +11,16 @@ export async function upgrade(db: Firestore) {
   await runChunks(notifications.docs, async (notificationDoc) => {
     const data = notificationDoc.data();
 
-    data._meta =  {
+    data._meta = {
       createdBy: 'internal',
-      createdAt: data.date,
-      email: {
-        active: false,
-        sent: false,
-        error: false,
-      },
-      app: {
-        active: true,
-        isRead: data.isRead,
-      },
-    }
+      createdAt: data.date
+    };
+
+    data.app = { isRead: data.isRead };
+
     delete data.date;
     delete data.isRead;
+
     await notificationDoc.ref.set(data);
   });
 
@@ -33,10 +29,7 @@ export async function upgrade(db: Firestore) {
   return runChunks(users.docs, async (userDoc) => {
     const data = userDoc.data();
 
-    data.notificationsSettings =  {
-      app: true,
-      email: false,
-    }
+    data.settings = createUserSettings();
 
     await userDoc.ref.set(data);
   });
