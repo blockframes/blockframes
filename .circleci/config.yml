@@ -170,6 +170,7 @@ jobs:
           name: Run unit-tests on affected apps
           command: |
             # Run npm command to unit tests on affected apps
+            firebase functions:config:get > .runtimeconfig.json
             npm run affected:test
       - run:
           name: Check size of apps being build
