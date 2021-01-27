@@ -5,7 +5,7 @@ import { FormEntity } from '@blockframes/utils/form';
 import { AlgoliaSearch, AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 // Utils
-import algoliasearch, { Index } from 'algoliasearch';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
 import { App } from '@blockframes/utils/apps';
@@ -42,7 +42,7 @@ export type OrganizationSearchControl = ReturnType<typeof createOrganizationSear
 
 export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl> {
 
-  private organizationIndex: Index;
+  private organizationIndex: SearchIndex;
 
   constructor(app: App, search: Partial<OrganizationSearch> = {}) {
     const organizationSearch = createOrganizationSearch(search);
@@ -62,9 +62,8 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
 
 
   search() {
-    return this.organizationIndex.search({
+    this.organizationIndex.search(this.query.value, {
       hitsPerPage: this.hitsPerPage.value,
-      query: this.query.value,
       page: this.page.value,
       facetFilters: [
         `country:${this.country.value || ''}`,
