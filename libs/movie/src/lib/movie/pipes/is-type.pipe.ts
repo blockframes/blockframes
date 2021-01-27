@@ -2,11 +2,11 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { contentType, ContentType } from '@blockframes/utils/static-model';
 
 @Pipe({
-  name: 'isSeries'
+  name: 'isType'
 })
-export class IsSeriesPipe implements PipeTransform {
-  transform(formValue: ContentType): boolean {
-    const contentTypeKeys = Object.keys(contentType).filter(type => type === 'series');
+export class IsTypePipe implements PipeTransform {
+  transform(formValue: ContentType, status: ContentType): boolean {
+    const contentTypeKeys = Object.keys(contentType).filter(type => type === status);
     return contentTypeKeys.includes(formValue);
   }
 }
@@ -15,4 +15,4 @@ export class IsSeriesPipe implements PipeTransform {
   declarations: [IsSeriesPipe],
   exports: [IsSeriesPipe]
 })
-export class SeriesPipeModule { }
+export class IsTypePipeModule { }
