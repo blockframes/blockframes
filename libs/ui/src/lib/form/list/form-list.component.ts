@@ -84,7 +84,8 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   /** Add a clean form */
   add() {
-    this.formItem = this.form.createControl();
+    this.formItem = this.form.createControl(undefined, this.form.length);
+    console.log(this.formItem);
   }
 
   save() {

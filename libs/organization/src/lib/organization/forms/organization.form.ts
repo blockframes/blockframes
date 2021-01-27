@@ -45,10 +45,10 @@ function createOrganizationFormControl(params?: Organization) {
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
     activity: new FormControl(organization.activity),
-    logo: new HostedMediaForm(organization.logo),
+    logo: new HostedMediaForm(organization.logo, { privacy: 'public', collection: 'orgs', docId: params?.id ?? '', field: 'logo' }),
     // ISSUE#2692
     // bankAccounts: FormList.factory(organization.bankAccounts, el => new OrganizationBankAccountForm(el))
-    documents: new OrganizationMediasForm(organization.documents),
+    documents: new OrganizationMediasForm(organization.id, organization.documents),
   }
 }
 

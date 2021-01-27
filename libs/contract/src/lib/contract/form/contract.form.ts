@@ -41,7 +41,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
   return {
     id: new FormControl(id),
     label: new FormControl(label),
-    media: new HostedMediaForm(media),
+    media: new HostedMediaForm(media), // TODO issue#4002
     language: new FormStaticValue(language, 'languages'),
     country: new FormStaticValue(country, 'territories')
   };
