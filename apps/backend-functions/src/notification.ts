@@ -26,13 +26,13 @@ export async function triggerNotifications(notifications: NotificationDocument[]
 }
 
 // @TODO #4046 should contain all notificationTypes in the end
-const customizableNotificationsTypes: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg'];
+const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg'];
 
 async function appendNotificationSettings(notification: NotificationDocument) {
   // get user notification settings
   const user = await getDocument<User>(`users/${notification.toUserId}`);
 
-  if (customizableNotificationsTypes.includes(notification.type)) {
+  if (types.includes(notification.type)) {
     // @TODO #4046 add other checks with notification.type
     if (user.settings?.notifications?.default.email) {
       notification.email = {
@@ -79,20 +79,17 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
 
   if (notification.email?.isSent === false) {
     // Update notification state
-    if (customizableNotificationsTypes.includes(notification.type)) {
+    if (types.includes(notification.type)) {
       const user = await getDocument<User>(`users/${notification.toUserId}`);
 
       // Send email
       // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
       // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
       await sendMail({ to: user.email, subject: notification.type, text: 'test' })
-        .then(_ => {
-          notification.email.isSent = true;
-        }).catch(e => {
-          notification.email.error = e.message;
-        });
+        .then(_ => notification.email.isSent = true)
+        .catch(e => notification.email.error = e.message);
     } else {
-      notification.email.error = emailErrorCodes.E04.code;
+      notification.email.error = emailErrorCodes.noTemplate.code;
     }
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });

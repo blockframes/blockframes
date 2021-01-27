@@ -72,15 +72,14 @@ export class LoginComponent implements OnInit {
       const { email, password, firstName, lastName } = signupForm.value;
       const createdFrom = getCurrentApp(this.routerQuery);
       const privacyPolicy = await this.service.getPrivacyPolicy();
-      await this.service.signup(email.trim(), password, {
-        ctx: {
-          firstName,
-          lastName,
-          _meta: { createdFrom },
-          settings: createUserSettings(),
-          privacyPolicy
-        }
-      });
+      const ctx = {
+        firstName,
+        lastName,
+        _meta: { createdFrom },
+        settings: createUserSettings(),
+        privacyPolicy
+      };
+      await this.service.signup(email.trim(), password, { ctx });
       // Reset page title to default
       this.dynTitle.setPageTitle();
       const redirectTo = localStorage.getItem('redirectTo');

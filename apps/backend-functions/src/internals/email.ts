@@ -44,15 +44,15 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
 
 async function send(msg: MailDataRequired): Promise<boolean> {
   if (sendgridAPIKey === '') {
-    throw new Error(emailErrorCodes.E03.code);
+    throw new Error(emailErrorCodes.missingKey.code);
   }
 
   SendGrid.setApiKey(sendgridAPIKey);
   return SendGrid.send(msg).then(_ => true).catch(e => {
     if (e.message === 'Unauthorized') {
-      throw new Error(emailErrorCodes.E01.code);
+      throw new Error(emailErrorCodes.unauthorized.code);
     } else {
-      throw new Error(emailErrorCodes.E02.code);
+      throw new Error(emailErrorCodes.general.code);
     }
   });
 }
