@@ -15,9 +15,8 @@ import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { PublicUser } from "@blockframes/user/types";
 import { App, app } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
-import { IndexSettings } from 'algoliasearch';
+import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
-// TODO MIGRATE TO ALGOLIA v4 #2554
 
 export async function upgradeAlgoliaOrgs(appConfig?: App) {
   if (!appConfig) {
@@ -26,7 +25,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
   } else {
 
     // reset config, clear index and fill it up from the db (which is the only source of truth)
-    const config: IndexSettings = {
+    const config: AlgoliaConfig = {
       searchableAttributes: ['name'],
       attributesForFaceting: [
         'appAccess',
@@ -124,7 +123,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
 export async function upgradeAlgoliaUsers() {
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
-  const config = {
+  const config: AlgoliaConfig = {
     searchableAttributes: [
       'email',
       'firstName',
@@ -156,7 +155,7 @@ export async function upgradeAlgoliaUsers() {
   console.log('Algolia Users index updated with success !');
 }
 
-const baseConfig: IndexSettings = {
+const baseConfig: AlgoliaConfig = {
   searchableAttributes: [
     'title.international',
     'title.original',
@@ -184,7 +183,7 @@ const baseConfig: IndexSettings = {
   customRanking: ['asc(title.international)', 'asc(title.original)']
 };
 
-function movieConfig(appConfig: App) {
+function movieConfig(appConfig: App): AlgoliaConfig {
   switch (appConfig) {
     case 'financiers': return {
       searchableAttributes: baseConfig.searchableAttributes,
