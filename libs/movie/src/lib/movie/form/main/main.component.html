@@ -48,9 +48,7 @@
             <input test-id="run-time" matInput type="number" name="runningTime"
               [formControl]="form.runningTime.get('time')" min="0" required />
             <mat-hint>In minutes</mat-hint>
-            <mat-error>
-              Please specify your project's runtime.
-            </mat-error>
+            <mat-error>Total number of episodes in a season.</mat-error>
           </mat-form-field>
 
           <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">

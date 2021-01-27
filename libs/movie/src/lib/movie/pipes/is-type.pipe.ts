@@ -6,8 +6,7 @@ import { contentType, ContentType } from '@blockframes/utils/static-model';
 })
 export class IsTypePipe implements PipeTransform {
   transform(formValue: ContentType, status: ContentType): boolean {
-    const contentTypeKeys = Object.keys(contentType).filter(type => type === status);
-    return contentTypeKeys.includes(formValue);
+    return contentType[formValue] === contentType[status]
   }
 }
 
