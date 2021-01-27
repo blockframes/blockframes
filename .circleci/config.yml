@@ -164,13 +164,14 @@ jobs:
             for app in ${AFFECTED}; do
               echo "building ${app}";
             done;
-      - run: npm run affected:lint --base=origin/develop
+      # - run: npm run affected:lint --base=origin/develop
       - run:
           name: Run unit-tests on affected apps
           command: |
             # Run npm command to unit tests on affected apps
             firebase functions:config:get > .runtimeconfig.json
-            firebase emulators:exec 'nx run user:test'
+            # firebase emulators:exec 'nx run user:test'
+            ./.circleci/emulator-test.sh 
       - run:
           name: Check size of apps being build
           command: |
