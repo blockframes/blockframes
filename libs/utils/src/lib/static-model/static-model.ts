@@ -110,8 +110,7 @@ export const colors = {
 export const contentType = {
   feature_film: 'Feature Film',
   short: 'Short Film',
-  serie: 'Tv Serie',
-  season: 'Season',
+  series: 'TV Series',
   volume: 'Volume',
   episode: 'Episode',
   collection: 'Collection',
