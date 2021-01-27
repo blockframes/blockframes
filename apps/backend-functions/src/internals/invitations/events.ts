@@ -92,7 +92,7 @@ async function onInvitationToAnEventCreate({
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending invitation email for an event (${eventId}) from ${senderName} to : ${recipient.email}`);
           const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
-          return sendMailFromTemplate(templateInvitation, appKey);
+          return sendMailFromTemplate(templateInvitation, appKey).catch(e => console.warn(e.message));
         }))
       case 'request':
       default:
@@ -125,7 +125,7 @@ async function onInvitationToAnEventCreate({
           const userName = `${fromUser.firstName} ${fromUser.lastName}`
           console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient.email}`);
           const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
-          return sendMailFromTemplate(templateRequest, appKey);
+          return sendMailFromTemplate(templateRequest, appKey).catch(e => console.warn(e.message));
         }))
     }
   } else {
@@ -164,7 +164,7 @@ async function onInvitationToAnEventAccepted({
       const url = applicationUrl[appKey];
 
       const templateRequest = requestToAttendEventFromUserAccepted(fromUser, orgName(org), eventData, url);
-      await sendMailFromTemplate(templateRequest, appKey);
+      await sendMailFromTemplate(templateRequest, appKey).catch(e => console.warn(e.message));
 
       notification.organization = toOrg; // The subject that have accepted the invitation
     } else {

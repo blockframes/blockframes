@@ -40,7 +40,12 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
 
     const templateId = templateIds.user.credentials[invitationType];
     const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
-    await sendMailFromTemplate(template, app);
+
+    try {
+      await sendMailFromTemplate(template, app);
+    } catch (e) {
+      throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
+    }
     return newUser.user;
   }
 };
@@ -73,5 +78,5 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
 export const sendFirstConnexionEmail = async (user: PublicUser): Promise<any> => {
   const mailRequest = await userFirstConnexion(user);
   const from = await getSendgridFrom(user._meta.createdFrom);
-  return sendMail(mailRequest, from);
+  return sendMail(mailRequest, from).catch(e => console.warn(e.message));
 };

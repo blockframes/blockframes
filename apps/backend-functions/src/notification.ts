@@ -83,9 +83,9 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       const user = await getDocument<User>(`users/${notification.toUserId}`);
 
       // Send email
-      const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
+      // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
       // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
-      await sendMail({ to: user.email, subject: notification.type, text: 'test' }, getSendgridFrom(appKey), false)
+      await sendMail({ to: user.email, subject: notification.type, text: 'test' })
         .then(_ => {
           notification.email.isSent = true;
         }).catch(e => {

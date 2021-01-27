@@ -25,7 +25,7 @@ export const startVerifyEmailFlow = async (data: any) => {
   }
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-  await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from);
+  await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from).catch(e => console.warn(e.message));
 };
 */
 
@@ -190,7 +190,8 @@ export async function onUserDelete(
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
   const from = getSendgridFrom(data.app);
-  await sendMail(sendDemoRequestMail(data), from);
+  await sendMail(sendDemoRequestMail(data), from)
+    .catch(e => console.warn(e.message));
 
   return data;
 }
@@ -207,7 +208,8 @@ export const sendUserMail = async (data: { subject: string, message: string, app
 
   const from = getSendgridFrom(app);
 
-  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from)
+    .catch(e => console.warn(e.message));
 }
 
 
@@ -234,7 +236,12 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
 
   const templateId = templateIds.user.credentials.joinOrganization[app];
   const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
-  await sendMailFromTemplate(template, app);
+
+  try {
+    await sendMailFromTemplate(template, app);
+  } catch (e) {
+    throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
+  }
 
   // We don't have the time to wait for the trigger onUserCreate,
   // So we create it here first.

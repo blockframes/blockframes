@@ -68,7 +68,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
   });
 }
 
-async function mailOnInvitationAccept(userId: string, organizationId: string) { // @TODO #4046 not need anymore? cf onOrgUpdate
+async function mailOnInvitationAccept(userId: string, organizationId: string) { // @TODO #4046 not needed anymore? cf onOrgUpdate
   const org = await getDocument<OrganizationDocument>(`orgs/${organizationId}`);
   const orgDenomination = orgName(org);
   const user = await getUser(userId);
@@ -78,7 +78,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) { 
   const adminPromises = admins
     .filter(mail => !!mail)
     .map(a => userJoinedYourOrganization(a!.email, a!.firstName, orgDenomination, user!.firstName, user!.lastName, user!.email))
-    .map(template => sendMailFromTemplate(template, app));
+    .map(template => sendMailFromTemplate(template, app).catch(e => console.warn(e.message)));
 
   return Promise.all(adminPromises);
 }
@@ -118,7 +118,7 @@ async function onRequestFromUserToJoinOrgCreate({
 
   // send invitation pending email to user
   const template = userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!);
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app).catch(e => console.warn(e.message));
 
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
@@ -131,7 +131,7 @@ async function onRequestFromUserToJoinOrgCreate({
       userFirstname: userData.firstName!,
       userLastname: userData.lastName!
     }, urlToUse))
-      .map(tpl => sendMailFromTemplate(tpl, app))
+      .map(tpl => sendMailFromTemplate(tpl, app).catch(e => console.warn(e.message)))
   );
 }
 
@@ -144,13 +144,12 @@ async function onRequestFromUserToJoinOrgAccept({
     console.error('No user or org provided');
     return;
   }
-  // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
   const app = await getOrgAppKey(toOrg.id);
   const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
   await sendMailFromTemplate(template, app);
-  return mailOnInvitationAccept(fromUser.uid, toOrg.id);
+  return mailOnInvitationAccept(fromUser.uid, toOrg.id).catch(e => console.warn(e.message));
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
@@ -174,7 +173,7 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
     })
   );
 
-  return triggerNotifications(notifications);
+  return triggerNotifications(notifications); // @TODO #4046
 }
 
 

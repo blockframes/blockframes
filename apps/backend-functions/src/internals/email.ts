@@ -14,7 +14,7 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), catchError = true): Promise<boolean> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom()): Promise<boolean> {
   const msg: MailDataRequired = {
     from,
     to,
@@ -22,19 +22,10 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
     text,
   };
 
-  if(catchError){
-    return send(msg).catch(e => {
-      console.warn(e.message);
-      return false;
-    });
-  } else {
-    // We let parent function catch the error
-    return send(msg);
-  }
-
+  return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, catchError = true): Promise<boolean> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App): Promise<boolean> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -48,15 +39,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     dynamicTemplateData: { ...data, app: appMailSettings, from }
   };
 
-  if(catchError){
-    return send(msg).catch(e => {
-      console.warn(e.message);
-      return false;
-    });
-  } else {
-    // We let parent function catch the error
-    return send(msg);
-  }
+  return send(msg);
 }
 
 async function send(msg: MailDataRequired): Promise<boolean> {
