@@ -10,7 +10,7 @@ import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/ut
 import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
 import { reminderEventToUser } from './templates/mail';
 import { templateIds } from './templates/ids';
-import { orgName } from '@blockframes/organization/+state';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 type Timestamp = admin.firestore.Timestamp;
 
