@@ -1,4 +1,4 @@
-import { NotificationDocument } from './data/types';
+import { NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
@@ -6,7 +6,11 @@ import { getDocument, getOrgAppKey } from './data/internals';
 import { User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 import { getSendgridFrom } from '@blockframes/utils/apps';
-import { emailErrorCodes } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
+import { reminderEventToUser } from './templates/mail';
+import { templateIds } from './templates/ids';
+import { orgName } from '@blockframes/organization/+state';
 
 type Timestamp = admin.firestore.Timestamp;
 
@@ -26,7 +30,7 @@ export async function triggerNotifications(notifications: NotificationDocument[]
 }
 
 // @TODO #4046 should contain all notificationTypes in the end
-const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg'];
+const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg', 'oneDayReminder', 'eventIsAboutToStart'];
 
 async function appendNotificationSettings(notification: NotificationDocument) {
   // get user notification settings
@@ -81,6 +85,30 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
     // Update notification state
     if (types.includes(notification.type)) {
       const user = await getDocument<User>(`users/${notification.toUserId}`);
+
+      if (notification.type === 'oneDayReminder') {
+        // Send reminder email to invited users a day before event start
+        const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+        const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
+        const eventData = getEventEmailData(event);
+
+        const template = reminderEventToUser(user, orgName(org), eventData, templateIds.eventReminder.oneDay);
+        await sendMailFromTemplate(template, 'festival') // TODO guess appKey
+        .then(_ => { notification.email.isSent = true })
+        .catch(e => { notification.email.error = e.message });
+      }
+
+      if (notification.type === 'eventIsAboutToStart') {
+        // Send reminder email to invited users a day before event start
+        const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+        const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
+        const eventData = getEventEmailData(event);
+
+        const template = reminderEventToUser(user, orgName(org), eventData, templateIds.eventReminder.oneHour);
+        await sendMailFromTemplate(template, 'festival') // TODO guess appKey
+        .then(_ => { notification.email.isSent = true })
+        .catch(e => { notification.email.error = e.message });
+      }
 
       // Send email
       // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey

@@ -279,34 +279,41 @@ export async function createNotificationsForEventsToStart() {
   const db = admin.firestore();
   const oneHour = 3600 * 1000;
   const oneDay = 24 * oneHour;
-  const notificationType: NotificationType = 'eventIsAboutToStart';
+  const halfHour = 1800 * 1000;
 
   // 1 Fetch events that are about to start
-  const eventsCollection = await db.collection('events')
+  const eventsDayCollection = await db.collection('events')
     .where('start', '>=', new Date(Date.now() + oneDay)) // Event starts in one day or more
     .where('start', '<', new Date(Date.now() + oneDay + oneHour)) // but not more than 1 day + 1 hour
     .get();
 
-  // 2 Fetch attendees (invitations accepted)
-  const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
-  const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
-  const invitationsSnaps = await Promise.all(promises);
-  const invitations: InvitationDocument[] = [];
+    const eventsHourCollection = await db.collection('events')
+    .where('start', '>=', new Date(Date.now() + oneHour))
+    .where('start', '<', new Date(Date.now() + oneHour + halfHour))
+    .get();
 
-  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
+  // 2 Fetch attendees (invitations accepted)
+  const eventDayIds: string[] = eventsDayCollection.docs.map(doc => doc.data().id);
+  const eventHourIds: string[] = eventsHourCollection.docs.map(doc => doc.data().id);
+  const dayPromises = eventDayIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+  const hourPromises = eventHourIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+  const invitationsDaySnaps = await Promise.all(dayPromises);
+  const invitationsHourSnaps = await Promise.all(hourPromises);
+  const invitationsDay: InvitationDocument[] = [];
+  const invitationsHour: InvitationDocument[] = [];
+
+  invitationsDaySnaps.forEach(snap => snap.docs.forEach(doc => invitationsDay.push(doc.data() as InvitationDocument)));
+  invitationsHourSnaps.forEach(snap => snap.docs.forEach(doc => invitationsHour.push(doc.data() as InvitationDocument)));
 
   // 3 Create notifications if not already exists
-  // @TODO (#2848) forcing to festival since invitations to events are only on this one
-  const appKey: App = 'festival';
-  let eventData: EventEmailData = getEventEmailData();
   // @TODO #4046
   const notifications = [];
-  for (const invitation of invitations) {
+  for (const invitation of invitationsDay) {
     const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
     const existingNotifications = await db.collection('notifications')
       .where('docId', '==', invitation.eventId)
       .where('toUserId', '==', toUserId)
-      .where('type', '==', notificationType)
+      .where('type', '==', 'oneDayReminder')
       .get();
 
     // There is no existing notification for this user
@@ -314,58 +321,66 @@ export async function createNotificationsForEventsToStart() {
       notifications.push(createNotification({
         toUserId,
         docId: invitation.eventId,
-        type: notificationType
+        type: 'oneDayReminder'
       }));
+    }
+  }
 
-      // Send reminder email to invited users a day before event start
-      const toUser = invitation.toUser ?? invitation.fromUser;
-      const org = invitation.toOrg ?? invitation.fromOrg;
-      const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-      eventData = getEventEmailData(event);
+  for (const invitation of invitationsHour) {
+    const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
+    const existingNotifications = await db.collection('notifications')
+      .where('docId', '==', invitation.eventId)
+      .where('toUserId', '==', toUserId)
+      .where('type', '==', 'eventIsAboutToStart')
+      .get();
 
-      const template = reminderEventToUser(toUser, orgName(org), eventData, templateIds.eventReminder.oneDay);
-      await sendMailFromTemplate(template, appKey);
-      console.log('!!!!!!!!!!!!!!!! after email in notification part')
+    // There is no existing notification for this user
+    if (existingNotifications.empty) {
+      notifications.push(createNotification({
+        toUserId,
+        docId: invitation.eventId,
+        type: 'eventIsAboutToStart'
+      }));
     }
   }
 
   return notifications.length ? triggerNotifications(notifications) : undefined;
 }
 
-/** Send a reminder email one hour before event start */
-export async function createOneHourReminderEmail() {
-  const db = admin.firestore();
-  const oneHour = 3600 * 1000;
-  const halfHour = 1800 * 1000;
+// /** Send a reminder email one hour before event start */
+// export async function createOneHourReminderEmail() {
+//   const db = admin.firestore();
+//   const oneHour = 3600 * 1000;
+//   const halfHour = 1800 * 1000;
 
-  // Fetch event that will start in one hour
-  const eventsCollection = await db.collection('events')
-    .where('start', '>=', new Date(Date.now() + oneHour))
-    .where('start', '<', new Date(Date.now() + oneHour + halfHour))
-    .get();
+//   // Fetch event that will start in one hour
+//   const eventsCollection = await db.collection('events')
+//     .where('start', '>=', new Date(Date.now() + oneHour))
+//     .where('start', '<', new Date(Date.now() + oneHour + halfHour))
+//     .get();
 
-  // Get all attendees for those events
-  const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
-  const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
-  const invitationsSnaps = await Promise.all(promises);
-  const invitations: InvitationDocument[] = [];
+//   // Get all attendees for those events
+//   const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
+//   const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+//   const invitationsSnaps = await Promise.all(promises);
+//   const invitations: InvitationDocument[] = [];
 
-  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
+//   invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
 
-  // @TODO (#2848) forcing to festival since invitations to events are only on this one
-  const appKey: App = 'festival';
-  let eventData: EventEmailData = getEventEmailData();
+//   // @TODO (#2848) forcing to festival since invitations to events are only on this one
+//   const appKey: App = 'festival';
+//   let eventData: EventEmailData = getEventEmailData();
 
-  for (const invitation of invitations) {
-    const toUser = invitation.toUser ?? invitation.fromUser;
-    const org = invitation.toOrg ?? invitation.fromOrg;
-    const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-    eventData = getEventEmailData(event);
+//   for (const invitation of invitations) {
+//     const toUser = invitation.toUser ?? invitation.fromUser;
+//     const org = invitation.toOrg ?? invitation.fromOrg;
+//     const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+//     eventData = getEventEmailData(event);
 
-    const template = reminderEventToUser(toUser, orgName(org), eventData, templateIds.eventReminder.oneHour);
-    await sendMailFromTemplate(template, appKey);
-  }
-}
+//     const template = reminderEventToUser(toUser, orgName(org), eventData, templateIds.eventReminder.oneHour);
+//     await sendMailFromTemplate(template, appKey);
+//   }
+// }
 
 /**
  * Check if a given user has accepted an invitation to an event.
