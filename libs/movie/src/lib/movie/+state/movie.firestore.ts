@@ -162,7 +162,7 @@ export interface Prize {
 export interface Title {
   original: string;
   international?: string;
-  series?: string
+  series?: number;
 }
 
 export interface BoxOffice {
