@@ -5,7 +5,8 @@ import { difference } from 'lodash';
  *
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
-import { db, getUser } from './internals/firebase';
+import { db } from './internals/firebase';
+import { getUser } from "./internals/utils";
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';

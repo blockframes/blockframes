@@ -1,8 +1,16 @@
 ﻿module.exports = {
   name: 'backend-ops',
   preset: '../../jest.preset.js',
-  globals: { 'ts-jest': { tsConfig: '<rootDir>/tsconfig.spec.json' } },
-  testEnvironment: 'node',
+  globals: {
+    'ts-jest': {
+      tsConfig: '<rootDir>/tsconfig.spec.json',
+    },
+  },
+  transform: {
+    '^.+\\.(ts)$': 'ts-jest',
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  testEnvironment: 'node',
   coverageDirectory: '../../coverage/apps/backend-ops',
 };

@@ -1,5 +1,6 @@
-<ng-container *ngIf="(movies$ | async)?.length; else isLoading">
-  <ng-container *ngIf="(titles$ | async) as titles; else noTitle">
+<ng-container *ngIf="movies$ | async as movies; else loading">
+  <ng-container *ngIf="movies.length; else empty">
+
     <h1>My Titles</h1>
 
     <div fxLayout="row" fxLayoutAlign="end center">
@@ -10,27 +11,30 @@
     </div>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All</button>
-      <button mat-tab-link (click)="applyFilter('library')" [active]="(filter$ | async) === 'library'">Library</button>
-      <button mat-tab-link (click)="applyFilter('line_up')" [active]="(filter$ | async) === 'line_up'">Line-up</button>
+      <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All projects</button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
+      <button mat-tab-link (click)="applyFilter('submitted')"
+        [active]="(filter$ | async) === 'submitted'">Submitted</button>
+      <button mat-tab-link (click)="applyFilter('accepted')"
+        [active]="(filter$ | async) === 'accepted'">Published</button>
     </header>
 
     <mat-card>
-      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
-        showPaginator (rowClick)="goToTitle($event)">
-        <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-        <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
+      <bf-table-filter [source]="movies | filterBy: filterByMovie: filter.value" [columns]="columns"
+        [initialColumns]="initialColumns" clickable showFilter showPaginator (rowClick)="goToTitle($event)">
+        <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
+        <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b></ng-template>
         <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
 </ng-container>
 
-<ng-template #isLoading>
+<ng-template #loading>
   <mat-spinner></mat-spinner>
 </ng-template>
 
-<ng-template #noTitle>
+<ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no titles to sell yet</h1>
     <p class="mat-body-1">

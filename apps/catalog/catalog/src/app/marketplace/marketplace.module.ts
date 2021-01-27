@@ -18,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { CatalogDealsGuard } from '../guards/deals.guard';
 
 const routes: Routes = [{
   path: '',
@@ -69,7 +70,7 @@ const routes: Routes = [{
       path: 'deals',
       children: [{
         path: '',
-        canActivate: [OrganizationContractListGuard, ContractsRightListGuard],
+        canActivate: [CatalogDealsGuard, OrganizationContractListGuard, ContractsRightListGuard],
         canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard],
         loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
       }, {

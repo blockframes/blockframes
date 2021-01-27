@@ -1,8 +1,8 @@
-<article fxLayout="row" fxLayoutAlign="end center"  *ngIf="showFilter">
+<article fxLayout="row" fxLayoutAlign="end center" *ngIf="showFilter">
   <mat-icon svgIcon="search_table" class="icon-filter"></mat-icon>
   <mat-form-field>
-    <input test-id="filter-input" matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
-    <!-- TODO issue#1819 -->
+    <input test-id="filter-input" matInput placeholder="Type to filter in the list below"
+      (keyup)="applyFilter($event.target.value)" />
   </mat-form-field>
   <button mat-icon-button class="icon-filter" [widgetTarget]="filterColumnWidget">
     <mat-icon svgIcon="filter_list"></mat-icon>
@@ -14,11 +14,11 @@
 
     <!-- You need to set the matColumnDef on the same ng-container as the ngFor or it fails -->
     <ng-container *ngFor="let column of columns | keyvalue" [matColumnDef]="column.key">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="sortColumnDisabled(column.value)"> {{ column.value?.value || column.value }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="sortColumnDisabled(column.value)">
+        {{ column.value?.value || column.value }} </th>
       <td [ngClass]="{'clickable': clickable}" mat-cell *matCellDef="let row">
         <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
-          <ng-template
-            [ngTemplateOutlet]="col.template"
+          <ng-template [ngTemplateOutlet]="col.template"
             [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.key, item: row }">
           </ng-template>
         </ng-container>
@@ -32,7 +32,7 @@
     <ng-template [ngIf]="link" [ngIfElse]="withoutLink">
       <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]"></tr>
     </ng-template>
-    <ng-template #withoutLink >
+    <ng-template #withoutLink>
       <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="rowClick.emit(row)"></tr>
     </ng-template>
   </table>
@@ -43,19 +43,20 @@
       <ng-container *ngIf="noData else spinner">
         <div class="no-data">No data found</div>
       </ng-container>
-      <ng-template #spinner >
+      <ng-template #spinner>
         <mat-spinner diameter="30"></mat-spinner>
       </ng-template>
     </div>
   </ng-container>
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons *ngIf="showPaginator"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons *ngIf="showPaginator">
+  </mat-paginator>
 </div>
 
 <!-- Fallback if no template is provided for a column -->
 <ng-template #text let-content>{{content}}</ng-template>
 
 <!-- Overlay with column selection -->
-<overlay-widget #filterColumnWidget >
+<overlay-widget #filterColumnWidget>
   <widget-card>
     <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
       <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key" color="primary">

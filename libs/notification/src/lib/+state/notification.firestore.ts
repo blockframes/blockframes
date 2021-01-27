@@ -23,7 +23,7 @@ export type NotificationType =
 
   // Events related notifications
   'requestToAttendEventSent' |
-  'eventIsAboutToStart' | // TODO the backend code is not yet ready issue #2555
+  'eventIsAboutToStart' |
   'invitationToAttendEventAccepted' |
   'invitationToAttendEventDeclined'
   ;

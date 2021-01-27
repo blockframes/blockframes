@@ -1,8 +1,8 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
-import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
+import { NotificationDocument, NotificationType, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
-import { db, getUser } from "../firebase";
+import { getUser } from "../utils";
 import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser, requestToAttendEventFromUserAccepted } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
@@ -10,6 +10,7 @@ import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firest
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
+import * as admin from 'firebase-admin';
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
@@ -33,6 +34,7 @@ async function onInvitationToAnEventCreate({
   mode,
   eventId
 }: InvitationDocument) {
+  const db = admin.firestore();
   if (!eventId) {
     console.log('eventId is not defined');
     return;
@@ -268,28 +270,51 @@ export async function onInvitationToAnEventUpdate(
   }
 }
 
+/**
+ * Notify users with accepted invitation to events that are starting in 1 day
+ */
 export async function createNotificationsForEventsToStart() {
-  // @TODO (#2555)
+  const db = admin.firestore();
+  const oneHour = 3600 * 1000;
+  const oneDay = 24 * oneHour;
+  const notificationType: NotificationType = 'eventIsAboutToStart';
 
   // 1 Fetch events that are about to start
+  const eventsCollection = await db.collection('events')
+    .where('start', '>=', new Date(Date.now() + oneDay)) // Event starts in one day or more
+    .where('start', '<', new Date(Date.now() + oneDay + oneHour)) // but not more than 1 day + 1 hour
+    .get();
+
   // 2 Fetch attendees (invitations accepted)
-  // 3 Create notifications
+  const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
+  const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+  const invitationsSnaps = await Promise.all(promises);
+  const invitations: InvitationDocument[] = [];
 
-  /*const notification = createNotification({
-    toUserId: toUser.uid,
-    eventId,
-    type: 'eventIsAboutToStart''
-  });*/
+  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
 
-  /*if (!!fromUser) {
-    notification.user = fromUser;
-  } else if (!!fromOrg) {
-    notification.organization = fromOrg;
-  } else {
-    throw new Error('Did not found invitation sender');
-  }*/
+  // 3 Create notifications if not already exists
+  // @TODO #4046
+  const notifications = [];
+  for (const invitation of invitations) {
+    const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
+    const existingNotifications = await db.collection('notifications')
+      .where('docId', '==', invitation.eventId)
+      .where('toUserId', '==', toUserId)
+      .where('type', '==', notificationType)
+      .get();
 
-  //return triggerNotifications([notification])
+    // There is no existing notification for this user
+    if (existingNotifications.empty) {
+      notifications.push(createNotification({
+        toUserId,
+        docId: invitation.eventId,
+        type: notificationType
+      }));
+    }
+  }
+
+  return notifications.length ? triggerNotifications(notifications) : undefined;
 }
 
 /**
@@ -298,7 +323,7 @@ export async function createNotificationsForEventsToStart() {
  * @param eventId
  */
 export async function isUserInvitedToEvent(userId: string, eventId: string) {
-
+  const db = admin.firestore();
   const acceptedInvitations = db.collection('invitations')
     .where('type', '==', 'attendEvent')
     .where('eventId', '==', eventId)

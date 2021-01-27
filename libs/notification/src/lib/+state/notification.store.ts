@@ -120,6 +120,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
+              imgRef: this.getPoster(event.meta.titleId),
               message: `REMINDER - Your ${event.type} "${event.title}" is about to start.`
             };
           });
@@ -128,7 +129,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
-          url: `/c/o/marketplace/event/${notification.docId}`, // TODO check url : see  #2716
+          placeholderUrl: 'empty_poster.webp',
+          url: `/c/o/marketplace/event/${notification.docId}`,
         };
       case 'invitationToAttendEventAccepted':
 
