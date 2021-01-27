@@ -12,7 +12,7 @@ export class IsTypePipe implements PipeTransform {
 }
 
 @NgModule({
-  declarations: [IsSeriesPipe],
-  exports: [IsSeriesPipe]
+  declarations: [IsTypePipe],
+  exports: [IsTypePipe]
 })
 export class IsTypePipeModule { }
