@@ -14,7 +14,7 @@ import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
 import { onContractWrite } from './contract';
-import { createNotificationsForEventsToStart, createOneHourReminderEmail } from './internals/invitations/events';
+import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
@@ -111,10 +111,6 @@ export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', logErrors
 
 /** Trigger: REST call to invite a list of users by email. */
 export const inviteUsers = functions.https.onCall(skipInMaintenance(logErrors(invitations.inviteUsers)));
-
-/** Create an email to remind user they have event starting in one hour */
-export const scheduledReminderEmail = functions.pubsub.schedule('*/30 * * * *') // every 30 minutes
-  .onRun(skipInMaintenance(_ => createOneHourReminderEmail()));
 
 //--------------------------------
 //      Twilio Access           //
