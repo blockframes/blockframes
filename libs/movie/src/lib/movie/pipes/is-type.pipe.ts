@@ -10,8 +10,28 @@ export class IsTypePipe implements PipeTransform {
   }
 }
 
+@Pipe({
+  name: 'typeDictionary'
+})
+export class TypeDictionaryPipe implements PipeTransform {
+  transform(formValue: ContentType) {
+    return formValue === 'series' ? typeDictionary.series : typeDictionary.default
+  }
+}
+
 @NgModule({
-  declarations: [IsTypePipe],
-  exports: [IsTypePipe]
+  declarations: [IsTypePipe, TypeDictionaryPipe],
+  exports: [IsTypePipe, TypeDictionaryPipe]
 })
 export class IsTypePipeModule { }
+
+const typeDictionary = {
+  series: {
+    runningTime: 'Runtime of an episode',
+    runningTimeError: 'Total number of episodes in a season.'
+  },
+  default: {
+    runningTime: 'Running Time',
+    runningTimeError: "Please specify your project's runtime."
+  }
+}
