@@ -27,11 +27,11 @@ export class MovieVideoUploadComponent implements OnInit {
     private movieService: MovieService,
     private cdr: ChangeDetectorRef
   ) {
-    this.form = new MovieHostedVideosForm();
+    this.form = new MovieHostedVideosForm(this.movie.id);
   }
 
   async ngOnInit() {
-    this.form = new MovieHostedVideosForm(this.movie.promotional.videos);
+    this.form = new MovieHostedVideosForm(this.movie.id, this.movie.promotional.videos);
 
     // Add empty upload zone
     this.form.otherVideos.add({ ref: '' });

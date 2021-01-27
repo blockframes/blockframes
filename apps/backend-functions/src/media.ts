@@ -1,7 +1,7 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { isEqual, set } from 'lodash';
+import { isEqual, mean, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -46,12 +46,17 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // (1) Security checks, (2) copy file to final destination, (3) update db, (4) delete tmp/file
 
-    const cleanAndReturn = async (success: boolean) => {
+    const cleanAndThrow = async (message: string) => {
       await file.delete();
-      return success;
+      throw new Error(message)
     };
 
-    if (!isValid) return cleanAndReturn(false);
+    if (!isValid) return cleanAndThrow(`Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
+
+    const docRef = db.collection(metadata.collection).doc(metadata.docId);
+    const docSnap = await docRef.get();
+    if (!docSnap.exists) return cleanAndThrow(`Document ${metadata.collection}/${metadata.docId} does not exists`);
+    const doc = docSnap.data()!;
 
     // (1) Security checks
 
@@ -59,30 +64,28 @@ export async function linkFile(data: storage.ObjectMetadata) {
     switch (metadata.collection) {
       case 'users': {
         // only the user is allowed to upload files about himself
-        if (metadata.docId !== metadata.uid) return cleanAndReturn(false);
+        if (metadata.docId !== metadata.uid) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
         break;
 
-      } case 'movies':
-      case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
+      } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
         // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
         const user = await getDocument<User>(`users/${metadata.uid}`);
-        if (!user) return cleanAndReturn(false);
+        if (!user) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
         const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
-        if (!movie) return cleanAndReturn(false);
+        if (!movie) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
         const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
-        if (!isAllowed) return cleanAndReturn(false);
+        if (!isAllowed) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
         break;
 
       } case 'orgs': {
         // only member of an org can upload to this org
         const user = await getDocument<User>(`users/${metadata.uid}`);
-        if (!user) return cleanAndReturn(false);
-        if (user.orgId !== metadata.docId) return cleanAndReturn(false);
+        if (!user) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
+        if (user.orgId !== metadata.docId) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
         break;
 
       } default: {
-        console.error(`UNKNOWN COLLECTION : ${metadata.collection}`);
-        return cleanAndReturn(false);
+        return cleanAndThrow(`UNKNOWN COLLECTION : ${metadata.collection}`);
       }
     }
 
@@ -92,10 +95,6 @@ export async function linkFile(data: storage.ObjectMetadata) {
     segments.shift(); // remove tmp/
     const finalPath = segments.join('/');
     const to = bucket.file(finalPath);
-    const [exists] = await file.exists();
-    if (!exists) {
-      return cleanAndReturn(false);
-    }
 
     await file.copy(to);
 
@@ -103,18 +102,13 @@ export async function linkFile(data: storage.ObjectMetadata) {
     // because of possible nested map and arrays, we need to retrieve the whole document
     // modify it, then update the whole doc with the new (modified) version
 
-    const docRef = db.collection(metadata.collection).doc(metadata.docId);
-    const docSnap = await docRef.get();
-    if (!docSnap.exists) return cleanAndReturn(false);
-    const doc = docSnap.data()!;
-
     // TODO issue#4002 refactor as set(doc, metadata.field, { ref: finalPath});
     set(doc, metadata.field, finalPath); // update the whole doc with only the new ref
 
     await docRef.update(doc);
 
     // (4) delete tmp/file
-    return cleanAndReturn(true);
+    return file.delete();
 
   } else {
 
@@ -122,7 +116,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
 
-    if (data.contentType.indexOf('video/') === 0 && metadata.collection === 'movies') {
+    const isVideo = data.contentType.indexOf('video/') === 0 && metadata.collection === 'movies';
+    if (isVideo) {
 
       const uploadResult = await uploadToJWPlayer(file);
 
