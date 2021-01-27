@@ -53,7 +53,6 @@ import { MatCardModule } from '@angular/material/card';
     MatSnackBarModule,
     MatTabsModule,
     MatCardModule,
-
     // Routes
     RouterModule
   ]

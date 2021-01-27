@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MarketplaceQuery } from './+state/marketplace.query';
 
 @Component({
@@ -10,6 +11,7 @@ import { MarketplaceQuery } from './+state/marketplace.query';
 
 export class MarketplaceComponent {
   public cartCount$ = this.marketplaceQuery.selectCount();
+  public canAccessDeals = !this.orgQuery.getActive().appAccess.catalog.dashboard;
 
-  constructor(private marketplaceQuery: MarketplaceQuery) {}
+  constructor(private marketplaceQuery: MarketplaceQuery, private orgQuery: OrganizationQuery) {}
 }

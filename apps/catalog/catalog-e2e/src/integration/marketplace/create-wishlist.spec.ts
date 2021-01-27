@@ -14,6 +14,8 @@ const users  =  [ userFixture.getByUID(USER.Vincent) ];
 beforeEach(() => {
   clearDataAndPrepareTest();
   signIn(users[0]);
+  cy.visit('c/o/marketplace/home', {timeout: 60000});
+  cy.wait(1000);
 });
 
 describe('Test wishlist features from library, detail page',  () => {
