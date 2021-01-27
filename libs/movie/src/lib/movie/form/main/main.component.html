@@ -40,7 +40,24 @@
         </static-select>
       </article>
 
-      <ng-container *ngIf="form.contentType.valueChanges | async | isType: 'series'; else notSeries">
+      <ng-container *ngIf="contentType | async | isType: 'series'; else notSeries">
+        <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Number of episodes</mat-label>
+            <input test-id="episode-count" matInput type="number" name="episodeCount"
+              [formControl]="form.runningTime.get('episodeCount')" min="0" />
+            <mat-hint>Total number of episodes in a season.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Seasons Number</mat-label>
+            <input test-id="episode-count" matInput type="number" name="seriesName"
+              [formControl]="form.title.get('series')" />
+            <mat-hint>Please specify the seasons number.</mat-hint>
+          </mat-form-field>
+
+        </article>
         <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
           <mat-form-field appearance="outline" fxFlex>
@@ -63,22 +80,7 @@
               </mat-error>
             </static-select>
           </ng-container>
-        </article>
-        <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Number of episodes</mat-label>
-            <input test-id="episode-count" matInput type="number" name="episodeCount"
-              [formControl]="form.runningTime.get('episodeCount')" min="0" />
-            <mat-hint>Total number of episodes in a season.</mat-hint>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Series Number</mat-label>
-            <input test-id="episode-count" matInput type="number" name="seriesName"
-              [formControl]="form.title.get('series')" />
-            <mat-hint>Please specify the seasons number.</mat-hint>
-          </mat-form-field>
         </article>
 
       </ng-container>

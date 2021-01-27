@@ -24,7 +24,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormMainComponent implements OnInit, OnDestroy {
   form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
-  public sub: Subscription;
+  private sub: Subscription;
+  contentType = this.form.contentType.valueChanges.pipe(startWith(this.form.contentType.value))
   valuesCustomGenres$: Observable<string[]>;
   customGenreCtrl = new FormControl();
 
