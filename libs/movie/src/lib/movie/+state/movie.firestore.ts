@@ -162,6 +162,7 @@ export interface Prize {
 export interface Title {
   original: string;
   international?: string;
+  series?: number;
 }
 
 export interface BoxOffice {
@@ -225,6 +226,7 @@ export interface MovieRelease {
 export interface MovieRunningTime {
   time?: number,
   status?: string,
+  episodeCount?: number
 }
 
 export interface OtherLink {
