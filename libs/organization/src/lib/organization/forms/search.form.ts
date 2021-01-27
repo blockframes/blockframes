@@ -1,14 +1,14 @@
-
 // Blockframes
 import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form';
 import { AlgoliaSearch, AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { Organization } from '../+state';
+import { App } from '@blockframes/utils/apps';
 
 // Utils
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
-import { App } from '@blockframes/utils/apps';
 
 export interface OrganizationSearch extends AlgoliaSearch, Partial<AlgoliaOrganization> {
   country?: Territory,
@@ -51,7 +51,6 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
     this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations[app]);
   }
 
-
   get query() { return this.get('query'); }
   get page() { return this.get('page'); }
   get hitsPerPage() { return this.get('hitsPerPage') }
@@ -62,7 +61,7 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
 
 
   search() {
-    this.organizationIndex.search(this.query.value, {
+    return this.organizationIndex.search<Organization>(this.query.value, {
       hitsPerPage: this.hitsPerPage.value,
       page: this.page.value,
       facetFilters: [
