@@ -37,6 +37,27 @@ export interface EventEmailData {
   end: string
 }
 
+export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
+
+export const emailErrorCodes = {
+  E01: {
+    code: 'E01-unauthorized' as EmailErrorCodes,
+    message: 'API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0'
+  },
+  E02: {
+    code: 'E02-general-error' as EmailErrorCodes,
+    message: 'Unexpected error while sending email',
+  },
+  E03: {
+    code: 'E03-missing-api-key' as EmailErrorCodes,
+    message: 'No sendgrid API key set'
+  },
+  E04: {
+    code: 'E04-no-template-available' as EmailErrorCodes,
+    message: 'There is no existing template for this email',
+  }
+};
+
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
   return {
     to: 'foo@bar.com',

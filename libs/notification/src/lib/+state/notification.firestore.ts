@@ -3,6 +3,7 @@ import { PublicMovie } from '@blockframes/movie/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 
 /** Type of Notification depending of its origin. */
 export type NotificationType =
@@ -45,7 +46,7 @@ export interface NotificationBase<D> {
   type: NotificationType;
   email?: {
     isSent: boolean;
-    error?: string;
+    error?: EmailErrorCodes;
   },
   app?: {
     isRead: boolean;

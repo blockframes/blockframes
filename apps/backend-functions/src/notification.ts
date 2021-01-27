@@ -5,6 +5,8 @@ import { NotificationType } from '@blockframes/notification/types';
 import { getDocument, getOrgAppKey } from './data/internals';
 import { User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
+import { getSendgridFrom } from '@blockframes/utils/apps';
+import { emailErrorCodes } from '@blockframes/utils/emails/utils';
 
 type Timestamp = admin.firestore.Timestamp;
 
@@ -81,16 +83,16 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       const user = await getDocument<User>(`users/${notification.toUserId}`);
 
       // Send email
-      // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
+      const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
       // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
-      const sent = await sendMail({ to: user.email, subject: notification.type, text: 'test' });
-
-      notification.email.isSent = sent;
-      if (!sent) {
-        notification.email.error = '@TODO #4046 errorCode';
-      }
+      await sendMail({ to: user.email, subject: notification.type, text: 'test' }, getSendgridFrom(appKey), false)
+        .then(_ => {
+          notification.email.isSent = true;
+        }).catch(e => {
+          notification.email.error = e.message;
+        });
     } else {
-      notification.email.error = '@TODO #4046 errorCode "notificationType" not handled';
+      notification.email.error = emailErrorCodes.E04.code;
     }
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });

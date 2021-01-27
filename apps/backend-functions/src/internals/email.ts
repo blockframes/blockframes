@@ -1,7 +1,7 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
-import { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -14,7 +14,7 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom()): Promise<boolean> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), catchError = true): Promise<boolean> {
   const msg: MailDataRequired = {
     from,
     to,
@@ -22,10 +22,19 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
     text,
   };
 
-  return send(msg);
+  if(catchError){
+    return send(msg).catch(e => {
+      console.warn(e.message);
+      return false;
+    });
+  } else {
+    // We let parent function catch the error
+    return send(msg);
+  }
+
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App): Promise<boolean> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, catchError = true): Promise<boolean> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -39,26 +48,29 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     dynamicTemplateData: { ...data, app: appMailSettings, from }
   };
 
-  return send(msg);
+  if(catchError){
+    return send(msg).catch(e => {
+      console.warn(e.message);
+      return false;
+    });
+  } else {
+    // We let parent function catch the error
+    return send(msg);
+  }
 }
 
 async function send(msg: MailDataRequired): Promise<boolean> {
   if (sendgridAPIKey === '') {
-    console.warn('No sendgrid API key set, skipping');
-    // @TODO #4046 return errorCode
-    return false;
+    throw new Error(emailErrorCodes.E03.code);
   }
 
   SendGrid.setApiKey(sendgridAPIKey);
   return SendGrid.send(msg).then(_ => true).catch(e => {
     if (e.message === 'Unauthorized') {
-      console.log('API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0 ');
-      // @TODO #4046 return errorCode
+      throw new Error(emailErrorCodes.E01.code);
     } else {
-      console.log(`Unexpected error while sending mail : ${e.message}`);
-      // @TODO #4046 return errorCode
+      throw new Error(emailErrorCodes.E02.code);
     }
-    return false;
   });
 }
 
