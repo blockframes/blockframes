@@ -21,8 +21,7 @@
     </div>
   </ng-template>
 
-  <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme"
-    bgAsset="profil_banner.webp">
+  <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="profil_banner.webp">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
@@ -37,13 +36,15 @@
       </article>
     </div>
   </header>
-  <nav id="nav" mat-tab-nav-bar>
-    <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
-      [active]="rla.isActive">
-      {{link.label}}
-    </a>
-  </nav>
+  <div #main>
+    <nav id="nav" mat-tab-nav-bar>
+      <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive" (click)="navClicked = true">
+        {{link.label}}
+      </a>
+    </nav>
+  </div>
   <section [@routeAnimation]="animationOutlet(outlet)">
-    <router-outlet #outlet="outlet"></router-outlet>
+    <router-outlet #outlet="outlet" (activate)="scrollIntoView()"></router-outlet>
   </section>
 </ng-container>
