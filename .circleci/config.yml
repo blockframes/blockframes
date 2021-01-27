@@ -163,7 +163,7 @@ jobs:
             echo "Building: ${AFFECTED}"
             for app in ${AFFECTED}; do
               echo "building ${app}";
-              npm run build:${app};
+          # npm run build:${app};
             done;
       - run: npm run affected:lint --base=origin/develop
       - run:
@@ -171,7 +171,7 @@ jobs:
           command: |
             # Run npm command to unit tests on affected apps
             firebase functions:config:get > .runtimeconfig.json
-            npm run affected:test
+            firebase emulators:exec 'nx run user:test'
       - run:
           name: Check size of apps being build
           command: |
