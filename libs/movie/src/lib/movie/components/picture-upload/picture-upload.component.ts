@@ -27,7 +27,6 @@ export class MoviePictureUploadComponent implements OnInit {
   }
 
   addStill() {
-    // TODO issue#4002
     this.moviePictureForm.get('still_photo').push(new HostedMediaForm());
     this.cdr.markForCheck();
   }

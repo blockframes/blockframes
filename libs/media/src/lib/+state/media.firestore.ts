@@ -8,7 +8,7 @@ export interface FileMetaData {
   collection: 'users' | 'orgs' | 'movies' | 'campaigns';
   docId: string;
   field: string;
-  [K: string]: string;
+  [K: string]: string; // extra-data
 };
 
 export interface HostedMediaFormValue {

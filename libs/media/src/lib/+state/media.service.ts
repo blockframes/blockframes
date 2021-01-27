@@ -94,9 +94,6 @@ export class MediaService {
           return; // skip the current `forEach` iteration
         }
 
-        console.log('uploading');
-        console.log(mediaForm);
-
         // upload the new file
         this.upload({
           data: mediaForm.blobOrFile,
