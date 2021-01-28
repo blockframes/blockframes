@@ -28,7 +28,7 @@ export class MovieFormMediaImagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.stillPhoto.valueChanges.subscribe(v => {
+    this.sub = this.stillPhoto.valueChanges.subscribe(v => {
       if (!v.length) {
         this.addStill();
         this.cdr.markForCheck();
