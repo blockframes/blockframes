@@ -288,7 +288,7 @@ service cloud.firestore {
       allow read: if userHasValidOrg()
         && notInMaintenance()
         && ( existingData().storeConfig.status == 'accepted'
-         || ( isOrgMember(userOrgId()) && orgCan('canUpdate', userOrgId(), existingData().id) )
+         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds )) 
         )
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
@@ -526,7 +526,7 @@ service cloud.firestore {
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
       return (getDocumentPermissions(orgId, docId).ownerId == orgId)
-        || (getDocumentPermissions(orgId, docId).admin == true)
+        || (getDocumentPermissions(orgId, docId).isAdmin == true)
         || (getDocumentPermissions(orgId, docId)[action] == true)
         || (isOrgAdmin(orgId) && orgId == docId);
     }
