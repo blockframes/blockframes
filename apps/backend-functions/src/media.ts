@@ -46,46 +46,53 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // (1) Security checks, (2) copy file to final destination, (3) update db, (4) delete tmp/file
 
-    const cleanAndThrow = async (message: string) => {
-      await file.delete();
-      throw new Error(message)
+    /** Will throw if the condition is **false**. If the function throws it will delete/clean the file beforehand. */
+    const assertFile = async (condition: boolean, message: string) => {
+      if (!condition) {
+        await file.delete();
+        throw new Error(message);
+      }
     };
 
-    if (!isValid) return cleanAndThrow(`Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
+    assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
     const docRef = db.collection(metadata.collection).doc(metadata.docId);
     const docSnap = await docRef.get();
-    if (!docSnap.exists) return cleanAndThrow(`Document ${metadata.collection}/${metadata.docId} does not exists`);
+    await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
     const doc = docSnap.data()!;
 
     // (1) Security checks
+
+    const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
 
     // Is the user allowed to upload this file ?
     switch (metadata.collection) {
       case 'users': {
         // only the user is allowed to upload files about himself
-        if (metadata.docId !== metadata.uid) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
+        await assertFile(metadata.docId === metadata.uid, notAllowedError);
         break;
 
       } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
         // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
         const user = await getDocument<User>(`users/${metadata.uid}`);
-        if (!user) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
+        await assertFile(!!user, notAllowedError);
+
         const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
-        if (!movie) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
+        await assertFile(!!movie, notAllowedError);
+
         const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
-        if (!isAllowed) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
+        await assertFile(isAllowed, notAllowedError);
         break;
 
       } case 'orgs': {
         // only member of an org can upload to this org
         const user = await getDocument<User>(`users/${metadata.uid}`);
-        if (!user) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
-        if (user.orgId !== metadata.docId) return cleanAndThrow(`User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`);
+        await assertFile(!!user, notAllowedError);
+        await assertFile(user.orgId === metadata.docId, notAllowedError);
         break;
 
       } default: {
-        return cleanAndThrow(`UNKNOWN COLLECTION : ${metadata.collection}`);
+        await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
       }
     }
 
