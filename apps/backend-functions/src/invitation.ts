@@ -38,11 +38,11 @@ export async function onInvitationWrite(
   // Doc was deleted
   if (!invitationDoc) {
 
-    if(!!invitationDocBefore.toUser) {
+    if (!!invitationDocBefore.toUser) {
       const user = await getUser(invitationDocBefore.toUser.uid)
 
       // Remove user in users collection
-      if(invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
+      if (invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
 
         // Fetch potential other invitations to join org
         const invitationCollectionRef = db.collection('invitations')
@@ -52,7 +52,7 @@ export async function onInvitationWrite(
         const existingInvitation = await invitationCollectionRef.get();
 
         // If there is an other invitation or the user has already an org, we don't want to delete its account
-        if(existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
+        if (existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
           return;
         }
 
@@ -196,12 +196,12 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
 export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
   const db = admin.firestore();
   const userPromises = userEmails.map(email => db.collection('users')
-  .where('email', '==', email)
-  .get());
+    .where('email', '==', email)
+    .get());
   const userQuery = await Promise.all(userPromises);
 
   const hasUserAlreadyAnOrg = userQuery.some(d => d.docs && d.docs.some(u => !!u.data().orgId));
-  if(hasUserAlreadyAnOrg) return true;
+  if (hasUserAlreadyAnOrg) return true;
 
   const invitationPromises = userEmails.map(email => db.collection('invitations')
     .where('type', '==', 'joinOrganization')

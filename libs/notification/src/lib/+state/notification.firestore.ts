@@ -15,6 +15,7 @@ export type NotificationType =
   'movieAccepted' |
 
   // Notifications relative to invitations
+  'requestFromUserToJoinOrgCreate' |
   'invitationFromUserToJoinOrgDecline' |
   'memberAddedToOrg' |
   'memberRemovedFromOrg' |

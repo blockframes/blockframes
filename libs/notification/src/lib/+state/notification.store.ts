@@ -41,6 +41,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
     const module = getCurrentModule(this.routerQuery.getValue().state.url);
     switch (notification.type) {
+      // #TODO 4046 requestFromUserToJoinOrgCreate
       case 'organizationAcceptedByArchipelContent':
         return {
           _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},

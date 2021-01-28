@@ -1,11 +1,13 @@
-import { NotificationDocument } from './data/types';
+import { NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
-import { getDocument, getOrgAppKey } from './data/internals';
+import { getAppUrl, getDocument, getOrgAppKey } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes } from '@blockframes/utils/emails/utils';
+import { userJoinedYourOrganization, userRequestedToJoinYourOrg } from './templates/mail';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 type Timestamp = admin.firestore.Timestamp;
 
@@ -65,23 +67,74 @@ export function createNotification(notification: Partial<NotificationDocument> =
 export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const notification = snap.data() as NotificationDocument;
   // @TODO #4046 should contain all notificationTypes in the end
-  const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg'];
+  const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg', 'requestFromUserToJoinOrgCreate'];
 
   if (notification.email?.isSent === false) {
     // Update notification state
     if (types.includes(notification.type)) {
-      const user = await getDocument<User>(`users/${notification.toUserId}`);
+      const recipient = await getDocument<User>(`users/${notification.toUserId}`);
 
-      // Send email
-      // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
-      // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
-      await sendMail({ to: user.email, subject: notification.type, text: 'test' })
-        .then(_ => notification.email.isSent = true)
-        .catch(e => notification.email.error = e.message);
+      switch (notification.type) {
+        case 'memberAddedToOrg':
+          await sendMemberAddedToOrgEmail(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
+        case 'memberRemovedFromOrg':
+          //@TODO #4046 do we have to handle ? or just notification ? or none ?
+          break;
+        case 'requestFromUserToJoinOrgCreate':
+          await sendUserRequestedToJoinYourOrgEmail(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
+        default:
+          // @TODO #4046 clean
+          // Send email
+          // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
+          // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
+          await sendMail({ to: recipient.email, subject: notification.type, text: 'test' })
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
+      }
+
     } else {
       notification.email.error = emailErrorCodes.noTemplate.code;
     }
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
+}
+
+async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification: NotificationDocument) {
+  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const urlToUse = await getAppUrl(org);
+
+  const template = userRequestedToJoinYourOrg({
+    adminEmail: recipient.email,
+    adminName: recipient.firstName!,
+    organizationName: orgName(org),
+    organizationId: notification.organization.id,
+    userFirstname: notification.user!.firstName,
+    userLastname: notification.user!.lastName
+  }, urlToUse);
+
+  const appKey = await getOrgAppKey(org);
+  return sendMailFromTemplate(template, appKey);
+}
+
+async function sendMemberAddedToOrgEmail(recipient: User, notification: NotificationDocument) {
+  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const template = userJoinedYourOrganization(
+    recipient.email,
+    recipient.firstName!,
+    orgName(org),
+    notification.user!.firstName,
+    notification.user!.lastName,
+    notification.user!.email
+  );
+
+  const appKey = await getOrgAppKey(org);
+  return sendMailFromTemplate(template, appKey);
 }
