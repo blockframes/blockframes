@@ -2,7 +2,7 @@ import { MovieDocument, NotificationDocument, OrganizationDocument } from './dat
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
-import { getDocument } from './data/internals';
+import { getDocument, getOrgAppKey } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
@@ -76,42 +76,38 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
     if (types.includes(notification.type)) {
       const user = await getDocument<User>(`users/${notification.toUserId}`);
 
-      if (notification.type === 'oneDayReminder') {
-        // Send reminder email to invited users a day before event start
-        const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
-        const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
-        const eventData = getEventEmailData(event);
-        const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
-
-        const template = reminderEventToUser(movie.title.international, user, orgName(org), eventData, templateIds.eventReminder.oneDay);
-        await sendMailFromTemplate(template, 'festival') // TODO guess appKey
-        .then(_ => { notification.email.isSent = true })
-        .catch(e => { notification.email.error = e.message });
+      switch (notification.type) {
+        case 'eventIsAboutToStart' :
+          await sendReminderEmails(notification, templateIds.eventReminder.oneHour);
+          break;
+        case 'oneDayReminder' :
+          await sendReminderEmails(notification, templateIds.eventReminder.oneDay);
+          break;
+        default:
+          await sendMail({ to: user.email, subject: notification.type, text: 'test' })
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+          break;
       }
-
-      if (notification.type === 'eventIsAboutToStart') {
-        // Send reminder email to invited users a day before event start
-        const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
-        const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
-        const eventData = getEventEmailData(event);
-        const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
-
-        const template = reminderEventToUser(movie.title.international, user, orgName(org), eventData, templateIds.eventReminder.oneHour);
-        await sendMailFromTemplate(template, 'festival') // TODO guess appKey
-        .then(_ => { notification.email.isSent = true })
-        .catch(e => { notification.email.error = e.message });
-      }
-
-      // Send email
-      // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
-      // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
-      await sendMail({ to: user.email, subject: notification.type, text: 'test' })
-        .then(_ => notification.email.isSent = true)
-        .catch(e => notification.email.error = e.message);
     } else {
       notification.email.error = emailErrorCodes.noTemplate.code;
     }
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
+}
+
+/** Send e reminder email 24h or 1h before event starts */
+async function sendReminderEmails(notification, template: string) {
+  const user = await getDocument<User>(`users/${notification.toUserId}`);
+  const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
+  const eventData = getEventEmailData(event);
+  const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
+  const app = await getOrgAppKey(org)
+
+  const email = reminderEventToUser(movie.title.international, user, orgName(org), eventData, template);
+  return await sendMailFromTemplate(email, app)
+  .then(_ => notification.email.isSent = true)
+  .catch(e => notification.email.error = e.message);
 }

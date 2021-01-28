@@ -282,68 +282,70 @@ export async function createNotificationsForEventsToStart() {
   const halfHour = 1800 * 1000;
 
   // 1 Fetch events that are about to start
-  const eventsDayCollection = await db.collection('events')
-    .where('start', '>=', new Date(Date.now() + oneDay)) // Event starts in one day or more
-    .where('start', '<', new Date(Date.now() + oneDay + oneHour)) // but not more than 1 day + 1 hour
-    .get();
-
-    const eventsHourCollection = await db.collection('events')
-    .where('start', '>=', new Date(Date.now() + oneHour))
-    .where('start', '<', new Date(Date.now() + oneHour + halfHour))
-    .get();
+  const eventsDayCollection = await fetchEventStartingIn(oneDay, (oneDay + oneHour));
+  const eventsHourCollection = await fetchEventStartingIn(oneHour, (oneHour + halfHour));
 
   // 2 Fetch attendees (invitations accepted)
-  const eventDayIds: string[] = eventsDayCollection.docs.map(doc => doc.data().id);
-  const eventHourIds: string[] = eventsHourCollection.docs.map(doc => doc.data().id);
-  const dayPromises = eventDayIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
-  const hourPromises = eventHourIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
-  const invitationsDaySnaps = await Promise.all(dayPromises);
-  const invitationsHourSnaps = await Promise.all(hourPromises);
-  const invitationsDay: InvitationDocument[] = [];
-  const invitationsHour: InvitationDocument[] = [];
-
-  invitationsDaySnaps.forEach(snap => snap.docs.forEach(doc => invitationsDay.push(doc.data() as InvitationDocument)));
-  invitationsHourSnaps.forEach(snap => snap.docs.forEach(doc => invitationsHour.push(doc.data() as InvitationDocument)));
+  const invitationsDay = await fetchAttendeesToEvent(eventsDayCollection.docs);
+  const invitationsHour = await fetchAttendeesToEvent(eventsHourCollection.docs);
 
   // 3 Create notifications if not already exists
-  const notifications = [];
-  for (const invitation of invitationsDay) {
-    const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
-    const existingNotifications = await db.collection('notifications')
-      .where('docId', '==', invitation.eventId)
-      .where('toUserId', '==', toUserId)
-      .where('type', '==', 'oneDayReminder')
-      .get();
-
-    // There is no existing notification for this user
-    if (existingNotifications.empty) {
-      notifications.push(createNotification({
-        toUserId,
-        docId: invitation.eventId,
-        type: 'oneDayReminder'
-      }));
-    }
-  }
-
-  for (const invitation of invitationsHour) {
-    const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
-    const existingNotifications = await db.collection('notifications')
-      .where('docId', '==', invitation.eventId)
-      .where('toUserId', '==', toUserId)
-      .where('type', '==', 'eventIsAboutToStart')
-      .get();
-
-    // There is no existing notification for this user
-    if (existingNotifications.empty) {
-      notifications.push(createNotification({
-        toUserId,
-        docId: invitation.eventId,
-        type: 'eventIsAboutToStart'
-      }));
-    }
-  }
+  const notificationsDays = await createNotificationIfNotExists(invitationsDay, 'oneDayReminder');
+  const notificationsHours = await createNotificationIfNotExists(invitationsHour, 'eventIsAboutToStart')
+  const notifications = notificationsDays.concat(notificationsHours);
 
   return notifications.length ? triggerNotifications(notifications) : undefined;
+}
+
+/** Fetch event collection with a start and an end range search */
+async function fetchEventStartingIn(from: number, to: number) {
+  const db = admin.firestore();
+  return await db.collection('events')
+    .where('start', '>=', new Date(Date.now() + from))
+    .where('start', '<', new Date(Date.now() + to))
+    .get();
+}
+
+/** Fetch accepted invitations to an event */
+async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]) {
+  const db = admin.firestore();
+  const invitations : InvitationDocument[] = [];
+
+  const docsIds: string[] = collectionDocs.map(doc => doc.data().id);
+  const promises = docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+  const invitationsSnaps = await Promise.all(promises);
+  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
+
+  return invitations;
+}
+
+/**
+ * Look after notification already existing for one user and one event
+ * Return an array of new notifications to create
+ */
+async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationType) {
+  const notifications = [];
+  const db = admin.firestore();
+
+  for (const invitation of invitations) {
+    const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
+    const existingNotifications = await db.collection('notifications')
+      .where('docId', '==', invitation.eventId)
+      .where('toUserId', '==', toUserId)
+      .where('type', '==', notificationType)
+      .get();
+
+    // There is no existing notification for this user
+    if (existingNotifications.empty) {
+      notifications.push(createNotification({
+        toUserId,
+        docId: invitation.eventId,
+        type: notificationType
+      }));
+    }
+  }
+
+  return notifications;
 }
 
 /**
