@@ -1,11 +1,13 @@
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Optional } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Component, OnInit, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Intercom } from 'ng-intercom';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
+import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 const isAcceptedInApp = movie => movie.storeConfig.status === 'accepted' && movie.storeConfig.appAccess.catalog === true;
 
@@ -17,25 +19,34 @@ const isAcceptedInApp = movie => movie.storeConfig.status === 'accepted' && movi
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
-  public movies$ = this.movieQuery.selectAll({ filterBy: isAcceptedInApp });
+  public movies$: Observable<Movie[]>;
   private sub: Subscription;
 
   constructor(
-    private movieQuery: MovieQuery,
+    private analyticsService: AnalyticsService,
     private movieService: MovieService,
+    private orgQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom
   ) { }
 
   ngOnInit() {
-    this.sub = this.movies$.pipe(switchMap(movies => {
-      const ids = movies.map(movie => movie.id);
-      return this.movieService.syncWithAnalytics(ids)
-    })).subscribe();
-    this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
-    this.movieQuery.getCount()
-      ? this.dynTitle.setPageTitle('Seller\'s Dashboard')
-      : this.dynTitle.setPageTitle('New Title')
+    this.movies$ = this.orgQuery.selectActive().pipe(
+      switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id)))
+    )
+
+    this.movieAnalytics$ = this.orgQuery.selectActive().pipe(
+      switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
+      map(movies => movies.map(m => m.id)),
+      tap(movieIds => {
+        !!movieIds.length
+          ? this.dynTitle.setPageTitle('Seller\'s Dashboard')
+          : this.dynTitle.setPageTitle('New Title')
+      }),
+      switchMap(movieIds => this.analyticsService.valueChanges(movieIds)),
+      map(analytics => analytics.filter(analytics => !!analytics)),
+    )
+    this.sub = this.movieAnalytics$.subscribe();
   }
 
   public openIntercom(): void {

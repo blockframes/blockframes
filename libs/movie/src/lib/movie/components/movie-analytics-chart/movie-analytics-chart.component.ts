@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { lineChartOptions } from './default-chart-options';
-import { MovieQuery } from '../../+state';
 import { switchMap, map, startWith, delay } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 
@@ -57,15 +56,16 @@ function toYMD(date: Date) {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class MovieAnalyticsChartComponent {
-  public lineChartOptions;
+  public lineChartOptions = lineChartOptions;
   public chartInfo = chartInfo;
   public filteredEvent;
   public chartData: any[] = [];
 
-  public delayTime$ = new BehaviorSubject(20000);
+  private delayTime$ = new BehaviorSubject(3000);
+  private isLoading = new BehaviorSubject(true);
   public loadingState$ = combineLatest([
-    this.movieQuery.analytics.selectLoading(),
-    this.delayTime$,
+    this.isLoading.asObservable(),
+    this.delayTime$
   ]).pipe(
     switchMap(([ isLoading, delayTime ]) => {
       return of(isLoading).pipe(
@@ -93,12 +93,11 @@ export class MovieAnalyticsChartComponent {
           }
         })
       }
+      if (this.isLoading.value) {
+        this.isLoading.next(false);
+      }
     }
   };
-
-  constructor(private movieQuery: MovieQuery) {
-    this.lineChartOptions = lineChartOptions;
-  }
 
   refresh() {
     this.delayTime$.next(20000);

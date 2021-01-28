@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 // Blockframes
-import { MovieService, MovieQuery, fromOrg } from '@blockframes/movie/+state';
+import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -10,6 +10,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
 
 @Component({
   selector: 'dashboard-home',
@@ -26,8 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   public isDataLoaded$: Observable<boolean>;
 
   constructor(
-    private movieQuery: MovieQuery,
     private movieService: MovieService,
+    private analyticsService: AnalyticsService,
     private orgQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService,
   ) { }
@@ -36,7 +37,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     const _isDataLoaded$ = new BehaviorSubject<boolean>(false);
     this.isDataLoaded$ = _isDataLoaded$.asObservable();
 
-    this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
+    this.movieAnalytics$ = this.orgQuery.selectActive().pipe(
+      switchMap(({id}) => this.movieService.valueChanges(fromOrg(id))),
+      map(movies => movies.map(m => m.id)),
+      switchMap(movieIds => this.analyticsService.valueChanges(movieIds)),
+      map(analytics => analytics.filter(analytics => !!analytics)),
+    )
+    this.sub = this.movieAnalytics$.subscribe();
 
     const allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
       switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
@@ -61,11 +68,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.dynTitle.setPageTitle('Dashboard', 'Empty');
       }),
     );
+    titles$.subscribe();
 
-    this.sub = titles$.pipe(
-      map(movies => movies.map(m => m.id)),
-      switchMap(movieIds => this.movieService.syncWithAnalytics(movieIds))
-    ).subscribe();
   }
 
   ngOnDestroy() {
