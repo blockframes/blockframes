@@ -13,6 +13,9 @@ export class NotificationsGuard extends CollectionGuard<NotificationState> {
 
   /** This sync on notifications where userId is the same as the connected user id */
   sync() {
-    return this.service.syncCollection(ref => ref.where('toUserId', '==', this.authQuery.userId).where('isRead', '==', false));
+    return this.service.syncCollection(ref => ref
+      .where('toUserId', '==', this.authQuery.userId)
+      .where('app.isRead', '==', false)
+    );
   }
 }

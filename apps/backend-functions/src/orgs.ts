@@ -83,7 +83,7 @@ async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after
     // Send a mail to c8 admin to accept the organization given it's choosen app access
     const mailRequest = await organizationRequestedAccessToApp(after);
     const from = await getFromEmail(after);
-    await sendMail(mailRequest, from);
+    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
 }
 
@@ -103,7 +103,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest, from),
+    sendMail(emailRequest, from).catch(e => console.warn(e.message)),
     // Update algolia's index
     storeSearchableOrg(org)
   ]);
@@ -147,7 +147,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     // send email to let the org admin know that the org has been accepted
     const urlToUse = await getAppUrl(after);
     const appKey = await getOrgAppKey(after);
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), appKey);
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), appKey).catch(e => console.warn(e.message));
 
     // Send a notification to the creator of the organization
     const notification = createNotification({
@@ -299,7 +299,7 @@ export const accessToAppChanged = async (
 
   await Promise.all(admins.map(admin => {
     const template = organizationAppAccessChanged(admin, appUrl);
-    return sendMailFromTemplate(template, appKey)
+    return sendMailFromTemplate(template, appKey).catch(e => console.warn(e.message));
   }));
 
   return {

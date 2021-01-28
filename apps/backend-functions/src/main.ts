@@ -21,6 +21,7 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { heavyConfig } from '@blockframes/firebase-utils';
+import { onNotificationCreate } from './notification';
 
 
 //--------------------------------
@@ -194,6 +195,11 @@ export const sendMailAsAdmin = functions.https.onCall(skipInMaintenance(_sendMai
  * Trigger: when a regular user wants to send an email.
  */
 export const sendMailWithTemplate = functions.https.onCall(skipInMaintenance(_sendMailWithTemplate));
+
+
+/** Trigger: when an notification is created to send email if requested */
+export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}', onNotificationCreate);
+
 
 //--------------------------------
 //       Orgs Management        //

@@ -1,14 +1,12 @@
 import { Injectable } from "@angular/core";
 import { CookiesConsent } from "../cookie-form/cookie.form";
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
 
   constructor(
-    private analytics: FireAnalytics,
     private intercom: IntercomService,
     private yandex: YandexMetricaService,
   ) {}

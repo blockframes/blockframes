@@ -119,7 +119,7 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       return { docPath, content: updateOrg(doc) };
     } else if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
       return { docPath, content: processInvitation(doc) };
-    } else if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
+    } else if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'toUserId')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     } else if (docPath.includes('movies/') ) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };

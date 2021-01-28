@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState, RoleState } from 'akita-ng-fire';
-import { User } from '@blockframes/user/+state/user.firestore';
+import { createUserSettings, User } from '@blockframes/user/+state/user.firestore';
 
 export { User } from '@blockframes/user/+state/user.firestore';
 
@@ -18,6 +18,7 @@ export function createUser(user: Partial<User> = {}) {
     ...user,
     avatar: user.avatar ?? '',
     watermark: user.watermark ?? '',
+    settings: createUserSettings(user.settings)
   } as User;
 }
 
@@ -28,6 +29,6 @@ export class AuthStore extends Store<AuthState> {
     super(initialAuthState);
   }
   public updateProfile(profile: Partial<User>) {
-    this.update(authState => ({ profile: { ...authState.profile, profile }}))
+    this.update(authState => ({ profile: { ...authState.profile, profile } }))
   }
 }
