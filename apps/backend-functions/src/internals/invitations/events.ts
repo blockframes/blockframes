@@ -306,7 +306,6 @@ export async function createNotificationsForEventsToStart() {
   invitationsHourSnaps.forEach(snap => snap.docs.forEach(doc => invitationsHour.push(doc.data() as InvitationDocument)));
 
   // 3 Create notifications if not already exists
-  // @TODO #4046
   const notifications = [];
   for (const invitation of invitationsDay) {
     const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
