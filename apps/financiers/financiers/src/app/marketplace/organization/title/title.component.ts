@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { switchMap, map } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
-import { MovieService, MovieQuery, fromOrg } from '@blockframes/movie/+state';
+import { MovieService, Movie } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { sortMovieBy } from '@blockframes/utils/helpers';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'financiers-marketplace-organization-title',
@@ -11,22 +13,27 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleComponent implements OnInit {
-  // Todo Try to filter movie before sync with the store
-  public titles$ = this.query.selectAll({ filterBy: movies => movies.storeConfig.status === 'accepted' && movies.storeConfig.appAccess.financiers });
+  public titles$: Observable<Movie[]>;
 
   constructor(
     private service: MovieService,
     private parent: ViewComponent,
     private dynTitle: DynamicTitleService,
-    private query: MovieQuery
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'Line-up');
     this.titles$ = this.parent.org$.pipe(
-      switchMap(org => this.service.valueChanges(fromOrg(org.id))),
-      map(movies => movies.filter(movie => movie.storeConfig.status === 'accepted' && movie.storeConfig.appAccess.financiers)),
-    ); // TODO query can be improved after issue #3498
+      switchMap(org => {
+        return this.service.valueChanges(ref => ref
+          .where('orgIds', 'array-contains', org.id)
+          .where('storeConfig.status', '==', 'accepted')
+          .where('storeConfig.appAccess.financiers', '==', true)
+          .orderBy('_meta.createdAt', 'desc')
+          )
+      }),
+      map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year')))
+    );
   }
 
 }

@@ -24,6 +24,7 @@ import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
+export const fromOrgAndAccepted = (orgId: string): QueryFn => ref => ref.where('storeConfig.status', '==', 'accepted').where('orgIds', 'array-contains', orgId);
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
