@@ -13,10 +13,10 @@ import {
   ElementRef,
   OnDestroy
 } from '@angular/core';
-import { Index } from 'algoliasearch';
+import { SearchIndex } from 'algoliasearch';
 
 // Blockframes
-import { AlgoliaIndex, AlgoliaService} from '@blockframes/utils/algolia';
+import { AlgoliaService, AlgoliaIndex } from '@blockframes/utils/algolia';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -92,7 +92,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   public algoliaSearchResults$: Observable<any>;
 
   /** The initialized client for algolia */
-  private indexSearch: Index;
+  private indexSearch: SearchIndex;
 
   /** Holds the last snapshot from algolia results */
   private lastValue$ = new BehaviorSubject(null);
@@ -114,7 +114,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
     // create search functions
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
-    const facetSearch = (text: string) => this.indexSearch.searchForFacetValues({ facetName: this.facet, facetQuery: text }).then(result => result.facetHits);
+    const facetSearch = (text: string) => this.indexSearch.searchForFacetValues(this.facet, text).then(result => result.facetHits);
 
     // perform search
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(

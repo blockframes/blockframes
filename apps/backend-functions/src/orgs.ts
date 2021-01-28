@@ -188,7 +188,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
   if (before.status === 'accepted' && after.status === 'pending') {
-    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id))
+    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>)
     await Promise.all(promises)
   }
 
@@ -281,7 +281,7 @@ export async function onOrganizationDelete(
 
   const orgAppAccess = findOrgAppAccess(org);
   // Update algolia's index
-  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID));
+  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID) as Promise<boolean>);
 
   await Promise.all(promises);
 
