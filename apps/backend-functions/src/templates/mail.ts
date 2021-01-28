@@ -209,6 +209,7 @@ export function requestToAttendEventFromUserAccepted(
 }
 
 export function reminderEventToUser(
+  movieTitle: string,
   toUser: PublicUser,
   organizerOrgName: string,
   eventData: EventEmailData,
@@ -216,6 +217,7 @@ export function reminderEventToUser(
   url: string = appUrl.market
 ): EmailTemplateRequest {
   const data = {
+    movieTitle,
     userFirstName: toUser.firstName,
     organizerOrgName,
     eventName: eventData.title,

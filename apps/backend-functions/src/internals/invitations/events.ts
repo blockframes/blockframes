@@ -347,41 +347,6 @@ export async function createNotificationsForEventsToStart() {
   return notifications.length ? triggerNotifications(notifications) : undefined;
 }
 
-// /** Send a reminder email one hour before event start */
-// export async function createOneHourReminderEmail() {
-//   const db = admin.firestore();
-//   const oneHour = 3600 * 1000;
-//   const halfHour = 1800 * 1000;
-
-//   // Fetch event that will start in one hour
-//   const eventsCollection = await db.collection('events')
-//     .where('start', '>=', new Date(Date.now() + oneHour))
-//     .where('start', '<', new Date(Date.now() + oneHour + halfHour))
-//     .get();
-
-//   // Get all attendees for those events
-//   const eventIds: string[] = eventsCollection.docs.map(doc => doc.data().id);
-//   const promises = eventIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
-//   const invitationsSnaps = await Promise.all(promises);
-//   const invitations: InvitationDocument[] = [];
-
-//   invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
-
-//   // @TODO (#2848) forcing to festival since invitations to events are only on this one
-//   const appKey: App = 'festival';
-//   let eventData: EventEmailData = getEventEmailData();
-
-//   for (const invitation of invitations) {
-//     const toUser = invitation.toUser ?? invitation.fromUser;
-//     const org = invitation.toOrg ?? invitation.fromOrg;
-//     const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-//     eventData = getEventEmailData(event);
-
-//     const template = reminderEventToUser(toUser, orgName(org), eventData, templateIds.eventReminder.oneHour);
-//     await sendMailFromTemplate(template, appKey);
-//   }
-// }
-
 /**
  * Check if a given user has accepted an invitation to an event.
  * @param userId
