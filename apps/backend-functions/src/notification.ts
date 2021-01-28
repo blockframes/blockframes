@@ -3,9 +3,8 @@ import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
 import { getDocument, getOrgAppKey } from './data/internals';
-import { User } from '@blockframes/user/types';
+import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
-import { getSendgridFrom } from '@blockframes/utils/apps';
 import { emailErrorCodes } from '@blockframes/utils/emails/utils';
 
 type Timestamp = admin.firestore.Timestamp;
@@ -25,32 +24,21 @@ export async function triggerNotifications(notifications: NotificationDocument[]
   return batch.commit();
 }
 
-// @TODO #4046 should contain all notificationTypes in the end
-const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg'];
-
 async function appendNotificationSettings(notification: NotificationDocument) {
   // get user notification settings
   const user = await getDocument<User>(`users/${notification.toUserId}`);
 
-  if (types.includes(notification.type)) {
-    // @TODO #4046 add other checks with notification.type
-    if (user.settings?.notifications?.default.email) {
-      notification.email = {
-        isSent: false,
-      };
-    }
-
-    if (user.settings?.notifications?.default.app) {
-      notification.app = {
-        isRead: false,
-      };
-    }
-
-  } else {
-    // default is "in app" notifications only
-    notification.app = { isRead: false };
+  const updateNotif = ({ email, app }: NotificationSettingsTemplate) => {
+    if (email) notification.email = { isSent: false };
+    if (app) notification.app = { isRead: false };
   }
-
+  if (!user.settings?.notifications?.default) {
+    updateNotif({ app: true, email: false });
+  } else if (notification.type in user.settings.notifications) {
+    updateNotif(user.settings.notifications[notification.type])
+  } else {
+    updateNotif(user.settings.notifications.default);
+  }
   return notification;
 }
 
@@ -76,6 +64,8 @@ export function createNotification(notification: Partial<NotificationDocument> =
 
 export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const notification = snap.data() as NotificationDocument;
+  // @TODO #4046 should contain all notificationTypes in the end
+  const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg'];
 
   if (notification.email?.isSent === false) {
     // Update notification state

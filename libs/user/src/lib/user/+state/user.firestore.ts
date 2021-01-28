@@ -30,24 +30,21 @@ export interface NotificationSettingsTemplate { email: boolean, app: boolean };
 
 export type NotificationSettings = Record<NotificationType | InvitationType | 'default', NotificationSettingsTemplate>;
 
-export function createNotificationSettings(notifications: Partial<NotificationSettings> = {}): Partial<NotificationSettings> {
+export function createNotificationSettings(notifications: Partial<NotificationSettings> = {}): NotificationSettings {
   return {
     default: {
       email: false,
       app: true,
     },
     // @TODO #4046 add default (existing) settings for invitationType and notificationType
-    ...notifications
+    ...notifications as NotificationSettings
   }
 }
 
 export function createUserSettings(settings: Partial<UserSettings> = {}): UserSettings {
   return {
     ...settings,
-    notifications: {
-      ...settings.notifications,
-      ...createNotificationSettings(),
-    },
+    notifications: createNotificationSettings(settings.notifications),
   }
 }
 

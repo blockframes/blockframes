@@ -14,7 +14,7 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom()): Promise<boolean> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom()): Promise<any> {
   const msg: MailDataRequired = {
     from,
     to,
@@ -25,7 +25,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App): Promise<boolean> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App): Promise<any> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -42,13 +42,13 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   return send(msg);
 }
 
-async function send(msg: MailDataRequired): Promise<boolean> {
+async function send(msg: MailDataRequired): Promise<any> {
   if (sendgridAPIKey === '') {
     throw new Error(emailErrorCodes.missingKey.code);
   }
 
   SendGrid.setApiKey(sendgridAPIKey);
-  return SendGrid.send(msg).then(_ => true).catch(e => {
+  return SendGrid.send(msg).catch(e => {
     if (e.message === 'Unauthorized') {
       throw new Error(emailErrorCodes.unauthorized.code);
     } else {
