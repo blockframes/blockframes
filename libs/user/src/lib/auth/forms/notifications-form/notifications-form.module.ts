@@ -8,7 +8,8 @@ import { NotificationsFormComponent } from './notifications-form.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -17,9 +18,10 @@ import { MatRadioModule } from '@angular/material/radio';
 
     // Material
     MatCheckboxModule,
-    MatRadioModule,
+    MatIconModule,
     MatDividerModule,
     MatSlideToggleModule,
+    MatTooltipModule,
   ],
   declarations: [
     NotificationsFormComponent,

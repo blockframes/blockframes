@@ -1,12 +1,11 @@
-:host {
-  display: flex;
-  flex-direction: column;
-}
-
-section {
+section.surface {
+  padding: 24px;
   margin-bottom: 36px;
+  &:last-child {
+    margin-bottom: 80px;
+  }
 }
 
-mat-checkbox {
-  margin-bottom: 24px;
+mat-icon {
+  max-height: 16px;
 }
