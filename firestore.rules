@@ -288,7 +288,7 @@ service cloud.firestore {
       allow read: if userHasValidOrg()
         && notInMaintenance()
         && ( existingData().storeConfig.status == 'accepted'
-         || ( isOrgMember(userOrgId()) && userOrgId() in existingData().orgIds ) 
+         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds )) 
         )
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
