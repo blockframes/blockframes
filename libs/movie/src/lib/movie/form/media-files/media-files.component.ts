@@ -20,6 +20,21 @@ export class MovieFormMediaFilesComponent {
   getPath = getFileStoragePath
   getMetadata = getFileMetadata
 
+  movieId = this.route.snapshot.params.movieId;
+
+  uploads: Record<string, { storagePath: string, metadata: FileMetaData }> = {
+    presentationDeck: {
+      storagePath: `public/movies/${this.movieId}/presentationDeck`,
+      metadata: {
+        privacy: 'public',
+        collection: 'movies',
+        docId: this.movieId,
+        field: 'promotional.presentation_deck.storagePath',
+        uid: '',
+      }
+    }
+  }
+
   constructor(
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
