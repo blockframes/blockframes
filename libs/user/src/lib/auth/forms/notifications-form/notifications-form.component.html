@@ -41,111 +41,16 @@
 </section>
 
 <table>
-  <tbody>
+  <tbody *ngFor="let row of notifications, let index = index">
     <tr>
-      <th>{{ notifications.title }}</th>
-      <th><mat-checkbox [indeterminate]="someComplete(0, 'email')" [checked]="allComplete.email" (change)="setAll($event.checked, 0, 'email')"></mat-checkbox>By e-mail</th>
-      <th><mat-checkbox [indeterminate]="someComplete(0, 'app')" [checked]="allComplete.app" (change)="setAll($event.checked, 0, 'app')"></mat-checkbox>In app</th>
+      <th>{{ row.title }}</th>
+      <th><mat-checkbox [indeterminate]="someComplete(index, 'email')" [checked]="row.completed.email" (change)="setAll($event.checked, index, 'email')"></mat-checkbox>By e-mail</th>
+      <th><mat-checkbox [indeterminate]="someComplete(index, 'app')" [checked]="row.completed.app" (change)="setAll($event.checked, index, 'app')"></mat-checkbox>In app</th>
     </tr>
-    <tr *ngFor="let subrow of notifications.subNotification, let i = index">
+    <tr *ngFor="let subrow of row.subNotification, let subIndex = index">
       <td>{{ subrow.subtitle }}</td>
-      <td><mat-checkbox [checked]="subrow.email" name="emailCheckbox" (change)="updateAllComplete(i, $event, 'email')"></mat-checkbox></td>
-      <td><mat-checkbox [checked]="subrow.app" name="appCheckbox" (change)="updateAllComplete(i, $event, 'app')"></mat-checkbox></td>
+      <td><mat-checkbox [checked]="subrow.email" name="emailCheckbox" (change)="updateAllComplete(index, subIndex, $event, 'email')"></mat-checkbox></td>
+      <td><mat-checkbox [checked]="subrow.app" name="appCheckbox" (change)="updateAllComplete(index, subIndex, $event, 'app')"></mat-checkbox></td>
     </tr>
   </tbody>
 </table>
-
-<!-- <section class="surface" fxLayout="column">
-  <h2>Content Management Notifications</h2>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>A title is successfully submitted for validation.</p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="selectAllApp">In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>A title gets published to the marketplace.</p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="selectAllApp">In app</mat-checkbox>
-    </div>
-  </article>
-</section> -->
-
-<!-- ! ONLY FOR FESTIVAL -->
-<!-- <section class="surface" fxLayout="column" *ngIf="currentApp === 'festival'">
-  <h2>Event Management Notifications</h2>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>An organization invites you to a screening.
-      <mat-icon svgIcon="info" matTooltip="This notification can't be disabled since you need to answer it."></mat-icon>
-    </p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" checked="true" disabled>In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>An user invites you to a meeting.
-      <mat-icon svgIcon="info" matTooltip="This notification can't be disabled since you need to answer it."></mat-icon>
-    </p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" checked="true" disabled>In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>An user answers your invitation to an event.</p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="selectAllApp">In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>An user requests an access to an event you organize.
-      <mat-icon svgIcon="info" matTooltip="This notification can't be disabled since you need to answer it."></mat-icon>
-    </p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" checked="true" disabled>In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>Your request to access an event has been sent.</p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="selectAllApp">In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>An organization answers your request to access an event.</p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="selectAllApp">In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>Reminder 24h before an event starts.</p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="selectAllApp">In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>Reminder 1h before an event starts.</p>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="selectAllEmail">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="selectAllApp">In app</mat-checkbox>
-    </div>
-  </article>
-</section> -->
