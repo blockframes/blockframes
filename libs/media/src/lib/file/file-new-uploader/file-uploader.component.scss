@@ -1,0 +1,75 @@
+:host {
+  height: 100%;
+  width: 100%;
+}
+
+img.picture-hover {
+  height: 142px;
+  opacity: 0.3;
+}
+
+section {
+  height: 100%;
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: solid 1px var(--foreground-divider);
+  border-radius: 5px;
+  font-size: 1.5rem;
+  transition: border 0.2s ease-in-out;
+  div {
+    flex: 1;
+  }
+}
+section.drop-zone {
+  border: dashed 1px var(--primary);
+}
+
+.upload-button-container {
+  button.mat-icon-button {
+    width: 48px;
+    height: 55px;
+    margin-bottom: 8px;
+    img {
+      width: 100%;
+    }
+  }
+}
+
+p.mat-caption a {
+  color: var(--primary);
+}
+
+input {
+  display: none;
+}
+
+.progress {
+  width: 80%;
+  text-align: center;
+}
+
+mat-progress-bar {
+  margin-bottom: 8px;
+}
+
+button.mat-button {
+  margin-top: 24px;
+}
+
+a, .primary-text {
+  color: var(--primary);
+  cursor: pointer;
+}
+
+img.file-uploaded {
+  width: 48px;
+  margin-bottom: 8px;
+}
+
+h3 {
+  margin: 0;
+}

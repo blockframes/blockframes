@@ -1,6 +1,9 @@
+
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
+
+import { MovieFormShellComponent } from '../shell/shell.component';
+import { FileMetaData } from '@blockframes/media/+state/media.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -11,6 +14,21 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class MovieFormMediaFilesComponent {
   form = this.shell.getForm('movie');
+
+  movieId = this.route.snapshot.params.movieId;
+
+  uploads: Record<string, { storagePath: string, metadata: FileMetaData }> = {
+    presentationDeck: {
+      storagePath: `public/movies/${this.movieId}/presentationDeck`,
+      metadata: {
+        privacy: 'public',
+        collection: 'movies',
+        docId: this.movieId,
+        field: 'promotional.presentation_deck.storagePath',
+        uid: '',
+      }
+    }
+  }
 
   constructor(
     private shell: MovieFormShellComponent,

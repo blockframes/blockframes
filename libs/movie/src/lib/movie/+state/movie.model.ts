@@ -116,7 +116,7 @@ export function createMoviePromotional(
     notes: params.notes ?? [],
     salesPitch: createSalesPitch(params.salesPitch),
     still_photo: params.still_photo ?? [],
-    presentation_deck: params.presentation_deck ?? '',
+    presentation_deck: params?.presentation_deck ?? { storagePath: ''},
     scenario: params.scenario ?? '',
     promo_reel_link: params.promo_reel_link ?? '',
     screener_link: params.screener_link ?? '',
