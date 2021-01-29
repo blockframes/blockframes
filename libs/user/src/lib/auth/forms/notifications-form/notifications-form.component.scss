@@ -9,3 +9,27 @@ section.surface {
 mat-icon {
   max-height: 16px;
 }
+
+body {
+  margin: 0;
+  padding: 2rem;
+}
+table {
+  max-height: 300px;
+  text-align: left;
+  position: relative;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 0.25rem;
+}
+th {
+  background: rgb(112, 2, 2);
+  position: sticky;
+  z-index: 10;
+  top: 0; /* Don't forget this, required for the stickiness */
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+td {
+  z-index: 1;
+}
