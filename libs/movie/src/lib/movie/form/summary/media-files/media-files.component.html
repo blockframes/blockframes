@@ -6,8 +6,8 @@
 </h6>
 <ul>
   <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <bf-preview-modal [ref]="movie.promotional.get('presentation_deck').ref.value"><strong> Presentation Deck </strong></bf-preview-modal>
-    <missing-control [control]="movie.promotional.get('presentation_deck').ref" [link]="link" fragment="files">
+    <bf-preview-modal [ref]="movie.promotional.get('presentation_deck').get('storagePath').value"><strong> Presentation Deck </strong></bf-preview-modal>
+    <missing-control [control]="movie.promotional.get('presentation_deck').get('storagePath')" [link]="link" fragment="files">
       <ng-template let-deck>
         {{ deck | fileName | maxLength: 30  }}
       </ng-template>

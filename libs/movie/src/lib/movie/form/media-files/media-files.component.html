@@ -3,10 +3,16 @@
 
     <section id="presentation-deck">
       <h3>Presentation Deck</h3>
-      <file-uploader test-id="presentation-deck" [form]="form.promotional.get('presentation_deck')"
-        [storagePath]="getPath('presentation_deck')" allowedFileType="pdf">
+
+      <file-new-uploader
+        allowedFileType="pdf"
+        [displayFile]="form.promotional.get('presentation_deck').get('storagePath')"
+        [storagePath]="uploads.presentationDeck.storagePath"
+        [metadata]="uploads.presentationDeck.metadata"
+      >
         <h3 title>Upload Presentation Deck</h3>
-      </file-uploader>
+      </file-new-uploader>
+
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
