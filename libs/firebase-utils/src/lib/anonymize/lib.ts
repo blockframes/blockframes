@@ -137,7 +137,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
       return { docPath, content: processInvitation(doc) };
     }
-    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
+    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'toUserId')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     }
     if (docPath.includes('movies/')) {

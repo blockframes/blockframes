@@ -317,7 +317,7 @@ describe('DB cleaning script', () => {
         id: 'notif-A',
         toUserId: 'A',
         // Should be kept
-        date: { _seconds: currentTimestamp },
+        _meta: { createdAt: { _seconds: currentTimestamp } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -326,7 +326,7 @@ describe('DB cleaning script', () => {
         id: 'notif-B',
         toUserId: 'A',
         // Just to the limit, should be kept
-        date: { _seconds: 30 + currentTimestamp - (3600 * 24 * numberOfDaysToKeepNotifications) },
+        _meta: { createdAt: { _seconds: 30 + currentTimestamp - (3600 * 24 * numberOfDaysToKeepNotifications) } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -335,7 +335,7 @@ describe('DB cleaning script', () => {
         id: 'notif-C',
         toUserId: 'A',
         // Should be removed
-        date: { _seconds: currentTimestamp - (3600 * 24 * (numberOfDaysToKeepNotifications + 1)) },
+        _meta: { createdAt: { _seconds: currentTimestamp - (3600 * 24 * (numberOfDaysToKeepNotifications + 1)) } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -371,7 +371,7 @@ describe('DB cleaning script', () => {
       {
         id: 'notif-A',
         toUserId: 'A',
-        date: { _seconds: currentTimestamp },
+        _meta: { createdAt: { _seconds: currentTimestamp } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -379,7 +379,7 @@ describe('DB cleaning script', () => {
       {
         id: 'notif-B',
         toUserId: 'B',
-        date: { _seconds: currentTimestamp },
+        _meta: { createdAt: { _seconds: currentTimestamp } },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'B' }
@@ -387,7 +387,7 @@ describe('DB cleaning script', () => {
       {
         id: 'notif-C',
         toUserId: 'B',
-        date: { _seconds: currentTimestamp },
+        _meta: { createdAt: { _seconds: currentTimestamp } },
         type: 'organizationAcceptedByArchipelContent',
         organization: { id: 'org-A' }
       },
@@ -667,7 +667,7 @@ function isNotificationClean(doc: any) {
     return false;
   }
 
-  const notificationTimestamp = d.date.toMillis();
+  const notificationTimestamp = d._meta.createdAt.toMillis();
   if (notificationTimestamp < new Date().getTime() - (dayInMillis * numberOfDaysToKeepNotifications)) {
     return false;
   }

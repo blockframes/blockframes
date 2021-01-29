@@ -43,7 +43,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
           placeholderUrl: 'empty_organization.webp',
@@ -51,7 +51,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         };
       case 'invitationFromUserToJoinOrgDecline':
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
@@ -59,7 +59,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         };
       case 'memberAddedToOrg':
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `${displayUserName} is now part of your organization.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
@@ -67,7 +67,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         };
       case 'memberRemovedFromOrg':
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `${displayUserName} has been removed from your organization.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
@@ -76,21 +76,21 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'newContract':
         const organizationName = orgName(notification.organization) || 'Organization with no name';
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `${organizationName} submitted a contract.`,
           placeholderUrl: 'gears.webp',
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'contractInNegotiation':
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `A new offer has been created.`,
           placeholderUrl: 'welcome_archipel_content.webp',
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieSubmitted':
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `A new movie has been submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
@@ -107,7 +107,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           })
         })
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
@@ -127,8 +127,27 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         });
 
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
+          placeholderUrl: 'empty_poster.webp',
+          url: `/c/o/marketplace/event/${notification.docId}`,
+        };
+      case 'oneDayReminder':
+
+        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              imgRef: this.getPoster(event.meta.titleId),
+              message: `REMINDER - Your ${event.type} "${event.title}" is tomorrow.`
+            };
+          });
+        });
+
+        return {
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
+          message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/marketplace/event/${notification.docId}`,
         };
@@ -146,7 +165,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         });
 
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `Someone has accepted your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
@@ -166,7 +185,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         });
 
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `Someone has declined your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
@@ -185,7 +204,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         });
 
         return {
-          date: toDate(notification.date),
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',

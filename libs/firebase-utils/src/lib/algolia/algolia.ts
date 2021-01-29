@@ -1,9 +1,9 @@
-import algoliasearch, { IndexSettings } from 'algoliasearch';
+import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
-import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser } from '@blockframes/utils/algolia';
+import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
@@ -19,7 +19,7 @@ const indexBuilder = (indexName: string, adminKey?: string) => {
   return client.initIndex(indexName);
 };
 
-export function deleteObject(indexName: string, objectId: string): Promise<any> {
+export function deleteObject(indexName: string, objectId: string) {
   if (!algolia.adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -34,10 +34,10 @@ export function clearIndex(indexName: string, adminKey?: string) {
     return Promise.resolve(true);
   }
 
-  return indexBuilder(indexName, adminKey).clearIndex()
+  return indexBuilder(indexName, adminKey).delete();
 }
 
-export function setIndexConfiguration(indexName: string, config: IndexSettings, adminKey?: string) {
+export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, adminKey?: string) {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -173,7 +173,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
 
   try {
     let orgData;
-    if(!!user.orgId) {
+    if (!!user.orgId) {
       const db = admin.firestore();
       const org = await db.doc(`orgs/${user.orgId}`).get();
       orgData = org.data();

@@ -13,6 +13,10 @@ const navLinks = [
     label: 'Profile Settings'
   },
   {
+    path: 'notifications',
+    label: 'General Notifications'
+  },
+  {
     path: 'cookies',
     label: 'Cookie Preferences'
   }

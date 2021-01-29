@@ -40,18 +40,19 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     // when ensure to keep the latest JwPlayerId because backend can takes some time to update it into the db
     // without this subscribe block we had trouble with user overwriting the JwPlayerId with stale values
     this.sub = this.movieQuery.selectActive().subscribe(movie => {
+
       if (this.form.promotional.videos.screener.jwPlayerId.value !== '') {
         const latestJwPlayerId = movie.promotional.videos.screener.jwPlayerId;
         this.form.promotional.videos.screener.patchValue({
           jwPlayerId: latestJwPlayerId,
         });
       }
+
       this.form.promotional.videos.otherVideos.controls.forEach((otherVideoControl: MovieHostedVideoControls) => {
         if (otherVideoControl.jwPlayerId.value !== '') {
           const latestJwPlayerId = movie.promotional.videos.otherVideos.find(movieOtherVideo =>
             movieOtherVideo.ref === otherVideoControl.ref.ref.value
           ).jwPlayerId;
-          console.log('update', latestJwPlayerId);
           otherVideoControl.jwPlayerId.setValue(latestJwPlayerId);
         }
       });

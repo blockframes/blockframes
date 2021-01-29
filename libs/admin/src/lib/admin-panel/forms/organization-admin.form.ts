@@ -19,7 +19,7 @@ function createOrgAdminControls(entity: Partial<Organization>) {
     email: new FormControl(org.email, Validators.email),
     fiscalNumber: new FormControl(org.fiscalNumber),
     activity: new FormControl(org.activity),
-    logo: new HostedMediaForm(org.logo),
+    logo: new HostedMediaForm(org.logo, { privacy: 'public', collection: 'orgs', docId: org.id ?? '', field: 'logo' }),
     appAccess,
     status: new FormControl(org.status),
   };

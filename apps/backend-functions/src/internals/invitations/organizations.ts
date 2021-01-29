@@ -14,7 +14,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds, getDocument, getAppUrl, getOrgAppKey } from '../../data/internals';
+import { getAdminIds, getDocument, getAppUrl, getOrgAppKey, createPublicUserDocument } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { orgName } from "@blockframes/organization/+state/organization.firestore";
 
@@ -68,7 +68,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
   });
 }
 
-async function mailOnInvitationAccept(userId: string, organizationId: string) {
+async function mailOnInvitationAccept(userId: string, organizationId: string) { // @TODO #4046 not needed anymore? cf onOrgUpdate
   const org = await getDocument<OrganizationDocument>(`orgs/${organizationId}`);
   const orgDenomination = orgName(org);
   const user = await getUser(userId);
@@ -78,7 +78,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const adminPromises = admins
     .filter(mail => !!mail)
     .map(a => userJoinedYourOrganization(a!.email, a!.firstName, orgDenomination, user!.firstName, user!.lastName, user!.email))
-    .map(template => sendMailFromTemplate(template, app));
+    .map(template => sendMailFromTemplate(template, app).catch(e => console.warn(e.message)));
 
   return Promise.all(adminPromises);
 }
@@ -90,9 +90,7 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
     return;
   }
 
-  // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(toUser.uid, fromOrg.id);
-  // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(toUser.uid, fromOrg.id);
 }
 
@@ -120,7 +118,7 @@ async function onRequestFromUserToJoinOrgCreate({
 
   // send invitation pending email to user
   const template = userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!);
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app).catch(e => console.warn(e.message));
 
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
@@ -133,7 +131,7 @@ async function onRequestFromUserToJoinOrgCreate({
       userFirstname: userData.firstName!,
       userLastname: userData.lastName!
     }, urlToUse))
-      .map(tpl => sendMailFromTemplate(tpl, app))
+      .map(tpl => sendMailFromTemplate(tpl, app).catch(e => console.warn(e.message)))
   );
 }
 
@@ -146,13 +144,12 @@ async function onRequestFromUserToJoinOrgAccept({
     console.error('No user or org provided');
     return;
   }
-  // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
   const app = await getOrgAppKey(toOrg.id);
   const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
   await sendMailFromTemplate(template, app);
-  return mailOnInvitationAccept(fromUser.uid, toOrg.id);
+  return mailOnInvitationAccept(fromUser.uid, toOrg.id).catch(e => console.warn(e.message));
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
@@ -168,15 +165,12 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
   const notifications = adminIds.map(toUserId =>
     createNotification({
       toUserId,
-      user: {
-        firstName: invitation.fromUser?.firstName,
-        lastName: invitation.fromUser?.lastName
-      },
+      user: createPublicUserDocument(invitation.fromUser),
       type: 'invitationFromUserToJoinOrgDecline'
     })
   );
 
-  return triggerNotifications(notifications);
+  return triggerNotifications(notifications); // @TODO #4046
 }
 
 
