@@ -5,6 +5,7 @@ import { NotificationSettings } from '@blockframes/user/+state/user.model';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { NotificationType } from '@blockframes/notification/types';
 
 @Component({
   selector: '[form] user-notifications-form',
@@ -20,6 +21,10 @@ export class NotificationsFormComponent {
 
   toogleDefault(event: MatSlideToggleChange) {
     this.form.get('default').get(event.source.name as keyof NotificationSettings).setValue(event.checked);
+  }
+
+  toogle(notificationType: NotificationType, event: MatSlideToggleChange) {
+    this.form.get(notificationType).get(event.source.name as keyof NotificationSettings).setValue(event.checked);
   }
 
 }

@@ -28,7 +28,7 @@ export interface UserSettings {
 
 export interface NotificationSettingsTemplate { email: boolean, app: boolean };
 
-export type NotificationSettings = Record<NotificationType | InvitationType | 'default', NotificationSettingsTemplate>;
+export type NotificationSettings = Record<NotificationType | 'default', NotificationSettingsTemplate>;
 
 export function createNotificationSettings(notifications: Partial<NotificationSettings> = {}): NotificationSettings {
   return {

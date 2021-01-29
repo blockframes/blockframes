@@ -36,6 +36,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     if (email) notification.email = { isSent: false };
     if (app) notification.app = { isRead: false };
   }
+
   if (!user.settings?.notifications?.default) {
     updateNotif({ app: true, email: false });
   } else if (notification.type in user.settings.notifications) {
@@ -43,6 +44,12 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   } else {
     updateNotif(user.settings.notifications.default);
   }
+
+  if (notification.type === 'requestFromUserToJoinOrgCreate') {
+    // This is notification is never displayed in front since we already have an invitation that will always be displayed
+    delete notification.app;
+  }
+
   return notification;
 }
 
@@ -94,7 +101,8 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
             .catch(e => notification.email.error = e.message);
           break;
         case 'memberRemovedFromOrg':
-          //@TODO #4046 do we have to handle ? or just notification ? or none ?
+          //@TODO #4046 create email for this
+          console.log(`No template id available for ${notification.type}`);
           break;
         case 'requestFromUserToJoinOrgCreate':
           await sendUserRequestedToJoinYourOrgEmail(recipient, notification)
