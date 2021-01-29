@@ -37,12 +37,10 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     if (app) notification.app = { isRead: false };
   }
 
-  if (!user.settings?.notifications?.default) {
-    updateNotif({ app: true, email: false });
-  } else if (notification.type in user.settings.notifications) {
-    updateNotif(user.settings.notifications[notification.type])
+  if (notification.type in user.settings.notifications) {
+    updateNotif(user.settings.notifications[notification.type]);
   } else {
-    updateNotif(user.settings.notifications.default);
+    updateNotif({ app: true, email: true });
   }
 
   if (notification.type === 'requestFromUserToJoinOrgCreate') {

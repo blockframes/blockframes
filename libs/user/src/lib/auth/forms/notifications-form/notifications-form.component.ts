@@ -17,12 +17,6 @@ export class NotificationsFormComponent {
 
   @Input() form: NotificationsForm;
 
-  constructor() { }
-
-  toogleDefault(event: MatSlideToggleChange) {
-    this.form.get('default').get(event.source.name as keyof NotificationSettings).setValue(event.checked);
-  }
-
   toogle(notificationType: NotificationType, event: MatSlideToggleChange) {
     this.form.get(notificationType).get(event.source.name as keyof NotificationSettings).setValue(event.checked);
   }

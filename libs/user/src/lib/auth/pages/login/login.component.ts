@@ -76,7 +76,6 @@ export class LoginComponent implements OnInit {
         firstName,
         lastName,
         _meta: { createdFrom },
-        settings: createUserSettings(),
         privacyPolicy
       };
       await this.service.signup(email.trim(), password, { ctx });

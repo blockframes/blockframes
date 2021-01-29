@@ -124,7 +124,6 @@ export class AuthService extends FireAuthService<AuthState> {
     firstName: string,
     lastName: string,
     _meta: DocumentMeta<Date>,
-    settings: UserSettings,
     privacyPolicy: PrivacyPolicy
   }) {
     return {
@@ -133,7 +132,6 @@ export class AuthService extends FireAuthService<AuthState> {
       email: user.email,
       firstName: ctx.firstName,
       lastName: ctx.lastName,
-      settings: ctx.settings,
       privacyPolicy: ctx.privacyPolicy,
     };
   }

@@ -1,6 +1,5 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { NotificationType } from '@blockframes/notification/types';
-import { InvitationType } from "@blockframes/invitation/+state/invitation.firestore";
 
 export interface User extends PublicUser {
   financing: {
@@ -14,7 +13,7 @@ export interface User extends PublicUser {
   avatar: string;
   watermark: string;
   privacyPolicy: PrivacyPolicy;
-  settings: UserSettings
+  settings?: UserSettings
 }
 
 export interface PrivacyPolicy {
@@ -23,30 +22,12 @@ export interface PrivacyPolicy {
 }
 
 export interface UserSettings {
-  notifications: NotificationSettings,
+  notifications?: NotificationSettings,
 }
 
 export interface NotificationSettingsTemplate { email: boolean, app: boolean };
 
-export type NotificationSettings = Record<NotificationType | 'default', NotificationSettingsTemplate>;
-
-export function createNotificationSettings(notifications: Partial<NotificationSettings> = {}): NotificationSettings {
-  return {
-    default: {
-      email: false,
-      app: true,
-    },
-    // @TODO #4046 add default (existing) settings for invitationType and notificationType
-    ...notifications as NotificationSettings
-  }
-}
-
-export function createUserSettings(settings: Partial<UserSettings> = {}): UserSettings {
-  return {
-    ...settings,
-    notifications: createNotificationSettings(settings.notifications),
-  }
-}
+export type NotificationSettings = Record<NotificationType, NotificationSettingsTemplate>;
 
 /** A user interface with public information */
 export interface PublicUser {
