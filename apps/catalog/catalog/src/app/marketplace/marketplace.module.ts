@@ -4,7 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Blockframes
 import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 // Guards
 import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
@@ -112,6 +115,7 @@ const routes: Routes = [{
   declarations: [MarketplaceComponent],
   imports: [
     CommonModule,
+    OrgAccessModule,
     FlexLayoutModule,
     MatListModule,
     MatIconModule,
