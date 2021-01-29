@@ -80,9 +80,9 @@ export async function importAnalytics() {
       movieAnalytics[row.movieId] = {
         id: row.movieId,
         type: 'movie',
-        addedToWishlist: groupEventsPerDayRange(movieRows.filter(row => row.event_name === 'addedToWishlist'), daysPerRange),
-        promoReelOpened: groupEventsPerDayRange(movieRows.filter(row => row.event_name === 'promoReelOpened'), daysPerRange),
-        movieViews: groupEventsPerDayRange(movieRows.filter(row => row.event_name === 'pageView'), daysPerRange)
+        addedToWishlist: groupEventsPerDayRange(movieRows.filter(r => r.event_name === 'addedToWishlist'), daysPerRange),
+        promoReelOpened: groupEventsPerDayRange(movieRows.filter(r => r.event_name === 'promoReelOpened'), daysPerRange),
+        movieViews: groupEventsPerDayRange(movieRows.filter(r => r.event_name === 'pageView'), daysPerRange)
       }
     }
   });
