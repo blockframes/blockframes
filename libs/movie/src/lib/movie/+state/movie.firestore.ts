@@ -123,7 +123,9 @@ export interface MoviePromotionalElements {
   financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
-  presentation_deck: string,
+  presentation_deck: {
+    storagePath: string,
+  },
   salesPitch: MovieSalesPitch,
   scenario: string,
   still_photo: string[],
