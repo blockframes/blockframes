@@ -25,7 +25,7 @@ export class OrganizationCardComponent implements OnInit {
   ngOnInit() {
     this.orgMovieCount$ = this.movieService.valueChanges(fromOrgAndAccepted(this.org.id)).pipe(
       map(movies =>
-        movies.filter(movie => movie.storeConfig.status === "accepted" && movie.storeConfig.appAccess[this.app]).length
+        movies.filter(movie => movie.storeConfig.appAccess[this.app]).length
       )
     );
   }

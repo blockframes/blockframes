@@ -31,8 +31,7 @@ export class TitleComponent implements OnInit {
           .where('storeConfig.appAccess.financiers', '==', true)
           .orderBy('_meta.createdAt', 'desc')
           )
-      }),
-      map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year')))
+      })
     );
   }
 
