@@ -44,7 +44,7 @@ export async function importFirestore(dirName?:string) {
     dir = dirName;
   } else {
     const bucket = await getBackupBucket();
-    dir = await getLatestDirName(bucket);
+    dir = await getLatestDirName(bucket, 'firestore');
   }
   await importFirestoreFromBucket(dir)
 }
