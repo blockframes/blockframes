@@ -28,6 +28,8 @@ export class FileMetaDataForm extends FormEntity<FileMetaDataControl> {
   }
 }
 
+// ! @deprecated Everything bellow should be removed during issue#4002
+
 // ------------------------------
 //          Hosted Media
 // ------------------------------

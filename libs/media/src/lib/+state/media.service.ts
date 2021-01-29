@@ -14,7 +14,7 @@ import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.compo
 import { delay, BehaviorStore } from "@blockframes/utils/helpers";
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 import { clamp } from '@blockframes/utils/utils';
-import { deconstructFilePath, tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
 import { AuthQuery } from "@blockframes/auth/+state";
 
 @Injectable({ providedIn: 'root' })
