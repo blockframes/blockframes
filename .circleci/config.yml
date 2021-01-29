@@ -169,8 +169,8 @@ jobs:
           command: |
             # Run npm command to unit tests on affected apps
             firebase functions:config:get > .runtimeconfig.json
-            # firebase emulators:exec 'nx run user:test'
-            ./.circleci/emulator-test.sh 
+            firebase emulators:exec 'nx run user:test'
+            #./.circleci/emulator-test.sh 
       - run:
           name: Check size of apps being build
           command: |
