@@ -37,7 +37,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     if (app) notification.app = { isRead: false };
   }
 
-  if (notification.type in user.settings.notifications) {
+  if (!!user.settings?.notifications && notification.type in user.settings.notifications) {
     updateNotif(user.settings.notifications[notification.type]);
   } else {
     updateNotif({ app: true, email: true });

@@ -4,8 +4,8 @@ import { EntityControl, FormEntity } from '@blockframes/utils/form/forms/entity.
 
 function createNotificationSettingsTemplateControls(settings: Partial<NotificationSettingsTemplate>): EntityControl<NotificationSettingsTemplate> {
   return {
-    email: new FormControl(settings?.email || true, Validators.required),
-    app: new FormControl(settings?.app || true, Validators.required),
+    email: new FormControl(settings?.email !== null ? settings?.email : true, Validators.required),
+    app: new FormControl(settings?.app !== null ? settings?.app : true, Validators.required),
   }
 }
 
@@ -19,11 +19,11 @@ class NotificationSettingsForm extends FormEntity<NotificationSettingsControl> {
 
 function createNotificationsControls(settings: Partial<NotificationSettings>): EntityControl<NotificationSettings> {
   return {
-    eventIsAboutToStart: new NotificationSettingsForm(settings.eventIsAboutToStart),
-    oneDayReminder: new NotificationSettingsForm(settings.oneDayReminder),
-    memberAddedToOrg: new NotificationSettingsForm(settings.memberAddedToOrg),
-    memberRemovedFromOrg: new NotificationSettingsForm(settings.memberRemovedFromOrg),
-    requestFromUserToJoinOrgCreate: new NotificationSettingsForm(settings.requestFromUserToJoinOrgCreate),
+    eventIsAboutToStart: new NotificationSettingsForm(settings?.eventIsAboutToStart),
+    oneDayReminder: new NotificationSettingsForm(settings?.oneDayReminder),
+    memberAddedToOrg: new NotificationSettingsForm(settings?.memberAddedToOrg),
+    memberRemovedFromOrg: new NotificationSettingsForm(settings?.memberRemovedFromOrg),
+    requestFromUserToJoinOrgCreate: new NotificationSettingsForm(settings?.requestFromUserToJoinOrgCreate),
     // @TODO #4046 add other notificationsType
   }
 }
