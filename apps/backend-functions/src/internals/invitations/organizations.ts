@@ -140,10 +140,7 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
   const notifications = adminIds.map(toUserId =>
     createNotification({
       toUserId,
-      user: {
-        firstName: invitation.fromUser?.firstName,
-        lastName: invitation.fromUser?.lastName
-      },
+      user: createPublicUserDocument(invitation.fromUser),
       type: 'invitationFromUserToJoinOrgDecline'
     })
   );
