@@ -18,30 +18,16 @@
       </div>
       <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
       <mat-card-content fxLayout="column" fxLayoutAlign="center center">
-        <ng-container [ngSwitch]="loadingState$ | async">
-          <ng-container *ngSwitchCase="'success'">
-            <apx-chart
-              [series]="getLineChartSeries(info.eventName, info.title)"
-              [chart]="lineChartOptions.chart"
-              [xaxis]="getLineChartXaxis(info.eventName)"
-              [yaxis]="lineChartOptions.yaxis"
-              [dataLabels]="lineChartOptions.dataLabels"
-              [grid]="lineChartOptions.grid"
-              [stroke]="lineChartOptions.stroke"
-              [fill]="lineChartOptions.fill"
-            ></apx-chart>
-          </ng-container>
-          <ng-container *ngSwitchCase="'loading'">
-            <mat-spinner diameter="48"></mat-spinner>
-          </ng-container>
-          <ng-container *ngSwitchCase="'failed'">
-            <p class="mat-caption">Sorry, we cannot load your analytics at this time.</p>
-            <button mat-button (click)="refresh()">
-              <span>Refresh</span>
-              <mat-icon matSuffix svgIcon="refresh"></mat-icon>
-            </button>
-          </ng-container>
-        </ng-container>
+        <apx-chart
+          [series]="getLineChartSeries(info.eventName, info.title)"
+          [chart]="lineChartOptions.chart"
+          [xaxis]="getLineChartXaxis(info.eventName)"
+          [yaxis]="lineChartOptions.yaxis"
+          [dataLabels]="lineChartOptions.dataLabels"
+          [grid]="lineChartOptions.grid"
+          [stroke]="lineChartOptions.stroke"
+          [fill]="lineChartOptions.fill"
+        ></apx-chart>
       </mat-card-content>
     </mat-card>
   </ng-container>

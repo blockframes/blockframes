@@ -438,6 +438,18 @@ service cloud.firestore {
       }
     }
 
+    ////////////////////////////////
+    // ANALYTICS RULES            //
+    ////////////////////////////////
+
+    match /analytics/{docId} {
+      allow read: if userHasValidOrg()
+        && notInMaintenance()
+        && ( resource == null
+          || (existingData().type == 'movie' && orgCan('canUpdate', userOrgId(), docId))
+        );
+    }
+
 
     /////////////////////////////////////////////////////////////////////////////////
     ///                                  FUNCTIONS                                ///
