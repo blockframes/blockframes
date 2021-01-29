@@ -3,7 +3,6 @@ import { backupBucket as backupBucketCI } from 'env/env.blockframes-ci';
 import * as admin from 'firebase-admin';
 import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';
-import { getLatestFolderURL } from './anonymize';
 import { backupBucket } from '@env';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { runShellCommand } from './commands';
