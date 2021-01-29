@@ -97,7 +97,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
   }
 }
 
-/** Send e reminder email 24h or 1h before event starts */
+/** Send a reminder email 24h or 1h before event starts */
 async function sendReminderEmails(notification, template: string) {
   const user = await getDocument<User>(`users/${notification.toUserId}`);
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
@@ -108,6 +108,6 @@ async function sendReminderEmails(notification, template: string) {
 
   const email = reminderEventToUser(movie.title.international, user, orgName(org), eventData, template);
   return await sendMailFromTemplate(email, app)
-  .then(_ => notification.email.isSent = true)
-  .catch(e => notification.email.error = e.message);
+    .then(_ => notification.email.isSent = true)
+    .catch(e => notification.email.error = e.message);
 }

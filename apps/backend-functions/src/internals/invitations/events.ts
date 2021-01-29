@@ -276,7 +276,6 @@ export async function onInvitationToAnEventUpdate(
  * Send also a reminder email
  */
 export async function createNotificationsForEventsToStart() {
-  const db = admin.firestore();
   const oneHour = 3600 * 1000;
   const oneDay = 24 * oneHour;
   const halfHour = 1800 * 1000;
