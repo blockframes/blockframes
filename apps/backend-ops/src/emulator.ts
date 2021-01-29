@@ -154,7 +154,7 @@ export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?:
  * @param param0 settings object
  * Provide a local path to the firestore export dir for which to switch on maintenance mode
  */
-export async function switchOnMaintenance({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
+export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
