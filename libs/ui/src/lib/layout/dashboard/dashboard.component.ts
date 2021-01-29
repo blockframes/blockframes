@@ -15,9 +15,6 @@ import { NotificationQuery } from '@blockframes/notification/+state';
 import { Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
-import { algolia } from '@env';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-
 @Component({
   selector: 'layout-dashboard',
   templateUrl: './dashboard.component.html',
@@ -47,11 +44,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private invitationQuery: InvitationQuery,
     private notificationQuery: NotificationQuery,
     private router: Router,
-    private routerQuery: RouterQuery
   ) { }
 
   ngAfterViewInit() {
-    const appName = this.routerQuery.getValue().state?.root.data.app;
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)

@@ -295,7 +295,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
   if (!existingIds.includes(notification.toUserId)) return false;
 
   // Cleaning notifications more than n days
-  const notificationTimestamp = notification.date.toMillis();
+  const notificationTimestamp = notification._meta.createdAt.toMillis();
   if (notificationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
     return false;
   }

@@ -8,6 +8,7 @@ import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
+import { createUserSettings } from '@blockframes/user/types';
 
 @Component({
   selector: 'auth-login-view',
@@ -70,9 +71,15 @@ export class LoginComponent implements OnInit {
     try {
       const { email, password, firstName, lastName } = signupForm.value;
       const createdFrom = getCurrentApp(this.routerQuery);
-      await this.service.signup(email.trim(), password, { ctx: { firstName, lastName, _meta: { createdFrom } } });
       const privacyPolicy = await this.service.getPrivacyPolicy();
-      await this.service.update({ privacyPolicy: privacyPolicy });
+      const ctx = {
+        firstName,
+        lastName,
+        _meta: { createdFrom },
+        settings: createUserSettings(),
+        privacyPolicy
+      };
+      await this.service.signup(email.trim(), password, { ctx });
       // Reset page title to default
       this.dynTitle.setPageTitle();
       const redirectTo = localStorage.getItem('redirectTo');

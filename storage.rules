@@ -14,14 +14,14 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
-      allow read, write: if false; // Everyting is forbidden by default
+      allow read, write: if false; // Everything is forbidden by default
     }
 
     match /tmp/{allPaths=**} {
       allow read, update, delete: if false;
-      allow create: if request.auth != null && isValidMedia();
+      allow create: if request.auth != null && request.auth.uid == request.resource.metadata.uid && isValidMedia();
     }
-    
+
     function isValidMedia() {
       return isValidImage() || isValidPdf() || isValidVideo();
     }
@@ -30,25 +30,25 @@ service firebase.storage {
     	// Only allow uploads of any image file that's less than 5MB
       return request.resource.contentType.matches('image/.*') && request.resource.size < 5 * 1024 * 1024;
     }
-    
+
     function isValidPdf() {
-    	// Only allow uploads of any image file that's less than 50MB
+    	// Only allow uploads of any pdf file that's less than 50MB
       return request.resource.contentType.matches('application/pdf') && request.resource.size < 50 * 1024 * 1024;
     }
 
     function isValidVideo() {
     	// Only allow uploads of any video file that's less than 50GB
       return (
-          request.resource.contentType.matches('video/x-msvideo') || 
-          request.resource.contentType.matches('video/x-matroska') || 
+          request.resource.contentType.matches('video/x-msvideo') ||
+          request.resource.contentType.matches('video/x-matroska') ||
           request.resource.contentType.matches('video/mp4') ||
           request.resource.contentType.matches('video/3gpp') ||
           request.resource.contentType.matches('video/quicktime') ||
           request.resource.contentType.matches('video/x-ms-wmv')
-        ) 
+        )
         && request.resource.size < 50 * 1024 * 1024 * 1024;
     }
-    
+
   }
 }
 

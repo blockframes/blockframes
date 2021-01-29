@@ -101,13 +101,14 @@ service cloud.firestore {
     /// FUNCTIONS ///
 
     function isOnlyMarkingNofitifcationAsRead() {
-      // Only "isRead" can be updated.
+      // Only "app.isRead" can be updated.
       return userId() == existingData().toUserId
         && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['date'])
+        && isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
         && isNotUpdatingField(['toUserId'])
         && isNotUpdatingField(['type'])
-        // Notifcations subjects
+        // Notifications subjects
         && isNotUpdatingField(['docId'])
         && isNotUpdatingField(['user'])
         && isNotUpdatingField(['organization'])
@@ -288,7 +289,7 @@ service cloud.firestore {
       allow read: if userHasValidOrg()
         && notInMaintenance()
         && ( existingData().storeConfig.status == 'accepted'
-         || ( isOrgMember(userOrgId()) && orgCan('canUpdate', userOrgId(), existingData().id) )
+         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds )) 
         )
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
@@ -526,7 +527,7 @@ service cloud.firestore {
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
       return (getDocumentPermissions(orgId, docId).ownerId == orgId)
-        || (getDocumentPermissions(orgId, docId).admin == true)
+        || (getDocumentPermissions(orgId, docId).isAdmin == true)
         || (getDocumentPermissions(orgId, docId)[action] == true)
         || (isOrgAdmin(orgId) && orgId == docId);
     }

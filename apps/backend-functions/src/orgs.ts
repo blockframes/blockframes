@@ -83,7 +83,7 @@ async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after
     // Send a mail to c8 admin to accept the organization given it's choosen app access
     const mailRequest = await organizationRequestedAccessToApp(after);
     const from = await getFromEmail(after);
-    await sendMail(mailRequest, from);
+    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
 }
 
@@ -103,7 +103,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest, from),
+    sendMail(emailRequest, from).catch(e => console.warn(e.message)),
     // Update algolia's index
     storeSearchableOrg(org)
   ]);
@@ -120,8 +120,8 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 
   // Update algolia's index
   if (before.denomination.full !== after.denomination.full
-  || before.denomination.public !== after.denomination.public) {
-    for(const userId of after.userIds) {
+    || before.denomination.public !== after.denomination.public) {
+    for (const userId of after.userIds) {
       const userDocRef = db.doc(`users/${userId}`);
       const userSnap = await userDocRef.get();
       const userData = userSnap.data() as PublicUser;
@@ -147,7 +147,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     // send email to let the org admin know that the org has been accepted
     const urlToUse = await getAppUrl(after);
     const appKey = await getOrgAppKey(after);
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), appKey);
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), appKey).catch(e => console.warn(e.message));
 
     // Send a notification to the creator of the organization
     const notification = createNotification({
@@ -188,7 +188,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
   if (before.status === 'accepted' && after.status === 'pending') {
-    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id))
+    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>)
     await Promise.all(promises)
   }
 
@@ -212,7 +212,7 @@ export async function onOrganizationDelete(
   for (const userId of org.userIds) {
     const userSnapshot = await db.doc(`users/${userId}`).get();
     const user = userSnapshot.data() as PublicUser;
-    await userSnapshot.ref.update({...user, orgId: null})
+    await userSnapshot.ref.update({ ...user, orgId: null })
   }
 
   // Delete persmission document related to the organization
@@ -223,7 +223,7 @@ export async function onOrganizationDelete(
   // Delete movies belonging to organization
   const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
   const moviesSnap = await movieCollectionRef.get();
-  for(const movie of moviesSnap.docs) {
+  for (const movie of moviesSnap.docs) {
     await movie.ref.delete();
   }
 
@@ -270,7 +270,7 @@ export async function onOrganizationDelete(
       if (party.party.orgId === org.id) {
         const index = contractData.parties.indexOf(party);
         contractData.parties.splice(index, 1);
-        await contract.ref.update({ parties: contractData.parties});
+        await contract.ref.update({ parties: contractData.parties });
       }
     }
   }
@@ -281,7 +281,7 @@ export async function onOrganizationDelete(
 
   const orgAppAccess = findOrgAppAccess(org);
   // Update algolia's index
-  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID));
+  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID) as Promise<boolean>);
 
   await Promise.all(promises);
 
@@ -299,7 +299,7 @@ export const accessToAppChanged = async (
 
   await Promise.all(admins.map(admin => {
     const template = organizationAppAccessChanged(admin, appUrl);
-    return sendMailFromTemplate(template, appKey)
+    return sendMailFromTemplate(template, appKey).catch(e => console.warn(e.message));
   }));
 
   return {

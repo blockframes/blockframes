@@ -3,18 +3,18 @@ import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-
 import { createOrgMedias, OrgMedias } from '@blockframes/organization/+state/organization.firestore';
 import { FormList } from '@blockframes/utils/form';
 
-function createOrgMediasControl(orgDocs: OrgMedias) {
+function createOrgMediasControl(id: string, orgDocs: OrgMedias) {
   const entity = createOrgMedias(orgDocs);
   return {
-    notes: FormList.factory(entity.notes, note => new HostedMediaWithMetadataForm(note)),
+    notes: FormList.factory(entity.notes, (note, i) => new HostedMediaWithMetadataForm(note, { privacy: 'protected', collection: 'orgs', docId: id ?? '', filed: `documents.notes[${i}]`})),
   }
 }
 
 type OrgMediasControl = ReturnType<typeof createOrgMediasControl>;
 
 export class OrganizationMediasForm extends FormEntity<OrgMediasControl> {
-  constructor(data?: OrgMedias) {
-    super(createOrgMediasControl(data));
+  constructor(id: string, data?: OrgMedias) {
+    super(createOrgMediasControl(id, data));
   }
 
   get notes() {

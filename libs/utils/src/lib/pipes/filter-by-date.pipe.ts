@@ -2,6 +2,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { add, startOfDay } from 'date-fns/fp'
 import { Event } from '@blockframes/event/+state';
+import { getValue } from '../helpers';
 
 export interface TimeFrame {
   label?: string;
@@ -52,9 +53,9 @@ function filterByDate(value: any[], timeFrame: TimeFrame, key: string = 'date', 
   const toDate = add({ [type]: to }, now);
   return value.filter(v => {
     if (!!keyFinish) {
-      return v[key] < toDate && v[keyFinish] >= fromDate;
+      return getValue(v, key) < toDate && getValue(v, keyFinish) >= fromDate;
     }
-    return v[key] >= fromDate && v[key] < toDate;
+    return getValue(v, key) >= fromDate && getValue(v, key) < toDate;
   });
 }
 
@@ -106,4 +107,4 @@ export class EventsToTimeFramePipe implements PipeTransform {
   declarations: [FilterByDatePipe, LabelByDatePipe, EventsToTimeFramePipe],
   exports: [FilterByDatePipe, LabelByDatePipe, EventsToTimeFramePipe]
 })
-export class FilterByDateModule {}
+export class FilterByDateModule { }

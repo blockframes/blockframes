@@ -31,7 +31,7 @@ function createProfileControls(entity: Partial<User>) {
     lastName: new FormControl(profile.lastName),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
-    avatar: new HostedMediaForm(profile.avatar),
+    avatar: new HostedMediaForm(profile.avatar, { privacy: 'public', collection: 'users', docId: entity.uid ?? '', field: 'avatar'  }),
     email: new FormControl({ value: profile.email, disabled: true })
   };
 }
