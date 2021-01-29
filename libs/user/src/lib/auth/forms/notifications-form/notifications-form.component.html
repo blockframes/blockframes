@@ -12,7 +12,7 @@
   <article fxLayout="row" fxLayoutAlign="space-between">
     <p>Receive notifications via :</p>
     <div fxLayout="row" fxLayoutGap="40px">
-      <mat-checkbox color="primary" name="selectAllEmail" (change)="selectAll($event)" [indeterminate]="someComplete()">By e-mail</mat-checkbox>
+      <mat-checkbox color="primary" name="selectAllEmail" (change)="selectAll($event)" [indeterminate]="">By e-mail</mat-checkbox>
       <mat-slide-toggle color="primary" labelPosition="before" name="selectAllApp" (change)="selectAll($event)">In app :</mat-slide-toggle>
     </div>
   </article>
@@ -41,33 +41,19 @@
 </section>
 
 <table>
-  <tbody *ngFor="let row of notifications">
+  <tbody>
     <tr>
-      <th>{{ row.title }}</th>
-      <th><mat-checkbox></mat-checkbox>By e-mail</th>
-      <th><mat-checkbox></mat-checkbox>In app</th>
+      <th>{{ notifications.title }}</th>
+      <th><mat-checkbox [indeterminate]="someComplete(0, 'email')" [checked]="allComplete.email" (change)="setAll($event.checked, 0, 'email')"></mat-checkbox>By e-mail</th>
+      <th><mat-checkbox [indeterminate]="someComplete(0, 'app')" [checked]="allComplete.app" (change)="setAll($event.checked, 0, 'app')"></mat-checkbox>In app</th>
     </tr>
-    <tr *ngFor="let subrow of row.subNotification">
+    <tr *ngFor="let subrow of notifications.subNotification, let i = index">
       <td>{{ subrow.subtitle }}</td>
-      <td><mat-checkbox [checked]="subrow.email"></mat-checkbox></td>
-      <td><mat-checkbox [checked]="subrow.app"></mat-checkbox></td>
+      <td><mat-checkbox [checked]="subrow.email" name="emailCheckbox" (change)="updateAllComplete(i, $event, 'email')"></mat-checkbox></td>
+      <td><mat-checkbox [checked]="subrow.app" name="appCheckbox" (change)="updateAllComplete(i, $event, 'app')"></mat-checkbox></td>
     </tr>
   </tbody>
 </table>
-
-<!-- ! TEST -->
-<!-- <section *ngFor="let notification of notifications" class="surface" fxLayout="column">
-  <h2>{{ notification.title }}</h2>
-
-  <article *ngFor="let subNotif of notification.subNotification" fxLayout="row" fxLayoutAlign="space-between">
-    <p>{{ subNotif.subtitle }}</p>
-    <div fxLayout="row"fxLayoutGap="16px">
-      <mat-checkbox color="primary" [checked]="subNotif.email.value" [disabled]="subNotif.email.disabled">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" [checked]="subNotif.app.value" [disabled]="subNotif.app.disabled">In app</mat-checkbox>
-    </div>
-  </article>
-</section> -->
-<!-- ! TEST -->
 
 <!-- <section class="surface" fxLayout="column">
   <h2>Content Management Notifications</h2>
