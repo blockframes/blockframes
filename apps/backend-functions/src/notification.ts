@@ -1,12 +1,14 @@
-import { NotificationDocument, OrganizationDocument } from './data/types';
+import { MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
 import { getAppUrl, getDocument, getOrgAppKey } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
-import { emailErrorCodes } from '@blockframes/utils/emails/utils';
-import { userJoinedYourOrganization, userRequestedToJoinYourOrg } from './templates/mail';
+import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { EventDocument, Screening } from '@blockframes/event/+state/event.firestore';
+import { reminderEventToUser, userJoinedYourOrganization, userRequestedToJoinYourOrg } from './templates/mail';
+import { templateIds } from './templates/ids';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 type Timestamp = admin.firestore.Timestamp;
@@ -67,14 +69,25 @@ export function createNotification(notification: Partial<NotificationDocument> =
 export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const notification = snap.data() as NotificationDocument;
   // @TODO #4046 should contain all notificationTypes in the end
-  const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg', 'requestFromUserToJoinOrgCreate'];
+  const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg', 'oneDayReminder', 'eventIsAboutToStart', 'requestFromUserToJoinOrgCreate'];
 
   if (notification.email?.isSent === false) {
     // Update notification state
     if (types.includes(notification.type)) {
+
       const recipient = await getDocument<User>(`users/${notification.toUserId}`);
 
       switch (notification.type) {
+        case 'eventIsAboutToStart':
+          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneHour)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message)
+          break;
+        case 'oneDayReminder':
+          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneDay)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message)
+          break;
         case 'memberAddedToOrg':
           await sendMemberAddedToOrgEmail(recipient, notification)
             .then(_ => notification.email.isSent = true)
@@ -137,4 +150,16 @@ async function sendMemberAddedToOrgEmail(recipient: User, notification: Notifica
 
   const appKey = await getOrgAppKey(org);
   return sendMailFromTemplate(template, appKey);
+}
+
+/** Send a reminder email 24h or 1h before event starts */
+async function sendReminderEmails(recipient: User, notification: NotificationDocument, template: string) {
+  const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
+  const eventData = getEventEmailData(event);
+  const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
+  const app = await getOrgAppKey(org);
+
+  const email = reminderEventToUser(movie.title.international, recipient, orgName(org), eventData, template);
+  return await sendMailFromTemplate(email, app);
 }

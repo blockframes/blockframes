@@ -133,6 +133,25 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/marketplace/event/${notification.docId}`,
         };
+      case 'oneDayReminder':
+
+        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              imgRef: this.getPoster(event.meta.titleId),
+              message: `REMINDER - Your ${event.type} "${event.title}" is tomorrow.`
+            };
+          });
+        });
+
+        return {
+          _meta : {...notification._meta, createdAt: toDate(notification._meta.createdAt)},
+          message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
+          placeholderUrl: 'empty_poster.webp',
+          url: `/c/o/marketplace/event/${notification.docId}`,
+        };
       case 'invitationToAttendEventAccepted':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)

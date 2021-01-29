@@ -26,7 +26,8 @@ export type NotificationType =
 
   // Events related notifications
   'requestToAttendEventSent' |
-  'eventIsAboutToStart' |
+  'eventIsAboutToStart' | // 1h Reminder before event
+  'oneDayReminder' | // 24h Reminder before event
   'invitationToAttendEventAccepted' |
   'invitationToAttendEventDeclined'
   ;
