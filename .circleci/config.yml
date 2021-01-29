@@ -75,6 +75,7 @@ commands:
         - run: gcloud --quiet config set project ${PROJECT_ID}
         - run: gcloud info
         - run: gsutil ls
+        - run: firebase use ${PROJECT_ID}
   prepare_environment:
     description: 'Set up CI environment'
     steps:
