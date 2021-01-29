@@ -1,4 +1,3 @@
-import admin, { storage } from "firebase-admin";
 import { backupBucket, firebase } from '@env'
 import { execSync } from "child_process";
 import { enableMaintenanceInEmulator } from "./emulator";
