@@ -3,15 +3,15 @@ import { backupBucket, firebase } from '@env'
 import { execSync } from "child_process";
 import { enableMaintenanceInEmulator } from "./emulator";
 import camelcase from 'camelcase'
-import { clearDbCLI, defaultEmulatorBackupPath, getLatestDirName, importFirestoreEmulatorBackup, loadAdminServices, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
+import { clearDbCLI, defaultEmulatorBackupPath, getLatestDirName, getLatestFolderURL, importFirestoreEmulatorBackup, loadAdminServices, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
 import { deleteAllUsers } from "@blockframes/testing/firebase";
 import { ensureMaintenanceMode } from "./tools";
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from "./algolia";
 
 export const getFirebaseBackupDirname = (d: Date) => `firebase-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`
 
-export async function backupEnv() {
-  const backupDir = getFirebaseBackupDirname(new Date());
+export async function backupEnv(dirName?: string) {
+  const backupDir = dirName || getFirebaseBackupDirname(new Date());
   const backupURL = `gs://${backupBucket}/${backupDir}`;
 
   const firestoreURL = `${backupURL}/firestore`;
@@ -51,13 +51,13 @@ export async function restoreEnv(dirName?: string) {
   console.log( 'If not found, it will manually restore auth with a default password. Otherwise it will restore original auth backup');
   const { storage, db, auth } = loadAdminServices();
   const bucket = storage.bucket(backupBucket);
-  const backupDir = dirName || await getLatestDirName(bucket, 'firebase');
+  const backupDir = dirName ? `${dirName}/` : await getLatestDirName(bucket, 'firebase');
 
   const backupURL = `gs://${backupBucket}/${backupDir}`;
 
-  const firestoreURL = `${backupURL}/firestore`;
-  const storageURL = `${backupURL}/storage`;
-  const authURL = `${backupURL}/auth-backup.json`;
+  const firestoreURL = `${backupURL}firestore`;
+  const storageURL = `${backupURL}storage`;
+  const authURL = `${backupURL}auth-backup.json`;
 
   let cmd: string;
   let output: string;
@@ -70,8 +70,8 @@ export async function restoreEnv(dirName?: string) {
 
   await clearDbCLI(db);
 
-  console.log('Clearing storage,,,');
-  cmd = `gsutil -m rm -r "${backupBucket}/*"`;
+  console.log('Clearing storage...');
+  cmd = `gsutil -m rm -r "gs://${firebase().storageBucket}/*"`;
   output = execSync(cmd).toString();
   console.log(output);
 
@@ -83,7 +83,7 @@ export async function restoreEnv(dirName?: string) {
   console.log('Enabling maintenance in backup...')
   await importFirestoreEmulatorBackup(firestoreURL, defaultEmulatorBackupPath);
   await enableMaintenanceInEmulator({importFrom: 'defaultImport'})
-  await uploadDbBackupToBucket({bucketName: backupBucket, remoteDir: `${backupDir}/firestore`})
+  await uploadDbBackupToBucket({bucketName: backupBucket, remoteDir: `${backupDir}firestore`})
 
   console.log('Importing Firestore');
   cmd = `gcloud firestore import ${firestoreURL}`;

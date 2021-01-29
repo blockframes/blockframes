@@ -161,7 +161,7 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   const firestoreMetadataAbsPath = join(firestoreExportAbsPath, firestoreMetadataFilename);
 
   const _remoteDir = remoteDir || getFirestoreExportDirname(new Date);
-  const newFirestoreMetaFilename = `${_remoteDir}.overall_export_metadata`
+  const newFirestoreMetaFilename = `${_remoteDir.split(sep).pop()}.overall_export_metadata`
   const newFirestoreMetadataAbsPath = join(firestoreExportAbsPath, newFirestoreMetaFilename);
   renameSync(firestoreMetadataAbsPath, newFirestoreMetadataAbsPath);
 
