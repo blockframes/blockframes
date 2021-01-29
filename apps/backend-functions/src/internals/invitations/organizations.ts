@@ -14,7 +14,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds, getDocument, getAppUrl, getOrgAppKey } from '../../data/internals';
+import { getAdminIds, getDocument, getAppUrl, getOrgAppKey, createPublicUserDocument } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { orgName } from "@blockframes/organization/+state/organization.firestore";
 
@@ -165,10 +165,7 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
   const notifications = adminIds.map(toUserId =>
     createNotification({
       toUserId,
-      user: {
-        firstName: invitation.fromUser?.firstName,
-        lastName: invitation.fromUser?.lastName
-      },
+      user: createPublicUserDocument(invitation.fromUser),
       type: 'invitationFromUserToJoinOrgDecline'
     })
   );
