@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { sortMovieBy } from '@blockframes/utils/helpers';
 import { Observable } from 'rxjs';
 
 @Component({
