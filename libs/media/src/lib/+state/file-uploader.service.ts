@@ -12,12 +12,19 @@ import { BehaviorStore, delay } from "@blockframes/utils/helpers";
 import { FileMetaData, isValidMetadata } from "./media.firestore";
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 
+
+export interface UploadData {
+  fileName: string;
+  file: Blob | File;
+  metadata: FileMetaData;
+}
+
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
 
   private tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
 
-  private queue: Record<string, { file: Blob | File, metadata: FileMetaData } | null> = {};
+  private queue: Record<string, UploadData[] | null> = {};
 
 
   public overlayRef: OverlayRef;
@@ -37,27 +44,42 @@ export class FileUploaderService {
   /**
    * Add a file in the queue, ready to be uploaded
    * @param storagePath the storage path where the file will be uploaded,
-   * this path will be automatically prefixed with `tmp/`
+   * - the *storage* path, **not** the db path!
+   * - it **should not** start with `tmp/`
+   * - it **should not** start with a `/`
+   * - it **should not** end with a `/`
+   * @param fileName the file name, this will be concatenated with the `storagePath`
    * @param file the actual raw data of the file to upload
    * @param metadata required metadata to complete the upload flow,
    * such as privacy, where is the corresponding db document, etc...
    */
-  addToQueue(storagePath: string, file: Blob | File, metadata: FileMetaData) {
+  addToQueue(storagePath: string, fileName: string, file: Blob | File, metadata: FileMetaData) {
 
-    console.log('ADD TO QUEUE', storagePath, file, metadata); // TODO REMOVE DEBUG LOG
+    console.log('ADD TO QUEUE', storagePath, fileName, file, metadata); // TODO REMOVE DEBUG LOG
 
     // Throw in case of duplicated path, instead of silently overwriting the first occurrence
-    if (!!this.queue[storagePath]) throw new Error(`This storage path already exists in the queue : ${storagePath}`);
+    if (!!this.queue[storagePath] && this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
 
-    this.queue[storagePath] = { file, metadata };
+    if (!this.queue[storagePath]) this.queue[storagePath] = [];
+    this.queue[storagePath].push({ file, fileName, metadata });
   }
 
   /**
    * Remove a file (not yet uploaded) from the queue
-   * @param storagePath
+   * @note if the file does not exists in the queue,
+   * this function will not throw any error and simply do nothing
    */
-  removeFromQueue(storagePath: string) {
-    delete this.queue[storagePath];
+  removeFromQueue(storagePath: string, fileName) {
+
+    if (!this.queue[storagePath]) return;
+
+    const index = this.queue[storagePath].findIndex(upload => upload.fileName === fileName);
+
+    if (index !== -1) this.queue[storagePath][index] = null; // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
+
+    if (this.queue[storagePath].length === 0 || this.queue[storagePath].every(upload => !upload)) {
+      delete this.queue[storagePath];
+    }
   }
 
   /** Remove every files (not yet uploaded) from the queue */
@@ -65,39 +87,46 @@ export class FileUploaderService {
     this.queue = {};
   }
 
-  isInQueue(storagePath: string) {
-    return !!this.queue[storagePath];
+  retrieveFromQueue(storagePath: string, index?: number) {
+    return this.queue[storagePath]?.[ index ?? 0 ];
   }
 
   /** Upload all files in the queue */
   upload() {
 
-    const validQueue = Object.entries(this.queue).filter(([storagePath, upload]) => {
-      const isValid = isValidMetadata(upload.metadata, { uidRequired: false });
-      if (!isValid) {
-        console.warn('INVALID METADATA: upload will be skipped!');
-        console.warn(storagePath, upload.metadata);
-      }
-      return isValid
-    });
-
-    const tasks = validQueue.map(([storagePath, upload]) => {
-
-      upload.metadata.uid = this.userQuery.userId;
-
-      // upload
-      const afTask = this.storage.upload(`${tempUploadDir}/${storagePath}`, upload.file, { customMetadata: upload.metadata });
-
-      // clean on success
-      afTask.task.then(() => {
-        console.log('task success, cleaning', storagePath); // TODO REMOVE DEBUG LOG
-        this.queue[storagePath] = null;
+    const validQueue = Object.entries(this.queue).filter(([storagePath, uploads]) => {
+      return uploads.filter(upload => {
+        const isValid = isValidMetadata(upload.metadata, { uidRequired: false });
+        if (!isValid) {
+          console.warn('INVALID METADATA: upload will be skipped!');
+          console.warn(storagePath, upload.metadata);
+        }
+        return isValid
       });
-
-      return afTask;
     });
 
-    this.tasks.value = [...this.tasks.value, ...tasks];
+    const tasks = validQueue.map(([storagePath, uploads]) => {
+      return uploads.map(upload => {
+        upload.metadata.uid = this.userQuery.userId;
+
+        // upload
+        const afTask = this.storage.upload(`${tempUploadDir}/${storagePath}/${upload.fileName}`, upload.file, { customMetadata: upload.metadata });
+
+        // clean on success
+        afTask.task.then(() => {
+          console.log('task success, cleaning', storagePath); // TODO REMOVE DEBUG LOG
+          this.removeFromQueue(storagePath, upload.fileName);
+        });
+
+        return afTask;
+      });
+    });
+
+    // convert a [][] into a []
+    // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
+    const flattenedTasks = ([] as AngularFireUploadTask[]).concat(...tasks);
+
+    this.tasks.value = [...this.tasks.value, ...flattenedTasks];
     (Promise as any).allSettled(tasks)
       .then(() => delay(3000))
       .then(() => this.detachWidget());
