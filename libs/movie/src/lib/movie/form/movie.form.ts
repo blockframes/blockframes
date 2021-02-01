@@ -655,6 +655,7 @@ function createMoviePromotionalElementsControls(movieId: string, promotionalElem
     // Hosted Media
     financialDetails: new HostedMediaForm(entity.financialDetails, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.financialDetails'}),
     presentation_deck: new FormEntity({
+      misc: new FormControl(entity.presentation_deck.misc),
       storagePath: new FormControl(entity.presentation_deck.storagePath),
     }),
     scenario: new HostedMediaForm(entity.scenario, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.scenario'}),
