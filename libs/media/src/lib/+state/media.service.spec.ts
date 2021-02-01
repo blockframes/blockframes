@@ -14,6 +14,7 @@ describe('Media Service Test Suite', () => {
   let db: AngularFirestore;
   let storage: AngularFireStorage;
   const TESTDATA: UploadData = {
+    metadata: null,
     path: 'unit-test/',
     data: null,
     fileName: 'test.tst'
