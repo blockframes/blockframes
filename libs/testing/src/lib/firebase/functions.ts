@@ -60,7 +60,6 @@ export async function initFirestoreApp(
   data: Record<string, Object> = {},
   auth?: TokenOptions
 ) {
-  
   //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
