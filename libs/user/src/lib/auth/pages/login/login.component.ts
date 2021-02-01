@@ -8,7 +8,6 @@ import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { createUserSettings } from '@blockframes/user/types';
 
 @Component({
   selector: 'auth-login-view',
@@ -76,7 +75,6 @@ export class LoginComponent implements OnInit {
         firstName,
         lastName,
         _meta: { createdFrom },
-        settings: createUserSettings(),
         privacyPolicy
       };
       await this.service.signup(email.trim(), password, { ctx });

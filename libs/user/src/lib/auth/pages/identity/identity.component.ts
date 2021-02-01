@@ -9,7 +9,6 @@ import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { createUserSettings } from '@blockframes/user/types';
 
 @Component({
   selector: 'auth-identity',
@@ -66,7 +65,6 @@ export class IdentityComponent implements OnInit {
         firstName: this.form.get('firstName').value,
         lastName: this.form.get('lastName').value,
         privacyPolicy: privacyPolicy,
-        settings: createUserSettings(),
       });
 
       // Accept the invitation from the organization.
