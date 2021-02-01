@@ -109,8 +109,20 @@ export async function linkFile(data: storage.ObjectMetadata) {
     // because of possible nested map and arrays, we need to retrieve the whole document
     // modify it, then update the whole doc with the new (modified) version
 
-    // TODO issue#4002 refactor as set(doc, metadata.field, { ref: finalPath});
-    set(doc, metadata.field, finalPath); // update the whole doc with only the new ref
+    const extraData = {...metadata};
+    delete extraData.uid;
+    delete extraData.privacy;
+    delete extraData.collection;
+    delete extraData.docId;
+    delete extraData.field;
+    delete extraData.firebaseStorageDownloadTokens;
+
+    const uploadData = {
+      ...extraData,
+      storagePath: finalPath,
+    }
+
+    set(doc, metadata.field, uploadData); // update the whole doc with only the new storagePath
 
     await docRef.update(doc);
 
@@ -137,18 +149,12 @@ export async function linkFile(data: storage.ObjectMetadata) {
         return false;
       }
 
-      // TODO issue#4002 use field and stop computing the videoField
       // upload success: we should add jwPlayerId to the db document
-      const segmentedField = metadata.field.split('.');
-      segmentedField.pop(); // remove `.ref` to get the whole video object instead of the ref/path
-      segmentedField.push('jwPlayerId');
-      const videoField = segmentedField.join('.');
-
       const docRef = db.collection(metadata.collection).doc(metadata.docId);
       const docSnap = await docRef.get();
       if (!docSnap.exists) return false;
       const doc = docSnap.data()!;
-      set(doc, videoField, uploadResult.key); // update the whole doc with only the new ref
+      set(doc, `${metadata.field}.jwPlayerId`, uploadResult.key); // update the whole doc with only the new jwPlayerId
       await docRef.update(doc);
 
       return true;

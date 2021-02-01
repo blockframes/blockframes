@@ -19,6 +19,8 @@ import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-u
 import { FileNewUploaderModule } from '@blockframes/media/file/file-new-uploader/file-uploader.module';
 
 import { MovieFormMediaFilesComponent } from './media-files.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -33,6 +35,8 @@ import { MovieFormMediaFilesComponent } from './media-files.component';
 
     // Material
     MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatButtonModule,
     MatDividerModule,
     RouterModule.forChild([{ path: '', component: MovieFormMediaFilesComponent }])
