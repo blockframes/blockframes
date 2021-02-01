@@ -1,11 +1,11 @@
 import { FormControl, Validators } from '@angular/forms';
-import { createNotificationSettings, NotificationSettings, NotificationSettingsTemplate } from '@blockframes/user/+state/user.model';
+import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/user/+state/user.model';
 import { EntityControl, FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createNotificationSettingsTemplateControls(settings: Partial<NotificationSettingsTemplate>): EntityControl<NotificationSettingsTemplate> {
   return {
-    email: new FormControl(settings.email, Validators.required),
-    app: new FormControl(settings.app, Validators.required),
+    email: new FormControl(settings?.email !== null ? settings?.email : true, Validators.required),
+    app: new FormControl(settings?.app !== null ? settings?.app : true, Validators.required),
   }
 }
 
@@ -17,10 +17,13 @@ class NotificationSettingsForm extends FormEntity<NotificationSettingsControl> {
   }
 }
 
-function createNotificationsControls(entity: Partial<NotificationSettings>): EntityControl<NotificationSettings> {
-  const settings = createNotificationSettings(entity);
+function createNotificationsControls(settings: Partial<NotificationSettings>): EntityControl<NotificationSettings> {
   return {
-    default: new NotificationSettingsForm(settings.default),
+    eventIsAboutToStart: new NotificationSettingsForm(settings?.eventIsAboutToStart),
+    oneDayReminder: new NotificationSettingsForm(settings?.oneDayReminder),
+    memberAddedToOrg: new NotificationSettingsForm(settings?.memberAddedToOrg),
+    memberRemovedFromOrg: new NotificationSettingsForm(settings?.memberRemovedFromOrg),
+    requestFromUserToJoinOrgCreate: new NotificationSettingsForm(settings?.requestFromUserToJoinOrgCreate),
     // @TODO #4046 add other notificationsType
   }
 }
