@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState, RoleState } from 'akita-ng-fire';
-import { createUserSettings, User } from '@blockframes/user/+state/user.firestore';
+import { User } from '@blockframes/user/+state/user.firestore';
 
 export { User } from '@blockframes/user/+state/user.firestore';
 
@@ -17,8 +17,7 @@ export function createUser(user: Partial<User> = {}) {
   return {
     ...user,
     avatar: user.avatar ?? '',
-    watermark: user.watermark ?? '',
-    settings: createUserSettings(user.settings)
+    watermark: user.watermark ?? ''
   } as User;
 }
 

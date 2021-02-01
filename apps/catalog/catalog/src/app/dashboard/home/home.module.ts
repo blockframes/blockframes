@@ -20,6 +20,7 @@ import { HomeComponent } from './home.component';
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -28,6 +29,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     FlexLayoutModule,
     MovieAnalyticsChartModule,
     ImageModule,
+    AnalyticsPipeModule,
     // Material
     MatButtonModule,
     MatIconModule,
