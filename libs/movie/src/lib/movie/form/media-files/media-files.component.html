@@ -4,11 +4,16 @@
     <section id="presentation-deck">
       <h3>Presentation Deck</h3>
 
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Extra Data</mat-label>
+        <input matInput placeholder="Test extra data flow" [formControl]="extradatas.presentationDeck.get('misc')" />
+      </mat-form-field>
+
       <file-new-uploader
         allowedFileType="pdf"
         [displayFile]="form.promotional.get('presentation_deck').get('storagePath')"
-        [storagePath]="uploads.presentationDeck.storagePath"
-        [metadata]="uploads.presentationDeck.metadata"
+        [storagePath]="storagePaths.presentationDeck"
+        [metadata]="metadatas.presentationDeck | async"
       >
         <h3 title>Upload Presentation Deck</h3>
       </file-new-uploader>
