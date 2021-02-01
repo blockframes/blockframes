@@ -1,4 +1,4 @@
-<ng-container *ngIf="isDataLoaded$ | async; else loading">
+<ng-container *ngIf="allMoviesFromOrg$ | async as titles; else loading">
   <ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
@@ -14,7 +14,7 @@
     </header>
     <section>
       <h3>My Marketplace Activity</h3>
-      <movie-analytics-chart [analyticsData]="movieAnalytics$ | async"></movie-analytics-chart>
+      <movie-analytics-chart [analyticsData]="titles | getTitlesAnalytics | async"></movie-analytics-chart>
     </section>
   </ng-container>
 

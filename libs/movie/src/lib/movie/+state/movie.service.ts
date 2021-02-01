@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { switchMap, filter, tap } from 'rxjs/operators';
 import {
   createMovie,
   Movie,
-  MovieAnalytics,
-  SyncMovieAnalyticsOptions,
   createStoreConfig,
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
@@ -13,7 +10,6 @@ import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { Observable } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -102,18 +98,6 @@ export class MovieService extends CollectionService<MovieState> {
     return super.remove(movieId);
   }
 
-  /** Gets every analytics for all movies and sync them. */
-  public syncWithAnalytics(movieIds: string[], options?: SyncMovieAnalyticsOptions) {
-    return this.query.analytics.select('ids').pipe(
-      filter(analyticsIds => movieIds.some(id => !analyticsIds.includes(id))),
-      switchMap(_ => {
-        const f = this.functions.httpsCallable('getMovieAnalytics');
-        return f({ movieIds, daysPerRange: 28 });
-      }),
-      tap(analytics => this.store.analytics.upsertMany(analytics))
-    );
-  }
-
   /**
    * Fetch a movie from its internal reference (example : AAA1)
    * @param internalRef
@@ -122,12 +106,6 @@ export class MovieService extends CollectionService<MovieState> {
     const movies = await this.getValue(ref => ref.where('internalRef', '==', internalRef))
 
     return movies.length ? createMovie(movies[0]) : undefined;
-  }
-
-  /** Call a firebase function to get analytics specify to an array of movieIds.*/
-  public getMovieAnalytics(movieIds: string[]): Observable<MovieAnalytics[]> {
-    const f = this.functions.httpsCallable('getMovieAnalytics');
-    return f({ movieIds, daysPerRange: 28 });
   }
 
   /**
