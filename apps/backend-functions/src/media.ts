@@ -342,30 +342,34 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 }
 
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
+
+  const needsToBeCleaned = (beforeStoragePath: string | undefined, afterStoragePath: string) => {
+    return !!beforeStoragePath && (beforeStoragePath !== afterStoragePath && afterStoragePath === '')
+  };
+
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
-    if (!!before.banner && (before.banner !== after.banner || after.banner === '')) {
+    if (needsToBeCleaned(before.banner, after.banner)) {
       mediaToDelete.push(before.banner);
     }
 
-    if (!!before.poster && (before.poster !== after.poster || after.poster === '')) {
+    if (needsToBeCleaned(before.poster, after.poster)) {
       mediaToDelete.push(before.poster);
     }
 
-    if (!!before.promotional.presentation_deck && (before.promotional.presentation_deck !== after.promotional.presentation_deck || after.promotional.presentation_deck === '')) {
-      mediaToDelete.push(before.promotional.presentation_deck);
+    if (needsToBeCleaned(before.promotional.presentation_deck.storagePath, after.promotional.presentation_deck.storagePath)) {
+      mediaToDelete.push(before.promotional.presentation_deck.storagePath);
     }
 
-    if (!!before.promotional.scenario && (before.promotional.scenario !== after.promotional.scenario || after.promotional.scenario === '')) {
+    if (needsToBeCleaned(before.promotional.scenario, after.promotional.scenario)) {
       mediaToDelete.push(before.promotional.scenario);
     }
 
-    if (!!before.promotional.moodboard && (before.promotional.moodboard !== after.promotional.moodboard || after.promotional.moodboard === '')) {
+    if (needsToBeCleaned(before.promotional.moodboard, after.promotional.moodboard)) {
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (!!before.promotional.videos?.screener?.ref &&
-      (before.promotional.videos.screener?.ref !== after.promotional.videos?.screener?.ref || after.promotional.videos?.screener?.ref === '')) {
+    if (needsToBeCleaned(before.promotional.videos?.screener?.ref, after.promotional.videos?.screener?.ref)) {
       mediaToDelete.push(before.promotional.videos.screener.ref);
     }
 
@@ -408,7 +412,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (!!before.promotional.presentation_deck) {
-      mediaToDelete.push(before.promotional.presentation_deck);
+      mediaToDelete.push(before.promotional.presentation_deck.storagePath);
     }
 
     if (!!before.promotional.scenario) {
