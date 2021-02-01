@@ -9,6 +9,8 @@ import {
   ViewChild,
   ElementRef,
   OnInit,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -41,7 +43,7 @@ function computeSize(fileSize: number) {
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileUploaderComponent implements OnInit { // }, OnDestroy {
+export class FileUploaderComponent implements OnInit, OnChanges {
   /**
    * This the *storage* path, **not** the db path!
    * @note it **should not** start with `tmp/`
@@ -99,6 +101,10 @@ export class FileUploaderComponent implements OnInit { // }, OnDestroy {
 
   }
 
+  ngOnChanges(changes: SimpleChanges) { // TODO REMOVE DEBUG LOG
+    console.log(changes);
+  }
+
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
@@ -121,7 +127,7 @@ export class FileUploaderComponent implements OnInit { // }, OnDestroy {
 
   public selected(files: FileList | File) {
 
-    console.log('selected', files); // TODO REMOVE DEBUG LOG
+    console.log('selected', files, this.metadata); // TODO REMOVE DEBUG LOG
 
     if ('item' in files) { // FileList
       if (!files.item(0)) {

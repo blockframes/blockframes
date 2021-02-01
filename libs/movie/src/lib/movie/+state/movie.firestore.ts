@@ -124,6 +124,7 @@ export interface MoviePromotionalElements {
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: {
+    misc: string,
     storagePath: string,
   },
   salesPitch: MovieSalesPitch,
