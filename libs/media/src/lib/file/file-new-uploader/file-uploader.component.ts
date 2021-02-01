@@ -23,6 +23,18 @@ import { FormControl } from '@angular/forms';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
+
+function computeSize(fileSize: number) {
+  const size = fileSize / 1000;
+  if (size < 1000) {
+    return `${size.toFixed(1)} KB`;
+  } else if (size < 1000 * 1000) {
+    return `${(size / 1000).toFixed(1)} MB`;
+  } else {
+    return `${(size / (1000 * 1000)).toFixed(1)} GB`;
+  }
+}
+
 @Component({
   selector: '[storagePath] [metadata] [allowedFileType] file-new-uploader',
   templateUrl: './file-uploader.component.html',
@@ -42,6 +54,8 @@ export class FileUploaderComponent implements OnInit { // }, OnDestroy {
   @Input() metadata: FileMetaData;
 
   @Input() displayFile: FormControl;
+
+  @Input() input: number;
 
   @Input() set allowedFileType(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]
@@ -74,6 +88,13 @@ export class FileUploaderComponent implements OnInit { // }, OnDestroy {
     if (!!this.displayFile.value) {
       this.state = 'file';
       this.fileName = this.displayFile.value;
+    } else {
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
+      if (!!retrieved) {
+      this.state = 'ready';
+      this.fileName = retrieved.fileName;
+      this.localSize = computeSize(retrieved.file.size);
+      }
     }
 
   }
@@ -148,23 +169,15 @@ export class FileUploaderComponent implements OnInit { // }, OnDestroy {
 
     this.state = 'ready';
     this.fileName = sanitizeFileName(this.file.name);
+    this.localSize = computeSize(this.file.size);
 
-    const size = this.file.size / 1000;
-    if (size < 1000) {
-      this.localSize = `${size.toFixed(1)} KB`;
-    } else if (size < 1000 * 1000) {
-      this.localSize = `${(size / 1000).toFixed(1)} MB`;
-    } else {
-      this.localSize = `${(size / (1000 * 1000)).toFixed(1)} GB`;
-    }
-
-    this.uploaderService.addToQueue(`${this.storagePath}/${this.displayFile}`, this.file, this.metadata);
+    this.uploaderService.addToQueue(this.storagePath, this.fileName, this.file, this.metadata);
   }
 
   public delete() {
     this.state = 'waiting';
     this.fileExplorer.nativeElement.value = null;
-    this.uploaderService.removeFromQueue(`${this.storagePath}/${this.displayFile}`);
+    this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.displayFile?.setValue('');
   }
 }
