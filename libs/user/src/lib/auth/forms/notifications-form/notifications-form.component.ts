@@ -19,6 +19,7 @@ export class NotificationsFormComponent {
   public notifications = [
     {
       title: 'Company Management Notifications',
+      available: ['catalog', 'festival', 'financiers'],
       completed: {
         email: false,
         app: false
@@ -38,6 +39,7 @@ export class NotificationsFormComponent {
     },
     {
       title: 'Content Management Notifications',
+      available: ['catalog', 'festival', 'financiers'],
       completed: {
         email: false,
         app: false
@@ -58,6 +60,7 @@ export class NotificationsFormComponent {
     {
       // ! IT IS ONLY FOR FESTIVAL
       title: 'Event Management Notifications',
+      available: ['festival'],
       completed: {
         email: false,
         app: false
@@ -108,21 +111,19 @@ export class NotificationsFormComponent {
   ];
 
   @Input() form: NotificationsForm;
-  selectAllEmail = false;
-  selectAllApp = false;
   currentApp: string = getCurrentApp(this.routerQuery);
 
   constructor(private routerQuery: RouterQuery) { }
+
+  showNotifications(index: number) {
+    return this.notifications[index].available.includes(this.currentApp);
+  }
 
   toogleDefault(event: MatSlideToggleChange) {
     this.form.get('default').get(event.source.name as keyof NotificationSettings).setValue(event.checked);
   }
 
-  selectAll(event: MatSlideToggleChange) {
-    if (event.source.name === 'selectAllEmail') this.selectAllEmail = event.checked;
-    if (event.source.name === 'selectAllApp') this.selectAllApp = event.checked;
-  }
-
+  // CHECKBOX LOGIC //
   someComplete(index: number, value: string) {
     if (this.notifications[index].subNotification == null) return false;
     return this.notifications[index].subNotification.filter(sn => sn[value]).length > 0 && !this.notifications[index].completed[value];
