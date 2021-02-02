@@ -1,3 +1,3 @@
 #! /usr/bin/env bash
-firebase emulators:exec --only firestore 'nx test event --skip-nx-cache && nx test notification --skip-nx-cache && nx test import --skip-nx-cache && nx test invitation  --skip-nx-cache'
+firebase emulators:exec --only firestore 'npx nx run event:test --skip-nx-cache && npx nx run notification:test --skip-nx-cache && npx nx run import:test --skip-nx-cache && npx nx run invitation:test  --skip-nx-cache'
 
