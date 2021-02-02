@@ -80,6 +80,8 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
   const notification = snap.data() as NotificationDocument;
   // @TODO #4046 should contain all notificationTypes in the end
   const types: NotificationType[] = [
+    'movieSubmitted',
+    'movieAccepted',
     'memberAddedToOrg',
     'memberRemovedFromOrg',
     'oneDayReminder',
@@ -95,16 +97,29 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       const recipient = await getDocument<User>(`users/${notification.toUserId}`);
 
       switch (notification.type) {
-        case 'eventIsAboutToStart':
-          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneHour)
+        case 'organizationAcceptedByArchipelContent':
+          await sendMailToOrgAcceptedAdmin(recipient, notification)
             .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message)
+            .catch(e => notification.email.error = e.message);
           break;
-        case 'oneDayReminder':
-          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneDay)
+
+        // Notifications relative to movies
+        case 'movieSubmitted' :
+          //! There is no email template for now
+          //TODO 4046 Add new template from Sendgrid
+          await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been submitted.' })
             .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message)
+            .catch(e => notification.email.error = e.message);
           break;
+        case 'movieAccepted' :
+          //! There is no email template for now
+          //TODO 4046 Add new template from Sendgrid
+          await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been accepted by the Archipel team.' })
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
+
+        // Notifications relative to invitations
         case 'memberAddedToOrg':
           await sendMemberAddedToOrgEmail(recipient, notification)
             .then(_ => notification.email.isSent = true)
@@ -119,14 +134,8 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
-        case 'invitationToAttendEventAccepted':
-          const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
-          if (!!invitation.fromUser && !!invitation.toOrg) {
-            await sendInvitationToAttendEventAcceptedEmail(recipient, notification)
-            .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message);
-          }
-          break;
+
+        // Events related notifications
         case 'requestToAttendEventSent' :
           //! There is no email template for now
           //TODO 4046 Add new template from Sendgrid
@@ -134,8 +143,18 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
-        case 'organizationAcceptedByArchipelContent':
-          await sendMailToOrgAcceptedAdmin(recipient, notification)
+        case 'eventIsAboutToStart':
+          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneHour)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message)
+          break;
+        case 'oneDayReminder':
+          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneDay)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message)
+          break;
+        case 'invitationToAttendEventAccepted':
+          await sendInvitationToAttendEventAcceptedEmail(recipient, notification)
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
