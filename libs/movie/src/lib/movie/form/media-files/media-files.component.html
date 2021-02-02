@@ -4,16 +4,12 @@
     <section id="presentation-deck">
       <h3>Presentation Deck</h3>
 
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Extra Data</mat-label>
-        <input matInput placeholder="Test extra data flow" [formControl]="extradatas.presentationDeck.get('misc')" />
-      </mat-form-field>
-
       <file-new-uploader
+        test-id="presentationDeck"
         allowedFileType="pdf"
         [displayFile]="form.promotional.get('presentation_deck').get('storagePath')"
         [storagePath]="storagePaths.presentationDeck"
-        [metadata]="metadatas.presentationDeck | async"
+        [metadata]="metadatas.presentationDeck"
       >
         <h3 title>Upload Presentation Deck</h3>
       </file-new-uploader>
@@ -23,19 +19,31 @@
 
     <section id="scenario">
       <h3>Scenario</h3>
-      <file-uploader test-id="scenario" [form]="form.promotional.get('scenario')" [storagePath]="getPath('scenario')"
-        allowedFileType="pdf">
+      <file-new-uploader
+        test-id="scenario"
+        allowedFileType="pdf"
+        [displayFile]="form.promotional.get('scenario').get('storagePath')"
+        [storagePath]="storagePaths.scenario"
+        [metadata]="metadatas.scenario"
+      >
         <h3 title>Upload Scenario</h3>
-      </file-uploader>
+      </file-new-uploader>
+
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
     <section id="moodboard">
       <h3>Moodboard / Artistic Deck</h3>
-      <file-uploader test-id="moodboard" [form]="form.promotional.get('moodboard')" [storagePath]="getPath('moodboard')"
-        allowedFileType="pdf">
+      <file-new-uploader
+        test-id="moodboard"
+        allowedFileType="pdf"
+        [displayFile]="form.promotional.get('moodboard').get('storagePath')"
+        [storagePath]="storagePaths.moodboard"
+        [metadata]="metadatas.moodboard"
+      >
         <h3 title>Upload Moodboard / Artistic Deck</h3>
-      </file-uploader>
+      </file-new-uploader>
+
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
   </ng-container>
