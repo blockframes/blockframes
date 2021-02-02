@@ -157,16 +157,6 @@ async function onInvitationToAnEventAccepted({
     if (!!toUser) {
       notification.user = toUser; // The subject that have accepted the invitation
     } else if (!!toOrg) {
-      // @TODO (#2848) forcing to festival since invitations to events are only on this one
-      const appKey: App = 'festival';
-      const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
-      const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
-      const eventData: EventEmailData = getEventEmailData(event);
-      const url = applicationUrl[appKey];
-
-      const templateRequest = requestToAttendEventFromUserAccepted(fromUser, orgName(org), eventData, url);
-      await sendMailFromTemplate(templateRequest, appKey).catch(e => console.warn(e.message));
-
       notification.organization = toOrg; // The subject that have accepted the invitation
     } else {
       throw new Error('Did not found invitation recipient.');
@@ -185,7 +175,6 @@ async function onInvitationToAnEventAccepted({
       if (!!toUser) {
         notification.user = toUser; // The subject that have accepted the invitation
       } else if (!!toOrg) {
-
         notification.organization = toOrg; // The subject that have accepted the invitation
       } else {
         throw new Error('Did not found invitation recipient.');
