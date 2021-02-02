@@ -29,3 +29,10 @@ th {
 td {
   z-index: 1;
 }
+
+.surface {
+  margin-bottom: 36px;
+  &:last-child {
+    margin-bottom: 80px;
+  }
+}

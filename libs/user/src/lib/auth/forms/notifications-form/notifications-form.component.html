@@ -40,11 +40,12 @@
   </article>
 </section> -->
 
-<table>
-  <ng-container *ngFor="let row of notifications, let index = index">
+<div class="surface" *ngFor="let row of notifications, let index = index">
+<table >
+  <!-- <ng-container *ngFor="let row of notifications, let index = index"> -->
     <tbody *ngIf="showNotifications(index)">
       <tr>
-        <th>{{ row.title }}</th>
+        <th><h2>{{ row.title }}</h2></th>
         <th><mat-checkbox [indeterminate]="someComplete(index, 'email')" [checked]="row.completed.email" (change)="setAll($event.checked, index, 'email')"></mat-checkbox>By e-mail</th>
         <th><mat-checkbox [indeterminate]="someComplete(index, 'app')" [checked]="row.completed.app" (change)="setAll($event.checked, index, 'app')"></mat-checkbox>In app</th>
       </tr>
@@ -54,6 +55,7 @@
         <td><mat-checkbox [checked]="subrow.app" name="appCheckbox" (change)="updateAllComplete(index, subIndex, $event, 'app')"></mat-checkbox></td>
       </tr>
     </tbody>
-  </ng-container>
+  <!-- </ng-container> -->
 
 </table>
+</div>
