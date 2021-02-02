@@ -129,6 +129,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           break;
         case 'requestToAttendEventSent' :
           //! There is no email template for now
+          //TODO 4046 Add new template from Sendgrid
           await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been sent.' })
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
@@ -203,13 +204,17 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
 
 /** Send an email when an invitation to access an event is accepted */
 async function sendInvitationToAttendEventAcceptedEmail(recipient: User, notification: NotificationDocument) {
-  const app = await getOrgAppKey(recipient.orgId);
-  const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
-  const eventData = getEventEmailData(event);
+  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
 
-  const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
-  await sendMailFromTemplate(template, app);
+  if (!!invitation.fromUser && !!invitation.toOrg) {
+    const app = await getOrgAppKey(recipient.orgId);
+    const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+    const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+    const eventData = getEventEmailData(event);
+    const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
+    await sendMailFromTemplate(template, app);
+  }
+  return;
 }
 
 /** Send an email to org admin when his/her org is accepted */
