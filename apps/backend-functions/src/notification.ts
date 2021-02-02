@@ -11,7 +11,8 @@ import { reminderEventToUser,
   userJoinedYourOrganization,
   userRequestedToJoinYourOrg,
   requestToAttendEventFromUserAccepted,
-  organizationWasAccepted
+  organizationWasAccepted,
+  organizationAppAccessChanged
 } from './templates/mail';
 import { templateIds } from './templates/ids';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -87,7 +88,9 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
     'oneDayReminder',
     'eventIsAboutToStart',
     'requestFromUserToJoinOrgCreate',
-    'organizationAcceptedByArchipelContent'
+    'organizationAcceptedByArchipelContent',
+    'invitationToAttendEventDeclined',
+    'orgAppAccessChanged'
   ];
 
   if (notification.email?.isSent === false) {
@@ -97,10 +100,16 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       const recipient = await getDocument<User>(`users/${notification.toUserId}`);
 
       switch (notification.type) {
+        // Notification related to organization
         case 'organizationAcceptedByArchipelContent':
           await sendMailToOrgAcceptedAdmin(recipient, notification)
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
+          break;
+        case 'orgAppAccessChanged':
+          await sendOrgAppAccessChangedEmail(recipient)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message)
           break;
 
         // Notifications relative to movies
@@ -155,6 +164,13 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           break;
         case 'invitationToAttendEventAccepted':
           await sendInvitationToAttendEventAcceptedEmail(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
+        case 'invitationToAttendEventDeclined' :
+          //! There is no email template for now
+          //TODO 4046 Add new template from Sendgrid
+          await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been declined.' })
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
@@ -241,4 +257,12 @@ async function sendMailToOrgAcceptedAdmin(recipient: User, notification: Notific
   const app = await getOrgAppKey(recipient.orgId);
   const template = organizationWasAccepted(recipient.email, recipient.firstName);
   await sendMailFromTemplate(template, app);
+}
+
+/** Send email to organization's admins when org appAccess has changed */
+async function sendOrgAppAccessChangedEmail(recipient: User) {
+  const app = await getOrgAppKey(recipient.orgId);
+  const url = await getAppUrl(recipient.orgId);
+  const template = organizationAppAccessChanged(recipient, url);
+   await sendMailFromTemplate(template, app);
 }

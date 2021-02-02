@@ -7,13 +7,14 @@ import { difference } from 'lodash';
  */
 import { db } from './internals/firebase';
 import { getUser } from "./internals/utils";
-import { sendMail, sendMailFromTemplate } from './internals/email';
-import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
+import { sendMail } from './internals/email';
+import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
-import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { NotificationDocument } from './data/types';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
@@ -287,13 +288,19 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const appKey = await getOrgAppKey(orgId);
-  const appUrl = await getAppUrl(orgId);
 
+  const notifications : NotificationDocument[] = [];
   await Promise.all(admins.map(admin => {
-    const template = organizationAppAccessChanged(admin, appUrl);
-    return sendMailFromTemplate(template, appKey).catch(e => console.warn(e.message));
+    const notification = createNotification({
+      toUserId: admin.uid,
+      docId: admin.orgId,
+      type: 'orgAppAccessChanged'
+    });
+
+    notifications.push(notification);
   }));
+
+  await triggerNotifications(notifications);
 
   return {
     error: '',
