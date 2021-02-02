@@ -19,6 +19,7 @@ import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { getDocument } from './data/internals';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -290,15 +291,17 @@ export const accessToAppChanged = async (
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
 
   const notifications : NotificationDocument[] = [];
-  await Promise.all(admins.map(admin => {
+  admins.map(async admin => {
+    const organization = await getDocument<OrganizationDocument>(`orgs/${admin.orgId}`);
     const notification = createNotification({
       toUserId: admin.uid,
       docId: admin.orgId,
+      organization,
       type: 'orgAppAccessChanged'
     });
 
     notifications.push(notification);
-  }));
+  });
 
   await triggerNotifications(notifications);
 

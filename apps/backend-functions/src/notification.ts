@@ -1,4 +1,4 @@
-import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, PublicUser } from './data/types';
+import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
@@ -107,7 +107,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
             .catch(e => notification.email.error = e.message);
           break;
         case 'orgAppAccessChanged':
-          await sendOrgAppAccessChangedEmail(recipient)
+          await sendOrgAppAccessChangedEmail(recipient, notification)
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message)
           break;
@@ -260,9 +260,9 @@ async function sendMailToOrgAcceptedAdmin(recipient: User, notification: Notific
 }
 
 /** Send email to organization's admins when org appAccess has changed */
-async function sendOrgAppAccessChangedEmail(recipient: User) {
-  const app = await getOrgAppKey(recipient.orgId);
-  const url = await getAppUrl(recipient.orgId);
+async function sendOrgAppAccessChangedEmail(recipient: User, notification: NotificationDocument) {
+  const app = await getOrgAppKey(notification.organization.id);
+  const url = await getAppUrl(notification.organization.id);
   const template = organizationAppAccessChanged(recipient, url);
-   await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app);
 }
