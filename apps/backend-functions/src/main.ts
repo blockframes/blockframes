@@ -22,6 +22,7 @@ import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { heavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
+import { importAnalytics } from './pubsub/daily-analytics-import';
 
 
 //--------------------------------
@@ -64,9 +65,6 @@ export const sendUserContactMail = functions.https.onCall(skipInMaintenance(logE
 
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions.https.onCall(skipInMaintenance(logErrors(users.sendDemoRequest)));
-
-/** Trigger: REST call bigQuery with an array of movieIds to get their analytics. */
-export const getMovieAnalytics = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.requestMovieAnalytics)));
 
 /** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
 export const getEventAnalytics = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.requestEventAnalytics)));
@@ -230,3 +228,12 @@ export const getMediaToken = functions.https.onCall(skipInMaintenance(logErrors(
  * This is a scheduled function which runs daily backup if complied with production configuration
  */
 export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
+
+//--------------------------------
+//          Analytics           //
+//--------------------------------
+/**
+ * Imports analytics data from BigQuery
+ */
+export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *') // every day
+  .onRun(skipInMaintenance(_ => importAnalytics));
