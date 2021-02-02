@@ -141,14 +141,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
 
-  const { userIds } = before as OrganizationDocument;
-  const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {
-    // send email to let the org admin know that the org has been accepted
-    const urlToUse = await getAppUrl(after);
-    const appKey = await getOrgAppKey(after);
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), appKey).catch(e => console.warn(e.message));
-
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array

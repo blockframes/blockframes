@@ -169,7 +169,7 @@ async function onInvitationToAnEventAccepted({
       const notification = createNotification({
         toUserId,
         docId: eventId,
-        type: 'invitationToAttendEventAccepted' //? Need a new type of notification ?
+        type: 'invitationToAttendEventAccepted'
       });
 
       if (!!toUser) {

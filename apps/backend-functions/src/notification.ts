@@ -1,4 +1,4 @@
-import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
+import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, PublicUser } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
@@ -7,7 +7,12 @@ import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
-import { reminderEventToUser, userJoinedYourOrganization, userRequestedToJoinYourOrg, requestToAttendEventFromUserAccepted } from './templates/mail';
+import { reminderEventToUser,
+  userJoinedYourOrganization,
+  userRequestedToJoinYourOrg,
+  requestToAttendEventFromUserAccepted,
+  organizationWasAccepted
+} from './templates/mail';
 import { templateIds } from './templates/ids';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
@@ -74,7 +79,14 @@ export function createNotification(notification: Partial<NotificationDocument> =
 export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const notification = snap.data() as NotificationDocument;
   // @TODO #4046 should contain all notificationTypes in the end
-  const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg', 'oneDayReminder', 'eventIsAboutToStart', 'requestFromUserToJoinOrgCreate'];
+  const types: NotificationType[] = [
+    'memberAddedToOrg',
+    'memberRemovedFromOrg',
+    'oneDayReminder',
+    'eventIsAboutToStart',
+    'requestFromUserToJoinOrgCreate',
+    'organizationAcceptedByArchipelContent'
+  ];
 
   if (notification.email?.isSent === false) {
     // Update notification state
@@ -120,6 +132,12 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been sent.' })
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
+          break;
+        case 'organizationAcceptedByArchipelContent':
+          await sendMailToOrgAcceptedAdmin(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
         default:
           // @TODO #4046 clean
           // Send email
@@ -191,5 +209,12 @@ async function sendInvitationToAttendEventAcceptedEmail(recipient: User, notific
   const eventData = getEventEmailData(event);
 
   const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
+  await sendMailFromTemplate(template, app);
+}
+
+/** Send an email to org admin when his/her org is accepted */
+async function sendMailToOrgAcceptedAdmin(recipient: User, notification: NotificationDocument) {
+  const app = await getOrgAppKey(recipient.orgId);
+  const template = organizationWasAccepted(recipient.email, recipient.firstName);
   await sendMailFromTemplate(template, app);
 }
