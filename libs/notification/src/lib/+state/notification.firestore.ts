@@ -9,7 +9,9 @@ import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 /** Type of Notification depending of its origin. */
 export type NotificationType =
 
+  // Notification related to organization
   'organizationAcceptedByArchipelContent' |
+  'orgAppAccessChanged' |
 
   // Notifications relative to movies
   'movieSubmitted' | // (catalog only)
