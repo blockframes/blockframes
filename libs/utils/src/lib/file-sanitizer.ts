@@ -49,6 +49,7 @@ export function deconstructFilePath(_filePath: string | undefined) {
     isTmp,
     privacy,
     collection,
+    docId,
     filePath,
     docPath,
     field

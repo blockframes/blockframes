@@ -7,14 +7,15 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { UploadData, HostedMediaFormValue } from "./media.firestore";
+import { UploadData, HostedMediaFormValue, isValidMetadata } from "./media.firestore";
 
 // Blockframes
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 import { delay, BehaviorStore } from "@blockframes/utils/helpers";
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 import { clamp } from '@blockframes/utils/utils';
-import { tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { deconstructFilePath, tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { AuthQuery } from "@blockframes/auth/+state";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -33,6 +34,7 @@ export class MediaService {
   private getMediaToken = this.functions.httpsCallable('getMediaToken');
 
   constructor(
+    private userQuery: AuthQuery,
     private storage: AngularFireStorage,
     private functions: AngularFireFunctions,
     private overlay: Overlay,
@@ -46,7 +48,7 @@ export class MediaService {
      * Then a backend functions performs a check on DB document to check if
      * file have to be moved to correct folder or deleted.
      */
-    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data));
+    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data, { customMetadata: file.metadata }));
     this.addTasks(tasks);
     (Promise as any).allSettled(tasks)
       .then(() => delay(3000))
@@ -81,19 +83,33 @@ export class MediaService {
     }
   }
 
-  async uploadMedias(mediaForms: HostedMediaFormValue[]) {
-    const promises = mediaForms.map(async mediaForm => {
+  uploadMedias(mediaForms: HostedMediaFormValue[]) {
+    mediaForms.forEach(mediaForm => {
       if (!!mediaForm.blobOrFile) {
+
+        const isValid = isValidMetadata(mediaForm.metadata);
+        if (!isValid) {
+          console.error('Invalid File Metadata: upload of this file will be skipped!');
+          console.error(mediaForm);
+          return; // skip the current `forEach` iteration
+        }
+
         // upload the new file
         this.upload({
           data: mediaForm.blobOrFile,
           path: mediaForm.ref,
-          fileName: mediaForm.fileName
+          fileName: mediaForm.fileName,
+          metadata: {
+            uid: this.userQuery.userId,
+            privacy: mediaForm.metadata.privacy,
+            collection: mediaForm.metadata.collection,
+            docId: mediaForm.metadata.docId,
+            field: mediaForm.metadata.field,
+          },
         });
 
       }
     });
-    await Promise.all(promises);
   }
 
   /**

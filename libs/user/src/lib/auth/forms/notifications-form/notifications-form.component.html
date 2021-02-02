@@ -4,8 +4,39 @@
   <article fxLayout="row" fxLayoutAlign="space-between">
     <p>Receive all general notifications :</p>
     <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('default').get('email').value" name="email" (change)="toogleDefault($event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('default').get('app').value" name="app" (change)="toogleDefault($event)">App :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('eventIsAboutToStart').get('email').value" name="email" (change)="toogle('eventIsAboutToStart', $event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('eventIsAboutToStart').get('app').value" name="app" (change)="toogle('eventIsAboutToStart', $event)">App :</mat-slide-toggle>
+    </div>
+  </article>
+  <article fxLayout="row" fxLayoutAlign="space-between">
+    <p>oneDayReminder :</p>
+    <div fxLayout="row" fxLayoutGap="40px">
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('oneDayReminder').get('email').value" name="email" (change)="toogle('oneDayReminder', $event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('oneDayReminder').get('app').value" name="app" (change)="toogle('oneDayReminder', $event)">App :</mat-slide-toggle>
+    </div>
+  </article>
+
+  <article fxLayout="row" fxLayoutAlign="space-between">
+    <p>memberAddedToOrg :</p>
+    <div fxLayout="row" fxLayoutGap="40px">
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberAddedToOrg').get('email').value" name="email" (change)="toogle('memberAddedToOrg', $event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberAddedToOrg').get('app').value" name="app" (change)="toogle('memberAddedToOrg', $event)">App :</mat-slide-toggle>
+    </div>
+  </article>
+
+  <article fxLayout="row" fxLayoutAlign="space-between">
+    <p>memberRemovedFromOrg :</p>
+    <div fxLayout="row" fxLayoutGap="40px">
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberRemovedFromOrg').get('email').value" name="email" (change)="toogle('memberRemovedFromOrg', $event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberRemovedFromOrg').get('app').value" name="app" (change)="toogle('memberRemovedFromOrg', $event)">App :</mat-slide-toggle>
+    </div>
+  </article>
+
+  <article fxLayout="row" fxLayoutAlign="space-between">
+    <p>requestFromUserToJoinOrgCreate :</p>
+    <div fxLayout="row" fxLayoutGap="40px">
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestFromUserToJoinOrgCreate').get('email').value" name="email" (change)="toogle('requestFromUserToJoinOrgCreate', $event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="true" [disabled] = true name="app">App :</mat-slide-toggle>
     </div>
   </article>
 

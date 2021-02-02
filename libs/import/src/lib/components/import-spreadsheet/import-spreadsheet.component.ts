@@ -27,7 +27,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   public isUserBlockframesAdmin = false;
   public pageTitle = 'Import multiple titles at once';
 
-  public excelForm = new HostedMediaForm();
+  public excelForm = new HostedMediaForm(); // TODO issue#4002
 
   private sub: Subscription;
   private fileTypeSub: Subscription;

@@ -12,6 +12,7 @@ import { MarketplaceQuery } from './+state/marketplace.query';
 export class MarketplaceComponent {
   public cartCount$ = this.marketplaceQuery.selectCount();
   public canAccessDeals = !this.orgQuery.getActive().appAccess.catalog.dashboard;
+  public org$ = this.orgQuery.selectActive();
 
-  constructor(private marketplaceQuery: MarketplaceQuery, private orgQuery: OrganizationQuery) {}
+  constructor(private marketplaceQuery: MarketplaceQuery, private orgQuery: OrganizationQuery) { }
 }

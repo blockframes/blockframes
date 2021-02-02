@@ -27,7 +27,7 @@ export class MoviePictureUploadComponent implements OnInit {
   }
 
   addStill() {
-    this.moviePictureForm.get('still_photos').push(new HostedMediaForm());
+    this.moviePictureForm.get('still_photo').push(new HostedMediaForm());
     this.cdr.markForCheck();
   }
 
@@ -41,7 +41,7 @@ export class MoviePictureUploadComponent implements OnInit {
 
     this.movie.poster = documentToUpdate.poster;
     this.movie.banner = documentToUpdate.banner;
-    this.movie.promotional.still_photo = documentToUpdate.still_photos;
+    this.movie.promotional.still_photo = documentToUpdate.still_photo;
 
     await this.movieService.update(this.movie.id, this.movie);
     this.mediaService.uploadMedias(mediasToUpload);

@@ -8,6 +8,7 @@ import { getCurrentApp } from "@blockframes/utils/apps";
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { NotificationType } from '@blockframes/notification/types';
 
 @Component({
   selector: '[form] user-notifications-form',
@@ -119,8 +120,8 @@ export class NotificationsFormComponent {
     return this.notifications[index].available.includes(this.currentApp);
   }
 
-  toogleDefault(event: MatSlideToggleChange) {
-    this.form.get('default').get(event.source.name as keyof NotificationSettings).setValue(event.checked);
+  toogle(notificationType: NotificationType, event: MatSlideToggleChange) {
+    this.form.get(notificationType).get(event.source.name as keyof NotificationSettings).setValue(event.checked);
   }
 
   // CHECKBOX LOGIC //
