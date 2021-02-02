@@ -121,14 +121,11 @@ export interface HostedVideo {
 export interface MoviePromotionalElements {
 
   financialDetails: string,
-  moodboard: string,
+  moodboard: { storagePath: string },
   notes: MovieNote[],
-  presentation_deck: {
-    misc: string,
-    storagePath: string,
-  },
+  presentation_deck: { storagePath: string },
   salesPitch: MovieSalesPitch,
-  scenario: string,
+  scenario: { storagePath: string },
   still_photo: string[],
   videos?: HostedVideos,
 
