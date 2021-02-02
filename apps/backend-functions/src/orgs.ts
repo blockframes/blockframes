@@ -289,14 +289,13 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-
-  const notifications : NotificationDocument[] = [];
+  const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+  const notifications: NotificationDocument[] = [];
   admins.map(async admin => {
-    const organization = await getDocument<OrganizationDocument>(`orgs/${admin.orgId}`);
     const notification = createNotification({
       toUserId: admin.uid,
       docId: admin.orgId,
-      organization,
+      organization: createPublicOrganizationDocument(organization),
       type: 'orgAppAccessChanged'
     });
 
