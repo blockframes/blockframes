@@ -1,38 +1,53 @@
-section.surface {
-  padding: 24px;
-  margin-bottom: 36px;
-  &:last-child {
-    margin-bottom: 80px;
-  }
-}
-
-mat-icon {
-  max-height: 16px;
-}
-
 table {
   width: 100%;
   text-align: left;
   position: relative;
   border-collapse: collapse;
 }
-th, td {
-  padding: 0.25rem;
-}
+
 th {
-  background: rgb(112, 2, 2);
+  background-color: var(--background-card);
   position: sticky;
   z-index: 10;
-  top: 0; /* Don't forget this, required for the stickiness */
-  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+  top: 0; /* Required for the stickiness */
+  padding-top: 16px;
+  &:first-child {
+    padding-left: 16px;
+  }
+  mat-checkbox {
+    margin-right: 4px;
+  }
+  h2 {
+    margin: 0;
+  }
 }
+
 td {
-  z-index: 1;
+  padding: 4px 0;
+  &:first-child {
+    padding-left: 16px;
+  }
+}
+
+span {
+  padding-left: 16px;
+}
+
+.description {
+  width: 80%;
 }
 
 .surface {
-  margin-bottom: 36px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
   &:last-child {
     margin-bottom: 80px;
+  }
+}
+
+section.general {
+  padding: 16px;
+  p {
+    margin: 0
   }
 }

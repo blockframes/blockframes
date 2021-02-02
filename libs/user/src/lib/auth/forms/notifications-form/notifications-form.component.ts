@@ -22,19 +22,19 @@ export class NotificationsFormComponent {
       title: 'Company Management Notifications',
       available: ['catalog', 'festival', 'financiers'],
       completed: {
-        email: false,
-        app: false
+        email: true,
+        app: true
       },
       subNotification: [
         {
           subtitle: 'A new user requests to join your organization.',
-          email: false,
+          email: true,
           app: true
         },
         {
           subtitle: 'A new member joins your organization.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         }
       ]
     },
@@ -42,19 +42,19 @@ export class NotificationsFormComponent {
       title: 'Content Management Notifications',
       available: ['catalog', 'festival', 'financiers'],
       completed: {
-        email: false,
-        app: false
+        email: true,
+        app: true
       },
       subNotification: [
         {
           subtitle: 'A title is successfully submitted for validation.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'A title gets published to the marketplace.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         }
       ]
     },
@@ -63,49 +63,49 @@ export class NotificationsFormComponent {
       title: 'Event Management Notifications',
       available: ['festival'],
       completed: {
-        email: false,
-        app: false
+        email: true,
+        app: true
       },
       subNotification: [
         {
           subtitle: 'An organization invites you to a screening.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'An user invites you to a meeting.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'An user answers your invitation to an event.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'An user requests an access to an event you organize.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'Your request to access an event has been sent.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'An organization answers your request to access an event.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'Reminder 24h before an event starts.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         },
         {
           subtitle: 'Reminder 1h before an event starts.',
-          email: false,
-          app: false
+          email: true,
+          app: true
         }
       ]
     }
@@ -118,6 +118,13 @@ export class NotificationsFormComponent {
 
   showNotifications(index: number) {
     return this.notifications[index].available.includes(this.currentApp);
+  }
+
+  toogleAll(event: MatSlideToggleChange) {
+    this.notifications.forEach(notification => {
+      notification.completed[event.source.name] = event.checked;
+      notification.subNotification.forEach(subNotif => subNotif[event.source.name] = event.checked)
+    });
   }
 
   toogle(notificationType: NotificationType, event: MatSlideToggleChange) {
