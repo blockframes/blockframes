@@ -1,6 +1,7 @@
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PublicMovie } from '@blockframes/movie/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
@@ -28,8 +29,8 @@ export type NotificationType =
   'requestToAttendEventSent' |
   'eventIsAboutToStart' | // 1h Reminder before event
   'oneDayReminder' | // 24h Reminder before event
-  'invitationToAttendEventAccepted' |
-  'invitationToAttendEventDeclined'
+  'invitationToAttendEventUpdated' | // Invitation, accepted or rejected
+  'requestToAttendEventUpdated' // Request, accepted or rejected
   ;
 
 
@@ -44,6 +45,7 @@ export interface NotificationBase<D> {
   docId?: string;
   movie?: PublicMovie;
   organization?: PublicOrganization;
+  invitation?: PublicInvitation,
   /** @dev Type of the notification */
   type: NotificationType;
   email?: {

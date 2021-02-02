@@ -7,7 +7,8 @@ import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
-import { reminderEventToUser,
+import {
+  reminderEventToUser,
   userJoinedYourOrganization,
   userRequestedToJoinYourOrg,
   requestToAttendEventFromUserAccepted,
@@ -15,6 +16,7 @@ import { reminderEventToUser,
 } from './templates/mail';
 import { templateIds } from './templates/ids';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { App } from '@blockframes/utils/apps';
 
 type Timestamp = admin.firestore.Timestamp;
 
@@ -84,10 +86,15 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
     'movieAccepted',
     'memberAddedToOrg',
     'memberRemovedFromOrg',
+
+    'requestFromUserToJoinOrgCreate',
+    'organizationAcceptedByArchipelContent',
+
+    // Events related notifications
     'oneDayReminder',
     'eventIsAboutToStart',
-    'requestFromUserToJoinOrgCreate',
-    'organizationAcceptedByArchipelContent'
+    'invitationToAttendEventUpdated',
+    'requestToAttendEventUpdated'
   ];
 
   if (notification.email?.isSent === false) {
@@ -104,14 +111,14 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           break;
 
         // Notifications relative to movies
-        case 'movieSubmitted' :
+        case 'movieSubmitted':
           //! There is no email template for now
           //TODO 4046 Add new template from Sendgrid
           await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been submitted.' })
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
-        case 'movieAccepted' :
+        case 'movieAccepted':
           //! There is no email template for now
           //TODO 4046 Add new template from Sendgrid
           await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been accepted by the Archipel team.' })
@@ -136,7 +143,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           break;
 
         // Events related notifications
-        case 'requestToAttendEventSent' :
+        case 'requestToAttendEventSent':
           //! There is no email template for now
           //TODO 4046 Add new template from Sendgrid
           await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been sent.' })
@@ -153,8 +160,13 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message)
           break;
-        case 'invitationToAttendEventAccepted':
-          await sendInvitationToAttendEventAcceptedEmail(recipient, notification)
+        case 'requestToAttendEventUpdated':
+          await sendRequestToAttendEventUpdatedEmail(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
+        case 'invitationToAttendEventUpdated':
+          await sendInvitationToAttendEventUpdatedEmail(recipient, notification)
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
@@ -221,18 +233,54 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
   return await sendMailFromTemplate(email, app);
 }
 
-/** Send an email when an invitation to access an event is accepted */
-async function sendInvitationToAttendEventAcceptedEmail(recipient: User, notification: NotificationDocument) {
+/** Send an email when an request to access an event is updated */
+async function sendRequestToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
   const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
 
-  if (!!invitation.fromUser && !!invitation.toOrg) {
-    const app = await getOrgAppKey(recipient.orgId);
+  if (!!invitation.toOrg) {
+    // Forcing to festival since invitations to events are only on this one
+    const app: App = 'festival';
     const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
     const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
     const eventData = getEventEmailData(event);
-    const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
-    await sendMailFromTemplate(template, app);
+    if (notification.invitation.status === 'accepted') {
+      const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
+      await sendMailFromTemplate(template, app);
+    } else {
+      // @TODO rejected
+    }
+  } else {
+    // @TODO create email when we have toUser 
+    const organizerUser = await getDocument<OrganizationDocument>(`users/${notification.user.uid}`);
+    if (notification.invitation.status === 'accepted') {
+      // @TODO accepted
+    } else {
+      // @TODO rejected
+    }
   }
+
+  return;
+}
+
+/** Send an email when an invitation to access an event is updated */
+async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
+  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
+
+  if (!!invitation.toOrg) {
+    if (notification.invitation.status === 'accepted') {
+      // @TODO accepted
+    } else {
+      // @TODO rejected
+    }
+  } else {
+    // @TODO create email when we have toUser
+    if (notification.invitation.status === 'accepted') {
+      // @TODO accepted
+    } else {
+      // @TODO rejected
+    }
+  }
+
   return;
 }
 
