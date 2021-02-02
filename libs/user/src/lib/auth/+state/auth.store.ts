@@ -17,7 +17,7 @@ export function createUser(user: Partial<User> = {}) {
   return {
     ...user,
     avatar: user.avatar ?? '',
-    watermark: user.watermark ?? '',
+    watermark: user.watermark ?? ''
   } as User;
 }
 
@@ -28,6 +28,6 @@ export class AuthStore extends Store<AuthState> {
     super(initialAuthState);
   }
   public updateProfile(profile: Partial<User>) {
-    this.update(authState => ({ profile: { ...authState.profile, profile }}))
+    this.update(authState => ({ profile: { ...authState.profile, profile } }))
   }
 }

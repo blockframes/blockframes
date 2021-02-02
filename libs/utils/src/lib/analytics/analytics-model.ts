@@ -21,3 +21,8 @@ export interface AnalyticsUserProperties {
   browser_name: string;
   browser_version: string;
 }
+
+export interface AnalyticsBase {
+  id: string;
+  type: 'movie',
+}

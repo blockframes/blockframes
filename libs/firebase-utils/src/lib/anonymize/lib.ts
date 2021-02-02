@@ -3,8 +3,8 @@ import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
 import { DbRecord, throwOnProduction } from '../util';
-import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot, } from '../types';
-import { Queue, } from '../queue';
+import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
+import { Queue } from '../queue';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
@@ -60,7 +60,7 @@ function processNotification(n: NotificationDocument): NotificationDocument {
   };
 }
 
-function updateUser(user: User | PublicUser) {
+function updateUser(user: User | PublicUser | Partial<User>) {
   if (!user) return;
   if (hasKeys<PublicUser>(user, 'uid') && !hasKeys<User>(user, 'watermark')) {
     // Is public
@@ -70,6 +70,11 @@ function updateUser(user: User | PublicUser) {
   }
   if (hasKeys<User>(user, 'uid')) {
     return userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
+  }
+  if (!hasKeys<User>(user, 'uid')) {
+    console.warn('WARNING - user does not have UID!', user)
+    // @ts-ignore
+    return processUser(user);
   }
   throw Error(`Unable to process user: ${JSON.stringify(user, null, 4)}`);
 }
@@ -109,7 +114,7 @@ function processMaintenanceDoc(doc: IMaintenanceDoc): IMaintenanceDoc {
   return { endedAt: null, startedAt: firestore.Timestamp.now() }
 }
 
-function anonymizeDocument({ docPath, content: doc }: DbRecord) {
+export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   const ignorePaths = [
     'blockframesAdmin/',
     'contracts/',
@@ -132,7 +137,7 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
       return { docPath, content: processInvitation(doc) };
     }
-    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
+    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'toUserId')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     }
     if (docPath.includes('movies/')) {
@@ -152,7 +157,7 @@ function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   throw new Error([error, location, solution].join('/n'));
 }
 
-function getPathOrder(path: string): number {
+export function getPathOrder(path: string): number {
   if (path.includes('users/')) return 1;
   if (path.includes('orgs/')) return 2;
   if (path.includes('invitations/')) return 3;

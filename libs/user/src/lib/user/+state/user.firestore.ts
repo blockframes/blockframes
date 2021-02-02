@@ -1,4 +1,5 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { NotificationType } from '@blockframes/notification/types';
 
 export interface User extends PublicUser {
   financing: {
@@ -11,12 +12,22 @@ export interface User extends PublicUser {
   orgId: string;
   avatar: string;
   watermark: string;
-  privacyPolicy: {
-    date: Date;
-    ip: string;
-  }
+  privacyPolicy: PrivacyPolicy;
+  settings?: UserSettings
 }
 
+export interface PrivacyPolicy {
+  date: Date;
+  ip: string;
+}
+
+export interface UserSettings {
+  notifications?: NotificationSettings,
+}
+
+export interface NotificationSettingsTemplate { email: boolean, app: boolean };
+
+export type NotificationSettings = Record<NotificationType, NotificationSettingsTemplate>;
 
 /** A user interface with public information */
 export interface PublicUser {
@@ -30,7 +41,7 @@ export interface PublicUser {
   orgId?: string;
 }
 
-export function createPublicUser(user: Partial<User> = {}) : PublicUser{
+export function createPublicUser(user: Partial<User> = {}): PublicUser {
   return {
     uid: user.uid ?? '',
     email: user.email ?? '',

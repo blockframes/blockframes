@@ -31,7 +31,7 @@ import { cleanDeprecatedData } from './db-cleaning';
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
 export async function importEmulatorFromBucket(_exportUrl: string) {
-  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket));
+  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
@@ -87,7 +87,7 @@ export async function downloadProdDbBackup(localPath?: string) {
   console.log('Production projectId: ', prodFirebase().projectId);
   console.log('Production backup bucket name: ', prodBackupBucket);
   const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);
-  const prodDbURL = await getLatestFolderURL(prodBackupBucketObj);
+  const prodDbURL = await getLatestFolderURL(prodBackupBucketObj, 'firestore');
   console.log('Production Firestore Backup URL:', prodDbURL);
   await importFirestoreEmulatorBackup(prodDbURL, localPath || defaultEmulatorBackupPath);
 }
@@ -103,7 +103,7 @@ export async function anonDbLocal() {
   console.log('Anonymization complete!')
 
   console.info('Syncing users from db...');
-  const p1 = syncUsers();
+  const p1 = syncUsers(); // ! FIX ANON
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   const { getCI, storage, auth } = loadAdminServices();
@@ -154,7 +154,7 @@ export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?:
  * @param param0 settings object
  * Provide a local path to the firestore export dir for which to switch on maintenance mode
  */
-export async function switchOnMaintenance({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
+export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {

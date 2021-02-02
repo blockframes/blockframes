@@ -13,6 +13,13 @@
         <mat-icon matListIcon svgIcon="account_balance_wallet"></mat-icon>
         <span matLine><b>Offers and Deals</b></span>
       </a>
+      <ng-container *ngIf="org$ | async | canAccess: 'marketplace'">
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="search_table"></mat-icon>
+          <span matLine><b>Buyer's Platform</b></span>
+        </a>
+      </ng-container>
     </mat-nav-list>
   </aside>
 </layout-dashboard>

@@ -10,7 +10,7 @@
 
 
 <h2>Promotional Images</h2>
-<ng-container *ngFor="let still of moviePictureForm.get('still_photos').controls; let i = index">
+<ng-container *ngFor="let still of moviePictureForm.get('still_photo').controls; let i = index">
   <image-uploader [storagePath]="movie.id | ref: 'movie' : 'still'" ratio="still" [form]="still">
     <h3 title>Stills</h3>
   </image-uploader>

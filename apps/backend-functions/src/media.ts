@@ -1,92 +1,160 @@
-import { getStorageBucketName } from './internals/firebase';
-import * as admin from 'firebase-admin';
-import { get, isEqual } from 'lodash';
+
+// External dependencies
 import { createHash } from 'crypto';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { imgixToken } from './environments/environment';
-import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
-import { getDocAndPath } from '@blockframes/firebase-utils';
-import { createPublicUser, PublicUser } from '@blockframes/user/types';
-import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
-import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
-import { MovieDocument } from './data/types';
-import { uploadToJWPlayer } from './player';
-import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
+import { isEqual, mean, set } from 'lodash';
+import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+
+// Blockframes dependencies
+import { getDocument } from '@blockframes/firebase-utils';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
+import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
+import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.firestore';
+import { privacies, Privacy, tempUploadDir } from '@blockframes/utils/file-sanitizer';
+import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
+import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
+
+// Internal dependencies
+import { uploadToJWPlayer } from './player';
+import { MovieDocument } from './data/types';
+import { imgixToken } from './environments/environment';
+import { db, getStorageBucketName } from './internals/firebase';
 import { isUserInvitedToEvent } from './internals/invitations/events';
+
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
  * It check if a new file in tmp directory is already referenced on DB and movie it to correct folder
  */
 export async function linkFile(data: storage.ObjectMetadata) {
-  // get the needed values
-  const { filePath, field, isTmp, docData, collection, doc } = await getDocAndPath(data.name);
 
-  if (isTmp && data.name) {
-    let savedRef: any = get(docData, field);
+  if (!data.name) return false;
 
-    if (Array.isArray(savedRef)) {
-      savedRef = savedRef.map(e => e.ref || e).find(ref => ref === filePath) || '';
-    } else if (!!savedRef.ref) {
-      savedRef = savedRef.ref;
-    }
+  const bucket = admin.storage().bucket(getStorageBucketName());
+  const file = bucket.file(data.name);
 
-    const bucket = admin.storage().bucket(getStorageBucketName());
-    const from = bucket.file(data.name);
-    if (filePath === savedRef) {
-      const to = bucket.file(filePath);
-      const [exists] = await from.exists();
-      if (exists) {
-        // Copy file to new location
-        await from.copy(to);
-        // Remove previous
-        await from.delete();
+  // metadata is composed of claims of where the user wants to upload the file:
+  // privacy, collection, docId, field
+  // the metadata also contain the user uid,
+  // which has been verified by storage rules and can be trusted
+  const metadata = data.metadata as FileMetaData;
+  const isValid = isValidMetadata(metadata, { uidRequired: true });
 
-        // If file is a video
-        const [fileMetaData] = await to.getMetadata();
-        if (fileMetaData.contentType.indexOf('video/') === 0 && collection === 'movies') {
+  const [ tmp ] = data.name.split('/');
+  if ( tmp === tempUploadDir ) {
 
-          const uploadResult = await uploadToJWPlayer(to);
+    // (1) Security checks, (2) copy file to final destination, (3) update db, (4) delete tmp/file
 
-          const hostedVideos: HostedVideo | HostedVideo[] = get(docData, field);
-
-          let update: HostedVideo | HostedVideo[] | {};
-          if (uploadResult.success) {
-            if (Array.isArray(hostedVideos)) {
-              update = hostedVideos.map(video => {
-                if (video.ref === savedRef) { video.jwPlayerId = uploadResult.key };
-                return video;
-              });
-            } else {
-              hostedVideos.jwPlayerId = uploadResult.key;
-              update = hostedVideos;
-            }
-          } else {
-            // There was an error when uploading file to jwPlayer
-
-            if (uploadResult.message) {
-              console.log(`An error occured when uploading video to JwPlayer: ${uploadResult.message}`);
-            }
-
-            if (Array.isArray(hostedVideos)) {
-              update = hostedVideos.filter(video => video.ref !== savedRef);
-            } else {
-              update = {};
-            }
-          }
-          await doc.update({ [field]: update });
-        }
+    /** Will throw if the condition is **false**. If the function throws it will delete/clean the file beforehand. */
+    const assertFile = async (condition: boolean, message: string) => {
+      if (!condition) {
+        await file.delete();
+        throw new Error(message);
       }
-      return true;
-    } else {
-      // If the ref is not found on db, we delete the file because it means that it is lost
-      await from.delete();
+    };
+
+    assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
+
+    const docRef = db.collection(metadata.collection).doc(metadata.docId);
+    const docSnap = await docRef.get();
+    await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
+    const doc = docSnap.data()!;
+
+    // (1) Security checks
+
+    const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
+
+    // Is the user allowed to upload this file ?
+    switch (metadata.collection) {
+      case 'users': {
+        // only the user is allowed to upload files about himself
+        await assertFile(metadata.docId === metadata.uid, notAllowedError);
+        break;
+
+      } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
+        // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
+        const user = await getDocument<User>(`users/${metadata.uid}`);
+        await assertFile(!!user, notAllowedError);
+
+        const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
+        await assertFile(!!movie, notAllowedError);
+
+        const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
+        await assertFile(isAllowed, notAllowedError);
+        break;
+
+      } case 'orgs': {
+        // only member of an org can upload to this org
+        const user = await getDocument<User>(`users/${metadata.uid}`);
+        await assertFile(!!user, notAllowedError);
+        await assertFile(user.orgId === metadata.docId, notAllowedError);
+        break;
+
+      } default: {
+        await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+      }
     }
 
+    // (2) copy file to final destination
+
+    const segments = data.name.split('/');
+    segments.shift(); // remove tmp/
+    const finalPath = segments.join('/');
+    const to = bucket.file(finalPath);
+
+    await file.copy(to);
+
+    // (3) update db
+    // because of possible nested map and arrays, we need to retrieve the whole document
+    // modify it, then update the whole doc with the new (modified) version
+
+    // TODO issue#4002 refactor as set(doc, metadata.field, { ref: finalPath});
+    set(doc, metadata.field, finalPath); // update the whole doc with only the new ref
+
+    await docRef.update(doc);
+
+    // (4) delete tmp/file
+    return file.delete();
+
+  } else {
+
+    if (!isValid) throw new Error('Invalid metadata after file copy');
+
+    // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
+
+    const isVideo = data.contentType.indexOf('video/') === 0 && metadata.collection === 'movies';
+    if (isVideo) {
+
+      const uploadResult = await uploadToJWPlayer(file);
+
+      // There was an error when uploading file to jwPlayer
+      if (!uploadResult.success) {
+        console.error(`UPLOAD TO JWPLAYER FAILED: video ${data.name}`);
+        if (uploadResult.message) {
+          console.error(`An error occurred when uploading video to JwPlayer: ${uploadResult.message}`);
+        }
+        return false;
+      }
+
+      // TODO issue#4002 use field and stop computing the videoField
+      // upload success: we should add jwPlayerId to the db document
+      const segmentedField = metadata.field.split('.');
+      segmentedField.pop(); // remove `.ref` to get the whole video object instead of the ref/path
+      segmentedField.push('jwPlayerId');
+      const videoField = segmentedField.join('.');
+
+      const docRef = db.collection(metadata.collection).doc(metadata.docId);
+      const docSnap = await docRef.get();
+      if (!docSnap.exists) return false;
+      const doc = docSnap.data()!;
+      set(doc, videoField, uploadResult.key); // update the whole doc with only the new ref
+      await docRef.update(doc);
+
+      return true;
+    }
   }
-  return false;
+
 }
 
 /**
@@ -136,7 +204,6 @@ export const deleteMedia = async (ref: string): Promise<void> => {
 
 async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string): Promise<boolean> {
   const pathInfo = getPathInfo(ref);
-  const db = admin.firestore();
 
   const user = await db.collection('users').doc(uid).get();
   if (!user.exists) { return false; }

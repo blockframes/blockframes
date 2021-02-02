@@ -8,7 +8,7 @@ import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { map, take } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
-import { PublicUser } from '@blockframes/user/types';
+import { PublicUser, UserSettings, PrivacyPolicy } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -120,13 +120,19 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /** Create the user in users collection on firestore. */
-  public createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string, _meta: DocumentMeta<Date> }) {
+  public createProfile(user: Partial<User>, ctx: {
+    firstName: string,
+    lastName: string,
+    _meta: DocumentMeta<Date>,
+    privacyPolicy: PrivacyPolicy
+  }) {
     return {
       _meta: createDocumentMeta(ctx._meta),
       uid: user.uid,
       email: user.email,
       firstName: ctx.firstName,
-      lastName: ctx.lastName
+      lastName: ctx.lastName,
+      privacyPolicy: ctx.privacyPolicy,
     };
   }
 
@@ -144,7 +150,7 @@ export class AuthService extends FireAuthService<AuthState> {
     return createUser(user);
   }
 
-  public async getPrivacyPolicy() {
+  public async getPrivacyPolicy(): Promise<PrivacyPolicy> {
     return {
       date: new Date(),
       ip: await this.ipService.get()

@@ -13,6 +13,7 @@ import { startWith, distinctUntilChanged } from 'rxjs/operators';
 // Material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -24,10 +25,9 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormMainComponent implements OnInit, OnDestroy {
   form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
-  public sub: Subscription;
+  contentType = this.form.contentType.valueChanges.pipe(startWith(this.form.contentType.value))
   valuesCustomGenres$: Observable<string[]>;
   customGenreCtrl = new FormControl();
-
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public displayedColumns = {
@@ -39,6 +39,8 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     filmography: 'Filmography'
   }
 
+
+  private sub: Subscription;
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute, private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {

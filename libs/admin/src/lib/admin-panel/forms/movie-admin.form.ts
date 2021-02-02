@@ -45,9 +45,9 @@ export class MovieAppAccessAdminForm extends FormEntity<MovieAppAccessAdminContr
 function createMovieImageAdminControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
   return {
-    poster: new HostedMediaForm(movie.poster),
-    banner: new HostedMediaForm(movie.banner),
-    still_photos: FormList.factory(movie.promotional.still_photo, el => new HostedMediaForm(el)),
+    poster: new HostedMediaForm(movie.poster, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: 'poster' }),
+    banner: new HostedMediaForm(movie.banner, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: 'banner' }),
+    still_photo: FormList.factory(movie.promotional.still_photo, (el, i) => new HostedMediaForm(el, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: `promotional.still_photo[${i}]` })),
   }
 }
 

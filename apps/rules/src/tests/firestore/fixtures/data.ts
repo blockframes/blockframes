@@ -130,7 +130,7 @@ export const testFixture = {
   //Notifications
   'notifications/001': {
     id: '001',
-    date: Date.now(),
+    _meta: { createdAt: Date.now() },
     toUserId: 'uid-c8',
     type: 'invitationToAttendEventAccepted',
     docId: '100',
@@ -150,30 +150,30 @@ export const testFixture = {
   },
 
   //Invitations
-  'invitations/I001' : {
+  'invitations/I001': {
     type: 'attendEvent',
     toUser: { uid: 'uid-user2' },
   },
-  'invitations/I010' : {
+  'invitations/I010': {
     type: 'cancelEvent',
-  },   
-  'invitations/I011' : {
+  },
+  'invitations/I011': {
     type: 'cancelEvent',
-    fromOrg: { id: 'O011'},
+    fromOrg: { id: 'O011' },
     fromUser: { uid: 'uid-user2' },
   },
-  'invitations/I012' : {
+  'invitations/I012': {
     type: 'cancelEvent',
-    fromOrg: { id: 'O001'},
+    fromOrg: { id: 'O001' },
     fromUser: { uid: 'uid-user2' },
-  },  
+  },
 
   //Contracts
   'contracts/C001': {
     partyIds: ['O001'],
     'versions/v1': {
       id: 'v1',
-    },    
+    },
   },
   'contracts/C002': {
     id: 'C002',
@@ -181,7 +181,7 @@ export const testFixture = {
   },
 
   //Public Contracts
-  'publicContracts/PC01' : {
+  'publicContracts/PC01': {
     id: 'PC01',
   },
 };

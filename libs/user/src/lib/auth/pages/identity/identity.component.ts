@@ -64,7 +64,7 @@ export class IdentityComponent implements OnInit {
         _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName: this.form.get('firstName').value,
         lastName: this.form.get('lastName').value,
-        privacyPolicy: privacyPolicy
+        privacyPolicy: privacyPolicy,
       });
 
       // Accept the invitation from the organization.

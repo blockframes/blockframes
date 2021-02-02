@@ -1,7 +1,7 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
-import { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -25,11 +25,11 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App) {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App): Promise<any> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
-  const appLogoLink =  appLogo[app];
+  const appLogoLink = appLogo[app];
   const appLink = applicationUrl[app];
   const appMailSettings: AppMailSetting = { description: appText, logo: appLogoLink, name: label, url: appLink }
   const msg: MailDataRequired = {
@@ -42,20 +42,18 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   return send(msg);
 }
 
-function send(msg: MailDataRequired) {
+async function send(msg: MailDataRequired): Promise<any> {
   if (sendgridAPIKey === '') {
-    console.warn('No sendgrid API key set, skipping');
-    return;
+    throw new Error(emailErrorCodes.missingKey.code);
   }
 
   SendGrid.setApiKey(sendgridAPIKey);
   return SendGrid.send(msg).catch(e => {
     if (e.message === 'Unauthorized') {
-      console.log('API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0 ');
+      throw new Error(emailErrorCodes.unauthorized.code);
     } else {
-      console.log(`Unexpected error while sending mail : ${e.message}`);
+      throw new Error(emailErrorCodes.general.code);
     }
-    return;
   });
 }
 

@@ -129,7 +129,7 @@ describe('Movies Rules Tests', () => {
     });
   });
 
-  describe('With User not in org', () => {
+  describe('With User not belonging to any org', () => {
     const newMovieId = 'MI-007';
     const draftMovieId = 'MI-0d7';
     const newMovieDetails = { id: `${newMovieId}` };
@@ -158,7 +158,7 @@ describe('Movies Rules Tests', () => {
     });
   });
 
-  describe('User without rights to edit movie', () => {
+  describe('User not belonging to organization in movies.orgIds', () => {
     const draftMovieId = 'MI-077';
     const acceptedMovieId = 'M001';
     
