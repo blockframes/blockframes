@@ -1,4 +1,4 @@
-import { MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
+import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
@@ -6,8 +6,8 @@ import { getAppUrl, getDocument, getOrgAppKey } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
-import { EventDocument, Screening } from '@blockframes/event/+state/event.firestore';
-import { reminderEventToUser, userJoinedYourOrganization, userRequestedToJoinYourOrg } from './templates/mail';
+import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
+import { reminderEventToUser, userJoinedYourOrganization, userRequestedToJoinYourOrg, requestToAttendEventFromUserAccepted } from './templates/mail';
 import { templateIds } from './templates/ids';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
@@ -107,6 +107,19 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
+        case 'invitationToAttendEventAccepted':
+          const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
+          if (!!invitation.fromUser && !!invitation.toOrg) {
+            await sendInvitationToAttendEventAcceptedEmail(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          }
+          break;
+        case 'requestToAttendEventSent' :
+          //! There is no email template for now
+          await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been sent.' })
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
         default:
           // @TODO #4046 clean
           // Send email
@@ -168,4 +181,15 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
 
   const email = reminderEventToUser(movie.title.international, recipient, orgName(org), eventData, template);
   return await sendMailFromTemplate(email, app);
+}
+
+/** Send an email when an invitation to access an event is accepted */
+async function sendInvitationToAttendEventAcceptedEmail(recipient: User, notification: NotificationDocument) {
+  const app = await getOrgAppKey(recipient.orgId);
+  const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+  const eventData = getEventEmailData(event);
+
+  const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
+  await sendMailFromTemplate(template, app);
 }
