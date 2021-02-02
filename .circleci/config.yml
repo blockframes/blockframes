@@ -156,13 +156,9 @@ jobs:
       - run:
           # npm run affected:build tries to build the libs which are broken,
           # the following command only build affected apps.
-          name: build affected apps
-          command: |
-            AFFECTED=`npx nx affected:apps --plain --base=origin/develop`;
-            echo "Building: ${AFFECTED}"
-            for app in ${AFFECTED}; do
-              echo "building ${app}";
-            done;
+          name: build all apps
+          command: npm run build:all
+
       # - run: npm run affected:lint --base=origin/develop
       - run:
           name: Run unit-tests on affected apps
