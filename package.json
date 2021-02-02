@@ -47,7 +47,6 @@
     "format:check": "nx format:check",
     "env:detect-service-account": "ts-node -P tools/tsconfig.tools.json tools/scripts/check-google-application-credentials.ts",
     "update": "nx migrate latest",
-    "update:check": "nx update",
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
