@@ -254,7 +254,7 @@ async function sendInvitationToAttendEventAcceptedEmail(recipient: User, notific
 
 /** Send an email to org admin when his/her org is accepted */
 async function sendMailToOrgAcceptedAdmin(recipient: User, notification: NotificationDocument) {
-  const app = await getOrgAppKey(recipient.orgId);
+  const app = await getOrgAppKey(notification.organization.id);
   const template = organizationWasAccepted(recipient.email, recipient.firstName);
   await sendMailFromTemplate(template, app);
 }
