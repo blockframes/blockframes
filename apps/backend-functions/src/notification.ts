@@ -261,8 +261,9 @@ async function sendMailToOrgAcceptedAdmin(recipient: User, notification: Notific
 
 /** Send email to organization's admins when org appAccess has changed */
 async function sendOrgAppAccessChangedEmail(recipient: User, notification: NotificationDocument) {
-  const app = await getOrgAppKey(notification.organization.id);
-  const url = await getAppUrl(notification.organization.id);
+  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const app = await getOrgAppKey(org);
+  const url = await getAppUrl(org);
   const template = organizationAppAccessChanged(recipient, url);
   await sendMailFromTemplate(template, app);
 }
