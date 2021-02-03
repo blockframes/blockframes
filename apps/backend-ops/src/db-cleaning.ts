@@ -312,15 +312,9 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
       );
     case 'movieSubmitted':
     case 'movieAccepted':
-    case 'contractInNegotiation':
     case 'invitationToAttendEventUpdated':
     case 'requestToAttendEventUpdated':
       return existingIds.includes(notification.docId);
-    case 'newContract':
-      return (
-        existingIds.includes(notification.docId) &&
-        existingIds.includes(notification.organization?.id)
-      );
     case 'requestToAttendEventSent':
       return (
         existingIds.includes(notification.user?.uid) && existingIds.includes(notification.docId)
