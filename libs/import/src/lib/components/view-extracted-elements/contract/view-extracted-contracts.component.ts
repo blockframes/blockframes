@@ -16,7 +16,7 @@ import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { TermsService } from '@blockframes/contract/terms/+state/terms.service'
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { getKeyFromValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
+import { getKeyFromValue, Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 
 enum SpreadSheetContract {
   titleId,
@@ -28,7 +28,11 @@ enum SpreadSheetContract {
   medias,
   exclusive,
   startOfContract,
-  endOfContract
+  endOfContract,
+  originalLanguageLicensed,
+  dubbed,
+  subtitled,
+  closedCaptioning
 }
 
 @Component({
@@ -133,16 +137,16 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
           }
 
-          /* Create terms */
-          let terms = createTerms({ orgId: this.orgQuery.getActiveId(), titleId: contract.titleId })
+          /* Create term */
+          let term = createTerms({ orgId: this.orgQuery.getActiveId(), titleId: contract.titleId })
           if (trimmedRow[SpreadSheetContract.territories].length) {
             const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
             const territories = territoryValues.map(territory => getKeyFromValue('territories', territory.trim()))
-            terms.territories = territories;
+            term.territories = territories;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'terms.territories',
+              field: 'term.territories',
               name: 'Territory',
               reason: `Archipel Content needs to know the territories in which the movie can be sold.`,
               hint: 'Edit corresponding sheet field.'
@@ -152,11 +156,11 @@ export class ViewExtractedContractsComponent implements OnInit {
           if (trimmedRow[SpreadSheetContract.medias].length) {
             const mediaValues: MediaValue[] = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
             const medias = mediaValues.map(media => getKeyFromValue('medias', media.trim()))
-            terms.medias = medias;
+            term.medias = medias;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'terms.medias',
+              field: 'term.medias',
               name: 'Media',
               reason: `Archipel Content needs to know the medias in which the movie can be sold.`,
               hint: 'Edit corresponding sheet field.'
@@ -164,16 +168,16 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.exclusive]) {
-            terms.exclusive =
+            term.exclusive =
               trimmedRow[SpreadSheetContract.exclusive].toLowerCase() === 'yes' ? true : false;
           }
 
           if (trimmedRow[SpreadSheetContract.startOfContract]) {
-            terms.duration.from = new Date(trimmedRow[SpreadSheetContract.startOfContract]);
+            term.duration.from = new Date(trimmedRow[SpreadSheetContract.startOfContract]);
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'terms.duration.from',
+              field: 'term.duration.from',
               name: 'Duration from',
               reason: `Archipel Content needs to know the starting date of the contract.`,
               hint: 'Edit corresponding sheet field.'
@@ -181,255 +185,97 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.endOfContract]) {
-            terms.duration.to = new Date(trimmedRow[SpreadSheetContract.endOfContract]);
+            term.duration.to = new Date(trimmedRow[SpreadSheetContract.endOfContract]);
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'terms.duration.to',
+              field: 'term.duration.to',
               name: 'Duration to',
               reason: `Archipel Content needs to know the ending date of the contract.`,
               hint: 'Edit corresponding sheet field.'
             })
           }
-          const id = await this.termsSerivce.upsert(terms);
-          // Maybe we need the terms later?
-          terms.id = id;
-          contract.termsIds.push(id)
-          console.log(contract)
 
-          /*
-                       // LICENSEE
-                       if (spreadSheetRow[SpreadSheetContract.licensee]) {
-                         const licenseeParts = spreadSheetRow[SpreadSheetContract.licensee].split(this.subSeparator);
-                         const licensee = createContractPartyDetail();
-                         licensee.party.displayName = licenseeParts[0].trim();
-                         if (licenseeParts[1]) {
-                           licensee.party.orgId = licenseeParts[1].trim();
-                         }
-                         licensee.party.role = 'licensee';
+          if (trimmedRow[SpreadSheetContract.originalLanguageLicensed]) {
+            term.licensedOriginal =
+              trimmedRow[SpreadSheetContract.originalLanguageLicensed].toLowerCase() === 'yes' ? true : false;
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'term.licensedOriginal',
+              name: 'Original Language Licensed',
+              reason: `please choose yes or no`,
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
 
-                         // SHOW NAME
-                         if (spreadSheetRow[SpreadSheetContract.displayLicenseeName]) {
-                           licensee.party.showName = spreadSheetRow[SpreadSheetContract.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
-                         }
-
-                         contract.parties.push(licensee);
-                       }
-
-                       // CHILD ROLES
-                       if (spreadSheetRow[SpreadSheetContract.childRoles]) {
-                         spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
-                           const childRoleParts = r.split(this.subSeparator);
-                           const partyName = childRoleParts.shift().trim();
-                           const party = contract.parties.find(p => p.party.displayName === partyName && p.party.role === 'licensor');
-                           if (party) {
-                             childRoleParts.forEach(childRole => {
-                               const role = getKeyIfExists('subLicensorRoles', childRole.trim() as GetCode<'subLicensorRoles'>);
-                               if (role) {
-                                 party.childRoles.push(role);
-                               } else {
-                                 importErrors.errors.push({
-                                   type: 'error',
-                                   field: 'contract.parties.childRoles',
-                                   name: 'Child roles',
-                                   reason: `Child role mismatch : ${childRole.trim()}`,
-                                   hint: 'Edit corresponding sheet field.'
-                                 });
-                               }
-                             });
-                           } else {
-                             importErrors.errors.push({
-                               type: 'error',
-                               field: 'contract.parties.childRoles',
-                               name: 'Child roles',
-                               reason: `Licensor name mismatch : ${partyName}`,
-                               hint: 'Edit corresponding sheet field.'
-                             });
-                           }
-                         });
-                       }
-
-                       // CONTRACT TYPE
-                       if (spreadSheetRow[SpreadSheetContract.contractType]) {
-                         const key = getKeyIfExists('contractType', spreadSheetRow[SpreadSheetContract.contractType]);
-                         if (key) {
-                           contract.type = key;
-                         } else {
-                           importErrors.errors.push({
-                             type: 'error',
-                             field: 'contract.type',
-                             name: 'Contract Type',
-                             reason: `Could not parse contract type : ${spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase()}`,
-                             hint: 'Edit corresponding sheet field.'
-                           });
-                         }
-                       } else {
-                         importErrors.errors.push({
-                           type: 'warning',
-                           field: 'contract.type',
-                           name: 'Contract Type',
-                           reason: 'Optional field is missing',
-                           hint: 'Edit corresponding sheet field.'
-                         });
-                       }
-                     }
-
-                     // CONTRACT STATUS
-                     if (spreadSheetRow[SpreadSheetContract.status]) {
-                       const key = getKeyIfExists('contractStatus', spreadSheetRow[SpreadSheetContract.status]);
-                       if (key) {
-                         contract.lastVersion.status = key;
-                       } else {
-                         importErrors.errors.push({
-                           type: 'warning',
-                           field: 'contract.lastVersion.status ',
-                           name: 'Contract Status',
-                           reason: `Contract status "${spreadSheetRow[SpreadSheetContract.status]}" could not be parsed.`,
-                           hint: 'Edit corresponding sheet field.'
-                         });
-                       }
-                     }
-
-                     // CONTRACT CREATION DATE
-                     if (spreadSheetRow[SpreadSheetContract.creationDate]) {
-                       const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.creationDate]);
-                       contract.lastVersion.creationDate = new Date(`${y}-${m}-${d}`);
-                     } else {
-                       importErrors.errors.push({
-                         type: 'warning',
-                         field: 'contract.lastVersion.creationDate',
-                         name: 'Creation date',
-                         reason: 'Contract creation date not found. Using current date',
-                         hint: 'Edit corresponding sheet field.'
-                       });
-                     }
-
-                     // SCOPE DATE START
-                     if (spreadSheetRow[SpreadSheetContract.scopeStartDate]) {
-                       const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.scopeStartDate]);
-                       const scopeStart = new Date(`${y}-${m}-${d}`);
-                       if (isNaN(scopeStart.getTime())) {
-                         contract.lastVersion.scope.approxStart = spreadSheetRow[SpreadSheetContract.scopeStartDate];
-                         importErrors.errors.push({
-                           type: 'warning',
-                           field: 'contract.lastVersion.scope',
-                           name: 'Contract scope start',
-                           reason: `Failed to parse contract scope start date : ${spreadSheetRow[SpreadSheetContract.scopeStartDate]}, moved data to approxStart`,
-                           hint: 'Edit corresponding sheet field.'
-                         });
-                       } else {
-                         contract.lastVersion.scope.start = scopeStart;
-                       }
-                     }
-
-                     // SCOPE DATE END
-                     if (spreadSheetRow[SpreadSheetContract.scopeEndDate]) {
-                       const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.scopeEndDate]);
-                       const scopeEnd = new Date(`${y}-${m}-${d}`);
-                       if (isNaN(scopeEnd.getTime())) {
-                         contract.lastVersion.scope.approxEnd = spreadSheetRow[SpreadSheetContract.scopeEndDate];
-                         importErrors.errors.push({
-                           type: 'warning',
-                           field: 'contract.lastVersion.scope',
-                           name: 'Contract scope end',
-                           reason: `Failed to parse contract scope end date : ${spreadSheetRow[SpreadSheetContract.scopeEndDate]}, moved data to approxEnd`,
-                           hint: 'Edit corresponding sheet field.'
-                         });
-                       } else {
-                         contract.lastVersion.scope.end = scopeEnd;
-                       }
-                     }
-
-                     // PAYMENT SCHEDULES
-                     if (spreadSheetRow[SpreadSheetContract.paymentSchedules]) {
-                       spreadSheetRow[SpreadSheetContract.paymentSchedules].split(this.separator).forEach((r: string) => {
-                         const scheduleParts = r.split(this.subSeparator);
-                         if (scheduleParts.length >= 2) {
-                           const percentage = scheduleParts[1].indexOf('%') !== -1 ?
-                             parseInt(scheduleParts[1].trim().replace('%', ''), 10) :
-                             parseInt(scheduleParts[1].trim(), 10);
-                           const paymentSchedule = createPaymentSchedule({ label: scheduleParts[0].trim(), percentage });
-                           if (scheduleParts[2]) {
-                             paymentSchedule.date.approxStart = scheduleParts[2].trim();
-                           }
-                           contract.lastVersion.paymentSchedule.push(paymentSchedule);
-                         } else {
-                           importErrors.errors.push({
-                             type: 'error',
-                             field: 'contract.lastVersion.paymentSchedule',
-                             name: 'Payment Schedule',
-                             reason: 'Error while parsing data',
-                             hint: 'Edit corresponding sheet field.'
-                           });
-                         }
-                       });
-                     } else {
-                       importErrors.errors.push({
-                         type: 'warning',
-                         field: 'contract.lastVersion.paymentSchedule',
-                         name: 'Payment Schedule',
-                         reason: 'Missing data',
-                         hint: 'Edit corresponding sheet field.'
-                       });
-                     }
-
-                     // TITLES STUFF
-                     let titleIndex = 0;
-                     // @dev this while is why we need to do a for(const of ...) (pretty sure)
-                     while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
-                       const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
-                       titleIndex += titlesFieldsCount;
-                       const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex, importErrors);
-
-                       if (importErrors.newContract && contract.lastVersion.titles[titleDetails.titleId] !== undefined) {
-                         importErrors.errors.push({
-                           type: 'error',
-                           field: 'titleIds',
-                           name: 'Film Code',
-                           reason: `Duplicate film code found : ${titleDetails.titleId}`,
-                           hint: 'Edit corresponding sheet field.'
-                         });
-                       } else {
-                         contract.lastVersion.titles[titleDetails.titleId] = titleDetails;
-                       }
-                     }
-              */
-
-          ///////////////
-          // VALIDATION
-          ///////////////
-
-          // Global contract price
-          /*     const contractPrice = createPrice();
-              Object.keys(importErrors.contract.lastVersion.titles).forEach(titleId => {
-                const price = importErrors.contract.lastVersion.titles[titleId].price;
-                if (price && price.amount) {
-                  contractPrice.amount += price.amount;
-                }
-                if (price && price.currency) {
-                  contractPrice.currency = price.currency;
-                }
-              });
-
-              importErrors.contract.lastVersion.price = contractPrice;
-
-              const contractWithErrors = await this.validateMovieContract(importErrors);
-
-              if (!contractWithErrors.newContract) {
-                this.contractsToUpdate.data.push(contractWithErrors);
-                this.contractsToUpdate.data = [... this.contractsToUpdate.data];
-              } else {
-                contractWithErrors.contract.id = spreadSheetRow[SpreadSheetContract.contractId];
-                this.contractsToCreate.data.push(contractWithErrors);
-                this.contractsToCreate.data = [... this.contractsToCreate.data];
-              }
-
-              this.cdRef.markForCheck();
+          if (trimmedRow[SpreadSheetContract.dubbed]) {
+            const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
+            const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
+            for (const language of languages) {
+              term.languages[language] = { ...term.languages[language], dubbed: true }
             }
-          };
-          matSnackbarRef.dismissWithAction(); // loading ended */
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'term.language.dubbed',
+              name: 'Language dubbed',
+              reason: `Please provide dubbed version if available.`,
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
+
+          if (trimmedRow[SpreadSheetContract.subtitled]) {
+            const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
+            const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
+            for (const language of languages) {
+              term.languages[language] = { ...term.languages[language], subtitle: true }
+            }
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'term.language.subtitle',
+              name: 'Language subtitle',
+              reason: `Please provide subtitle version if available.`,
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
+
+          if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
+            const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
+            const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
+            for (const language of languages) {
+              term.languages[language] = { ...term.languages[language], caption: true }
+            }
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'term.language.caption',
+              name: 'Language caption',
+              reason: `Please provide caption version if available.`,
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
+
+          console.log(term)
+          const id = await this.termSerivce.upsert(term);
+          contract.termsIds.push(id)
+
+          const contractWithErrors = await this.validateMovieContract(importErrors);
+
+          if (!contractWithErrors.newContract) {
+            this.contractsToUpdate.data.push(contractWithErrors);
+            this.contractsToUpdate.data = [... this.contractsToUpdate.data];
+          } else {
+            contractWithErrors.contract.id = spreadSheetRow[SpreadSheetContract.contractId];
+            this.contractsToCreate.data.push(contractWithErrors);
+            this.contractsToCreate.data = [... this.contractsToCreate.data];
+          }
+
+          this.cdRef.markForCheck();
         }
-      }
+      };
+      matSnackbarRef.dismissWithAction(); // loading ended */
     }
   }
 

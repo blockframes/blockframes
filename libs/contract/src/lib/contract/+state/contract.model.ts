@@ -295,6 +295,7 @@ export function createTerms(params?) {
     medias: [],
     exclusive: false,
     duration: { from: '', to: '' },
+    licensedOriginal: null,
     languages: {},
     criteria: [],
     ...params
