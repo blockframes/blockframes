@@ -108,8 +108,11 @@ async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
  * If `jsonl` param is not provided, the function will read users from local Firestore
  * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
  */
-export async function syncUsers(jsonl?: DbRecord[]): Promise<any> {
-  const { auth, db } = loadAdminServices();
+export async function syncUsers(
+  jsonl?: DbRecord[],
+  db: FirebaseFirestore.Firestore = loadAdminServices().db
+): Promise<any> {
+  const { auth } = loadAdminServices();
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   await deleteAllUsers(auth);
   const createResult = await importAllUsers(auth, expectedUsers);
