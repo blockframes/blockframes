@@ -22,10 +22,6 @@ export type NotificationType =
   'invitationFromUserToJoinOrgDecline' |
   'orgMemberUpdated' |
 
-  // Notifications relative to contracts (only for catalog app)
-  'newContract' |
-  'contractInNegotiation' |
-
   // Events related notifications
   'requestToAttendEventSent' |
   'eventIsAboutToStart' | // 1h Reminder before event

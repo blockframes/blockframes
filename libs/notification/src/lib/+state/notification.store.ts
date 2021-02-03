@@ -93,21 +93,6 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
-      case 'newContract': // @TODO #4046 handle or not ? or clean
-        const organizationName = orgName(notification.organization) || 'Organization with no name';
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `${organizationName} submitted a contract.`,
-          placeholderUrl: 'gears.webp',
-          url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
-        };
-      case 'contractInNegotiation': // @TODO #4046 handle or not ? or clean
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `A new offer has been created.`,
-          placeholderUrl: 'welcome_archipel_content.webp',
-          url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
-        };
       case 'movieSubmitted':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
