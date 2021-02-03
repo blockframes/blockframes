@@ -9,18 +9,10 @@
   </article>
 
   <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>memberAddedToOrg : A new member joins your organization</p>
+    <p>orgMemberUpdated : Members of your organization are added or removed</p>
     <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberAddedToOrg').get('email').value" name="email" (change)="toogle('memberAddedToOrg', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberAddedToOrg').get('app').value" name="app" (change)="toogle('memberAddedToOrg', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>memberRemovedFromOrg : A member was removed from your organization</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberRemovedFromOrg').get('email').value" name="email" (change)="toogle('memberRemovedFromOrg', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('memberRemovedFromOrg').get('app').value" name="app" (change)="toogle('memberRemovedFromOrg', $event)">App :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('orgMemberUpdated').get('email').value" name="email" (change)="toogle('orgMemberUpdated', $event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('orgMemberUpdated').get('app').value" name="app" (change)="toogle('orgMemberUpdated', $event)">App :</mat-slide-toggle>
     </div>
   </article>
 
@@ -50,6 +42,14 @@
     </div>
   </article>
 
+  <article fxLayout="row" fxLayoutAlign="space-between">
+    <p>requestToAttendEventSent : Your request to access an event has been sent</p>
+    <div fxLayout="row" fxLayoutGap="40px">
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestToAttendEventSent').get('email').value" name="email" (change)="toogle('requestToAttendEventSent', $event)">Email :</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestToAttendEventSent').get('app').value" name="app" (change)="toogle('requestToAttendEventSent', $event)">App :</mat-slide-toggle>
+    </div>
+  </article>
+  
   <article fxLayout="row" fxLayoutAlign="space-between">
     <p>requestToAttendEventUpdated : An organization answers your request to access an event</p>
     <div fxLayout="row" fxLayoutGap="40px">

@@ -6,7 +6,7 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Event } from '@blockframes/event/+state/event.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { OrganizationService, orgName } from '@blockframes/organization/+state';
+import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
@@ -57,7 +57,27 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
-      case 'memberAddedToOrg':
+      case 'orgMemberUpdated':
+        this.getDocument<Organization>(`orgs/${notification.organization.id}`).then(org => {
+          const message = org.userIds.includes(notification.user.uid) ?
+            `${displayUserName} is now part of your organization.` :
+            `${displayUserName} has been removed from your organization.`;
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              imgRef: notification.user.avatar,
+              message,
+            };
+          })
+        })
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Members of your organization have been updated`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/members`,
+        };
+      case 'memberAddedToOrg': // @TODO #4046 create issue to remove this and also libs/notification/src/lib/+state/notification.firestore.ts
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName} is now part of your organization.`,
@@ -65,7 +85,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
-      case 'memberRemovedFromOrg':
+      case 'memberRemovedFromOrg': // @TODO #4046 create issue to remove this and also libs/notification/src/lib/+state/notification.firestore.ts
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName} has been removed from your organization.`,
@@ -213,7 +233,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
         };
-      case 'requestToAttendEventSent': // @TODO #4046
+      case 'requestToAttendEventSent':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(event => {

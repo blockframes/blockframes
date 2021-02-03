@@ -21,8 +21,8 @@ function createNotificationsControls(settings: Partial<NotificationSettings>): E
   return {
     eventIsAboutToStart: new NotificationSettingsForm(settings?.eventIsAboutToStart),
     oneDayReminder: new NotificationSettingsForm(settings?.oneDayReminder),
-    memberAddedToOrg: new NotificationSettingsForm(settings?.memberAddedToOrg),
-    memberRemovedFromOrg: new NotificationSettingsForm(settings?.memberRemovedFromOrg),
+    orgMemberUpdated: new NotificationSettingsForm(settings?.orgMemberUpdated),
+    requestToAttendEventSent: new NotificationSettingsForm(settings?.requestToAttendEventSent),
     requestFromUserToJoinOrgCreate: new NotificationSettingsForm(settings?.requestFromUserToJoinOrgCreate),
     invitationToAttendEventUpdated: new NotificationSettingsForm(settings?.invitationToAttendEventUpdated), 
     requestToAttendEventUpdated: new NotificationSettingsForm(settings?.requestToAttendEventUpdated), 

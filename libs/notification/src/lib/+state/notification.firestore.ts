@@ -20,8 +20,7 @@ export type NotificationType =
   // Notifications relative to invitations
   'requestFromUserToJoinOrgCreate' |
   'invitationFromUserToJoinOrgDecline' |
-  'memberAddedToOrg' |
-  'memberRemovedFromOrg' |
+  'orgMemberUpdated' |
 
   // Notifications relative to contracts (only for catalog app)
   'newContract' |
@@ -38,7 +37,9 @@ export type NotificationType =
   // @TODO #4046 create issue to remove this and also from libs/notification/src/lib/+state/notification.store.ts
   // once all notification of theses types are read or deleted (since we cannot make a migration script)
   'invitationToAttendEventAccepted' |
-  'invitationToAttendEventDeclined'
+  'invitationToAttendEventDeclined' |
+  'memberAddedToOrg' |
+  'memberRemovedFromOrg'
   ;
 
 
