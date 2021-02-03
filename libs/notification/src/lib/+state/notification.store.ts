@@ -41,7 +41,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
     const module = getCurrentModule(this.routerQuery.getValue().state.url);
     switch (notification.type) {
-      case 'organizationAcceptedByArchipelContent': // @TODO #4046 handle or not ?
+      case 'organizationAcceptedByArchipelContent':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your organization was accepted by the ${this.appName} team.`,
@@ -49,7 +49,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
-      case 'invitationFromUserToJoinOrgDecline': // @TODO #4046 handle or not ?
+      case 'invitationFromUserToJoinOrgDecline':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
@@ -92,21 +92,6 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
-        };
-      case 'newContract': // @TODO #4046 handle or not ? or clean
-        const organizationName = orgName(notification.organization) || 'Organization with no name';
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `${organizationName} submitted a contract.`,
-          placeholderUrl: 'gears.webp',
-          url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
-        };
-      case 'contractInNegotiation': // @TODO #4046 handle or not ? or clean
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `A new offer has been created.`,
-          placeholderUrl: 'welcome_archipel_content.webp',
-          url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieSubmitted':
         return {

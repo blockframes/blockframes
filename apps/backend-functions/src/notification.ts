@@ -89,6 +89,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
     'orgAppAccessChanged',
     'requestFromUserToJoinOrgCreate',
     'organizationAcceptedByArchipelContent',
+    'invitationFromUserToJoinOrgDecline',
 
     // Events related notifications
     'requestToAttendEventSent',
@@ -116,7 +117,9 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message)
           break;
-
+        case 'invitationFromUserToJoinOrgDecline':
+          // @TODO #4046 create mail
+          break;
         // Notifications relative to movies
         case 'movieSubmitted':
           //! There is no email template for now

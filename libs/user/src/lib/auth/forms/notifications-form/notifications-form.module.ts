@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { NotificationsFormComponent } from './notifications-form.component';
 
@@ -8,18 +9,20 @@ import { NotificationsFormComponent } from './notifications-form.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
-
+    ReactiveFormsModule,
     // Material
     MatCheckboxModule,
-    MatRadioModule,
+    MatIconModule,
     MatDividerModule,
     MatSlideToggleModule,
+    MatTooltipModule,
   ],
   declarations: [
     NotificationsFormComponent,
