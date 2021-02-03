@@ -77,7 +77,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
-      case 'memberAddedToOrg': // @TODO #4046 create issue to remove this and also libs/notification/src/lib/+state/notification.firestore.ts
+      case 'memberAddedToOrg': // @TODO #4859 remove
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName} is now part of your organization.`,
@@ -85,7 +85,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
-      case 'memberRemovedFromOrg': // @TODO #4046 create issue to remove this and also libs/notification/src/lib/+state/notification.firestore.ts
+      case 'memberRemovedFromOrg': // @TODO #4859 remove
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName} has been removed from your organization.`,
@@ -178,7 +178,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
         };
-      case 'invitationToAttendEventAccepted': // @TODO #4046 create issue to remove this and also libs/notification/src/lib/+state/notification.firestore.ts
+      case 'invitationToAttendEventAccepted': // @TODO #4859 remove
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
@@ -198,7 +198,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
         };
-      case 'invitationToAttendEventDeclined': // @TODO #4046 create issue to remove this and also libs/notification/src/lib/+state/notification.firestore.ts
+      case 'invitationToAttendEventDeclined': // @TODO #4859 remove
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
