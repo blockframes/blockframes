@@ -56,7 +56,7 @@ import { createCredit, Stakeholder, createStakeholder, Director } from '@blockfr
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
-import { FileMetaData } from '@blockframes/media/+state/media.firestore';
+import { FileMetaData } from '@blockframes/media/+state/media.model';
 
 // LEGAL DOCUMENTS
 
