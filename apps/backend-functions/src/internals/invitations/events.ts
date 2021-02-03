@@ -4,14 +4,13 @@ import { NotificationDocument, NotificationType, OrganizationDocument, PublicUse
 import { createNotification, triggerNotifications } from "../../notification";
 import { getUser } from "../utils";
 import { getAdminIds, getDocument } from "../../data/internals";
-import { invitationToEventFromOrg, requestToAttendEventFromUser, requestToAttendEventFromUserAccepted, reminderEventToUser } from '../../templates/mail';
+import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
 import { App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
 import * as admin from 'firebase-admin';
-import { templateIds } from "../../templates/ids";
 
 function getEventLink(org: OrganizationDocument) {
   if (canAccessModule('marketplace', org)) {
