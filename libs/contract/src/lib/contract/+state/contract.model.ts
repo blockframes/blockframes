@@ -287,7 +287,7 @@ export function createSale(params?) {
   }
 }
 
-export function createTerms(params?) {
+export function createTerm(params?) {
   return {
     titleId: '',
     orgId: '',

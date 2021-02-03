@@ -1,4 +1,4 @@
-export interface Terms {
+export interface Term {
   id: string;  // Use same id than right & terms
   // Start Query //
   titleId: string;

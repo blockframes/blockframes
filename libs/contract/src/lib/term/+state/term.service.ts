@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
-import { Terms } from './terms.model';
-import { TermsStore } from './terms.store'
+import { Term } from './term.model';
+import { TermStore } from './term.store'
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,8 @@ import { TermsStore } from './terms.store'
 @CollectionConfig({
   path: 'terms'
 })
-export class TermsService extends CollectionService<Terms> {
-  constructor(store: TermsStore) {
+export class TermService extends CollectionService<Term> {
+  constructor(store: TermStore) {
     super(store)
   }
 }

@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { SSF } from 'xlsx';
-import { createContract, createTerms, createContractTitleDetail, createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
+import { createContract, createTerm, createContractTitleDetail, createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -14,7 +14,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { TermsService } from '@blockframes/contract/terms/+state/terms.service'
+import { TermService } from '@blockframes/contract/term/+state/term.service'
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { getKeyFromValue, Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 
@@ -58,7 +58,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
     private orgQuery: OrganizationQuery,
-    private termsSerivce: TermsService
+    private termService: TermService
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -70,14 +70,13 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
-    console.log(sheetTab)
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
     for (const spreadSheetRow of sheetTab.rows) {
       const trimmedRow = spreadSheetRow.map(row => {
         if (typeof row === 'string') row.trim()
         return row
       })
-      let contract
+      let contract;
       let newContract = true;
       if (trimmedRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
@@ -138,7 +137,7 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           /* Create term */
-          let term = createTerms({ orgId: this.orgQuery.getActiveId(), titleId: contract.titleId })
+          const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract.titleId })
           if (trimmedRow[SpreadSheetContract.territories].length) {
             const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
             const territories = territoryValues.map(territory => getKeyFromValue('territories', territory.trim()))
@@ -213,7 +212,9 @@ export class ViewExtractedContractsComponent implements OnInit {
             const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
             const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
             for (const language of languages) {
-              term.languages[language] = { ...term.languages[language], dubbed: true }
+              if (language) {
+                term.languages[language] = { ...term.languages[language], dubbed: true }
+              }
             }
           } else {
             importErrors.errors.push({
@@ -229,7 +230,9 @@ export class ViewExtractedContractsComponent implements OnInit {
             const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
             const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
             for (const language of languages) {
-              term.languages[language] = { ...term.languages[language], subtitle: true }
+              if (language) {
+                term.languages[language] = { ...term.languages[language], subtitle: true }
+              }
             }
           } else {
             importErrors.errors.push({
@@ -242,10 +245,12 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
-            const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
+            const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
             const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
             for (const language of languages) {
-              term.languages[language] = { ...term.languages[language], caption: true }
+              if (language) {
+                term.languages[language] = { ...term.languages[language], caption: true }
+              }
             }
           } else {
             importErrors.errors.push({
@@ -257,87 +262,14 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
           }
 
-          console.log(term)
-          const id = await this.termSerivce.upsert(term);
-          contract.termsIds.push(id)
-
-          const contractWithErrors = await this.validateMovieContract(importErrors);
-
-          if (!contractWithErrors.newContract) {
-            this.contractsToUpdate.data.push(contractWithErrors);
-            this.contractsToUpdate.data = [... this.contractsToUpdate.data];
-          } else {
-            contractWithErrors.contract.id = spreadSheetRow[SpreadSheetContract.contractId];
-            this.contractsToCreate.data.push(contractWithErrors);
-            this.contractsToCreate.data = [... this.contractsToCreate.data];
-          }
+          this.contractsToUpdate.data.push(importErrors);
+          this.contractsToUpdate.data = [... this.contractsToUpdate.data];
 
           this.cdRef.markForCheck();
         }
       };
       matSnackbarRef.dismissWithAction(); // loading ended */
     }
-  }
-
-  private async validateMovieContract(importErrors: ContractsImportState): Promise<ContractsImportState> {
-
-    const contract = importErrors.contract;
-    const errors = importErrors.errors;
-
-    //////////////////
-    // REQUIRED FIELDS
-    //////////////////
-
-    //  CONTRACT VALIDATION
-    const isContractValid = await this.contractService.validateAndConsolidateContract(contract);
-    if (!isContractValid) {
-      errors.push({
-        type: 'error',
-        field: 'contractId',
-        name: 'Contract',
-        reason: 'Contract is not valid',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    // SCOPE
-    if (Object.entries(contract.lastVersion.scope).length === 0 && contract.lastVersion.scope.constructor === Object) {
-      importErrors.errors.push({
-        type: 'error',
-        field: 'contract.lastVersion.scope',
-        name: 'Scope Start',
-        reason: 'Contract scope not defined',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    //////////////////
-    // OPTIONAL FIELDS
-    //////////////////
-
-    // CONTRACT PRICE VALIDATION
-    if (!contract.lastVersion.price.amount) {
-      errors.push({
-        type: 'warning',
-        field: 'price',
-        name: 'Contract price',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    // CONTRACT STATUS
-    if (!contract.lastVersion.status) {
-      errors.push({
-        type: 'warning',
-        field: 'contract.lastVersion.status',
-        name: 'Contract Status',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    return importErrors;
   }
 
   private async processTitleDetails(spreadSheetRow: any[], currentIndex: number, importErrors: ContractsImportState) {
