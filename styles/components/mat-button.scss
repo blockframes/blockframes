@@ -131,7 +131,7 @@
 
   .mat-fab,
   .mat-mini-fab {
-    @include _mat-theme-overridable-elevation(0, $theme);
+    @include mat-private-theme-overridable-elevation(0, $theme);
   }
 
   .mat-fab {
