@@ -98,7 +98,7 @@ export class InvitationsComponent implements OnInit {
       'host org id': i.org.id,
       'event type': i.event.type,
       'title': i.movie ? i.movie.title.international : '--',
-      'privacy status': i.event.privacyType,
+      'privacy type': i.event.privacyType,
       'invitation date': i.date,
       'guest email': getGuest(i, 'user').email,
       'guest first name': getGuest(i, 'user').firstName || '--',
