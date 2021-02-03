@@ -13,6 +13,7 @@ import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
+import { ensureMaintenanceMode } from './tools';
 export const { storageBucket } = firebase();
 export { restore } from './admin';
 
@@ -65,6 +66,9 @@ export async function prepareForTesting() {
 }
 
 export async function prepareForTestingBeta() {
+  const { storage, getCI , db} = loadAdminServices();
+  const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
+
   console.log('Copying AnonDb from CI...');
   await copyFirestoreExportFromCiBucket();
   console.log('Copied!');
@@ -77,7 +81,6 @@ export async function prepareForTestingBeta() {
   await syncUsers();
   console.info('Users synced!');
 
-  const { storage, getCI } = loadAdminServices();
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   await restoreStorageFromCi(getCI());
   console.info('Storage synced!');
@@ -103,6 +106,8 @@ export async function prepareForTestingBeta() {
   console.info('Generating watermarks...');
   await generateWatermarks();
   console.info('Watermarks generated!');
+
+  insurance(); // Switch off maintenance insurance
 }
 
 export async function prepareDb() {

@@ -103,7 +103,7 @@ export async function anonDbLocal() {
   console.log('Anonymization complete!')
 
   console.info('Syncing users from db...');
-  const p1 = syncUsers(); // ! FIX ANON
+  const p1 = syncUsers(null, db);
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   const { getCI, storage, auth } = loadAdminServices();
