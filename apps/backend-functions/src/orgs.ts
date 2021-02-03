@@ -154,31 +154,6 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     await triggerNotifications([notification]);
   }
 
-  // @todo(#3640) 09/09/2020 : We got rid of ethers dependencies
-  // const RELAYER_CONFIG: RelayerConfig = {
-  //   ...relayer,
-  //   mnemonic
-  // };
-  // const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
-  // if (blockchainBecomeEnabled) {
-  //   const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
-
-  //   const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
-
-  //   if (isOrgRegistered) {
-  //     throw new Error(`This organization has already an ENS name: ${orgENS}`);
-  //   }
-
-  //   const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
-  //   const provider = getProvider(RELAYER_CONFIG.network);
-  //   const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
-  //   const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
-
-  //   console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
-  //   const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
-  //   console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
-  // }
-
   // Update algolia's index
 
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */

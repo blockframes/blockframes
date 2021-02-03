@@ -41,7 +41,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
     const module = getCurrentModule(this.routerQuery.getValue().state.url);
     switch (notification.type) {
-      case 'organizationAcceptedByArchipelContent': // @TODO #4046 handle or not ?
+      case 'organizationAcceptedByArchipelContent':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your organization was accepted by the ${this.appName} team.`,
@@ -49,7 +49,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
-      case 'invitationFromUserToJoinOrgDecline': // @TODO #4046 handle or not ?
+      case 'invitationFromUserToJoinOrgDecline': // @TODO #4046 add to form and handle mail associated  
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
