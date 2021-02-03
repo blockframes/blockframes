@@ -9,7 +9,7 @@
   </article>
 </section>
 
-<section class="surface" *ngFor="let row of notifications, let index = index">
+<section class="surface" *ngFor="let row of notificationGroup, let index = index">
   <table>
       <tbody *ngIf="showNotifications(index)">
         <tr>
@@ -34,25 +34,26 @@
           </th>
         </tr>
         <tr><span class="mat-caption">Receive notifications when:</span></tr>
-        <tr *ngFor="let subrow of row.subNotification, let subIndex = index">
-          <td class="description">{{ subrow.subtitle }}  <b>({{ subrow.notificationType}})</b></td>
+        <tr *ngFor="let notif of row.notification, let subIndex = index">
+          <td class="description">{{ notif.subtitle }}  <b>({{ notif.notificationType}})</b></td>
           <td>
             <mat-checkbox
               color="primary"
-              [checked]="subrow.email"
               name="email"
+              [checked]="notif.email"
               (change)="updateAllComplete(index, subIndex, $event)"
-              [formControl]="form.get(subrow.notificationType).get('email')"
+              [formControl]="form.get(notif.notificationType).get('email')"
               >
             </mat-checkbox>
           </td>
           <td>
             <mat-checkbox
               color="primary"
-              [checked]="subrow.app"
               name="app"
+              [checked]="notif.app"
+              [disabled]="notif.appMandatory"
               (change)="updateAllComplete(index, subIndex, $event)"
-              [formControl]="form.get(subrow.notificationType).get('app')"
+              [formControl]="form.get(notif.notificationType).get('app')"
               >
             </mat-checkbox>
           </td>
