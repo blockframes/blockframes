@@ -13,7 +13,7 @@ import { generateFixtures } from './generate-fixtures';
 import { backup, exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonDbLocal, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
+import { anonDbProcess, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
 
 const args = process.argv.slice(2);
@@ -37,7 +37,7 @@ async function runCommand() {
       await displayCredentials();
       break;
     case 'loadEmulator':
-      await loadEmulator({ importFrom: arg1});
+      await loadEmulator({ importFrom: arg1 });
       break;
     case 'importEmulator':
       await importEmulatorFromBucket(arg1);
@@ -47,9 +47,6 @@ async function runCommand() {
       break;
     case 'downloadProdDbBackup':
       await downloadProdDbBackup(arg1);
-      break;
-    case 'anonDbLocal':
-      await anonDbLocal();
       break;
     case 'uploadToBucket':
       await uploadBackup({ remoteDir: arg1, localRelPath: arg2 });
