@@ -7,7 +7,42 @@ import type { MoviePictureAdminForm } from '@blockframes/admin/admin-panel/forms
 import type { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
 import type { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
 import type { CampaignForm } from '@blockframes/campaign/form/form'
+import { privacies, Privacy } from "@blockframes/utils/file-sanitizer";
 
+
+/**
+ * Data needed by the `FileUploaderService` to actually upload into the storage.
+ */
+export interface UploadData {
+  fileName: string;
+  file: Blob | File;
+  metadata: FileMetaData;
+}
+
+/**
+ * File metadata required by the backend function in order to complete the upload flow.
+ * @note every extra-data keys will be copied into the Firestore db
+ */
+export interface FileMetaData {
+  uid: string;
+  privacy: Privacy;
+  collection: 'users' | 'orgs' | 'movies' | 'campaigns';
+  docId: string;
+  field: string;
+  [K: string]: string; // extra-data
+};
+
+export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: boolean }) {
+  if (!meta) return false;
+  if (!!options?.uidRequired && (!meta.uid || typeof meta.uid !== 'string')) return false;
+  if (!meta.privacy || !privacies.includes(meta.privacy)) return false;
+  if (!meta.collection || typeof meta.collection !== 'string') return false;
+  if (!meta.docId || typeof meta.docId !== 'string') return false;
+  if (!meta.field || typeof meta.field !== 'string') return false;
+  return true;
+}
+
+// ! DEPRECATED
 /**
  * This function prepare media references in db documents before updating it in firestore.
  * The function also return an array of media to upload, we can then pass this array to the media service.
@@ -34,6 +69,7 @@ export function extractMediaFromDocumentBeforeUpdate(
   };
 }
 
+// ! DEPRECATED
 function extractMediaFromDocument(document: any) {
   let medias: HostedMediaFormValue[] = [];
 
@@ -58,6 +94,7 @@ function extractMediaFromDocument(document: any) {
   return medias;
 }
 
+// ! DEPRECATED
 /**
  * Loops over form looking for mediaForms that need to be updated and then resets that form.
  */
@@ -83,6 +120,7 @@ function updateMediaFormInForm(form: any) {
   }
 }
 
+// ! DEPRECATED
 export function recursivelyListFiles(document: any): string[] {
 
   if (typeof document === 'string') {
@@ -108,11 +146,13 @@ export function recursivelyListFiles(document: any): string[] {
   }
 }
 
+// ! DEPRECATED
 /** Check if a string is a media ref (i.e. if it starts with `public/` or `protected/`) */
 function isMedia(ref: string) {
   return /^(public\/|protected\/)/gm.test(ref);
 }
 
+// ! DEPRECATED
 export function isMediaForm(obj: any) {
   return (
     typeof obj === 'object' &&
@@ -124,9 +164,12 @@ export function isMediaForm(obj: any) {
   );
 }
 
+// ! DEPRECATED
 function mediaNeedsUpdate(media: HostedMediaFormValue) {
   return !media.ref || (!!media.ref && !!media.blobOrFile);
 }
+
+// TODO issue#4002 MOVE THE 2 FUNCTIONS BELLOW ELSEWHERE
 
 export function getFileNameFromPath(path: string) {
   if (typeof path !== 'string') {

@@ -2,7 +2,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
-import { FileMetaData } from '@blockframes/media/+state/media.firestore';
+import { FileMetaData } from '@blockframes/media/+state/media.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 import { MovieFormShellComponent } from '../shell/shell.component';
