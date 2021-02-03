@@ -67,54 +67,6 @@ async function updatePublicContract(tx: FirebaseFirestore.Transaction, contract:
 }
 
 /**
- * Checks for a status change between previous and current and triggers notifications.
- * @param current
- * @param previous
- */
-async function checkAndTriggerNotifications(current: ContractDocument) {
-  const previousVersionId = await getPreviousVersionId(current.id);
-  const previousVersionSnap = await db.doc(`contracts/${current.id}/versions/${previousVersionId}`).get();
-  const previous = previousVersionSnap.data() as ContractVersionDocument;
-
-  if (!!previous) {
-    const contractInNegotiation = (previous.status === 'submitted') && (current.lastVersion.status === 'undernegotiation');
-    const contractSubmitted = (previous.status === 'draft') && (current.lastVersion.status === 'submitted');
-
-    if (contractSubmitted && current.partyIds.length > 0) { // Contract is submitted by organization to Archipel Content
-      // TODO (#1999): Find real creator
-      const org = await getDocument<OrganizationDocument>(`orgs/${current.partyIds[0]}`);
-      const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
-      const notifications = archipelContent.userIds.map(
-        toUserId => createNotification({
-          toUserId,
-          organization: createPublicOrganizationDocument(org),
-          type: 'newContract',
-          docId: current.id
-        })
-      );
-
-      await triggerNotifications(notifications);
-    }
-
-    if (contractInNegotiation) { // Contract is validated by Archipel Content
-      const organizations = await getOrganizationsOfContract(current);
-      const notifications = organizations
-        .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-        .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-        .map(toUserId => {
-          return createNotification({
-            toUserId,
-            type: 'contractInNegotiation',
-            docId: current.id
-          });
-        });
-
-      await triggerNotifications(notifications);
-    }
-  }
-}
-
-/**
  * This method is in charge of updating contract version document on DB.
  * It updates some of document attributes.
  * @param tx
@@ -362,8 +314,7 @@ export async function onContractWrite(
       }
       return current;
     });
-    // Contract version may have changed, we check if notifications need to be triggered
-    await checkAndTriggerNotifications(current);
+
     return true;
   } else {
     // Rules should have prevent this case (@see method definition).
