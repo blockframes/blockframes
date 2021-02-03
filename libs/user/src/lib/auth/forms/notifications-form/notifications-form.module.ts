@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { NotificationsFormComponent } from './notifications-form.component';
 
@@ -15,7 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
     FlexLayoutModule,
-
+    ReactiveFormsModule,
     // Material
     MatCheckboxModule,
     MatIconModule,
