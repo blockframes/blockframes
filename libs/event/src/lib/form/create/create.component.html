@@ -14,32 +14,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Title</mat-label>
-    <input matInput formControlName="title" />
-  </mat-form-field>
-
-  <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
-    <mat-form-field fxFlex appearance="outline">
-      <mat-label>Start</mat-label>
-      <time-picker formControlName="start" [allDay]="form.value.allDay"></time-picker>
-      <mat-error *ngIf="form.hasError('startOverEnd', 'start')">Start date must not be later than end date</mat-error>
-    </mat-form-field>
-    <span>to</span>
-    <mat-form-field fxFlex  appearance="outline">
-      <mat-label>End</mat-label>
-      <time-picker formControlName="end" [allDay]="form.value.allDay"></time-picker>
-      <mat-error *ngIf="form.hasError('startOverEnd', 'end')">End date must not be earlier than start date</mat-error>
-    </mat-form-field>
-  </div>
-
-  <mat-slide-toggle formControlName="allDay" color="primary">All day</mat-slide-toggle>
-
-  <mat-radio-group formControlName="privacy" aria-label="Choose privacy" fxLayout fxLayoutAlign="start center">
-    <mat-radio-button value="public">Public</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is listed on the marketplace and available to all users."></mat-icon>
-    <mat-radio-button value="private">Private</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is listed on the marketplace but only invited users can join."></mat-icon>
-    <!-- <mat-radio-button value="secret">Secret</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is not listed on the marketplace. Only invited users can join"></mat-icon> -->
-  </mat-radio-group>
+  <edit-event-details [form]="form"></edit-event-details>
 
 </form>
 

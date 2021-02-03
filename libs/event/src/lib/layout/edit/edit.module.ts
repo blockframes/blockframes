@@ -12,6 +12,7 @@ import { AppBarModule } from '@blockframes/ui/app-bar';
 import { InvitationFormUserModule } from '@blockframes/invitation/form/user/user.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { EditDetailsModule } from '../../form/edit-details/edit-details.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -44,6 +45,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AppBarModule,
     InvitationFormUserModule,
     ConfirmModule,
+    EditDetailsModule,
 
     // Material
     MatDividerModule,
