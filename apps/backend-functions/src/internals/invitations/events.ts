@@ -149,14 +149,14 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
     });
 
     if (!!invitation.toUser) {
-      notification.user = invitation.toUser; // The subject that have accepted or rejected the invitation
+      notification.user = invitation.toUser; // The subject that have accepted or rejected the request
     } else if (!!invitation.toOrg) {
-      notification.organization = invitation.toOrg; // The subject that have accepted or rejected the invitation
+      notification.organization = invitation.toOrg; // The subject that have accepted or rejected the request
     } else {
       throw new Error('Did not found invitation recipient.');
     }
     notifications.push(notification);
-  } else if (!!invitation.fromOrg && invitation.mode === 'invitation') { // Forcement une invitation de fromOrg 
+  } else if (!!invitation.fromOrg && invitation.mode === 'invitation') {
     const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
     const adminIds = await getAdminIds(org.id);
     adminIds.forEach(toUserId => {

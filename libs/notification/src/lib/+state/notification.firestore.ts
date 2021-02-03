@@ -32,7 +32,13 @@ export type NotificationType =
   'eventIsAboutToStart' | // 1h Reminder before event
   'oneDayReminder' | // 24h Reminder before event
   'invitationToAttendEventUpdated' | // Invitation, accepted or rejected
-  'requestToAttendEventUpdated' // Request, accepted or rejected
+  'requestToAttendEventUpdated' | // Request, accepted or rejected
+
+
+  // @TODO #4046 create issue to remove this and also from libs/notification/src/lib/+state/notification.store.ts
+  // once all notification of theses types are read or deleted (since we cannot make a migration script)
+  'invitationToAttendEventAccepted' |
+  'invitationToAttendEventDeclined'
   ;
 
 

@@ -24,6 +24,10 @@ function createNotificationsControls(settings: Partial<NotificationSettings>): E
     memberAddedToOrg: new NotificationSettingsForm(settings?.memberAddedToOrg),
     memberRemovedFromOrg: new NotificationSettingsForm(settings?.memberRemovedFromOrg),
     requestFromUserToJoinOrgCreate: new NotificationSettingsForm(settings?.requestFromUserToJoinOrgCreate),
+    invitationToAttendEventUpdated: new NotificationSettingsForm(settings?.invitationToAttendEventUpdated), 
+    requestToAttendEventUpdated: new NotificationSettingsForm(settings?.requestToAttendEventUpdated), 
+    movieSubmitted: new NotificationSettingsForm(settings?.movieSubmitted), 
+    movieAccepted: new NotificationSettingsForm(settings?.movieAccepted), 
     // @TODO #4046 add other notificationsType
   }
 }
