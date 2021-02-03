@@ -10,14 +10,15 @@ import {
   uploadDbBackupToBucket,
   loadAdminServices,
   restoreStorageFromCi,
-  startMaintenance
+  startMaintenance,
+  latestAnonDbDir
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket } from '@env'
-import { migrate } from './migrations';
+import { migrate, migrateBeta } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 
@@ -95,9 +96,10 @@ export async function downloadProdDbBackup(localPath?: string) {
 /**
  * This function will run db anonymization on a locally running Firestore emulator database
  */
-export async function anonDbLocal() {
+export async function anonDbProcess() {
   const db = connectEmulator();
   const o = await db.listCollections();
+  if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
   console.log(o.map((snap) => snap.id));
   await runAnonymization(db);
   console.log('Anonymization complete!')
@@ -114,7 +116,7 @@ export async function anonDbLocal() {
   console.info('Users synced!');
 
   console.info('Preparing database & storage by running migrations...');
-  await migrate(false, db, storage); // run the migration, do not trigger a backup before, since we already have it!
+  await migrateBeta(false, db, storage); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Migrations complete!');
 
   console.info('Cleaning unused DB data...');
@@ -131,12 +133,13 @@ export async function anonymizeLatestProdDb() {
   await downloadProdDbBackup(defaultEmulatorBackupPath)
   const proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
   try {
-    await anonDbLocal();
+    await anonDbProcess();
   } catch (e) {
     throw e;
   } finally {
     await shutdownEmulator(proc);
   }
+  await uploadBackup({ localRelPath: defaultEmulatorBackupPath, remoteDir: latestAnonDbDir });
 }
 
 /**
