@@ -22,7 +22,7 @@ export class EventsComponent implements OnInit {
     'invited': 'Number of invitations',
     'confirmed': 'Confirmed',
     'pending': 'Pending',
-    'privacyType': 'Privacy type'
+    'privacy': 'Privacy'
   };
 
   public initialColumns: string[] = [
@@ -35,7 +35,7 @@ export class EventsComponent implements OnInit {
     'invited',
     'confirmed',
     'pending',
-    'privacyType'
+    'privacy'
   ];
   public rows: any[] = [];
   public eventListLoaded = false;
@@ -80,7 +80,7 @@ export class EventsComponent implements OnInit {
       'id',
       'title',
       'type',
-      'privacyType',
+      'privacy',
       'hostedBy',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
@@ -98,7 +98,7 @@ export class EventsComponent implements OnInit {
       'invited': i.invited,
       'confirmed': i.confirmed,
       'pending': i.pending,
-      'privacy type': i.privacyType,
+      'privacy': i.privacy,
     }))
     downloadCsvFromJson(exportedRows, 'invitations-list');
   }

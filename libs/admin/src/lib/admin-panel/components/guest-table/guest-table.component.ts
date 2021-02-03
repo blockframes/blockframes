@@ -20,7 +20,7 @@ export class GuestTableComponent {
     'event.start': 'Event start',
     'event.end': 'Event end',
     'event.type': 'Event type',
-    'event.privacyType': 'Privacy Type',
+    'event.privacy': 'Privacy',
     'date': 'Invitation date',
     'guest.firstName': 'FirstName',
     'guest.lastName': 'LastName',

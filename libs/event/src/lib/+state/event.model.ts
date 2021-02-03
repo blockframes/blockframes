@@ -29,7 +29,7 @@ export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<an
     id: '',
     title: '',
     ownerId: '',
-    privacyType: 'private',
+    privacy: 'private',
     type: 'standard',
     allDay: false,
     isOwner: false,

@@ -10,7 +10,7 @@ export async function upgrade(db: Firestore) {
   await runChunks(events.docs, async (eventDoc) => {
     const data = eventDoc.data();
 
-    data.privacyType = data.isPrivate ? 'private' : 'public';
+    data.privacy = data.isPrivate ? 'private' : 'public';
 
     delete data.isPrivate;
 
