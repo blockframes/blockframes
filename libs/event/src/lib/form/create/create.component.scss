@@ -5,3 +5,16 @@
 mat-slide-toggle {
   width: fit-content;
 }
+
+mat-radio-group {
+  margin-top: 12px;
+
+  mat-radio-button {
+    margin-right: 8px;
+  }
+  
+  mat-icon {
+    margin-right: 32px;
+    width: 16px;
+  }
+}

@@ -401,7 +401,7 @@ service cloud.firestore {
       return isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['allDay'])
         && isNotUpdatingField(['end'])
-        && isNotUpdatingField(['isPrivate'])
+        && isNotUpdatingField(['privacyType'])
         && isNotUpdatingField(['ownerId'])
         && isNotUpdatingField(['start'])
         // && isNotUpdatingField(['title'])

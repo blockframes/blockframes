@@ -17,7 +17,11 @@
   </div>
 
   <mat-checkbox formControlName="allDay" color="primary">All day</mat-checkbox>
-  <mat-checkbox formControlName="isPrivate" color="primary">Private</mat-checkbox>
+  <mat-radio-group formControlName="privacyType" aria-label="Choose privacy type" fxLayout fxLayoutAlign="start center">
+    <mat-radio-button value="public">Public</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is listed on the marketplace and available to all users."></mat-icon>
+    <mat-radio-button value="private">Private</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is listed on the marketplace but only invited users can join."></mat-icon>
+    <!-- <mat-radio-button value="secret">Secret</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is not listed on the marketplace. Only invited users can join"></mat-icon> -->
+  </mat-radio-group>
 
   <footer fxLayout fxLayoutAlign="center center">
     <button mat-stroked-button type="submit">

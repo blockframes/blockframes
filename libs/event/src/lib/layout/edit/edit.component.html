@@ -37,9 +37,13 @@
         </mat-form-field>
       </div>
 
-      <mat-slide-toggle test-id="event-private" formControlName="isPrivate" color="primary">Private</mat-slide-toggle>
       <mat-slide-toggle test-id="all-day" formControlName="allDay" color="primary">All day</mat-slide-toggle>
 
+      <mat-radio-group formControlName="privacyType" aria-label="Choose privacy type" fxLayout fxLayoutAlign="start center">
+        <mat-radio-button value="public">Public</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is listed on the marketplace and available to all users."></mat-icon>
+        <mat-radio-button value="private">Private</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is listed on the marketplace but only invited users can join."></mat-icon>
+        <!-- <mat-radio-button value="secret">Secret</mat-radio-button><mat-icon svgIcon="info" matTooltip="Event is not listed on the marketplace. Only invited users can join"></mat-icon> -->
+      </mat-radio-group>
     </mat-card>
 
     <!-- Meta content -->
