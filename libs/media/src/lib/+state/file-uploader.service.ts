@@ -57,11 +57,15 @@ export class FileUploaderService {
 
     console.log('ADD TO QUEUE', storagePath, fileName, file, metadata); // TODO REMOVE DEBUG LOG
 
-    // Throw in case of duplicated path, instead of silently overwriting the first occurrence
-    if (!!this.queue[storagePath] && this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
-
+    // instantiate array if it doesn't exists yet
     if (!this.queue[storagePath]) this.queue[storagePath] = [];
-    this.queue[storagePath].push({ file, fileName, metadata });
+
+    const uploads = this.queue[storagePath];
+
+    // Throw in case of duplicated path, instead of silently overwriting the first occurrence
+    if (uploads.some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
+
+    uploads.push({ file, fileName, metadata });
   }
 
   /**
@@ -71,13 +75,17 @@ export class FileUploaderService {
    */
   removeFromQueue(storagePath: string, fileName) {
 
-    if (!this.queue[storagePath]) return;
+    const uploads = this.queue[storagePath];
 
-    const index = this.queue[storagePath].findIndex(upload => upload.fileName === fileName);
+    if (!uploads) return;
 
-    if (index !== -1) this.queue[storagePath][index] = null; // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
+    const index = uploads.findIndex(upload => upload.fileName === fileName);
 
-    if (this.queue[storagePath].length === 0 || this.queue[storagePath].every(upload => !upload)) {
+    // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
+    if (index !== -1) uploads[index] = null;
+
+    if (uploads.length === 0 || uploads.every(upload => !upload)) {
+      // delete directly on `this.queue` instead of `uploads` otherwise it will do nothing
       delete this.queue[storagePath];
     }
   }
@@ -87,8 +95,8 @@ export class FileUploaderService {
     this.queue = {};
   }
 
-  retrieveFromQueue(storagePath: string, index?: number) {
-    return this.queue[storagePath]?.[ index ?? 0 ];
+  retrieveFromQueue(storagePath: string, index = 0) {
+    return this.queue[storagePath]?.[index];
   }
 
   /** Upload all files in the queue */
@@ -126,7 +134,8 @@ export class FileUploaderService {
     // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
     const flattenedTasks = ([] as AngularFireUploadTask[]).concat(...tasks);
 
-    this.tasks.value = [...this.tasks.value, ...flattenedTasks];
+    // this.tasks.value = [...this.tasks.value, ...flattenedTasks];
+    this.tasks.value = [...this.tasks.value, ...tasks.flat()];
     (Promise as any).allSettled(tasks)
       .then(() => delay(3000))
       .then(() => this.detachWidget());
