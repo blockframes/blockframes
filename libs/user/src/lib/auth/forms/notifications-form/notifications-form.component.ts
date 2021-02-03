@@ -124,11 +124,12 @@ export class NotificationsFormComponent {
   toogleAll(event: MatSlideToggleChange) {
     this.notificationGroup.forEach(group => {
       group.completed[event.source.name] = event.checked;
-      group.notification.forEach(notif => {
+      group.notification.filter(notif => !notif.appMandatory).forEach(notif => {
         notif[event.source.name] = event.checked;
         this.form.controls[notif.notificationType].controls[event.source.name].setValue(event.checked);
       })
     });
+    this.form.markAsTouched();
   }
 
   // CHECKBOX LOGIC //
@@ -145,9 +146,10 @@ export class NotificationsFormComponent {
   setAll(completed: boolean, index: number, value: string) {
     this.notificationGroup[index].completed[value] = completed;
     if (this.notificationGroup[index].notification == null) return;
-    this.notificationGroup[index].notification.forEach(notif => {
+    this.notificationGroup[index].notification.filter(notif => !notif.appMandatory).forEach(notif => {
       notif[value] = completed;
       this.form.controls[notif.notificationType].controls[value].setValue(completed);
     });
+    this.form.markAsTouched();
   }
 }
