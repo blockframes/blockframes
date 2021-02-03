@@ -49,7 +49,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
-      case 'invitationFromUserToJoinOrgDecline': // @TODO #4046 add to form and handle mail associated  
+      case 'invitationFromUserToJoinOrgDecline':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
