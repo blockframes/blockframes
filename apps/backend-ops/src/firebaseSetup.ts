@@ -116,7 +116,7 @@ export async function prepareDb() {
   console.log('Restoring latest db from storage...')
   await importFirestore(latestAnonDbDir);
   console.log('Anonymized DB restored. Migrating...');
-  await migrate(false);
+  await migrateBeta(false);
 }
 
 export async function prepareStorage() {

@@ -63,10 +63,7 @@
     "db:download-prod": "ts-node -P tools/tsconfig.tools.json tools/scripts/get-prod-backup.ts",
     "db:anonymize": "ts-node -P tools/tsconfig.tools.json tools/scripts/anonymize-db.ts",
     "db:upload-anon-db-ci": "ts-node -P tools/tsconfig.tools.json tools/scripts/upload-anon-db-ci.ts",
-    "firestore:download-prod": "npm run backend-ops downloadProdDbBackup",
-    "firestore:anonymize": "firebase emulators:exec --only firestore --export-on-exit --import ./.firebase/firestore 'npm run backend-ops anonDbLocal'",
-    "firestore:upload-db-ci": "npm run backend-ops uploadToBucket LATEST-ANON-DB",
-    "firestore:run-db-anon-process": "npm run firestore:download-prod && npm run firestore:anonymize && npm run firestore:upload-db-ci",
+    "firestore:run-db-anon-process": "npm run backend-ops anonProdDb",
     "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
   },
   "private": true,

@@ -59,18 +59,18 @@ export async function startFirestoreEmulatorWithImport(emuPath: string) {
  * This helper function will download a Firestore export from a GCS bucket and
  * save it inside a folder structure compatible with a local Firestore emulator
  * @param gcsPath The full GCS bucket URI pointing to the online Firestore export
- * @param emuPath absolute path to the root Firebase emulator directory
+ * @param emulatorBackupPath absolute path to the root Firebase emulator directory
  */
-export function downloadFirestoreBackup(gcsPath: string, emuPath: string) {
-  const firestorePath = getFirestoreExportPath(emuPath);
+export function downloadFirestoreBackup(gcsPath: string, emulatorBackupPath: string) {
+  const firestoreBackupPath = getFirestoreExportPath(emulatorBackupPath);
   const trailingSlash = gcsPath.charAt(gcsPath.length - 1) === '/';
-  if (!existsSync(emuPath)) mkdirSync(firestorePath, { recursive: true });
+  if (!existsSync(emulatorBackupPath)) mkdirSync(firestoreBackupPath, { recursive: true });
   else {
-    rmdirSync(emuPath, { recursive: true });
-    mkdirSync(firestorePath, { recursive: true });
+    rmdirSync(emulatorBackupPath, { recursive: true });
+    mkdirSync(firestoreBackupPath, { recursive: true });
   }
 
-  const cmd = `gsutil -m cp -r "${gcsPath}${trailingSlash ? '*' : '/*'}"  "${firestorePath}"`;
+  const cmd = `gsutil -m cp -r "${gcsPath}${trailingSlash ? '*' : '/*'}"  "${firestoreBackupPath}"`;
   console.log('Running command:', cmd);
   return runShellCommand(cmd);
 }
@@ -87,7 +87,13 @@ function createEmulatorMetadataJson(emuPath: string) {
   const firestoreEmulatorVersion = '1.11.7';
 
   const fileSearch: Dirent[] = readdirSync(firestorePath, { withFileTypes: true });
-  const firestoreMetadataFile = fileSearch.find((file) => file.isFile()).name;
+
+  let firestoreMetadataFile: string;
+  try {
+    firestoreMetadataFile = fileSearch.find((file) => file.isFile()).name;
+  } catch (e) {
+    throw Error('The Firestore backup metadata file could not be found - likely because it was not successfully downloaded');
+  }
 
   const emulatorObj = {
     version: firebaseVersion,
