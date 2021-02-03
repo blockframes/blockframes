@@ -47,9 +47,9 @@ export class FileUploaderService {
    * @param metadata required metadata to complete the upload flow,
    * such as privacy, where is the corresponding db document, etc...
    */
-  addToQueue(storagePath: string, upload: UploadData) {
+  addToQueue(storagePath: string, uploadData: UploadData) {
 
-    const { fileName, file, metadata } = upload;
+    const { fileName, file, metadata } = uploadData;
 
     console.log('ADD TO QUEUE', storagePath, fileName, file, metadata); // TODO REMOVE DEBUG LOG
 
