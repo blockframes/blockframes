@@ -6,7 +6,7 @@
 
       <file-new-uploader
         test-id="presentationDeck"
-        allowedFileType="pdf"
+        accept="pdf"
         [displayFile]="form.promotional.get('presentation_deck').get('storagePath')"
         [storagePath]="storagePaths.presentationDeck"
         [metadata]="metadatas.presentationDeck"
@@ -21,7 +21,7 @@
       <h3>Scenario</h3>
       <file-new-uploader
         test-id="scenario"
-        allowedFileType="pdf"
+        accept="pdf"
         [displayFile]="form.promotional.get('scenario').get('storagePath')"
         [storagePath]="storagePaths.scenario"
         [metadata]="metadatas.scenario"
@@ -36,7 +36,7 @@
       <h3>Moodboard / Artistic Deck</h3>
       <file-new-uploader
         test-id="moodboard"
-        allowedFileType="pdf"
+        accept="pdf"
         [displayFile]="form.promotional.get('moodboard').get('storagePath')"
         [storagePath]="storagePaths.moodboard"
         [metadata]="metadatas.moodboard"
