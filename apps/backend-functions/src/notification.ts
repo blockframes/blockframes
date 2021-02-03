@@ -1,4 +1,4 @@
-import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, PublicUser } from './data/types';
+import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
@@ -11,7 +11,8 @@ import { reminderEventToUser,
   userJoinedYourOrganization,
   userRequestedToJoinYourOrg,
   requestToAttendEventFromUserAccepted,
-  organizationWasAccepted
+  organizationWasAccepted,
+  organizationAppAccessChanged
 } from './templates/mail';
 import { templateIds } from './templates/ids';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -87,7 +88,9 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
     'oneDayReminder',
     'eventIsAboutToStart',
     'requestFromUserToJoinOrgCreate',
-    'organizationAcceptedByArchipelContent'
+    'organizationAcceptedByArchipelContent',
+    'invitationToAttendEventDeclined',
+    'orgAppAccessChanged'
   ];
 
   if (notification.email?.isSent === false) {
@@ -97,10 +100,16 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       const recipient = await getDocument<User>(`users/${notification.toUserId}`);
 
       switch (notification.type) {
+        // Notification related to organization
         case 'organizationAcceptedByArchipelContent':
           await sendMailToOrgAcceptedAdmin(recipient, notification)
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
+          break;
+        case 'orgAppAccessChanged':
+          await sendOrgAppAccessChangedEmail(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message)
           break;
 
         // Notifications relative to movies
@@ -155,6 +164,13 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           break;
         case 'invitationToAttendEventAccepted':
           await sendInvitationToAttendEventAcceptedEmail(recipient, notification)
+            .then(_ => notification.email.isSent = true)
+            .catch(e => notification.email.error = e.message);
+          break;
+        case 'invitationToAttendEventDeclined' :
+          //! There is no email template for now
+          //TODO 4046 Add new template from Sendgrid
+          await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been declined.' })
             .then(_ => notification.email.isSent = true)
             .catch(e => notification.email.error = e.message);
           break;
@@ -240,5 +256,14 @@ async function sendInvitationToAttendEventAcceptedEmail(recipient: User, notific
 async function sendMailToOrgAcceptedAdmin(recipient: User, notification: NotificationDocument) {
   const app = await getOrgAppKey(notification.organization.id);
   const template = organizationWasAccepted(recipient.email, recipient.firstName);
+  await sendMailFromTemplate(template, app);
+}
+
+/** Send email to organization's admins when org appAccess has changed */
+async function sendOrgAppAccessChangedEmail(recipient: User, notification: NotificationDocument) {
+  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const app = await getOrgAppKey(org);
+  const url = await getAppUrl(org);
+  const template = organizationAppAccessChanged(recipient, url);
   await sendMailFromTemplate(template, app);
 }
