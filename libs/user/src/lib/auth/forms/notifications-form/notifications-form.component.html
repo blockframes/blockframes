@@ -1,140 +1,63 @@
-<section class="surface">
-  <!-- ///// COMPANY MANAGEMENT NOTIFICATIONS -->
+<section class="surface general">
+  <h2>Notifications Settings</h2>
   <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>requestFromUserToJoinOrgCreate : A new user requests to join your organization</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestFromUserToJoinOrgCreate').get('email').value" name="email" (change)="toogle('requestFromUserToJoinOrgCreate', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="true" [disabled] = true name="app">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>orgMemberUpdated : Members of your organization are added or removed</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('orgMemberUpdated').get('email').value" name="email" (change)="toogle('orgMemberUpdated', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('orgMemberUpdated').get('app').value" name="app" (change)="toogle('orgMemberUpdated', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <!-- ///// CONTENT MANAGEMENT NOTIFICATIONS -->
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>movieSubmitted : A title is successfully submitted for validation</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('movieSubmitted').get('email').value" name="email" (change)="toogle('movieSubmitted', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('movieSubmitted').get('app').value" name="app" (change)="toogle('movieSubmitted', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>movieAccepted : A title gets published to the marketplace</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('movieAccepted').get('email').value" name="email" (change)="toogle('movieAccepted', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('movieAccepted').get('app').value" name="app" (change)="toogle('movieAccepted', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <!-- ///// EVENT MANAGEMENT NOTIFICATIONS -->
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>invitationToAttendEventUpdated : An user answers your invitation to an event</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('invitationToAttendEventUpdated').get('email').value" name="email" (change)="toogle('invitationToAttendEventUpdated', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('invitationToAttendEventUpdated').get('app').value" name="app" (change)="toogle('invitationToAttendEventUpdated', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>requestToAttendEventSent : Your request to access an event has been sent</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestToAttendEventSent').get('email').value" name="email" (change)="toogle('requestToAttendEventSent', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestToAttendEventSent').get('app').value" name="app" (change)="toogle('requestToAttendEventSent', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-  
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>requestToAttendEventUpdated : An organization answers your request to access an event</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestToAttendEventUpdated').get('email').value" name="email" (change)="toogle('requestToAttendEventUpdated', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('requestToAttendEventUpdated').get('app').value" name="app" (change)="toogle('requestToAttendEventUpdated', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>oneDayReminder : Reminder 24h before event starts</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('oneDayReminder').get('email').value" name="email" (change)="toogle('oneDayReminder', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('oneDayReminder').get('app').value" name="app" (change)="toogle('oneDayReminder', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>eventIsAboutToStart : Reminder 1h before event starts</p>
-    <div fxLayout="row" fxLayoutGap="40px">
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('eventIsAboutToStart').get('email').value" name="email" (change)="toogle('eventIsAboutToStart', $event)">Email :</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" [checked]="form.get('eventIsAboutToStart').get('app').value" name="app" (change)="toogle('eventIsAboutToStart', $event)">App :</mat-slide-toggle>
-    </div>
-  </article>
-
-</section>
-
-
-<section class="surface">
-  <h2>Company Management Notifications</h2>
-  <h3>I want to be informed that :</h3>
-
-  <article fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>Company details were changed.</p>
-      <mat-slide-toggle color="primary" checked disabled></mat-slide-toggle>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="16px">
-      <mat-checkbox color="primary">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary" checked="true" disabled>In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>My company's member has changed profile details.</p>
-      <mat-slide-toggle color="primary"></mat-slide-toggle>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="16px">
-      <mat-checkbox color="primary">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary">In app</mat-checkbox>
+    <p>Activate all the notifications :</p>
+    <div fxLayout="row" fxLayoutGap="32px">
+      <mat-slide-toggle color="primary" labelPosition="before" name="email" checked="true" (change)="toogleAll($event)">By Email:</mat-slide-toggle>
+      <mat-slide-toggle color="primary" labelPosition="before" name="app" checked="true" (change)="toogleAll($event)">In App:</mat-slide-toggle>
     </div>
   </article>
 </section>
 
-<section class="surface">
-  <h2>Content Management Notifications</h2>
-  <h3>I want to be informed that :</h3>
-
-  <article fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>A title is successfully submitted for validation.</p>
-      <mat-slide-toggle color="primary"></mat-slide-toggle>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="16px">
-      <mat-checkbox color="primary">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary">In app</mat-checkbox>
-    </div>
-  </article>
-
-  <article fxLayout="column">
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>A title gets published on/removed from the marketplace.</p>
-      <mat-slide-toggle color="primary"></mat-slide-toggle>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="16px">
-      <mat-checkbox color="primary">By e-mail</mat-checkbox>
-      <mat-checkbox color="primary">In app</mat-checkbox>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>A title ’s production status gets updated.</p>
-      <mat-slide-toggle color="primary"></mat-slide-toggle>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>A title gets added to wishlist.</p>
-      <mat-slide-toggle color="primary"></mat-slide-toggle>
-    </div>
-  </article>
+<section class="surface" *ngFor="let row of notificationGroup, let index = index">
+  <table>
+      <tbody *ngIf="showNotifications(index)">
+        <tr>
+          <th class="description"><h2>{{ row.title }}</h2></th>
+          <th>
+            <mat-checkbox
+              color="primary"
+              [indeterminate]="someComplete(index, 'email')"
+              [checked]="row.completed.email"
+              (change)="setAll($event.checked, index, 'email')">
+            </mat-checkbox>
+            By email
+          </th>
+          <th>
+            <mat-checkbox
+              color="primary"
+              [indeterminate]="someComplete(index, 'app')"
+              [checked]="row.completed.app"
+              (change)="setAll($event.checked, index, 'app')">
+            </mat-checkbox>
+            In App
+          </th>
+        </tr>
+        <tr><span class="mat-caption">Receive notifications when:</span></tr>
+        <tr *ngFor="let notif of row.notification, let subIndex = index">
+          <td class="description">{{ notif.subtitle }}  <b>({{ notif.notificationType}})</b></td>
+          <td>
+            <mat-checkbox
+              color="primary"
+              name="email"
+              [checked]="notif.email"
+              (change)="updateAllComplete(index, subIndex, $event)"
+              [formControl]="form.get(notif.notificationType).get('email')"
+              >
+            </mat-checkbox>
+          </td>
+          <td>
+            <mat-checkbox
+              color="primary"
+              name="app"
+              [checked]="notif.app"
+              [disabled]="notif.appMandatory"
+              (change)="updateAllComplete(index, subIndex, $event)"
+              [formControl]="form.get(notif.notificationType).get('app')"
+              >
+            </mat-checkbox>
+          </td>
+        </tr>
+      </tbody>
+  </table>
 </section>
