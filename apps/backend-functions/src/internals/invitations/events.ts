@@ -89,7 +89,9 @@ async function onInvitationToAnEventCreate({
 
     switch (mode) {
       case 'invitation':
-        return Promise.all(recipients.map(recipient => { // @TODO #4046 an organization invites you to a screening OR an User invites you to a meeting
+        // @TODO #4046 an organization invites you to a screening OR an User invites you to a meeting
+        // Create a new notificationType like invitationToAttendEventCreated | need text for notification
+        return Promise.all(recipients.map(recipient => {
           console.log(`Sending invitation email for an event (${eventId}) from ${senderName} to : ${recipient.email}`);
           const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, appKey).catch(e => console.warn(e.message));
@@ -121,7 +123,9 @@ async function onInvitationToAnEventCreate({
 
         await triggerNotifications([notification]);
 
-        return Promise.all(recipients.map(recipient => { // @TODO #4046 an user requests access to event your organize
+        // @TODO #4046 an user requests access to event your organize
+        // Create a new notificationType like requestToAttendEventCreated | need text for notification
+        return Promise.all(recipients.map(recipient => {
           const userName = `${fromUser.firstName} ${fromUser.lastName}`
           console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient.email}`);
           const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
