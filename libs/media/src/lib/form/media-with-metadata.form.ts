@@ -1,6 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { createHostedMediaWithMetadata, FileMetaData, HostedMediaWithMetadata } from '../+state/media.firestore';
+import { createHostedMediaWithMetadata, HostedMediaWithMetadata } from '../+state/media.firestore';
+import { FileMetaData } from '../+state/media.model';
 import { HostedMediaForm } from './media.form';
 
 
