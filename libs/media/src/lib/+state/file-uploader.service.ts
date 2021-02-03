@@ -9,15 +9,9 @@ import { AuthQuery } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 import { BehaviorStore, delay } from "@blockframes/utils/helpers";
 
-import { FileMetaData, isValidMetadata } from "./media.firestore";
+import { UploadData, FileMetaData, isValidMetadata } from "./media.model";
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 
-
-export interface UploadData {
-  fileName: string;
-  file: Blob | File;
-  metadata: FileMetaData;
-}
 
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
@@ -53,7 +47,9 @@ export class FileUploaderService {
    * @param metadata required metadata to complete the upload flow,
    * such as privacy, where is the corresponding db document, etc...
    */
-  addToQueue(storagePath: string, fileName: string, file: Blob | File, metadata: FileMetaData) {
+  addToQueue(storagePath: string, upload: UploadData) {
+
+    const { fileName, file, metadata } = upload;
 
     console.log('ADD TO QUEUE', storagePath, fileName, file, metadata); // TODO REMOVE DEBUG LOG
 

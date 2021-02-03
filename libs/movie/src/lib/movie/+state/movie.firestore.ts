@@ -28,6 +28,7 @@ import { LegalDocument } from "@blockframes/contract/contract/+state/contract.fi
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
+import { StorageFile } from "@blockframes/media/+state/media.firestore";
 
 // TODO issue#2582
 
@@ -121,11 +122,11 @@ export interface HostedVideo {
 export interface MoviePromotionalElements {
 
   financialDetails: string,
-  moodboard: { storagePath: string },
+  moodboard: StorageFile,
   notes: MovieNote[],
-  presentation_deck: { storagePath: string },
+  presentation_deck: StorageFile,
   salesPitch: MovieSalesPitch,
-  scenario: { storagePath: string },
+  scenario: StorageFile,
   still_photo: string[],
   videos?: HostedVideos,
 

@@ -1,7 +1,7 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { Overlay } from '@angular/cdk/overlay';
 import { MediaService } from './media.service';
-import { UploadData } from "./media.firestore";
+import { OldUploadData } from "./media.firestore";
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorage } from "@angular/fire/storage";
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
@@ -13,7 +13,8 @@ describe('Media Service Test Suite', () => {
   let service: MediaService;
   let db: AngularFirestore;
   let storage: AngularFireStorage;
-  const TESTDATA: UploadData = {
+
+  const TESTDATA: OldUploadData = {
     metadata: null,
     path: 'unit-test/',
     data: null,

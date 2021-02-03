@@ -10,7 +10,8 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
 import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
-import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
 import { privacies, Privacy, tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
@@ -119,7 +120,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
       delete extraData[key];
     }
 
-    const uploadData = {
+    const uploadData: StorageFile = {
       ...extraData,
       storagePath: finalPath,
     }
