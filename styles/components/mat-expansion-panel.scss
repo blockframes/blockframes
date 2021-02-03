@@ -2,7 +2,7 @@
   $foreground: map-get($theme, foreground);
 
   .mat-expansion-panel {
-    @include _mat-theme-overridable-elevation(0, $theme);
+    @include mat-private-theme-overridable-elevation(0, $theme);
     // HEADER
     .mat-expansion-panel-header {
       padding: 0 16px;
