@@ -7,7 +7,8 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { UploadData, HostedMediaFormValue, isValidMetadata } from "./media.firestore";
+import { OldUploadData, HostedMediaFormValue } from "./media.firestore";
+import { isValidMetadata } from "./media.model";
 
 // Blockframes
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
@@ -42,7 +43,7 @@ export class MediaService {
     private db: AngularFirestore
   ) { }
 
-  async upload(uploadFiles: UploadData | UploadData[]) {
+  async upload(uploadFiles: OldUploadData | OldUploadData[]) {
     const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
     /**
      * @dev Every file goes into tmp dir.

@@ -19,7 +19,7 @@ import {
   sanitizeFileName,
 } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { FileMetaData } from '@blockframes/media/+state/media.firestore';
+import { FileMetaData } from '@blockframes/media/+state/media.model';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { FormControl } from '@angular/forms';
 
@@ -165,7 +165,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
     this.fileName = sanitizeFileName(this.file.name);
     this.localSize = computeSize(this.file.size);
 
-    this.uploaderService.addToQueue(this.storagePath, this.fileName, this.file, this.metadata);
+    this.uploaderService.addToQueue(this.storagePath, { fileName: this.fileName, file: this.file, metadata: this.metadata });
   }
 
   public delete() {

@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
-import { FileMetaData } from '../+state/media.firestore';
+import { FileMetaData } from '../+state/media.model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 
 
