@@ -44,7 +44,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
-    if(this.isUserBlockframesAdmin){
+    if (this.isUserBlockframesAdmin) {
       this.pageTitle = '[ADMIN] Import multiple items at once';
     }
     this.cdRef.markForCheck();
@@ -119,9 +119,9 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
       });
   }
 
-  getTemplateName(templateType: string){
+  getTemplateName(templateType: string) {
     const appName = getCurrentApp(this.routerQuery);
-    if(this.isUserBlockframesAdmin){
+    if (this.isUserBlockframesAdmin) {
       return `import-${templateType}-template-admin.xlsx`;
     } else {
       return `import-${templateType}-template-customer-${appName}.xlsx`;

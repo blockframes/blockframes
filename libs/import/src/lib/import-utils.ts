@@ -8,7 +8,7 @@ export interface SpreadsheetImportError {
   field: string;
   name: string;
   reason: string;
-  type: string;
+  type: 'error' | 'warning';
   hint?: string;
 }
 
@@ -16,14 +16,6 @@ export interface MovieImportState {
   movie: Movie;
   distributionRights?: DistributionRight[];
   errors?: SpreadsheetImportError[];
-}
-
-export interface RightsImportState {
-  distributionRight: DistributionRight;
-  errors?: SpreadsheetImportError[];
-  movieTitle: string;
-  movieInternalRef?: string;
-  movieId: string;
 }
 
 export interface ContractsImportState {

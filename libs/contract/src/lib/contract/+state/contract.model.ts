@@ -252,3 +252,51 @@ export function getValidatedContracts(contracts: Contract[]): Contract[] {
   const validStatus = 'paid' || 'waitingpayment' || 'accepted';
   return contracts.filter(contract => contract.lastVersion.status === validStatus)
 }
+
+///////////////////////////// NEW DATA MODEL OF CONTRACT
+
+export function createMandate(params?) {
+  return {
+    id: '',
+    titleId: '',
+    termsIds: [],
+    buyerId: '', // For external sales this is undefined
+    sellerId: '', // Archipel content or the Seller
+    type: 'mandate',
+    status: {
+      seller: 'draft',
+      buyer: 'draft'
+    },
+    ...params
+  }
+}
+
+export function createSale(params?) {
+  return {
+    id: '',
+    titleId: '',
+    termsIds: [],
+    buyerId: undefined, // For external sales this is undefined
+    sellerId: '', // Archipel content or the Seller
+    type: 'sale',
+    status: {
+      seller: 'draft',
+      buyer: 'draft'
+    },
+    ...params
+  }
+}
+
+export function createTerms(params?) {
+  return {
+    titleId: '',
+    orgId: '',
+    territories: [],
+    medias: [],
+    exclusive: false,
+    duration: { from: '', to: '' },
+    languages: {},
+    criteria: [],
+    ...params
+  }
+}
