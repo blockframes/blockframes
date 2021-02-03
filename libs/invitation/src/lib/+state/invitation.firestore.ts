@@ -14,11 +14,7 @@ type Timestamp = firebase.firestore.Timestamp;
  *  If user that received an email invitation and
  *  created an account, we will then be able to replace email by the coresponding new user.
  * */
-export interface InvitationBase<D> {
-  id: string;
-  type: InvitationType;
-  mode: InvitationMode,
-  status: InvitationStatus;
+export interface InvitationBase<D> extends PublicInvitation{
   date: D;
   /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
   fromOrg?: PublicOrganization,
@@ -31,6 +27,14 @@ export interface InvitationBase<D> {
    */
   eventId?: string;
   message?: string;
+}
+
+/** Public interface of an invitation (for notifications). */
+export interface PublicInvitation {
+  id: string;
+  type: InvitationType;
+  mode: InvitationMode,
+  status: InvitationStatus;
 }
 
 /** Specific types of Invitation, both used in firebase functions. */
