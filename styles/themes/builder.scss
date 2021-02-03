@@ -204,5 +204,4 @@
 @include mat-native-control($bf-typography);
 
 // Density
-// Remove the "_" when we switch to ng 11
-@include _angular-material-density(maximum);
+@include angular-material-density(maximum);
