@@ -4,8 +4,8 @@ import { EntityControl, FormEntity } from '@blockframes/utils/form/forms/entity.
 
 function createNotificationSettingsTemplateControls(settings: Partial<NotificationSettingsTemplate>): EntityControl<NotificationSettingsTemplate> {
   return {
-    email: new FormControl(settings?.email !== null ? settings?.email : true, Validators.required),
-    app: new FormControl(settings?.app !== null ? settings?.app : true, Validators.required),
+    email: new FormControl(![null, undefined].includes(settings?.email) ? settings?.email : true, Validators.required),
+    app: new FormControl(![null, undefined].includes(settings?.app) ? settings?.app : true, Validators.required),
   }
 }
 
@@ -21,9 +21,13 @@ function createNotificationsControls(settings: Partial<NotificationSettings>): E
   return {
     eventIsAboutToStart: new NotificationSettingsForm(settings?.eventIsAboutToStart),
     oneDayReminder: new NotificationSettingsForm(settings?.oneDayReminder),
-    memberAddedToOrg: new NotificationSettingsForm(settings?.memberAddedToOrg),
-    memberRemovedFromOrg: new NotificationSettingsForm(settings?.memberRemovedFromOrg),
+    orgMemberUpdated: new NotificationSettingsForm(settings?.orgMemberUpdated),
+    requestToAttendEventSent: new NotificationSettingsForm(settings?.requestToAttendEventSent),
     requestFromUserToJoinOrgCreate: new NotificationSettingsForm(settings?.requestFromUserToJoinOrgCreate),
+    invitationToAttendEventUpdated: new NotificationSettingsForm(settings?.invitationToAttendEventUpdated),
+    requestToAttendEventUpdated: new NotificationSettingsForm(settings?.requestToAttendEventUpdated),
+    movieSubmitted: new NotificationSettingsForm(settings?.movieSubmitted),
+    movieAccepted: new NotificationSettingsForm(settings?.movieAccepted),
     // @TODO #4046 add other notificationsType
   }
 }
