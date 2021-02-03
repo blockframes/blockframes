@@ -133,7 +133,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
-      // @TODO case : 'orgAppAccessChanged' ?? sinon a mettre dans appendNotificationSettings
+      // @TODO #4046 case : 'orgAppAccessChanged' ?? If not, edit appendNotificationSettings
       case 'eventIsAboutToStart':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)

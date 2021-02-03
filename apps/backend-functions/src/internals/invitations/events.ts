@@ -90,7 +90,7 @@ async function onInvitationToAnEventCreate({
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => { // @TODO #4046 an organization invites you to a screening OR an User invites you to a meeting
-          console.log(`Sending invitation email for an event (${eventId}) from ${senderName} to : ${recipient.email}`); // ICI
+          console.log(`Sending invitation email for an event (${eventId}) from ${senderName} to : ${recipient.email}`);
           const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, appKey).catch(e => console.warn(e.message));
         }))
