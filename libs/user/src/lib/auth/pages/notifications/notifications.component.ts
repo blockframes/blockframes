@@ -24,15 +24,11 @@ export class NotificationsComponent {
   }
 
   public async update() {
-    if(this.form.touched){
-      const notifications = this.form.value;
-      const uid = this.authQuery.userId;
-      await this.authService.update({ uid, settings: { notifications } });
-  
-      this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
-    } else {
-      this.snackBar.open('Please update some settings before updating.', 'close', { duration: 2000 });
-    }
+    const notifications = this.form.value;
+    const uid = this.authQuery.userId;
+    await this.authService.update({ uid, settings: { notifications } });
+
+    this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
 
   }
 }

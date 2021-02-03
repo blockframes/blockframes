@@ -145,7 +145,7 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
     })
   );
 
-  return triggerNotifications(notifications); // @TODO #4046
+  return triggerNotifications(notifications);
 }
 
 
