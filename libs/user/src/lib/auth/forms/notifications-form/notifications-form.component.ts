@@ -37,6 +37,13 @@ export class NotificationsFormComponent {
           email: true,
           app: true,
           appMandatory: false
+        },
+        {
+          notificationType: 'invitationFromUserToJoinOrgDecline',
+          subtitle: 'An user declined your invitation to join your organization.',
+          email: true,
+          app: true,
+          appMandatory: false
         }
       ]
     },
@@ -75,14 +82,14 @@ export class NotificationsFormComponent {
       notification: [
         {
           notificationType: 'invitationToAttendEventUpdated',
-          subtitle: 'An users answers your invitation to an event',
+          subtitle: 'An users answers your invitation to an event.',
           email: true,
           app: true,
           appMandatory: false
         },
         {
           notificationType: 'requestToAttendEventUpdated',
-          subtitle: 'Organizer of the event has answer to your request.',
+          subtitle: 'Organizer of the event has answered your request.',
           email: true,
           app: true,
           appMandatory: false
