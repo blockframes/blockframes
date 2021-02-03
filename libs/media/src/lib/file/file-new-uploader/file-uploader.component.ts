@@ -38,7 +38,7 @@ function computeSize(fileSize: number) {
 }
 
 @Component({
-  selector: '[storagePath] [metadata] [allowedFileType] file-new-uploader',
+  selector: '[storagePath] [metadata] [accept] file-new-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,14 +59,14 @@ export class FileUploaderComponent implements OnInit, OnChanges {
 
   @Input() input: number;
 
-  @Input() set allowedFileType(fileType: AllowedFileType | AllowedFileType[]) {
+  @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]
     types.forEach(type => {
-      this.accept = this.accept.concat(allowedFiles[type].extension);
+      this.allowedTypes = this.allowedTypes.concat(allowedFiles[type].extension);
       this.types = this.types.concat(allowedFiles[type].mime);
     })
   }
-  public accept: string[] = [];
+  public allowedTypes: string[] = [];
   public types: string[] = [];
 
   @ContentChild('onReady') onReadyTemplate: TemplateRef<any>;
@@ -87,18 +87,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
 
     console.log(this.displayFile); // TODO REMOVE DEBUG LOG
 
-    if (!!this.displayFile.value) {
-      this.state = 'file';
-      this.fileName = this.displayFile.value;
-    } else {
-      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
-      if (!!retrieved) {
-      this.state = 'ready';
-      this.fileName = retrieved.fileName;
-      this.localSize = computeSize(retrieved.file.size);
-      }
-    }
-
+    this.computeState();
   }
 
   ngOnChanges(changes: SimpleChanges) { // TODO REMOVE DEBUG LOG
@@ -121,7 +110,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
-    this.state = 'waiting';
+    this.computeState();
   }
 
 
@@ -142,8 +131,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
       }
       this.file = files.item(0);
 
-    } else { // Single File
-      if (!files) {
+    } else if (!files) { // No files
         this.snackBar.open('No file found', 'close', { duration: 1000 });
         if (!!this.file) {
           this.state = 'file';
@@ -152,7 +140,7 @@ export class FileUploaderComponent implements OnInit, OnChanges {
           this.fileExplorer.nativeElement.value = null;
         }
         return;
-      }
+    } else { // Single file
       this.file = files;
     }
 
@@ -185,5 +173,21 @@ export class FileUploaderComponent implements OnInit, OnChanges {
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.displayFile?.setValue('');
+  }
+
+  private computeState() {
+    if (!!this.displayFile.value) {
+      this.state = 'file';
+      this.fileName = this.displayFile.value;
+    } else {
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
+      if (!!retrieved) {
+        this.state = 'ready';
+        this.fileName = retrieved.fileName;
+        this.localSize = computeSize(retrieved.file.size);
+      } else {
+        this.state = 'waiting';
+      }
+    }
   }
 }
