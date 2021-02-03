@@ -32,7 +32,7 @@ export class NotificationsFormComponent {
           appMandatory: true
         },
         {
-          notificationType: 'memberAddedToOrg',
+          notificationType: 'orgMemberUpdated',
           subtitle: 'A new member joins your organization.',
           email: true,
           app: true,
@@ -40,30 +40,30 @@ export class NotificationsFormComponent {
         }
       ]
     },
-    // {
-    //   title: 'Content Management Notifications',
-    //   available: ['catalog', 'festival', 'financiers'],
-    //   completed: {
-    //     email: true,
-    //     app: true
-    //   },
-    //   notification: [
-    //     {
-    //       notificationType: '',
-    //       subtitle: 'A title is successfully submitted for validation.',
-    //       email: true,
-    //       app: true,
-    //       appMandatory: false
-    //     },
-    //     {
-    //       notificationType: '',
-    //       subtitle: 'A title gets published to the marketplace.',
-    //       email: true,
-    //       app: true,
-    //       appMandatory: false
-    //     }
-    //   ]
-    // },
+    {
+      title: 'Content Management Notifications',
+      available: ['catalog', 'festival', 'financiers'],
+      completed: {
+        email: true,
+        app: true
+      },
+      notification: [
+        {
+          notificationType: 'movieSubmitted',
+          subtitle: 'A title is successfully submitted for validation.',
+          email: true,
+          app: true,
+          appMandatory: false
+        },
+        {
+          notificationType: 'movieAccepted',
+          subtitle: 'A title gets published to the marketplace.',
+          email: true,
+          app: true,
+          appMandatory: false
+        }
+      ]
+    },
     {
       // ! IT IS ONLY FOR FESTIVAL
       title: 'Event Management Notifications',
@@ -73,42 +73,27 @@ export class NotificationsFormComponent {
         app: true
       },
       notification: [
-        // {
-        //   notificationType: '',
-        //   subtitle: 'An organization invites you to a screening.',
-        //   email: true,
-        //   app: true
-        // },
-        // {
-        //   notificationType: '',
-        //   subtitle: 'An user invites you to a meeting.',
-        //   email: true,
-        //   app: true
-        // },
-        // {
-        //   notificationType: '',
-        //   subtitle: 'An user answers your invitation to an event.',
-        //   email: true,
-        //   app: true
-        // },
-        // {
-        //   notificationType: '',
-        //   subtitle: 'An user requests an access to an event you organize.',
-        //   email: true,
-        //   app: true
-        // },
-        // {
-        //   notificationType: '',
-        //   subtitle: 'Your request to access an event has been sent.',
-        //   email: true,
-        //   app: true
-        // },
-        // {
-        //   notificationType: '',
-        //   subtitle: 'An organization answers your request to access an event.',
-        //   email: true,
-        //   app: true
-        // },
+        {
+          notificationType: 'invitationToAttendEventUpdated',
+          subtitle: 'An users answers your invitation to an event',
+          email: true,
+          app: true,
+          appMandatory: false
+        },
+        {
+          notificationType: 'requestToAttendEventUpdated',
+          subtitle: 'Organizer of the event has answer to your request.',
+          email: true,
+          app: true,
+          appMandatory: false
+        },
+        {
+          notificationType: 'requestToAttendEventSent',
+          subtitle: 'Your request to access an event has been sent.',
+          email: true,
+          app: true,
+          appMandatory: false
+        },
         {
           notificationType: 'oneDayReminder',
           subtitle: 'Reminder 24h before an event starts.',
