@@ -19,6 +19,7 @@ export class NotificationsFormComponent {
 
   toogle(notificationType: NotificationType, event: MatSlideToggleChange) {
     this.form.get(notificationType).get(event.source.name as keyof NotificationSettings).setValue(event.checked);
+    this.form.markAsTouched();
   }
 
 }

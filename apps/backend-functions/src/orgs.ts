@@ -55,7 +55,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberAddedToOrg', after, userAdded));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
     return triggerNotifications(notifications);
 
     // Member removed
@@ -66,7 +66,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
     await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberRemovedFromOrg', after, userRemoved));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userRemoved));
     return triggerNotifications(notifications);
   }
 }

@@ -1,6 +1,7 @@
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PublicMovie } from '@blockframes/movie/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
@@ -19,8 +20,7 @@ export type NotificationType =
   // Notifications relative to invitations
   'requestFromUserToJoinOrgCreate' |
   'invitationFromUserToJoinOrgDecline' |
-  'memberAddedToOrg' |
-  'memberRemovedFromOrg' |
+  'orgMemberUpdated' |
 
   // Notifications relative to contracts (only for catalog app)
   'newContract' |
@@ -30,8 +30,16 @@ export type NotificationType =
   'requestToAttendEventSent' |
   'eventIsAboutToStart' | // 1h Reminder before event
   'oneDayReminder' | // 24h Reminder before event
+  'invitationToAttendEventUpdated' | // Invitation, accepted or rejected
+  'requestToAttendEventUpdated' | // Request, accepted or rejected
+
+
+  // @TODO #4046 create issue to remove this and also from libs/notification/src/lib/+state/notification.store.ts
+  // once all notification of theses types are read or deleted (since we cannot make a migration script)
   'invitationToAttendEventAccepted' |
-  'invitationToAttendEventDeclined'
+  'invitationToAttendEventDeclined' |
+  'memberAddedToOrg' |
+  'memberRemovedFromOrg'
   ;
 
 
@@ -46,6 +54,7 @@ export interface NotificationBase<D> {
   docId?: string;
   movie?: PublicMovie;
   organization?: PublicOrganization;
+  invitation?: PublicInvitation,
   /** @dev Type of the notification */
   type: NotificationType;
   email?: {
