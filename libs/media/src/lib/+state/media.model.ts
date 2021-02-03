@@ -91,7 +91,8 @@ export function recursivelyListFiles(document: any): string[] {
   } else if (Array.isArray(document)) {
     const result = document.map(el => recursivelyListFiles(el));
     // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
-    return [].concat(...result);
+    // return [].concat(...result);
+    return result.flat();
 
   } else if (!document) {
     return [];
@@ -99,7 +100,8 @@ export function recursivelyListFiles(document: any): string[] {
   } else if (typeof document === 'object') {
     const result = Object.keys(document).map(key => recursivelyListFiles(document[key]));
     // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
-    return [].concat(...result);
+    // return [].concat(...result);
+    return result.flat();
 
   } else {
     return [];

@@ -56,6 +56,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
+    // because of possible nested map and arrays, we need to retrieve the whole document
+    // modify it, then update the whole doc with the new (modified) version
     const docRef = db.collection(metadata.collection).doc(metadata.docId);
     const docSnap = await docRef.get();
     await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
@@ -106,23 +108,23 @@ export async function linkFile(data: storage.ObjectMetadata) {
     await file.copy(to);
 
     // (3) update db
-    // because of possible nested map and arrays, we need to retrieve the whole document
-    // modify it, then update the whole doc with the new (modified) version
 
+    // separate extraData from metadata
     const extraData = {...metadata};
-    delete extraData.uid;
-    delete extraData.privacy;
-    delete extraData.collection;
-    delete extraData.docId;
-    delete extraData.field;
-    delete extraData.firebaseStorageDownloadTokens;
+    const keysToDelete = [
+      'uid', 'privacy', 'collection', 'docId', 'field',
+      'firebaseStorageDownloadTokens',
+    ];
+    for (const key of keysToDelete) {
+      delete extraData[key];
+    }
 
     const uploadData = {
       ...extraData,
       storagePath: finalPath,
     }
 
-    set(doc, metadata.field, uploadData); // update the whole doc with only the new storagePath
+    set(doc, metadata.field, uploadData); // update the whole doc with only the new storagePath & extraData
 
     await docRef.update(doc);
 
@@ -195,14 +197,17 @@ export const getMediaToken = async (data: { ref: string, parametersSet: ImagePar
 
 }
 
-export const deleteMedia = async (ref: string): Promise<void> => {
+// TODO issue#4813 refactor
+// TODO - to use parent object instead of storagePath
+// TODO - check if parent object has a `jwPlayerId`, if so delete video from JWPlayer API
+export const deleteMedia = async (storagePath: string): Promise<void> => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
-  const file = bucket.file(ref);
+  const file = bucket.file(storagePath);
 
   const [exists] = await file.exists();
   if (!exists) {
-    console.log(`Upload Error : File "${ref}" does not exists in the storage`);
+    console.log(`Upload Error : File "${storagePath}" does not exists in the storage`);
   } else {
     await file.delete();
   }
