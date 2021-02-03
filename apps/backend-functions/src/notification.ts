@@ -101,20 +101,20 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .catch(e => notification.email.error = e.message)
         break;
       case 'invitationFromUserToJoinOrgDecline':
-        // @TODO #4046 create mail
+        // @TODO #4046 create mail | need text for email
         break;
 
       // Notifications relative to movies
       case 'movieSubmitted':
         //! There is no email template for now
-        //TODO 4046 Add new template from Sendgrid
+        // @TODO #4046 Add new template from Sendgrid | need text for email
         await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been submitted.' })
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
       case 'movieAccepted':
         //! There is no email template for now
-        //TODO 4046 Add new template from Sendgrid
+        // @TODO #4046 Add new template from Sendgrid | need text for email
         await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been accepted by the Archipel team.' })
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
@@ -135,7 +135,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
       // Events related notifications
       case 'requestToAttendEventSent':
         //! There is no email template for now
-        //TODO 4046 Add new template from Sendgrid
+        // @TODO #4046 Add new template from Sendgrid | need text for email
         await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been sent.' })
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
@@ -203,7 +203,7 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     const appKey = await getOrgAppKey(org);
     return sendMailFromTemplate(template, appKey);
   } else {
-    // @TODO #4046 member removed from org email
+    // @TODO #4046 member removed from org email | need text for email
   }
 
 }
@@ -234,15 +234,15 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
       const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
       await sendMailFromTemplate(template, app);
     } else {
-      // @TODO rejected
+      // @TODO #4046 rejected | need text for email
     }
   } else {
     // @TODO create email when we have toUser 
     const organizerUser = await getDocument<OrganizationDocument>(`users/${notification.user.uid}`);
     if (notification.invitation.status === 'accepted') {
-      // @TODO accepted
+      // @TODO #4046 accepted | need text for email
     } else {
-      // @TODO rejected
+      // @TODO #4046 rejected | need text for email
     }
   }
 
@@ -255,16 +255,16 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
 
   if (!!invitation.toOrg) {
     if (notification.invitation.status === 'accepted') {
-      // @TODO accepted
+      // @TODO #4046 accepted | need text for email
     } else {
-      // @TODO rejected
+      // @TODO #4046 rejected | need text for email
     }
   } else {
-    // @TODO create email when we have toUser
+    // @TODO #4046 create email when we have toUser
     if (notification.invitation.status === 'accepted') {
-      // @TODO accepted
+      // @TODO #4046 accepted | need text for email
     } else {
-      // @TODO rejected
+      // @TODO #4046 rejected | need text for email
     }
   }
 
