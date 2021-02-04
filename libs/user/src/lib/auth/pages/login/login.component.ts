@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
         _meta: { createdFrom },
         privacyPolicy
       };
-      await this.service.signup(email.trim(), password, { ctx });
+      await this.service.signup(email.trim(), password.trim(), { ctx });
       // Reset page title to default
       this.dynTitle.setPageTitle();
       const redirectTo = localStorage.getItem('redirectTo');
