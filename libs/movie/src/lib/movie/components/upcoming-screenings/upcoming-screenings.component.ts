@@ -9,8 +9,9 @@ import { InvitationQuery, InvitationService } from '@blockframes/invitation/+sta
 import { OrganizationService } from '@blockframes/organization/+state';
 
 // RxJs
-import { map, take, switchMap, delay, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Observable, timer } from 'rxjs';
+import { map, take, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Screening } from '@blockframes/event/+state/event.firestore';
 
 @Component({
   selector: 'movie-screening',
@@ -29,8 +30,7 @@ export class UpcomingScreeningsComponent implements OnInit {
 
   public movie$ = this.query.selectActive();
 
-  public screenings$ = this.eventService.filterScreeningsByMovieId(this.query.getActive().id).pipe(
-    map(screenings => screenings.sort(this.sortByDate).slice(0, 5)));
+  public screenings$: Observable<Event<Screening>[]>;
 
   public orgs$ = this.orgService.queryFromMovie(this.query.getActive());
 
@@ -46,6 +46,16 @@ export class UpcomingScreeningsComponent implements OnInit {
   { }
 
   ngOnInit() {
+    const query = ref => ref
+      .where('privacy', 'in', ['public', 'private'])
+      .where('meta.titleId', '==', this.query.getActiveId())
+      .orderBy('end')
+      .startAt(new Date())
+
+    this.screenings$ = this.eventService.queryByType(['screening'], query).pipe(
+      map(screenings => screenings.sort(this.sortByDate).slice(0, 5))
+    )
+
     this.checkInvitationStatus();
   }
 

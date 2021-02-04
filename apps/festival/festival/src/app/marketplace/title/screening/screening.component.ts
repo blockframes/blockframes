@@ -25,7 +25,9 @@ export class ScreeningComponent implements OnInit {
     this.dynTitle.setPageTitle('Film Page', 'Screening Schedule');
     this.events$ = this.parent.movie$.pipe(
       switchMap(movie => {
-        const query = ref => ref.where('meta.titleId', '==', movie.id)
+        const query = ref => ref
+          .where('privacy', 'in', ['public', 'private'])
+          .where('meta.titleId', '==', movie.id)
           .orderBy('end').startAt(new Date());
         return this.service.queryByType(['screening'], query);
       }),

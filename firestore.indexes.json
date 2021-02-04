@@ -72,6 +72,16 @@
     "fields": [
       { "fieldPath": "meta.titleId", "order": "ASCENDING" },
       { "fieldPath": "type", "order": "ASCENDING" },
+      { "fieldPath": "privacy", "order": "ASCENDING" },
+      { "fieldPath": "end", "order": "ASCENDING" }
+    ]
+  }, 
+  {
+    "collectionGroup": "events",
+    "queryScope": "COLLECTION",
+    "fields": [
+      { "fieldPath": "type", "order": "ASCENDING" },
+      { "fieldPath": "privacy", "order": "ASCENDING" },
       { "fieldPath": "end", "order": "ASCENDING" }
     ]
   }],

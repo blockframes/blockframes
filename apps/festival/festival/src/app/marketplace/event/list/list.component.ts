@@ -27,7 +27,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     const orgIds$ = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value));
-    const query = ref => ref.orderBy('end').startAt(new Date());
+    const query = ref => ref.where('privacy', 'in', ['public', 'private']).orderBy('end').startAt(new Date());
     const events$ = this.service.queryByType(['screening'], query);
 
     this.events$ = combineLatest(events$, orgIds$).pipe(
