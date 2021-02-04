@@ -14,7 +14,6 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { TermService } from '@blockframes/contract/term/+state/term.service'
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 
@@ -57,8 +56,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
-    private orgQuery: OrganizationQuery,
-    private termService: TermService
+    private orgQuery: OrganizationQuery
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -86,7 +84,9 @@ export class ViewExtractedContractsComponent implements OnInit {
         }
       }
 
-      if (trimmedRow[SpreadSheetContract.contractId]) {
+      if (trimmedRow.length) {
+
+
         const importErrors = {
           contract,
           newContract: newContract,
@@ -94,12 +94,11 @@ export class ViewExtractedContractsComponent implements OnInit {
         } as ContractsImportState;
 
         if (newContract) {
-
-          if (trimmedRow[SpreadSheetContract.contractType].toLowerCase() === 'mandate') {
+          if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'mandate') {
             contract = createMandate({
               sellerId: this.orgQuery.getActiveId()
             });
-          } else if (trimmedRow[SpreadSheetContract.contractType].toLowerCase() === 'sale') {
+          } else if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'sale') {
             contract = createSale({
               sellerId: this.orgQuery.getActiveId()
             })
@@ -109,7 +108,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'error',
               field: 'contract.type',
               name: 'Mandate',
-              reason: `Contract type is mandatory`,
+              reason: 'Contract type is mandatory',
               hint: 'Edit corresponding sheet field.'
             })
           }
@@ -129,13 +128,14 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'error',
               field: 'contract.titleId',
               name: 'Title Id',
-              reason: `We need to know the title otherwise we can't map the contract to the a movie`,
+              reason: 'We need to know the title otherwise we can\'t map the contract to the a movie',
               hint: 'Edit corresponding sheet field.'
             })
           }
 
           /* Create term */
-          const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract.titleId })
+          const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
+          console.log(trimmedRow)
           if (trimmedRow[SpreadSheetContract.territories].length) {
             const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
             const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim()))
@@ -145,7 +145,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'error',
               field: 'term.territories',
               name: 'Territory',
-              reason: `Archipel Content needs to know the territories in which the movie can be sold.`,
+              reason: 'Archipel Content needs to know the territories in which the movie can be sold.',
               hint: 'Edit corresponding sheet field.'
             })
           }
@@ -159,7 +159,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'error',
               field: 'term.medias',
               name: 'Media',
-              reason: `Archipel Content needs to know the medias in which the movie can be sold.`,
+              reason: 'Archipel Content needs to know the medias in which the movie can be sold.',
               hint: 'Edit corresponding sheet field.'
             })
           }
@@ -176,7 +176,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'warning',
               field: 'term.duration.from',
               name: 'Duration from',
-              reason: `Archipel Content needs to know the starting date of the contract.`,
+              reason: 'Archipel Content needs to know the starting date of the contract.',
               hint: 'Edit corresponding sheet field.'
             })
           }
@@ -188,7 +188,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'warning',
               field: 'term.duration.to',
               name: 'Duration to',
-              reason: `Archipel Content needs to know the ending date of the contract.`,
+              reason: 'Archipel Content needs to know the ending date of the contract.',
               hint: 'Edit corresponding sheet field.'
             })
           }
@@ -201,7 +201,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'warning',
               field: 'term.licensedOriginal',
               name: 'Original Language Licensed',
-              reason: `please choose yes or no`,
+              reason: 'ÄPlease choose yes or no',
               hint: 'Edit corresponding sheet field.'
             })
           }
@@ -237,7 +237,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'warning',
               field: 'term.language.subtitle',
               name: 'Language subtitle',
-              reason: `Please provide subtitle version if available.`,
+              reason: 'Please provide subtitle version if available.',
               hint: 'Edit corresponding sheet field.'
             })
           }
@@ -255,15 +255,16 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'warning',
               field: 'term.language.caption',
               name: 'Language caption',
-              reason: `Please provide caption version if available.`,
+              reason: 'Please provide caption version if available.',
               hint: 'Edit corresponding sheet field.'
             })
           }
-
+          importErrors.term = term
+          importErrors.contract = contract
           this.contractsToCreate.data.push(importErrors);
 
-          this.cdRef.markForCheck();
         }
+        this.cdRef.markForCheck();
       };
       matSnackbarRef.dismissWithAction(); // loading ended */
     }
@@ -272,8 +273,6 @@ export class ViewExtractedContractsComponent implements OnInit {
   private async processTitleDetails(spreadSheetRow: any[], currentIndex: number, importErrors: ContractsImportState) {
     const titleDetails = createContractTitleDetail();
     titleDetails.price.recoupableExpenses = [];
-
-    let internalRef;
     /*   if (spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]) {
         internalRef = spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex];
         const title = await this.movieService.getFromInternalRef(internalRef);
