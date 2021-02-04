@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { NotificationsFormComponent, SomeCheckedPipe, EveryCheckedPipe } from './notifications-form.component';
+import { NotificationsFormComponent, SomeCheckedPipe, EveryCheckedPipe, ShowNotificationPipe } from './notifications-form.component';
 
 // Material
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -31,7 +31,8 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [
     NotificationsFormComponent,
     SomeCheckedPipe,
-    EveryCheckedPipe
+    EveryCheckedPipe,
+    ShowNotificationPipe
   ],
   exports: [
     NotificationsFormComponent

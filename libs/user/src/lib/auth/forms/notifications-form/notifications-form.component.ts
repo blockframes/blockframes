@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 // Blockframes
 import { NotificationsForm } from './notifications.form';
@@ -11,22 +11,49 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-//  TODO Type Record<NotificationType, string>
+
 const titleType = {
-  requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
-  orgMemberUpdated: 'A new member joins your organization.',
-  invitationFromUserToJoinOrgDecline: 'An user declined your invitation to join your organization.',
   movieSubmitted: 'A title is successfully submitted for validation.',
   movieAccepted: 'A title gets published to the marketplace.',
-  invitationToAttendEventUpdated: 'An users answers your invitation to an event.',
-  requestToAttendEventCreated: 'An user requests an access to an event your organize.',
+  requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
+  invitationFromUserToJoinOrgDecline: 'An user declined your invitation to join your organization.',
+  orgMemberUpdated: 'A new member joins your organization.',
   requestToAttendEventSent: 'Your request to access an event has been sent.',
-  oneDayReminder: 'Reminder 24h before an event starts.',
   eventIsAboutToStart: 'Reminder 1h before an event starts.',
-  invitationToAttendScreeningCreated: 'An organization invites you to a screening.',
+  oneDayReminder: 'Reminder 24h before an event starts.',
+  invitationToAttendEventUpdated: 'An users answers your invitation to an event.',
+  requestToAttendEventUpdated: 'Organizer of the event has answered your request.',
+  requestToAttendEventCreated: 'An user requests an access to an event your organize.',
   invitationToAttendMeetingCreated: 'An user invites you to a meeting.',
-  requestToAttendEventUpdated: 'Organizer of the event has answered your request.'
+  invitationToAttendScreeningCreated: 'An organization invites you to a screening.',
 };
+
+const tables = [
+  {
+    title: 'Company Management Notifications',
+    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'invitationFromUserToJoinOrgDecline'],
+    appAuthorized: ['catalog', 'festival', 'financiers']
+  },
+  {
+    title: 'Content Management Notifications',
+    types: ['movieSubmitted', 'movieAccepted'],
+    appAuthorized: ['catalog', 'festival', 'financiers']
+  },
+  {
+    title: 'Event Management Notifications',
+    types: [
+      'invitationToAttendScreeningCreated',
+      'invitationToAttendMeetingCreated',
+      'invitationToAttendEventUpdated',
+      'requestToAttendEventCreated',
+      'requestToAttendEventSent',
+      'requestToAttendEventUpdated',
+      'oneDayReminder',
+      'eventIsAboutToStart',
+    ],
+    appAuthorized: ['festival']
+  },
+];
 
 @Component({
   selector: '[form] user-notifications-form',
@@ -38,47 +65,15 @@ export class NotificationsFormComponent {
 
   public types = [...notificationTypes];
   public titleType = titleType;
-  public tables = [
-    {
-      title: 'Company Management Notifications',
-      types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'invitationFromUserToJoinOrgDecline'],
-      appAuthorized: ['catalog', 'festival', 'financiers']
-    },
-    {
-      title: 'Content Management Notifications',
-      types: ['movieSubmitted', 'movieAccepted'],
-      appAuthorized: ['catalog', 'festival', 'financiers']
-    },
-    {
-      title: 'Event Management Notifications',
-      types: [
-        'invitationToAttendEventUpdated',
-        'requestToAttendEventCreated',
-        'requestToAttendEventUpdated',
-        'requestToAttendEventSent',
-        'oneDayReminder',
-        'eventIsAboutToStart',
-        'invitationToAttendScreeningCreated',
-        'invitationToAttendMeetingCreated'
-      ],
-      appAuthorized: ['festival']
-    },
-  ];
+  public tables = tables;
 
-  currentApp: string = getCurrentApp(this.routerQuery);
   public form = new NotificationsForm(this.authQuery.user.settings?.notifications);
 
   constructor(
-    private routerQuery: RouterQuery,
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private snackBar: MatSnackBar
     ) { }
-
-  showNotification(index: number) {
-    return this.tables[index].appAuthorized.includes(this.currentApp);
-  }
 
   toogleAll(event: MatSlideToggleChange, mode: 'email' | 'app') {
     const checked = event.checked;
@@ -94,7 +89,6 @@ export class NotificationsFormComponent {
       const c = this.form.get(type as any).get(mode);
       if(!c.disabled) c.setValue(checked);
     }
-    this.cdr.markForCheck();
   }
 
   public async update() {
@@ -121,5 +115,16 @@ export class SomeCheckedPipe implements PipeTransform {
 export class EveryCheckedPipe implements PipeTransform {
   transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationType[]) {
     return types.every(type => !!value[type]?.[mode]);
+  }
+}
+
+@Pipe({name: 'showNotification'})
+export class ShowNotificationPipe implements PipeTransform {
+  currentApp: string = getCurrentApp(this.routerQuery);
+  public tables = tables;
+  constructor(private routerQuery: RouterQuery) {}
+
+  transform(index: number) {
+    return this.tables[index].appAuthorized.includes(this.currentApp);
   }
 }

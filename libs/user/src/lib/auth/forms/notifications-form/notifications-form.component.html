@@ -12,7 +12,7 @@
     </header>
 
     <ng-container *ngFor="let table of tables; let index = index">
-      <table class="surface" *ngIf="showNotification(index)">
+      <table class="surface" *ngIf="index | showNotification">
         <tbody>
           <tr>
             <th class="description mat-title">{{ table.title }}</th>
