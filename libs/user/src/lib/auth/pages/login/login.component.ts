@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
     }
     try {
       const { email, password } = signinForm.value;
-      await this.service.signin(email.trim(), password);
+      await this.service.signin(email.trim(), password.trim());
       // Reset page title to default
       this.dynTitle.setPageTitle();
       const redirectTo = localStorage.getItem('redirectTo');
