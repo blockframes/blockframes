@@ -81,6 +81,20 @@ export class NotificationsFormComponent {
       },
       notification: [
         {
+          notificationType: 'invitationToAttendScreeningCreated',
+          subtitle: 'An organization invites you to a screening',
+          email: true,
+          app: true,
+          appMandatory: true
+        },
+        {
+          notificationType: 'invitationToAttendMeetingCreated',
+          subtitle: 'An user invites you to a meeting',
+          email: true,
+          app: true,
+          appMandatory: true
+        },
+        {
           notificationType: 'invitationToAttendEventUpdated',
           subtitle: 'An users answers your invitation to an event.',
           email: true,
@@ -88,15 +102,22 @@ export class NotificationsFormComponent {
           appMandatory: false
         },
         {
-          notificationType: 'requestToAttendEventUpdated',
-          subtitle: 'Organizer of the event has answered your request.',
+          notificationType: 'requestToAttendEventCreated',
+          subtitle: 'An user requests an access to an event your organize',
+          email: true,
+          app: true,
+          appMandatory: true
+        },
+        {
+          notificationType: 'requestToAttendEventSent',
+          subtitle: 'Your request to access an event has been sent.',
           email: true,
           app: true,
           appMandatory: false
         },
         {
-          notificationType: 'requestToAttendEventSent',
-          subtitle: 'Your request to access an event has been sent.',
+          notificationType: 'requestToAttendEventUpdated',
+          subtitle: 'Organizer of the event has answered your request.',
           email: true,
           app: true,
           appMandatory: false
