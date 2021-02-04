@@ -23,7 +23,6 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TableExtractedContractsComponent } from './contracts/contracts.component';
-import { TableExtractedRightsComponent } from './rights/rights.component';
 import { TableExtractedMoviesComponent } from './movies/movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 import { RouterModule } from '@angular/router';
@@ -33,7 +32,6 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
 @NgModule({
   declarations: [
     TableExtractedMoviesComponent,
-    TableExtractedRightsComponent,
     TableExtractedContractsComponent,
     TableExtractedOrganizationsComponent,
     ViewImportErrorsComponent,
@@ -65,7 +63,6 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
   ],
   exports: [
     TableExtractedMoviesComponent,
-    TableExtractedRightsComponent,
     TableExtractedContractsComponent,
     TableExtractedOrganizationsComponent,
   ],
