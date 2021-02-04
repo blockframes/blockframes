@@ -35,9 +35,6 @@ export class TableExtractedContractsComponent implements OnInit {
     'select',
     'contract.id',
     'contract.type',
-    'contract.lastVersion.status',
-    'contract.lastVersion.id',
-    'contract.parties',
     'errors',
     'warnings',
     'actions',
@@ -55,6 +52,7 @@ export class TableExtractedContractsComponent implements OnInit {
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
+    console.log(this.rows)
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
