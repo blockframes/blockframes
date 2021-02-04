@@ -116,10 +116,8 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           /* If title id is provided, add it to the contract, otherwise try to fetch the title id */
           if (trimmedRow[SpreadSheetContract.titleId]) {
-            console.log(trimmedRow[SpreadSheetContract.titleId])
             contract.titleId = trimmedRow[SpreadSheetContract.titleId];
           } else if (trimmedRow[SpreadSheetContract.titleInternalRef]) {
-            console.log(trimmedRow[SpreadSheetContract.titleInternalRef])
             const movie = await this.movieService.getFromInternalRef(trimmedRow[SpreadSheetContract.titleInternalRef])
             if (movie) contract.titleId = movie.id
           } else if (trimmedRow[SpreadSheetContract.internationalTitle]) {
