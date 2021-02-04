@@ -4,24 +4,24 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { SSF } from 'xlsx';
-import { createContract, createTerm, createContractTitleDetail, createMandate, createSale } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
-import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
+import { createTerm, createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { Intercom } from 'ng-intercom';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
+import { TermService } from '@blockframes/contract/term/+state/term.service'
 
 enum SpreadSheetContract {
   titleId,
   titleInternalRef,
   internationalTitle,
   contractType,
+  licensorName,
+  licenseeName,
   contractId,
   territories,
   medias,
@@ -56,7 +56,9 @@ export class ViewExtractedContractsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
+    private termService: TermService
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -74,23 +76,28 @@ export class ViewExtractedContractsComponent implements OnInit {
         if (typeof cell === 'string') cell.trim()
         return cell
       })
-      let contract;
+      let contract: Mandate | Sale;
       let newContract = true;
       if (trimmedRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
         if (!!existingContract) {
-          contract = createContract(existingContract);
+          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale(existingContract as any)
           newContract = false;
+          const terms = await this.termService.getValue(contract.termsIds);
+          const parsedTerms = terms.map(createTerm)
+          this.contractsToUpdate.data.push({ contract, newContract: false, errors: [], terms: parsedTerms })
+          // Forcing change detection
+          this.contractsToUpdate.data = [...this.contractsToUpdate.data]
         }
       }
 
       if (trimmedRow.length) {
 
-
         const importErrors = {
           contract,
           newContract: newContract,
           errors: [],
+          terms: []
         } as ContractsImportState;
 
         if (newContract) {
@@ -133,12 +140,41 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
           }
 
+          if (trimmedRow[SpreadSheetContract.licensorName]) {
+            const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licensorName]))
+            if (orgs.length === 1) {
+              contract.sellerId = orgs[0].id
+            }
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contract.sellerId',
+              name: 'Seller Id',
+              reason: 'Couldn\'t find Licensor with the provided name.',
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
+
+          if (trimmedRow[SpreadSheetContract.licenseeName]) {
+            const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licenseeName]))
+            if (orgs.length === 1) {
+              contract.buyerId = orgs[0].id
+            }
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contract.buyerId',
+              name: 'Buyer Id',
+              reason: 'Couldn\'t find Licensee with the provided name.',
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
+
           /* Create term */
           const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
-          console.log(trimmedRow)
           if (trimmedRow[SpreadSheetContract.territories].length) {
             const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
-            const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim()))
+            const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
             term.territories = territories;
           } else {
             importErrors.errors.push({
@@ -152,7 +188,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.medias].length) {
             const mediaValues: MediaValue[] = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
-            const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim()))
+            const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim())).filter(media => !!media)
             term.medias = medias;
           } else {
             importErrors.errors.push({
@@ -170,7 +206,8 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.startOfContract]) {
-            term.duration.from = new Date(trimmedRow[SpreadSheetContract.startOfContract]);
+            const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.startOfContract]);
+            term.duration.from = new Date(`${y}-${m}-${d}`);
           } else {
             importErrors.errors.push({
               type: 'warning',
@@ -182,7 +219,8 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.endOfContract]) {
-            term.duration.to = new Date(trimmedRow[SpreadSheetContract.endOfContract]);
+            const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.endOfContract]);
+            term.duration.to = new Date(`${y}-${m}-${d}`);
           } else {
             importErrors.errors.push({
               type: 'warning',
@@ -259,107 +297,20 @@ export class ViewExtractedContractsComponent implements OnInit {
               hint: 'Edit corresponding sheet field.'
             })
           }
-          importErrors.term = term
+          importErrors.terms.push(term)
           importErrors.contract = contract
           this.contractsToCreate.data.push(importErrors);
+          // Forcing change detection
+          this.contractsToCreate.data = [...this.contractsToCreate.data]
+        } // End of parsing new contract
 
-        }
         this.cdRef.markForCheck();
       };
       matSnackbarRef.dismissWithAction(); // loading ended */
     }
   }
 
-  private async processTitleDetails(spreadSheetRow: any[], currentIndex: number, importErrors: ContractsImportState) {
-    const titleDetails = createContractTitleDetail();
-    titleDetails.price.recoupableExpenses = [];
-    /*   if (spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]) {
-        internalRef = spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex];
-        const title = await this.movieService.getFromInternalRef(internalRef);
-        if (title === undefined) {
-          throw new Error(`Movie ${spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]} is missing in database.`);
-        }
-        titleDetails.titleId = title.id;
-      }
-
-      if (spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]) {
-        titleDetails.distributionRightIds = spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]
-          .split(this.separator)
-          .map(c => c.trim());
-      }
-
-      if (spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex]) {
-        const priceParts = spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex].split(this.subSeparator);
-
-        // Check if priceParts have at least two parts (amount and currency)
-        if (priceParts.length >= 2) {
-          const amount = parseInt(priceParts[0], 10);
-          const currency = getKeyIfExists('movieCurrencies', priceParts[1]);
-          titleDetails.price.amount = amount;
-          if (currency) {
-            titleDetails.price.currency = currency;
-          } else {
-            importErrors.errors.push({
-              type: 'warning',
-              field: 'title.price',
-              name: 'Title price currency',
-              reason: `Failed to parse currency : ${priceParts[1]} for ${internalRef}`,
-              hint: 'Edit corresponding sheet field.'
-            });
-          }
-        } else {
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'title.price',
-            name: 'Title price',
-            reason: `Failed to parse title price ${spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex]} for ${internalRef}`,
-            hint: 'Edit corresponding sheet field.'
-          });
-        }
-      } else {
-        importErrors.errors.push({
-          type: 'warning',
-          field: 'title.price',
-          name: 'Title price',
-          reason: `Title price not found for ${internalRef}`,
-          hint: 'Edit corresponding sheet field.'
-        });
-      }
-
-      if (spreadSheetRow[SpreadSheetContractTitle.commission + currentIndex]) {
-        titleDetails.price.commission = spreadSheetRow[SpreadSheetContractTitle.commission + currentIndex]
-      }
-
-      const recoupableExpense = createExpense();
-      if (spreadSheetRow[SpreadSheetContractTitle.expenseLabel + currentIndex]) {
-        recoupableExpense.label = spreadSheetRow[SpreadSheetContractTitle.expenseLabel + currentIndex];
-      }
-
-      if (spreadSheetRow[SpreadSheetContractTitle.expenseValue + currentIndex]) {
-        recoupableExpense.price.amount = spreadSheetRow[SpreadSheetContractTitle.expenseValue + currentIndex];
-      }
-
-      if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-        const currency = getKeyIfExists('movieCurrencies', spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
-        if (currency) {
-          recoupableExpense.price.currency = currency;
-        } else {
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'recoupableExpense.price.currency',
-            name: 'Expense currency',
-            reason: `Failed to parse expense currency : ${spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]} for ${internalRef}`,
-            hint: 'Edit corresponding sheet field.'
-          });
-        }
-      }
-
-      titleDetails.price.recoupableExpenses.push(recoupableExpense);
-
-      return titleDetails; */
-  }
-
-  public openIntercom(): void {
+  public openIntercom() {
     return this.intercom.show();
   }
 

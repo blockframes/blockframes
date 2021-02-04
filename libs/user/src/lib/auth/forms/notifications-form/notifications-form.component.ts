@@ -1,12 +1,59 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 // Blockframes
 import { NotificationsForm } from './notifications.form';
 import { getCurrentApp } from "@blockframes/utils/apps";
+import { NotificationType, notificationTypes } from '@blockframes/notification/types';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+
+const titleType = {
+  movieSubmitted: 'A title is successfully submitted for validation.',
+  movieAccepted: 'A title gets published to the marketplace.',
+  requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
+  invitationFromUserToJoinOrgDecline: 'An user declined your invitation to join your organization.',
+  orgMemberUpdated: 'A new member joins your organization.',
+  requestToAttendEventSent: 'Your request to access an event has been sent.',
+  eventIsAboutToStart: 'Reminder 1h before an event starts.',
+  oneDayReminder: 'Reminder 24h before an event starts.',
+  invitationToAttendEventUpdated: 'An users answers your invitation to an event.',
+  requestToAttendEventUpdated: 'Organizer of the event has answered your request.',
+  requestToAttendEventCreated: 'An user requests an access to an event your organize.',
+  invitationToAttendMeetingCreated: 'An user invites you to a meeting.',
+  invitationToAttendScreeningCreated: 'An organization invites you to a screening.',
+};
+
+const tables = [
+  {
+    title: 'Company Management Notifications',
+    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'invitationFromUserToJoinOrgDecline'],
+    appAuthorized: ['catalog', 'festival', 'financiers']
+  },
+  {
+    title: 'Content Management Notifications',
+    types: ['movieSubmitted', 'movieAccepted'],
+    appAuthorized: ['catalog', 'festival', 'financiers']
+  },
+  {
+    title: 'Event Management Notifications',
+    types: [
+      'invitationToAttendScreeningCreated',
+      'invitationToAttendMeetingCreated',
+      'invitationToAttendEventUpdated',
+      'requestToAttendEventCreated',
+      'requestToAttendEventSent',
+      'requestToAttendEventUpdated',
+      'oneDayReminder',
+      'eventIsAboutToStart',
+    ],
+    appAuthorized: ['festival']
+  },
+];
 
 @Component({
   selector: '[form] user-notifications-form',
@@ -15,146 +62,69 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationsFormComponent {
-  public notificationGroup = [
-    {
-      title: 'Company Management Notifications',
-      available: ['catalog', 'festival', 'financiers'],
-      completed: {
-        email: true,
-        app: true
-      },
-      notification: [
-        {
-          notificationType: 'requestFromUserToJoinOrgCreate',
-          subtitle: 'A new user requests to join your organization.',
-          email: true,
-          app: true,
-          appMandatory: true
-        },
-        {
-          notificationType: 'orgMemberUpdated',
-          subtitle: 'A new member joins your organization.',
-          email: true,
-          app: true,
-          appMandatory: false
-        },
-        {
-          notificationType: 'invitationFromUserToJoinOrgDecline',
-          subtitle: 'An user declined your invitation to join your organization.',
-          email: true,
-          app: true,
-          appMandatory: false
-        }
-      ]
-    },
-    {
-      title: 'Content Management Notifications',
-      available: ['catalog', 'festival', 'financiers'],
-      completed: {
-        email: true,
-        app: true
-      },
-      notification: [
-        {
-          notificationType: 'movieSubmitted',
-          subtitle: 'A title is successfully submitted for validation.',
-          email: true,
-          app: true,
-          appMandatory: false
-        },
-        {
-          notificationType: 'movieAccepted',
-          subtitle: 'A title gets published to the marketplace.',
-          email: true,
-          app: true,
-          appMandatory: false
-        }
-      ]
-    },
-    {
-      // ! IT IS ONLY FOR FESTIVAL
-      title: 'Event Management Notifications',
-      available: ['festival'],
-      completed: {
-        email: true,
-        app: true
-      },
-      notification: [
-        {
-          notificationType: 'invitationToAttendEventUpdated',
-          subtitle: 'An users answers your invitation to an event.',
-          email: true,
-          app: true,
-          appMandatory: false
-        },
-        {
-          notificationType: 'requestToAttendEventUpdated',
-          subtitle: 'Organizer of the event has answered your request.',
-          email: true,
-          app: true,
-          appMandatory: false
-        },
-        {
-          notificationType: 'requestToAttendEventSent',
-          subtitle: 'Your request to access an event has been sent.',
-          email: true,
-          app: true,
-          appMandatory: false
-        },
-        {
-          notificationType: 'oneDayReminder',
-          subtitle: 'Reminder 24h before an event starts.',
-          email: true,
-          app: true,
-          appMandatory: false
-        },
-        {
-          notificationType: 'eventIsAboutToStart',
-          subtitle: 'Reminder 1h before an event starts.',
-          email: true,
-          app: true,
-          appMandatory: false
-        }
-      ]
+
+  public types = [...notificationTypes];
+  public titleType = titleType;
+  public tables = tables;
+
+  public form = new NotificationsForm(this.authQuery.user.settings?.notifications);
+
+  constructor(
+    private authQuery: AuthQuery,
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+    ) { }
+
+  toogleAll(event: MatSlideToggleChange, mode: 'email' | 'app') {
+    const checked = event.checked;
+    for (const control of Object.values(this.form.controls)) {
+      const c = control.get(mode);
+      if(!c.disabled) c.setValue(checked);
     }
-  ];
+  }
 
-  @Input() form: NotificationsForm;
+  setAll(event: MatCheckboxChange, mode: 'email' | 'app', types: NotificationType[]) {
+    const checked = event.checked;
+    for (const type of types) {
+      const c = this.form.get(type as any).get(mode);
+      if(!c.disabled) c.setValue(checked);
+    }
+  }
+
+  public async update() {
+    const notifications = this.form.getRawValue();
+    const uid = this.authQuery.userId;
+    await this.authService.update({ uid, settings: { notifications } });
+
+    this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
+  }
+}
+
+@Pipe({name: 'someChecked'})
+export class SomeCheckedPipe implements PipeTransform {
+  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationType[]) {
+    let checked = 0;
+    for (const type of types) {
+      if (value[type]?.[mode]) checked ++;
+    }
+    return checked > 0 && checked < types.length;
+  }
+}
+
+@Pipe({name: 'everyChecked'})
+export class EveryCheckedPipe implements PipeTransform {
+  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationType[]) {
+    return types.every(type => !!value[type]?.[mode]);
+  }
+}
+
+@Pipe({name: 'showNotification'})
+export class ShowNotificationPipe implements PipeTransform {
   currentApp: string = getCurrentApp(this.routerQuery);
+  public tables = tables;
+  constructor(private routerQuery: RouterQuery) {}
 
-  constructor(private routerQuery: RouterQuery) { }
-
-  showNotifications(index: number) {
-    return this.notificationGroup[index].available.includes(this.currentApp);
-  }
-
-  toogleAll(event: MatSlideToggleChange) {
-    this.notificationGroup.forEach(group => {
-      group.completed[event.source.name] = event.checked;
-      group.notification.forEach(notif => {
-        notif[event.source.name] = event.checked;
-        this.form.controls[notif.notificationType].controls[event.source.name].setValue(event.checked);
-      })
-    });
-  }
-
-  // CHECKBOX LOGIC //
-  someComplete(index: number, value: string) {
-    if (this.notificationGroup[index].notification == null) return false;
-    return this.notificationGroup[index].notification.filter(notif => notif[value]).length > 0 && !this.notificationGroup[index].completed[value];
-  }
-
-  updateAllComplete(index: number, subIndex: number, event: MatCheckboxChange) {
-    this.notificationGroup[index].notification[subIndex][event.source.name] = event.checked;
-    this.notificationGroup[index].completed[event.source.name] = this.notificationGroup[index].notification !== null && this.notificationGroup[index].notification.every(sub => sub[event.source.name]);
-  }
-
-  setAll(completed: boolean, index: number, value: string) {
-    this.notificationGroup[index].completed[value] = completed;
-    if (this.notificationGroup[index].notification == null) return;
-    this.notificationGroup[index].notification.forEach(notif => {
-      notif[value] = completed;
-      this.form.controls[notif.notificationType].controls[value].setValue(completed);
-    });
+  transform(index: number) {
+    return this.tables[index].appAuthorized.includes(this.currentApp);
   }
 }
