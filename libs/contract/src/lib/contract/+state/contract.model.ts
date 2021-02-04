@@ -19,6 +19,7 @@ import {
 } from '../../version/+state/contract-version.model';
 import { LegalRole } from '@blockframes/utils/static-model/types';
 import { getKeyIfExists, toDate } from '@blockframes/utils/helpers';
+import { Term } from '@blockframes/contract/term/+state/term.model';
 
 export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
@@ -255,7 +256,32 @@ export function getValidatedContracts(contracts: Contract[]): Contract[] {
 
 ///////////////////////////// NEW DATA MODEL OF CONTRACT
 
-export function createMandate(params?) {
+interface ContractNew {
+  id: string;
+  titleId: string;
+  termsIds: string[];
+  offerId?: string;
+  buyerId?: string | undefined; // For external sales this is undefined
+  sellerId: string; // Archipel content or the Seller
+  status: {
+    seller: 'draft' | 'accepted' | 'declined', // Maybe put sellerId as a key instead
+    buyer: 'draft' | 'accepted' | 'declined'
+  };
+}
+interface Mandate extends ContractNew {
+  type: 'mandate';
+}
+interface Sale extends ContractNew {
+  type: 'sale';
+  /** Free text provided by the buyer, addressed to the seller */
+  specificTerms: string;
+  /** Create the anccestors organization when you create the sale */
+  ancestors: string[]; // ??? The orgs that have a parent contract with the
+  // incomeId: string; // Id of the terms/right on which income should occured
+}
+
+
+export function createMandate(params: Partial<Mandate> = {}): Mandate {
   return {
     id: '',
     titleId: '',
@@ -271,11 +297,13 @@ export function createMandate(params?) {
   }
 }
 
-export function createSale(params?) {
+export function createSale(params: Partial<Sale> = {}): Sale {
   return {
     id: '',
     titleId: '',
     termsIds: [],
+    specificTerms: '',
+    ancestors: [],
     buyerId: undefined, // For external sales this is undefined
     sellerId: '', // Archipel content or the Seller
     type: 'sale',
@@ -287,14 +315,15 @@ export function createSale(params?) {
   }
 }
 
-export function createTerm(params?) {
+export function createTerm(params: Partial<Term> = {}): Term {
   return {
+    id: '',
     titleId: '',
     orgId: '',
     territories: [],
     medias: [],
     exclusive: false,
-    duration: { from: '', to: '' },
+    duration: { from: new Date(), to: new Date() },
     licensedOriginal: null,
     languages: {},
     criteria: [],

@@ -16,7 +16,7 @@ import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { TermService } from '@blockframes/contract/term/+state/term.service'
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { getKeyFromValue, Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
+import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 
 enum SpreadSheetContract {
   titleId,
@@ -72,9 +72,9 @@ export class ViewExtractedContractsComponent implements OnInit {
     this.clearDataSources();
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
     for (const spreadSheetRow of sheetTab.rows) {
-      const trimmedRow = spreadSheetRow.map(row => {
-        if (typeof row === 'string') row.trim()
-        return row
+      const trimmedRow = spreadSheetRow.map(cell => {
+        if (typeof cell === 'string') cell.trim()
+        return cell
       })
       let contract;
       let newContract = true;
@@ -140,11 +140,11 @@ export class ViewExtractedContractsComponent implements OnInit {
           const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract.titleId })
           if (trimmedRow[SpreadSheetContract.territories].length) {
             const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
-            const territories = territoryValues.map(territory => getKeyFromValue('territories', territory.trim()))
+            const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim()))
             term.territories = territories;
           } else {
             importErrors.errors.push({
-              type: 'warning',
+              type: 'error',
               field: 'term.territories',
               name: 'Territory',
               reason: `Archipel Content needs to know the territories in which the movie can be sold.`,
@@ -154,11 +154,11 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.medias].length) {
             const mediaValues: MediaValue[] = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
-            const medias = mediaValues.map(media => getKeyFromValue('medias', media.trim()))
+            const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim()))
             term.medias = medias;
           } else {
             importErrors.errors.push({
-              type: 'warning',
+              type: 'error',
               field: 'term.medias',
               name: 'Media',
               reason: `Archipel Content needs to know the medias in which the movie can be sold.`,
@@ -210,7 +210,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.dubbed]) {
             const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
-            const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
+            const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
             for (const language of languages) {
               if (language) {
                 term.languages[language] = { ...term.languages[language], dubbed: true }
@@ -221,14 +221,14 @@ export class ViewExtractedContractsComponent implements OnInit {
               type: 'warning',
               field: 'term.language.dubbed',
               name: 'Language dubbed',
-              reason: `Please provide dubbed version if available.`,
+              reason: 'Please provide dubbed version if available.',
               hint: 'Edit corresponding sheet field.'
             })
           }
 
           if (trimmedRow[SpreadSheetContract.subtitled]) {
             const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
-            const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
+            const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
             for (const language of languages) {
               if (language) {
                 term.languages[language] = { ...term.languages[language], subtitle: true }
@@ -246,7 +246,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
             const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
-            const languages: Language[] = languageValues.map(language => getKeyFromValue('languages', language.trim()))
+            const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
             for (const language of languages) {
               if (language) {
                 term.languages[language] = { ...term.languages[language], caption: true }
@@ -263,7 +263,6 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           this.contractsToUpdate.data.push(importErrors);
-          this.contractsToUpdate.data = [... this.contractsToUpdate.data];
 
           this.cdRef.markForCheck();
         }

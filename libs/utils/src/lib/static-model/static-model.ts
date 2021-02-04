@@ -1931,8 +1931,3 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
     fr: territoriesFR[territory],
   }
 }
-
-export function getKeyFromValue(scope: Scope, searchValue: string) {
-  const [key, value] = Object.entries(staticModel[scope]).filter(([key, value]) => value === searchValue).flat();
-  return key;
-}
