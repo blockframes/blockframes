@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
     }
     try {
       const { email, password } = signinForm.value;
-      await this.service.signin(email.trim(), password.trim());
+      await this.service.signin(email.trim(), password);
       // Reset page title to default
       this.dynTitle.setPageTitle();
       const redirectTo = localStorage.getItem('redirectTo');
@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
         _meta: { createdFrom },
         privacyPolicy
       };
-      await this.service.signup(email.trim(), password.trim(), { ctx });
+      await this.service.signup(email.trim(), password, { ctx });
       // Reset page title to default
       this.dynTitle.setPageTitle();
       const redirectTo = localStorage.getItem('redirectTo');
