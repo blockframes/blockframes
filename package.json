@@ -2,9 +2,6 @@
   "name": "blockframes",
   "version": "0.0.2",
   "license": "MIT",
-  "engines": {
-    "node": "12"
-  },
   "scripts": {
     "ng": "nx",
     "start": "nx serve --hmr --disable-host-check",
