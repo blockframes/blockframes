@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "license": "MIT",
   "engines": {
-    "node": "10"
+    "node": "12"
   },
   "scripts": {
     "ng": "nx",
