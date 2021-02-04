@@ -6,40 +6,36 @@ import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 
-/** Type of Notification depending of its origin. */
-export type NotificationType =
-
-  // Notification related to organization
-  'organizationAcceptedByArchipelContent' |
-  'orgAppAccessChanged' |
+export const notificationTypes = [
+  'organizationAcceptedByArchipelContent',
+  'orgAppAccessChanged',
 
   // Notifications relative to movies
-  'movieSubmitted' | // (catalog only)
-  'movieAccepted' |
+  'movieSubmitted', // (catalog only)
+  'movieAccepted',
 
   // Notifications relative to invitations
-  'requestFromUserToJoinOrgCreate' |
-  'invitationFromUserToJoinOrgDecline' |
-  'orgMemberUpdated' |
+  'requestFromUserToJoinOrgCreate',
+  'invitationFromUserToJoinOrgDecline',
+  'orgMemberUpdated',
 
   // Events related notifications
-  'requestToAttendEventSent' |
-  'eventIsAboutToStart' | // 1h Reminder before event
-  'oneDayReminder' | // 24h Reminder before event
-  'invitationToAttendScreeningCreated' |
-  'invitationToAttendMeetingCreated' |
-  'requestToAttendEventCreated' | 
-  'invitationToAttendEventUpdated' | // Invitation, accepted or rejected
-  'requestToAttendEventUpdated' | // Request, accepted or rejected
-
+  'requestToAttendEventSent',
+  'eventIsAboutToStart', // 1h Reminder before event
+  'oneDayReminder', // 24h Reminder before event
+  'invitationToAttendEventUpdated', // Invitation, accepted or rejected
+  'requestToAttendEventUpdated', // Request, accepted or rejected
+  'requestToAttendEventCreated',
+  'invitationToAttendMeetingCreated',
+  'invitationToAttendScreeningCreated',
 
   // @TODO #4859 remove once all notification of theses types are read or deleted (since we cannot make a migration script)
-  'invitationToAttendEventAccepted' |
-  'invitationToAttendEventDeclined' |
-  'memberAddedToOrg' |
+  'invitationToAttendEventAccepted',
+  'invitationToAttendEventDeclined',
+  'memberAddedToOrg',
   'memberRemovedFromOrg'
-  ;
-
+] as const;
+export type NotificationType = typeof notificationTypes[number];
 
 /** Generic informations for a Notification. */
 export interface NotificationBase<D> {
