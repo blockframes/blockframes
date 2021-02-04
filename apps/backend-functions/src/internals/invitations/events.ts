@@ -66,7 +66,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
             organization: invitation.fromOrg,
             docId: invitation.eventId,
             invitation: createPublicInvitationDocument(invitation),
-            type: event.type == 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated'
+            type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated'
           }));
         });
 
