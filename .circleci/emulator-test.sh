@@ -4,4 +4,3 @@
 # Modify the command as needed
 echo "Starting emulators & launching affected unit-tests..."
 firebase emulators:exec --only firestore 'npx nx affected:test --base=origin/develop'
-

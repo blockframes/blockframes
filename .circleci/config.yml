@@ -162,8 +162,9 @@ jobs:
             echo "Building: ${AFFECTED}"
             for app in ${AFFECTED}; do
               echo "building ${app}";
+              npm run build:${app};
             done;
-      # - run: npm run affected:lint --base=origin/develop
+      - run: npm run affected:lint --base=origin/develop
       - run:
           name: Run unit-tests on affected apps
           command: |
