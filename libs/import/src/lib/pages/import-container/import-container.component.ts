@@ -3,7 +3,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AuthQuery } from '@blockframes/auth/+state';
 import { ViewExtractedMoviesComponent } from '../../components/view-extracted-elements/movies/view-extracted-movies.component';
 import { ViewExtractedContractsComponent } from '../../components/view-extracted-elements/contract/view-extracted-contracts.component';
-import { ViewExtractedRightsComponent } from '../../components/view-extracted-elements/rights/view-extracted-rights.component';
 import { ViewExtractedOrganizationsComponent } from '../../components/view-extracted-elements/organizations/view-extracted-organizations.component';
 import { SpreadsheetImportEvent } from '../../components/import-spreadsheet/import-spreadsheet.component';
 
@@ -17,7 +16,6 @@ export class ImportContainerComponent implements OnInit {
 
   @ViewChild('viewExtractedMoviesComponent') viewExtractedMoviesComponent: ViewExtractedMoviesComponent;
   @ViewChild('viewExtractedContractsComponent') viewExtractedContractsComponent: ViewExtractedContractsComponent;
-  @ViewChild('viewExtractedRightsComponent') viewExtractedRightsComponent: ViewExtractedRightsComponent;
   @ViewChild('viewExtractedOrganizationsComponent') viewExtractedOrganizationsComponent: ViewExtractedOrganizationsComponent;
 
   public importedFiles = false;
