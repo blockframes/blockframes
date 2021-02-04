@@ -1,4 +1,4 @@
-#
+﻿#
 # ENV VARIABLES:
 #   CACHE_VERSION:
 #     change this version when you need to trigger a global cache refresh on the ci,
@@ -165,6 +165,12 @@ jobs:
               npm run build:${app};
             done;
       - run: npm run affected:lint --base=origin/develop
+      - run:
+          name: Run unit-tests on affected apps
+          command: |
+            # Run npm command to unit tests on affected apps
+            firebase functions:config:get > .runtimeconfig.json
+            ./.circleci/emulator-test.sh 
       - run:
           name: Check size of apps being build
           command: |
