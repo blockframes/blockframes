@@ -1,5 +1,5 @@
 import { Movie } from "@blockframes/movie/+state";
-import { Contract } from "@blockframes/contract/contract/+state/contract.model";
+import { Mandate, Sale } from "@blockframes/contract/contract/+state/contract.model";
 import { DistributionRight } from "@blockframes/distribution-rights/+state/distribution-right.model";
 import { Organization } from "@blockframes/organization/+state";
 import { User } from "@blockframes/user/+state/user.model";
@@ -22,8 +22,8 @@ export interface MovieImportState {
 export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
   newContract: boolean;
-  contract: Contract;
-  term: Term
+  contract: Sale | Mandate;
+  terms: Term[]
 }
 
 export interface OrganizationsImportState {

@@ -268,10 +268,10 @@ interface ContractNew {
     buyer: 'draft' | 'accepted' | 'declined'
   };
 }
-interface Mandate extends ContractNew {
+export interface Mandate extends ContractNew {
   type: 'mandate';
 }
-interface Sale extends ContractNew {
+export interface Sale extends ContractNew {
   type: 'sale';
   /** Free text provided by the buyer, addressed to the seller */
   specificTerms: string;

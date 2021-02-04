@@ -130,7 +130,7 @@ export class TableExtractedContractsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: ContractsImportState) {
-    const data = { title: `Contract id ${importState.contract.id} v-${importState.contract.lastVersion.id}`, errors: importState.errors };
+    const data = { title: `Contract id ${importState.contract.id}`, errors: importState.errors };
     this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
   }
 
@@ -178,7 +178,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * Even for nested objects.
    */
   public filterPredicate(data: ContractsImportState, filter: string) {
-    const dataStr = data.contract.id + data.contract.lastVersion.id + data.contract.lastVersion.creationDate + data.contract.lastVersion.price.amount;
+    const dataStr = data.contract.id;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
