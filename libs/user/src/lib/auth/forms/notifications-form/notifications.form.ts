@@ -29,7 +29,9 @@ function createNotificationsControls(settings: Partial<NotificationSettings>): E
     requestToAttendEventUpdated: new NotificationSettingsForm(settings?.requestToAttendEventUpdated),
     movieSubmitted: new NotificationSettingsForm(settings?.movieSubmitted),
     movieAccepted: new NotificationSettingsForm(settings?.movieAccepted),
-    // @TODO #4046 add other notificationsType
+    requestToAttendEventCreated: new  NotificationSettingsForm(settings?.requestToAttendEventCreated),
+    invitationToAttendMeetingCreated: new  NotificationSettingsForm(settings?.invitationToAttendMeetingCreated),
+    invitationToAttendScreeningCreated: new  NotificationSettingsForm(settings?.invitationToAttendScreeningCreated),
   }
 }
 

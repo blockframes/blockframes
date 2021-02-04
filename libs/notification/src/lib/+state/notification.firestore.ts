@@ -26,6 +26,9 @@ export type NotificationType =
   'requestToAttendEventSent' |
   'eventIsAboutToStart' | // 1h Reminder before event
   'oneDayReminder' | // 24h Reminder before event
+  'invitationToAttendScreeningCreated' |
+  'invitationToAttendMeetingCreated' |
+  'requestToAttendEventCreated' | 
   'invitationToAttendEventUpdated' | // Invitation, accepted or rejected
   'requestToAttendEventUpdated' | // Request, accepted or rejected
 

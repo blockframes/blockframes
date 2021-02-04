@@ -5,7 +5,7 @@ import { NotificationType } from '@blockframes/notification/types';
 import { getAppUrl, getDocument, getOrgAppKey } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
-import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
   reminderEventToUser,
@@ -13,13 +13,18 @@ import {
   userRequestedToJoinYourOrg,
   requestToAttendEventFromUserAccepted,
   organizationWasAccepted,
-  organizationAppAccessChanged
+  organizationAppAccessChanged,
+  requestToAttendEventFromUser,
+  invitationToEventFromOrg
 } from './templates/mail';
 import { templateIds } from './templates/ids';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { App } from '@blockframes/utils/apps';
+import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
+import { App, applicationUrl } from '@blockframes/utils/apps';
 
 type Timestamp = admin.firestore.Timestamp;
+
+// @TODO (#2848) forcing to festival since invitations to events are only on this one
+const eventAppKey: App = 'festival';
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: NotificationDocument[]): Promise<any> {
@@ -51,8 +56,15 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     updateNotif({ app: true, email: true });
   }
 
-  if (notification.type === 'requestFromUserToJoinOrgCreate') {
-    // This is notification is never displayed in front since we already have an invitation that will always be displayed
+  // Theses notifications are never displayed in front since we already have an invitation that will always be displayed
+  const notificationsForInvitations: NotificationType[] = [
+    'requestFromUserToJoinOrgCreate',
+    'requestToAttendEventCreated',
+    'invitationToAttendScreeningCreated',
+    'invitationToAttendMeetingCreated'
+  ];
+
+  if (notificationsForInvitations.includes(notification.type)) {
     delete notification.app;
   }
 
@@ -133,6 +145,17 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
 
       // Events related notifications
+      case 'requestToAttendEventCreated':
+        await sendRequestToAttendEventCreatedEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'invitationToAttendMeetingCreated':
+      case 'invitationToAttendScreeningCreated':
+        await sendInvitationToAttendEventCreatedEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
       case 'requestToAttendEventSent':
         //! There is no email template for now
         // @TODO #4046 Add new template from Sendgrid | need text for email
@@ -214,10 +237,9 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
   const eventData = getEventEmailData(event);
   const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
-  const app = await getOrgAppKey(org);
 
   const email = reminderEventToUser(movie.title.international, recipient, orgName(org), eventData, template);
-  return await sendMailFromTemplate(email, app);
+  return await sendMailFromTemplate(email, eventAppKey);
 }
 
 /** Send an email when an request to access an event is updated */
@@ -225,14 +247,12 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
   const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
 
   if (!!invitation.toOrg) {
-    // Forcing to festival since invitations to events are only on this one
-    const app: App = 'festival';
     const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
     const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
     const eventData = getEventEmailData(event);
     if (notification.invitation.status === 'accepted') {
       const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
-      await sendMailFromTemplate(template, app);
+      await sendMailFromTemplate(template, eventAppKey);
     } else {
       // @TODO #4046 rejected | need text for email
     }
@@ -285,4 +305,40 @@ async function sendOrgAppAccessChangedEmail(recipient: User, notification: Notif
   const url = await getAppUrl(org);
   const template = organizationAppAccessChanged(recipient, url);
   await sendMailFromTemplate(template, app);
+}
+
+async function sendRequestToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
+  const link = getEventLink(org);
+  const urlToUse = applicationUrl[eventAppKey];
+  const userName = `${notification.user.firstName} ${notification.user.lastName}`;
+
+  console.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user} to : ${recipient.email}`);
+  const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
+  return sendMailFromTemplate(templateRequest, eventAppKey).catch(e => console.warn(e.message));
+}
+
+async function sendInvitationToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+
+  const eventEmailData: EventEmailData = getEventEmailData(event);
+  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const urlToUse = applicationUrl[eventAppKey];
+  const senderName = orgName(org);
+  const link = getEventLink(org);
+
+  console.log(`Sending invitation email for an event (${notification.docId}) from ${senderName} to : ${recipient.email}`);
+  const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
+  return sendMailFromTemplate(templateInvitation, eventAppKey).catch(e => console.warn(e.message));
+}
+
+function getEventLink(org: OrganizationDocument) {
+  if (canAccessModule('marketplace', org)) {
+    return '/c/o/marketplace/invitations';
+  } else if (canAccessModule('dashboard', org)) {
+    return '/c/o/dashboard/invitations';
+  } else {
+    return "";
+  }
 }
