@@ -4,7 +4,7 @@
 <article fxLayout="column" fxLayoutAlign="space-between start">
   <div fxLayout="column" fxLayoutAlign="start start">
     <h3><a [routerLink]="['/c/o/marketplace/event/', screening.id]">{{ screening.title }}</a></h3>
-    <h5>{{ screening.privacyType | titlecase }} Screening </h5>
+    <h5>{{ screening.isPrivate ? 'Private' : 'Public' }} Screening </h5>
     <pre class="mat-body-1">{{ screening | eventRange }}</pre>
     <org-chip [org]="screening.org"></org-chip>
   </div>

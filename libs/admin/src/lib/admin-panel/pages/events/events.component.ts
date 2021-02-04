@@ -64,7 +64,7 @@ export class EventsComponent implements OnInit {
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
-      row.privacyStatus = event.privacyType ? 'private' : 'public';
+      row.privacyStatus = event.isPrivate ? 'private' : 'public';
       return row;
     })
 
