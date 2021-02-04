@@ -260,7 +260,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
           }
 
-          this.contractsToUpdate.data.push(importErrors);
+          this.contractsToCreate.data.push(importErrors);
 
           this.cdRef.markForCheck();
         }
