@@ -23,7 +23,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
     throw new Error(`Event ${invitation.eventId} doesn't exist !`);
   }
 
-  if (invitation.mode === 'request' && event?.privacy === 'public') {
+  if (invitation.mode === 'request' && event?.privacyType === 'public') {
     // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser'
     return await db.doc(`invitations/${invitation.id}`).set({ status: 'accepted' }, { merge: true });
   }

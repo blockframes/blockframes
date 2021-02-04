@@ -8,7 +8,7 @@
       <ng-container [ngSwitch]="event | eventTime">
 
         <ng-container *ngSwitchCase="'early'">
-          <h6>{{ event.privacy | titlecase }} {{ event.type }}</h6>
+          <h6>{{ event.privacyType | titlecase }} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <p class="mat-body-2">{{ event.meta.description }}</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
@@ -22,7 +22,7 @@
         </ng-container>
 
         <ng-container *ngSwitchCase="'onTime'">
-          <h6>{{ event.privacy | titlecase }} {{ event.type }}</h6>
+          <h6>{{ event.privacyType | titlecase }} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <p class="mat-body-2">{{ event.meta.description }}</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
