@@ -12,6 +12,7 @@ import { AppBarModule } from '@blockframes/ui/app-bar';
 import { InvitationFormUserModule } from '@blockframes/invitation/form/user/user.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { EditDetailsModule } from '../../form/edit-details/edit-details.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -24,7 +25,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -43,6 +45,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     AppBarModule,
     InvitationFormUserModule,
     ConfirmModule,
+    EditDetailsModule,
 
     // Material
     MatDividerModule,
@@ -55,6 +58,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatListModule,
     MatSlideToggleModule,
     MatProgressBarModule,
+    MatRadioModule,
+    MatTooltipModule
   ]
 })
 export class EventEditModule { }

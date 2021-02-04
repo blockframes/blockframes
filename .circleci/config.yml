@@ -1,4 +1,4 @@
-#
+﻿#
 # ENV VARIABLES:
 #   CACHE_VERSION:
 #     change this version when you need to trigger a global cache refresh on the ci,
@@ -166,6 +166,12 @@ jobs:
             done;
       - run: npm run affected:lint --base=origin/develop
       - run:
+          name: Run unit-tests on affected apps
+          command: |
+            # Run npm command to unit tests on affected apps
+            firebase functions:config:get > .runtimeconfig.json
+            ./.circleci/emulator-test.sh 
+      - run:
           name: Check size of apps being build
           command: |
             # Generate default json for bundlesize
@@ -303,7 +309,6 @@ jobs:
       - run: npm run db:download-prod
       - run: npm run db:anonymize
       - run: npm run db:upload-anon-db-ci
-      - run: gsutil -m -q rm -r "gs://ci-backups-blockframes/LATEST-ANON-DB/*"
       - run: npm run firestore:run-db-anon-process
   copy-storage-from-prod:
     executor: blockframes-ci

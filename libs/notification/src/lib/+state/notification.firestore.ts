@@ -27,8 +27,7 @@ export const notificationTypes = [
   'requestToAttendEventUpdated', // Request, accepted or rejected
 
 
-  // @TODO #4046 create issue to remove this and also from libs/notification/src/lib/+state/notification.store.ts
-  // once all notification of theses types are read or deleted (since we cannot make a migration script)
+  // @TODO #4859 remove once all notification of theses types are read or deleted (since we cannot make a migration script)
   'invitationToAttendEventAccepted',
   'invitationToAttendEventDeclined',
   'memberAddedToOrg',
