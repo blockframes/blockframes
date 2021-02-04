@@ -47,7 +47,6 @@ commands:
       - restore_cache:
           keys:
             - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-      - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
       - run: touch .env # dotenv will crash without this
       - run: npm install
       - save_cache:
@@ -94,7 +93,7 @@ commands:
             npm run backend-ops displayCredentials &&
             npm run deploy:storage &&
             npm run deploy:firestore &&
-            npx nx run-many --target=deploy --projects=festival,catalog,crm,cms,financiers,backend-functions
+            npx nx run-many --target=deploy --all
   build_deploy_upgrade:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
@@ -153,18 +152,8 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run:
-          # npm run affected:build tries to build the libs which are broken,
-          # the following command only build affected apps.
-          name: build affected apps
-          command: |
-            AFFECTED=`npx nx affected:apps --plain --base=origin/develop`;
-            echo "Building: ${AFFECTED}"
-            for app in ${AFFECTED}; do
-              echo "building ${app}";
-              npm run build:${app};
-            done;
-      - run: npm run affected:lint --base=origin/develop
+      - run: npm run affected:build
+      - run: npm run affected:lint
       - run:
           name: Run unit-tests on affected apps
           command: |
