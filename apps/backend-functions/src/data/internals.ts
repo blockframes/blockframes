@@ -4,13 +4,14 @@
  * This code deals directly with the low level parts of firebase,
  */
 import * as admin from 'firebase-admin';
-import { OrganizationDocument } from './types';
+import { InvitationDocument, OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { getDocument } from '@blockframes/firebase-utils';
+import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 
 export { getDocument };
 
@@ -20,6 +21,15 @@ export function createPublicOrganizationDocument(org: OrganizationDocument) {
     denomination: createDenomination(org.denomination),
     logo: org.logo ?? '',
   }
+}
+
+export function createPublicInvitationDocument(invitation: InvitationDocument) {
+  return {
+    id: invitation.id ?? '',
+    type: invitation.type ?? '',
+    mode: invitation.mode ?? '',
+    status: invitation.status ?? '',
+  } as PublicInvitation
 }
 
 export function createPublicUserDocument(user: any = {}) {

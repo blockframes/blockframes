@@ -3,12 +3,13 @@ import { Contract } from "@blockframes/contract/contract/+state/contract.model";
 import { DistributionRight } from "@blockframes/distribution-rights/+state/distribution-right.model";
 import { Organization } from "@blockframes/organization/+state";
 import { User } from "@blockframes/user/+state/user.model";
+import { Term } from "@blockframes/contract/term/+state/term.model";
 
 export interface SpreadsheetImportError {
   field: string;
   name: string;
   reason: string;
-  type: string;
+  type: 'error' | 'warning';
   hint?: string;
 }
 
@@ -18,18 +19,11 @@ export interface MovieImportState {
   errors?: SpreadsheetImportError[];
 }
 
-export interface RightsImportState {
-  distributionRight: DistributionRight;
-  errors?: SpreadsheetImportError[];
-  movieTitle: string;
-  movieInternalRef?: string;
-  movieId: string;
-}
-
 export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
   newContract: boolean;
   contract: Contract;
+  term: Term
 }
 
 export interface OrganizationsImportState {

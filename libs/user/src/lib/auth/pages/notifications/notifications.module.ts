@@ -10,7 +10,6 @@ import { NotificationsComponent } from './notifications.component';
 import { NotificationsFormModule } from '@blockframes/auth/forms/notifications-form/notifications-form.module';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -20,7 +19,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
     FlexLayoutModule,
     NotificationsFormModule,
-    MatCardModule,
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,

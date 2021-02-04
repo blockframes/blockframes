@@ -132,7 +132,7 @@ export const testFixture = {
     id: '001',
     _meta: { createdAt: Date.now() },
     toUserId: 'uid-c8',
-    type: 'invitationToAttendEventAccepted',
+    type: 'invitationToAttendEventUpdated',
     docId: '100',
     user: { uid: 'uid-user2' },
     organization: { id: 'O001' },

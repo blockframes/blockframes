@@ -29,5 +29,6 @@ export class NotificationsComponent {
     await this.authService.update({ uid, settings: { notifications } });
 
     this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
+
   }
 }

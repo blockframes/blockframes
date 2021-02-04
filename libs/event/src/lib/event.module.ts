@@ -12,8 +12,7 @@ import { EventSmallDirective, EventLargeDirective } from './components/event.dir
 import { EventSizePipe } from './components/event.pipe';
 // Forms
 import { EventCreateComponent } from './form/create/create.component';
-import { TimeDateModule } from './form/time-date.directive';
-import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
+import { EditDetailsModule } from './form/edit-details/edit-details.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -24,7 +23,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -46,8 +44,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    TimeDateModule,
-    TimePickerModule,
+    EditDetailsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
@@ -60,7 +57,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
-    MatSlideToggleModule,
   ]
 })
 export class EventModule {}

@@ -1,4 +1,4 @@
-import { MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
+import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { NotificationType } from '@blockframes/notification/types';
@@ -6,10 +6,18 @@ import { getAppUrl, getDocument, getOrgAppKey } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, getEventEmailData } from '@blockframes/utils/emails/utils';
-import { EventDocument, Screening } from '@blockframes/event/+state/event.firestore';
-import { reminderEventToUser, userJoinedYourOrganization, userRequestedToJoinYourOrg } from './templates/mail';
+import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
+import {
+  reminderEventToUser,
+  userJoinedYourOrganization,
+  userRequestedToJoinYourOrg,
+  requestToAttendEventFromUserAccepted,
+  organizationWasAccepted,
+  organizationAppAccessChanged
+} from './templates/mail';
 import { templateIds } from './templates/ids';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { App } from '@blockframes/utils/apps';
 
 type Timestamp = admin.firestore.Timestamp;
 
@@ -73,54 +81,90 @@ export function createNotification(notification: Partial<NotificationDocument> =
 
 export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const notification = snap.data() as NotificationDocument;
-  // @TODO #4046 should contain all notificationTypes in the end
-  const types: NotificationType[] = ['memberAddedToOrg', 'memberRemovedFromOrg', 'oneDayReminder', 'eventIsAboutToStart', 'requestFromUserToJoinOrgCreate'];
 
   if (notification.email?.isSent === false) {
     // Update notification state
-    if (types.includes(notification.type)) {
 
-      const recipient = await getDocument<User>(`users/${notification.toUserId}`);
+    const recipient = await getDocument<User>(`users/${notification.toUserId}`);
 
-      switch (notification.type) {
-        case 'eventIsAboutToStart':
-          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneHour)
-            .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message)
-          break;
-        case 'oneDayReminder':
-          await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneDay)
-            .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message)
-          break;
-        case 'memberAddedToOrg':
-          await sendMemberAddedToOrgEmail(recipient, notification)
-            .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message);
-          break;
-        case 'memberRemovedFromOrg':
-          //@TODO #4046 create email for this
-          console.log(`No template id available for ${notification.type}`);
-          break;
-        case 'requestFromUserToJoinOrgCreate':
-          await sendUserRequestedToJoinYourOrgEmail(recipient, notification)
-            .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message);
-          break;
-        default:
-          // @TODO #4046 clean
-          // Send email
-          // const appKey = await getOrgAppKey(user.orgId); //@TODO also use notification.type to guess appKey
-          // await sendMailFromTemplate({ to: user.email, templateId: 'TODO#4046', data: {} }, appKey); // @TODO #4046
-          await sendMail({ to: recipient.email, subject: notification.type, text: 'test' })
-            .then(_ => notification.email.isSent = true)
-            .catch(e => notification.email.error = e.message);
-          break;
-      }
+    switch (notification.type) {
 
-    } else {
-      notification.email.error = emailErrorCodes.noTemplate.code;
+      // Notification related to organization
+      case 'organizationAcceptedByArchipelContent':
+        await sendMailToOrgAcceptedAdmin(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'orgAppAccessChanged':
+        await sendOrgAppAccessChangedEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message)
+        break;
+      case 'invitationFromUserToJoinOrgDecline':
+        // @TODO #4046 create mail | need text for email
+        break;
+
+      // Notifications relative to movies
+      case 'movieSubmitted':
+        //! There is no email template for now
+        // @TODO #4046 Add new template from Sendgrid | need text for email
+        await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been submitted.' })
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'movieAccepted':
+        //! There is no email template for now
+        // @TODO #4046 Add new template from Sendgrid | need text for email
+        await sendMail({ to: recipient.email, subject: notification.type, text: 'Your movie has been accepted by the Archipel team.' })
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+
+      // Notifications relative to invitations
+      case 'orgMemberUpdated':
+        await sendOrgMemberUpdatedEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'requestFromUserToJoinOrgCreate':
+        await sendUserRequestedToJoinYourOrgEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+
+      // Events related notifications
+      case 'requestToAttendEventSent':
+        //! There is no email template for now
+        // @TODO #4046 Add new template from Sendgrid | need text for email
+        await sendMail({ to: recipient.email, subject: notification.type, text: 'Your request has been sent.' })
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'eventIsAboutToStart':
+        await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneHour)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message)
+        break;
+      case 'oneDayReminder':
+        await sendReminderEmails(recipient, notification, templateIds.eventReminder.oneDay)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message)
+        break;
+      case 'requestToAttendEventUpdated':
+        await sendRequestToAttendEventUpdatedEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'invitationToAttendEventUpdated':
+        await sendInvitationToAttendEventUpdatedEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      default:
+        notification.email.error = emailErrorCodes.noTemplate.code;
+        break;
     }
+
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
@@ -143,19 +187,25 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
   return sendMailFromTemplate(template, appKey);
 }
 
-async function sendMemberAddedToOrgEmail(recipient: User, notification: NotificationDocument) {
+async function sendOrgMemberUpdatedEmail(recipient: User, notification: NotificationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
-  const template = userJoinedYourOrganization(
-    recipient.email,
-    recipient.firstName!,
-    orgName(org),
-    notification.user!.firstName,
-    notification.user!.lastName,
-    notification.user!.email
-  );
 
-  const appKey = await getOrgAppKey(org);
-  return sendMailFromTemplate(template, appKey);
+  if (org.userIds.includes(notification.user.uid)) {
+    const template = userJoinedYourOrganization(
+      recipient.email,
+      recipient.firstName!,
+      orgName(org),
+      notification.user!.firstName,
+      notification.user!.lastName,
+      notification.user!.email
+    );
+
+    const appKey = await getOrgAppKey(org);
+    return sendMailFromTemplate(template, appKey);
+  } else {
+    // @TODO #4046 member removed from org email | need text for email
+  }
+
 }
 
 /** Send a reminder email 24h or 1h before event starts */
@@ -168,4 +218,71 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
 
   const email = reminderEventToUser(movie.title.international, recipient, orgName(org), eventData, template);
   return await sendMailFromTemplate(email, app);
+}
+
+/** Send an email when an request to access an event is updated */
+async function sendRequestToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
+  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
+
+  if (!!invitation.toOrg) {
+    // Forcing to festival since invitations to events are only on this one
+    const app: App = 'festival';
+    const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+    const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+    const eventData = getEventEmailData(event);
+    if (notification.invitation.status === 'accepted') {
+      const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
+      await sendMailFromTemplate(template, app);
+    } else {
+      // @TODO #4046 rejected | need text for email
+    }
+  } else {
+    // @TODO create email when we have toUser 
+    const organizerUser = await getDocument<OrganizationDocument>(`users/${notification.user.uid}`);
+    if (notification.invitation.status === 'accepted') {
+      // @TODO #4046 accepted | need text for email
+    } else {
+      // @TODO #4046 rejected | need text for email
+    }
+  }
+
+  return;
+}
+
+/** Send an email when an invitation to access an event is updated */
+async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
+  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
+
+  if (!!invitation.toOrg) {
+    if (notification.invitation.status === 'accepted') {
+      // @TODO #4046 accepted | need text for email
+    } else {
+      // @TODO #4046 rejected | need text for email
+    }
+  } else {
+    // @TODO #4046 create email when we have toUser
+    if (notification.invitation.status === 'accepted') {
+      // @TODO #4046 accepted | need text for email
+    } else {
+      // @TODO #4046 rejected | need text for email
+    }
+  }
+
+  return;
+}
+
+/** Send an email to org admin when his/her org is accepted */
+async function sendMailToOrgAcceptedAdmin(recipient: User, notification: NotificationDocument) {
+  const app = await getOrgAppKey(notification.organization.id);
+  const template = organizationWasAccepted(recipient.email, recipient.firstName);
+  await sendMailFromTemplate(template, app);
+}
+
+/** Send email to organization's admins when org appAccess has changed */
+async function sendOrgAppAccessChangedEmail(recipient: User, notification: NotificationDocument) {
+  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const app = await getOrgAppKey(org);
+  const url = await getAppUrl(org);
+  const template = organizationAppAccessChanged(recipient, url);
+  await sendMailFromTemplate(template, app);
 }

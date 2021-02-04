@@ -7,17 +7,19 @@ import { difference } from 'lodash';
  */
 import { db } from './internals/firebase';
 import { getUser } from "./internals/utils";
-import { sendMail, sendMailFromTemplate } from './internals/email';
-import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
+import { sendMail } from './internals/email';
+import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
-import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { NotificationDocument } from './data/types';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { getDocument } from './data/internals';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -53,7 +55,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberAddedToOrg', after, userAdded));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
     return triggerNotifications(notifications);
 
     // Member removed
@@ -64,7 +66,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
     await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberRemovedFromOrg', after, userRemoved));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userRemoved));
     return triggerNotifications(notifications);
   }
 }
@@ -141,14 +143,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
 
-  const { userIds } = before as OrganizationDocument;
-  const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {
-    // send email to let the org admin know that the org has been accepted
-    const urlToUse = await getAppUrl(after);
-    const appKey = await getOrgAppKey(after);
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), appKey).catch(e => console.warn(e.message));
-
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
@@ -158,31 +153,6 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     });
     await triggerNotifications([notification]);
   }
-
-  // @todo(#3640) 09/09/2020 : We got rid of ethers dependencies
-  // const RELAYER_CONFIG: RelayerConfig = {
-  //   ...relayer,
-  //   mnemonic
-  // };
-  // const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
-  // if (blockchainBecomeEnabled) {
-  //   const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
-
-  //   const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
-
-  //   if (isOrgRegistered) {
-  //     throw new Error(`This organization has already an ENS name: ${orgENS}`);
-  //   }
-
-  //   const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
-  //   const provider = getProvider(RELAYER_CONFIG.network);
-  //   const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
-  //   const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
-
-  //   console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
-  //   const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
-  //   console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
-  // }
 
   // Update algolia's index
 
@@ -294,13 +264,20 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const appKey = await getOrgAppKey(orgId);
-  const appUrl = await getAppUrl(orgId);
+  const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+  const notifications: NotificationDocument[] = [];
+  admins.map(async admin => {
+    const notification = createNotification({
+      toUserId: admin.uid,
+      docId: admin.orgId,
+      organization: createPublicOrganizationDocument(organization),
+      type: 'orgAppAccessChanged'
+    });
 
-  await Promise.all(admins.map(admin => {
-    const template = organizationAppAccessChanged(admin, appUrl);
-    return sendMailFromTemplate(template, appKey).catch(e => console.warn(e.message));
-  }));
+    notifications.push(notification);
+  });
+
+  await triggerNotifications(notifications);
 
   return {
     error: '',
