@@ -13,15 +13,12 @@ import { TableExtractedElementsModule } from '../table-extracted-elements/table-
 // Components
 import { ViewExtractedMoviesComponent } from './movies/view-extracted-movies.component';
 import { ViewExtractedContractsComponent } from './contract/view-extracted-contracts.component';
-import { ViewExtractedRightsComponent } from './rights/view-extracted-rights.component';
 import { ViewExtractedOrganizationsComponent } from './organizations/view-extracted-organizations.component';
-
 
 @NgModule({
   declarations: [
     ViewExtractedMoviesComponent,
     ViewExtractedContractsComponent,
-    ViewExtractedRightsComponent,
     ViewExtractedOrganizationsComponent,
   ],
   imports: [
@@ -36,7 +33,6 @@ import { ViewExtractedOrganizationsComponent } from './organizations/view-extrac
   exports: [
     ViewExtractedMoviesComponent,
     ViewExtractedContractsComponent,
-    ViewExtractedRightsComponent,
     ViewExtractedOrganizationsComponent,
   ],
 })
