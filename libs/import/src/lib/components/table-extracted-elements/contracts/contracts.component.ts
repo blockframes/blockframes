@@ -5,11 +5,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
+import { TermService } from '@blockframes/contract/term/+state/term.service';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -43,7 +43,8 @@ export class TableExtractedContractsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private contractService: ContractService
+    private contractService: ContractService,
+    private termService: TermService
   ) { }
 
   ngOnInit() {
@@ -52,7 +53,6 @@ export class TableExtractedContractsComponent implements OnInit {
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
-    console.log(this.rows)
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
@@ -78,6 +78,7 @@ export class TableExtractedContractsComponent implements OnInit {
       this.processedContracts = 0;
       return true;
     } catch (err) {
+      console.error(err)
       this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedContracts = 0;
     }
@@ -105,7 +106,9 @@ export class TableExtractedContractsComponent implements OnInit {
    */
   private async addContract(importState: ContractsImportState): Promise<boolean> {
     const data = this.rows.data;
-    await this.contractService.add(importState.contract)
+    const termIds = await this.termService.add(importState.terms);
+    importState.contract.termsIds = termIds;
+    await this.contractService.add(importState.contract);
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -130,7 +133,7 @@ export class TableExtractedContractsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: ContractsImportState) {
-    const data = { title: `Contract id ${importState.contract.id} v-${importState.contract.lastVersion.id}`, errors: importState.errors };
+    const data = { title: `Contract id ${importState.contract.id}`, errors: importState.errors };
     this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
   }
 
@@ -178,7 +181,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * Even for nested objects.
    */
   public filterPredicate(data: ContractsImportState, filter: string) {
-    const dataStr = data.contract.id + data.contract.lastVersion.id + data.contract.lastVersion.creationDate + data.contract.lastVersion.price.amount;
+    const dataStr = data.contract.id;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
