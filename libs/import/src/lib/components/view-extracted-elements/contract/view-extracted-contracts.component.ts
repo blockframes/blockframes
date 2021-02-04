@@ -86,6 +86,8 @@ export class ViewExtractedContractsComponent implements OnInit {
           const terms = await this.termService.getValue(contract.termsIds);
           const parsedTerms = terms.map(createTerm)
           this.contractsToUpdate.data.push({ contract, newContract: false, errors: [], terms: parsedTerms })
+          // Forcing change detection
+          this.contractsToUpdate.data = [...this.contractsToUpdate.data]
         }
       }
 
@@ -172,7 +174,7 @@ export class ViewExtractedContractsComponent implements OnInit {
           const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
           if (trimmedRow[SpreadSheetContract.territories].length) {
             const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
-            const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim()))
+            const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
             term.territories = territories;
           } else {
             importErrors.errors.push({
@@ -186,7 +188,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.medias].length) {
             const mediaValues: MediaValue[] = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
-            const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim()))
+            const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim())).filter(media => !!media)
             term.medias = medias;
           } else {
             importErrors.errors.push({
