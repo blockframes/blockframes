@@ -36,7 +36,7 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsModule)
+      loadChildren: () => import('../../forms/notifications-form/notifications-form.module').then(m => m.NotificationsFormModule)
     }
   ]
 }]

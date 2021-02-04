@@ -1,63 +1,59 @@
-<section class="surface general">
-  <h2>Notifications Settings</h2>
-  <article fxLayout="row" fxLayoutAlign="space-between">
-    <p>Activate all the notifications :</p>
-    <div fxLayout="row" fxLayoutGap="32px">
-      <mat-slide-toggle color="primary" labelPosition="before" name="email" checked="true" (change)="toogleAll($event)">By Email:</mat-slide-toggle>
-      <mat-slide-toggle color="primary" labelPosition="before" name="app" checked="true" (change)="toogleAll($event)">In App:</mat-slide-toggle>
-    </div>
-  </article>
-</section>
+<ng-container *ngIf="form">
+  <form [formGroup]="form" (ngSubmit)="update()">
+    <header class="surface general">
+      <h2>Notifications Settings</h2>
+      <article fxLayout="row" fxLayoutAlign="space-between">
+        <p>Activate all the notifications :</p>
+        <div fxLayout="row" fxLayoutGap="32px">
+          <mat-slide-toggle color="primary" labelPosition="before" name="email" [checked]="form.value | everyChecked: 'email' : types" (change)="toogleAll($event, 'email')">By Email:</mat-slide-toggle>
+          <mat-slide-toggle color="primary" labelPosition="before" name="app" [checked]="form.value | everyChecked: 'app' : types" (change)="toogleAll($event, 'app')">In App:</mat-slide-toggle>
+        </div>
+      </article>
+    </header>
 
-<section class="surface" *ngFor="let row of notificationGroup, let index = index">
-  <table>
-      <tbody *ngIf="showNotifications(index)">
+    <table class="surface" *ngFor="let table of tables">
+      <tbody>
         <tr>
-          <th class="description"><h2>{{ row.title }}</h2></th>
+          <th class="description mat-subtitle">{{ table.title }}</th>
           <th>
             <mat-checkbox
               color="primary"
-              [indeterminate]="someComplete(index, 'email')"
-              [checked]="row.completed.email"
-              (change)="setAll($event.checked, index, 'email')">
+              [checked]="form.value | everyChecked: 'email':table.types"
+              [indeterminate]="form.value | someChecked: 'email': table.types"
+              (change)="setAll($event, 'email', table.types)">
+              By email
             </mat-checkbox>
-            By email
           </th>
           <th>
             <mat-checkbox
               color="primary"
-              [indeterminate]="someComplete(index, 'app')"
-              [checked]="row.completed.app"
-              (change)="setAll($event.checked, index, 'app')">
+              [checked]="form.value | everyChecked: 'app':table.types"
+              [indeterminate]="form.value | someChecked: 'app':table.types"
+              (change)="setAll($event, 'app', table.types)">
+              In App
             </mat-checkbox>
-            In App
           </th>
         </tr>
-        <tr><span class="mat-caption">Receive notifications when:</span></tr>
-        <tr *ngFor="let notif of row.notification, let subIndex = index">
-          <td class="description">{{ notif.subtitle }}  <b>({{ notif.notificationType}})</b></td>
-          <td>
-            <mat-checkbox
-              color="primary"
-              name="email"
-              [checked]="notif.email"
-              (change)="updateAllComplete(index, subIndex, $event)"
-              [formControl]="form.get(notif.notificationType).get('email')"
-              >
-            </mat-checkbox>
-          </td>
-          <td>
-            <mat-checkbox
-              color="primary"
-              name="app"
-              [checked]="notif.app"
-              [disabled]="notif.appMandatory"
-              (change)="updateAllComplete(index, subIndex, $event)"
-              [formControl]="form.get(notif.notificationType).get('app')"
-              >
-            </mat-checkbox>
-          </td>
-        </tr>
+        <tr class="mat-caption">Receive notifications when:</tr>
+        <ng-container *ngFor="let type of table.types">
+          <tr [formGroupName]="type">
+            <td class="description">{{ titleType[type] }}  <b>({{ type }})</b></td>
+            <td>
+              <mat-checkbox color="primary" name="email" formControlName="email"></mat-checkbox>
+            </td>
+            <td>
+              <mat-checkbox color="primary" name="app" formControlName="app"></mat-checkbox>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
-  </table>
-</section>
+    </table>
+
+    <footer fxLayout fxLayoutAlign="center center">
+      <button mat-flat-button color="accent" type="submit">
+        <mat-icon svgIcon="save"></mat-icon>
+        <span>Update</span>
+      </button>
+    </footer>
+  </form>
+</ng-container>
