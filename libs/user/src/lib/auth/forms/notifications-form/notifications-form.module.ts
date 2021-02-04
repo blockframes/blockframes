@@ -12,6 +12,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     // Material
     MatCheckboxModule,
     MatIconModule,
+    MatButtonModule,
     MatDividerModule,
     MatSlideToggleModule,
     MatTooltipModule,

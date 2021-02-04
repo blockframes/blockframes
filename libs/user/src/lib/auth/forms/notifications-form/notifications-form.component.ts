@@ -10,11 +10,22 @@ import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
-//  Record<NotificationType, string>
+
+//  TODO Type Record<NotificationType, string>
 const titleType = {
-  requestFromUserToJoinOrgCreate: 'blabla',
-  orgMemberUpdated: 'blabla',
-  invitationFromUserToJoinOrgDecline: 'blabla'
+  requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
+  orgMemberUpdated: 'A new member joins your organization.',
+  invitationFromUserToJoinOrgDecline: 'An user declined your invitation to join your organization.',
+  movieSubmitted: 'A title is successfully submitted for validation.',
+  movieAccepted: 'A title gets published to the marketplace.',
+  invitationToAttendEventUpdated: 'An users answers your invitation to an event.',
+  requestToAttendEventCreated: 'An user requests an access to an event your organize.',
+  requestToAttendEventSent: 'Your request to access an event has been sent.',
+  oneDayReminder: 'Reminder 24h before an event starts.',
+  eventIsAboutToStart: 'Reminder 1h before an event starts.',
+  invitationToAttendScreeningCreated: 'An organization invites you to a screening.',
+  invitationToAttendMeetingCreated: 'An user invites you to a meeting.',
+  requestToAttendEventUpdated: 'Organizer of the event has answered your request.'
 };
 
 @Component({
@@ -30,9 +41,28 @@ export class NotificationsFormComponent {
   public tables = [
     {
       title: 'Company Management Notifications',
-      types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'invitationFromUserToJoinOrgDecline']
+      types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'invitationFromUserToJoinOrgDecline'],
+      appAuthorized: ['catalog', 'festival', 'financiers']
     },
-
+    {
+      title: 'Content Management Notifications',
+      types: ['movieSubmitted', 'movieAccepted'],
+      appAuthorized: ['catalog', 'festival', 'financiers']
+    },
+    {
+      title: 'Event Management Notifications',
+      types: [
+        'invitationToAttendEventUpdated',
+        // 'requestToAttendEventCreated',
+        'requestToAttendEventUpdated',
+        'requestToAttendEventSent',
+        'oneDayReminder',
+        'eventIsAboutToStart',
+        // 'invitationToAttendScreeningCreated',
+        // 'invitationToAttendMeetingCreated'
+      ],
+      appAuthorized: ['festival']
+    },
   ];
 
   currentApp: string = getCurrentApp(this.routerQuery);
@@ -45,6 +75,10 @@ export class NotificationsFormComponent {
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
     ) { }
+
+  showNotification(index: number) {
+    return this.tables[index].appAuthorized.includes(this.currentApp);
+  }
 
   toogleAll(event: MatSlideToggleChange, mode: 'email' | 'app') {
     const checked = event.checked;
