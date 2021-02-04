@@ -184,6 +184,13 @@ export const testFixture = {
   'publicContracts/PC01': {
     id: 'PC01',
   },
+
+  // Consents
+  'consents/O001': {
+    id: 'O001',
+    access: [],
+    share: []
+  },
 };
 
 
