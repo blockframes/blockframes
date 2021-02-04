@@ -26,7 +26,6 @@ export function getCollection<T>(path: string): Promise<T[]> {
 }
 
 /**
- * getDocAndPath : Gets the document
  * @param fullPath the storage path of the file
  */
 export async function getDocAndPath(fullPath: string | undefined) {
