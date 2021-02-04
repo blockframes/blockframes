@@ -25,11 +25,6 @@ export interface EmailAdminParameters {
   from?: EmailJSON,
 }
 
-export interface EmailRecipient {
-  email: string;
-  name?: string;
-}
-
 export interface EventEmailData {
   id: string,
   title: string,
