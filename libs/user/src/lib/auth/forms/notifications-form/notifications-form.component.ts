@@ -53,13 +53,13 @@ export class NotificationsFormComponent {
       title: 'Event Management Notifications',
       types: [
         'invitationToAttendEventUpdated',
-        // 'requestToAttendEventCreated',
+        'requestToAttendEventCreated',
         'requestToAttendEventUpdated',
         'requestToAttendEventSent',
         'oneDayReminder',
         'eventIsAboutToStart',
-        // 'invitationToAttendScreeningCreated',
-        // 'invitationToAttendMeetingCreated'
+        'invitationToAttendScreeningCreated',
+        'invitationToAttendMeetingCreated'
       ],
       appAuthorized: ['festival']
     },

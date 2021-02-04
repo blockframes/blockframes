@@ -4,6 +4,9 @@ header {
 
 footer {
   margin-top: 56px;
+  button.mat-flat-button {
+    margin-bottom: 32px;
+  }
 }
 
 table {
@@ -25,6 +28,9 @@ th {
 th, td {
   &:first-child {
     padding-left: 24px;
+  }
+  &:last-child {
+    padding-right: 24px;
   }
 }
 
