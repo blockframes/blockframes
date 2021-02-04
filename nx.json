@@ -154,6 +154,6 @@
     }
   },
   "affected": {
-    "defaultBase": "master"
+    "defaultBase": "develop"
   }
 }
