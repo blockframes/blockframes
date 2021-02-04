@@ -261,17 +261,17 @@ interface ContractNew {
   titleId: string;
   termsIds: string[];
   offerId?: string;
-  buyerId?: string | undefined; // For external sales this is undefined
+  buyerId?: string | null; // For external sales this is undefined
   sellerId: string; // Archipel content or the Seller
   status: {
     seller: 'draft' | 'accepted' | 'declined', // Maybe put sellerId as a key instead
     buyer: 'draft' | 'accepted' | 'declined'
   };
 }
-interface Mandate extends ContractNew {
+export interface Mandate extends ContractNew {
   type: 'mandate';
 }
-interface Sale extends ContractNew {
+export interface Sale extends ContractNew {
   type: 'sale';
   /** Free text provided by the buyer, addressed to the seller */
   specificTerms: string;
@@ -304,7 +304,7 @@ export function createSale(params: Partial<Sale> = {}): Sale {
     termsIds: [],
     specificTerms: '',
     ancestors: [],
-    buyerId: undefined, // For external sales this is undefined
+    buyerId: null, // For external sales this is undefined
     sellerId: '', // Archipel content or the Seller
     type: 'sale',
     status: {
