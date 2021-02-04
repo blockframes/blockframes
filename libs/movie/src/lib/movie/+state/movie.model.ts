@@ -22,8 +22,7 @@ import {
   MovieGoalsAudience,
   MovieSalesPitch,
   MovieNote,
-  HostedVideos,
-  HostedVideo,
+  StorageVideo,
   MovieBase
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -111,26 +110,31 @@ export function createMoviePromotional(
   return {
     ...params,
     clip_link: params.clip_link ?? '',
-    financialDetails: params.financialDetails ?? '',
-    moodboard: params.moodboard ?? { storagePath: '' },
+    financialDetails: params.financialDetails ?? { storagePath: '', privacy: 'protected' },
+    moodboard: params.moodboard ?? { storagePath: '', privacy: 'public' },
     notes: params.notes ?? [],
     salesPitch: createSalesPitch(params.salesPitch),
     still_photo: params.still_photo ?? [],
-    presentation_deck: params?.presentation_deck ?? { storagePath: '' },
-    scenario: params.scenario ?? { storagePath: '' },
+    presentation_deck: params?.presentation_deck ?? { storagePath: '', privacy: 'public' },
+    scenario: params.scenario ?? { storagePath: '', privacy: 'public' },
     promo_reel_link: params.promo_reel_link ?? '',
     screener_link: params.screener_link ?? '',
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
-    videos: createHostedVideos(params.videos),
+    videos: {
+      screener: params?.videos?.screener ?? { storagePath: '', privacy: 'protected', jwPlayerId: '' },
+      otherVideos: params?.videos?.otherVideos ?? [],
+    },
   };
 }
 
 export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
   return {
+    storagePath: '',
+    privacy: 'public',
     description: '',
-    ref: '',
+    jwPlayerId: '',
     ...params,
   }
 }
@@ -349,18 +353,12 @@ export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
 }
 
 
-export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
-  return {
-    screener: createHostedVideo(params?.screener),
-    otherVideos: params?.otherVideos?.map(video => createHostedVideo(video)) || [],
-    ...params,
-  }
-}
 
-export function createHostedVideo(params: Partial<HostedVideo>): HostedVideo {
-  return {
-    ref: '',
-    jwPlayerId: '',
-    ...params,
-  }
-}
+
+// export function createStorageVideo(params: Partial<StorageVideo>): StorageVideo {
+//   return {
+//     storagePath: params?.storagePath ?? '',
+//     jwPlayerId: params?.jwPlayerId ?? '',
+//     ...params,
+//   }
+// }

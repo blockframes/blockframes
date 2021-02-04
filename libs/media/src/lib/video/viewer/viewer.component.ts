@@ -15,7 +15,7 @@ declare const jwplayer: any;
 
 @Component({
   // ! Warning if you change the selector, be sure to also change it in the .scss
-  selector: '[ref] video-viewer',
+  selector: '[docRef] [field] video-viewer',
   templateUrl: './viewer.component.html',
   styleUrls: ['./viewer.component.scss'],
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
@@ -34,13 +34,24 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   public loading$ = new BehaviorSubject(true);
 
-  private _ref: string;
-  get ref() { return this._ref; }
-  @Input() set ref(value: string) {
+  private _docRef: string;
+  get docRef() { return this._docRef; }
+  @Input() set docRef(value: string) {
     // if the video file has changed
-    if (!!value && this.ref !== value) {
+    if (!!value && this.docRef !== value) {
       this.resetPlayerState();
-      this._ref = value;
+      this._docRef = value;
+      this.initPlayer();
+    }
+  }
+
+  private _field: string;
+  get field() { return this._field; }
+  @Input() set field(value: string) {
+    // if the video file has changed
+    if (!!value && this.field !== value) {
+      this.resetPlayerState();
+      this._field = value;
       this.initPlayer();
     }
   }
@@ -80,7 +91,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   async initPlayer() {
     try {
       const privateVideo = this.functions.httpsCallable('privateVideo');
-      const { error, result } = await privateVideo({ eventId: this.eventId, ref: this.ref }).toPromise();
+      const { error, result } = await privateVideo({ docRef: this.docRef, field: this.field, eventId: this.eventId }).toPromise();
 
       if (!!error) {
         // if error is set, result will contain the error message
@@ -136,7 +147,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   async updatePlayer() {
 
-    if (!this.ref || !this.control || this.control.type !== 'video') return;
+    if (!this.docRef || !this.field || !this.control || this.control.type !== 'video') return;
 
     await this.waitForPlayerReady;
     this.player.seek(this.control.position);

@@ -8,7 +8,8 @@ import { MediaService } from '../../+state/media.service';
 export class GetUrlPipe implements PipeTransform {
   constructor(private service: MediaService) {}
   transform(path: string): Promise<string> {
-    return this.service.generateImgIxUrl(path);
+    // TODO issue#4868 reactivate this feature
+    return new Promise(res => res('')); // this.service.generateImgIxUrl(path);
   }
 }
 
@@ -16,10 +17,12 @@ export class GetUrlPipe implements PipeTransform {
 export class ToBlobPipe implements PipeTransform {
   constructor(private service: MediaService, private http: HttpClient) {}
   async transform(path: string) {
-    const url = await this.service.generateImgIxUrl(path);
-    return this.http.get(url, { responseType: 'blob' }).pipe(
-      map((blob: Blob) => URL.createObjectURL(blob))
-    )
+    // TODO issue#4868 reactivate this feature
+    return new Promise(res => res(''));
+    // const url = await this.service.generateImgIxUrl(path);
+    // return this.http.get(url, { responseType: 'blob' }).pipe(
+    //   map((blob: Blob) => URL.createObjectURL(blob))
+    // )
   }
 }
 

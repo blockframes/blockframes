@@ -1,6 +1,6 @@
 import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/browser/utils';
-import type { MovieForm, MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
+import type { MovieForm, MoviePromotionalVideosForm } from '@blockframes/movie/form/movie.form';
 import type { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import type { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import type { MoviePictureAdminForm } from '@blockframes/admin/admin-panel/forms/movie-admin.form';
@@ -53,7 +53,7 @@ export function extractMediaFromDocumentBeforeUpdate(
     OrganizationForm |
     OrganizationAdminForm |
     OrganizationMediasForm |
-    MovieHostedVideosForm |
+    MoviePromotionalVideosForm |
     CampaignForm |
     MoviePictureAdminForm
 ): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {

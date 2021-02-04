@@ -78,8 +78,8 @@
     <article *ngIf="movie.promotional.videos.otherVideos.length">
       <h2>Videos</h2>
       <div gdColumns="1fr 1fr" gdGap="16px">
-        <div class="video-container" *ngFor="let video of movie.promotional.videos.otherVideos">
-          <video-viewer [ref]="video.ref"></video-viewer>
+        <div class="video-container" *ngFor="let video of movie.promotional.videos.otherVideos; let i = index">
+          <video-viewer [docRef]="'movies/' + movie.id" [field]="'promotional.videos.otherVideos[' + i + ']'"></video-viewer>
           <p>{{ video.type | titlecase }} - {{ video.title }}</p>
         </div>
       </div>

@@ -239,6 +239,8 @@ export class ImageUploaderComponent implements OnInit {
    * If media is protected, this will also try to fetch a security token.
    * */
   private getDownloadUrl(ref: string): Promise<string> {
-    return this.mediaService.generateImgIxUrl(ref, this.parameters);
+    // TODO issue#4868 reactivate this feature
+    return new Promise(res => res(''));
+    // return this.mediaService.generateImgIxUrl(ref, this.parameters);
   }
 }

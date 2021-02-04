@@ -18,7 +18,9 @@ export class PromotionalLinksPipe implements PipeTransform {
       const ref = (movie.promotional[link] as string);
       const useImgIx = ['scenario', 'presentation_deck', 'moodboard'].includes(link);
       if (!!ref) {
-        const url = useImgIx ? await this.mediaService.generateImgIxUrl(ref) : ref;
+        // TODO issue#4868 reactivate this feature
+        // const url = useImgIx ? await this.mediaService.generateImgIxUrl(ref) : ref;
+        const url = useImgIx ? '' : ref;
         if (!!url) {
           const linkLabel = promotionalElementTypes[link];
           const icon = useImgIx ? 'cloud_download' : 'play_arrow';

@@ -8,7 +8,7 @@
       <pdf-viewer [eventId]="eventId" [ref]="ref" [control]="control"></pdf-viewer>
     </ng-container>
     <ng-container *ngSwitchCase="'video'">
-      <video-viewer [eventId]="eventId" [ref]="ref" [control]="control"></video-viewer>
+      <video-viewer [eventId]="eventId" [docRef]="ref" [field]="field" [control]="control"></video-viewer>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <article>

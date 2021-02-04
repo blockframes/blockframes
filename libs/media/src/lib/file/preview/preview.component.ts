@@ -11,7 +11,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class FilePreviewComponent {
   constructor(
     private dialogRef: MatDialogRef<FilePreviewComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { ref: string}
+    @Inject(MAT_DIALOG_DATA) public data: { docRef: string, field: string, ref: string }
   ) { }
 
   close() {

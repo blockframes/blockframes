@@ -8,8 +8,8 @@
       <ng-container *ngIf="hasScreener; else noScreener">
         <mat-list>
           <mat-list-item>
-            <mat-icon mat-list-icon [svgIcon]="screenerForm.get('fileName').value | fileTypeImage: 'icon'"></mat-icon>
-            <div mat-line>{{screenerForm.get('fileName').value}}</div>
+            <mat-icon mat-list-icon [svgIcon]="screenerForm.get('storagePath').value | fileTypeImage: 'icon'"></mat-icon>
+            <div mat-line>{{screenerForm.get('storagePath').value | fileName}}</div>
             <button mat-icon-button (click)="deleteScreener()">
               <mat-icon svgIcon="delete"></mat-icon>
             </button>
@@ -17,10 +17,14 @@
         </mat-list>
       </ng-container>
       <ng-template #noScreener>
-        <file-uploader [form]="screenerForm" [storagePath]="getPath('screener')" allowedFileType="video"
-          filePrivacy="protected">
+        <file-new-uploader
+          accept="video"
+          [metadata]="screenerMetaData"
+          [storagePath]="storagePaths.screener"
+          [displayFile]="screenerForm.get('storagePath')"
+        >
           <h3 title>Upload Screener</h3>
-        </file-uploader>
+        </file-new-uploader>
         <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
           outside your organization unless you explicitly invite them to a virtual screening.</p>
       </ng-template>
@@ -33,11 +37,11 @@
       <p>Upload other videos such as trailer, teaser, promotional clip, etc...</p>
 
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
-        <ng-template itemRef let-video>
-          {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.ref.fileName ? video.ref.fileName :
-          (video.ref.ref | fileName) }}
+        <ng-template itemRef let-video let-index="index">
+          ({{index}}) {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.storagePath ? video.storagePath :
+          (video.storagePath | fileName) }}
         </ng-template>
-        <ng-template formView let-activeForm>
+        <ng-template formView let-activeForm let-index="index">
           <article fxLayout="column">
             <span fxFlex fxLayout="row" fxLayoutGap="16px">
               <mat-form-field appearance="outline" fxFlex>
@@ -53,9 +57,14 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <file-uploader [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video">
-              <h3 title>Upload Video</h3>
-            </file-uploader>
+            <file-new-uploader
+              accept="video"
+              [metadata]="otherVideosMetaData(0)"
+              [storagePath]="storagePaths.otherVideos"
+              [displayFile]="activeForm.get('storagePath')"
+            >
+              <h3 title>Upload Video {{index}}</h3>
+            </file-new-uploader>
 
             <ng-template saveButtonText>Save Video</ng-template>
             <ng-template addButtonText>Add a Video</ng-template>

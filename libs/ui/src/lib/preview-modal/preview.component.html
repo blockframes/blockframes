@@ -19,7 +19,7 @@
       <ng-container *ngSwitchCase="'video'">
         <!-- The player component has no size, we use a container div to set a size that the player will fill -->
         <div class="video-container">
-          <video-viewer [ref]="ref"></video-viewer>
+          <video-viewer [docRef]="docRef" [field]="field"></video-viewer>
         </div>
       </ng-container>
 

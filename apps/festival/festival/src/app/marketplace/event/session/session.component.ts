@@ -30,7 +30,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
-  public screeningFileRef: string;
+  public movieDocRef: string;
 
   public creatingControl$ = new BehaviorSubject(false);
 
@@ -69,8 +69,9 @@ export class SessionComponent implements OnInit, OnDestroy {
       if (event.type === 'screening') {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
-          const movie = await this.movieService.getValue(event.meta.titleId as string);
-          this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
+          this.movieDocRef = `movies/${(event.meta as Screening).titleId}`;
+        } else {
+          console.warn('NO TITLE ID'); // TODO REMOVE DEBUG LOG
         }
 
       // MEETING
@@ -149,13 +150,13 @@ export class SessionComponent implements OnInit, OnDestroy {
 
         // If the current selected file hasn't any controls yet we should create them
         if (!!(event as Event<Meeting>).meta.selectedFile) {
-          const file = (event as Event<Meeting>).meta.selectedFile;
-          if (!(event as Event<Meeting>).meta.controls[file]) {
-            const fileType = extensionToType(getFileExtension(file));
+          const fileData = (event as Event<Meeting>).meta.selectedFile;
+          if (!(event as Event<Meeting>).meta.controls[fileData.storagePath]) {
+            const fileType = extensionToType(getFileExtension(fileData.storagePath));
             switch (fileType) {
               case 'pdf': {
                 this.creatingControl$.next(true);
-                const control = await this.createPdfControl(file, event.id);
+                const control = await this.createPdfControl(fileData.storagePath, fileData.docRef, fileData.field, event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
@@ -163,7 +164,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                 break;
               } case 'video': {
                 this.creatingControl$.next(true);
-                const control = await this.createVideoControl(file, event.id);
+                const control = await this.createVideoControl(fileData.docRef, fileData.field, event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
@@ -220,9 +221,9 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.service.update(event.id, { meta })
   }
 
-  async createPdfControl(ref: string, eventId: string): Promise<MeetingPdfControl> {
+  async createPdfControl(storagePath: string, docRef: string, field: string, eventId: string): Promise<MeetingPdfControl> {
     // locally download the pdf file to count it's number of pages
-    const url = await this.mediaService.generateImgIxUrl(ref, {}, eventId);
+    const url = await this.mediaService.generateImgIxUrl(storagePath, docRef, field, {}, eventId);
     const response = await fetch(url);
     const textResult = await response.text();
     // this actually count the number of pages, the regex comes from stack overflow
@@ -231,10 +232,10 @@ export class SessionComponent implements OnInit, OnDestroy {
     return { type: 'pdf', currentPage: 1, totalPages };
   }
 
-  async createVideoControl(ref: string, eventId: string): Promise<MeetingVideoControl> {
+  async createVideoControl(docRef: string, field: string, eventId: string): Promise<MeetingVideoControl> {
     const getVideoInfo = this.functions.httpsCallable('privateVideo');
 
-    const { error, result} = await getVideoInfo({ ref, eventId }).toPromise();
+    const { error, result} = await getVideoInfo({ docRef, field, eventId }).toPromise();
     if (!!error) {
       // if error is set, result will contain the error message
       throw new Error(result);

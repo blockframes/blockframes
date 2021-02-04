@@ -1,4 +1,5 @@
 
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { FileMetaData } from './media.model';
 
 /**
@@ -7,10 +8,46 @@ import { FileMetaData } from './media.model';
 */
 export interface StorageFile {
   storagePath: string;
+  privacy: Privacy;
   [K: string]: string; // extra-data
 }
 
+/**
+ * Reference that point to a `StorageFile` in the db.
+ * You can query firestore with a `StorageReference` to retrieve a `StorageFile`
+ */
+export interface StorageReference {
+  /**
+   * The reference of the document in the Firestore
+   * @example 'movies/12345/'
+   */
+  docRef: string;
 
+  /**
+   * The document field that hold the `StorageVideo` object
+   * @example 'promotional.videos.screener'
+   * @example 'promotional.videos.otherVideos[0]'
+   */
+  field: string;
+}
+
+/**
+ * Take a firestore document reference and extract the docId and corresponding collection
+ * @param docRef a reference to a document in the Firestore
+ * @example
+ * getRefInfo('movies/1234'); // { collection: 'movies', docId: '1234' }
+ * 
+ * getRefInfo('collection/1234/subCollection/5678'); // { collection: 'subCollection', docId: '5678' }
+ */
+export function getRefInfo(docRef: string) {
+  const parts = docRef.split('/').filter(part => !!part);
+  const docId = parts.pop();
+  const collection = parts.pop();
+  return {
+    collection,
+    docId,
+  }
+}
 
 // ! DEPRECATED
 export interface HostedMediaFormValue {

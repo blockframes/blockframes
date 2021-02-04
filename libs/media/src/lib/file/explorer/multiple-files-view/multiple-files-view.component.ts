@@ -124,11 +124,12 @@ export class MultipleFilesViewComponent implements OnInit {
     });
   }
 
+  // TODO issue#4868 reactivate this feature
   public async downloadFile(item: Partial<HostedMediaWithMetadata | Organization>, event: Event) {
     event.stopPropagation();
-    const ref = this.activeDirectory.fileRefField ? item[this.activeDirectory.fileRefField] : item;
-    const url = await this.mediaService.generateImgIxUrl(ref);
-    window.open(url);
+    // const ref = this.activeDirectory.fileRefField ? item[this.activeDirectory.fileRefField] : item;
+    // const url = await this.mediaService.generateImgIxUrl(ref);
+    // window.open(url);
   }
 
   public getFileRef(row: HostedMediaWithMetadata | MovieNote | string) {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
-import { MovieHostedVideoForm, MovieNotesForm } from '@blockframes/movie/form/movie.form';
+import { MovieNotesForm } from '@blockframes/movie/form/movie.form';
 
 // Material
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -19,21 +19,17 @@ export class FileExplorerUploaderDialogComponent implements OnInit {
 
   hostedMediaWithMetadataForm: HostedMediaWithMetadataForm;
   movieNotesForm: MovieNotesForm;
-  movieHostedVideoForm: MovieHostedVideoForm;
 
   roles = ['producer', 'director', 'other'];
 
   constructor(
     private dialogRef: MatDialogRef<FileExplorerUploaderDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { form: HostedMediaWithMetadataForm | MovieNotesForm | MovieHostedVideoForm, privacy: Privacy, storagePath: string, acceptedFileType: AllowedFileType}
+    @Inject(MAT_DIALOG_DATA) public data: { form: HostedMediaWithMetadataForm | MovieNotesForm, privacy: Privacy, storagePath: string, acceptedFileType: AllowedFileType}
   ) {}
 
   ngOnInit() {
 
-    if (isMovieHostedVideoForm(this.data.form)) {
-      this.movieHostedVideoForm = this.data.form;
-      this.movieHostedVideoForm.get('ref').get('ref').setValidators(Validators.required);
-    } else if (isHostedMediaWithMetadataForm(this.data.form)) {
+    if (isHostedMediaWithMetadataForm(this.data.form)) {
       this.hostedMediaWithMetadataForm = this.data.form;
       this.hostedMediaWithMetadataForm.get('ref').get('ref').setValidators(Validators.required);
       this.hostedMediaWithMetadataForm.get('title').setValidators(Validators.required);
@@ -51,10 +47,6 @@ export class FileExplorerUploaderDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-}
-
-function isMovieHostedVideoForm(form: MovieNotesForm | HostedMediaWithMetadataForm | MovieHostedVideoForm): form is MovieHostedVideoForm {
-  return !!(form as MovieHostedVideoForm).get('jwPlayerId');
 }
 
 function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMediaWithMetadataForm): form is HostedMediaWithMetadataForm {

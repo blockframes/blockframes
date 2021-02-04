@@ -1,6 +1,7 @@
 import { Firestore } from '@blockframes/firebase-utils';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
-import { createHostedVideo, Credit } from '@blockframes/movie/+state/movie.model';
+import { Credit } from '@blockframes/movie/+state/movie.model';
+import { createOldHostedVideo } from './old-types';
 
 /**
  * Replace the old value for unitBox in box office
@@ -48,7 +49,7 @@ export async function upgrade(db: Firestore) {
     if (jwPlayerId) {
       newData.promotional.videos = {
         ...newData.promotional.videos,
-        screener: createHostedVideo({ jwPlayerId })
+        screener: createOldHostedVideo({ jwPlayerId }) as any,
       }
     }
 

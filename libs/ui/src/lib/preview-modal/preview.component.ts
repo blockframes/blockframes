@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class PreviewModalComponent {
 
   @Input() ref: string;
+  @Input() docRef: string;
+  @Input() field: string;
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
 
   constructor(

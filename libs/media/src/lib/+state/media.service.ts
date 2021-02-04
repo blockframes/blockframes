@@ -121,27 +121,25 @@ export class MediaService {
    * @param ref (without "/protected")
    * @param parametersSet ImageParameters[]
    */
-  private async getProtectedMediaToken(ref: string, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
-    ref = !ref.startsWith('/') ? `/${ref}` : ref;
-    return this.getMediaToken({ ref, parametersSet, eventId }).toPromise();
+  private async getProtectedMediaToken(docRef: string, field: string, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
+    return this.getMediaToken({ docRef, field, parametersSet, eventId }).toPromise();
   }
 
-  async generateImageSrcset(ref: string, _parameters: ImageParameters): Promise<string> {
-    const refParts = ref.split('/');
-    const privacy = refParts.shift() as Privacy;
-    const params: ImageParameters[] = getImgSize(ref).map(size => ({ ..._parameters, w: size }));
+  async generateImageSrcset(storagePath: string, docRef: string, field: string, _parameters: ImageParameters): Promise<string> {
+
+    const privacy = storagePath.split('/').filter(part => !!part).shift() as Privacy;
+    const params: ImageParameters[] = getImgSize(field).map(size => ({ ..._parameters, w: size }));
     let tokens: string[] = [];
 
     if (privacies.includes(privacy)) {
-      ref = refParts.join('/');
       if (privacy === 'protected') {
-        tokens = await this.getProtectedMediaToken(ref, params);
+        tokens = await this.getProtectedMediaToken(docRef, field, params);
       }
     }
 
     const urls = params.map((param, index) => {
       if (tokens[index]) { param.s = tokens[index] };
-      return `${getImgIxResourceUrl(ref, param)} ${param.w}w`;
+      return `${getImgIxResourceUrl(storagePath, param)} ${param.w}w`;
     })
 
     return urls.join(', ');
@@ -152,26 +150,22 @@ export class MediaService {
    * @param ref string
    * @param parameters ImageParameters
    */
-  async generateImgIxUrl(ref: string, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
-    if (!ref) {
-      return '';
+  async generateImgIxUrl(storagePath: string, docRef: string, field: string, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
+
+    if (!storagePath) return '';
+
+    const parts = storagePath.split('/').filter(part => !!part)
+    const privacy = parts.shift() as Privacy;
+
+    if (privacy === 'protected') {
+      const [token] = await this.getProtectedMediaToken(docRef, field, [parameters], eventId);
+      parameters.s = token;
     }
 
-    const refParts = ref.split('/');
-    const privacy = refParts.shift() as Privacy;
-
-    if (privacies.includes(privacy)) {
-      ref = refParts.join('/');
-      if (privacy === 'protected') {
-        const [token] = await this.getProtectedMediaToken(ref, [parameters], eventId);
-        parameters.s = token;
-      }
-    }
-
-    return getImgIxResourceUrl(ref, parameters);
+    return getImgIxResourceUrl(storagePath, parameters);
   }
 
-  generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
+  async generateBackgroundImageUrl(storagePath: string, docRef: string, field: string, p: ImageParameters): Promise<string> {
 
     // default client width
     let clientWidth = 1024;
@@ -184,7 +178,7 @@ export class MediaService {
     // to prevent that we use Infinity to pick clientWidth if parameters.width is undefined
     p.w = Math.min(clientWidth, p.w || Infinity);
 
-    return this.generateImgIxUrl(ref, p);
+    return this.generateImgIxUrl(storagePath, docRef, field, p);
   }
 
 }

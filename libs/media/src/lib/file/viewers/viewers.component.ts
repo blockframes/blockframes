@@ -11,5 +11,7 @@ import { MeetingMediaControl } from '@blockframes/event/+state/event.firestore';
 export class FileViewersComponent {
   @Input() eventId: string;
   @Input() ref: string;
+  @Input() docRef: string;
+  @Input() field: string;
   @Input() control: MeetingMediaControl;
 }

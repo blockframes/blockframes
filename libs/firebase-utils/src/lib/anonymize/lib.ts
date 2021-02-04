@@ -1,19 +1,22 @@
+
 import * as faker from 'faker';
-import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
-import { NotificationDocument } from '@blockframes/notification/types';
+import { firebase } from '@env';
+import { firestore } from 'firebase-admin';
+
 import { Invitation } from '@blockframes/invitation/+state';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
+import { NotificationDocument } from '@blockframes/notification/types';
+import { StorageVideo } from '@blockframes/movie/+state/movie.firestore';
+import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
+
+import { Queue } from '../queue';
+import { runChunks } from '../firebase-utils';
+import { FirestoreEmulator } from '../firestore';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
-import { Queue } from '../queue';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
-import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { FirestoreEmulator } from '../firestore';
-import { firebase } from '@env'
-import { runChunks } from '../firebase-utils';
-import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
-import { firestore } from 'firebase-admin';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -91,7 +94,7 @@ function updateOrg(org: Organization | PublicOrganization) {
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
-function updateHostedVideo(screener: HostedVideo): HostedVideo {
+function updateHostedVideo(screener: StorageVideo): StorageVideo {
   const jwPlayerId = 'Ek2LPn3W';
   return {
     ...screener,

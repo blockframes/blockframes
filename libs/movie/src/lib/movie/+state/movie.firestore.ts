@@ -102,17 +102,19 @@ export interface PublicMovie {
   title: Title;
 }
 
-export interface HostedVideos {
-  screener?: HostedVideo; // Main screener
-  otherVideos?: HostedVideo[]; // Other videos
+export interface PromotionalVideos {
+  screener?: StorageVideo; // Main screener
+  otherVideos?: StoragePromotionalVideo[]; // Other videos
 }
 
-export interface HostedVideo {
-  ref: string,
+export interface StorageVideo extends StorageFile {
   jwPlayerId: string,
+}
+
+export interface StoragePromotionalVideo extends StorageVideo {
   title?: string,
   description?: string,
-  type?: HostedVideoType
+  type?: HostedVideoType,
 }
 
 ////////////////////
@@ -121,14 +123,14 @@ export interface HostedVideo {
 
 export interface MoviePromotionalElements {
 
-  financialDetails: string,
+  financialDetails: StorageFile,
   moodboard: StorageFile,
-  notes: MovieNote[],
+  notes: MovieNote[], // TODO issue#4002
   presentation_deck: StorageFile,
-  salesPitch: MovieSalesPitch,
+  salesPitch: MovieSalesPitch, // TODO issue#4002
   scenario: StorageFile,
-  still_photo: string[],
-  videos?: HostedVideos,
+  still_photo: string[], // TODO issue#4002
+  videos?: PromotionalVideos,
 
   // @TODO #2586 remove this when we can upload
   // videos through movie tunnel and remove the component for external links
@@ -278,9 +280,8 @@ export interface MovieExpectedPremiereRaw<D> {
 
 export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> { }
 
-export interface MovieSalesPitch {
+export interface MovieSalesPitch extends StorageFile {
   description?: string,
-  ref?: string, // hosted media
   jwPlayerId?: string;
 }
 

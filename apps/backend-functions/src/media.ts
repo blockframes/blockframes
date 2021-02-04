@@ -1,7 +1,7 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { isEqual, set } from 'lodash';
+import { get, isEqual, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -10,7 +10,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
 import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { getRefInfo, StorageFile } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
 import { privacies, Privacy, tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
@@ -113,7 +113,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
     // separate extraData from metadata
     const extraData = {...metadata};
     const keysToDelete = [
-      'uid', 'privacy', 'collection', 'docId', 'field',
+      'uid', 'collection', 'docId', 'field',
       'firebaseStorageDownloadTokens',
     ];
     for (const key of keysToDelete) {
@@ -176,18 +176,18 @@ export async function linkFile(data: storage.ObjectMetadata) {
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
  * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
  */
-export const getMediaToken = async (data: { ref: string, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
+export const getMediaToken = async (data: { docRef: string, field: string, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  const canAccess = await isAllowedToAccessMedia(data.ref, context.auth.uid, data.eventId);
+  const canAccess = await isAllowedToAccessMedia(data.docRef, data.field, context.auth.uid, data.eventId);
   if (!canAccess) {
     throw new Error('Permission denied. User is not allowed');
   }
 
   return data.parametersSet.map((p: ImageParameters) => {
     const params = formatParameters(p);
-    let toSign = `${imgixToken}${encodeURI(data.ref)}`;
+    let toSign = `${imgixToken}${encodeURI(data.docRef)}`;
 
     if (!!params) {
       toSign = `${toSign}?${params}`;
@@ -214,38 +214,47 @@ export const deleteMedia = async (storagePath: string): Promise<void> => {
   }
 }
 
-async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string): Promise<boolean> {
-  const pathInfo = getPathInfo(ref);
+async function isAllowedToAccessMedia(docRef: string, field: string, uid: string, eventId?: string): Promise<boolean> {
 
   const user = await db.collection('users').doc(uid).get();
-  if (!user.exists) { return false; }
+  if (!user.exists) return false;
   const userDoc = createPublicUser(user.data());
 
   const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
-  if (blockframesAdmin.exists) { return true; }
+  if (blockframesAdmin.exists) return true;
+
+  const { collection, docId } = getRefInfo(docRef);
+
+  const doc = await getDocument(docRef);
+  if (!doc) return false;
+
+  const { storagePath, privacy } = get(doc, field) as StorageFile;
+  if (!storagePath || !privacy) return false;
+
+  if (privacy === 'public') return true;
 
   let canAccess = false;
-  switch (pathInfo.collection) {
+  switch (collection) {
     case 'users':
-      canAccess = pathInfo.docId === uid;
+      canAccess = docId === uid;
       break;
     case 'orgs':
       if (!userDoc.orgId) { return false; }
-      canAccess = pathInfo.docId === userDoc.orgId;
+      canAccess = docId === userDoc.orgId;
       break;
     case 'movies':
       if (!userDoc.orgId) { return false; }
       const moviesCol = await db.collection('movies').where('orgIds', 'array-contains', userDoc.orgId).get();
       const movies = moviesCol.docs.map(doc => doc.data());
       const orgIds = movies.map(m => m.orgIds)
-      canAccess = orgIds.some(id => pathInfo.docId === id);
+      canAccess = orgIds.some(id => docId === id);
       break;
     default:
       canAccess = false;
       break;
   }
 
-  // use is not currently authorized,
+  // user is not currently authorized,
   // but he might be invited to an event where the file is shared
   if (!canAccess && !!eventId) {
     const eventRef = db.collection('events').doc(eventId);
@@ -257,21 +266,7 @@ async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string
 
       // if event is a Meeting and has the file
       if (eventData.type === 'meeting') {
-
-        // event.meta.files store the raw refs, but the ref in the function params
-        // has been transformed by the front, so we must apply the same transformations
-        // if we want to be able to match ref & files
-        const match = (eventData.meta as Meeting).files.some(file => {
-
-          if (file.startsWith('/')) file = file.substr(1); // remove leading '/' if exists
-          const fileParts = file.split('/');
-          fileParts.shift(); // remove privacy
-          let normalizedFile = fileParts.join('/');
-          if (!normalizedFile.startsWith('/')) normalizedFile = `/${normalizedFile}`; // put back a leading '/'
-
-          return normalizedFile === ref;
-        })
-
+        const match = (eventData.meta as Meeting).files.some(file => file.storagePath === storagePath);
         if (match) {
           // check if user is invited
           canAccess = await isUserInvitedToEvent(uid, eventId);
@@ -282,28 +277,6 @@ async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string
 
   return canAccess;
 }
-
-interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
-
-function getPathInfo(ref: string) {
-  const refParts = ref.split('/').filter(v => !!v);
-
-  const pathInfo: PathInfo = {
-    securityLevel: 'protected', // protected by default
-    collection: '',
-    docId: '',
-  };
-
-  if (privacies.includes(refParts[0] as any)) {
-    pathInfo.securityLevel = refParts.shift()! as Privacy;
-  }
-
-  pathInfo.collection = refParts.shift()!;
-  pathInfo.docId = refParts.shift()!;
-
-  return pathInfo;
-}
-
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
   const mediaToDelete: string[] = [];
@@ -381,14 +354,18 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard.storagePath);
     }
 
-    if (needsToBeCleaned(before.promotional.videos?.screener?.ref, after.promotional.videos?.screener?.ref)) {
-      mediaToDelete.push(before.promotional.videos.screener.ref);
+    if (needsToBeCleaned(before.promotional.salesPitch.storagePath, after.promotional.salesPitch.storagePath)) {
+      mediaToDelete.push(before.promotional.salesPitch.storagePath);
+    }
+
+    if (needsToBeCleaned(before.promotional.videos?.screener?.storagePath, after.promotional.videos?.screener?.storagePath)) {
+      mediaToDelete.push(before.promotional.videos.screener.storagePath);
     }
 
     if (before.promotional.videos?.otherVideos?.length) {
       before.promotional.videos.otherVideos.forEach(vb => {
-        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.ref === vb.ref)) {
-          mediaToDelete.push(vb.ref);
+        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.storagePath === vb.storagePath)) {
+          mediaToDelete.push(vb.storagePath);
         }
       });
     }
@@ -436,11 +413,11 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (!!before.promotional.videos?.screener?.ref) {
-      mediaToDelete.push(before.promotional.videos.screener.ref);
+      mediaToDelete.push(before.promotional.videos.screener.storagePath);
     }
 
     if (before.promotional.videos?.otherVideos?.length) {
-      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.ref));
+      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.storagePath));
     }
 
     if (before.promotional.still_photo?.length) {

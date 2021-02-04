@@ -21,7 +21,7 @@
 
         <ng-template #showVideo>
           <article class="screen">
-            <video-viewer [ref]="screeningFileRef" [eventId]="event.id" class="overlay"></video-viewer>
+            <video-viewer [docRef]="movieDocRef" field="promotional.videos.screener" [eventId]="event.id" class="overlay"></video-viewer>
           </article>
         </ng-template>
 

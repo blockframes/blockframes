@@ -1,29 +1,28 @@
-import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db, getStorageBucketName } from './internals/firebase';
-import * as admin from 'firebase-admin';
-import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
-import { isUserInvitedToEvent } from './internals/invitations/events';
-import { PublicUser } from './data/types';
-import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
-import { createHash } from 'crypto';
-import firebase from 'firebase';
-import { getDocument, getOrganizationsOfMovie } from './data/internals';
-import { ErrorResultResponse } from './utils';
-import { getDocAndPath, upsertWatermark } from '@blockframes/firebase-utils';
-import { File as GFile } from '@google-cloud/storage';
-import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
+
 import { get } from 'lodash';
+import firebase from 'firebase';
+import { createHash } from 'crypto';
+import * as admin from 'firebase-admin';
+import { File as GFile } from '@google-cloud/storage';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+
+import { upsertWatermark } from '@blockframes/firebase-utils';
+import { MovieDocument, StorageVideo } from '@blockframes/movie/+state/movie.firestore';
+import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
+
+import { PublicUser } from './data/types';
+import { ErrorResultResponse } from './utils';
+import { db, getStorageBucketName } from './internals/firebase';
+import { isUserInvitedToEvent } from './internals/invitations/events';
+import { getDocument, getOrganizationsOfMovie } from './data/internals';
+import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
+import { getRefInfo, StorageReference } from '@blockframes/media/+state/media.firestore';
+
 
 // No typing
 const JWPlayerApi = require('jwplatform');
 
-interface ReadVideoParams {
-
-  /**
-   * The reference to the video in storage
-   */
-  ref: string;
-
+interface ReadVideoParams extends StorageReference {
   /**
    * The id of the event.
    * Mandatory if the video is for a meeting.
@@ -40,20 +39,37 @@ export const getPrivateVideoUrl = async (
     throw new Error(`Unauthorized call !`);
   }
 
-  if (!data.ref) {
+  if (!data.docRef) {
     return {
       error: 'UNKNOWN_REFERENCE',
       result: 'No reference in params, this parameter is mandatory !'
     }
   }
 
-  const uid = context.auth.uid;
-  const { privacy, collection, doc, docData, field } = await getDocAndPath(data.ref);
+  if (!data.field) {
+    return {
+      error: 'UNKNOWN_FIELD',
+      result: 'No field in params, this parameter is mandatory !'
+    }
+  }
 
-  if (!docData) {
+  const uid = context.auth.uid;
+  const doc = await getDocument(data.docRef);
+
+  if (!doc) {
     return {
       error: 'UNKNOWN_DOCUMENT',
       result: 'The reference points to an unknown document'
+    }
+  }
+
+  const { collection } = getRefInfo(data.docRef);
+  const { privacy, jwPlayerId }  = get(doc, data.field) as StorageVideo;
+
+  if (!privacy || !jwPlayerId) {
+    return {
+      error: 'MALFORMED_STORAGE_VIDEO',
+      result: `Storage Video objects must have a 'privacy' & 'jwPlayerId', retrieved: ${JSON.stringify(get(doc, data.field))}`,
     }
   }
 
@@ -63,7 +79,7 @@ export const getPrivateVideoUrl = async (
 
     // CHECK FOR ORGANIZATION MEMBER
     if (collection === 'movies') {
-      const orgs = await getOrganizationsOfMovie(doc.id);
+      const orgs = await getOrganizationsOfMovie((doc as MovieDocument).id);
       access = orgs
         .filter(org => !!org && !!org.userIds)
         .some(org => org.userIds.some(userId => userId === uid));
@@ -138,21 +154,6 @@ export const getPrivateVideoUrl = async (
       result: `You are not authorized to see this video`
     }
   }
-
-  // get JwPlayerId
-  let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, field)
-  if (Array.isArray(savedRef)) {
-    savedRef = savedRef.find(video => video.ref === data.ref);
-  }
-
-  if (!savedRef || !savedRef.jwPlayerId) {
-    return {
-      error: 'DOCUMENT_VIDEO_NOT_FOUND',
-      result: `The file ${data.ref} was pointing to the existing document (${doc.id}), but this document doesn't contain the file or it's not a video`
-    }
-  }
-
-  const jwPlayerId = savedRef.jwPlayerId
 
   // watermark fallback : in case the user's watermark doesn't exist we generate it
   const userRef = db.collection('users').doc(uid);
