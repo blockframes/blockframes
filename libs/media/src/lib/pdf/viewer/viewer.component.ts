@@ -10,7 +10,7 @@ import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpe
 import { toggleFullScreen } from '../../file/viewers/utils';
 
 @Component({
-  selector: '[ref] pdf-viewer',
+  selector: '[storagePath][docRef][field] pdf-viewer',
   templateUrl: './viewer.component.html',
   styleUrls: ['./viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,10 +19,22 @@ export class PdfViewerComponent implements OnInit {
 
   fullScreen = false;
 
-  private _ref: string;
-  get ref() { return this._ref; }
+  private _storagePath: string;
+  get storagePath() { return this._storagePath; }
   @Input() set ref(value: string) {
-    this._ref = value;
+    this._storagePath = value;
+  }
+
+  private _docRef: string;
+  get docRef() { return this._docRef; }
+  @Input() set docRef(value: string) {
+    this._docRef = value;
+  }
+
+  private _field: string;
+  get field() { return this._field; }
+  @Input() set field(value: string) {
+    this._field = value;
   }
 
   private _control: MeetingPdfControl;
@@ -73,7 +85,7 @@ export class PdfViewerComponent implements OnInit {
       this.isPuppet$.next(false);
 
       // locally download the pdf file to count it's number of pages
-      const url = await this.mediaService.generateImgIxUrl(this.ref);
+      const url = await this.mediaService.generateImgIxUrl(this.storagePath, this.docRef, this.field);
       const response = await fetch(url);
       const textResult = await response.text();
       // this actually count the number of pages, the regex comes from stack overflow
@@ -97,7 +109,7 @@ export class PdfViewerComponent implements OnInit {
       page: this.control.currentPage,
       auto: 'compress,format'
     }
-    const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
+    const url = await this.mediaService.generateImgIxUrl(this.storagePath, this.docRef, this.field, param, this.eventId);
     this.pdfUrl$.next(url);
     this.fetching$.next(false);
     this.loading$.next(false);

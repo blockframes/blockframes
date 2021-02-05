@@ -101,11 +101,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
           auto: 'compress,format',
           fit: 'crop',
         };
-        const watermarkRef = this.authQuery.user.watermark;
-        if (!watermarkRef) {
+        const { uid, watermark } = this.authQuery.user;
+        if (!watermark) {
           throw new Error('We cannot load video without watermark.');
         }
-        const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
+        const watermarkUrl = await this.mediaService.generateImgIxUrl(watermark, `users/${uid}`, 'watermark', parameters);
 
         const signedUrl = new URL(result.signedUrl);
         const expires = signedUrl.searchParams.get('exp');

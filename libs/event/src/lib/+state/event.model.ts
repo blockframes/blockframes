@@ -59,7 +59,7 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
     description: '',
     attendees: {},
     files: [],
-    selectedFile: { docRef: '', field: '' },
+    selectedFile: { storagePath: '', docRef: '', field: '' },
     controls: {},
 
     ...meeting

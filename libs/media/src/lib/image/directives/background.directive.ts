@@ -2,18 +2,20 @@ import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } f
 import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { getAssetPath } from '@blockframes/media/+state/media.model';
 import { ImageParameters } from './imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Directive({
-  selector: '[bgRef] [bgAsset], [bgAsset]'
+  selector: '[bgStoragePath][bgDocRef][bgField] [bgAsset], [bgAsset]'
 })
 export class BackgroundDirective implements OnInit, OnDestroy {
   private sub: Subscription;
   private asset$ = new BehaviorSubject('');
-  private ref$ = new BehaviorSubject('');
+  private storagePath$ = new BehaviorSubject('');
+  private docRef$ = new BehaviorSubject('');
+  private field$ = new BehaviorSubject('');
   private assetUrl$: Observable<string>;
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
 
@@ -24,16 +26,16 @@ export class BackgroundDirective implements OnInit, OnDestroy {
 
   @HostBinding('style.backgroundImage') src: SafeStyle;
 
-  /** Set background-image attribute in any html tag with the url stored in firestore.
-   *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set bgRef(image: string) {
-    if (!image) {
-      this.ref$.next('');
-    } else {
-      this.mediaService.generateBackgroundImageUrl(image, this.parameters)
-        .then(url => this.ref$.next(url))
-        .catch(_ => this.ref$.next(''));
-    }
+  @Input() set storagePath(value: string) {
+    this.storagePath$.next(value);
+  }
+
+  @Input() set docRef(value: string) {
+    this.docRef$.next(value);
+  }
+
+  @Input() set field(value: string) {
+    this.field$.next(value);
   }
 
   @Input() set bgAsset(asset: string) {
@@ -72,12 +74,23 @@ export class BackgroundDirective implements OnInit, OnDestroy {
       map(([theme, asset]) => !!asset ? getAssetPath(asset, theme, 'images') : '')
     );
 
+    const imgUrl$ = combineLatest([
+      this.storagePath$,
+      this.docRef$,
+      this.field$,
+    ]).pipe(
+      switchMap(([storagePath, docRef, field]) =>
+        this.mediaService.generateBackgroundImageUrl(storagePath, docRef, field, this.parameters)
+          .catch(() => '')
+      ),
+    );
+
     this.sub = combineLatest([
-      this.ref$,
+      imgUrl$,
       this.assetUrl$
-    ]).subscribe(([ref, assetUrl]) => {
-      if (ref) {
-        this.src = this.sanitazier.bypassSecurityTrustStyle(`url("${ref}"), url("${assetUrl}")`);
+    ]).subscribe(([imgUrl, assetUrl]) => {
+      if (!!imgUrl) {
+        this.src = this.sanitazier.bypassSecurityTrustStyle(`url("${imgUrl}"), url("${assetUrl}")`);
         this.cdr.markForCheck();
       } else if (assetUrl) {
         this.src = this.sanitazier.bypassSecurityTrustStyle(`url("${assetUrl}")`);
