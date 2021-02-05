@@ -109,7 +109,7 @@ export function organizationAppAccessChanged(admin: PublicUser, url: string): Em
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
 }
 
-/** Send email to a user to inform him that he joined an org */
+/** Send email to an user to inform him that he joined an org */
 export function userJoinedAnOrganization(userEmail: string, url: string = appUrl.market, orgName: string, userFirstName: string): EmailTemplateRequest {
   const data = {
     pageURL: `${url}/c/o`,
@@ -136,6 +136,26 @@ EmailTemplateRequest {
     userEmail
   };
   return { to: orgAdminEmail, templateId: templateIds.org.memberAdded, data };
+}
+
+/** Send email to org admins to inform them that an user declined their invitation to join his org */
+export function invitationToJoinOrgDeclined(admin: PublicUser, user: PublicUser): EmailTemplateRequest {
+  const data = {
+    adminFirstName: admin.firstName,
+    userFirstName: user.firstName,
+    userLastName: user.lastName,
+    userEmail: user.email
+  };
+  return { to: admin.email, templateId: templateIds.invitation.organization.declined, data };
+}
+
+/** Send email to users to inform them that organization has declined their request to join it */
+export function requestToJoinOrgDeclined(toUser: Partial<PublicUser>, orgName: string): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    orgName
+  };
+  return { to: toUser.email, templateId: templateIds.request.joinOrganization.declined, data };
 }
 
 /** Send email to org admin to inform him that an user has left his org */

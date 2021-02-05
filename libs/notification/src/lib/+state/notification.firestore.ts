@@ -14,7 +14,7 @@ export const notificationTypesBase = [
 
   // Notifications relative to invitations
   'requestFromUserToJoinOrgCreate',
-  'invitationFromUserToJoinOrgDecline',
+  'requestFromUserToJoinOrgDecline',
   'orgMemberUpdated',
 
   // Events related notifications

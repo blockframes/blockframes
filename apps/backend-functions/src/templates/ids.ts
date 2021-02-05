@@ -29,6 +29,7 @@ export const templateIds = {
       created: 'd-b1ab5d21def145ccb759520e2d984436',
       pending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
       accepted: 'd-d32b25a504874a708de6bfc50a1acba7',
+      declined: 'd-6fbee372b12243c68edd580b02cbccf7'
     },
     attendEvent: {
       created: 'd-07f5e3cc6796455097b6082c22568d9e',
@@ -41,6 +42,9 @@ export const templateIds = {
   invitation: {
     attendEvent: {
       created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5'
+    },
+    organization: {
+      declined: 'd-d3c17695e25a453a98ab5540ea171c5c'
     }
   },
   financiers: {

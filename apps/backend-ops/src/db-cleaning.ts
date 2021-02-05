@@ -304,7 +304,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
   switch (notification.type) {
     case 'organizationAcceptedByArchipelContent':
       return existingIds.includes(notification.organization?.id);
-    case 'invitationFromUserToJoinOrgDecline':
+    case 'requestFromUserToJoinOrgDecline':
     case 'orgMemberUpdated':
       return (
         existingIds.includes(notification.organization?.id) &&

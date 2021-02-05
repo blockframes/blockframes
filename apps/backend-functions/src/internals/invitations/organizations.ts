@@ -141,7 +141,8 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
     createNotification({
       toUserId,
       user: createPublicUserDocument(invitation.fromUser),
-      type: 'invitationFromUserToJoinOrgDecline'
+      //? Is this type for user requesting to join org OR org inviting someone to join ???
+      type: 'requestFromUserToJoinOrgDecline'
     })
   );
 

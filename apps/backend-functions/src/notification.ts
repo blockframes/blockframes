@@ -20,7 +20,9 @@ import {
   movieAcceptedEmail,
   requestToAttendEventFromUserSent,
   userLeftYourOrganization,
-  requestToAttendEventFromUserRefused
+  requestToAttendEventFromUserRefused,
+  invitationToJoinOrgDeclined,
+  requestToJoinOrgDeclined
 } from './templates/mail';
 import { templateIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -117,8 +119,10 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message)
         break;
-      case 'invitationFromUserToJoinOrgDecline':
-        // @TODO #4046 create mail | need text for email
+      case 'requestFromUserToJoinOrgDecline':
+        await sendRequestToJoinOrgDeclined(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message)
         break;
 
       // Notifications relative to movies
@@ -225,7 +229,7 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     const appKey = await getOrgAppKey(org);
     return sendMailFromTemplate(template, appKey);
   } else {
-    // @TODO #4046 Update parameters given to the movieAcceptedEmail function when Vincent updated template
+    // @TODO #4046 Update parameters given to the email function when Vincent updated template
     // Member left/removed from org
     const userRemoved = notification.user;
     const app = await getOrgAppKey(org);
@@ -363,7 +367,7 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
 
 /** Send an email to org admin when his/her org is accepted */
 async function sendMovieSubmittedEmail(recipient: User, notification: NotificationDocument) {
-  // @TODO #4046 Update parameters given to the movieSubmittedEmail function when Vincent updated template
+  // @TODO #4046 Update parameters given to the email function when Vincent updated template
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const movieTitle = movie.title.original ? movie.title.original : movie.title.international;
   const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
@@ -375,7 +379,7 @@ async function sendMovieSubmittedEmail(recipient: User, notification: Notificati
 
 /** Send an email to user when their request to attend an event has been sent */
 async function sendRequestToAttendSentEmail(recipient: User, notification: NotificationDocument) {
-  // @TODO #4046 Update parameters given to the movieSubmittedEmail function when Vincent updated template
+  // @TODO #4046 Update parameters given to the email function when Vincent updated template
   const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
   const eventEmailData: EventEmailData = getEventEmailData(event);
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
@@ -383,5 +387,24 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
 
   const app = await getOrgAppKey(org);
   const template = requestToAttendEventFromUserSent(recipient, eventEmailData, organizerOrgName);
+  await sendMailFromTemplate(template, app);
+}
+
+/** Let admins knows their invitation to an user to join their org has been declined */
+async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notification: NotificationDocument) {
+  // @TODO #4046 Update parameters given to the email function when Vincent updated template
+  // const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
+
+  // const app = await getOrgAppKey(org);
+  // const template = invitationToJoinOrgDeclined(recipient);
+  // await sendMailFromTemplate(template, app);
+}
+
+/** Let user knows its request to join an org has been declined */
+async function sendRequestToJoinOrgDeclined(recipient: User, notification: NotificationDocument) {
+  // @TODO #4046 Update parameters given to the email function when Vincent updated template
+  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
+  const app = await getOrgAppKey(org);
+  const template = requestToJoinOrgDeclined(notification.user, orgName(org));
   await sendMailFromTemplate(template, app);
 }
