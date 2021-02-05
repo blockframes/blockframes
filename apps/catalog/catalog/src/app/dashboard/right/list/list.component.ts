@@ -21,7 +21,7 @@ export class RightListComponent {
   };
   initialColumns = ['id', 'status'];
   filter = new FormControl();
-  filter$: Observable<any> = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  filter$: Observable<string> = this.filter.valueChanges.pipe(startWith(this.filter.value));
   contracts = []
 
   constructor(
