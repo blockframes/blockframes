@@ -3,7 +3,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 // Blockframes
 import { NotificationsForm } from './notifications.form';
 import { getCurrentApp } from "@blockframes/utils/apps";
-import { NotificationType, notificationTypes } from '@blockframes/notification/types';
+import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 
 // Material
@@ -12,7 +12,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 
-const titleType = {
+const titleType: Record<NotificationTypesBase, string> = {
   movieSubmitted: 'A title is successfully submitted for validation.',
   movieAccepted: 'A title gets published to the marketplace.',
   requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
@@ -63,7 +63,7 @@ const tables = [
 })
 export class NotificationsFormComponent {
 
-  public types = [...notificationTypes];
+  public types = [...notificationTypesBase];
   public titleType = titleType;
   public tables = tables;
 
@@ -83,7 +83,7 @@ export class NotificationsFormComponent {
     }
   }
 
-  setAll(event: MatCheckboxChange, mode: 'email' | 'app', types: NotificationType[]) {
+  setAll(event: MatCheckboxChange, mode: 'email' | 'app', types: NotificationTypesBase[]) {
     const checked = event.checked;
     for (const type of types) {
       const c = this.form.get(type as any).get(mode);
@@ -102,7 +102,7 @@ export class NotificationsFormComponent {
 
 @Pipe({name: 'someChecked'})
 export class SomeCheckedPipe implements PipeTransform {
-  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationType[]) {
+  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationTypesBase[]) {
     let checked = 0;
     for (const type of types) {
       if (value[type]?.[mode]) checked ++;
@@ -113,7 +113,7 @@ export class SomeCheckedPipe implements PipeTransform {
 
 @Pipe({name: 'everyChecked'})
 export class EveryCheckedPipe implements PipeTransform {
-  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationType[]) {
+  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationTypesBase[]) {
     return types.every(type => !!value[type]?.[mode]);
   }
 }
