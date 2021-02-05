@@ -71,7 +71,17 @@
     "queryScope": "COLLECTION",
     "fields": [
       { "fieldPath": "meta.titleId", "order": "ASCENDING" },
+      { "fieldPath": "isSecret", "order": "ASCENDING" },
       { "fieldPath": "type", "order": "ASCENDING" },
+      { "fieldPath": "end", "order": "ASCENDING" }
+    ]
+  }, 
+  {
+    "collectionGroup": "events",
+    "queryScope": "COLLECTION",
+    "fields": [
+      { "fieldPath": "type", "order": "ASCENDING" },
+      { "fieldPath": "isSecret", "order": "ASCENDING" },
       { "fieldPath": "end", "order": "ASCENDING" }
     ]
   }],
