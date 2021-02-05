@@ -189,6 +189,16 @@ export function requestToAttendEventFromUser(
   return { to: recipient.email, templateId: templateIds.request.attendEvent.created, data };
 }
 
+/** Generate an email to inform users their request to attend an event has been sent */
+export function requestToAttendEventFromUserSent(toUser: PublicUser, event: EventEmailData, organizerOrgName: string): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    event,
+    organizerOrgName
+  };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.sent, data };
+}
+
 /** Generate an email to inform users that their request to attend an event was accepted */
 export function requestToAttendEventFromUserAccepted(
   toUser: PublicUser,
@@ -208,6 +218,7 @@ export function requestToAttendEventFromUserAccepted(
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
 
+/** Generate an email to remind users they have an event starting soon */
 export function reminderEventToUser(
   movieTitle: string,
   toUser: PublicUser,
@@ -227,6 +238,19 @@ export function reminderEventToUser(
   };
   return { to: toUser.email, templateId: template, data };
 }
+
+/** Generate an email when a movie is submitted */
+export function movieSubmittedEmail(toUser: PublicUser, movieTitle: string): EmailTemplateRequest {
+  const data = { userFirstName: toUser.firstName, movieTitle };
+  return { to: toUser.email, templateId: templateIds.movie.submitted, data };
+}
+
+/** Generate an email when a movie is accepted */
+export function movieAcceptedEmail(toUser: PublicUser, movieTitle: string, movieUrl: string): EmailTemplateRequest {
+  const data = { userFirstName: toUser.firstName, movieTitle, movieUrl };
+  return { to: toUser.email, templateId: templateIds.movie.accepted, data };
+}
+
 // ------------------------- //
 //      CASCADE8 ADMIN       //
 // ------------------------- //

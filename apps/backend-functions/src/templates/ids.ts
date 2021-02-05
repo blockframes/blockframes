@@ -32,6 +32,7 @@ export const templateIds = {
     attendEvent: {
       created: 'd-07f5e3cc6796455097b6082c22568d9e',
       accepted: 'd-df7b0a372b994a3090a48dc6cf17ba3e',
+      sent: 'd-113048f9990044bbb3c9431f9965f7b8'
     }
   },
   // Templates for invitations
@@ -46,5 +47,9 @@ export const templateIds = {
   eventReminder: {
     oneDay: 'd-0c7bcb6e4a234ddc95ed74b9ecc433dc',
     oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
+  },
+  movie: {
+    submitted: 'd-b303d5c2fd794fc6975752948414d62d',
+    accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
   }
 }
