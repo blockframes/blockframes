@@ -21,7 +21,10 @@
   <div fxLayout="column" fxLayoutGap="12px">
     <mat-slide-toggle formControlName="allDay" color="primary">All day</mat-slide-toggle>
     <mat-checkbox formControlName="isPrivate" color="primary">Accessible only on invitation (private event)</mat-checkbox>
-    <mat-checkbox formControlName="isSecret" color="primary">Do not show on Marketplace</mat-checkbox>
+    <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+      <mat-checkbox formControlName="isSecret" color="primary">Do not show on Marketplace</mat-checkbox>
+      <mat-icon svgIcon="info" matTooltip="Only people with a link can access your event"></mat-icon>
+    </div>
   </div>
 
 </form>

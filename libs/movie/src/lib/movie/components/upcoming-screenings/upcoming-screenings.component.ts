@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
@@ -9,8 +9,8 @@ import { InvitationQuery, InvitationService } from '@blockframes/invitation/+sta
 import { OrganizationService } from '@blockframes/organization/+state';
 
 // RxJs
-import { map, take, switchMap, delay, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Observable, timer } from 'rxjs';
+import { map, take, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Screening } from '@blockframes/event/+state/event.firestore';
 
 @Component({
@@ -22,7 +22,7 @@ import { Screening } from '@blockframes/event/+state/event.firestore';
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UpcomingScreeningsComponent implements OnInit {
+export class UpcomingScreeningsComponent {
 
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
@@ -43,16 +43,14 @@ export class UpcomingScreeningsComponent implements OnInit {
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
     )
-  { }
-
-  ngOnInit() {
-    const query = ref => ref
+  { 
+    const q = ref => ref
       .where('isSecret', '==', false)
       .where('meta.titleId', '==', this.query.getActiveId())
       .orderBy('end')
       .startAt(new Date())
 
-    this.screenings$ = this.eventService.queryByType(['screening'], query).pipe(
+    this.screenings$ = this.eventService.queryByType(['screening'], q).pipe(
       map(screenings => screenings.sort(this.sortByDate).slice(0, 5))
     )
 
