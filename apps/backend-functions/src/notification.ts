@@ -18,7 +18,9 @@ import {
   invitationToEventFromOrg,
   movieSubmittedEmail,
   movieAcceptedEmail,
-  requestToAttendEventFromUserSent
+  requestToAttendEventFromUserSent,
+  userLeftYourOrganization,
+  requestToAttendEventFromUserRefused
 } from './templates/mail';
 import { templateIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -223,7 +225,12 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     const appKey = await getOrgAppKey(org);
     return sendMailFromTemplate(template, appKey);
   } else {
-    // @TODO #4046 member removed from org email | need text for email
+    // @TODO #4046 Update parameters given to the movieAcceptedEmail function when Vincent updated template
+    // Member left/removed from org
+    const userRemoved = notification.user;
+    const app = await getOrgAppKey(org);
+    const template = userLeftYourOrganization(recipient, userRemoved);
+    await sendMailFromTemplate(template, app);
   }
 
 }
@@ -251,7 +258,8 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
       const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
       await sendMailFromTemplate(template, eventAppKey);
     } else {
-      // @TODO #4046 rejected | need text for email
+      const template = requestToAttendEventFromUserRefused(recipient, orgName(organizerOrg), eventData);
+      await sendMailFromTemplate(template, eventAppKey);
     }
   } else {
     // @TODO create email when we have toUser

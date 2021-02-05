@@ -138,6 +138,16 @@ EmailTemplateRequest {
   return { to: orgAdminEmail, templateId: templateIds.org.memberAdded, data };
 }
 
+/** Send email to org admin to inform him that an user has left his org */
+export function userLeftYourOrganization(admin: PublicUser, userRemoved: Partial<PublicUser> ): EmailTemplateRequest {
+  const data = {
+    userFirstName: userRemoved.firstName,
+    userLastName: userRemoved.lastName,
+    userEmail: userRemoved.email
+  };
+  return { to: admin.email, templateId: templateIds.org.memberRemoved, data };
+}
+
 /** Generates a transactional email to let an admin knows that an user requested to join his/her org */
 export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, url: string = appUrl.market): EmailTemplateRequest {
   const data = {
@@ -216,6 +226,20 @@ export function requestToAttendEventFromUserAccepted(
     sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
+}
+
+/** Generate an email to inform users that their request to attend an event was refused */
+export function requestToAttendEventFromUserRefused(
+  toUser: PublicUser,
+  organizerOrgName: string,
+  eventData: EventEmailData
+): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    organizerOrgName,
+    event: eventData,
+  };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.refused, data };
 }
 
 /** Generate an email to remind users they have an event starting soon */

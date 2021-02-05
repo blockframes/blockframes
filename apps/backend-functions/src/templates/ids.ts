@@ -21,6 +21,7 @@ export const templateIds = {
     accepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
     appAccessChanged: 'd-274b8b8370b44dc2984273d28970a06d',
     memberAdded: 'd-f84d8c5a70884316870ca4ef657e368f',
+    memberRemoved: 'd-9913537cf12a497c8959bee844ad0fb7'
   },
   // Templates for requests (invitations)
   request: {
@@ -32,6 +33,7 @@ export const templateIds = {
     attendEvent: {
       created: 'd-07f5e3cc6796455097b6082c22568d9e',
       accepted: 'd-df7b0a372b994a3090a48dc6cf17ba3e',
+      refused: 'd-4e36dd72f50d4e7e9ec738476efa84a9',
       sent: 'd-113048f9990044bbb3c9431f9965f7b8'
     }
   },
