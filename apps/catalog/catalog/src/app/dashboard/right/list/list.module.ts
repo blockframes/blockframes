@@ -4,9 +4,8 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RightListComponent } from './list.component';
-
-import { ContractTableModule } from '@blockframes/contract/contract/components';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,13 +18,14 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    ContractTableModule,
-    ImageModule,
+    TableFilterModule,
+    ToLabelModule,
 
     // Material
     MatTabsModule,
     MatIconModule,
     MatButtonModule,
+
     RouterModule.forChild([{ path: '', component: RightListComponent }])
   ]
 })

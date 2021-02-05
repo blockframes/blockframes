@@ -18,13 +18,6 @@ interface TitleView {
   status: StoreStatus;
 }
 
-const columns = {
-  title: 'Title',
-  sales: 'Sales',
-  receipt: 'Total Gross Receipts',
-  status: 'Status'
-};
-
 @Component({
   selector: 'catalog-title-list',
   templateUrl: './list.component.html',
@@ -32,7 +25,12 @@ const columns = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListComponent {
-  columns = columns;
+  columns = {
+    title: 'Title',
+    sales: 'Sales',
+    receipt: 'Total Gross Receipts',
+    status: 'Status'
+  };
   initialColumns = ['title', 'sales', 'receipt', 'status'];
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
@@ -55,6 +53,7 @@ export class TitleListComponent {
     this.dynTitle.setPageTitle(storeStatus[filter])
   }
 
+  /* index paramter is unused because it is a default paramter from the filter javascript function */
   filterByMovie(movie: Movie, index: number, value: any): boolean {
     return value ? movie.storeConfig.status === value : true;
   }

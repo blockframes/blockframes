@@ -1,46 +1,14 @@
-<ng-container *ngIf="!(salesLoading$ | async)">
-  <ng-container *ngIf="(tabs$ | async) as tabs">
-    <!-- Check if we have contracts in the tab "All" -->
-    <ng-container *ngIf="tabs[0].contracts.length else noRight">
-      <header fxLayout="row" fxLayoutAlign="space-between start">
-        <h1>Offers & Deals</h1>
-        <div fxLayout="column" fxLayoutAlign="start end">
-          <button mat-mini-fab color="primary" (click)="createSale()">
-            <mat-icon svgIcon="add"></mat-icon>
-          </button>
-        </div>
-      </header>
-
-      <mat-tab-group (selectedTabChange)="updateTitle($event)">
-        <mat-tab *ngFor="let tab of tabs">
-          <ng-template mat-tab-label>
-              {{ tab.name }} ({{ tab.contracts.length }})
-          </ng-template>
-          <ng-template matTabContent>
-            <ng-container *ngIf="tab.contracts.length; else noContracts">
-              <contract-table [contracts]="tab.contracts" hasBuyer app="dashboard"></contract-table>
-            </ng-container>
-            <ng-template #noContracts>
-              <span>There are no contract in {{ tab.name }}</span>
-            </ng-template>
-          </ng-template>
-        </mat-tab>
-      </mat-tab-group>
-    </ng-container>
-    <ng-template #noRight>
-      <section fxLayout="column" fxLayoutAlign="center center">
-        <h1>You have no ongoing offers or deals yet.</h1>
-        <p class="mat-body-1">
-          For the moment, you haven’t received any offers.
-        </p>
-        <img asset="no_titles.webp" alt="No title image">
-        <p>
-          While waiting for incoming offers, we invite you to<br>
-          consult <a class="mat-body-1" routerLink="../home">your Dashboard</a> to see the Marketplace Activity.
-        </p>
-        <p>If you haven’t added any title yet, please <a class="mat-body-1" routerLink="lobby">click here</a>.
-        </p>
-      </section>
-    </ng-template>
-  </ng-container>
-</ng-container>
+<h1>Offers & Deals</h1>
+<header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+  <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All Offers</button>
+  <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Offers</button>
+  <button mat-tab-link (click)="applyFilter('submitted')" [active]="(filter$ | async) === 'submitted'">Ongoing
+    Deals</button>
+  <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Past Deals</button>
+</header>
+<bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
+  showPaginator (rowClick)="goToTitle($event)">
+  <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
+  <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b></ng-template>
+  <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+</bf-table-filter>
