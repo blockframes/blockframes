@@ -6,10 +6,8 @@ import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 
-export const notificationTypes = [
-  'organizationAcceptedByArchipelContent',
-  'orgAppAccessChanged',
-
+// Type of notification used in front
+export const notificationTypesBase = [
   // Notifications relative to movies
   'movieSubmitted', // (catalog only)
   'movieAccepted',
@@ -28,6 +26,12 @@ export const notificationTypes = [
   'requestToAttendEventCreated',
   'invitationToAttendMeetingCreated',
   'invitationToAttendScreeningCreated',
+] as const;
+
+// All the other notification types
+export const notificationTypesPlus = [
+  'organizationAcceptedByArchipelContent',
+  'orgAppAccessChanged',
 
   // @TODO #4859 remove once all notification of theses types are read or deleted (since we cannot make a migration script)
   'invitationToAttendEventAccepted',
@@ -35,7 +39,10 @@ export const notificationTypes = [
   'memberAddedToOrg',
   'memberRemovedFromOrg'
 ] as const;
-export type NotificationType = typeof notificationTypes[number];
+
+export type NotificationTypesBase = typeof notificationTypesBase[number];
+export type NotificationTypesPlus = typeof notificationTypesPlus[number];
+export type NotificationTypes = NotificationTypesBase | NotificationTypesPlus;
 
 /** Generic informations for a Notification. */
 export interface NotificationBase<D> {
@@ -50,7 +57,7 @@ export interface NotificationBase<D> {
   organization?: PublicOrganization;
   invitation?: PublicInvitation,
   /** @dev Type of the notification */
-  type: NotificationType;
+  type: NotificationTypes;
   email?: {
     isSent: boolean;
     error?: EmailErrorCodes;

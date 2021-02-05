@@ -1,5 +1,5 @@
 import { DocumentMeta } from "@blockframes/utils/models-meta";
-import { NotificationType } from '@blockframes/notification/types';
+import { NotificationTypesBase } from '@blockframes/notification/types';
 
 export interface User extends PublicUser {
   financing: {
@@ -27,7 +27,7 @@ export interface UserSettings {
 
 export interface NotificationSettingsTemplate { email: boolean, app: boolean };
 
-export type NotificationSettings = Record<NotificationType, NotificationSettingsTemplate>;
+export type NotificationSettings = Record<NotificationTypesBase, NotificationSettingsTemplate>;
 
 /** A user interface with public information */
 export interface PublicUser {

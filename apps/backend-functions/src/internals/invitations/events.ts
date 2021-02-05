@@ -1,6 +1,6 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
-import { NotificationDocument, NotificationType, OrganizationDocument, PublicUser } from "../../data/types";
+import { NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { getUser } from "../utils";
 import { createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
@@ -227,7 +227,7 @@ async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocu
  * Look after notification already existing for one user and one event
  * Return an array of new notifications to create
  */
-async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationType) {
+async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationTypes) {
   const notifications = [];
   const db = admin.firestore();
 

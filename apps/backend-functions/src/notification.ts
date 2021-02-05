@@ -1,7 +1,7 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument } from './data/types';
 import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { NotificationType } from '@blockframes/notification/types';
+import { NotificationTypes } from '@blockframes/notification/types';
 import { getAppUrl, getDocument, getOrgAppKey } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
@@ -57,7 +57,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   }
 
   // Theses notifications are never displayed in front since we already have an invitation that will always be displayed
-  const notificationsForInvitations: NotificationType[] = [
+  const notificationsForInvitations: NotificationTypes[] = [
     'requestFromUserToJoinOrgCreate',
     'requestToAttendEventCreated',
     'invitationToAttendScreeningCreated',
@@ -257,7 +257,7 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
       // @TODO #4046 rejected | need text for email
     }
   } else {
-    // @TODO create email when we have toUser 
+    // @TODO create email when we have toUser
     const organizerUser = await getDocument<OrganizationDocument>(`users/${notification.user.uid}`);
     if (notification.invitation.status === 'accepted') {
       // @TODO #4046 accepted | need text for email

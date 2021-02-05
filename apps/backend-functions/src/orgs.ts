@@ -10,7 +10,7 @@ import { getUser } from "./internals/utils";
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
-import { NotificationType } from '@blockframes/notification/types';
+import { NotificationTypes } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
@@ -22,7 +22,7 @@ import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAccepte
 import { getDocument } from './data/internals';
 
 /** Create a notification with user and org. */
-function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
+function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
   return createNotification({
     toUserId,
     type: notificationType,
