@@ -119,12 +119,16 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message)
         break;
-      case 'requestFromUserToJoinOrgDecline':
+      case 'requestFromUserToJoinOrgDeclined':
         await sendRequestToJoinOrgDeclined(recipient, notification)
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message)
         break;
-
+      case 'invitationToJoinOrgDeclined':
+        await sendInvitationDeclinedToJoinOrgEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message)
+        break;
       // Notifications relative to movies
       case 'movieSubmitted':
         await sendMovieSubmittedEmail(recipient, notification)
@@ -393,9 +397,9 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
 /** Let admins knows their invitation to an user to join their org has been declined */
 async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notification: NotificationDocument) {
   // @TODO #4046 Update parameters given to the email function when Vincent updated template
-  // const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
 
-  // const app = await getOrgAppKey(org);
+  const app = await getOrgAppKey(org);
   // const template = invitationToJoinOrgDeclined(recipient);
   // await sendMailFromTemplate(template, app);
 }

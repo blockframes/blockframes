@@ -1,4 +1,3 @@
-
 import * as admin from 'firebase-admin';
 import { getUser } from "./../utils";
 import {
@@ -75,6 +74,27 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
   return addUserToOrg(toUser.uid, fromOrg.id);
 }
 
+/** Send a notification to admins of organization to notify them that the invitation is declined. */
+async function onInvitationToOrgDecline(invitation: InvitationDocument) {
+  if (!invitation.fromUser || !invitation.toOrg) {
+    console.error('No user or org provided');
+    return;
+  }
+
+  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
+  const adminIds = await getAdminIds(org.id);
+
+  const notifications = adminIds.map(toUserId =>
+    createNotification({
+      toUserId,
+      user: createPublicUserDocument(invitation.fromUser),
+      type: 'invitationToJoinOrgDeclined'
+    })
+  );
+
+  return triggerNotifications(notifications);
+}
+
 /** Sends an email when an organization invites a user to join. */
 async function onRequestFromUserToJoinOrgCreate({
   toOrg,
@@ -141,8 +161,7 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
     createNotification({
       toUserId,
       user: createPublicUserDocument(invitation.fromUser),
-      //? Is this type for user requesting to join org OR org inviting someone to join ???
-      type: 'requestFromUserToJoinOrgDecline'
+      type: 'requestFromUserToJoinOrgDeclined'
     })
   );
 
@@ -161,6 +180,8 @@ export async function onInvitationToJoinOrgUpdate(
 ): Promise<any> {
   if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
+  } else if (wasDeclined(before!, after)) {
+    return onInvitationToOrgDecline(invitation);
   }
 }
 
