@@ -150,7 +150,7 @@ export function invitationToJoinOrgDeclined(admin: PublicUser, user: PublicUser)
 }
 
 /** Send email to users to inform them that organization has declined their request to join it */
-export function requestToJoinOrgDeclined(toUser: Partial<PublicUser>, orgName: string): EmailTemplateRequest {
+export function requestToJoinOrgDeclined(toUser: PublicUser, orgName: string): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     orgName
@@ -159,7 +159,7 @@ export function requestToJoinOrgDeclined(toUser: Partial<PublicUser>, orgName: s
 }
 
 /** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization(admin: PublicUser, userRemoved: Partial<PublicUser> ): EmailTemplateRequest {
+export function userLeftYourOrganization(admin: PublicUser, userRemoved: PublicUser ): EmailTemplateRequest {
   const data = {
     userFirstName: userRemoved.firstName,
     userLastName: userRemoved.lastName,
@@ -198,6 +198,25 @@ export function invitationToEventFromOrg(
     eventEndDate: eventData.end
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
+}
+
+/** Generate an email for org's admin when an user accepted/declined their invitation to attend one of their events */
+export function invitationToEventFromOrgUpdated(
+  admin: User,
+  user: User,
+  userOrgName: string,
+  event: EventEmailData,
+  templateId: string
+): EmailTemplateRequest {
+  const data = {
+    adminFirstName: admin.firstName,
+    userFirstName: user.firstName,
+    userLastName: user.lastName,
+    userOrgName,
+    event,
+    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`
+  };
+  return { to: admin.email, templateId, data };
 }
 
 /** Generates an email for user requesting to attend an event. */

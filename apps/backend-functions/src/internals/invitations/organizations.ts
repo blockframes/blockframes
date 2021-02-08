@@ -84,10 +84,10 @@ async function onInvitationToOrgDecline(invitation: InvitationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
   const adminIds = await getAdminIds(org.id);
 
-  const notifications = adminIds.map(toUserId =>
+  const notifications = adminIds.map(toAdminId =>
     createNotification({
-      toUserId,
-      user: createPublicUserDocument(invitation.fromUser),
+      toUserId: toAdminId,
+      user: createPublicUserDocument(invitation.toUser),
       type: 'invitationToJoinOrgDeclined'
     })
   );
