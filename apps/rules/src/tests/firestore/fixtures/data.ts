@@ -135,7 +135,7 @@ export const testFixture = {
   },
   'invitations/I010' : {
     type: 'cancelEvent',
-  },   
+  },
   'invitations/I011' : {
     type: 'cancelEvent',
     fromOrg: { id: 'O011'},
@@ -145,14 +145,14 @@ export const testFixture = {
     type: 'cancelEvent',
     fromOrg: { id: 'O001'},
     fromUser: { uid: 'uid-user2' },
-  },  
+  },
 
   //Contracts
   'contracts/C001': {
     partyIds: ['O001'],
     'versions/v1': {
       id: 'v1',
-    },    
+    },
   },
   'contracts/C002': {
     id: 'C002',
@@ -162,6 +162,12 @@ export const testFixture = {
   //Public Contracts
   'publicContracts/PC01' : {
     id: 'PC01',
+  },
+  // Consents
+  'consents/O001': {
+    id: 'O001',
+    access: [],
+    share: []
   },
 };
 
