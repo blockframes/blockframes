@@ -3,7 +3,7 @@
     <img [storagePath]="data.ref" [docRef]="data.docRef" [field]="data.field" asset="no_titles.webp" />
   </ng-container>
   <ng-container *ngSwitchCase="'pdf'">
-    <pdf-viewer [ref]="data.ref"></pdf-viewer>
+    <pdf-viewer [storagePath]="data.ref" [docRef]="data.docRef" [field]="data.field" ></pdf-viewer>
   </ng-container>
   <ng-container *ngSwitchCase="'video'">
     <video-viewer [docRef]="data.docRef" [field]="data.field"></video-viewer>

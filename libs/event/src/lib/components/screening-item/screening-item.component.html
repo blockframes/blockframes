@@ -1,5 +1,5 @@
 <a matRipple [routerLink]="['/c/o/marketplace/event/', screening.id]">
-  <img fxHide.lt-sm [storagePath]="poster.storagePath" [docRef]="'movies/' + event.titleId" field="post" asset="empty_poster.webp" alt="Movie poster of the screening">
+  <img fxHide.lt-sm [storagePath]="poster" [docRef]="'movies/' + event.meta.titleId" field="post" asset="empty_poster.webp" alt="Movie poster of the screening">
 </a>
 <article fxLayout="column" fxLayoutAlign="space-between start">
   <div fxLayout="column" fxLayoutAlign="start start">

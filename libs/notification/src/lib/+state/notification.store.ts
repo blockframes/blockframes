@@ -12,6 +12,8 @@ import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/app
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
+import { StorageReference } from '@blockframes/media/+state/media.firestore';
+import { getDocument } from '@blockframes/firebase-utils';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -45,7 +47,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your organization was accepted by the ${this.appName} team.`,
-          imgRef: notification.organization?.logo,
+          imgRef: {
+            docRef: `orgs/${notification.organization.id}`,
+            field: 'logo',
+            storagePath: notification.organization?.logo
+          },
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
@@ -53,19 +59,27 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
-          imgRef: notification.user.avatar,
+          imgRef: {
+            docRef: `users/${notification.user.uid}`,
+            field: 'avatar',
+            storagePath: notification.user.avatar,
+          },
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'orgMemberUpdated':
-        this.getDocument<Organization>(`orgs/${notification.organization.id}`).then(org => {
+        getDocument<Organization>(`orgs/${notification.organization.id}`).then(org => {
           const message = org.userIds.includes(notification.user.uid) ?
             `${displayUserName} is now part of your organization.` :
             `${displayUserName} has been removed from your organization.`;
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              imgRef: notification.user.avatar,
+              imgRef: {
+                docRef: `users/${notification.id}`,
+                field: 'avatar',
+                storagePath: notification.user.avatar
+              },
               message,
             };
           })
@@ -73,7 +87,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Members of your organization have been updated`,
-          imgRef: notification.user.avatar,
+          imgRef: {
+            docRef: `users/${notification.user.uid}`,
+            field: 'avatar',
+            storagePath: notification.user.avatar,
+          },
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
@@ -81,7 +99,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName} is now part of your organization.`,
-          imgRef: notification.user.avatar,
+          imgRef: {
+            docRef: `users/${notification.user.uid}`,
+            field: 'avatar',
+            storagePath: notification.user.avatar,
+          },
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
@@ -89,7 +111,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName} has been removed from your organization.`,
-          imgRef: notification.user.avatar,
+          imgRef: {
+            docRef: `users/${notification.user.uid}`,
+            field: 'avatar',
+            storagePath: notification.user.avatar,
+          },
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
@@ -97,16 +123,24 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `A new movie has been submitted`,
-          imgRef: this.getPoster(notification.docId),
+          imgRef: {
+            docRef: `movies/${notification.docId}`,
+            field: 'poster',
+            storagePath: this.movieQuery.getEntity(notification.docId).poster ?? '',
+          },
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}`, // TODO check url : see  #2716
+          url: `/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
-        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+        getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              imgRef: movie?.poster ?? 'empty_poster.webp',
+              imgRef: {
+                docRef: `movies/${movie?.id}`,
+                field: 'poster',
+                storagePath: movie?.poster ?? 'empty_poster.webp'
+              },
               message: `${movie.title.international} was successfully published on the marketplace.`,
             };
           })
@@ -114,7 +148,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your project was successfully published on the marketplace.`,
-          imgRef: this.getPoster(notification.docId),
+          imgRef: {
+            docRef: `movies/${notification.docId}`,
+            field: 'poster',
+            storagePath: this.movieQuery.getEntity(notification.docId).poster ?? '',
+          },
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
@@ -126,11 +164,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'eventIsAboutToStart':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+        getDocument<Event>(`events/${notification.docId}`).then(event => {
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              imgRef: this.getPoster(event.meta.titleId),
+              imgRef: {
+                docRef: `movies/${event.meta.titleId}`,
+                field: 'poster',
+                storagePath: this.movieQuery.getEntity(event.meta.titleId).poster ?? '',
+              },
               message: `REMINDER - Your ${event.type} "${event.title}" is about to start.`
             };
           });
@@ -145,11 +187,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'oneDayReminder':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+        getDocument<Event>(`events/${notification.docId}`).then(event => {
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              imgRef: this.getPoster(event.meta.titleId),
+              imgRef: {
+                docRef: `movies/${event.meta.titleId}`,
+                field: 'poster',
+                storagePath: this.movieQuery.getEntity(event.meta.titleId).poster ?? '',
+              },
               message: `REMINDER - Your ${event.type} "${event.title}" is tomorrow.`
             };
           });
@@ -162,10 +208,10 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/marketplace/event/${notification.docId}`,
         };
       case 'invitationToAttendEventUpdated':
-      case 'requestToAttendEventUpdated':
+      case 'requestToAttendEventUpdated': {
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
+        getDocument<Event>(`events/${notification.docId}`).then(async event => {
           const subject = await this.notificationSubject(notification, event)
           await this.update(notification.id, newNotification => {
             return {
@@ -175,17 +221,32 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           });
         });
 
+        let imgRef: StorageReference & { storagePath: string };
+        if (!!notification.user?.avatar) {
+          imgRef = {
+            docRef: `users/${notification.user?.uid}`,
+            field: 'avatar',
+            storagePath: notification.user?.avatar,
+          };
+        } else {
+          imgRef = {
+            docRef: `orgs/${notification.organization?.id}`,
+            field: 'logo',
+            storagePath: notification.organization?.logo,
+          };
+        }
+
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
-          imgRef: notification.user?.avatar || notification.organization?.logo,
+          imgRef,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
         };
-      case 'invitationToAttendEventAccepted': // @TODO #4859 remove
+      } case 'invitationToAttendEventAccepted': {// @TODO #4859 remove
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
+        getDocument<Event>(`events/${notification.docId}`).then(async event => {
           const subject = await this.notificationSubject(notification, event)
           await this.update(notification.id, newNotification => {
             return {
@@ -195,17 +256,33 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           });
         });
 
+        let imgRef: StorageReference & { storagePath: string };
+        if (!!notification.user?.avatar) {
+          imgRef = {
+            docRef: `users/${notification.user?.uid}`,
+            field: 'avatar',
+            storagePath: notification.user?.avatar,
+          };
+        } else {
+          imgRef = {
+            docRef: `orgs/${notification.organization?.id}`,
+            field: 'logo',
+            storagePath: notification.organization?.logo,
+          };
+        }
+
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Someone has accepted your invitation to event "${notification.docId}".`,
-          imgRef: notification.user?.avatar || notification.organization?.logo,
+          imgRef,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
         };
-      case 'invitationToAttendEventDeclined': // @TODO #4859 remove
+
+      } case 'invitationToAttendEventDeclined': {// @TODO #4859 remove
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
+        getDocument<Event>(`events/${notification.docId}`).then(async event => {
           const subject = await this.notificationSubject(notification, event)
           this.update(notification.id, newNotification => {
             return {
@@ -215,17 +292,32 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           });
         });
 
+        let imgRef: StorageReference & { storagePath: string };
+        if (!!notification.user?.avatar) {
+          imgRef = {
+            docRef: `users/${notification.user?.uid}`,
+            field: 'avatar',
+            storagePath: notification.user?.avatar,
+          };
+        } else {
+          imgRef = {
+            docRef: `orgs/${notification.organization?.id}`,
+            field: 'logo',
+            storagePath: notification.organization?.logo,
+          };
+        }
+
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Someone has declined your invitation to event "${notification.docId}".`,
-          imgRef: notification.user?.avatar || notification.organization?.logo,
+          imgRef,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
         };
-      case 'requestToAttendEventSent':
+      } case 'requestToAttendEventSent':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+        getDocument<Event>(`events/${notification.docId}`).then(event => {
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
@@ -237,7 +329,11 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your request to attend event "${notification.docId}" has been sent.`,
-          imgRef: notification.user.avatar,
+          imgRef: {
+            docRef: `users/${notification.user.uid}`,
+            field: 'avatar',
+            storagePath: notification.user.avatar,
+          },
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
         };
@@ -253,7 +349,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
     // Adding user data to the notification of meeting events
     if (!!event && event.type === 'meeting' && !!notification.organization) {
-      const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerId}`);
+      const user = await getDocument<PublicUser>(`users/${event.meta.organizerId}`);
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
@@ -268,17 +364,5 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       subject = notification.user.email;
     }
     return subject;
-  }
-
-  public getPoster(id: string) {
-    const movie = this.movieQuery.getEntity(id);
-    return movie?.poster ?? '';
-  }
-
-  private getDocument<T>(path: string): Promise<T> {
-    return this.firestore
-      .doc(path)
-      .get().toPromise()
-      .then(doc => doc.data() as T);
   }
 }

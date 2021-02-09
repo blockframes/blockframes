@@ -1,4 +1,4 @@
-import { StorageFile, StorageReference } from "@blockframes/media/+state/media.firestore";
+import { StorageReference } from "@blockframes/media/+state/media.firestore";
 import { NotificationBase } from "./notification.firestore";
 
 export interface Notification extends NotificationBase<Date> {

@@ -10,7 +10,7 @@ import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpe
 import { toggleFullScreen } from '../../file/viewers/utils';
 
 @Component({
-  selector: '[storagePath][docRef][field] pdf-viewer',
+  selector: '[storagePath] [docRef] [field] pdf-viewer',
   templateUrl: './viewer.component.html',
   styleUrls: ['./viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +21,7 @@ export class PdfViewerComponent implements OnInit {
 
   private _storagePath: string;
   get storagePath() { return this._storagePath; }
-  @Input() set ref(value: string) {
+  @Input() set storagePath(value: string) {
     this._storagePath = value;
   }
 
@@ -97,7 +97,7 @@ export class PdfViewerComponent implements OnInit {
 
   async generatePdfUrl() {
 
-    const isLoading = !this.ref || !this.control || this.control.type !== 'pdf';
+    const isLoading = !this.storagePath || !this.control || this.control.type !== 'pdf';
     if (isLoading) {
       this.pdfUrl$.next('');
       this.loading$.next(true);

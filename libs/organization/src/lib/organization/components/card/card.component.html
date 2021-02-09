@@ -1,5 +1,5 @@
 <a matRipple [routerLink]="org.id">
-  <img [storagePath]="org.logo.storagePath" [docRef]="'orgs/' + org.id" field="logo" asset="empty_organization.webp" type="logo" alt="organization logo" [delay]="0">
+  <img [storagePath]="org.logo" [docRef]="'orgs/' + org.id" field="logo" asset="empty_organization.webp" type="logo" alt="organization logo">
 </a>
 <header fxLayout="column">
   <h5>{{ org | orgName }}</h5>

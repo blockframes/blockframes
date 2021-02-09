@@ -16,7 +16,7 @@
           <span>{{ org | orgName }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</span>
         </div>
-        <img [storagePath]="org.logo.storagePath" [docRef]="'orgs/' + org.id" field="logo" type="logo" asset="empty_organization.webp" alt="organization logo">
+        <img [storagePath]="org.logo" [docRef]="'orgs/' + org.id" field="logo" type="logo" asset="empty_organization.webp" alt="organization logo">
       </div>
     </div>
   </ng-template>
@@ -26,7 +26,7 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div class="org-info" fxLayout="row" fxLayoutGap="20px">
-      <img [storagePath]="org.logo.storagePath" [docRef]="'orgs/' + org.id" field="logo" asset="empty_organization.webp" alt="organization logo">
+      <img [storagePath]="org.logo" [docRef]="'orgs/' + org.id" field="logo" asset="empty_organization.webp" alt="organization logo">
       <article fxFlex fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
         <span class="mat-display-2">{{ org | orgName }}</span>

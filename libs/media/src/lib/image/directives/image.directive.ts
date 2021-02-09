@@ -82,8 +82,6 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.asset$.next(asset);
   }
 
-  // @Input() delay = 5000;
-
   constructor(
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
@@ -113,15 +111,6 @@ export class ImageDirective implements OnInit, OnDestroy {
 
     const obs$: Observable<any>[] = [this.asset$, this.parameters$, theme$, this.storagePath$, this.docRef$, this.field$];
 
-    // This should be fixed be new upload flow
-    // let _delay = 0;
-    // if (this.storagePath$.value) {
-    //   // Adds a 5 (default) sec delay on image loading except for the first one.
-    //   // This is to prevent imgIx to load the image before it is even uploaded or moved to good directory.
-    //   // This variable will be updated on the fly inside the `subscribe` to update next observable's behaviour.
-    //   obs$.push(this.storagePath$.pipe(delayWhen(() => timer(_delay))))
-    // }
-
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, storagePath, docRef, field]) => {
 
@@ -131,8 +120,6 @@ export class ImageDirective implements OnInit, OnDestroy {
 
         this.src = this.srcset.split(' ')[0];
 
-        // Next subscription change will be delayed
-        // _delay = this.delay;
       } else {
 
         // asset

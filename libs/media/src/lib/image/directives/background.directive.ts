@@ -8,7 +8,7 @@ import { ImageParameters } from './imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Directive({
-  selector: '[bgStoragePath][bgDocRef][bgField] [bgAsset], [bgAsset]'
+  selector: '[bgStoragePath] [bgDocRef] [bgField] [bgAsset], [bgAsset]'
 })
 export class BackgroundDirective implements OnInit, OnDestroy {
   private sub: Subscription;
@@ -26,15 +26,15 @@ export class BackgroundDirective implements OnInit, OnDestroy {
 
   @HostBinding('style.backgroundImage') src: SafeStyle;
 
-  @Input() set storagePath(value: string) {
+  @Input() set bgStoragePath(value: string) {
     this.storagePath$.next(value);
   }
 
-  @Input() set docRef(value: string) {
+  @Input() set bgDocRef(value: string) {
     this.docRef$.next(value);
   }
 
-  @Input() set field(value: string) {
+  @Input() set bgField(value: string) {
     this.field$.next(value);
   }
 

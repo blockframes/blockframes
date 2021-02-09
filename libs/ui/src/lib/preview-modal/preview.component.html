@@ -13,7 +13,7 @@
       </ng-container>
 
       <ng-container *ngSwitchCase="'pdf'">
-        <pdf-viewer [ref]="ref"></pdf-viewer>
+        <pdf-viewer [storagePath]="ref" [docRef]="docRef" [field]="field" ></pdf-viewer>
       </ng-container>
 
       <ng-container *ngSwitchCase="'video'">

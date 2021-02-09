@@ -11,20 +11,6 @@ import {
 import { Movie } from '@blockframes/movie/+state';
 import { Location } from '@angular/common';
 
-function createMovieView(movie: Movie) {
-  return {
-    directors: movie.directors,
-    title: {
-      original: movie.title.original,
-      international: movie.title.international
-    },
-    banner: movie.banner,
-    poster: movie.poster,
-  }
-}
-
-type MovieHeaderView = ReturnType<typeof createMovieView>
-
 @Component({
   selector: '[movie] movie-header',
   templateUrl: './header.component.html',
@@ -34,19 +20,10 @@ type MovieHeaderView = ReturnType<typeof createMovieView>
 })
 export class HeaderComponent {
 
-  public movieView: MovieHeaderView;
-  public movie: Movie;
-
   constructor(private location: Location) { }
 
   @Input() showBackArrow = true;
-  @Input('movie')
-  set movieInput(movie: Movie) {
-    if (movie) {
-      this.movie = movie;
-      this.movieView = createMovieView(movie);
-    }
-  }
+  @Input() movie: Movie;
 
   goBack() {
     this.location.back();

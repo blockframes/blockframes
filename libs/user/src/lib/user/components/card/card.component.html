@@ -1,4 +1,4 @@
-<img [storagePath]="user.avatar.storagePath" [docRef]="'users/' + user.id" field="avatar" asset="profil_user.webp" alt="User avatar">
+<img [storagePath]="user.avatar" [docRef]="'users/' + user.uid" field="avatar" asset="profil_user.webp" alt="User avatar">
 <h5>{{ user | displayName }}</h5>
 <span class="mat-body-2 nowrap">{{ user.position | maxLength: 35 }}</span>
-<a class="mat-caption" [href]="'mailto:' + userView.email">{{ user.email }}</a>
+<a class="mat-caption" [href]="'mailto:' + user.email">{{ user.email }}</a>

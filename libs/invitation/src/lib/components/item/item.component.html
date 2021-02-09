@@ -3,8 +3,8 @@
     matListAvatar
     *ngIf="_invitation.fromUser"
     asset="profil_user.webp"
-    [storagePath]="_invitation.fromUser.avatar.storagePath"
-    [docRef]="'users/' + _invitation.fromUser.id"
+    [storagePath]="_invitation.fromUser.avatar"
+    [docRef]="'users/' + _invitation.fromUser.uid"
     field="avatar"
     alt="Profile picture"
   >
@@ -12,7 +12,7 @@
     matListAvatar
     *ngIf="_invitation.fromOrg"
     asset="profil_user.webp"
-    [storagePath]="_invitation.fromOrg.logo.storagePath"
+    [storagePath]="_invitation.fromOrg.logo"
     [docRef]="'orgs/' + _invitation.fromOrg.id"
     field="logo"
     alt="Organization logo"
