@@ -11,5 +11,6 @@ export class IpService {
       .get<{ ip: string }>(this.api)
       .toPromise()
       .then(data => data.ip)
+      .catch(err => 'unknown');
   }
 }
