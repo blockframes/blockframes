@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
+import { StorageReference } from '@blockframes/media/+state/media.firestore';
+
 @Component({
   selector: 'avatar-list',
   templateUrl: './avatar-list.component.html',
@@ -9,7 +11,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class AvatarListComponent {
 
   _urls: string[];
-  _refs: string[];
+  _refs: ({ storagePath: string } & StorageReference)[];
   _moreDetails = 0;
 
   @Input()
@@ -26,7 +28,7 @@ export class AvatarListComponent {
 
   // TODO: Avatar-list component must display placeholders when there is no refs => ISSUE#1645
   @Input()
-  set refs(newRefs: string[]) {
+  set refs(newRefs: ({ storagePath: string } & StorageReference)[]) {
     this._refs = [];
     for(let i = 0 ; i < Math.min(2, newRefs.length) ; i++) {
       this._refs.push(newRefs[i]);

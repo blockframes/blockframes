@@ -9,7 +9,7 @@
     <ng-container [ngSwitch]="ref | fileType">
 
       <ng-container *ngSwitchCase="'image'">
-        <img [ref]="ref" asset="empty_banner.webp"/>
+        <img [storagePath]="ref" [docRef]="docRef" [field]="field" asset="empty_banner.webp"/>
       </ng-container>
 
       <ng-container *ngSwitchCase="'pdf'">

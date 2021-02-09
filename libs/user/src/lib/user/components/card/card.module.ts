@@ -9,6 +9,7 @@ import { CardComponent } from './card.component';
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
     CommonModule,
     ImageModule,
     FlexLayoutModule,
-    MaxLengthModule
+    MaxLengthModule,
+    DisplayNameModule,
   ]
 })
 export class UserCardModule { }

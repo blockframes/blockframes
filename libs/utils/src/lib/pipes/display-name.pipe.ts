@@ -2,6 +2,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Person } from '../common-interfaces';
 import { displayName } from '../utils'
+import { User } from '@blockframes/user/types';
 
 /**
  * This pipe display the firstname and lastname of the person;
@@ -11,7 +12,7 @@ import { displayName } from '../utils'
   name: 'displayName'
 })
 export class DisplayNamePipe implements PipeTransform {
-  transform(value: Person | Person[]): string {
+  transform(value: (Person | User) | (Person | User)[] ): string {
     if (Array.isArray(value)) {
       return value.map(person => {
         if (person?.firstName) {
