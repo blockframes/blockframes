@@ -8,7 +8,6 @@ describe('Consents Rules Tests', () => {
   let db: Firestore;
 
   describe('Any user', () => {
-    const newConsentId = 'CI-007';
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
     });
@@ -21,6 +20,7 @@ describe('Consents Rules Tests', () => {
     });
 
     test('should not be able to write consent collection', async () => {
+      const newConsentId = 'CI-007';
       const consentRef = db.doc(`consents/${newConsentId}`);
       const createdConsent: Partial<Consents<Date>> = {
         id: newConsentId,
