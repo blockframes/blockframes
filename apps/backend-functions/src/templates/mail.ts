@@ -92,6 +92,7 @@ export function organizationWasAccepted(email: string, userFirstName?: string, u
   return { to: email, templateId: templateIds.org.accepted, data };
 }
 
+/** Generates a transactional email to let user knows its request has been sent */
 export function userJoinOrgPendingRequest(email: string, orgName: string, userFirstName: string): EmailTemplateRequest {
   const data = {
     userFirstName,
@@ -278,7 +279,7 @@ export function requestToAttendEventFromUserRefused(
     organizerOrgName,
     event: eventData,
   };
-  return { to: toUser.email, templateId: templateIds.request.attendEvent.refused, data };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.declined, data };
 }
 
 /** Generate an email to remind users they have an event starting soon */

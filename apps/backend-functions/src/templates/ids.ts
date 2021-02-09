@@ -34,7 +34,7 @@ export const templateIds = {
     attendEvent: {
       created: 'd-07f5e3cc6796455097b6082c22568d9e',
       accepted: 'd-df7b0a372b994a3090a48dc6cf17ba3e',
-      refused: 'd-4e36dd72f50d4e7e9ec738476efa84a9',
+      declined: 'd-4e36dd72f50d4e7e9ec738476efa84a9',
       sent: 'd-113048f9990044bbb3c9431f9965f7b8'
     }
   },
