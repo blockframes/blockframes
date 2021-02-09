@@ -10,12 +10,12 @@ import { TimeDateModule } from '../time-date.directive';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 
 // Material
-import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   imports: [
@@ -26,12 +26,12 @@ import { MatIconModule } from '@angular/material/icon';
     TimeDateModule,
     TimePickerModule,
     // Material
-    MatRadioModule,
     MatTooltipModule,
     MatFormFieldModule,
     MatSlideToggleModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatCheckboxModule
   ],
   declarations: [EditDetailsComponent],
   exports: [EditDetailsComponent]

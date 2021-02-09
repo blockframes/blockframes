@@ -42,9 +42,9 @@ export class ActionComponent {
 
   /** Request the owner to accept invitation (automatically accepted if event is public) */
   request(event: Event) {
-    const { ownerId, id, privacy } = event;
+    const { ownerId, id, isPrivate } = event;
     this.service.request('org', ownerId).from('user').to('attendEvent', id);
-    if (privacy !== 'public') {
+    if (isPrivate) {
       this.snackBar.open('Your request has been sent to the organizer.', 'close', { duration: 2000 });
     }
     this.requestPending = true;
