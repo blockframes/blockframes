@@ -39,6 +39,37 @@ describe('Consents Rules Tests', () => {
 
     });
 
+    describe('With User not in org', () => {
+      beforeAll(async () => {
+        db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+          uid: 'uid-consent',
+        });
+      });
+
+      afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+      test("user without valid org shouldn't be able to read consent", async () => {
+        const consentRef = db.doc('consent/C001');
+        await assertFails(consentRef.get());
+      });
+
+      test("user without valid org shouldn't be able to create consent", async () => {
+        const consentRef = db.doc('consents/C007');
+        const consentDetails = { id: 'C007' };
+        await assertFails(consentRef.set(consentDetails));
+      });
+
+      test("user without valid org shouldn't be able to update consent", async () => {
+        const consentRef = db.doc('consent/C001');
+        const consentDetails = { notes: 'Unit Test' };
+        await assertFails(consentRef.update(consentDetails));
+      });
+
+      test("user without valid org shouldn't be able to delete consent", async () => {
+        const eventRef = db.doc('consent/C001');
+        await assertFails(eventRef.delete());
+      });
+    });
 
 
   });

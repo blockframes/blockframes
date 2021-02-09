@@ -157,11 +157,7 @@ export const testFixture = {
   'invitations/I010': {
     type: 'cancelEvent',
   },
-<<<<<<< HEAD
   'invitations/I011' : {
-=======
-  'invitations/I011': {
->>>>>>> origin/develop
     type: 'cancelEvent',
     fromOrg: { id: 'O011' },
     fromUser: { uid: 'uid-user2' },
