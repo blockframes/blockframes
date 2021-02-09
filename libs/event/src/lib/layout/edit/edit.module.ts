@@ -25,8 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 
 @NgModule({
@@ -58,8 +57,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatListModule,
     MatSlideToggleModule,
     MatProgressBarModule,
-    MatRadioModule,
-    MatTooltipModule
   ]
 })
 export class EventEditModule { }

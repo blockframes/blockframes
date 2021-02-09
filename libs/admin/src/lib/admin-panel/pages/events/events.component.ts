@@ -22,7 +22,8 @@ export class EventsComponent implements OnInit {
     'invited': 'Number of invitations',
     'confirmed': 'Confirmed',
     'pending': 'Pending',
-    'privacy': 'Privacy'
+    'privacyStatus': 'Privacy status',
+    'isSecret': 'Hidden on Marketplace'
   };
 
   public initialColumns: string[] = [
@@ -35,7 +36,8 @@ export class EventsComponent implements OnInit {
     'invited',
     'confirmed',
     'pending',
-    'privacy'
+    'privacyStatus',
+    'isSecret'
   ];
   public rows: any[] = [];
   public eventListLoaded = false;
@@ -64,6 +66,8 @@ export class EventsComponent implements OnInit {
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
+      row.privacyStatus = event.isPrivate ? 'private' : 'public';
+      row.isSecret = event.isSecret ? 'Yes' : 'No';
       return row;
     })
 
@@ -80,7 +84,8 @@ export class EventsComponent implements OnInit {
       'id',
       'title',
       'type',
-      'privacy',
+      'privacyStatus',
+      'isSecret',
       'hostedBy',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
@@ -98,8 +103,9 @@ export class EventsComponent implements OnInit {
       'invited': i.invited,
       'confirmed': i.confirmed,
       'pending': i.pending,
-      'privacy': i.privacy,
+      'privacy status': i.privacyStatus,
+      'hidden on marketplace': i.isSecret
     }))
-    downloadCsvFromJson(exportedRows, 'invitations-list');
+    downloadCsvFromJson(exportedRows, 'events-list');
   }
 }
