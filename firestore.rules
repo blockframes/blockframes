@@ -289,7 +289,7 @@ service cloud.firestore {
       allow read: if userHasValidOrg()
         && notInMaintenance()
         && ( existingData().storeConfig.status == 'accepted'
-         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds )) 
+         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
         )
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
@@ -419,8 +419,8 @@ service cloud.firestore {
     // note: campaign is using the movieId as id
     match /campaigns/{movieId} {
       allow read: if isSignedIn() && notInMaintenance();
-      allow write: if isOrgMember(incomingData().orgId) 
-                  && orgCan('canUpdate', incomingData().orgId, movieId) 
+      allow write: if isOrgMember(incomingData().orgId)
+                  && orgCan('canUpdate', incomingData().orgId, movieId)
                   && notInMaintenance();
     }
 
@@ -436,6 +436,14 @@ service cloud.firestore {
         allow read: if true;
         allow write: if isBlockframesAdmin(userId()) && notInMaintenance();
       }
+    }
+
+    ///////////////////////////
+    // CONSENTS RULES        //
+    ///////////////////////////
+
+    match /consents/{consentId} {
+			allow read, write: if false;
     }
 
     ////////////////////////////////
