@@ -50,21 +50,32 @@ export class InvitationsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'));
+    const [invitations, events] = await Promise.all([
+      this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent')),
+      this.eventService.getValue()
+    ])
+    
+    const orgIds = Array.from(new Set([
+      ...invitations.map(invitation => getHost(invitation, 'org').id),
+      ...invitations.map(invitation => getGuest(invitation, 'user').orgId).filter(id => !!id)
+    ]));
+    const movieIds = events.map(event => event.type === 'screening' ? event.meta.titleId as string : undefined).filter(id => !!id);
 
-    const orgs = invitations.map(async (invitation : InvitationDetailed) => {
-      invitation.org = await this.getOrg(getHost(invitation, 'org').id);
-      invitation.event = await this.getEvent(invitation.eventId);
-      const guestOrgId = getGuest(invitation, 'user').orgId;
-      if (guestOrgId) {
-        invitation.guestOrg = await this.getOrg(guestOrgId);
-      }
+    const [orgs, movies] = await Promise.all([
+      this.orgService.getValue(orgIds),
+      this.movieService.getValue(movieIds)
+    ])
+
+    this.invitations = invitations.map((invitation: InvitationDetailed) => {
+      invitation.event = events.find(event => event.id === invitation.eventId);
+      invitation.org = orgs.find(org => org.id === getHost(invitation, 'org').id);
+      invitation.guestOrg = orgs.find(org => org.id === getGuest(invitation, 'user').orgId);
 
       if (invitation.event.type === 'screening') {
         const titleId = invitation.event.meta.titleId as string;
         if (titleId) {
           try {
-            invitation.movie = await this.getMovie(titleId);
+            invitation.movie = movies.find(movie => movie.id === titleId);
           } catch (err) {
             console.log(`Error while loading movie for event : ${invitation.event.id}`);
           }
@@ -73,7 +84,6 @@ export class InvitationsComponent implements OnInit {
       return invitation;
     })
 
-    this.invitations = await Promise.all(orgs);
     this.invitationListLoaded = true;
     this.cdRef.markForCheck();
   }
@@ -99,29 +109,4 @@ export class InvitationsComponent implements OnInit {
     }))
     downloadCsvFromJson(exportedRows, 'invitations-list');
   }
-
-  private async getOrg(id: string): Promise<Organization> {
-    if (!this.orgs[id]) {
-      this.orgs[id] = await this.orgService.getValue(id);
-    }
-
-    return this.orgs[id];
-  }
-
-  private async getEvent(id: string): Promise<Event> {
-    if (!this.events[id]) {
-      this.events[id] = await this.eventService.getValue(id);
-    }
-
-    return this.events[id];
-  }
-
-  private async getMovie(id: string): Promise<Movie> {
-    if (!this.movies[id]) {
-      this.movies[id] = await this.movieService.getValue(id);
-    }
-
-    return this.movies[id];
-  }
-
 }

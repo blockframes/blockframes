@@ -15,6 +15,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { OrgAccessModule } from '@blockframes/organization/pipes'
 
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
@@ -22,15 +23,12 @@ import { OrganizationContractListGuard } from '@blockframes/contract/contract/gu
 import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
 import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
-import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon'
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -47,8 +45,6 @@ const routes: Routes = [
       },
       {
         path: 'home',   // Home (dashboard if film, welcome if not)
-        canActivate: [MovieOrganizationListGuard],
-        canDeactivate: [MovieOrganizationListGuard],
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
       },
       {
@@ -71,8 +67,6 @@ const routes: Routes = [
         canDeactivate: [OrganizationContractListGuard],
         children: [{
           path: '',
-          canActivate: [MovieOrganizationListGuard],
-          canDeactivate: [MovieOrganizationListGuard],
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         },
         {
@@ -161,13 +155,12 @@ const routes: Routes = [
     OrgNameModule,
     ToLabelModule,
     MovieFormShellModule,
+    OrgAccessModule,
+    RouterModule.forChild(routes),
 
     // Material
-    MatDividerModule,
     MatListModule,
-    MatIconModule,
-    MatToolbarModule,
-    RouterModule.forChild(routes)
+    MatIconModule
   ],
   providers: [{
     provide: FORMS_CONFIG,

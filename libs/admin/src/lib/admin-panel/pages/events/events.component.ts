@@ -22,7 +22,8 @@ export class EventsComponent implements OnInit {
     'invited': 'Number of invitations',
     'confirmed': 'Confirmed',
     'pending': 'Pending',
-    'privacyStatus': 'Privacy status'
+    'privacyStatus': 'Privacy status',
+    'isSecret': 'Hidden on Marketplace'
   };
 
   public initialColumns: string[] = [
@@ -35,7 +36,8 @@ export class EventsComponent implements OnInit {
     'invited',
     'confirmed',
     'pending',
-    'privacyStatus'
+    'privacyStatus',
+    'isSecret'
   ];
   public rows: any[] = [];
   public eventListLoaded = false;
@@ -49,20 +51,26 @@ export class EventsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const events = await this.eventService.getValue(); // All events
-    const promises = events.map(async event => {
+    const [events, invites] = await Promise.all([
+      this.eventService.getValue(),
+      this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'))
+    ]);
+
+    const ownerIds = events.map(event => event.ownerId);
+    const orgs = await this.orgService.getValue(ownerIds);
+    
+    this.rows = events.map(event => {
       const row = { ...event } as any;
-      // Append new data for table display
-      const invitations = await this.invitationService.getValue(ref => ref.where('eventId', '==', row.id));
-      row.hostedBy = event.ownerId ? await this.orgService.getValue(event.ownerId) : undefined;
+      const invitations = invites.filter(inv => inv.eventId === event.id);
+      row.hostedBy = event.ownerId ? orgs.find(org => org.id === event.ownerId) : undefined;
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
       row.privacyStatus = event.isPrivate ? 'private' : 'public';
+      row.isSecret = event.isSecret ? 'Yes' : 'No';
       return row;
-    });
+    })
 
-    this.rows = await Promise.all(promises);
     this.eventListLoaded = true;
     this.cdRef.markForCheck();
   }
@@ -77,6 +85,7 @@ export class EventsComponent implements OnInit {
       'title',
       'type',
       'privacyStatus',
+      'isSecret',
       'hostedBy',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
@@ -95,7 +104,8 @@ export class EventsComponent implements OnInit {
       'confirmed': i.confirmed,
       'pending': i.pending,
       'privacy status': i.privacyStatus,
+      'hidden on marketplace': i.isSecret
     }))
-    downloadCsvFromJson(exportedRows, 'invitations-list');
+    downloadCsvFromJson(exportedRows, 'events-list');
   }
 }

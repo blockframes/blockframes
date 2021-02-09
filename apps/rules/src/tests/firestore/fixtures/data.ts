@@ -40,6 +40,9 @@ export const testFixture = {
   'orgs/O001': {
     status: 'accepted', //belongs to O001
   },
+  'orgs/O002': {
+    status: 'accepted'
+  },
 
   //Users Collection
   'users/uid-bfAdmin': {
@@ -70,6 +73,11 @@ export const testFixture = {
     email: 'tom@no-org.com',
     uid: 'uid-peeptom',
   },
+  'users/uid-user3': {
+    email: 'u3@cascade8.com',
+    uid: 'uid-user3',
+    orgId: 'O002'
+  },
 
   //Blockframes Admin
   'blockframesAdmin/uid-bfAdmin': {},
@@ -83,12 +91,22 @@ export const testFixture = {
     'distributionRights/DR001': {
       id: 'DR001',
     },
+    storeConfig: {
+      appAccess: { festival: true },
+      status: 'accepted'
+    },
+    orgIds: ['O001']
   },
   'movies/MI-0d7': {
     id: 'MI-0d7',
     title: {
       original: 'UnitTest Eraser',
     },
+    storeConfig: {
+      appAccess: { festival: true },
+      status: 'accepted'
+    },
+    orgIds: ['O001']
   },
   'movies/MI-077': {
     id: 'MI-077',
@@ -100,8 +118,11 @@ export const testFixture = {
       status: 'draft',
     },
     note: '',
+    orgIds: ['O001']
   },
 
+
+  // Events
   'events/E001': {
     id: 'E001',
   },
@@ -109,9 +130,9 @@ export const testFixture = {
   //Notifications
   'notifications/001': {
     id: '001',
-    date: Date.now(),
+    _meta: { createdAt: Date.now() },
     toUserId: 'uid-c8',
-    type: 'invitationToAttendEventAccepted',
+    type: 'invitationToAttendEventUpdated',
     docId: '100',
     user: { uid: 'uid-user2' },
     organization: { id: 'O001' },
@@ -129,21 +150,25 @@ export const testFixture = {
   },
 
   //Invitations
-  'invitations/I001' : {
+  'invitations/I001': {
     type: 'attendEvent',
     toUser: { uid: 'uid-user2' },
   },
-  'invitations/I010' : {
+  'invitations/I010': {
     type: 'cancelEvent',
   },
+<<<<<<< HEAD
   'invitations/I011' : {
+=======
+  'invitations/I011': {
+>>>>>>> origin/develop
     type: 'cancelEvent',
-    fromOrg: { id: 'O011'},
+    fromOrg: { id: 'O011' },
     fromUser: { uid: 'uid-user2' },
   },
-  'invitations/I012' : {
+  'invitations/I012': {
     type: 'cancelEvent',
-    fromOrg: { id: 'O001'},
+    fromOrg: { id: 'O001' },
     fromUser: { uid: 'uid-user2' },
   },
 
@@ -160,7 +185,7 @@ export const testFixture = {
   },
 
   //Public Contracts
-  'publicContracts/PC01' : {
+  'publicContracts/PC01': {
     id: 'PC01',
   },
   // Consents

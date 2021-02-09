@@ -1,4 +1,4 @@
-import { functions, db } from './internals/firebase';
+import { db } from './internals/firebase';
 import { ContractDocument, PublicContractDocument, OrganizationDocument } from './data/types';
 import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { getOrganizationsOfContract, getDocument, createPublicOrganizationDocument } from './data/internals';
@@ -8,6 +8,7 @@ import { isEqual, uniqBy, flatten } from 'lodash';
 import { firestore } from 'firebase-admin';
 import { Change } from 'firebase-functions';
 import { DocumentReference } from '@blockframes/firebase-utils';
+import type firebase from 'firebase';
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<number> {
   return (await _getVersionCount(contractId, tx));
@@ -62,54 +63,6 @@ async function updatePublicContract(tx: FirebaseFirestore.Transaction, contract:
   } else {
     /** @dev status is not OK, we delete public contract */
     tx.delete(db.doc(`publicContracts/${contract.id}`));
-  }
-}
-
-/**
- * Checks for a status change between previous and current and triggers notifications.
- * @param current
- * @param previous
- */
-async function checkAndTriggerNotifications(current: ContractDocument) {
-  const previousVersionId = await getPreviousVersionId(current.id);
-  const previousVersionSnap = await db.doc(`contracts/${current.id}/versions/${previousVersionId}`).get();
-  const previous = previousVersionSnap.data() as ContractVersionDocument;
-
-  if (!!previous) {
-    const contractInNegotiation = (previous.status === 'submitted') && (current.lastVersion.status === 'undernegotiation');
-    const contractSubmitted = (previous.status === 'draft') && (current.lastVersion.status === 'submitted');
-
-    if (contractSubmitted && current.partyIds.length > 0) { // Contract is submitted by organization to Archipel Content
-      // TODO (#1999): Find real creator
-      const org = await getDocument<OrganizationDocument>(`orgs/${current.partyIds[0]}`);
-      const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
-      const notifications = archipelContent.userIds.map(
-        toUserId => createNotification({
-          toUserId,
-          organization: createPublicOrganizationDocument(org),
-          type: 'newContract',
-          docId: current.id
-        })
-      );
-
-      await triggerNotifications(notifications);
-    }
-
-    if (contractInNegotiation) { // Contract is validated by Archipel Content
-      const organizations = await getOrganizationsOfContract(current);
-      const notifications = organizations
-        .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-        .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-        .map(toUserId => {
-          return createNotification({
-            toUserId,
-            type: 'contractInNegotiation',
-            docId: current.id
-          });
-        });
-
-      await triggerNotifications(notifications);
-    }
   }
 }
 
@@ -361,8 +314,7 @@ export async function onContractWrite(
       }
       return current;
     });
-    // Contract version may have changed, we check if notifications need to be triggered
-    await checkAndTriggerNotifications(current);
+
     return true;
   } else {
     // Rules should have prevent this case (@see method definition).

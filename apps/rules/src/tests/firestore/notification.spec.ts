@@ -31,7 +31,7 @@ describe('Notification Rules Tests', () => {
     const fields: any = [
       ['id', '001'],
       ['toUserId', 'uid-002'],
-      ['isRead', true],
+      ['app.isRead', true],
     ];
     test.each(fields)(
       "updating restricted '%s' field shouldn't be able to update notification",
@@ -63,7 +63,7 @@ describe('Notification Rules Tests', () => {
 
     const fields: any = [
       ['id', '002'],
-      ['date', new Date()],
+      ['_meta.createdAt', new Date()],
       ['toUserId', 'uid-002'],
       ['type', 'movie'],
       ['docId', 'x-002'],
@@ -81,9 +81,9 @@ describe('Notification Rules Tests', () => {
       }
     );
 
-    test("User should be able to update 'isRead' field in notification", async () => {
+    test("User should be able to update 'app.isRead' field in notification", async () => {
       const notifRef = db.doc(existingNotif);
-      const details = { isRead: true };
+      const details = { app: { isRead: true } };
       await assertSucceeds(notifRef.update(details));
     });
 

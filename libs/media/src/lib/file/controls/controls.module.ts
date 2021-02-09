@@ -1,25 +1,23 @@
-import { CommonModule } from '@angular/common';
+
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
+import { PdfControlModule } from '../../pdf/control/control.module';
+import { VideoControlModule } from '../../video/control/control.module';
+
 import { FileControlsComponent } from './controls.component';
-import { PdfControlComponent } from '../../pdf/control/control.component';
-import { VideoControlComponent } from '../../video/control/control.component';
 
 @NgModule({
-  declarations: [
-    FileControlsComponent,
-    PdfControlComponent,
-    VideoControlComponent,
-  ],
+  declarations: [ FileControlsComponent ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -31,6 +29,8 @@ import { VideoControlComponent } from '../../video/control/control.component';
 
     FileNameModule,
     DurationModule,
+    PdfControlModule,
+    VideoControlModule,
   ],
   exports: [ FileControlsComponent ],
 })

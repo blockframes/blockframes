@@ -1,10 +1,11 @@
-import { backupBucket } from '@env';
+import { backupBucket, firebase } from '@env';
 import { Writable } from "stream";
 import { Queue } from '../queue';
 import { DbRecord, loadAdminServices } from '../util';
 import type { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import type { Bucket } from "@google-cloud/storage";
 import type { storage } from 'firebase-admin';
+import { execSync } from 'child_process';
 
 export async function getBackupOutput(bucket: Bucket, name: string): Promise<Writable> {
   const blob = bucket.file(`${name}.jsonl`);
@@ -70,3 +71,13 @@ export async function exportFirestoreToBucket(db: FirebaseFirestore.Firestore, b
     stream.end(res);
   });
 }
+export async function exportFirestoreToBucketBeta(dirName?: string) {
+  const suffix = dirName || getFirestoreExportDirname(new Date());
+  const url = `gs://${backupBucket}/${suffix}`;
+  const cmd = `gcloud firestore export --project ${firebase().projectId} ${url}`;
+  console.log('Running cmd:', cmd);
+  const output = execSync(cmd).toString();
+  console.log(output);
+}
+
+export const getFirestoreExportDirname = (d: Date) => `firestore-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`

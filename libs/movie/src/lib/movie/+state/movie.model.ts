@@ -327,7 +327,7 @@ export function getMovieReceipt(contracts: Contract[], movieId: string): number 
  * @param movieId
  */
 export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
-  const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
+  const movieAnalytic = analytics.find(analytic => analytic.id === movieId);
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0);

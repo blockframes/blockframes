@@ -1,7 +1,7 @@
-import { firestore } from 'firebase/app';
+import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
@@ -31,7 +31,7 @@ export interface MeetingVideoControl {
   duration: number;
 }
 
-type MeetingMediaControl = MeetingPdfControl | MeetingVideoControl;
+export type MeetingMediaControl = MeetingPdfControl | MeetingVideoControl;
 
 /** Maximum number of invitations that can be sent for a given Meeting */
 export const MEETING_MAX_INVITATIONS_NUMBER = 9;
@@ -47,6 +47,7 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   /** @dev The id of the owner. Can be a user or an organization given the event.type **/
   ownerId: string;
   isPrivate: boolean;
+  isSecret: boolean;
   type: EventTypes;
   title: string;
   start: D;

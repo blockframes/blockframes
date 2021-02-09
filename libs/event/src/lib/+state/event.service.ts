@@ -134,15 +134,6 @@ export class EventService extends CollectionService<EventState> {
     return f({ eventIds });
   }
 
-  public filterScreeningsByMovieId(movieId: string) {
-    return this.queryByType(['screening']).pipe(map(screenings => screenings.filter(screening => {
-      /* We only want upcoming screenings or screenings already started */
-      if (screening.end.getTime() > new Date().getTime()) {
-        return screening.movie?.id === movieId;
-      }
-    })))
-  }
-
   /** Just save local time so we will be able to compute session duration at the end */
   public startLocalSession() {
     this.store.update(state => ({ localSessionStart: Date.now() }));

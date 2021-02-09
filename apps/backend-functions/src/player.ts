@@ -6,7 +6,7 @@ import { isUserInvitedToEvent } from './internals/invitations/events';
 import { PublicUser } from './data/types';
 import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
 import { createHash } from 'crypto';
-import { firestore } from 'firebase'
+import firebase from 'firebase';
 import { getDocument, getOrganizationsOfMovie } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { getDocAndPath, upsertWatermark } from '@blockframes/firebase-utils';
@@ -87,7 +87,7 @@ export const getPrivateVideoUrl = async (
         };
       }
 
-      const now = firestore.Timestamp.now();
+      const now = firebase.firestore.Timestamp.now();
 
       if (now.seconds < event.start.seconds) {
         return {

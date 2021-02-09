@@ -1,5 +1,4 @@
 import { Territory } from '../static-model';
-
 export interface Location {
   street: string;
   zipCode: string;

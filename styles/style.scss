@@ -2,7 +2,6 @@
 
 
 :root {
-  color-scheme: light dark; // @dev check doc https://web.dev/color-scheme/
   --layout-margin: 24px;
   --toolbarHeight: 80px;
 }
@@ -13,7 +12,7 @@
 
 html{
   height: 100vh;
-}
+} 
 
 body {
   margin: 0;

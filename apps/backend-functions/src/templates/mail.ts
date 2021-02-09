@@ -5,8 +5,8 @@ import { supportEmails, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { EmailRecipient, EventEmailData } from '@blockframes/utils/emails/utils';
+import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
+import { EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
@@ -152,14 +152,14 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
 
 /** Generates an email for user invited by an organization to an event. */
 export function invitationToEventFromOrg(
-  recipient: EmailRecipient,
+  recipient: User,
   orgDenomination: string,
   eventData: EventEmailData,
   link: string,
   url: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
-    userFirstName: recipient.name,
+    userFirstName: recipient.firstName,
     orgName: orgDenomination,
     eventName: eventData.title,
     pageURL: `${url}/${link}`,
@@ -174,13 +174,13 @@ export function invitationToEventFromOrg(
 export function requestToAttendEventFromUser(
   fromUserFirstname: string,
   fromUserOrgName: string,
-  recipient: EmailRecipient,
+  recipient: User,
   eventTitle: string,
   link: string,
   url: string = appUrl.market
 ): EmailTemplateRequest {
   const data = {
-    adminFirstName: recipient.name,
+    adminFirstName: recipient.firstName,
     userFirstName: fromUserFirstname,
     orgName: fromUserOrgName,
     eventName: eventTitle,
@@ -208,6 +208,25 @@ export function requestToAttendEventFromUserAccepted(
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
 
+export function reminderEventToUser(
+  movieTitle: string,
+  toUser: PublicUser,
+  organizerOrgName: string,
+  eventData: EventEmailData,
+  template: string,
+  url: string = appUrl.market
+): EmailTemplateRequest {
+  const data = {
+    movieTitle,
+    userFirstName: toUser.firstName,
+    organizerOrgName,
+    eventName: eventData.title,
+    eventStartDate: eventData.start,
+    eventEndDate: eventData.end,
+    pageURL: eventData.id ? `${url}/c/o/marketplace/event/${eventData.id}` : ''
+  };
+  return { to: toUser.email, templateId: template, data };
+}
 // ------------------------- //
 //      CASCADE8 ADMIN       //
 // ------------------------- //

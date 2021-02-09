@@ -5,6 +5,7 @@
  */
 import {
   exportFirestoreToBucket,
+  exportFirestoreToBucketBeta,
   getBackupBucket,
   getLatestDirName,
   importFirestoreFromBucket,
@@ -43,7 +44,11 @@ export async function importFirestore(dirName?:string) {
     dir = dirName;
   } else {
     const bucket = await getBackupBucket();
-    dir = await getLatestDirName(bucket);
+    dir = await getLatestDirName(bucket, 'firestore');
   }
   await importFirestoreFromBucket(dir)
+}
+
+export async function exportFirestore(dirName?: string) {
+  await exportFirestoreToBucketBeta(dirName);
 }

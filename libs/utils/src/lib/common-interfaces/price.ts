@@ -1,8 +1,8 @@
 import { MovieCurrency } from "@blockframes/utils/static-model/types";
-import { firestore } from "firebase";
+import type firebase from 'firebase';
 import { toDate } from "@blockframes/utils/helpers"
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 export const paymentType = {
   CB: 'Credit Card',

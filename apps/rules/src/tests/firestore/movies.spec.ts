@@ -15,7 +15,8 @@ describe('Movies Rules Tests', () => {
 
   describe('With User in org', () => {
     const newMovieId = 'MI-007';
-    const existMovieId = 'MI-077';
+    const existMovieInDraft = 'MI-077';
+    const existMovieAccepted = 'M001';
     const storeConfig = {
       status: <StoreStatus>'draft',
       storeType: <StoreType>'Library',
@@ -29,10 +30,15 @@ describe('Movies Rules Tests', () => {
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
     describe('Read Movie', () => {
-      test('should be able to read movie', async () => {
-        const movieRef = db.doc('movies/M001');
+      test('should be able to read movie with status draft', async () => {
+        const movieRef = db.doc(`movies/${existMovieInDraft}`);
         await assertSucceeds(movieRef.get());
       });
+
+      test('should be able to read movie with status accepted', async () => {
+        const movieRef = db.doc(`movies/${existMovieAccepted}`);
+        await assertSucceeds(movieRef.get());
+      })
 
       test('should be able to read movie distribution rights', async () => {
         const movieDRRef = db.doc('movies/M001/distributionRights/DR001');
@@ -93,14 +99,14 @@ describe('Movies Rules Tests', () => {
         ['storeConfig', { appAccess: { festival: {} } }],
       ];
       test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
-        const movieRef = db.doc(`movies/${existMovieId}`);
+        const movieRef = db.doc(`movies/${existMovieInDraft}`);
         const details = {};
         details[key] = value;
         await assertFails(movieRef.update(details));
       });
 
       test('user valid org, updating unrestricted field should be able', async () => {
-        const movieRef = db.doc(`movies/${existMovieId}`);
+        const movieRef = db.doc(`movies/${existMovieInDraft}`);
         const movieDetailsOther = { notes: 'update in unit-test' };
         await assertSucceeds(movieRef.update(movieDetailsOther));
       });
@@ -123,7 +129,7 @@ describe('Movies Rules Tests', () => {
     });
   });
 
-  describe('With User not in org', () => {
+  describe('With User not belonging to any org', () => {
     const newMovieId = 'MI-007';
     const draftMovieId = 'MI-0d7';
     const newMovieDetails = { id: `${newMovieId}` };
@@ -149,6 +155,29 @@ describe('Movies Rules Tests', () => {
     test("user without valid org shouldn't be able to delete movie title", async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
       await assertFails(movieRef.delete());
+    });
+  });
+
+  describe('User not belonging to organization in movies.orgIds', () => {
+    const draftMovieId = 'MI-077';
+    const acceptedMovieId = 'M001';
+    
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
+        uid: 'uid-user3'
+      })
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test("user without rights to edit movie shouldn't be able to read movie title when in draft", async () => {
+      const movieRef = db.doc(`movies/${draftMovieId}`);
+      await assertFails(movieRef.get());
+    });
+
+    test("user without rights to edit movie should be able to read movie title when accepted", async () => {
+      const movieRef = db.doc(`movies/${acceptedMovieId}`);
+      await assertSucceeds(movieRef.get())
     });
   });
 });

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
-import { Observable, Subscription } from 'rxjs';
-import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
@@ -13,7 +13,10 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { getFileExtension } from '@blockframes/utils/file-sanitizer';
+import { extensionToType } from '@blockframes/utils/utils';
+import { MediaService } from '@blockframes/media/+state';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'festival-session',
@@ -29,6 +32,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   public visioContainerSize: string;
   public screeningFileRef: string;
 
+  public creatingControl$ = new BehaviorSubject(false);
+
   private sub: Subscription;
   private dialogSub: Subscription;
 
@@ -39,9 +44,11 @@ export class SessionComponent implements OnInit, OnDestroy {
   private countdownId: number = undefined;
 
   constructor(
+    private functions: AngularFireFunctions,
     private eventQuery: EventQuery,
     private service: EventService,
     private movieService: MovieService,
+    private mediaService: MediaService,
     private authQuery: AuthQuery,
     private bottomSheet: MatBottomSheet,
     private userService: UserService,
@@ -55,26 +62,31 @@ export class SessionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.service.startLocalSession();
     this.event$ = this.service.queryDocs(this.eventQuery.getActiveId());
-    this.sub = this.event$.subscribe(async event => {
-      const fileSelected = !!event?.meta?.selectedFile;
-      if (!fileSelected) {
-        this.visioContainerSize = '100%';
-      } else if (event.isOwner) {
-        this.mediaContainerSize = '40%';
-        this.visioContainerSize = '60%';
-      } else {
-        this.mediaContainerSize = '60%';
-        this.visioContainerSize = '40%';
-      }
 
+    this.sub = this.event$.subscribe(async event => {
+
+      // SCREENING
       if (event.type === 'screening') {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
         }
+
+      // MEETING
       } else if (event.type === 'meeting') {
         this.dynTitle.setPageTitle(event.title, 'Meeting');
+
+        const fileSelected = !!event?.meta?.selectedFile;
+        if (!fileSelected) {
+          this.visioContainerSize = '100%';
+        } else if (event.isOwner) {
+          this.mediaContainerSize = '40%';
+          this.visioContainerSize = '60%';
+        } else {
+          this.mediaContainerSize = '60%';
+          this.visioContainerSize = '40%';
+        }
 
         // Check for the autoplay
         try {
@@ -84,23 +96,25 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.isAutoPlayEnabled = true;
           }
         } catch (error) {
-          this.confirmDialog = this.dialog.open(ConfirmComponent, {
-            data: {
-              title: 'Your browser might be blocking autoplay',
-              question: 'This can result in poor viewing experience during your meeting.\nYou can try to unblock autoplay by clicking the following button. If it doesn\'t work, please change your browser settings to allow autoplay.',
-              buttonName: 'Unblock autoplay',
-              onConfirm: () => {
-                this.autoPlayTester.nativeElement.play();
-                this.autoPlayTester.nativeElement.pause();
+          if (!this.confirmDialog) {
+            this.confirmDialog = this.dialog.open(ConfirmComponent, {
+              data: {
+                title: 'Your browser might be blocking autoplay',
+                question: 'This can result in poor viewing experience during your meeting.\nYou can try to unblock autoplay by clicking the following button. If it doesn\'t work, please change your browser settings to allow autoplay.',
+                buttonName: 'Unblock autoplay',
+                onConfirm: () => {
+                  this.autoPlayTester.nativeElement.play();
+                  this.autoPlayTester.nativeElement.pause();
+                },
               },
-            },
-          });
-          this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
-            this.isAutoPlayEnabled = !!confirmed;
-          });
+            });
+            this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
+              this.isAutoPlayEnabled = !!confirmed;
+            });
+          }
         }
 
-        // Manage behavior depending on attendees status
+        // Manage redirect depending on attendees status & presence of meeting owners
         const uid = this.authQuery.userId;
         if (event.isOwner) {
           const attendees = (event.meta as Meeting).attendees;
@@ -132,6 +146,34 @@ export class SessionComponent implements OnInit, OnDestroy {
             }
           }
         }
+
+        // If the current selected file hasn't any controls yet we should create them
+        if (!!(event as Event<Meeting>).meta.selectedFile) {
+          const file = (event as Event<Meeting>).meta.selectedFile;
+          if (!(event as Event<Meeting>).meta.controls[file]) {
+            const fileType = extensionToType(getFileExtension(file));
+            switch (fileType) {
+              case 'pdf': {
+                this.creatingControl$.next(true);
+                const control = await this.createPdfControl(file, event.id);
+                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                const meta  = { ...event.meta, controls };
+                await this.service.update(event.id, { meta });
+                this.creatingControl$.next(false);
+                break;
+              } case 'video': {
+                this.creatingControl$.next(true);
+                const control = await this.createVideoControl(file, event.id);
+                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                const meta  = { ...event.meta, controls };
+                await this.service.update(event.id, { meta });
+                this.creatingControl$.next(false);
+                break;
+              } default: break;
+            }
+          }
+        }
+
       }
     })
   }
@@ -178,4 +220,27 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.service.update(event.id, { meta })
   }
 
+  async createPdfControl(ref: string, eventId: string): Promise<MeetingPdfControl> {
+    // locally download the pdf file to count it's number of pages
+    const url = await this.mediaService.generateImgIxUrl(ref, {}, eventId);
+    const response = await fetch(url);
+    const textResult = await response.text();
+    // this actually count the number of pages, the regex comes from stack overflow
+    const totalPages = textResult.match(/\/Type[\s]*\/Page[^s]/g).length;
+
+    return { type: 'pdf', currentPage: 1, totalPages };
+  }
+
+  async createVideoControl(ref: string, eventId: string): Promise<MeetingVideoControl> {
+    const getVideoInfo = this.functions.httpsCallable('privateVideo');
+
+    const { error, result} = await getVideoInfo({ ref, eventId }).toPromise();
+    if (!!error) {
+      // if error is set, result will contain the error message
+      throw new Error(result);
+    }
+
+    const duration = parseFloat(result.info.duration);
+    return { type: 'video', isPlaying: false, position: 0, duration };
+  }
 }

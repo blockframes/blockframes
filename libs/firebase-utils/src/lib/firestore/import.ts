@@ -5,7 +5,7 @@ import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import { getLatestFile, runChunks } from '../firebase-utils';
 import { DbRecord, loadAdminServices } from '../util';
 import { clear, clearDbCLI } from './clear';
-import { backupBucket } from '@env';
+import { backupBucket, firebase } from '@env';
 import { execSync } from 'child_process';
 
 const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
@@ -106,7 +106,7 @@ function reEncodeObject(x: any): any {
 
 export async function importFirestoreFromBucket(dirName: string) {
   const url = `gs://${backupBucket}/${dirName}`;
-  const cmd = `gcloud firestore import ${url}`;
+  const cmd = `gcloud firestore import --project ${firebase().projectId} ${url}`;
 
   const { db } = loadAdminServices();
   await clearDbCLI(db);

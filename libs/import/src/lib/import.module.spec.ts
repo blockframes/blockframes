@@ -1,11 +1,25 @@
-import { TestBed } from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireStorage } from "@angular/fire/storage";
+import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
+import { clearFirestoreData } from '@firebase/testing';
 import { ImportModule } from './import.module';
+import { firebase } from '@env';
 
 describe('ImportModule', () => {
-  beforeEach(() => {
+  let db: AngularFirestore;
+  let storage: AngularFireStorage;
+
+  beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [ImportModule]
-    }).compileComponents();
+      imports: [
+        AngularFireModule.initializeApp({projectId: 'test'}),
+        AngularFirestoreModule,
+        ImportModule
+      ],
+    });
+    db = TestBed.inject(AngularFirestore);
+    storage = TestBed.inject(AngularFireStorage);
   });
 
   it.skip('should create', () => {

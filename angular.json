@@ -36,14 +36,6 @@
       "projectType": "library",
       "prefix": "wallet",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/ethers/tsconfig.lib.json",
-            "project": "libs/ethers/ng-package.json",
-            "buildableProjectDepsInPackageJsonType": "dependencies"
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
@@ -71,14 +63,6 @@
       "projectType": "library",
       "prefix": "movie",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/movie/tsconfig.lib.json",
-            "project": "libs/movie/ng-package.json",
-            "buildableProjectDepsInPackageJsonType": "dependencies"
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
@@ -106,14 +90,6 @@
       "projectType": "library",
       "prefix": "org",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/organization/tsconfig.lib.json",
-            "project": "libs/organization/ng-package.json",
-            "buildableProjectDepsInPackageJsonType": "dependencies"
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
@@ -174,14 +150,6 @@
       "projectType": "library",
       "prefix": "utils",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/utils/tsconfig.lib.json",
-            "project": "libs/utils/ng-package.json",
-            "buildableProjectDepsInPackageJsonType": "dependencies"
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
@@ -312,7 +280,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy": {
@@ -396,7 +365,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-ops/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         }
       }
@@ -407,14 +377,6 @@
       "sourceRoot": "libs/contract/src",
       "prefix": "contract",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/contract/tsconfig.lib.json",
-            "project": "libs/contract/ng-package.json",
-            "buildableProjectDepsInPackageJsonType": "dependencies"
-          }
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -443,14 +405,6 @@
       "sourceRoot": "libs/financial-report/src",
       "prefix": "financial-report",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/financial-report/tsconfig.lib.json",
-            "project": "libs/financial-report/ng-package.json",
-            "buildableProjectDepsInPackageJsonType": "dependencies"
-          }
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -479,14 +433,6 @@
       "sourceRoot": "libs/admin/src",
       "prefix": "admin",
       "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/admin/tsconfig.lib.json",
-            "project": "libs/admin/ng-package.json",
-            "buildableProjectDepsInPackageJsonType": "dependencies"
-          }
-        },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
@@ -1960,25 +1906,6 @@
       "prefix": "rules",
       "schematics": {},
       "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/rules",
-            "main": "apps/rules/src/main.ts",
-            "tsConfig": "apps/rules/tsconfig.app.json",
-            "assets": []
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {}
-              ]
-            }
-          }
-        },
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
@@ -2001,7 +1928,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/rules/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         }
       }

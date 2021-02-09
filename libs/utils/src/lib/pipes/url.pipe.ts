@@ -23,10 +23,13 @@ export class GetLinkModule { }
 
 function formatUrl(path: string) {
   const params = {};
-  const [url, paramsUrl = ''] = path.split('?');
-  const httpParams = new HttpParams({ fromString: paramsUrl });
-  for (const key of httpParams.keys()) {
-    params[key] = httpParams.get(key);
+  if (path) {
+    const [url, paramsUrl = ''] = path.split('?');
+    const httpParams = new HttpParams({ fromString: paramsUrl });
+    for (const key of httpParams.keys()) {
+      params[key] = httpParams.get(key);
+    }
+    return { url, params }
   }
-  return { url, params }
+  return {}
 }

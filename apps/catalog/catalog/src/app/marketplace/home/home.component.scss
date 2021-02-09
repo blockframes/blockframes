@@ -1,143 +1,90 @@
 @import "~@angular/flex-layout/mq";
 
-header {
-  padding: 50px;
-  background-image: url("/assets/images/banner_home.png");
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.banner {
   background-size: cover;
-  text-align: center;
-  border: none;
-
-  h3 {
-    margin: 0;
-  }
-
-  span {
-    width: 35%;
-    text-align: left;
-  }
-
-  a {
-    margin-top: 20px;
-  }
-}
-
-article {
-  width: 80%;
-  margin: 75px 0;
-
-  aside {
-    width: 31%;
-
-    a {
-      margin-top: 20px;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  .banner-details {
+    h4 {
+      margin-bottom: 0;
     }
-  }
-
-  bf-slider {
-    flex: 1;
-    margin: 10px;
-    color: white;
-
-    h2 {
-      margin: 0;
-    }
-
-    .overlay {
-      height: 100%;
-    }
-
-    .informations-wrapper {
-      height: 100%;
-
-      .informations {
-        width: 100%;
-        padding: 10px 30px;
-        h3,
-        .mat-body-2,
-        .mat-caption {
-          color: white;
-        }
-      }
-    }
-
-    wishlist-button {
-      position: absolute;
-      top: 15px;
-      right: 15px;
+    .links {
+      margin-top: 24px;
     }
   }
 }
 
-@include layout-bp(xs) {
+.hero {
+  padding: 40px;
+  background-image: url("/assets/images/banner_empty.png");
+  background-size: cover;
+  min-height: 236px;
+
+  h1 {
+    margin-bottom: 0;
+    text-align: center;
+  }
+  .links {
+    margin-top: 24px;
+  }
+}
+
+.cards {
+  padding: 48px 0;
   header {
-    padding: 50px 0;
-    span {
-      width: 100%;
-      text-align: center;
-    }
-  }
-
-  article {
-    width: 100%;
-    margin: 0;
-
-    aside {
-      width: 100%;
-      text-align: center;
-    }
-
-    bf-slider {
-      width: 100%;
-      margin: 0;
-      margin-top: 10px;
-    }
+    margin: 8px 24px;
   }
 }
 
-@include layout-bp(sm) {
-  header {
-    padding: 20px;
-    span {
-      width: 100%;
-      text-align: left;
-    }
+// two consecutive list of cards (titles, orgs, org-titles) should not cumulate their paddings
+.cards + .cards {
+  padding-top: 0;
+}
+
+.org-titles {
+  background-color: var(--background-card);
+}
+
+movie-slide {
+  height: 700px;
+}
+
+@include layout-bp(gt-sm) {
+  .banner, movie-slide {
+    padding: 80px;
   }
-
-  article {
-    width: 100%;
-    margin: 50px;
-
-    aside {
-      width: 100%;
-      text-align: center;
-      h1 {
-        margin: 0;
-      }
+  .banner {
+    flex-direction: row;
+    .banner-details {
+      width: 50%;
     }
-
-    bf-slider {
-      width: 100%;
-      margin: 0;
-      margin-top: 10px;
+    img {
+      margin-left: 24px;
+      width: 500px;
+      max-width: 50%;
     }
   }
 }
-
-@include layout-bp(md) {
-  header {
-    padding: 20px;
-    span {
-      width: 70%;
-      text-align: left;
-    }
+@include layout-bp(lt-md) {
+  .banner, movie-slide {
+    padding: 24px;
   }
-
-  article {
-    width: 100%;
-    margin: 50px 0;
-
-    aside {
-      margin: 10px;
+  .banner {
+    flex-direction: column;
+    .banner-details {
+      width: 100%;
+    }
+    img {
+      margin-top: 24px;
+      max-width: 80%;
     }
   }
 }

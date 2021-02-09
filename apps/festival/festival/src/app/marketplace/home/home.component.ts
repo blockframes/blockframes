@@ -6,9 +6,7 @@ import { Observable } from 'rxjs';
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CmsTemplate, HomeSection } from '@blockframes/admin/cms';
-
-type CmsPage = CmsTemplate<HomeSection>;
+import { CmsPage } from '@blockframes/admin/cms/template';
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -27,6 +25,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   @HostBinding('test-id="content"') testId
   public page$: Observable<CmsPage>;
   public templates: Record<string, TemplateRef<any>> = {};
+
 
   constructor(
     private dynTitle: DynamicTitleService,

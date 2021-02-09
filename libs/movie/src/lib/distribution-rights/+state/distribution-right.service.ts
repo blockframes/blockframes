@@ -83,7 +83,7 @@ export class DistributionRightService extends CollectionService<DistributionRigh
       `publicContracts/`, ref => ref.where('type', '==', 'mandate').where('titleIds', 'array-contains', movie.id))
       .get().toPromise();
     const contracts = contractsSnap.docs.map(contract => contract.data());
-    return movie.distributionRights.filter(right => right.contractId === contracts[0].id);
+    return movie.distributionRights.filter(right => right.contractId === (contracts[0] as any).id);
   }
 
   /** Check if the formValue is valid to create a right, throw an error for each case. */

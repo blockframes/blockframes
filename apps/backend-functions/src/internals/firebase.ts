@@ -1,11 +1,9 @@
 import { region, config } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-
-export const functionRegion = 'europe-west1';
-export const functions = region(functionRegion);
+import { firebaseRegion } from '@env';
+export const functions = region(firebaseRegion);
 
 import { backupBucket, storageBucket } from '../environments/environment';
-import { PublicUser } from '../data/types';
 import { isInMaintenance } from '@blockframes/firebase-utils';
 import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 
@@ -29,15 +27,6 @@ export const getStorageBucketName = (): string => storageBucket;
 export async function getUserMail(userId: string): Promise<string | undefined> {
   const user = await admin.auth().getUser(userId);
   return user.email;
-}
-
-/**
- * Gets the user document corresponding to a given `uid`.
- * Throws if the user does not exists.
- */
-export async function getUser(userId: string): Promise<PublicUser> {
-  const user = await db.doc(`users/${userId}`).get();
-  return user.data()! as PublicUser;
 }
 
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {

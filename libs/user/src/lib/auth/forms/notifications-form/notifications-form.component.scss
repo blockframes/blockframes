@@ -1,0 +1,46 @@
+header {
+  margin-bottom: 24px;
+}
+
+footer {
+  margin-top: 56px;
+  button.mat-flat-button {
+    margin-bottom: 32px;
+  }
+}
+
+table {
+  width: 100%;
+  text-align: left;
+  position: relative;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+th {
+  background-color: var(--background-card);
+  position: sticky;
+  z-index: 10;
+  top: 0; /* Required for the stickiness */
+  padding-top: 24px;
+}
+
+th, td {
+  &:first-child {
+    padding-left: 24px;
+  }
+  &:last-child {
+    padding-right: 24px;
+  }
+}
+
+.description {
+  width: 80%;
+}
+
+.general {
+  padding: 24px;
+  p {
+    margin: 0;
+  }
+}

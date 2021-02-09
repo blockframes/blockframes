@@ -7,7 +7,7 @@ import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { Index } from 'algoliasearch';
+import { SearchIndex } from 'algoliasearch';
 
 const Separators = {
   [COMMA]: ',',
@@ -103,13 +103,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
       this.displayWithPath = 'value';
     }
 
-    let indexSearch: Index;
+    let indexSearch: SearchIndex;
 
     indexSearch = this.algoliaService.getIndex(this.index)
 
     // create search functions
-    const regularSearch = (text: string) => indexSearch.search({ query: text, facetFilters: this.getFilter() }).then(result => result.hits);
-    const facetSearch = (text: string) => indexSearch.searchForFacetValues({ facetName: this.facet, facetQuery: text }).then(result => result.facetHits);
+    const regularSearch = (text: string) => indexSearch.search(text, this.getFilter()).then(result => result.hits);
+    const facetSearch = (text: string) => indexSearch.searchForFacetValues(this.facet, text).then(result => result.facetHits);
 
     // perform search
     this.algoliaSearchResults$ = this.searchCtrl.valueChanges.pipe(

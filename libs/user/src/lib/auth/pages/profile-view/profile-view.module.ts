@@ -33,6 +33,10 @@ const routes: Routes = [{
     {
       path: 'cookies',
       loadChildren: () => import('../profile-cookie/profile-cookie.module').then(m => m.ProfileCookieModule)
+    },
+    {
+      path: 'notifications',
+      loadChildren: () => import('../../forms/notifications-form/notifications-form.module').then(m => m.NotificationsFormModule)
     }
   ]
 }]

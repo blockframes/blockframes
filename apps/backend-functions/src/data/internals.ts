@@ -3,14 +3,15 @@
  *
  * This code deals directly with the low level parts of firebase,
  */
-import { db } from '../internals/firebase';
-import { OrganizationDocument } from './types';
+import * as admin from 'firebase-admin';
+import { InvitationDocument, OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { getDocument } from '@blockframes/firebase-utils';
+import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 
 export { getDocument };
 
@@ -20,6 +21,15 @@ export function createPublicOrganizationDocument(org: OrganizationDocument) {
     denomination: createDenomination(org.denomination),
     logo: org.logo ?? '',
   }
+}
+
+export function createPublicInvitationDocument(invitation: InvitationDocument) {
+  return {
+    id: invitation.id ?? '',
+    type: invitation.type ?? '',
+    mode: invitation.mode ?? '',
+    status: invitation.status ?? '',
+  } as PublicInvitation
 }
 
 export function createPublicUserDocument(user: any = {}) {
@@ -49,6 +59,7 @@ export async function getOrganizationsOfContract(contract: ContractDocument): Pr
  * @returns the organizations that have movie id in organization.movieIds
  */
 export async function getOrganizationsOfMovie(movieId: string): Promise<OrganizationDocument[]> {
+  const db = admin.firestore();
   const movie = await db.doc(`movies/${movieId}`).get();
   const orgIds = movie.data().orgIds;
   const promises = orgIds.map(id => db.doc(`orgs/${id}`).get())
@@ -58,6 +69,7 @@ export async function getOrganizationsOfMovie(movieId: string): Promise<Organiza
 
 /** Get the number of elements in a firestore collection */
 export function getCount(collection: string): Promise<number> {
+  const db = admin.firestore();
   // TODO: implement counters to make this function scalable. => ISSUE#646
   // relevant docs: https://firebase.google.com/docs/firestore/solutions/counters
   return db
@@ -67,7 +79,7 @@ export function getCount(collection: string): Promise<number> {
 }
 
 /** Retrieve the list of superAdmins and admins of an organization */
-export async function getAdminIds(organizationId: string): Promise<string[]> {
+export async function getAdminIds(organizationId: string): Promise<string[]> { // @TODO #4046 this may be removed at the end
   const permissions = await getDocument<PermissionsDocument>(`permissions/${organizationId}`);
 
   if (!permissions) {

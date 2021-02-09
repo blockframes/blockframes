@@ -21,27 +21,33 @@ const routes = [{
     },
     {
       path: 'main',
-      loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule)
+      loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule),
+      data: { animation: 0 }
     },
     {
       path: 'artistic',
-      loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule)
+      loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule),
+      data: { animation: 1 }
     },
     {
       path: 'production',
-      loadChildren: () => import('@blockframes/movie/marketplace/production/production.module').then(m => m.MovieProductionModule)
+      loadChildren: () => import('@blockframes/movie/marketplace/production/production.module').then(m => m.MovieProductionModule),
+      data: { animation: 2 }
     },
     {
       path: 'additional',
-      loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule)
+      loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule),
+      data: { animation: 3 }
     },
     {
       path: 'finance',
-      loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule)
+      loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule),
+      data: { animation: 4 }
     },
     {
       path: 'avails',
-      loadChildren: () => import('../avails/avails.module').then(m => m.MarketplaceMovieAvailsModule)
+      loadChildren: () => import('../avails/avails.module').then(m => m.MarketplaceMovieAvailsModule),
+      data: { animation: 5 }
     }
   ]
 }];
@@ -57,4 +63,4 @@ const routes = [{
     RouterModule.forChild(routes)
   ]
 })
-export class MovieViewModule {}
+export class MovieViewModule { }

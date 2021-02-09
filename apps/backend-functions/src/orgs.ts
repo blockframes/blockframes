@@ -5,21 +5,24 @@ import { difference } from 'lodash';
  *
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
-import { db, getUser } from './internals/firebase';
-import { sendMail, sendMailFromTemplate } from './internals/email';
-import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
+import { db } from './internals/firebase';
+import { getUser } from "./internals/utils";
+import { sendMail } from './internals/email';
+import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
-import { NotificationType } from '@blockframes/notification/types';
+import { NotificationTypes } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
-import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { NotificationDocument } from './data/types';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { getDocument } from './data/internals';
 
 /** Create a notification with user and org. */
-function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
+function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
   return createNotification({
     toUserId,
     type: notificationType,
@@ -52,7 +55,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberAddedToOrg', after, userAdded));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
     return triggerNotifications(notifications);
 
     // Member removed
@@ -63,7 +66,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
     await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberRemovedFromOrg', after, userRemoved));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userRemoved));
     return triggerNotifications(notifications);
   }
 }
@@ -82,7 +85,7 @@ async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after
     // Send a mail to c8 admin to accept the organization given it's choosen app access
     const mailRequest = await organizationRequestedAccessToApp(after);
     const from = await getFromEmail(after);
-    await sendMail(mailRequest, from);
+    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
 }
 
@@ -102,7 +105,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest, from),
+    sendMail(emailRequest, from).catch(e => console.warn(e.message)),
     // Update algolia's index
     storeSearchableOrg(org)
   ]);
@@ -119,8 +122,8 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 
   // Update algolia's index
   if (before.denomination.full !== after.denomination.full
-  || before.denomination.public !== after.denomination.public) {
-    for(const userId of after.userIds) {
+    || before.denomination.public !== after.denomination.public) {
+    for (const userId of after.userIds) {
       const userDocRef = db.doc(`users/${userId}`);
       const userSnap = await userDocRef.get();
       const userData = userSnap.data() as PublicUser;
@@ -140,14 +143,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
 
-  const { userIds } = before as OrganizationDocument;
-  const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {
-    // send email to let the org admin know that the org has been accepted
-    const urlToUse = await getAppUrl(after);
-    const appKey = await getOrgAppKey(after);
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), appKey);
-
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
@@ -158,36 +154,11 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     await triggerNotifications([notification]);
   }
 
-  // @todo(#3640) 09/09/2020 : We got rid of ethers dependencies
-  // const RELAYER_CONFIG: RelayerConfig = {
-  //   ...relayer,
-  //   mnemonic
-  // };
-  // const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
-  // if (blockchainBecomeEnabled) {
-  //   const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
-
-  //   const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
-
-  //   if (isOrgRegistered) {
-  //     throw new Error(`This organization has already an ENS name: ${orgENS}`);
-  //   }
-
-  //   const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
-  //   const provider = getProvider(RELAYER_CONFIG.network);
-  //   const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
-  //   const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
-
-  //   console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
-  //   const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
-  //   console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
-  // }
-
   // Update algolia's index
 
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
   if (before.status === 'accepted' && after.status === 'pending') {
-    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id))
+    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>)
     await Promise.all(promises)
   }
 
@@ -211,7 +182,7 @@ export async function onOrganizationDelete(
   for (const userId of org.userIds) {
     const userSnapshot = await db.doc(`users/${userId}`).get();
     const user = userSnapshot.data() as PublicUser;
-    await userSnapshot.ref.update({...user, orgId: null})
+    await userSnapshot.ref.update({ ...user, orgId: null })
   }
 
   // Delete persmission document related to the organization
@@ -222,7 +193,7 @@ export async function onOrganizationDelete(
   // Delete movies belonging to organization
   const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
   const moviesSnap = await movieCollectionRef.get();
-  for(const movie of moviesSnap.docs) {
+  for (const movie of moviesSnap.docs) {
     await movie.ref.delete();
   }
 
@@ -269,7 +240,7 @@ export async function onOrganizationDelete(
       if (party.party.orgId === org.id) {
         const index = contractData.parties.indexOf(party);
         contractData.parties.splice(index, 1);
-        await contract.ref.update({ parties: contractData.parties});
+        await contract.ref.update({ parties: contractData.parties });
       }
     }
   }
@@ -280,7 +251,7 @@ export async function onOrganizationDelete(
 
   const orgAppAccess = findOrgAppAccess(org);
   // Update algolia's index
-  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID));
+  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID) as Promise<boolean>);
 
   await Promise.all(promises);
 
@@ -293,13 +264,20 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const appKey = await getOrgAppKey(orgId);
-  const appUrl = await getAppUrl(orgId);
+  const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+  const notifications: NotificationDocument[] = [];
+  admins.map(async admin => {
+    const notification = createNotification({
+      toUserId: admin.uid,
+      docId: admin.orgId,
+      organization: createPublicOrganizationDocument(organization),
+      type: 'orgAppAccessChanged'
+    });
 
-  await Promise.all(admins.map(admin => {
-    const template = organizationAppAccessChanged(admin, appUrl);
-    return sendMailFromTemplate(template, appKey)
-  }));
+    notifications.push(notification);
+  });
+
+  await triggerNotifications(notifications);
 
   return {
     error: '',

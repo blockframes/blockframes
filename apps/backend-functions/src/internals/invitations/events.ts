@@ -1,130 +1,109 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
-import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
+import { NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
-import { db, getUser } from "../firebase";
-import { getAdminIds, getDocument } from "../../data/internals";
-import { invitationToEventFromOrg, requestToAttendEventFromUser, requestToAttendEventFromUserAccepted } from '../../templates/mail';
-import { sendMailFromTemplate } from '../email';
+import { getUser } from "../utils";
+import { createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
-import { EmailRecipient, getEventEmailData, EventEmailData } from "@blockframes/utils/emails/utils";
-import { App, applicationUrl } from "@blockframes/utils/apps";
-import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
-
-function getEventLink(org: OrganizationDocument) {
-  if (canAccessModule('marketplace', org)) {
-    return '/c/o/marketplace/invitations';
-  } else if (canAccessModule('dashboard', org)) {
-    return '/c/o/dashboard/invitations';
-  } else {
-    return "";
-  }
-}
+import * as admin from 'firebase-admin';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
  */
-async function onInvitationToAnEventCreate({
-  id,
-  toUser,
-  toOrg,
-  fromUser,
-  fromOrg,
-  mode,
-  eventId
-}: InvitationDocument) {
-  if (!eventId) {
+async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
+  const db = admin.firestore();
+  if (!invitation.eventId) {
     console.log('eventId is not defined');
     return;
   }
 
   // Fetch event and verify if it exists
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
   if (!event) {
-    throw new Error(`Event ${eventId} doesn't exist !`);
+    throw new Error(`Event ${invitation.eventId} doesn't exist !`);
   }
 
-  if (mode === 'request' && event?.isPrivate === false) {
+  if (invitation.mode === 'request' && event?.isPrivate === false) {
     // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser'
-    return await db.doc(`invitations/${id}`).set({ status: 'accepted' }, { merge: true });
+    return await db.doc(`invitations/${invitation.id}`).set({ status: 'accepted' }, { merge: true });
   }
 
   // Retreive notification recipient
-  const recipients: EmailRecipient[] = [];
-  if (!!toUser) {
+  const recipients: string[] = [];
+  if (!!invitation.toUser) {
     /**
      * @dev We wants to send this email only if user have an orgId. If not, this means that he already received an
      * email inviting him along with his credentials.
     */
-    const user = await getDocument<PublicUser>(`users/${toUser.uid}`);
+    const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     if (!user.orgId) {
       console.log('Invitation have already been sent along with user credentials');
       return;
     }
-    recipients.push({ email: toUser.email, name: `${toUser.firstName} ${toUser.lastName}` });
-  } else if (!!toOrg) {
-    const adminIds = await getAdminIds(toOrg.id);
+    recipients.push(invitation.toUser.uid);
+  } else if (!!invitation.toOrg) {
+    const adminIds = await getAdminIds(invitation.toOrg.id);
     const admins = await Promise.all(adminIds.map(i => getUser(i)));
-    admins.forEach(a => recipients.push({ email: a.email, name: a.firstName }));
+    admins.forEach(a => recipients.push(a.uid));
   } else {
     throw new Error('Who is this invitation for ?');
   }
 
-  // @TODO (#2848) forcing to festival since invitations to events are only on this one
-  const appKey: App = 'festival';
+  const notifications = [];
 
-  if (!!fromOrg) {
+  if (!!invitation.fromOrg) {
     /**
      * @dev For now, org can only make invitation to a screeening
-     * No need to create a notification because fromOrg and user recipient
-     * will already get the invitation displayed on front end.
      */
-    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
-    const senderName = orgName(org);
-    const link = getEventLink(org);
-    const urlToUse = applicationUrl[appKey];
-    const eventEmailData: EventEmailData = getEventEmailData(event)
 
-    switch (mode) {
+    switch (invitation.mode) {
       case 'invitation':
-        return Promise.all(recipients.map(recipient => {
-          console.log(`Sending invitation email for an event (${eventId}) from ${senderName} to : ${recipient.email}`);
-          const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
-          return sendMailFromTemplate(templateInvitation, appKey);
-        }))
+
+        // Notification to request recipients
+        recipients.map(recipient => {
+          notifications.push(createNotification({
+            toUserId: recipient,
+            organization: invitation.fromOrg,
+            docId: invitation.eventId,
+            invitation: createPublicInvitationDocument(invitation),
+            type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated'
+          }));
+        });
+
+        return triggerNotifications(notifications);
       case 'request':
       default:
         throw new Error('Org can not create requests for events, reserved to users only');
     }
-  } else if (!!fromUser) {
+  } else if (!!invitation.fromUser) {
 
-    const senderEmail = fromUser.email;
-    const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
-    const link = getEventLink(org);
-    const urlToUse = applicationUrl[appKey];
-
-    switch (mode) {
+    switch (invitation.mode) {
       case 'invitation':
         throw new Error('User can not create invitations for events, reserved to orgs only.');
       case 'request':
       default:
 
         // Notification to request sender, letting him know that his request have been sent
-        const notification = createNotification({
-          toUserId: fromUser.uid,
-          user: fromUser,
-          docId: eventId,
+        notifications.push(createNotification({
+          toUserId: invitation.fromUser.uid,
+          user: invitation.fromUser,
+          docId: invitation.eventId,
+          invitation: createPublicInvitationDocument(invitation),
           type: 'requestToAttendEventSent'
+        }));
+
+        // Notification to request recipients
+        recipients.map(recipient => {
+          notifications.push(createNotification({
+            toUserId: recipient,
+            user: invitation.fromUser,
+            docId: invitation.eventId,
+            invitation: createPublicInvitationDocument(invitation),
+            type: 'requestToAttendEventCreated'
+          }));
         });
 
-        await triggerNotifications([notification]);
-
-        return Promise.all(recipients.map(recipient => {
-          const userName = `${fromUser.firstName} ${fromUser.lastName}`
-          console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
-          return sendMailFromTemplate(templateRequest, appKey);
-        }))
+        return triggerNotifications(notifications);
     }
   } else {
     throw new Error('Did not found invitation sender');
@@ -132,112 +111,43 @@ async function onInvitationToAnEventCreate({
 }
 
 /**
- * Handles notifications and emails when an invitation to an event is accepted.
+ * Handles notifications when an invitation to an event is updated (accepted or rejected).
  */
-async function onInvitationToAnEventAccepted({
-  fromUser,
-  fromOrg,
-  toUser,
-  toOrg,
-  eventId
-}: InvitationDocument) {
+async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDocument) {
 
   const notifications: NotificationDocument[] = [];
 
-  if (!!fromUser) {
+  if (!!invitation.fromUser && invitation.mode === 'request') {
     const notification = createNotification({
-      toUserId: fromUser.uid,
-      docId: eventId,
-      type: 'invitationToAttendEventAccepted'
+      toUserId: invitation.fromUser.uid,
+      docId: invitation.eventId,
+      invitation: createPublicInvitationDocument(invitation),
+      type: 'requestToAttendEventUpdated'
     });
 
-    if (!!toUser) {
-      notification.user = toUser; // The subject that have accepted the invitation
-    } else if (!!toOrg) {
-      // @TODO (#2848) forcing to festival since invitations to events are only on this one
-      const appKey: App = 'festival';
-      const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
-      const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
-      const eventData: EventEmailData = getEventEmailData(event);
-      const url = applicationUrl[appKey];
-
-      const templateRequest = requestToAttendEventFromUserAccepted(fromUser, orgName(org), eventData, url);
-      await sendMailFromTemplate(templateRequest, appKey);
-
-      notification.organization = toOrg; // The subject that have accepted the invitation
+    if (!!invitation.toUser) {
+      notification.user = invitation.toUser; // The subject that have accepted or rejected the request
+    } else if (!!invitation.toOrg) {
+      notification.organization = invitation.toOrg; // The subject that have accepted or rejected the request
     } else {
       throw new Error('Did not found invitation recipient.');
     }
     notifications.push(notification);
-  } else if (!!fromOrg) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
+  } else if (!!invitation.fromOrg && invitation.mode === 'invitation') {
+    const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
     const adminIds = await getAdminIds(org.id);
     adminIds.forEach(toUserId => {
       const notification = createNotification({
         toUserId,
-        docId: eventId,
-        type: 'invitationToAttendEventAccepted'
+        docId: invitation.eventId,
+        invitation: createPublicInvitationDocument(invitation),
+        type: 'invitationToAttendEventUpdated'
       });
 
-      if (!!toUser) {
-        notification.user = toUser; // The subject that have accepted the invitation
-      } else if (!!toOrg) {
-
-        notification.organization = toOrg; // The subject that have accepted the invitation
-      } else {
-        throw new Error('Did not found invitation recipient.');
-      }
-      notifications.push(notification);
-    });
-  } else {
-    throw new Error('Did not found invitation sender.');
-  }
-
-  return triggerNotifications(notifications);
-}
-
-/**
- * Handles notifications and emails when an invitation to an event is rejected.
- */
-async function onInvitationToAnEventRejected({
-  fromUser,
-  fromOrg,
-  toUser,
-  toOrg,
-  eventId,
-}: InvitationDocument) {
-
-  const notifications: NotificationDocument[] = [];
-
-  if (!!fromUser) {
-    const notification = createNotification({
-      toUserId: fromUser.uid,
-      docId: eventId,
-      type: 'invitationToAttendEventDeclined'
-    });
-
-    if (!!toUser) {
-      notification.user = toUser; // The subject that have declined the invitation
-    } else if (!!toOrg) {
-      notification.organization = toOrg; // The subject that have declined the invitation
-    } else {
-      throw new Error('Did not found invitation recipient.');
-    }
-    notifications.push(notification);
-  } else if (!!fromOrg) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
-    const adminIds = await getAdminIds(org.id);
-    adminIds.forEach(toUserId => {
-      const notification = createNotification({
-        toUserId,
-        docId: eventId,
-        type: 'invitationToAttendEventDeclined'
-      });
-
-      if (!!toUser) {
-        notification.user = toUser; // The subject that have declined the invitation
-      } else if (!!toOrg) {
-        notification.organization = toOrg; // The subject that have declined the invitation
+      if (!!invitation.toUser) {
+        notification.user = invitation.toUser; // The subject that have accepted or rejected the invitation
+      } else if (!!invitation.toOrg) {
+        notification.organization = invitation.toOrg; // The subject that have accepted or rejected the invitation
       } else {
         throw new Error('Did not found invitation recipient.');
       }
@@ -261,35 +171,85 @@ export async function onInvitationToAnEventUpdate(
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationToAnEventCreate(invitation);
-  } else if (wasAccepted(before!, after)) {
-    return onInvitationToAnEventAccepted(invitation);
-  } else if (wasDeclined(before!, after)) {
-    return onInvitationToAnEventRejected(invitation);
+  } else if (wasAccepted(before!, after) || wasDeclined(before!, after)) {
+    return onInvitationToAnEventAcceptedOrRejected(invitation);
   }
 }
 
+/**
+ * Notify users with accepted invitation to events that are starting in 1 day
+ * Send also a reminder email
+ */
 export async function createNotificationsForEventsToStart() {
-  // @TODO (#2555)
+  const oneHour = 3600 * 1000;
+  const oneDay = 24 * oneHour;
+  const halfHour = 1800 * 1000;
 
   // 1 Fetch events that are about to start
+  const eventsDayCollection = await fetchEventStartingIn(oneDay, (oneDay + oneHour));
+  const eventsHourCollection = await fetchEventStartingIn(oneHour, (oneHour + halfHour));
+
   // 2 Fetch attendees (invitations accepted)
-  // 3 Create notifications
+  const invitationsDay = await fetchAttendeesToEvent(eventsDayCollection.docs);
+  const invitationsHour = await fetchAttendeesToEvent(eventsHourCollection.docs);
 
-  /*const notification = createNotification({
-    toUserId: toUser.uid,
-    eventId,
-    type: 'eventIsAboutToStart''
-  });*/
+  // 3 Create notifications if not already exists
+  const notificationsDays = await createNotificationIfNotExists(invitationsDay, 'oneDayReminder');
+  const notificationsHours = await createNotificationIfNotExists(invitationsHour, 'eventIsAboutToStart')
+  const notifications = notificationsDays.concat(notificationsHours);
 
-  /*if (!!fromUser) {
-    notification.user = fromUser;
-  } else if (!!fromOrg) {
-    notification.organization = fromOrg;
-  } else {
-    throw new Error('Did not found invitation sender');
-  }*/
+  return notifications.length ? triggerNotifications(notifications) : undefined;
+}
 
-  //return triggerNotifications([notification])
+/** Fetch event collection with a start and an end range search */
+async function fetchEventStartingIn(from: number, to: number) {
+  const db = admin.firestore();
+  return await db.collection('events')
+    .where('start', '>=', new Date(Date.now() + from))
+    .where('start', '<', new Date(Date.now() + to))
+    .get();
+}
+
+/** Fetch accepted invitations to an event */
+async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]) {
+  const db = admin.firestore();
+  const invitations: InvitationDocument[] = [];
+
+  const docsIds: string[] = collectionDocs.map(doc => doc.data().id);
+  const promises = docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get());
+  const invitationsSnaps = await Promise.all(promises);
+  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
+
+  return invitations;
+}
+
+/**
+ * Look after notification already existing for one user and one event
+ * Return an array of new notifications to create
+ */
+async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationTypes) {
+  const notifications = [];
+  const db = admin.firestore();
+
+  for (const invitation of invitations) {
+    const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
+    const existingNotifications = await db.collection('notifications')
+      .where('docId', '==', invitation.eventId)
+      .where('toUserId', '==', toUserId)
+      .where('type', '==', notificationType)
+      .get();
+
+    // There is no existing notification for this user
+    if (existingNotifications.empty) {
+      notifications.push(createNotification({
+        toUserId,
+        docId: invitation.eventId,
+        type: notificationType
+      }));
+    }
+  }
+
+  return notifications;
 }
 
 /**
@@ -298,7 +258,7 @@ export async function createNotificationsForEventsToStart() {
  * @param eventId
  */
 export async function isUserInvitedToEvent(userId: string, eventId: string) {
-
+  const db = admin.firestore();
   const acceptedInvitations = db.collection('invitations')
     .where('type', '==', 'attendEvent')
     .where('eventId', '==', eventId)

@@ -1,8 +1,8 @@
-import {getTwilioAccessToken, RequestAccessToken} from "./twilio";
-import {CallableContextOptions} from "firebase-functions-test/lib/main";
-import {CallableContext} from "firebase-functions/lib/providers/https";
-import {getTestingProjectId, initFunctionsTestMock, populate} from "@blockframes/testing/firebase/functions";
-import {clearFirestoreData} from "@firebase/testing";
+import { getTwilioAccessToken, RequestAccessToken } from "./twilio";
+import { CallableContextOptions } from "firebase-functions-test/lib/main";
+import { CallableContext } from "firebase-functions/lib/providers/https";
+import { getTestingProjectId, initFunctionsTestMock, populate } from "@blockframes/testing/firebase/functions";
+import { clearFirestoreData } from "@firebase/testing";
 
 const testInvitations = [
   {
@@ -21,7 +21,8 @@ const testEvents = [
     type: 'meeting',
     start: new Date(),
     end: new Date(),
-    meta: {organizerId: 'uidUserTest'}
+    meta: { organizerId: 'uidUserTest' },
+    ownerId: 'uidUserTest'
   }
 ];
 const testEventsScreening = [
@@ -30,19 +31,17 @@ const testEventsScreening = [
     type: 'screening',
     start: new Date(),
     end: new Date(),
-    meta: {organizerId: 'uidUserTest'}
+    meta: { organizerId: 'uidUserTest' }
   }
 ];
-const testUsers = [{ uid: 'uidUserTest', email: 'A@fake.com' }];
+const testUsers = [{ uid: 'uidUserTest', email: 'A@fake.com' }, { uid: 'uidUserTestNotAccepted' }];
 const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
-const testRequestAccessToken:RequestAccessToken = { eventId: 'eventTest'};
+const testRequestAccessToken: RequestAccessToken = { eventId: 'eventTest' };
 
 describe('Twilio test script', () => {
 
   beforeAll(async () => {
     initFunctionsTestMock();
-    // To be sure that tests are not polluted
-    await clearFirestoreData({ projectId: getTestingProjectId() });
   });
 
   afterEach(async () => {
@@ -53,7 +52,7 @@ describe('Twilio test script', () => {
   it('should throw error when eventId is null', async () => {
     // Load our test set
     try {
-      await populateAndGetTwilioAccessToken(true, { eventId: ''});
+      await populateAndGetTwilioAccessToken(true, { eventId: '' });
     } catch (e) {
       expect(e).toMatchObject(new Error(`No 'eventId' params, this parameter is mandatory !`));
     }
@@ -69,9 +68,9 @@ describe('Twilio test script', () => {
   });
 
   it('should return error when event is not found', async () => {
-   testEvents[0].end.setHours(new Date().getHours() + 4);
-   // Load our test set
-    const output = await populateAndGetTwilioAccessToken(true, {eventId: 'unknown'});
+    testEvents[0].end.setHours(new Date().getHours() + 4);
+    // Load our test set
+    const output = await populateAndGetTwilioAccessToken(true, { eventId: 'unknown' });
     expect(output.error).toMatch('UNKNOWN_EVENT');
   });
 
@@ -94,7 +93,7 @@ describe('Twilio test script', () => {
 
   it('should return error when event is finished', async () => {
     testEvents[0].start.setHours(new Date().getHours() - 5);
-    testEvents[0].end.setHours(new Date().getHours()  - 1 );
+    testEvents[0].end.setHours(new Date().getHours() - 1);
     // Load our test set
     const output = await populateAndGetTwilioAccessToken();
     expect(output.error).toMatch('EVENT_FINISHED');
@@ -103,7 +102,7 @@ describe('Twilio test script', () => {
   it('should return error if user is not invited', async () => {
     testEvents[0].end.setHours(new Date().getHours() + 4);
     // Load our test set
-    const output = await populateAndGetTwilioAccessToken(true, null, { uid: 'uidUserTestNotAccepted'});
+    const output = await populateAndGetTwilioAccessToken(true, null, { uid: 'uidUserTestNotAccepted' });
     expect(output.error).toMatch('NOT_ACCEPTED');
   });
 
@@ -115,14 +114,14 @@ describe('Twilio test script', () => {
   });
 })
 
-async function populateAndGetTwilioAccessToken(eventMeeting = true, requestAccessTokenTest = null, uid = { uid: 'uidUserTest'}){
+async function populateAndGetTwilioAccessToken(eventMeeting = true, requestAccessTokenTest = null, uid = { uid: 'uidUserTest' }) {
   const invitationn = populate('invitations', testInvitations);
   const events = populate('events', (eventMeeting) ? testEvents : testEventsScreening);
   const users = populate('users', testUsers);
   const orgs = populate('orgs', testOrgs);
   await Promise.all([invitationn, events, users, orgs]);
-  const testCallbackContext : CallableContextOptions = {
-    auth : uid
+  const testCallbackContext: CallableContextOptions = {
+    auth: uid
   }
   requestAccessTokenTest = (requestAccessTokenTest === null) ? testRequestAccessToken : requestAccessTokenTest;
   return await getTwilioAccessToken(requestAccessTokenTest, testCallbackContext as CallableContext);

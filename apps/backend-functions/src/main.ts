@@ -21,6 +21,8 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { heavyConfig } from '@blockframes/firebase-utils';
+import { onNotificationCreate } from './notification';
+import { importAnalytics } from './pubsub/daily-analytics-import';
 
 
 //--------------------------------
@@ -64,9 +66,6 @@ export const sendUserContactMail = functions.https.onCall(skipInMaintenance(logE
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions.https.onCall(skipInMaintenance(logErrors(users.sendDemoRequest)));
 
-/** Trigger: REST call bigQuery with an array of movieIds to get their analytics. */
-export const getMovieAnalytics = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.requestMovieAnalytics)));
-
 /** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
 export const getEventAnalytics = functions.https.onCall(skipInMaintenance(logErrors(bigQuery.requestEventAnalytics)));
 
@@ -90,7 +89,7 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
 );
 
 /** Trigger: when a permission document is deleted. */
-export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}',onPermissionDelete);
+export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}', onPermissionDelete);
 
 //--------------------------------
 //    Invitations Management    //
@@ -127,7 +126,7 @@ export const twilioWebhook = functions.https.onRequest(_twilioWebhook);
 /**
  * Creates notifications when an event is about to start
  */
-export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// every day at 4 AM
+export const scheduledNotifications = functions.pubsub.schedule('*/30 * * * *') // every 30 minutes
   .onRun(skipInMaintenance(_ => createNotificationsForEventsToStart()));
 
 //--------------------------------
@@ -195,6 +194,11 @@ export const sendMailAsAdmin = functions.https.onCall(skipInMaintenance(_sendMai
  */
 export const sendMailWithTemplate = functions.https.onCall(skipInMaintenance(_sendMailWithTemplate));
 
+
+/** Trigger: when an notification is created to send email if requested */
+export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}', onNotificationCreate);
+
+
 //--------------------------------
 //       Orgs Management        //
 //--------------------------------
@@ -224,3 +228,12 @@ export const getMediaToken = functions.https.onCall(skipInMaintenance(logErrors(
  * This is a scheduled function which runs daily backup if complied with production configuration
  */
 export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
+
+//--------------------------------
+//          Analytics           //
+//--------------------------------
+/**
+ * Imports analytics data from BigQuery
+ */
+export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *') // every day
+  .onRun(skipInMaintenance(_ => importAnalytics));

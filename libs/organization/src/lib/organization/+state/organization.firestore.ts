@@ -1,4 +1,4 @@
-import { firestore } from 'firebase/app';
+import type firebase from 'firebase';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
@@ -6,7 +6,7 @@ import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 interface Denomination {
   full: string;

@@ -1,9 +1,9 @@
-import { firestore } from "firebase/app";
+import type firebase from 'firebase';
 import { PriceRaw, PaymentStatus, PaymentRaw } from "@blockframes/utils/common-interfaces/price";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { BankAccount } from "@blockframes/utils/common-interfaces/utility";
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 export interface InvoiceTitleDetailsRaw<D> {
   price: PriceRaw<D>;

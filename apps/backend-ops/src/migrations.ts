@@ -2,8 +2,8 @@
  * This module deal with migrating the system from a CURRENT version
  * to the LAST version.
  */
-import { backup, restore } from './admin';
-import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from "@blockframes/firebase-utils";
+import { backup, restore, exportFirestore, importFirestore } from './admin';
+import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, getFirestoreExportDirname } from "@blockframes/firebase-utils";
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
 
@@ -44,7 +44,6 @@ export async function migrate(
   storage = loadAdminServices().storage
 ) {
   console.info('start the migration process...');
-  // const { db, storage } = loadAdminServices();
 
   try {
     const currentVersion = await loadDBVersion(db);
@@ -83,6 +82,59 @@ export async function migrate(
     if (withBackup) {
       console.info('running a backup post-migration');
       await backup();
+      console.info('done with the backup post-migration');
+    }
+    console.info('end the migration process...');
+  }
+}
+
+
+export async function migrateBeta(
+  withBackup: boolean = true,
+  db = loadAdminServices().db,
+  storage = loadAdminServices().storage
+) {
+  console.info('start the migration process...');
+
+  const backupDir = `pre-migration-${getFirestoreExportDirname(new Date())}`;
+
+  try {
+    const currentVersion = await loadDBVersion(db);
+    const migrations = selectAndOrderMigrations(currentVersion);
+
+    if (migrations.length === 0) {
+      console.info('No migrations to run, leaving...');
+      return;
+    }
+
+    if (withBackup) {
+      console.info('backup the database before doing anything');
+      await exportFirestore(backupDir);
+      console.info('backup done, moving on to the migrations...');
+    } else {
+      console.warn('⚠️ skipping the backup before running migrations, are you sure?');
+    }
+
+    const lastVersion = last(migrations).version;
+
+    console.info(`Running migrations: ${migrations.map((x) => x.version).join(', ')}`);
+
+    for (const migration of migrations) {
+      console.info(`applying migration: ${migration.version}`);
+      await migration.upgrade(db, storage);
+      console.info(`done applying migration: ${migration.version}`);
+    }
+
+    await updateDBVersion(db, lastVersion);
+  } catch (e) {
+    console.error(e);
+    console.error("the migration failed, reverting!");
+    await importFirestore(backupDir);
+    throw e;
+  } finally {
+    if (withBackup) {
+      console.info('running a backup post-migration');
+      await exportFirestore(`post-migration-${getFirestoreExportDirname(new Date())}`);
       console.info('done with the backup post-migration');
     }
     console.info('end the migration process...');

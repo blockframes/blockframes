@@ -7,5 +7,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellComponent {
-  apps = ['festival'];
+  apps = ['festival', 'catalog'];
 }

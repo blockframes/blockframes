@@ -15,6 +15,7 @@ import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select'
 import { FirestoreFormModule, firestoreQuery, titlesFromApp } from '../../forms/firestore';
 import { getTitlesQueryFn, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { sortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
 
 
 type TitlesSchema = FormGroupSchema<TitlesSection>;
@@ -27,6 +28,7 @@ export const titlesSchema = (params: TemplateParams): TitlesSchema => ({
     title: matText({ label: 'Title' }),
     link: matText({ label: 'See all Link', placeholder: '../title' }),
     mode: matSelect({ label: 'Mode', options: ['poster', 'banner'], value: 'banner' }),
+    sorting: matSelect({ label: 'Sorting', options: sortingOptions, value: 'default'}),
     titleIds: matMultiSelect<string>({ label: 'Titles ID' }),
     query: firestoreQuery({ collection: 'movies' }),
   },

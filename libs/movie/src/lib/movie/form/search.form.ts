@@ -3,11 +3,12 @@ import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
-import algoliasearch, { Index } from 'algoliasearch';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
+import { Movie } from '../+state';
 
 export interface LanguagesSearch {
   original: Language[];
@@ -81,7 +82,7 @@ export type MovieSearchControl = ReturnType<typeof createMovieSearchControl>;
 
 export class MovieSearchForm extends FormEntity<MovieSearchControl> {
 
-  private movieIndex: Index;
+  private movieIndex: SearchIndex;
 
   constructor(app: App, storeStatus: StoreStatus) {
     const movieSearch = createMovieSearch({});
@@ -142,11 +143,11 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.socialGoals.value.map(goal => `socialGoals:${goal}`)
       ],
 
-    } as any;
+    };
 
     if (this.minBudget.value) {
-      search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
+      search['filters'] = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
-    return this.movieIndex.search(search);
+    return this.movieIndex.search<Movie>(search.query, search);
   }
 }

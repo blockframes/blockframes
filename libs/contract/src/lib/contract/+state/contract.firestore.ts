@@ -1,4 +1,4 @@
-import { firestore } from "firebase/app";
+import type firebase from 'firebase';
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
 import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
@@ -11,7 +11,7 @@ import {
 } from "@blockframes/utils/static-model/types";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 /** @dev Valid values of ContractStatus */
 export const ValidContractStatuses = ['waitingpayment', 'paid', 'accepted'];

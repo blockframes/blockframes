@@ -22,11 +22,12 @@ import {
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
-import { firestore } from "firebase/app";
+import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
+import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 
 // TODO issue#2582
 
@@ -143,7 +144,7 @@ export interface MoviePromotionalElements {
 // MOVIE DETAILS //
 ////////////////////
 
-type Timestamp = firestore.Timestamp;
+type Timestamp = firebase.firestore.Timestamp;
 
 export interface StoreConfig {
   status: StoreStatus,
@@ -162,6 +163,7 @@ export interface Prize {
 export interface Title {
   original: string;
   international?: string;
+  series?: number;
 }
 
 export interface BoxOffice {
@@ -225,6 +227,7 @@ export interface MovieRelease {
 export interface MovieRunningTime {
   time?: number,
   status?: string,
+  episodeCount?: number
 }
 
 export interface OtherLink {
@@ -297,8 +300,7 @@ export interface MovieEventAnalytics {
   movieId: string
 }
 
-export interface MovieAnalytics {
-  movieId: string,
+export interface MovieAnalytics extends AnalyticsBase {
   addedToWishlist: {
     current: MovieEventAnalytics[],
     past: MovieEventAnalytics[]

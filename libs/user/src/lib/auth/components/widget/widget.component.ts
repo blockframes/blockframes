@@ -6,6 +6,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { UserService } from '@blockframes/user/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { dbVersionDoc, IVersionDoc } from '@blockframes/utils/maintenance';
+import { emulators } from '@env';
 
 @Component({
   selector: 'auth-widget',
@@ -19,6 +20,8 @@ export class AuthWidgetComponent {
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
+  emulatorList = Object.entries(emulators).filter(([_, value]) => !!value).map(([key, _]) => key);
+  emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
 
   constructor(
     private db: AngularFirestore,

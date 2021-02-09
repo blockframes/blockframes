@@ -9,14 +9,16 @@ import {
   getServiceAccountObj,
   uploadDbBackupToBucket,
   loadAdminServices,
-  restoreStorageFromCi
+  restoreStorageFromCi,
+  startMaintenance,
+  latestAnonDbDir
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket } from '@env'
-import { migrate } from './migrations';
+import { migrate, migrateBeta } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 
@@ -30,12 +32,12 @@ import { cleanDeprecatedData } from './db-cleaning';
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
 export async function importEmulatorFromBucket(_exportUrl: string) {
-  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket));
+  const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
-    await new Promise(() => {});
+    await new Promise(() => { });
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;
@@ -43,7 +45,7 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
 }
 
 export interface StartEmulatorOptions {
-  importFrom: 'defaultImport' | string
+  importFrom: 'defaultImport' | string,
 }
 
 /**
@@ -52,12 +54,12 @@ export interface StartEmulatorOptions {
  * Not much use over manually running the command, other than less flags...
  * @param param0 this is a relative path to local Firestore backup to import into emulator
  */
-export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
+export async function loadEmulator({ importFrom = 'defaultImport'}: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(emulatorPath);
-    await new Promise(() => {});
+    await new Promise(() => { });
   } catch (e) {
     await shutdownEmulator(proc)
     throw e;
@@ -86,7 +88,7 @@ export async function downloadProdDbBackup(localPath?: string) {
   console.log('Production projectId: ', prodFirebase().projectId);
   console.log('Production backup bucket name: ', prodBackupBucket);
   const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);
-  const prodDbURL = await getLatestFolderURL(prodBackupBucketObj);
+  const prodDbURL = await getLatestFolderURL(prodBackupBucketObj, 'firestore');
   console.log('Production Firestore Backup URL:', prodDbURL);
   await importFirestoreEmulatorBackup(prodDbURL, localPath || defaultEmulatorBackupPath);
 }
@@ -94,15 +96,16 @@ export async function downloadProdDbBackup(localPath?: string) {
 /**
  * This function will run db anonymization on a locally running Firestore emulator database
  */
-export async function anonDbLocal() {
+export async function anonDbProcess() {
   const db = connectEmulator();
   const o = await db.listCollections();
+  if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
   console.log(o.map((snap) => snap.id));
   await runAnonymization(db);
   console.log('Anonymization complete!')
 
   console.info('Syncing users from db...');
-  const p1 = syncUsers();
+  const p1 = syncUsers(null, db);
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   const { getCI, storage, auth } = loadAdminServices();
@@ -113,7 +116,7 @@ export async function anonDbLocal() {
   console.info('Users synced!');
 
   console.info('Preparing database & storage by running migrations...');
-  await migrate(false, db, storage); // run the migration, do not trigger a backup before, since we already have it!
+  await migrateBeta(false, db, storage); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Migrations complete!');
 
   console.info('Cleaning unused DB data...');
@@ -130,12 +133,13 @@ export async function anonymizeLatestProdDb() {
   await downloadProdDbBackup(defaultEmulatorBackupPath)
   const proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
   try {
-    await anonDbLocal();
+    await anonDbProcess();
   } catch (e) {
     throw e;
   } finally {
     await shutdownEmulator(proc);
   }
+  await uploadBackup({ localRelPath: defaultEmulatorBackupPath, remoteDir: latestAnonDbDir });
 }
 
 /**
@@ -146,4 +150,23 @@ export async function anonymizeLatestProdDb() {
  */
 export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
   await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
+}
+
+/**
+ * This function will launch the emulator and switch on maintenance mode, then exit
+ * @param param0 settings object
+ * Provide a local path to the firestore export dir for which to switch on maintenance mode
+ */
+export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
+  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
+  let proc: ChildProcess;
+  try {
+    proc = await startFirestoreEmulatorWithImport(emulatorPath);
+    const db = connectEmulator();
+    startMaintenance(db);
+  } catch (e) {
+    throw e;
+  } finally {
+    await shutdownEmulator(proc);
+  }
 }

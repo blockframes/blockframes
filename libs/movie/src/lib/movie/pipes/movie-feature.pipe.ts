@@ -9,7 +9,7 @@ import { formatRunningTime } from "@blockframes/movie/pipes/running-time.pipe";
 })
 export class MovieFeaturePipe implements PipeTransform {
   transform(value: Movie): string {
-    const { contentType, runningTime, genres, originalLanguages, release, stakeholders } = value;
+    const { contentType, runningTime, genres, originalLanguages, originCountries, release } = value;
 
     let displayedGenres = '';
     if (genres.length > 0) displayedGenres += staticGenres[genres[0]];
@@ -19,25 +19,15 @@ export class MovieFeaturePipe implements PipeTransform {
     if (originalLanguages.length > 0) displayedLanguages += languages[originalLanguages[0]];
     if (originalLanguages.length > 1) displayedLanguages += ', ...';
 
-    let displayedProductionCountries = '';
-    if (!!stakeholders) {
-      const productionCountries = [];
-      for (const company of stakeholders.productionCompany) {
-        for (const country of company.countries) {
-          if (!productionCountries.includes(country)) productionCountries.push(country);
-        }
-      }
-      productionCountries.forEach((country, index) => {
-        if (index === 0) displayedProductionCountries += territoriesISOA2[country];
-        if (index === 1) displayedProductionCountries += `, ${territoriesISOA2[country]}`;
-        if (index === 2) displayedProductionCountries += `, ...`;
-      })
-    }
+    let displayedCountries = '';
+    if (originCountries.length > 0) displayedCountries += territoriesISOA2[originCountries[0]];
+    if (originCountries.length > 1) displayedCountries += `, ${territoriesISOA2[originCountries[1]]}`;
+    if (originCountries.length > 2) displayedCountries += ', ...';
 
     return [
       contentType ? contentType[contentType] : '',
       displayedGenres,
-      displayedProductionCountries,
+      displayedCountries,
       displayedLanguages,
       release.year,
       formatRunningTime(runningTime, false)
