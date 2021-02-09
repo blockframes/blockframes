@@ -256,7 +256,7 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
 
 /** Send an email when an request to access an event is updated */
 async function sendRequestToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
-  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`); // @TODO #4046
+  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.invitation.id}`);
 
   if (!!invitation.toOrg) {
     const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
