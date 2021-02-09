@@ -256,7 +256,7 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
 
 /** Send an email when an request to access an event is updated */
 async function sendRequestToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
-  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`);
+  const invitation = await getDocument<InvitationDocument>(`invitations/${notification.docId}`); // @TODO #4046
 
   if (!!invitation.toOrg) {
     const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
@@ -327,6 +327,7 @@ async function sendOrgAppAccessChangedEmail(recipient: User, notification: Notif
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const app = await getOrgAppKey(org);
   const url = await getAppUrl(org);
+  // @#4046 Change text to something more generic than `Your organization has now access to Archipel Market.` wich can be wrong
   const template = organizationAppAccessChanged(recipient, url);
   await sendMailFromTemplate(template, app);
 }
@@ -372,7 +373,7 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
   // @TODO #4046 Update parameters given to the movieAcceptedEmail function when Vincent updated template
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const movieTitle = movie.title.original ? movie.title.original : movie.title.international;
-  const movieUrl = `dashboard/title/${movie.id}`;
+  const movieUrl = `c/o/dashboard/title/${movie.id}`;
   const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
 
   const app = await getOrgAppKey(org);
