@@ -235,5 +235,4 @@ export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
 /**
  * Imports analytics data from BigQuery
  */
-export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *') // every day
-  .onRun(skipInMaintenance(_ => importAnalytics));
+export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *').onRun(importAnalytics); // every day

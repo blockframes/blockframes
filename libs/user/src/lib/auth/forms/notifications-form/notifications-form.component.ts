@@ -16,13 +16,14 @@ const titleType: Record<NotificationTypesBase, string> = {
   movieSubmitted: 'A title is successfully submitted for validation.',
   movieAccepted: 'A title gets published to the marketplace.',
   requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
-  invitationFromUserToJoinOrgDecline: 'An user declined your invitation to join your organization.',
-  orgMemberUpdated: 'A new member joins your organization.',
+  requestFromUserToJoinOrgDeclined: 'User\'s request to join your org declined.',
+  invitationToJoinOrgDeclined: 'An user declined your invitation to join your organization.',
+  orgMemberUpdated: 'A member joins or leaves your organization.',
   requestToAttendEventSent: 'Your request to access an event has been sent.',
   eventIsAboutToStart: 'Reminder 1h before an event starts.',
   oneDayReminder: 'Reminder 24h before an event starts.',
   invitationToAttendEventUpdated: 'An users answers your invitation to an event.',
-  requestToAttendEventUpdated: 'Organizer of the event has answered your request.',
+  requestToAttendEventUpdated: 'An organization answers your request to access an event.',
   requestToAttendEventCreated: 'An user requests an access to an event your organize.',
   invitationToAttendMeetingCreated: 'An user invites you to a meeting.',
   invitationToAttendScreeningCreated: 'An organization invites you to a screening.',
@@ -31,7 +32,7 @@ const titleType: Record<NotificationTypesBase, string> = {
 const tables = [
   {
     title: 'Company Management Notifications',
-    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'invitationFromUserToJoinOrgDecline'],
+    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'requestFromUserToJoinOrgDeclined', 'invitationToJoinOrgDeclined'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {

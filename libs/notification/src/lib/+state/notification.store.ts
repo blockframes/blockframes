@@ -49,10 +49,18 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
-      case 'invitationFromUserToJoinOrgDecline':
+      case 'requestFromUserToJoinOrgDeclined':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/members`,
+        };
+      case 'invitationToJoinOrgDeclined':
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
