@@ -70,8 +70,6 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           this.movieDocRef = `movies/${(event.meta as Screening).titleId}`;
-        } else {
-          console.warn('NO TITLE ID'); // TODO REMOVE DEBUG LOG
         }
 
       // MEETING

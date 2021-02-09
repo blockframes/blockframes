@@ -51,8 +51,6 @@ export class FileUploaderService {
 
     const { fileName, file, metadata } = uploadData;
 
-    console.log('ADD TO QUEUE', storagePath, fileName, file, metadata); // TODO REMOVE DEBUG LOG
-
     // instantiate array if it doesn't exists yet
     if (!this.queue[storagePath]) this.queue[storagePath] = [];
 
@@ -118,7 +116,6 @@ export class FileUploaderService {
 
         // clean on success
         afTask.task.then(() => {
-          console.log('task success, cleaning', storagePath); // TODO REMOVE DEBUG LOG
           this.removeFromQueue(storagePath, upload.fileName);
         });
 
