@@ -9,7 +9,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Pipes
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
-import { MovieImageModule } from './movie-image.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -25,7 +24,6 @@ import { MatRippleModule } from '@angular/material/core';
     DisplayNameModule,
     WishlistButtonModule,
     MovieFeatureModule,
-    MovieImageModule,
     MatButtonModule,
     FlexLayoutModule,
     MatRippleModule

@@ -20,7 +20,7 @@
             </mat-card-title>
             <ng-container
               *ngIf="movie.poster as poster;">
-              <img mat-card-avatar [ref]="poster" asset="empty_poster.webp">
+              <img mat-card-avatar [storagePath]="poster.storagePath" [docRef]="'movies/' + movie.id" field="poster" asset="empty_poster.webp">
             </ng-container>
           </mat-card-header>
 

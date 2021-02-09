@@ -1,8 +1,22 @@
 <mat-list-item *ngIf="!!_invitation">
-  <img matListAvatar *ngIf="_invitation.fromUser" asset="profil_user.webp" [ref]="_invitation.fromUser.avatar"
-    alt="Profile picture">
-  <img matListAvatar *ngIf="_invitation.fromOrg" asset="profil_user.webp" [ref]="_invitation.fromOrg.logo"
-    alt="Organization logo">
+  <img
+    matListAvatar
+    *ngIf="_invitation.fromUser"
+    asset="profil_user.webp"
+    [storagePath]="_invitation.fromUser.avatar.storagePath"
+    [docRef]="'users/' + _invitation.fromUser.id"
+    field="avatar"
+    alt="Profile picture"
+  >
+  <img
+    matListAvatar
+    *ngIf="_invitation.fromOrg"
+    asset="profil_user.webp"
+    [storagePath]="_invitation.fromOrg.logo.storagePath"
+    [docRef]="'orgs/' + _invitation.fromOrg.id"
+    field="logo"
+    alt="Organization logo"
+  >
   <div matLine>
     <ng-container [ngSwitch]="_invitation.type">
       <ng-container *ngSwitchCase="'attendEvent'">

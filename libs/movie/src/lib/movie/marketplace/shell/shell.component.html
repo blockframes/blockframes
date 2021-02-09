@@ -69,8 +69,8 @@
     <article *ngIf="movie.promotional.still_photo.length">
       <h2>Images</h2>
       <bf-carousel flex [min]="3">
-        <ng-container *ngFor="let photo of movie.promotional.still_photo">
-          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.webp" loading="eager">
+        <ng-container *ngFor="let photo of movie.promotional.still_photo; let i = index">
+          <img carouselItem [col]="4" [storagePath]="photo.storagePath" [docRef]="'movies/' + movie.id" [field]="'promotional.still_photo[' + i + ']'" asset="empty_still_photo.webp" loading="eager">
         </ng-container>
       </bf-carousel>
     </article>

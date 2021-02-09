@@ -10,6 +10,7 @@ import { Title } from '../../+state/movie.firestore';
 })
 export class BannerComponent {
 
+  public id: string;
   public poster: string;
   public title: Title;
   public director: string;
@@ -18,6 +19,7 @@ export class BannerComponent {
 
   @Input() set movie(movie: Movie) {
     if (movie) {
+      this.id = movie.id;
       this.poster = movie.poster;
       this.title = movie.title;
       this.director = movie.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');

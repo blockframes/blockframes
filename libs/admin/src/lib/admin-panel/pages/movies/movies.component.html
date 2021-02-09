@@ -24,7 +24,7 @@
     (rowClick)="goToEdit($event)">
     <ng-template colRef="poster" let-posters>
       <ng-container *ngIf="posters">
-        <img class="poster" [ref]="posters" asset="empty_poster.webp">
+        <img class="poster" [storagePath]="posters.storagePath" [docRef]="'movies/' + movie.id" field="poster" asset="empty_poster.webp">
       </ng-container>
     </ng-template>
     <ng-template colRef="storeConfig.status" let-storeStatus>

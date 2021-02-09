@@ -22,7 +22,7 @@
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="logo" let-logo>
       <ng-container *ngIf="logo; else nologo">
-        <img class="logo" [ref]="logo" asset="empty_poster.webp">
+        <img class="logo" [storagePath]="logo.storagePath" [docRef]="'orgs/' + org.id" field="logo" asset="empty_poster.webp">
       </ng-container>
       <ng-template #nologo>
         --

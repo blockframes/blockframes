@@ -13,7 +13,7 @@
     </a>
     <div class="movie-info" fxLayout="row" fxLayoutGap="20px">
       <!-- Poster -->
-      <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.webp" alt="Movie Poster" class="poster">
+      <img fxHide.lt-md [storagePath]="movieView.poster.storagePath" [docRef]="'movies/' + movieView.id" field="poster" asset="empty_poster.webp" alt="Movie Poster" class="poster">
       <!-- Descriptions -->
       <div fxLayout="column" fxLayoutAlign="space-between start">
           <div class="movie-details">

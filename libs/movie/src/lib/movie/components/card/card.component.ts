@@ -25,7 +25,7 @@ export class CardComponent {
   public placeholder: string;
   public ltLg$ = this.breakpointsService.ltLg;
 
-  @Input() size: 'banner' | 'poster' | 'avatar';
+  @Input() size: 'banner' | 'poster';
   private _movie: Movie;
   get movie() { return this._movie }
   @Input() set movie(value: Movie) {
