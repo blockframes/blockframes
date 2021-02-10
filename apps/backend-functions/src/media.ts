@@ -111,17 +111,16 @@ export async function linkFile(data: storage.ObjectMetadata) {
     // (3) update db
 
     // separate extraData from metadata
-    const extraData = {...metadata};
     const keysToDelete = [
-      'uid', 'privacy', 'collection', 'docId', 'field',
+      'uid',
       'firebaseStorageDownloadTokens',
     ];
     for (const key of keysToDelete) {
-      delete extraData[key];
+      delete metadata[key];
     }
 
     const uploadData: StorageFile = {
-      ...extraData,
+      ...metadata,
       storagePath: finalPath,
     }
 
@@ -356,7 +355,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
 
   const needsToBeCleaned = (beforeStoragePath: string | undefined, afterStoragePath: string) => {
-    return !!beforeStoragePath && (beforeStoragePath !== afterStoragePath && afterStoragePath === '')
+    return !!beforeStoragePath && beforeStoragePath !== afterStoragePath && afterStoragePath === '';
   };
 
   const mediaToDelete: string[] = [];

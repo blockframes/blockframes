@@ -2,7 +2,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
-import { FileMetaData } from '@blockframes/media/+state/media.model';
+import { getFileStoragePath, getFileMetadata } from '@blockframes/media/+state/static-files';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 import { MovieFormShellComponent } from '../shell/shell.component';
@@ -16,38 +16,9 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 })
 export class MovieFormMediaFilesComponent {
   form = this.shell.getForm('movie');
-
   movieId = this.route.snapshot.params.movieId;
-
-  storagePaths: Record<string, string> = {
-    presentationDeck: `public/movies/${this.movieId}/presentationDeck`,
-    scenario: `public/movies/${this.movieId}/scenario`,
-    moodboard: `public/movies/${this.movieId}/moodboard`,
-  };
-
-  metadatas: Record<string, FileMetaData> = {
-    presentationDeck: {
-      privacy: 'public',
-      collection: 'movies',
-      docId: this.movieId,
-      field: 'promotional.presentation_deck',
-      uid: '',
-    },
-    scenario: {
-      privacy: 'public',
-      collection: 'movies',
-      docId: this.movieId,
-      field: 'promotional.scenario',
-      uid: '',
-    },
-    moodboard: {
-      privacy: 'public',
-      collection: 'movies',
-      docId: this.movieId,
-      field: 'promotional.moodboard',
-      uid: '',
-    },
-  };
+  getPath = getFileStoragePath
+  getMetadata = getFileMetadata
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -56,6 +27,4 @@ export class MovieFormMediaFilesComponent {
   ) {
     this.dynTitle.setPageTitle('Files');
   }
-
-
 }
