@@ -222,10 +222,11 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
     notification.organization.denomination.full,
     notification.user.firstName!
   );
-  await sendMailFromTemplate(templateRequest, appKey);
 
-
-  return sendMailFromTemplate(template, appKey);
+  const promises: Promise<any>[] = [];
+  promises.push(sendMailFromTemplate(template, appKey));
+  promises.push(sendMailFromTemplate(templateRequest, appKey))
+  return Promise.all(promises);
 }
 
 async function sendOrgMemberUpdatedEmail(recipient: User, notification: NotificationDocument) {
