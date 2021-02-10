@@ -1,7 +1,6 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import * as admin from 'firebase-admin';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument } from './data/internals';
+import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
@@ -27,8 +26,6 @@ import {
 import { templateIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
-
-type Timestamp = admin.firestore.Timestamp;
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -78,13 +75,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   return notification;
 }
 
-function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}): DocumentMeta<Timestamp> {
-  return {
-    createdBy: 'internal',
-    createdAt: admin.firestore.Timestamp.now(),
-    ...meta
-  }
-}
+
 
 /** Create a Notification with required and generic information. */
 export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
