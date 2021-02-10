@@ -49,7 +49,7 @@ import { FormStaticValue, FormStaticValueArray } from '@blockframes/utils/form/f
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { HostedMediaForm, StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
@@ -654,22 +654,14 @@ function createMoviePromotionalElementsControls(movieId: string, promotionalElem
 
     // Hosted Media
     financialDetails: new HostedMediaForm(entity.financialDetails, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.financialDetails'}),
-    presentation_deck: new FormEntity({
-      storagePath: new FormControl(entity.presentation_deck.storagePath),
-    }),
-    scenario: new FormEntity({
-      storagePath: new FormControl(entity.scenario.storagePath),
-    }),
-    moodboard: new FormEntity({
-      storagePath: new FormControl(entity.moodboard.storagePath),
-    }),
+    presentation_deck: new StorageFileForm(entity.presentation_deck),
+    scenario: new StorageFileForm(entity.scenario),
+    moodboard: new StorageFileForm(entity.moodboard),
     notes: FormList.factory(entity.notes, el => new FormEntity({
       role: new FormControl(el.role),
       firstName: new FormControl(el.firstName),
       lastName: new FormControl(el.lastName),
-      file: new FormEntity({
-        storagePath: new FormControl(entity.scenario.storagePath),
-      }),
+      file: new FormControl(el.ref),
     })),
     salesPitch: new MovieSalesPitchForm(movieId, entity.salesPitch),
 
