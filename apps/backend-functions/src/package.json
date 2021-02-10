@@ -28,7 +28,6 @@
     "generate-password": "^1.4.2",
     "jwplatform": "0.0.5",
     "lodash": "^4.17.11",
-    "rxjs": "~6.5.5",
     "twilio": "3.49.2"
   }
 }
