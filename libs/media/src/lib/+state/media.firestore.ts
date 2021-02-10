@@ -1,16 +1,32 @@
 
-import { privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { Privacy } from '@blockframes/utils/file-sanitizer';
+import { FileMetaData } from './media.model';
 
-
-export interface FileMetaData {
-  uid: string;
+/**
+* Representation of a storage file in our Firestore db.
+* @note this is not the same as the data needed to upload into the storage: `UploadData`
+*/
+export interface StorageFile {
   privacy: Privacy;
-  collection: 'users' | 'orgs' | 'movies' | 'campaigns';
+  collection: 'movies' | 'users' | 'orgs' | 'campaigns';
   docId: string;
   field: string;
+  storagePath: string;
   [K: string]: string; // extra-data
-};
+}
 
+export function createStorageFile(file: Partial<StorageFile>): StorageFile {
+  return {
+    privacy: 'public',
+    collection: 'movies',
+    docId: '',
+    field: '',
+    storagePath: '',
+    ...file,
+  };
+}
+
+// ! DEPRECATED
 export interface HostedMediaFormValue {
   ref: string;
   oldRef: string;
@@ -19,21 +35,13 @@ export interface HostedMediaFormValue {
   metadata: FileMetaData;
 }
 
+// ! DEPRECATED
 export interface HostedMediaWithMetadata {
   ref: string,
   title: string
 }
 
-export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: boolean }) {
-  if (!meta) return false;
-  if (!!options?.uidRequired && (!meta.uid || typeof meta.uid !== 'string')) return false;
-  if (!meta.privacy || !privacies.includes(meta.privacy)) return false;
-  if (!meta.collection || typeof meta.collection !== 'string') return false;
-  if (!meta.docId || typeof meta.docId !== 'string') return false;
-  if (!meta.field || typeof meta.field !== 'string') return false;
-  return true;
-}
-
+// ! DEPRECATED
 export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
   if (!formValue.ref) return '';
   const ref = formValue.ref;
@@ -43,6 +51,7 @@ export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): stri
     `${formValue.ref}/${formValue.fileName}`;
 }
 
+// ! DEPRECATED
 export function createHostedMediaWithMetadata(params: Partial<HostedMediaWithMetadata> = {}): HostedMediaWithMetadata {
   return {
     ref: '',
@@ -51,7 +60,8 @@ export function createHostedMediaWithMetadata(params: Partial<HostedMediaWithMet
   }
 }
 
-export interface UploadData {
+// ! DEPRECATED
+export interface OldUploadData {
   /**
   * firebase storage upload path *(or ref)*,
   * @note **Make sure that the path param does not include the filename.**

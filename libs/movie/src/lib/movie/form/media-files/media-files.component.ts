@@ -1,7 +1,12 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieFormShellComponent } from '../shell/shell.component';
+
 import { ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+
+import { getFileStoragePath, getFileMetadata } from '@blockframes/media/+state/static-files';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+
+import { MovieFormShellComponent } from '../shell/shell.component';
+
 
 @Component({
   selector: 'movie-form-media-files',
@@ -11,6 +16,9 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class MovieFormMediaFilesComponent {
   form = this.shell.getForm('movie');
+  movieId = this.route.snapshot.params.movieId;
+  getPath = getFileStoragePath
+  getMetadata = getFileMetadata
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -19,14 +27,4 @@ export class MovieFormMediaFilesComponent {
   ) {
     this.dynTitle.setPageTitle('Files');
   }
-
-  get promotional() {
-    return this.form.get('promotional');
-  }
-
-  public getPath(filePath: 'presentation_deck' | 'scenario' | 'moodboard') {
-    const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.${filePath}/`;
-  }
-
 }

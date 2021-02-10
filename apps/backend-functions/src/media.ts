@@ -1,7 +1,7 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { isEqual, mean, set } from 'lodash';
+import { isEqual, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -10,7 +10,8 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getDocument } from '@blockframes/firebase-utils';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
 import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
-import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
 import { privacies, Privacy, tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
@@ -56,6 +57,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
+    // because of possible nested map and arrays, we need to retrieve the whole document
+    // modify it, then update the whole doc with the new (modified) version
     const docRef = db.collection(metadata.collection).doc(metadata.docId);
     const docSnap = await docRef.get();
     await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
@@ -106,11 +109,22 @@ export async function linkFile(data: storage.ObjectMetadata) {
     await file.copy(to);
 
     // (3) update db
-    // because of possible nested map and arrays, we need to retrieve the whole document
-    // modify it, then update the whole doc with the new (modified) version
 
-    // TODO issue#4002 refactor as set(doc, metadata.field, { ref: finalPath});
-    set(doc, metadata.field, finalPath); // update the whole doc with only the new ref
+    // separate extraData from metadata
+    const keysToDelete = [
+      'uid',
+      'firebaseStorageDownloadTokens',
+    ];
+    for (const key of keysToDelete) {
+      delete metadata[key];
+    }
+
+    const uploadData: StorageFile = {
+      ...metadata,
+      storagePath: finalPath,
+    }
+
+    set(doc, metadata.field, uploadData); // update the whole doc with only the new storagePath & extraData
 
     await docRef.update(doc);
 
@@ -137,18 +151,12 @@ export async function linkFile(data: storage.ObjectMetadata) {
         return false;
       }
 
-      // TODO issue#4002 use field and stop computing the videoField
       // upload success: we should add jwPlayerId to the db document
-      const segmentedField = metadata.field.split('.');
-      segmentedField.pop(); // remove `.ref` to get the whole video object instead of the ref/path
-      segmentedField.push('jwPlayerId');
-      const videoField = segmentedField.join('.');
-
       const docRef = db.collection(metadata.collection).doc(metadata.docId);
       const docSnap = await docRef.get();
       if (!docSnap.exists) return false;
       const doc = docSnap.data()!;
-      set(doc, videoField, uploadResult.key); // update the whole doc with only the new ref
+      set(doc, `${metadata.field}.jwPlayerId`, uploadResult.key); // update the whole doc with only the new jwPlayerId
       await docRef.update(doc);
 
       return true;
@@ -189,14 +197,17 @@ export const getMediaToken = async (data: { ref: string, parametersSet: ImagePar
 
 }
 
-export const deleteMedia = async (ref: string): Promise<void> => {
+// TODO issue#4813 refactor
+// TODO - to use parent object instead of storagePath
+// TODO - check if parent object has a `jwPlayerId`, if so delete video from JWPlayer API
+export const deleteMedia = async (storagePath: string): Promise<void> => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
-  const file = bucket.file(ref);
+  const file = bucket.file(storagePath);
 
   const [exists] = await file.exists();
   if (!exists) {
-    console.log(`Upload Error : File "${ref}" does not exists in the storage`);
+    console.log(`Upload Error : File "${storagePath}" does not exists in the storage`);
   } else {
     await file.delete();
   }
@@ -342,30 +353,34 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 }
 
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
+
+  const needsToBeCleaned = (beforeStoragePath: string | undefined, afterStoragePath: string) => {
+    return !!beforeStoragePath && beforeStoragePath !== afterStoragePath && afterStoragePath === '';
+  };
+
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
-    if (!!before.banner && (before.banner !== after.banner || after.banner === '')) {
+    if (needsToBeCleaned(before.banner, after.banner)) {
       mediaToDelete.push(before.banner);
     }
 
-    if (!!before.poster && (before.poster !== after.poster || after.poster === '')) {
+    if (needsToBeCleaned(before.poster, after.poster)) {
       mediaToDelete.push(before.poster);
     }
 
-    if (!!before.promotional.presentation_deck && (before.promotional.presentation_deck !== after.promotional.presentation_deck || after.promotional.presentation_deck === '')) {
-      mediaToDelete.push(before.promotional.presentation_deck);
+    if (needsToBeCleaned(before.promotional.presentation_deck.storagePath, after.promotional.presentation_deck.storagePath)) {
+      mediaToDelete.push(before.promotional.presentation_deck.storagePath);
     }
 
-    if (!!before.promotional.scenario && (before.promotional.scenario !== after.promotional.scenario || after.promotional.scenario === '')) {
-      mediaToDelete.push(before.promotional.scenario);
+    if (needsToBeCleaned(before.promotional.scenario.storagePath, after.promotional.scenario.storagePath)) {
+      mediaToDelete.push(before.promotional.scenario.storagePath);
     }
 
-    if (!!before.promotional.moodboard && (before.promotional.moodboard !== after.promotional.moodboard || after.promotional.moodboard === '')) {
-      mediaToDelete.push(before.promotional.moodboard);
+    if (needsToBeCleaned(before.promotional.moodboard.storagePath, after.promotional.moodboard.storagePath)) {
+      mediaToDelete.push(before.promotional.moodboard.storagePath);
     }
 
-    if (!!before.promotional.videos?.screener?.ref &&
-      (before.promotional.videos.screener?.ref !== after.promotional.videos?.screener?.ref || after.promotional.videos?.screener?.ref === '')) {
+    if (needsToBeCleaned(before.promotional.videos?.screener?.ref, after.promotional.videos?.screener?.ref)) {
       mediaToDelete.push(before.promotional.videos.screener.ref);
     }
 
@@ -408,15 +423,15 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (!!before.promotional.presentation_deck) {
-      mediaToDelete.push(before.promotional.presentation_deck);
+      mediaToDelete.push(before.promotional.presentation_deck.storagePath);
     }
 
     if (!!before.promotional.scenario) {
-      mediaToDelete.push(before.promotional.scenario);
+      mediaToDelete.push(before.promotional.scenario.storagePath);
     }
 
     if (!!before.promotional.moodboard) {
-      mediaToDelete.push(before.promotional.moodboard);
+      mediaToDelete.push(before.promotional.moodboard.storagePath);
     }
 
     if (!!before.promotional.videos?.screener?.ref) {

@@ -1,8 +1,9 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
-import { FileMetaData } from '../+state/media.firestore';
+import { FileMetaData } from '../+state/media.model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
+import { StorageFile } from '../+state/media.firestore';
 
 
 // ------------------------------
@@ -27,6 +28,26 @@ export class FileMetaDataForm extends FormEntity<FileMetaDataControl> {
     super(control);
   }
 }
+
+
+
+function createStorageFileControl(storageFile: Partial<StorageFile>) {
+  return {
+    storagePath: new FormControl(storageFile?.storagePath ?? ''),
+  };
+}
+
+export type StorageFileControl = ReturnType<typeof createStorageFileControl>;
+
+export class StorageFileForm extends FormEntity<StorageFileControl> {
+  constructor(storageFile: Partial<StorageFile>) {
+    const control = createStorageFileControl(storageFile);
+    super(control);
+  }
+}
+
+
+// ! @deprecated Everything bellow should be removed during issue#4002
 
 // ------------------------------
 //          Hosted Media

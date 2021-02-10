@@ -49,14 +49,14 @@ import { FormStaticValue, FormStaticValueArray } from '@blockframes/utils/form/f
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { HostedMediaForm, StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
-import { FileMetaData } from '@blockframes/media/+state/media.firestore';
+import { FileMetaData } from '@blockframes/media/+state/media.model';
 
 // LEGAL DOCUMENTS
 
@@ -654,10 +654,15 @@ function createMoviePromotionalElementsControls(movieId: string, promotionalElem
 
     // Hosted Media
     financialDetails: new HostedMediaForm(entity.financialDetails, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.financialDetails'}),
-    presentation_deck: new HostedMediaForm(entity.presentation_deck, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.presentation_deck'}),
-    scenario: new HostedMediaForm(entity.scenario, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.scenario'}),
-    moodboard: new HostedMediaForm(entity.moodboard, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.moodboard'}),
-    notes: FormList.factory(entity.notes, (el, i) => new MovieNotesForm(el, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: `promotional.notes[${i}].ref` })),
+    presentation_deck: new StorageFileForm(entity.presentation_deck),
+    scenario: new StorageFileForm(entity.scenario),
+    moodboard: new StorageFileForm(entity.moodboard),
+    notes: FormList.factory(entity.notes, el => new FormEntity({
+      role: new FormControl(el.role),
+      firstName: new FormControl(el.firstName),
+      lastName: new FormControl(el.lastName),
+      file: new FormControl(el.ref),
+    })),
     salesPitch: new MovieSalesPitchForm(movieId, entity.salesPitch),
 
     // Hosted Videos

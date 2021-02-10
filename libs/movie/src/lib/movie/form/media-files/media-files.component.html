@@ -3,28 +3,47 @@
 
     <section id="presentation-deck">
       <h3>Presentation Deck</h3>
-      <file-uploader test-id="presentation-deck" [form]="form.promotional.get('presentation_deck')"
-        [storagePath]="getPath('presentation_deck')" allowedFileType="pdf">
+
+      <file-new-uploader
+        test-id="presentationDeck"
+        accept="pdf"
+        [form]="form.promotional.get('presentation_deck').get('storagePath')"
+        [storagePath]="getPath('movies', 'presentation_deck')"
+        [metadata]="getMetadata('movies', 'presentation_deck', movieId)"
+      >
         <h3 title>Upload Presentation Deck</h3>
-      </file-uploader>
+      </file-new-uploader>
+
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
     <section id="scenario">
       <h3>Scenario</h3>
-      <file-uploader test-id="scenario" [form]="form.promotional.get('scenario')" [storagePath]="getPath('scenario')"
-        allowedFileType="pdf">
+      <file-new-uploader
+        test-id="scenario"
+        accept="pdf"
+        [form]="form.promotional.get('scenario').get('storagePath')"
+        [storagePath]="getPath('movies', 'scenario')"
+        [metadata]="getMetadata('movies', 'scenario', movieId)"
+      >
         <h3 title>Upload Scenario</h3>
-      </file-uploader>
+      </file-new-uploader>
+
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
     <section id="moodboard">
       <h3>Moodboard / Artistic Deck</h3>
-      <file-uploader test-id="moodboard" [form]="form.promotional.get('moodboard')" [storagePath]="getPath('moodboard')"
-        allowedFileType="pdf">
+      <file-new-uploader
+        test-id="moodboard"
+        accept="pdf"
+        [form]="form.promotional.get('moodboard').get('storagePath')"
+        [storagePath]="getPath('movies', 'moodboard')"
+        [metadata]="getMetadata('movies', 'moodboard', movieId)"
+      >
         <h3 title>Upload Moodboard / Artistic Deck</h3>
-      </file-uploader>
+      </file-new-uploader>
+
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
   </ng-container>
