@@ -154,6 +154,6 @@
     }
   },
   "affected": {
-    "defaultBase": "develop"
+    "defaultBase": "origin/develop"
   }
 }
