@@ -31,6 +31,7 @@ import { Contract, getValidatedContracts } from '@blockframes/contract/contract/
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -112,12 +113,12 @@ export function createMoviePromotional(
     ...params,
     clip_link: params.clip_link ?? '',
     financialDetails: params.financialDetails ?? '',
-    moodboard: params.moodboard ?? { storagePath: '' },
+    moodboard: createStorageFile(params?.moodboard),
     notes: params.notes ?? [],
     salesPitch: createSalesPitch(params.salesPitch),
     still_photo: params.still_photo ?? [],
-    presentation_deck: params?.presentation_deck ?? { storagePath: '' },
-    scenario: params.scenario ?? { storagePath: '' },
+    presentation_deck: createStorageFile(params?.presentation_deck),
+    scenario: createStorageFile(params?.scenario),
     promo_reel_link: params.promo_reel_link ?? '',
     screener_link: params.screener_link ?? '',
     trailer_link: params.trailer_link ?? '',

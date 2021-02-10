@@ -7,9 +7,9 @@
       <file-new-uploader
         test-id="presentationDeck"
         accept="pdf"
-        [displayFile]="form.promotional.get('presentation_deck').get('storagePath')"
-        [storagePath]="storagePaths.presentationDeck"
-        [metadata]="metadatas.presentationDeck"
+        [form]="form.promotional.get('presentation_deck').get('storagePath')"
+        [storagePath]="getPath('movies', 'presentation_deck')"
+        [metadata]="getMetadata('movies', 'presentation_deck', movieId)"
       >
         <h3 title>Upload Presentation Deck</h3>
       </file-new-uploader>
@@ -22,9 +22,9 @@
       <file-new-uploader
         test-id="scenario"
         accept="pdf"
-        [displayFile]="form.promotional.get('scenario').get('storagePath')"
-        [storagePath]="storagePaths.scenario"
-        [metadata]="metadatas.scenario"
+        [form]="form.promotional.get('scenario').get('storagePath')"
+        [storagePath]="getPath('movies', 'scenario')"
+        [metadata]="getMetadata('movies', 'scenario', movieId)"
       >
         <h3 title>Upload Scenario</h3>
       </file-new-uploader>
@@ -37,9 +37,9 @@
       <file-new-uploader
         test-id="moodboard"
         accept="pdf"
-        [displayFile]="form.promotional.get('moodboard').get('storagePath')"
-        [storagePath]="storagePaths.moodboard"
-        [metadata]="metadatas.moodboard"
+        [form]="form.promotional.get('moodboard').get('storagePath')"
+        [storagePath]="getPath('movies', 'moodboard')"
+        [metadata]="getMetadata('movies', 'moodboard', movieId)"
       >
         <h3 title>Upload Moodboard / Artistic Deck</h3>
       </file-new-uploader>
