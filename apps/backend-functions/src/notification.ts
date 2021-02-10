@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
-import { sendMail /* @TODO #4046 remove import */, sendMailFromTemplate } from './internals/email';
+import { sendMailFromTemplate } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
@@ -337,6 +337,7 @@ async function sendOrgAppAccessChangedEmail(recipient: User, notification: Notif
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const app = await getOrgAppKey(org);
   const url = await getAppUrl(org);
+  // @#4046 Change text to something more generic than `Your organization has now access to Archipel Market.` wich can be wrong
   const template = organizationAppAccessChanged(recipient, url);
   await sendMailFromTemplate(template, app);
 }
@@ -382,7 +383,7 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
   // @TODO #4046 Update parameters given to the movieAcceptedEmail function when Vincent updated template
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const movieTitle = movie.title.original ? movie.title.original : movie.title.international;
-  const movieUrl = `dashboard/title/${movie.id}`;
+  const movieUrl = `c/o/dashboard/title/${movie.id}`;
   const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
 
   const app = await getOrgAppKey(org);

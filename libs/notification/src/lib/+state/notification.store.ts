@@ -127,9 +127,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
-        // @TODO #4046 need text for notification
+        // @TODO #4046 Update text if needed
         return {
-          message: 'Error while displaying notification.'
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: 'Your organization\'s app access have changed.',
+          imgRef: notification.organization?.logo,
+          placeholderUrl: 'empty_organization.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'eventIsAboutToStart':
 
