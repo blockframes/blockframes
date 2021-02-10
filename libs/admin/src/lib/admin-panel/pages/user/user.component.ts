@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'admin-user',
@@ -30,6 +31,8 @@ export class UserComponent implements OnInit {
   public userForm: UserAdminForm;
   private originalOrgValue: string;
 
+  public reportURL: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
+
   constructor(
     private userService: UserService,
     private eventService: EventService,
@@ -42,6 +45,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer
   ) { }
 
   async ngOnInit() {
@@ -56,6 +60,11 @@ export class UserComponent implements OnInit {
 
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
+
+      const prms = JSON.stringify({ "ds2.user_id": this.userId });
+      const encodedPrms = encodeURIComponent(prms);
+      this.reportURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB?params=${encodedPrms}`);
+
       this.cdRef.markForCheck();
     });
   }
