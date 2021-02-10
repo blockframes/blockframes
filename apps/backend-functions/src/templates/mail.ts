@@ -303,12 +303,6 @@ export function reminderEventToUser(
   return { to: toUser.email, templateId: template, data };
 }
 
-/** Generate an email when a movie is submitted */
-export function movieSubmittedEmail(toUser: PublicUser, movieTitle: string): EmailTemplateRequest {
-  const data = { userFirstName: toUser.firstName, movieTitle };
-  return { to: toUser.email, templateId: templateIds.movie.submitted, data };
-}
-
 /** Generate an email when a movie is accepted */
 export function movieAcceptedEmail(toUser: PublicUser, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { userFirstName: toUser.firstName, movieTitle, movieUrl };

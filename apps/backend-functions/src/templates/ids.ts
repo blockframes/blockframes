@@ -42,8 +42,8 @@ export const templateIds = {
   invitation: {
     attendEvent: {
       created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
-      accepted: '5d014e60af4c431dbe7316369f41591e',
-      declined: 'b7ea357cfd41404e9ff82f8d75410079'
+      accepted: 'd-5d014e60af4c431dbe7316369f41591e',
+      declined: 'd-b7ea357cfd41404e9ff82f8d75410079'
     },
     organization: {
       declined: 'd-d3c17695e25a453a98ab5540ea171c5c'
@@ -57,7 +57,6 @@ export const templateIds = {
     oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
   },
   movie: {
-    submitted: 'd-b303d5c2fd794fc6975752948414d62d',
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
   }
 }
