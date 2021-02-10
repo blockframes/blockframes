@@ -10,6 +10,7 @@ import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { EventEmailData } from '@blockframes/utils/emails/utils';
+import { logger } from 'firebase-functions';
 
 interface UserProposal {
   uid: string;
@@ -32,21 +33,21 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     const user = await getDocument<PublicUser>(`users/${uid}`);
     return user || { uid, email }
   } catch {
-    const newUser = await createUserFromEmail(email);
-
-    // User does not exists, send him an email.
-    const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
-    const urlToUse = applicationUrl[app];
-
-    const templateId = templateIds.user.credentials[invitationType];
-    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
-
     try {
+      const newUser = await createUserFromEmail(email);
+
+      // User does not exists, send him an email.
+      const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
+      const urlToUse = applicationUrl[app];
+
+      const templateId = templateIds.user.credentials[invitationType];
+      const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
+      return newUser.user;
     } catch (e) {
       throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
     }
-    return newUser.user;
+
   }
 };
 
@@ -59,13 +60,17 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
 
   const password = generatePassword();
 
-  // User does not exists, send them an email.
+  // User does not exists, we create it with a generated password
   const user = await auth.createUser({
     email,
     password,
     emailVerified: true,
     disabled: false
+  }).catch(e => {
+    throw new Error(`There was an error while creating user (email: "${email}" | password: "${password}"): ${e.message}`);
   });
+
+  logger.info(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
 
   return { user: { uid: user.uid, email }, password };
 };
