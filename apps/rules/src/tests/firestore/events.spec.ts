@@ -30,13 +30,13 @@ describe('Events Rules Tests', () => {
 
     test("user with valid org, invalid ownerOrgId shouldn't be able to create event", async () => {
       const eventRef = db.doc('events/E007');
-      const eventDetails = { id: 'E007', ownerOrgId: 'uid-007' };
+      const eventDetails = { id: 'E007', ownerOrgId: 'O002' };
       await assertFails(eventRef.set(eventDetails));
     });
 
     test('user with valid org, ownerOrgId as uid should be able to create event', async () => {
       const eventRef = db.doc('events/E007');
-      const eventDetails = { id: 'E007', ownerOrgId: 'uid-user2' };
+      const eventDetails = { id: 'E007', ownerOrgId: 'O001' };
       await assertSucceeds(eventRef.set(eventDetails));
     });
 
