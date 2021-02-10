@@ -10,6 +10,7 @@ import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { EventEmailData } from '@blockframes/utils/emails/utils';
+import { logger } from 'firebase-functions';
 
 interface UserProposal {
   uid: string;
@@ -69,7 +70,7 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
     throw new Error(`There was an error while creating user (email: "${email}" | password: "${password}"): ${e.message}`);
   });
 
-  console.log(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
+  logger.info(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
 
   return { user: { uid: user.uid, email }, password };
 };
