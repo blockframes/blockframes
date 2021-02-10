@@ -10,6 +10,7 @@ import {
   Territory
 } from "@blockframes/utils/static-model/types";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 type Timestamp = firebase.firestore.Timestamp;
 
@@ -138,10 +139,9 @@ export interface ContractLegalDocuments {
   expenses?: LegalDocument[]
 }
 
-export interface LegalDocument {
+export interface LegalDocument extends StorageFile {
   id: string,
   label: string,
-  media: string,
   language?: Language,
   country?: Territory,
 }

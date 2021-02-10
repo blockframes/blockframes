@@ -21,9 +21,8 @@ import {
   MoviePlannedShooting,
   MovieGoalsAudience,
   MovieSalesPitch,
-  MovieNote,
-  HostedVideos,
-  HostedVideo,
+  MovieVideos,
+  MovieVideo,
   MovieBase
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -93,10 +92,10 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
-    banner: params.banner ?? '',
+    banner: createStorageFile(params?.banner),
     audience: createAudienceGoals(params.audience),
     languages: createLanguageKey(params.languages ? params.languages : {}),
-    poster: params.poster ?? '',
+    poster: createStorageFile(params?.poster),
     promotional: createMoviePromotional(params.promotional),
     release: createReleaseYear(params.release),
     shooting: createShooting(params.shooting),
@@ -111,27 +110,31 @@ export function createMoviePromotional(
 ): MoviePromotionalElements {
   return {
     ...params,
-    clip_link: params.clip_link ?? '',
-    financialDetails: params.financialDetails ?? '',
+
+    financialDetails: createStorageFile(params?.financialDetails),
     moodboard: createStorageFile(params?.moodboard),
-    notes: params.notes ?? [],
+    notes: params?.notes?.map(note => createStorageFile(note)),
     salesPitch: createSalesPitch(params.salesPitch),
-    still_photo: params.still_photo ?? [],
+    still_photo: params?.still_photo?.map(still => createStorageFile(still)),
     presentation_deck: createStorageFile(params?.presentation_deck),
     scenario: createStorageFile(params?.scenario),
+    videos: createMovieVideos(params?.videos),
+
+    clip_link: params.clip_link ?? '',
     promo_reel_link: params.promo_reel_link ?? '',
     screener_link: params.screener_link ?? '',
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
-    videos: createHostedVideos(params.videos),
   };
 }
 
 export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
+  const video = createStorageFile(params);
   return {
     description: '',
-    ref: '',
+    jwPlayerId: '',
+    ...video,
     ...params,
   }
 }
@@ -342,26 +345,19 @@ export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
   }
 }
 
-export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
+export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
-    ref: '',
-    ...note
-  }
-}
-
-
-export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
-  return {
-    screener: createHostedVideo(params?.screener),
-    otherVideos: params?.otherVideos?.map(video => createHostedVideo(video)) || [],
+    screener: createMovieVideo(params?.screener),
+    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
     ...params,
   }
 }
 
-export function createHostedVideo(params: Partial<HostedVideo>): HostedVideo {
+export function createMovieVideo(params: Partial<MovieVideo>): MovieVideo {
+  const file = createStorageFile(params);
   return {
-    ref: '',
     jwPlayerId: '',
+    ...file,
     ...params,
   }
 }
