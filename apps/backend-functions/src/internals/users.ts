@@ -66,8 +66,10 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
     emailVerified: true,
     disabled: false
   }).catch(e => {
-    throw new Error(`There was an error while creating user (email: ${email} | password: ${password}): ${e.message}`);
+    throw new Error(`There was an error while creating user (email: "${email}" | password: "${password}"): ${e.message}`);
   });
+
+  console.log(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
 
   return { user: { uid: user.uid, email }, password };
 };
