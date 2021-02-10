@@ -13,7 +13,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 const titleType: Record<NotificationTypesBase, string> = {
-  movieSubmitted: 'A title is successfully submitted for validation.',
   movieAccepted: 'A title gets published to the marketplace.',
   requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
   requestFromUserToJoinOrgDeclined: 'User\'s request to join your org declined.',
@@ -37,7 +36,7 @@ const tables = [
   },
   {
     title: 'Content Management Notifications',
-    types: ['movieSubmitted', 'movieAccepted'],
+    types: ['movieAccepted'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
