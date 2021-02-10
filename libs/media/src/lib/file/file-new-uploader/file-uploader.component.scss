@@ -4,7 +4,7 @@
 }
 
 img.picture-hover {
-  height: 142px;
+  height: 140px;
   opacity: 0.3;
 }
 
@@ -17,7 +17,7 @@ section {
   justify-content: center;
   flex-direction: column;
   border: solid 1px var(--foreground-divider);
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 1.5rem;
   transition: border 0.2s ease-in-out;
   div {
