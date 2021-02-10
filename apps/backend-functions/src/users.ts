@@ -230,21 +230,21 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
     throw new Error('Email is mandatory for creating user');
   }
 
-  const newUser = await createUserFromEmail(email);
-
-  const urlToUse = applicationUrl[app];
-
-  const templateId = templateIds.user.credentials.joinOrganization[app];
-  const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
-
   try {
+    const newUser = await createUserFromEmail(email);
+
+    const urlToUse = applicationUrl[app];
+
+    const templateId = templateIds.user.credentials.joinOrganization[app];
+    const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
     await sendMailFromTemplate(template, app);
+
+    // We don't have the time to wait for the trigger onUserCreate,
+    // So we create it here first.
+    await db.collection('users').doc(newUser.user.uid).set(newUser.user);
+    return newUser.user;
   } catch (e) {
     throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
   }
 
-  // We don't have the time to wait for the trigger onUserCreate,
-  // So we create it here first.
-  await db.collection('users').doc(newUser.user.uid).set(newUser.user);
-  return newUser.user;
 }
