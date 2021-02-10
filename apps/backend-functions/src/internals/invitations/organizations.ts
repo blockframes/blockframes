@@ -114,10 +114,6 @@ async function onRequestFromUserToJoinOrgCreate({
   const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
   const app = await getOrgAppKey(org);
 
-  // send invitation pending email to user
-  const template = userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!);
-  await sendMailFromTemplate(template, app).catch(e => console.warn(e.message));
-
   // create notifications
   const notifications = org.userIds.map(toUserId =>
     createNotification({
