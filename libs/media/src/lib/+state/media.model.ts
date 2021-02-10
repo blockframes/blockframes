@@ -153,10 +153,7 @@ export function isMediaForm(obj: any) {
   return (
     typeof obj === 'object' &&
     !!obj &&
-    'ref' in obj &&
-    'oldRef' in obj &&
-    'blobOrFile' in obj &&
-    'fileName' in obj
+    'storagePath' in obj
   );
 }
 
