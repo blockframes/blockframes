@@ -67,7 +67,6 @@ export const testFixture = {
     email: 'u2@cascade8.com',
     uid: 'uid-user2',
     orgId: 'O001',
-    ownerId: 'O001',
   },
   'users/uid-peeptom': {
     email: 'tom@no-org.com',

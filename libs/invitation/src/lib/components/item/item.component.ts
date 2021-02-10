@@ -32,7 +32,7 @@ export class ItemComponent {
       this.eventService.getValue(invitation.eventId).then(event => {
         if (event.type === 'meeting') {
           this.eventType = 'meeting';
-          this.userService.getValue(event.meta.organizerId as string).then(user => {
+          this.userService.getValue(event.meta.organizerUid as string).then(user => {
             this.fromUser.value = user;
           })
         }

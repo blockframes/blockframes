@@ -28,37 +28,37 @@ describe('Events Rules Tests', () => {
       await assertFails(eventRef.set(eventDetails));
     });
 
-    test("user with valid org, invalid ownerId shouldn't be able to create event", async () => {
+    test("user with valid org, invalid ownerOrgId shouldn't be able to create event", async () => {
       const eventRef = db.doc('events/E007');
-      const eventDetails = { id: 'E007', ownerId: 'uid-007' };
+      const eventDetails = { id: 'E007', ownerOrgId: 'uid-007' };
       await assertFails(eventRef.set(eventDetails));
     });
 
-    test('user with valid org, ownerId as uid should be able to create event', async () => {
+    test('user with valid org, ownerOrgId as uid should be able to create event', async () => {
       const eventRef = db.doc('events/E007');
-      const eventDetails = { id: 'E007', ownerId: 'uid-user2' };
+      const eventDetails = { id: 'E007', ownerOrgId: 'uid-user2' };
       await assertSucceeds(eventRef.set(eventDetails));
     });
 
-    test('user with valid org, ownerId as orgId should be able to create event', async () => {
+    test('user with valid org, ownerOrgId as orgId should be able to create event', async () => {
       const eventRef = db.doc('events/E007');
-      const eventDetails = { id: 'E007', ownerId: 'O001' };
+      const eventDetails = { id: 'E007', ownerOrgId: 'O001' };
       await assertSucceeds(eventRef.set(eventDetails));
     });
 
-    test("user with valid org, ownerId as orgId, modifying id shouldn't be able to update event", async () => {
+    test("user with valid org, ownerOrgId as orgId, modifying id shouldn't be able to update event", async () => {
       const eventRef = db.doc('events/E007');
       const eventDetails = { id: 'E008' };
       await assertFails(eventRef.update(eventDetails));
     });
 
-    test('user with valid org, ownerId as orgId should be able to update event', async () => {
+    test('user with valid org, ownerOrgId as orgId should be able to update event', async () => {
       const eventRef = db.doc('events/E007');
       const eventDetails = { notes: 'Unit Test' };
       await assertSucceeds(eventRef.update(eventDetails));
     });
 
-    test('user with valid org, ownerId as orgId should be able to delete event', async () => {
+    test('user with valid org, ownerOrgId as orgId should be able to delete event', async () => {
       const eventRef = db.doc('events/E007');
       await assertSucceeds(eventRef.delete());
     });

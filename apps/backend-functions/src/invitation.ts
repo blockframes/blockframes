@@ -38,7 +38,7 @@ export async function onInvitationWrite(
   // Doc was deleted
   if (!invitationDoc) {
 
-    if (!!invitationDocBefore.toUser) {
+    if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') { // @TODO #4046 confirm with Clélia
       const user = await getUser(invitationDocBefore.toUser.uid)
 
       // Remove user in users collection
@@ -49,6 +49,7 @@ export async function onInvitationWrite(
           .where('toUser.uid', '==', user.uid)
           .where('mode', '==', 'invitation')
           .where('status', '==', 'pending')
+          .where('type', '==', 'joinOrganization') // @TODO #4046 confirm with Clélia
         const existingInvitation = await invitationCollectionRef.get();
 
         // If there is an other invitation or the user has already an org, we don't want to delete its account
@@ -140,7 +141,6 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
 
     const promises: ErrorResultResponse[] = [];
     const invitation = createInvitation(data.invitation);
-    const fromOrgId = (invitation.fromUser?.orgId || invitation.fromOrg?.id || user.orgId);
 
     // Ensure that we are not violating invitations limit
     if (invitation.type === 'attendEvent') {
@@ -174,7 +174,7 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
     }
 
     for (const email of data.emails) {
-      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app, eventData)
+      getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;

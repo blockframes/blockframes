@@ -25,10 +25,6 @@ const routes = [{
     path: 'screening',
     loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule),
     data: { animation: '2' }
-  // Put the meeting tab in comment to prevent users to go in
-  // }, {
-  //   path: 'meeting',
-  //   loadChildren: () => import('../meeting/meeting.module').then(m => m.MeetingModule)
   }]
 }]
 

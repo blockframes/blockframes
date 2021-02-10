@@ -27,9 +27,9 @@ export class EventCreateComponent {
 
   async createAndRedirect() {
     const event = this.form.value;
-    event.ownerId = this.orgQuery.getActiveId();
+    event.ownerOrgId = this.orgQuery.getActiveId();
     if (event.type === 'meeting') {
-      event.meta.organizerId = (await this.authService.user).uid;
+      event.meta.organizerUid = (await this.authService.user).uid;
     }
     if (event.allDay) {
       event.start.setHours(0,0,0);
