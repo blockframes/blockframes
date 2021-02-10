@@ -47,7 +47,10 @@
       "tags": []
     },
     "backend-ops": {
-      "tags": ["backend-ops", "ops"]
+      "tags": [
+        "backend-ops",
+        "ops"
+      ]
     },
     "notification": {
       "tags": [
@@ -141,15 +144,17 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
+        "accessToken": "Mzg2ZWE1MGEtYjg1NC00OGFjLWI1MzktYTBjYjZmMDA0ODE3fHJlYWQtd3JpdGU=",
         "cacheableOperations": [
           "build",
-          "lint",
           "test",
+          "lint",
           "e2e"
         ],
-        "cacheDirectory": ".cache/nx"
+        "canTrackAnalytics": false,
+        "showUsageWarnings": true
       }
     }
   },
