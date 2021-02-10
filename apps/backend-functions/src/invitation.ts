@@ -52,7 +52,7 @@ export async function onInvitationWrite(
         const existingInvitation = await invitationCollectionRef.get();
 
         // If there is an other invitation or the user has already an org, we don't want to delete its account
-        if (existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
+        if (existingInvitation.docs.length >= 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
           return;
         }
 
