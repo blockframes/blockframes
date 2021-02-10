@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { getValue, downloadCsvFromJson, BehaviorStore } from '@blockframes/utils/helpers';
+import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { BehaviorStore } from '@blockframes/utils/behavior-store';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
 import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
