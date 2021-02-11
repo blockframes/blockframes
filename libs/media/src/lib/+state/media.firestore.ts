@@ -26,39 +26,10 @@ export function createStorageFile(file: Partial<StorageFile>): StorageFile {
   };
 }
 
-// ! DEPRECATED
-export interface HostedMediaFormValue {
-  ref: string;
-  oldRef: string;
-  blobOrFile: Blob | File;
-  fileName: string;
-  metadata: FileMetaData;
+export interface StorageVideo extends StorageFile {
+  jwPlayerId: string;
 }
 
-// ! DEPRECATED
-export interface HostedMediaWithMetadata {
-  ref: string,
-  title: string
-}
-
-// ! DEPRECATED
-export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
-  if (!formValue.ref) return '';
-  const ref = formValue.ref;
-  const refParts = ref.split('/');
-  return refParts.pop() === formValue.fileName ?
-    `${formValue.ref}` :
-    `${formValue.ref}/${formValue.fileName}`;
-}
-
-// ! DEPRECATED
-export function createHostedMediaWithMetadata(params: Partial<HostedMediaWithMetadata> = {}): HostedMediaWithMetadata {
-  return {
-    ref: '',
-    title: '',
-    ...params
-  }
-}
 
 // ! DEPRECATED
 export interface OldUploadData {

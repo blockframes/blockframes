@@ -28,9 +28,7 @@ import { LegalDocument } from "@blockframes/contract/contract/+state/contract.fi
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
-import { StorageFile } from "@blockframes/media/+state/media.firestore";
-
-// TODO issue#2582
+import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
 
 //////////////////
 // MOVIE OBJECT //
@@ -49,7 +47,7 @@ export interface MovieBase<D> {
 
   // Every field concerning the movie
   audience?: MovieGoalsAudience,
-  banner?: string;
+  banner?: StorageFile;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
   certifications?: Certification[],
@@ -72,7 +70,7 @@ export interface MovieBase<D> {
   originalLanguages: Language[], //! required
   originalRelease?: MovieOriginalReleaseRaw<D>[],
   originCountries: Territory[], //! required
-  poster?: string;
+  poster?: StorageFile;
   prizes?: Prize[],
   customPrizes?: Prize[],
   producers?: Producer[],
@@ -102,14 +100,12 @@ export interface PublicMovie {
   title: Title;
 }
 
-export interface HostedVideos {
-  screener?: HostedVideo; // Main screener
-  otherVideos?: HostedVideo[]; // Other videos
+export interface MovieVideos {
+  screener?: MovieVideo; // Main screener
+  otherVideos?: MovieVideo[]; // Other videos
 }
 
-export interface HostedVideo {
-  ref: string,
-  jwPlayerId: string,
+export interface MovieVideo extends StorageVideo {
   title?: string,
   description?: string,
   type?: HostedVideoType
@@ -121,14 +117,14 @@ export interface HostedVideo {
 
 export interface MoviePromotionalElements {
 
-  financialDetails: string,
+  financialDetails: StorageFile,
   moodboard: StorageFile,
   notes: MovieNote[],
   presentation_deck: StorageFile,
   salesPitch: MovieSalesPitch,
   scenario: StorageFile,
-  still_photo: string[],
-  videos?: HostedVideos,
+  still_photo: StorageFile[],
+  videos?: MovieVideos,
 
   // @TODO #2586 remove this when we can upload
   // videos through movie tunnel and remove the component for external links
@@ -256,9 +252,7 @@ export interface MovieShootingDateRaw<D> {
 
 export interface MovieShootingDate extends MovieShootingDateRaw<Date> { }
 
-export interface MovieNote extends Person {
-  ref: string,
-}
+export type MovieNote = Person & StorageFile;
 
 export interface MoviePlannedShootingDateRange {
   from?: MoviePlannedShooting,
@@ -278,10 +272,8 @@ export interface MovieExpectedPremiereRaw<D> {
 
 export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> { }
 
-export interface MovieSalesPitch {
+export interface MovieSalesPitch extends StorageVideo {
   description?: string,
-  ref?: string, // hosted media
-  jwPlayerId?: string;
 }
 
 export interface MovieGoalsAudience {
