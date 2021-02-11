@@ -8,7 +8,7 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
-import { dashboardEmbed } from '@env'
+import { datastudio } from '@env'
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -62,10 +62,10 @@ export class UserComponent implements OnInit {
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
 
-      if (!!dashboardEmbed.user) {
+      if (!!datastudio.user) {
         const prms = JSON.stringify({ "ds2.user_id": this.userId });
         const encodedPrms = encodeURIComponent(prms);
-        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`${dashboardEmbed.user}?params=${encodedPrms}`);
+        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/${datastudio.user}?params=${encodedPrms}`);
       }
 
       this.cdRef.markForCheck();

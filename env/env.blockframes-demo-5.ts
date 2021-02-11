@@ -143,7 +143,7 @@ export const bigQueryAnalyticsTable = 'blockframes-demo-5.analytics_197180636.ev
 // Data Studio
 // ========
 
-export const dashboardEmbed = {
+export const datastudio = {
   user: ''
 }
 

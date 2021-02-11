@@ -175,8 +175,8 @@ export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.e
 // Data Studio
 // ========
 
-export const dashboardEmbed = {
-  user: 'https://datastudio.google.com/embed/reporting/1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB'
+export const datastudio = {
+  user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB'
 }
 
 

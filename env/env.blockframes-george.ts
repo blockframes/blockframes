@@ -144,7 +144,7 @@ export const bigQueryAnalyticsTable = 'blockframes-george.analytics_235781207.ev
 // Data Studio
 // ========
 
-export const dashboardEmbed = {
+export const datastudio = {
   user: ''
 }
 

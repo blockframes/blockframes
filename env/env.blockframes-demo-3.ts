@@ -144,7 +144,7 @@ export const bigQueryAnalyticsTable = 'blockframes-demo3.analytics_200039147.eve
 // Data Studio
 // ========
 
-export const dashboardEmbed = {
+export const datastudio = {
   user: ''
 }
 

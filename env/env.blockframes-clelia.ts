@@ -142,7 +142,7 @@ export const bigQueryAnalyticsTable = 'blockframes-clelia.analytics_224526935.ev
 // Data Studio
 // ========
 
-export const dashboardEmbed = {
+export const datastudio = {
   user: ''
 }
 

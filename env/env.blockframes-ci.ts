@@ -144,7 +144,7 @@ export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events
 // Data Studio
 // ========
 
-export const dashboardEmbed = {
+export const datastudio = {
   user: ''
 }
 

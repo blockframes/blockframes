@@ -145,7 +145,7 @@ export const bigQueryAnalyticsTable = 'blockframes-vincent.analytics_194475739.e
 // Data Studio
 // ========
 
-export const dashboardEmbed = {
+export const datastudio = {
   user: ''
 }
 
