@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { FileExplorerComponent } from './explorer.component';
+import { FileExplorerComponent, GetDirPipe } from './explorer.component';
 
 // Blockframes
 import { FileExplorerUploaderDialogModule } from './uploader-dialog/uploader-dialog.module';
@@ -23,7 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
-  declarations: [FileExplorerComponent],
+  declarations: [FileExplorerComponent, GetDirPipe],
   imports: [
     CommonModule,
     FlexLayoutModule,

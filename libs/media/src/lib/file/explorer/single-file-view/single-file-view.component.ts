@@ -12,12 +12,12 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 // File Explorer
 import {
-  getCollection,
-  getId,
-  isHostedMediaForm,
-  MediaFormTypes,
-  SubDirectoryFile,
-  SubDirectoryImage
+  // getCollection,
+  // getId,
+  // isHostedMediaForm,
+  // MediaFormTypes,
+  ImgDirectory,
+  FileDirectory
 } from '../explorer.model';
 
 @Component({
@@ -30,7 +30,7 @@ export class SingleFileViewComponent implements OnInit {
 
   public activeForm: OrganizationForm | MovieForm;
 
-  @Input() activeDirectory: SubDirectoryImage | SubDirectoryFile;
+  @Input() dir: ImgDirectory | FileDirectory;
 
   constructor(
     private mediaService: MediaService,
