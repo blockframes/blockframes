@@ -3,7 +3,7 @@ import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
-import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 type Timestamp = firebase.firestore.Timestamp;
@@ -21,7 +21,7 @@ export interface PublicOrganization {
 }
 
 export interface OrgMedias {
-  notes: HostedMediaWithMetadata[],
+  notes: StorageFile[],
 };
 
 /** Document model of an Organization */

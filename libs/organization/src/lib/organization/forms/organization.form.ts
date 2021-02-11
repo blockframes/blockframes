@@ -3,7 +3,7 @@ import { FormStaticValue, FormEntity } from "@blockframes/utils/form";
 import { createOrganization, Organization } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/+state/organization.firestore";
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { HostedMediaForm } from "@blockframes/media/form/media.form";
+import { StorageFileForm } from "@blockframes/media/form/media.form";
 import { OrganizationMediasForm } from './medias.form';
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
@@ -45,8 +45,8 @@ function createOrganizationFormControl(params?: Organization) {
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
     activity: new FormControl(organization.activity),
-    logo: new HostedMediaForm(organization.logo, { privacy: 'public', collection: 'orgs', docId: params?.id ?? '', field: 'logo' }),
-    documents: new OrganizationMediasForm(organization.id, organization.documents),
+    logo: new StorageFileForm({ storagePath: organization.logo }),
+    documents: new OrganizationMediasForm(organization.documents),
   }
 }
 
@@ -72,26 +72,6 @@ function createOrganizationAddressesControls(addresses: Partial<AddressSet> = {}
 }
 
 type OrganizationAddressesControl = ReturnType<typeof createOrganizationAddressesControls>
-
-// ISSUE#2692
-// function createOrganizationBankAccountFormControl(account?: Partial<BankAccount>) {
-//   const entity = createBankAccount(account);
-//   return {
-//     address: new AddressForm(entity.address),
-//     IBAN: new FormControl(entity.IBAN),
-//     BIC: new FormControl(entity.BIC),
-//     name: new FormControl(entity.name),
-//     holderName: new FormControl(entity.holderName)
-//   }
-// }
-
-// export type OrganizationBankAccountFormControl = ReturnType<typeof createOrganizationBankAccountFormControl>;
-
-// export class OrganizationBankAccountForm extends FormEntity<OrganizationBankAccountFormControl> {
-//   constructor(account?: Partial<BankAccount>) {
-//     super(createOrganizationBankAccountFormControl(account));
-//   }
-// }
 
 // Denomination form
 function createDenominationFormControl(denomination) {

@@ -1,6 +1,6 @@
-import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
+
 import { isSafari } from '@blockframes/utils/browser/utils';
-import type { MovieForm, MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
+import type { MovieForm, MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import type { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import type { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import type { MoviePictureAdminForm } from '@blockframes/admin/admin-panel/forms/movie-admin.form';
@@ -53,10 +53,10 @@ export function extractMediaFromDocumentBeforeUpdate(
     OrganizationForm |
     OrganizationAdminForm |
     OrganizationMediasForm |
-    MovieHostedVideosForm |
+    MovieVideosForm |
     CampaignForm |
     MoviePictureAdminForm
-): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
+): { documentToUpdate: any, mediasToUpload: any[] } {
 
   const cleanedDocument = JSON.parse(JSON.stringify(form.value));
 
@@ -71,7 +71,7 @@ export function extractMediaFromDocumentBeforeUpdate(
 
 // ! DEPRECATED
 function extractMediaFromDocument(document: any) {
-  let medias: HostedMediaFormValue[] = [];
+  let medias: any[] = [];
 
   for (const key in document) {
 
@@ -80,9 +80,6 @@ function extractMediaFromDocument(document: any) {
       if (mediaNeedsUpdate(document[key])) {
         medias.push(document[key]);
       }
-
-      // convert an `HostedMediaFormValue` into a simple `string`
-      document[key] = clearHostedMediaFormValue(document[key]);
 
     } else if (typeof document[key] === 'object' && !!document[key]) {
 
@@ -109,7 +106,7 @@ function updateMediaFormInForm(form: any) {
           // patching oldRef with the new reference. Updating this value in the form prevents emptying the reference multiple saves.
           control.patchValue({
             blobOrFile: '',
-            oldRef: clearHostedMediaFormValue(control.value),
+            oldRef: control.value,
           });
 
         }
@@ -158,7 +155,7 @@ export function isMediaForm(obj: any) {
 }
 
 // ! DEPRECATED
-function mediaNeedsUpdate(media: HostedMediaFormValue) {
+function mediaNeedsUpdate(media: any) {
   return !media.ref || (!!media.ref && !!media.blobOrFile);
 }
 
