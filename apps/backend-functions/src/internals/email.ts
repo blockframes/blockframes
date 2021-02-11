@@ -14,18 +14,19 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom()): Promise<any> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), unsubId?: number): Promise<any> {
   const msg: MailDataRequired = {
     from,
     to,
     subject,
     text,
+    asm: { groupId: unsubId }
   };
 
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App): Promise<any> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, unsubId?: number): Promise<any> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -36,7 +37,8 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     from,
     to,
     templateId,
-    dynamicTemplateData: { ...data, app: appMailSettings, from }
+    dynamicTemplateData: { ...data, app: appMailSettings, from },
+    asm: { groupId: unsubId }
   };
 
   return send(msg);

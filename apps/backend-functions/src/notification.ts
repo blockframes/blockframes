@@ -23,12 +23,14 @@ import {
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest
 } from './templates/mail';
-import { templateIds } from './templates/ids';
+import { templateIds, unsubscribeGroupIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
+// This is for letting user unsubscribe from every email except the critical ones as reset password.
+const unsubscribeId = unsubscribeGroupIds.allExceptCriticals
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: NotificationDocument[]): Promise<any> {
@@ -215,8 +217,8 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
   );
 
   const promises: Promise<any>[] = [];
-  promises.push(sendMailFromTemplate(template, appKey));
-  promises.push(sendMailFromTemplate(templateRequest, appKey))
+  promises.push(sendMailFromTemplate(template, appKey, unsubscribeId));
+  promises.push(sendMailFromTemplate(templateRequest, appKey, unsubscribeId))
   return Promise.all(promises);
 }
 
@@ -234,14 +236,14 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     );
 
     const appKey = await getOrgAppKey(org);
-    return sendMailFromTemplate(template, appKey);
+    return sendMailFromTemplate(template, appKey, unsubscribeId);
   } else {
     // @TODO #4046 Update parameters given to the email function when Vincent updated template
     // Member left/removed from org
     const userRemoved = createPublicUserDocument(notification.user);
     const app = await getOrgAppKey(org);
     const template = userLeftYourOrganization(recipient, userRemoved);
-    await sendMailFromTemplate(template, app);
+    await sendMailFromTemplate(template, app, unsubscribeId);
   }
 
 }
@@ -254,7 +256,7 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
   const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
 
   const email = reminderEventToUser(movie.title.international, recipient, orgName(org), eventData, template);
-  return await sendMailFromTemplate(email, eventAppKey);
+  return await sendMailFromTemplate(email, eventAppKey, unsubscribeId);
 }
 
 /** Send an email when an request to access an event is updated */
@@ -267,10 +269,10 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
     const eventData = getEventEmailData(event);
     if (notification.invitation.status === 'accepted') {
       const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
-      await sendMailFromTemplate(template, eventAppKey);
+      await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
       const template = requestToAttendEventFromUserRefused(recipient, orgName(organizerOrg), eventData);
-      await sendMailFromTemplate(template, eventAppKey);
+      await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {
     throw new Error('Invitation with mode === "request" can only have "toOrg" attribute');
@@ -292,12 +294,12 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
       // @TODO #4046 Update parameters given to the email function when Vincent updated template
       const templateId = templateIds.invitation.attendEvent.accepted;
       const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, templateId);
-      return sendMailFromTemplate(template, eventAppKey);
+      return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
       // @TODO #4046 Update parameters given to the email function when Vincent updated template
       const templateId = templateIds.invitation.attendEvent.declined;
       const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, templateId);
-      return sendMailFromTemplate(template, eventAppKey);
+      return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {
     throw new Error('Invitation with mode === "invitation" can only have "fromOrg" attribute');
@@ -310,7 +312,7 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
 async function sendMailToOrgAcceptedAdmin(recipient: User, notification: NotificationDocument) {
   const app = await getOrgAppKey(notification.organization.id);
   const template = organizationWasAccepted(recipient.email, recipient.firstName);
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
 /** Send email to organization's admins when org appAccess has changed */
@@ -320,7 +322,7 @@ async function sendOrgAppAccessChangedEmail(recipient: User, notification: Notif
   const url = await getAppUrl(org);
   // @#4046 Change text to something more generic than `Your organization has now access to Archipel Market.` wich can be wrong
   const template = organizationAppAccessChanged(recipient, url);
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
 async function sendRequestToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
@@ -332,7 +334,7 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
 
   console.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user} to : ${recipient.email}`);
   const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
-  return sendMailFromTemplate(templateRequest, eventAppKey).catch(e => console.warn(e.message));
+  return sendMailFromTemplate(templateRequest, eventAppKey, unsubscribeId).catch(e => console.warn(e.message));
 }
 
 async function sendInvitationToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
@@ -346,7 +348,7 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
 
   console.log(`Sending invitation email for an event (${notification.docId}) from ${senderName} to : ${recipient.email}`);
   const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
-  return sendMailFromTemplate(templateInvitation, eventAppKey).catch(e => console.warn(e.message));
+  return sendMailFromTemplate(templateInvitation, eventAppKey, unsubscribeId).catch(e => console.warn(e.message));
 }
 
 function getEventLink(org: OrganizationDocument) {
@@ -369,7 +371,7 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
 
   const app = await getOrgAppKey(org);
   const template = movieAcceptedEmail(recipient, movieTitle, movieUrl);
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
 /** Send an email to C8 members when a movie is submitted */
@@ -392,7 +394,7 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
 
   const app = await getOrgAppKey(org);
   const template = requestToAttendEventFromUserSent(recipient, eventEmailData, organizerOrgName);
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
 /** Let admins knows their invitation to an user to join their org has been declined */
@@ -403,7 +405,7 @@ async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notificatio
 
   const app = await getOrgAppKey(org);
   const template = invitationToJoinOrgDeclined(recipient, user);
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
 /** Let user knows its request to join an org has been declined */
@@ -413,5 +415,5 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
   const user = createPublicUserDocument(notification.user);
   const app = await getOrgAppKey(org);
   const template = requestToJoinOrgDeclined(user, orgName(org));
-  await sendMailFromTemplate(template, app);
+  await sendMailFromTemplate(template, app, unsubscribeId);
 }
