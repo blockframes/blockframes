@@ -696,6 +696,31 @@ describe('DB cleaning script', () => {
     expect(orgC.data().wishlist.length).toEqual(3);
   });
 
+  it('should remove duplicates in movie.orgIds', async () => {
+    const testMovies = [
+      { id: 'mov-A', orgIds: ['org-A', 'org-B', 'org-A'] },
+      { id: 'mov-B', orgIds: ['org-A', 'org-B', 'org-C'] },
+      { id: 'mov-C', orgIds: ['org-B', 'org-B', 'org-B'] },
+    ];
+
+    await populate('movies', testMovies);
+
+    const moviesBefore: Snapshot = await getCollectionRef('movies');
+    expect(moviesBefore.docs.length).toEqual(3);
+
+    await cleanMovies(moviesBefore);
+    const moviesAfter: Snapshot = await getCollectionRef('movies');
+
+    const movA = moviesAfter.docs.find(o => o.data().id === 'mov-A');
+    expect(movA.data().orgIds.length).toEqual(2);
+
+    const movB = moviesAfter.docs.find(o => o.data().id === 'mov-B');
+    expect(movB.data().orgIds.length).toEqual(3);
+
+    const movC = moviesAfter.docs.find(o => o.data().id === 'mov-C');
+    expect(movC.data().orgIds.length).toEqual(1);
+  });
+
 });
 
 function isMovieClean(d: any) {

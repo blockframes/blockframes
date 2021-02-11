@@ -227,7 +227,7 @@ export function cleanOrganizations(
       await orgDoc.ref.set(org);
     }
 
-    const { userIds = [], wishlist = []} = org as OrganizationDocument;
+    const { userIds = [], wishlist = [] } = org as OrganizationDocument;
 
     const validUserIds = Array.from(new Set(userIds.filter(userId => existingUserIds.includes(userId))));
     if (validUserIds.length !== userIds.length) {
@@ -265,8 +265,19 @@ export function cleanMovies(
   return runChunks(movies.docs, async (movieDoc) => {
     const movie = movieDoc.data() as any;
 
+    let updateDoc = false;
+
     if (movie.distributionRights) {
       delete movie.distributionRights;
+      updateDoc = true;
+    }
+
+    if (!!movie.orgIds && Array.from(new Set(movie.orgIds)).length !== movie.orgIds.length) {
+      movie.orgIds = Array.from(new Set(movie.orgIds));
+      updateDoc = true;
+    }
+
+    if (updateDoc) {
       await movieDoc.ref.set(movie);
     }
 
