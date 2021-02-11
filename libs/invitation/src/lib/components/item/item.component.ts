@@ -5,7 +5,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { BehaviorStore } from '@blockframes/utils/helpers';
+import { BehaviorStore } from '@blockframes/utils/behavior-store';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class ItemComponent {
       this.eventService.getValue(invitation.eventId).then(event => {
         if (event.type === 'meeting') {
           this.eventType = 'meeting';
-          this.userService.getValue(event.meta.organizerId as string).then(user => {
+          this.userService.getValue(event.meta.organizerUid as string).then(user => {
             this.fromUser.value = user;
           })
         }

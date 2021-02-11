@@ -10,7 +10,7 @@ export type EventMeta = Meeting | Screening | {};
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
 
 export interface Meeting {
-  organizerId: string;
+  organizerUid: string;
   description: string;
   attendees: Record<string, AttendeeStatus>;
   files: string[];
@@ -44,8 +44,7 @@ export interface Screening {
 
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = any> {
   id: string;
-  /** @dev The id of the owner. Can be a user or an organization given the event.type **/
-  ownerId: string;
+  ownerOrgId: string;
   isPrivate: boolean;
   isSecret: boolean;
   type: EventTypes;

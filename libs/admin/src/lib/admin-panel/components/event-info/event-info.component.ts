@@ -32,6 +32,6 @@ export class EventInfoComponent implements OnInit {
     ) { }
 
   async ngOnInit() {
-    this.org = await this.orgService.getValue(this.event.ownerId);
+    this.org = await this.orgService.getValue(this.event.ownerOrgId);
   }
 }

@@ -13,6 +13,7 @@ import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-for
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state';
+import { EventService } from '@blockframes/event/+state/event.service';
 
 @Component({
   selector: 'admin-user',
@@ -31,6 +32,7 @@ export class UserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private eventService: EventService,
     private organizationService: OrganizationService,
     private router: Router,
     private route: ActivatedRoute,
@@ -179,6 +181,11 @@ export class UserComponent implements OnInit {
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`)
+    }
+
+    const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerUid', '==', user.uid));
+    if (organizerEvent.length) {
+      output.push(`${organizerEvent.length} meetings event(s) will have no organizer anymore.`);
     }
 
     return output;

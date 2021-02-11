@@ -14,6 +14,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 import { TermService } from '@blockframes/contract/term/+state/term.service'
+import { centralOrgID } from '@env';
 
 enum SpreadSheetContract {
   titleId,
@@ -103,7 +104,8 @@ export class ViewExtractedContractsComponent implements OnInit {
         if (newContract) {
           if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'mandate') {
             contract = createMandate({
-              sellerId: this.orgQuery.getActiveId()
+              sellerId: this.orgQuery.getActiveId(),
+              buyerId: centralOrgID
             });
           } else if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'sale') {
             contract = createSale({

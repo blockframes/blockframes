@@ -1,7 +1,7 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { isEqual, mean, set } from 'lodash';
+import { isEqual, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';

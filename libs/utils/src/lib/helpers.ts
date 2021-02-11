@@ -1,5 +1,4 @@
 import  firebase from 'firebase';
-import { BehaviorSubject, Observable } from "rxjs";
 import { staticModel, Scope } from './static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
@@ -150,24 +149,7 @@ export function downloadCsvFromJson(data: any[], fileName = 'my-file') {
   a.remove();
 }
 
-/**
- * Default structure for BehaviorSubject
- * includes an observable, getter and setter
- */
-export class BehaviorStore<T> {
-  private state: BehaviorSubject<T>;
-  $: Observable<T>;
-  constructor(initial: T) {
-    this.state = new BehaviorSubject<T>(initial);
-    this.$ = this.state.asObservable();
-  }
-  get value(): T {
-    return this.state.getValue();
-  }
-  set value(value: T) {
-    this.state.next(value);
-  }
-}
+
 
 /**
  * This high-order function create debounced functions, that can be continuously called,

@@ -51,60 +51,45 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
 
   const notifications = [];
 
-  if (!!invitation.fromOrg) {
-    /**
-     * @dev For now, org can only make invitation to a screeening
-     */
+  if (!!invitation.fromOrg && invitation.mode === 'invitation') {
 
-    switch (invitation.mode) {
-      case 'invitation':
+    // Notification to request recipients
+    recipients.map(recipient => {
+      notifications.push(createNotification({
+        toUserId: recipient,
+        organization: invitation.fromOrg,
+        docId: invitation.eventId,
+        invitation: createPublicInvitationDocument(invitation),
+        type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated'
+      }));
+    });
 
-        // Notification to request recipients
-        recipients.map(recipient => {
-          notifications.push(createNotification({
-            toUserId: recipient,
-            organization: invitation.fromOrg,
-            docId: invitation.eventId,
-            invitation: createPublicInvitationDocument(invitation),
-            type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated'
-          }));
-        });
+    return triggerNotifications(notifications);
 
-        return triggerNotifications(notifications);
-      case 'request':
-      default:
-        throw new Error('Org can not create requests for events, reserved to users only');
-    }
-  } else if (!!invitation.fromUser) {
+  } else if (!!invitation.fromUser && invitation.mode === 'request') {
 
-    switch (invitation.mode) {
-      case 'invitation':
-        throw new Error('User can not create invitations for events, reserved to orgs only.');
-      case 'request':
-      default:
+    // Notification to request sender, letting him know that his request have been sent
+    notifications.push(createNotification({
+      toUserId: invitation.fromUser.uid,
+      user: invitation.fromUser,
+      docId: invitation.eventId,
+      invitation: createPublicInvitationDocument(invitation),
+      type: 'requestToAttendEventSent'
+    }));
 
-        // Notification to request sender, letting him know that his request have been sent
-        notifications.push(createNotification({
-          toUserId: invitation.fromUser.uid,
-          user: invitation.fromUser,
-          docId: invitation.eventId,
-          invitation: createPublicInvitationDocument(invitation),
-          type: 'requestToAttendEventSent'
-        }));
+    // Notification to request recipients
+    recipients.map(recipient => {
+      notifications.push(createNotification({
+        toUserId: recipient,
+        user: invitation.fromUser,
+        docId: invitation.eventId,
+        invitation: createPublicInvitationDocument(invitation),
+        type: 'requestToAttendEventCreated'
+      }));
+    });
 
-        // Notification to request recipients
-        recipients.map(recipient => {
-          notifications.push(createNotification({
-            toUserId: recipient,
-            user: invitation.fromUser,
-            docId: invitation.eventId,
-            invitation: createPublicInvitationDocument(invitation),
-            type: 'requestToAttendEventCreated'
-          }));
-        });
+    return triggerNotifications(notifications);
 
-        return triggerNotifications(notifications);
-    }
   } else {
     throw new Error('Did not found invitation sender');
   }
@@ -122,16 +107,9 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
       toUserId: invitation.fromUser.uid,
       docId: invitation.eventId,
       invitation: createPublicInvitationDocument(invitation),
-      type: 'requestToAttendEventUpdated'
+      type: 'requestToAttendEventUpdated',
+      organization: invitation.toOrg, // The subject that have accepted or rejected the request
     });
-
-    if (!!invitation.toUser) {
-      notification.user = invitation.toUser; // The subject that have accepted or rejected the request
-    } else if (!!invitation.toOrg) {
-      notification.organization = invitation.toOrg; // The subject that have accepted or rejected the request
-    } else {
-      throw new Error('Did not found invitation recipient.');
-    }
     notifications.push(notification);
   } else if (!!invitation.fromOrg && invitation.mode === 'invitation') {
     const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
@@ -141,16 +119,10 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
         toUserId,
         docId: invitation.eventId,
         invitation: createPublicInvitationDocument(invitation),
-        type: 'invitationToAttendEventUpdated'
+        type: 'invitationToAttendEventUpdated',
+        user: invitation.toUser // The subject that have accepted or rejected the invitation
       });
 
-      if (!!invitation.toUser) {
-        notification.user = invitation.toUser; // The subject that have accepted or rejected the invitation
-      } else if (!!invitation.toOrg) {
-        notification.organization = invitation.toOrg; // The subject that have accepted or rejected the invitation
-      } else {
-        throw new Error('Did not found invitation recipient.');
-      }
       notifications.push(notification);
     });
   } else {

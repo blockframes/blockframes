@@ -38,13 +38,13 @@ export async function onInvitationWrite(
   // Doc was deleted
   if (!invitationDoc) {
 
-    if (!!invitationDocBefore.toUser) {
+    if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') { 
       const user = await getUser(invitationDocBefore.toUser.uid)
 
       // Remove user in users collection
       if (invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
 
-        // Fetch potential other invitations to join org
+        // Fetch potential other invitations to this user
         const invitationCollectionRef = db.collection('invitations')
           .where('toUser.uid', '==', user.uid)
           .where('mode', '==', 'invitation')
@@ -52,7 +52,7 @@ export async function onInvitationWrite(
         const existingInvitation = await invitationCollectionRef.get();
 
         // If there is an other invitation or the user has already an org, we don't want to delete its account
-        if (existingInvitation.docs.length > 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
+        if (existingInvitation.docs.length >= 1 || !!user.orgId || !!user.firstName || !!user.lastName) {
           return;
         }
 
@@ -140,7 +140,6 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
 
     const promises: ErrorResultResponse[] = [];
     const invitation = createInvitation(data.invitation);
-    const fromOrgId = (invitation.fromUser?.orgId || invitation.fromOrg?.id || user.orgId);
 
     // Ensure that we are not violating invitations limit
     if (invitation.type === 'attendEvent') {
@@ -174,7 +173,7 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
     }
 
     for (const email of data.emails) {
-      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app, eventData)
+      getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;
