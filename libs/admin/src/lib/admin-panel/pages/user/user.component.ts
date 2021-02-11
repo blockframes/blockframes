@@ -8,6 +8,7 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
+import { dashboardEmbed } from '@env'
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -31,7 +32,7 @@ export class UserComponent implements OnInit {
   public userForm: UserAdminForm;
   private originalOrgValue: string;
 
-  public reportURL: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
+  public dashboardURL: SafeResourceUrl
 
   constructor(
     private userService: UserService,
@@ -61,9 +62,11 @@ export class UserComponent implements OnInit {
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
 
-      const prms = JSON.stringify({ "ds2.user_id": this.userId });
-      const encodedPrms = encodeURIComponent(prms);
-      this.reportURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB?params=${encodedPrms}`);
+      if (!!dashboardEmbed.user) {
+        const prms = JSON.stringify({ "ds2.user_id": this.userId });
+        const encodedPrms = encodeURIComponent(prms);
+        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`${dashboardEmbed.user}?params=${encodedPrms}`);
+      }
 
       this.cdRef.markForCheck();
     });

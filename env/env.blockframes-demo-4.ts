@@ -141,6 +141,13 @@ export const quorum = {
 
 export const bigQueryAnalyticsTable = 'blockframes-demo-4.analytics_197180636.events_';
 
+// Data Studio
+// ========
+
+export const dashboardEmbed = {
+  user: ''
+}
+
 // Archipel Content OrgId
 // ========
 

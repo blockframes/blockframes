@@ -103,14 +103,13 @@
       </form>
     </article>
   </section>
-  <section fxLayout fxLayoutAlign="center">
-    <iframe 
-      width="780px"
-      height="1100px"
-      [src]="reportURL"
-      frameborder="0"
-      style="border:0"
-      allowfullscreen>
-    </iframe>
-  </section>
+  <ng-container *ngIf="!!dashboardURL">
+    <section fxLayout fxLayoutAlign="center">
+      <iframe
+        [src]="dashboard"
+        frameborder="0"
+        allowfullscreen>
+      </iframe>
+    </section>
+  </ng-container>
 </main>
