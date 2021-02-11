@@ -32,10 +32,9 @@ export async function upsertWatermark(user: PublicUser, bucketName: string, stor
 
   const ref = `${privacy}/users/${user.uid}/watermark/${user.uid}.svg`;
   const file = storage ? storage.bucket(bucketName).file(ref) : admin.storage().bucket(bucketName).file(ref);
+  const metadata = { metadata: { uid: user.uid, privacy: 'public', collection: 'users', field: 'watermark', docId: user.uid } };
 
-  await new Promise(res => {
-    file.createWriteStream({ contentType: 'image/svg+xml' }).end(watermark, () => res());
-  });
+  await file.save(watermark, { metadata });
 
   const db = admin.firestore();
   const doc = await db.collection('users').doc(user.uid);
