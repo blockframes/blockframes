@@ -8,8 +8,7 @@
         test-id="presentationDeck"
         accept="pdf"
         [form]="form.promotional.get('presentation_deck').get('storagePath')"
-        [storagePath]="getPath('movies', 'presentation_deck')"
-        [metadata]="getMetadata('movies', 'presentation_deck', movieId)"
+        [meta]="['movies', 'presentation_deck', movieId]"
       >
         <h3 title>Upload Presentation Deck</h3>
       </file-new-uploader>
@@ -23,8 +22,7 @@
         test-id="scenario"
         accept="pdf"
         [form]="form.promotional.get('scenario').get('storagePath')"
-        [storagePath]="getPath('movies', 'scenario')"
-        [metadata]="getMetadata('movies', 'scenario', movieId)"
+        [meta]="['movies', 'scenario', movieId]"
       >
         <h3 title>Upload Scenario</h3>
       </file-new-uploader>
@@ -38,8 +36,7 @@
         test-id="moodboard"
         accept="pdf"
         [form]="form.promotional.get('moodboard').get('storagePath')"
-        [storagePath]="getPath('movies', 'moodboard')"
-        [metadata]="getMetadata('movies', 'moodboard', movieId)"
+        [metadata]="['movies', 'moodboard', movieId]"
       >
         <h3 title>Upload Moodboard / Artistic Deck</h3>
       </file-new-uploader>
