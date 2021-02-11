@@ -20,6 +20,7 @@ import { FileUploaderService } from '@blockframes/media/+state';
 import { FileMetaData } from '@blockframes/media/+state/media.model';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { FormControl } from '@angular/forms';
+import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '@blockframes/media/+state/static-files';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -36,22 +37,21 @@ function computeSize(fileSize: number) {
 }
 
 @Component({
-  selector: '[storagePath] [metadata] [accept] file-new-uploader',
+  selector: '[meta] [accept] file-new-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileUploaderComponent implements OnInit {
-  /**
-   * This the *storage* path, **not** the db path!
-   * @note it **should not** start with `tmp/`
-   * @note it **should not** start with a `/`
-   * @note it **should not** end with a `/`
-   * @example 'protected/movie/1234/poster'
-   */
-  @Input() storagePath: string;
 
-  @Input() metadata: FileMetaData;
+  public storagePath: string;
+  public metadata: FileMetaData;
+
+  @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
+    const [ collection, label, docId, index] = value;
+    this.storagePath = getFileStoragePath(collection, label);
+    this.metadata = getFileMetadata(collection, label, docId, index);
+  }
 
   @Input() form: FormControl;
 
