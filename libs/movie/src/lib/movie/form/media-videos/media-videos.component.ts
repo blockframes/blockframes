@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 
 import { hostedVideoTypes } from '@blockframes/utils/static-model/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { getFileStoragePath, getFileMetadata } from '@blockframes/media/+state/static-files';
 
 import { MovieFormShellComponent } from '../shell/shell.component';
 
@@ -20,9 +19,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
-
-  getPath = getFileStoragePath;
-  getMetadata = getFileMetadata;
 
   videoTypes = Object.keys(hostedVideoTypes);
 
