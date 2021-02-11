@@ -12,6 +12,7 @@ import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockfra
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { getDocument } from '@blockframes/firebase-utils';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 export { getDocument };
 
@@ -40,6 +41,16 @@ export function createPublicUserDocument(user: any = {}) {
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     orgId: user.orgId ?? ''
+  }
+}
+
+type Timestamp = admin.firestore.Timestamp;
+
+export function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}): DocumentMeta<Timestamp> {
+  return {
+    createdBy: 'internal',
+    createdAt: admin.firestore.Timestamp.now(),
+    ...meta
   }
 }
 

@@ -1,7 +1,6 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import * as admin from 'firebase-admin';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument } from './data/internals';
+import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
@@ -27,8 +26,6 @@ import {
 import { templateIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
-
-type Timestamp = admin.firestore.Timestamp;
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -78,13 +75,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   return notification;
 }
 
-function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}): DocumentMeta<Timestamp> {
-  return {
-    createdBy: 'internal',
-    createdAt: admin.firestore.Timestamp.now(),
-    ...meta
-  }
-}
+
 
 /** Create a Notification with required and generic information. */
 export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
@@ -258,7 +249,7 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
 /** Send a reminder email 24h or 1h before event starts */
 async function sendReminderEmails(recipient: User, notification: NotificationDocument, template: string) {
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const eventData = getEventEmailData(event);
   const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
 
@@ -282,13 +273,7 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
       await sendMailFromTemplate(template, eventAppKey);
     }
   } else {
-    // @TODO create email when we have toUser
-    const organizerUser = await getDocument<OrganizationDocument>(`users/${notification.user.uid}`);
-    if (notification.invitation.status === 'accepted') {
-      // @TODO #4046 accepted | need text for email
-    } else {
-      // @TODO #4046 rejected | need text for email
-    }
+    throw new Error('Invitation with mode === "request" can only have "toOrg" attribute');
   }
 
   return;
@@ -315,12 +300,7 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
       return sendMailFromTemplate(template, eventAppKey);
     }
   } else {
-    // @TODO #4046 create email when we have toUser
-    if (notification.invitation.status === 'accepted') {
-      // @TODO #4046 accepted | need text for email
-    } else {
-      // @TODO #4046 rejected | need text for email
-    }
+    throw new Error('Invitation with mode === "invitation" can only have "fromOrg" attribute');
   }
 
   return;
@@ -407,7 +387,7 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
   // @TODO #4046 Update parameters given to the email function when Vincent updated template
   const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
   const eventEmailData: EventEmailData = getEventEmailData(event);
-  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerId}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const organizerOrgName = orgName(org);
 
   const app = await getOrgAppKey(org);

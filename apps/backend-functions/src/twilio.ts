@@ -73,8 +73,8 @@ export const getTwilioAccessToken = async (
   const user = await getUser(context.auth.uid);
 
   const isOwner = async () => {
-    if (event.meta.organizerId === context.auth.uid) return true;
-    return !!user && !!user.orgId && user.orgId === event.ownerId;
+    if (event.meta.organizerUid === context.auth.uid) return true;
+    return !!user && !!user.orgId && user.orgId === event.ownerOrgId;
   }
 
   // Check if user is owner or is invited to event

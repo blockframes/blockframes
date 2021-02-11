@@ -42,8 +42,7 @@ export class UpcomingScreeningsComponent {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
-    )
-  { 
+  ) {
     const q = ref => ref
       .where('isSecret', '==', false)
       .where('meta.titleId', '==', this.query.getActiveId())
@@ -60,9 +59,7 @@ export class UpcomingScreeningsComponent {
   askForInvitation(events: Event[]) {
     const eventId = events[this.sessionCtrl.value].id;
     this.orgs$.pipe(take(1)).subscribe(orgs => {
-      orgs.forEach(org => {
-        this.invitationService.request('org', org.id).from('user').to('attendEvent', eventId)
-      })
+      orgs.forEach(org => this.invitationService.request(org.id).to('attendEvent', eventId))
       this.checkInvitationStatus();
     })
   }

@@ -52,6 +52,6 @@ export class EventViewComponent implements OnInit {
    * If event is public (event.isPrivate === false), it will be automatically setted to 'accepted'
    */
   addToCalendar() {
-    this.invitationService.request(this.event.type === 'meeting' ? 'user' : 'org', this.event.ownerId).from('user').to('attendEvent', this.event.id);
+    this.invitationService.request(this.event.ownerOrgId).to('attendEvent', this.event.id);
   }
 }

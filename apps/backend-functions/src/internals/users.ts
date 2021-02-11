@@ -2,10 +2,10 @@
 import { App, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
-import { getDocument } from '../data/internals';
+import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
 import { templateIds } from '../templates/ids';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -34,7 +34,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     return user || { uid, email }
   } catch {
     try {
-      const newUser = await createUserFromEmail(email);
+      const newUser = await createUserFromEmail(email, app);
 
       // User does not exists, send him an email.
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
@@ -56,7 +56,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
  * Creates an user from email address
  * @param email
  */
-export const createUserFromEmail = async (email: string): Promise<{ user: PublicUser, password: string }> => {
+export const createUserFromEmail = async (email: string, createdFrom: App = 'festival'): Promise<{ user: PublicUser, password: string }> => {
 
   const password = generatePassword();
 
@@ -72,7 +72,12 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
 
   logger.info(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
 
-  return { user: { uid: user.uid, email }, password };
+  // We don't have the time to wait for the trigger onUserCreate,
+  // So we create it here first. 
+  const userDb = { uid: user.uid, email, _meta: createDocumentMeta({ createdFrom }) };
+  await db.collection('users').doc(userDb.uid).set(userDb);
+
+  return { user: createPublicUserDocument(userDb), password };
 };
 
 /**

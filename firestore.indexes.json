@@ -61,7 +61,7 @@
     "collectionGroup": "events",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "ownerId", "order": "ASCENDING" },
+      { "fieldPath": "ownerOrgId", "order": "ASCENDING" },
       { "fieldPath": "type", "order": "ASCENDING" },
       { "fieldPath": "end", "order": "ASCENDING" }
     ]

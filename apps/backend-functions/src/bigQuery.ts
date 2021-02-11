@@ -109,13 +109,13 @@ export const requestEventAnalytics = async (
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
-  // Security: only events with the same ownerId that orgId of user
+  // Security: only events with the same ownerOrgId that orgId of user
   const screeningEventsPromises = eventIds.map(eventId => {
     return getDocument<ScreeningEventDocument>(`events/${eventId}`)
   });
   const screeningEvents = await Promise.all(screeningEventsPromises);
-  const screeningEventsOwnerIds = screeningEvents.map(e => e.ownerId);
-  if (!screeningEventsOwnerIds.every(ownerId => org.id === ownerId)) {
+  const screeningEventsOwnerOrgIds = screeningEvents.map(e => e.ownerOrgId);
+  if (!screeningEventsOwnerOrgIds.every(ownerOrgId => org.id === ownerOrgId)) {
     throw new Error(`Insufficient permission to get events analytics.`)
   }
 

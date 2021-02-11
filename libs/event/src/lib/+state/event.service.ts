@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
-  org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
+  org: ({ ownerOrgId }: ScreeningEvent) => ({ path: `orgs/${ownerOrgId}` }),
   movie: (event: Event) => {
     if (isScreening(event)) {
       return event.meta.titleId ? { path: `movies/${event.meta.titleId}` } : undefined
@@ -21,7 +21,7 @@ const eventQuery = (id: string) => ({
   },
   organizedBy: (event: Event) => {
     if (isMeeting(event)) {
-      return event.meta.organizerId ? { path: `users/${event.meta.organizerId}` } : undefined
+      return event.meta.organizerUid ? { path: `users/${event.meta.organizerUid}` } : undefined
     }
   }
 })
@@ -35,14 +35,14 @@ const eventQueries = {
     movie: ({ meta }: ScreeningEvent) => {
       return meta?.titleId ? { path: `movies/${meta.titleId}` } : undefined
     },
-    org: (e: ScreeningEvent) => ({ path: `orgs/${e.ownerId}` }),
+    org: (e: ScreeningEvent) => ({ path: `orgs/${e.ownerOrgId}` }),
   }),
 
   // Meeting
   meeting: (queryFn: QueryFn = (ref) => ref): Query<MeetingEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'meeting'),
-    org: ({ ownerId }: MeetingEvent) => ({ path: `orgs/${ownerId}` }),
+    org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
   })
 }
 
@@ -76,9 +76,7 @@ export class EventService extends CollectionService<EventState> {
 
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<any, any>) {
-    const isUser = event.ownerId === this.authQuery.userId;
-    const isFromOrg = event.ownerId === this.orgQuery.getActiveId();
-    return isUser || isFromOrg;
+    return event.ownerOrgId === this.orgQuery.getActiveId();
   }
 
   /** Create the permission */
@@ -97,8 +95,9 @@ export class EventService extends CollectionService<EventState> {
 
     // remove possible undefined values to avoid
     // FirebaseError: [code=invalid-argument]: Unsupported field value: undefined
-    if (!e.movie) delete e.movie;
-    if (!e.organizedBy) delete e.organizedBy;
+    if (!!e.movie) delete e.movie;
+    if (!!e.organizedBy) delete e.organizedBy;
+    if (!!e.org) delete e.org;
 
     return e;
   }
