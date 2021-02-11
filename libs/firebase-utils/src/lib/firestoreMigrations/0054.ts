@@ -1,16 +1,9 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { runChunks } from '../firebase-utils';
-import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
-function createStorageFile(data: {
-  storagePath: string,
-  privacy: Privacy, 
-  collection: 'orgs' | 'movies' | 'users' | 'campaigns',
-  docId: string,
-  field: string,
-  [k: string]: any
-}) {
+
+function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
   if (!data.storagePath) data.storagePath = '';
   return data;
@@ -34,7 +27,7 @@ export async function upgrade(db: Firestore) {
           privacy: 'protected',
           collection: 'orgs',
           docId: data.id,
-          field: `documents.notes.[${i}]`,
+          field: `documents.notes[${i}]`,
           ...note
         });
       })
@@ -70,7 +63,7 @@ export async function upgrade(db: Firestore) {
     const promotionalFields = ['financialDetails', 'presentation_deck', 'scenario', 'moodboard'];
     promotionalFields.forEach(field => {
       data.promotional[field] = createStorageFile({
-        storagePath: getDeepValue(data, `promotional.${field}`),
+        storagePath: data.promotional[field],
         privacy: 'public',
         collection: 'movies',
         docId: data.id,
@@ -84,7 +77,7 @@ export async function upgrade(db: Firestore) {
       privacy: 'public',
       collection: 'movies',
       docId: data.id,
-      field: `promotional.still_photo.[${i}]`
+      field: `promotional.still_photo[${i}]`
     }));
 
     // promotional.salesPitch
@@ -119,7 +112,7 @@ export async function upgrade(db: Firestore) {
           privacy: 'public',
           collection: 'movies',
           docId: data.id,
-          field: `promotional.videos.otherVideos.[${i}]`,
+          field: `promotional.videos.otherVideos[${i}]`,
           ...video
         }));
       }
@@ -132,7 +125,7 @@ export async function upgrade(db: Firestore) {
         privacy: 'public',
         collection: 'movies',
         docId: data.id,
-        field: `promotional.notes.[${i}]`,
+        field: `promotional.notes[${i}]`,
         ...note
       }))
     }
@@ -148,7 +141,7 @@ export async function upgrade(db: Firestore) {
     const fields = ['budget', 'financingPlan', 'waterfall'];
     fields.forEach(field => {
        data.files[field] = createStorageFile({
-        storagePath: getDeepValue(data, `files.${field}`),
+        storagePath: data.files[field],
         privacy: 'public',
         collection: 'campaigns',
         docId: data.id,
