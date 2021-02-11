@@ -70,7 +70,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    */
   request(orgId: string, fromUser: User = this.authQuery.user) {
     return {
-      to: async (type: 'attendEvent' | 'joinOrganization', eventId: string, write?: AtomicWrite) => {
+      to: async (type: 'attendEvent' | 'joinOrganization', eventId?: string, write?: AtomicWrite) => {
         const request = { mode: 'request', type } as Partial<Invitation>;
         if (type === 'attendEvent') {
           request.eventId = eventId;
@@ -91,7 +91,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    */
   invite(idOrEmails: string | string[], fromOrg: Organization = this.orgQuery.getActive()) {
     return {
-      to: (type: 'attendEvent' | 'joinOrganization', eventId: string) => {
+      to: (type: 'attendEvent' | 'joinOrganization', eventId?: string) => {
         const invitation = { mode: 'invitation', type } as Partial<Invitation>;
         if (type === 'attendEvent') {
           invitation.eventId = eventId;
