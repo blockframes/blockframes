@@ -6,8 +6,8 @@ import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { Subscription } from 'rxjs';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -27,7 +27,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   public isUserBlockframesAdmin = false;
   public pageTitle = 'Import multiple titles at once';
 
-  public excelForm = new HostedMediaForm(); // TODO issue#4002
+  public excelForm = new StorageFileForm({});
 
   private sub: Subscription;
   private fileTypeSub: Subscription;

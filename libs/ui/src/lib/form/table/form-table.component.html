@@ -50,7 +50,7 @@
 <!-- VIEW -->
 <!---------->
 ​<div *ngIf="formItem">
-  <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
+  <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem, index: activeIndex }">
   </ng-template>
   <ng-container *ngIf="form.controls.length; else empty">
     <div fxLayout="row" fxLayoutAlign="space-between start">

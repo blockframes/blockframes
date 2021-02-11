@@ -8,7 +8,7 @@
     <ng-container *ngIf="list.length">
       <mat-list class="surface">
         <mat-list-item *ngFor="let item of list; let index = index">
-          <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item }" matLine>
+          <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item, index: index }" matLine>
           </ng-template>
           <button mat-icon-button (click)="edit(index)">
             <mat-icon svgIcon="edit"></mat-icon>
@@ -32,7 +32,7 @@
   <!---------->
 
   ​<div *ngIf="formItem">
-    <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
+    <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem, index: activeIndex }">
     </ng-template>
 
     <!-- If we keep the form open, there is no point to have a cancel button -->
