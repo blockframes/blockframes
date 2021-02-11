@@ -109,23 +109,23 @@ export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
   return {
-    ...params,
-
-    financialDetails: createStorageFile(params?.financialDetails),
-    moodboard: createStorageFile(params?.moodboard),
-    notes: params?.notes?.map(note => createStorageFile(note)),
-    salesPitch: createSalesPitch(params.salesPitch),
-    still_photo: params?.still_photo?.map(still => createStorageFile(still)),
-    presentation_deck: createStorageFile(params?.presentation_deck),
-    scenario: createStorageFile(params?.scenario),
-    videos: createMovieVideos(params?.videos),
-
     clip_link: params.clip_link ?? '',
     promo_reel_link: params.promo_reel_link ?? '',
     screener_link: params.screener_link ?? '',
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
+
+    ...params,
+
+    financialDetails: createStorageFile(params?.financialDetails),
+    moodboard: createStorageFile(params?.moodboard),
+    notes: params?.notes?.map(note => createStorageFile(note)) ?? [],
+    salesPitch: createSalesPitch(params.salesPitch),
+    still_photo: params?.still_photo?.map(still => createStorageFile(still)) ?? [],
+    presentation_deck: createStorageFile(params?.presentation_deck),
+    scenario: createStorageFile(params?.scenario),
+    videos: createMovieVideos(params?.videos),
   };
 }
 
@@ -347,17 +347,16 @@ export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
 
 export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
+    ...params,
     screener: createMovieVideo(params?.screener),
     otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
-    ...params,
   }
 }
 
 export function createMovieVideo(params: Partial<MovieVideo>): MovieVideo {
-  const file = createStorageFile(params);
   return {
     jwPlayerId: '',
-    ...file,
     ...params,
+    ...createStorageFile(params),
   }
 }

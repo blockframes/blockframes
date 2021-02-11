@@ -158,12 +158,11 @@ export function createContractLegalDocuments(
 export function createLegalDocument(
   params: Partial<LegalDocument> = {}
 ): LegalDocument {
-  const file = createStorageFile(params);
   return {
     id: params?.id ?? '',
     label: params?.label ?? '',
-    ...file,
     ...params,
+    ...createStorageFile(params),
   }
 }
 
