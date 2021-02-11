@@ -17,7 +17,7 @@
         </mat-list>
       </ng-container>
       <ng-template #noScreener>
-        <file-new-uploader [form]="screenerForm.storagePath" [storagePath]="getPath('movies', 'screener')" [metadata]="getMetadata('movies', 'screener', movieId)" accept="video">
+        <file-new-uploader [form]="screenerForm.storagePath" [meta]="['movies', 'screener', movieId]" accept="video">
           filePrivacy="protected">
           <h3 title>Upload Screener</h3>
         </file-new-uploader>
@@ -34,8 +34,7 @@
 
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
-          {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.storagePath ? video.storagePath :
-          (video.storagePath | fileName) }}
+          {{ video.type | titlecase }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
         </ng-template>
         <ng-template formView let-activeForm let-index="index">
           <article fxLayout="column">
@@ -53,7 +52,7 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <file-new-uploader [form]="activeForm.get('storagePath')" [storagePath]="getPath('movies', 'otherVideos')" [metadata]="getPath('movies', 'otherVideos', movieId, index)" accept="video">
+            <file-new-uploader [form]="activeForm.get('storagePath')" [meta]="['movies', 'otherVideos', movieId, index]" accept="video">
               <h3 title>Upload Video</h3>
             </file-new-uploader>
 
