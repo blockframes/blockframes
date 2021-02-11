@@ -1,10 +1,8 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorage } from "@angular/fire/storage";
-import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
-import { clearFirestoreData } from '@firebase/testing';
+import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { ImportModule } from './import.module';
-import { firebase } from '@env';
 
 describe('ImportModule', () => {
   let db: AngularFirestore;
