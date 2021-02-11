@@ -30,7 +30,7 @@ import { App, applicationUrl } from '@blockframes/utils/apps';
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
 // This is for letting user unsubscribe from every email except the critical ones as reset password.
-const unsubscribeId = unsubscribeGroupIds.allExceptCriticals
+const unsubscribeId = unsubscribeGroupIds.allExceptCriticals;
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: NotificationDocument[]): Promise<any> {
