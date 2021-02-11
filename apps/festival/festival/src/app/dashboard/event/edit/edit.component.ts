@@ -3,7 +3,7 @@ import { EventForm, MeetingForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
-import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
+import { fromOrgAndAccepted, Movie, MovieService } from '@blockframes/movie/+state';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
@@ -62,8 +62,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrg(org.id))),
-      map(titles => titles.filter(title => title.storeConfig.status === 'accepted' || 'submitted')),
+      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id)))
     );
 
     this.members$ = this.orgQuery.selectActive().pipe(

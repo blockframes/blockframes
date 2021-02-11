@@ -1,5 +1,3 @@
-import { toDate } from '@blockframes/utils/helpers';
-
 export type ConsentType = 'access' | 'share';
 
 export interface Consents<D> {
@@ -39,7 +37,7 @@ export function createAccess(access: Partial<Access<Date>> = {}): Access<Date> {
     lastName: '',
     userId: '',
     ...access,
-    date: toDate(access.date),
+    date: access.date,
   };
 }
 
@@ -52,7 +50,7 @@ export function createShare(share: Partial<Share<Date>> = {}): Share<Date> {
     lastName: '',
     userId: '',
     ...share,
-    date: toDate(share.date),
+    date: share.date,
   };
 }
 

@@ -91,7 +91,7 @@ export class CalendarWeekComponent {
     }
     const localEvent: CalendarEvent = createEvent({
       id: this.service['db'].createId(),
-      ownerId: this.orgQuery.getActiveId(),
+      ownerOrgId: this.orgQuery.getActiveId(),
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),

@@ -92,6 +92,7 @@ export function organizationWasAccepted(email: string, userFirstName?: string, u
   return { to: email, templateId: templateIds.org.accepted, data };
 }
 
+/** Generates a transactional email to let user knows its request has been sent */
 export function userJoinOrgPendingRequest(email: string, orgName: string, userFirstName: string): EmailTemplateRequest {
   const data = {
     userFirstName,
@@ -109,7 +110,7 @@ export function organizationAppAccessChanged(admin: PublicUser, url: string): Em
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
 }
 
-/** Send email to a user to inform him that he joined an org */
+/** Send email to an user to inform him that he joined an org */
 export function userJoinedAnOrganization(userEmail: string, url: string = appUrl.market, orgName: string, userFirstName: string): EmailTemplateRequest {
   const data = {
     pageURL: `${url}/c/o`,
@@ -136,6 +137,36 @@ EmailTemplateRequest {
     userEmail
   };
   return { to: orgAdminEmail, templateId: templateIds.org.memberAdded, data };
+}
+
+/** Send email to org admins to inform them that an user declined their invitation to join his org */
+export function invitationToJoinOrgDeclined(admin: PublicUser, user: PublicUser): EmailTemplateRequest {
+  const data = {
+    adminFirstName: admin.firstName,
+    userFirstName: user.firstName,
+    userLastName: user.lastName,
+    userEmail: user.email
+  };
+  return { to: admin.email, templateId: templateIds.invitation.organization.declined, data };
+}
+
+/** Send email to users to inform them that organization has declined their request to join it */
+export function requestToJoinOrgDeclined(toUser: PublicUser, orgName: string): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    orgName
+  };
+  return { to: toUser.email, templateId: templateIds.request.joinOrganization.declined, data };
+}
+
+/** Send email to org admin to inform him that an user has left his org */
+export function userLeftYourOrganization(admin: PublicUser, userRemoved: PublicUser ): EmailTemplateRequest {
+  const data = {
+    userFirstName: userRemoved.firstName,
+    userLastName: userRemoved.lastName,
+    userEmail: userRemoved.email
+  };
+  return { to: admin.email, templateId: templateIds.org.memberRemoved, data };
 }
 
 /** Generates a transactional email to let an admin knows that an user requested to join his/her org */
@@ -170,6 +201,25 @@ export function invitationToEventFromOrg(
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
 
+/** Generate an email for org's admin when an user accepted/declined their invitation to attend one of their events */
+export function invitationToEventFromOrgUpdated(
+  admin: User,
+  user: User,
+  userOrgName: string,
+  event: EventEmailData,
+  templateId: string
+): EmailTemplateRequest {
+  const data = {
+    adminFirstName: admin.firstName,
+    userFirstName: user.firstName,
+    userLastName: user.lastName,
+    userOrgName,
+    event,
+    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`
+  };
+  return { to: admin.email, templateId, data };
+}
+
 /** Generates an email for user requesting to attend an event. */
 export function requestToAttendEventFromUser(
   fromUserFirstname: string,
@@ -187,6 +237,16 @@ export function requestToAttendEventFromUser(
     pageURL: `${url}/${link}`
   };
   return { to: recipient.email, templateId: templateIds.request.attendEvent.created, data };
+}
+
+/** Generate an email to inform users their request to attend an event has been sent */
+export function requestToAttendEventFromUserSent(toUser: PublicUser, event: EventEmailData, organizerOrgName: string): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    event,
+    organizerOrgName
+  };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.sent, data };
 }
 
 /** Generate an email to inform users that their request to attend an event was accepted */
@@ -208,6 +268,21 @@ export function requestToAttendEventFromUserAccepted(
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
 
+/** Generate an email to inform users that their request to attend an event was refused */
+export function requestToAttendEventFromUserRefused(
+  toUser: PublicUser,
+  organizerOrgName: string,
+  eventData: EventEmailData
+): EmailTemplateRequest {
+  const data = {
+    userFirstName: toUser.firstName,
+    organizerOrgName,
+    event: eventData,
+  };
+  return { to: toUser.email, templateId: templateIds.request.attendEvent.declined, data };
+}
+
+/** Generate an email to remind users they have an event starting soon */
 export function reminderEventToUser(
   movieTitle: string,
   toUser: PublicUser,
@@ -227,6 +302,13 @@ export function reminderEventToUser(
   };
   return { to: toUser.email, templateId: template, data };
 }
+
+/** Generate an email when a movie is accepted */
+export function movieAcceptedEmail(toUser: PublicUser, movieTitle: string, movieUrl: string): EmailTemplateRequest {
+  const data = { userFirstName: toUser.firstName, movieTitle, movieUrl };
+  return { to: toUser.email, templateId: templateIds.movie.accepted, data };
+}
+
 // ------------------------- //
 //      CASCADE8 ADMIN       //
 // ------------------------- //

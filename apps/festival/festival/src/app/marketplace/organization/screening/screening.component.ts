@@ -25,7 +25,7 @@ export class ScreeningComponent implements OnInit {
     this.dynTitle.setPageTitle('Sales Agent', 'Screenings');
     this.events$ = this.parent.org$.pipe(
       switchMap(org => {
-        const query = ref => ref.where('ownerId', '==', org.id)
+        const query = ref => ref.where('ownerOrgId', '==', org.id)
           .orderBy('end').startAt(new Date());
         return this.service.queryByType(['screening'], query).pipe(
           // We can't filter by meta.titleId directly in the query because

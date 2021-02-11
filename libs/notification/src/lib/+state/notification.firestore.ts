@@ -9,12 +9,12 @@ import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 // Type of notification used in front
 export const notificationTypesBase = [
   // Notifications relative to movies
-  'movieSubmitted', // (catalog only)
   'movieAccepted',
 
   // Notifications relative to invitations
   'requestFromUserToJoinOrgCreate',
-  'invitationFromUserToJoinOrgDecline',
+  'requestFromUserToJoinOrgDeclined',
+  'invitationToJoinOrgDeclined',
   'orgMemberUpdated',
 
   // Events related notifications
@@ -30,6 +30,7 @@ export const notificationTypesBase = [
 
 // All the other notification types
 export const notificationTypesPlus = [
+  'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
   'orgAppAccessChanged',
 

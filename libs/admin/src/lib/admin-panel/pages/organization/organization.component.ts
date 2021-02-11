@@ -195,7 +195,7 @@ export class OrganizationComponent implements OnInit {
         confirmationWord: 'delete',
         onConfirm: async () => {
           await this.organizationService.remove(this.orgId);
-          this.snackBar.open('Organization deleted !', 'close', { duration: 5000});
+          this.snackBar.open('Organization deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/admin/panel/organizations']);
         }
       }
@@ -222,11 +222,9 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many events will be removed
-    const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerId', '==', organization.id));
-    const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerId', '==', organization.id));
-    const allEvents = [...ownerEvent, ...organizerEvent]; 
-    if (allEvents.length) {
-      output.push(`${allEvents.length} event(s) will be cancelled or deleted.`)
+    const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerOrgId', '==', organization.id));
+    if (ownerEvent.length) {
+      output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`)
     }
 
     // Calculate how many invitation will be removed

@@ -49,10 +49,18 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
-      case 'invitationFromUserToJoinOrgDecline':
+      case 'requestFromUserToJoinOrgDeclined':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/members`,
+        };
+      case 'invitationToJoinOrgDeclined':
+        return {
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
@@ -119,9 +127,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
-        // @TODO #4046 need text for notification
+        // @TODO #4046 Update text if needed
         return {
-          message: 'Error while displaying notification.'
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: 'Your organization\'s app access have changed.',
+          imgRef: notification.organization?.logo,
+          placeholderUrl: 'empty_organization.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'eventIsAboutToStart':
 
@@ -253,7 +265,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
     // Adding user data to the notification of meeting events
     if (!!event && event.type === 'meeting' && !!notification.organization) {
-      const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerId}`);
+      const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerUid}`);
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {

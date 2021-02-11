@@ -9,17 +9,14 @@ import { db } from './internals/firebase';
 import { getUser } from "./internals/utils";
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
-import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
-import { NotificationTypes } from '@blockframes/notification/types';
+import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
-import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
-import { NotificationDocument } from './data/types';
+import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail, getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
-import { getDocument } from './data/internals';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -198,15 +195,9 @@ export async function onOrganizationDelete(
   }
 
   // Delete all events where organization is involved
-  const eventsOwnerIdCollectionRef = db.collection('events').where('ownerId', '==', org.id);
-  const eventsOwnerIdSnap = await eventsOwnerIdCollectionRef.get();
-  for (const event of eventsOwnerIdSnap.docs) {
-    await event.ref.delete();
-  }
-
-  const eventsOrganizerIdCollectionRef = db.collection('events').where('meta.organizerId', '==', org.id);
-  const eventsOrganizerIdSnap = await eventsOrganizerIdCollectionRef.get();
-  for (const event of eventsOrganizerIdSnap.docs) {
+  const eventsOwnerOrgIdCollectionRef = db.collection('events').where('ownerOrgId', '==', org.id);
+  const eventsOwnerOrgIdSnap = await eventsOwnerOrgIdCollectionRef.get();
+  for (const event of eventsOwnerOrgIdSnap.docs) {
     await event.ref.delete();
   }
 

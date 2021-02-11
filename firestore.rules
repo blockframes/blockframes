@@ -373,12 +373,11 @@ service cloud.firestore {
     	allow read: if userHasValidOrg() && notInMaintenance();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
-        && ( isRequestFieldValueEqualTo(['ownerId'], userId()) || isRequestFieldValueEqualTo(['ownerId'], userOrgId()) )
+        && isRequestFieldValueEqualTo(['ownerOrgId'], userOrgId())
         && notInMaintenance();
       allow update: if userHasValidOrg()
         && isNotUpdatingId('id', existingData().id)
-        && ( existingData().ownerId == userId()
-          || existingData().ownerId == userOrgId()
+        && ( existingData().ownerOrgId == userOrgId()
           || (
             (
               isRequestFieldValueEqualTo(['meta', 'attendees', userId()], 'requesting')
@@ -390,9 +389,7 @@ service cloud.firestore {
         )
         && notInMaintenance();
       allow delete: if userHasValidOrg()
-        && ( existingData().ownerId == userId() // Current user is event owner
-          || ( existingData().ownerId == userOrgId() && isOrgMember(userOrgId()) ) // Or Org of current user is the event owner and current user is isOrgMember
-        )
+        && ( existingData().ownerOrgId == userOrgId() && isOrgMember(userOrgId()) ) // Or Org of current user is the event owner and current user is isOrgMember
         && notInMaintenance();
 		}
 
@@ -402,11 +399,11 @@ service cloud.firestore {
         && isNotUpdatingField(['allDay'])
         && isNotUpdatingField(['end'])
         && isNotUpdatingField(['isPrivate'])
-        && isNotUpdatingField(['ownerId'])
+        && isNotUpdatingField(['ownerOrgId'])
         && isNotUpdatingField(['start'])
         // && isNotUpdatingField(['title'])
         // && isNotUpdatingField(['type'])
-        // && isNotUpdatingField(['meta', 'organizerId'])
+        // && isNotUpdatingField(['meta', 'organizerUid'])
         // && isNotUpdatingField(['meta', 'titleId'])
         // && isNotUpdatingField(['meta', 'controls'])
         // && isNotUpdatingField(['meta', 'files']);

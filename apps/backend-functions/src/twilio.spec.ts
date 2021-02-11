@@ -21,8 +21,8 @@ const testEvents = [
     type: 'meeting',
     start: new Date(),
     end: new Date(),
-    meta: { organizerId: 'uidUserTest' },
-    ownerId: 'uidUserTest'
+    meta: { organizerUid: 'uidUserTest' },
+    ownerOrgId: 'idOrgTest'
   }
 ];
 const testEventsScreening = [
@@ -31,7 +31,7 @@ const testEventsScreening = [
     type: 'screening',
     start: new Date(),
     end: new Date(),
-    meta: { organizerId: 'uidUserTest' }
+    meta: { organizerUid: 'uidUserTest' }
   }
 ];
 const testUsers = [{ uid: 'uidUserTest', email: 'A@fake.com' }, { uid: 'uidUserTestNotAccepted' }];

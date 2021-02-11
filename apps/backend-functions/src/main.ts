@@ -29,7 +29,7 @@ import { importAnalytics } from './pubsub/daily-analytics-import';
 //    Users Management          //
 //--------------------------------
 
-/** Trigger: REST call to invite a list of users by email. */
+/** Trigger: REST call to create an user from CRM app. */
 export const createUser = functions.https.onCall(skipInMaintenance(logErrors(users.createUser)));
 
 /**
@@ -235,5 +235,4 @@ export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
 /**
  * Imports analytics data from BigQuery
  */
-export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *') // every day
-  .onRun(skipInMaintenance(_ => importAnalytics));
+export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *').onRun(importAnalytics); // every day

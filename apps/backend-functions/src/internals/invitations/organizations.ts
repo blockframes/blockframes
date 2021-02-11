@@ -1,4 +1,3 @@
-
 import * as admin from 'firebase-admin';
 import { getUser } from "./../utils";
 import {
@@ -75,6 +74,27 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
   return addUserToOrg(toUser.uid, fromOrg.id);
 }
 
+/** Send a notification to admins of organization to notify them that the invitation is declined. */
+async function onInvitationToOrgDecline(invitation: InvitationDocument) {
+  if (!invitation.fromUser || !invitation.toOrg) {
+    console.error('No user or org provided');
+    return;
+  }
+
+  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
+  const adminIds = await getAdminIds(org.id);
+
+  const notifications = adminIds.map(toAdminId =>
+    createNotification({
+      toUserId: toAdminId,
+      user: createPublicUserDocument(invitation.toUser),
+      type: 'invitationToJoinOrgDeclined'
+    })
+  );
+
+  return triggerNotifications(notifications);
+}
+
 /** Sends an email when an organization invites a user to join. */
 async function onRequestFromUserToJoinOrgCreate({
   toOrg,
@@ -93,10 +113,6 @@ async function onRequestFromUserToJoinOrgCreate({
 
   const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
   const app = await getOrgAppKey(org);
-
-  // send invitation pending email to user
-  const template = userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!);
-  await sendMailFromTemplate(template, app).catch(e => console.warn(e.message));
 
   // create notifications
   const notifications = org.userIds.map(toUserId =>
@@ -141,7 +157,7 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
     createNotification({
       toUserId,
       user: createPublicUserDocument(invitation.fromUser),
-      type: 'invitationFromUserToJoinOrgDecline'
+      type: 'requestFromUserToJoinOrgDeclined'
     })
   );
 
@@ -160,6 +176,8 @@ export async function onInvitationToJoinOrgUpdate(
 ): Promise<any> {
   if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
+  } else if (wasDeclined(before!, after)) {
+    return onInvitationToOrgDecline(invitation);
   }
 }
 

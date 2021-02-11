@@ -19,7 +19,7 @@ export function createEventControl(params?: Partial<Event>) {
     id: new FormControl(event.id),
     isPrivate: new FormControl(event.isPrivate),
     isSecret: new FormControl(event.isSecret),
-    ownerId: new FormControl(event.ownerId),
+    ownerOrgId: new FormControl(event.ownerOrgId),
     type: new FormControl(event.type, Validators.required),
     title: new FormControl(event.title),
     start: new FormControl(event.start, compareDates),
@@ -60,7 +60,7 @@ function createMetaControl(event: Event): MeetingForm | ScreeningForm | FormGrou
 export function createMeetingControl(params?: Partial<Meeting>) {
   const meeting = createMeeting(params);
   return {
-    organizerId: new FormControl(meeting.organizerId),
+    organizerUid: new FormControl(meeting.organizerUid),
     description: new FormControl(meeting.description, [Validators.maxLength(500)]),
     files: FormList.factory(meeting.files, el => new FormControl(el)),
   }
