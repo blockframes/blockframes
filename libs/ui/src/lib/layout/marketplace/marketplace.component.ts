@@ -1,11 +1,11 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
-import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // Blockframes
@@ -23,7 +23,6 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceComponent implements OnInit {
-  private routerSub: Subscription;
   public user$ = this.authQuery.select('profile');
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationQuery.selectCount();
