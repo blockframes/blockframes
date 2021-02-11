@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Movie, createMovie } from '@blockframes/movie/+state/movie.model';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { app } from '@blockframes/utils/apps';
 
@@ -45,9 +45,9 @@ export class MovieAppAccessAdminForm extends FormEntity<MovieAppAccessAdminContr
 function createMovieImageAdminControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
   return {
-    poster: new HostedMediaForm(movie.poster, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: 'poster' }),
-    banner: new HostedMediaForm(movie.banner, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: 'banner' }),
-    still_photo: FormList.factory(movie.promotional.still_photo, (el, i) => new HostedMediaForm(el, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: `promotional.still_photo[${i}]` })),
+    poster: new StorageFileForm(movie.poster),
+    banner: new StorageFileForm(movie.banner),
+    still_photo: FormList.factory(movie.promotional.still_photo, el => new StorageFileForm(el)),
   }
 }
 

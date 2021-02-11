@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 
 export interface Profile {
   firstName: string;
@@ -31,7 +31,7 @@ function createProfileControls(entity: Partial<User>) {
     lastName: new FormControl(profile.lastName),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
-    avatar: new HostedMediaForm(profile.avatar, { privacy: 'public', collection: 'users', docId: entity.uid ?? '', field: 'avatar'  }),
+    avatar: new StorageFileForm({ storagePath: profile.avatar}),
     email: new FormControl({ value: profile.email, disabled: true })
   };
 }
