@@ -89,12 +89,16 @@ export async function migrate(
 }
 
 
-export async function migrateBeta(
-  withBackup: boolean = true,
+export async function migrateBeta({
+  withBackup = true,
   db = loadAdminServices().db,
-  storage = loadAdminServices().storage
-) {
-  console.info('start the migration process...');
+  storage = loadAdminServices().storage,
+}: {
+  withBackup?: boolean;
+  db?: FirebaseFirestore.Firestore;
+  storage?: import('firebase-admin').storage.Storage;
+} = {}) {
+  console.info('Start the migration process...');
 
   const backupDir = `pre-migration-${getFirestoreExportDirname(new Date())}`;
 
@@ -108,11 +112,11 @@ export async function migrateBeta(
     }
 
     if (withBackup) {
-      console.info('backup the database before doing anything');
+      console.info('Backup the database before doing anything');
       await exportFirestore(backupDir);
-      console.info('backup done, moving on to the migrations...');
+      console.info('Backup done, moving on to the migrations...');
     } else {
-      console.warn('⚠️ skipping the backup before running migrations, are you sure?');
+      console.warn('⚠️ skipping the backup before running migrations!');
     }
 
     const lastVersion = last(migrations).version;
@@ -120,23 +124,23 @@ export async function migrateBeta(
     console.info(`Running migrations: ${migrations.map((x) => x.version).join(', ')}`);
 
     for (const migration of migrations) {
-      console.info(`applying migration: ${migration.version}`);
+      console.info(`Running migration: ${migration.version}`);
       await migration.upgrade(db, storage);
-      console.info(`done applying migration: ${migration.version}`);
+      console.info(`Done running migration: ${migration.version}`);
     }
 
     await updateDBVersion(db, lastVersion);
   } catch (e) {
     console.error(e);
-    console.error("the migration failed, reverting!");
+    console.error('Migration failed. Restoring pre-migration backup...');
     await importFirestore(backupDir);
     throw e;
   } finally {
     if (withBackup) {
-      console.info('running a backup post-migration');
+      console.info('Running a backup post-migration');
       await exportFirestore(`post-migration-${getFirestoreExportDirname(new Date())}`);
-      console.info('done with the backup post-migration');
+      console.info('Done with the backup post-migration');
     }
-    console.info('end the migration process...');
+    console.info('Data model version migration complete!');
   }
 }
