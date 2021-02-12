@@ -178,5 +178,4 @@ export class FileUploaderComponent implements OnInit {
       }
     }
   }
-
 }
