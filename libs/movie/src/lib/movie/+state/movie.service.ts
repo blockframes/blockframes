@@ -9,8 +9,6 @@ import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -31,8 +29,6 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private userService: UserService,
     private routerQuery: RouterQuery,
-    private functions: AngularFireFunctions,
-    private query: MovieQuery,
     protected store: MovieStore,
     private orgQuery: OrganizationQuery
   ) {

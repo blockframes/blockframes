@@ -29,14 +29,16 @@ export class ItemComponent {
     } else if (!!invitation.fromOrg) {
       this.fromOrg.value = invitation.fromOrg
 
-      this.eventService.getValue(invitation.eventId).then(event => {
-        if (event.type === 'meeting') {
-          this.eventType = 'meeting';
-          this.userService.getValue(event.meta.organizerUid as string).then(user => {
-            this.fromUser.value = user;
-          })
-        }
-      })
+      if (invitation.type === 'attendEvent') {
+        this.eventService.getValue(invitation.eventId).then(event => {
+          if (event.type === 'meeting') {
+            this.eventType = 'meeting';
+            this.userService.getValue(event.meta.organizerUid as string).then(user => {
+              this.fromUser.value = user;
+            })
+          }
+        })
+      }
     }
   };
 

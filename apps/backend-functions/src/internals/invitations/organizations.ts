@@ -7,10 +7,7 @@ import {
 } from './../../data/types';
 import { triggerNotifications, createNotification } from './../../notification';
 import { sendMailFromTemplate } from './../email';
-import {
-  userJoinedAnOrganization,
-  userJoinOrgPendingRequest
-} from '../../templates/mail';
+import { userJoinedAnOrganization } from '../../templates/mail';
 import { getAdminIds, getDocument, getAppUrl, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
@@ -56,7 +53,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
       // Update organization
       tx.set(organizationRef, {
         ...organizationData,
-        userIds: [...organizationData.userIds, userId]
+        userIds: Array.from(new Set([...organizationData.userIds, userId]))
       }),
       // Update Permissions
       tx.set(permissionsRef, { ...permissionData, roles: permissionData.roles })

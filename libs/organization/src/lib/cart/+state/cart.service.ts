@@ -25,7 +25,7 @@ export class CartService extends CollectionService<CartState> {
    */
   public async updateWishlist(movie: Movie) {
     const orgState = this.organizationQuery.getActive();
-    let wishlist = [...orgState.wishlist] || [];
+    let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
       wishlist = orgState.wishlist.filter(id => id !== movie.id);
       this.analytics.event('removedFromWishlist', {
