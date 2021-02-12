@@ -9,6 +9,8 @@ import {
   ViewChild,
   ElementRef,
   OnInit,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -47,16 +49,13 @@ export class FileUploaderComponent implements OnInit {
   public storagePath: string;
   public metadata: FileMetaData;
 
+  @Input() form: FormControl;
+  @Input() input: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
     const [ collection, label, docId, index] = value;
     this.storagePath = getFileStoragePath(collection, label);
     this.metadata = getFileMetadata(collection, label, docId, index);
   }
-
-  @Input() form: FormControl;
-
-  @Input() input: number;
-
   @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]
     types.forEach(type => {
@@ -64,6 +63,8 @@ export class FileUploaderComponent implements OnInit {
       this.types = this.types.concat(allowedFiles[type].mime);
     })
   }
+  @Output() change = new EventEmitter<void>();
+
   public allowedTypes: string[] = [];
   public types: string[] = [];
 
@@ -154,6 +155,7 @@ export class FileUploaderComponent implements OnInit {
     this.localSize = computeSize(this.file.size);
 
     this.uploaderService.addToQueue(this.storagePath, { fileName: this.fileName, file: this.file, metadata: this.metadata });
+    this.change.emit();
   }
 
   public delete() {
@@ -161,6 +163,7 @@ export class FileUploaderComponent implements OnInit {
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.form?.setValue('');
+    this.change.emit();
   }
 
   private computeState() {
