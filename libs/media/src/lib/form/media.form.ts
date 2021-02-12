@@ -11,18 +11,18 @@ import { StorageFile } from '../+state/media.firestore';
 
 function createFileMetaDataControl(metadata: Partial<FileMetaData>) {
   return {
-    privacy: new FormControl(metadata?.privacy ?? privacies[0]), // public by default
-    uid: new FormControl(metadata?.uid ?? ''),
-    collection: new FormControl(metadata?.collection ?? ''),
-    docId: new FormControl(metadata?.docId ?? ''),
-    field: new FormControl(metadata?.field ?? ''),
+    privacy: new FormControl(metadata.privacy ?? privacies[0]), // public by default
+    uid: new FormControl(metadata.uid),
+    collection: new FormControl(metadata.collection),
+    docId: new FormControl(metadata.docId),
+    field: new FormControl(metadata.field),
   }
 }
 
 export type FileMetaDataControl = ReturnType<typeof createFileMetaDataControl>;
 
 export class FileMetaDataForm extends FormEntity<FileMetaDataControl> {
-  constructor(metadata: Partial<FileMetaData>) {
+  constructor(metadata: Partial<FileMetaData> = {}) {
     const control = createFileMetaDataControl(metadata);
     super(control);
   }
@@ -30,16 +30,16 @@ export class FileMetaDataForm extends FormEntity<FileMetaDataControl> {
 
 
 
-function createStorageFileControl(storageFile?: Partial<StorageFile>) {
+function createStorageFileControl(storageFile: Partial<StorageFile>) {
   return {
-    storagePath: new FormControl(storageFile?.storagePath ?? ''),
+    storagePath: new FormControl(storageFile.storagePath),
   };
 }
 
 export type StorageFileControl = ReturnType<typeof createStorageFileControl>;
 
 export class StorageFileForm extends FormEntity<StorageFileControl> {
-  constructor(storageFile?: Partial<StorageFile>) {
+  constructor(storageFile: Partial<StorageFile> = {}) {
     const control = createStorageFileControl(storageFile);
     super(control);
   }
