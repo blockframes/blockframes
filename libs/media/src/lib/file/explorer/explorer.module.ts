@@ -10,10 +10,12 @@ import { FileExplorerCropperDialogModule } from './cropper-dialog/cropper-dialog
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { FileNewUploaderModule } from '../file-new-uploader/file-uploader.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 
 // File explorer
 import { MultipleFilesViewModule } from './multiple-files-view/multiple-files-view.module';
-import { SingleFileViewModule } from './single-file-view/single-file-view.module';
+import { FileExplorerFileComponent } from './file/file.component';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -23,7 +25,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
-  declarations: [FileExplorerComponent, GetDirPipe],
+  declarations: [FileExplorerComponent, GetDirPipe, FileExplorerFileComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -34,10 +36,10 @@ import { MatBadgeModule } from '@angular/material/badge';
     TableFilterModule,
     MaxLengthModule,
     OrgNameModule,
-
+    FileNewUploaderModule,
+    ImageUploaderModule,
     // File explorer
     MultipleFilesViewModule,
-    SingleFileViewModule,
 
     // Material
     MatListModule,
