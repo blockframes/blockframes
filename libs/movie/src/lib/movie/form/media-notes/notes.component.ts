@@ -14,6 +14,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMediaNotesComponent {
+  movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
 
   roles = ['producer', 'director', 'other'];
@@ -21,10 +22,5 @@ export class MovieFormMediaNotesComponent {
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
     private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Notes')
-  }
-
-  public getPath() {
-    const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.notes/`;
   }
 }

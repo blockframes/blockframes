@@ -7,12 +7,13 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { OldUploadData, HostedMediaFormValue } from "./media.firestore";
+import { OldUploadData } from "./media.firestore";
 import { isValidMetadata } from "./media.model";
 
 // Blockframes
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
-import { delay, BehaviorStore } from "@blockframes/utils/helpers";
+import { delay } from "@blockframes/utils/helpers";
+import { BehaviorStore } from '@blockframes/utils/behavior-store';
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 import { clamp } from '@blockframes/utils/utils';
 import { tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
@@ -84,7 +85,7 @@ export class MediaService {
     }
   }
 
-  uploadMedias(mediaForms: HostedMediaFormValue[]) {
+  uploadMedias(mediaForms: any[]) {
     mediaForms.forEach(mediaForm => {
       if (!!mediaForm.blobOrFile) {
 

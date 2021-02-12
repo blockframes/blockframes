@@ -56,13 +56,13 @@ export class EventsComponent implements OnInit {
       this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'))
     ]);
 
-    const ownerIds = events.map(event => event.ownerId);
-    const orgs = await this.orgService.getValue(ownerIds);
+    const ownerOrgIds = events.map(event => event.ownerOrgId);
+    const orgs = await this.orgService.getValue(ownerOrgIds);
     
     this.rows = events.map(event => {
       const row = { ...event } as any;
       const invitations = invites.filter(inv => inv.eventId === event.id);
-      row.hostedBy = event.ownerId ? orgs.find(org => org.id === event.ownerId) : undefined;
+      row.hostedBy = orgs.find(org => org.id === event.ownerOrgId);
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;

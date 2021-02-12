@@ -30,7 +30,7 @@ export class FileMetaDataForm extends FormEntity<FileMetaDataControl> {
 
 
 
-function createStorageFileControl(storageFile: Partial<StorageFile>) {
+function createStorageFileControl(storageFile?: Partial<StorageFile>) {
   return {
     storagePath: new FormControl(storageFile?.storagePath ?? ''),
   };
@@ -39,7 +39,7 @@ function createStorageFileControl(storageFile: Partial<StorageFile>) {
 export type StorageFileControl = ReturnType<typeof createStorageFileControl>;
 
 export class StorageFileForm extends FormEntity<StorageFileControl> {
-  constructor(storageFile: Partial<StorageFile>) {
+  constructor(storageFile?: Partial<StorageFile>) {
     const control = createStorageFileControl(storageFile);
     super(control);
   }

@@ -5,7 +5,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { BehaviorStore } from '@blockframes/utils/helpers';
+import { BehaviorStore } from '@blockframes/utils/behavior-store';
 
 
 @Component({
@@ -29,14 +29,16 @@ export class ItemComponent {
     } else if (!!invitation.fromOrg) {
       this.fromOrg.value = invitation.fromOrg
 
-      this.eventService.getValue(invitation.eventId).then(event => {
-        if (event.type === 'meeting') {
-          this.eventType = 'meeting';
-          this.userService.getValue(event.meta.organizerId as string).then(user => {
-            this.fromUser.value = user;
-          })
-        }
-      })
+      if (invitation.type === 'attendEvent') {
+        this.eventService.getValue(invitation.eventId).then(event => {
+          if (event.type === 'meeting') {
+            this.eventType = 'meeting';
+            this.userService.getValue(event.meta.organizerUid as string).then(user => {
+              this.fromUser.value = user;
+            })
+          }
+        })
+      }
     }
   };
 

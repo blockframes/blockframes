@@ -29,7 +29,7 @@ import { importAnalytics } from './pubsub/daily-analytics-import';
 //    Users Management          //
 //--------------------------------
 
-/** Trigger: REST call to invite a list of users by email. */
+/** Trigger: REST call to create an user from CRM app. */
 export const createUser = functions.https.onCall(skipInMaintenance(logErrors(users.createUser)));
 
 /**

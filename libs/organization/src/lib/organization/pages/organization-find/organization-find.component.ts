@@ -29,7 +29,7 @@ export class OrganizationFindComponent {
   public async requestToJoinOrganization() {
     if (this.orgId) {
       try {
-        await this.invitationService.request('org', this.orgId).from('user').to('joinOrganization', this.orgId);
+        await this.invitationService.request(this.orgId).to('joinOrganization');
         this.snackBar.open('Request sent !', 'close', { duration: 2000 });
         return this.router.navigate(['c/organization/join-congratulations']);
       } catch (error) {

@@ -2,14 +2,15 @@
 import { App, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
-import { getDocument } from '../data/internals';
+import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
 import { templateIds } from '../templates/ids';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { EventEmailData } from '@blockframes/utils/emails/utils';
+import { logger } from 'firebase-functions';
 
 interface UserProposal {
   uid: string;
@@ -32,21 +33,21 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     const user = await getDocument<PublicUser>(`users/${uid}`);
     return user || { uid, email }
   } catch {
-    const newUser = await createUserFromEmail(email);
-
-    // User does not exists, send him an email.
-    const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
-    const urlToUse = applicationUrl[app];
-
-    const templateId = templateIds.user.credentials[invitationType];
-    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
-
     try {
+      const newUser = await createUserFromEmail(email, app);
+
+      // User does not exists, send him an email.
+      const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
+      const urlToUse = applicationUrl[app];
+
+      const templateId = templateIds.user.credentials[invitationType];
+      const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
+      return newUser.user;
     } catch (e) {
       throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
     }
-    return newUser.user;
+
   }
 };
 
@@ -55,19 +56,28 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
  * Creates an user from email address
  * @param email
  */
-export const createUserFromEmail = async (email: string): Promise<{ user: PublicUser, password: string }> => {
+export const createUserFromEmail = async (email: string, createdFrom: App = 'festival'): Promise<{ user: PublicUser, password: string }> => {
 
   const password = generatePassword();
 
-  // User does not exists, send them an email.
+  // User does not exists, we create it with a generated password
   const user = await auth.createUser({
     email,
     password,
     emailVerified: true,
     disabled: false
+  }).catch(e => {
+    throw new Error(`There was an error while creating user (email: "${email}" | password: "${password}"): ${e.message}`);
   });
 
-  return { user: { uid: user.uid, email }, password };
+  logger.info(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
+
+  // We don't have the time to wait for the trigger onUserCreate,
+  // So we create it here first. 
+  const userDb = { uid: user.uid, email, _meta: createDocumentMeta({ createdFrom }) };
+  await db.collection('users').doc(userDb.uid).set(userDb);
+
+  return { user: createPublicUserDocument(userDb), password };
 };
 
 /**

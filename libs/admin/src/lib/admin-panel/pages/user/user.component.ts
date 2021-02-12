@@ -8,11 +8,14 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
+import { datastudio } from '@env'
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state';
+import { EventService } from '@blockframes/event/+state/event.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'admin-user',
@@ -29,8 +32,11 @@ export class UserComponent implements OnInit {
   public userForm: UserAdminForm;
   private originalOrgValue: string;
 
+  public dashboardURL: SafeResourceUrl
+
   constructor(
     private userService: UserService,
+    private eventService: EventService,
     private organizationService: OrganizationService,
     private router: Router,
     private route: ActivatedRoute,
@@ -40,6 +46,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer
   ) { }
 
   async ngOnInit() {
@@ -54,6 +61,13 @@ export class UserComponent implements OnInit {
 
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
+
+      if (!!datastudio.user) {
+        const prms = JSON.stringify({ "ds2.user_id": this.userId });
+        const encodedPrms = encodeURIComponent(prms);
+        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/${datastudio.user}?params=${encodedPrms}`);
+      }
+
       this.cdRef.markForCheck();
     });
   }
@@ -179,6 +193,11 @@ export class UserComponent implements OnInit {
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`)
+    }
+
+    const organizerEvent = await this.eventService.getValue(ref => ref.where('meta.organizerUid', '==', user.uid));
+    if (organizerEvent.length) {
+      output.push(`${organizerEvent.length} meetings event(s) will have no organizer anymore.`);
     }
 
     return output;

@@ -57,7 +57,7 @@
           </div>
           <mat-form-field appearance="outline">
             <mat-label>Organized by</mat-label>
-            <mat-select formControlName="organizerId">
+            <mat-select formControlName="organizerUid">
               <ng-container *ngFor="let member of members$ | async">
                 <mat-option [value]="member.uid">{{ member | displayName }}</mat-option>
               </ng-container>

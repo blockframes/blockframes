@@ -28,7 +28,7 @@ export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<an
   return {
     id: '',
     title: '',
-    ownerId: '',
+    ownerOrgId: '',
     isPrivate: true,
     isSecret: false,
     type: 'standard',
@@ -56,7 +56,7 @@ export interface MeetingEvent extends Event<Meeting> {
 export const isMeeting = (event: Partial<Event>): event is MeetingEvent => event?.type === 'meeting';
 export function createMeeting(meeting: Partial<Meeting>): Meeting {
   return {
-    organizerId: '',
+    organizerUid: '',
     description: '',
     attendees: {},
     files: [],

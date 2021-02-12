@@ -57,7 +57,10 @@ export const templateIds = {
     oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
   },
   movie: {
-    submitted: 'd-b303d5c2fd794fc6975752948414d62d',
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
   }
+}
+
+export const unsubscribeGroupIds = {
+  allExceptCriticals: 15120
 }

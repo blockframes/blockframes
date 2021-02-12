@@ -8,7 +8,7 @@ import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { map, take } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
-import { PublicUser, UserSettings, PrivacyPolicy } from '@blockframes/user/types';
+import { PublicUser, PrivacyPolicy } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';

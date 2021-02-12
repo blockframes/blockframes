@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -9,8 +9,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./budget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CampaignFormBudgetComponent implements OnInit {
-  storagePath: string;
+export class CampaignFormBudgetComponent {
+  movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('campaign');
 
   constructor(
@@ -19,11 +19,6 @@ export class CampaignFormBudgetComponent implements OnInit {
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Estimated budget')
-  }
-
-  ngOnInit() {
-    const { movieId } = this.route.snapshot.params;
-    this.storagePath = `campaigns/${movieId}/files.budget/`;
   }
 
   get budget() {

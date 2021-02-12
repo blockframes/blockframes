@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { OrganizationQuery, createPublicOrganization, OrganizationService, Organization } from '@blockframes/organization/+state';
+import { OrganizationQuery, createPublicOrganization, Organization } from '@blockframes/organization/+state';
 import { AuthQuery, User } from '@blockframes/auth/+state';
 import { createPublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -21,7 +21,6 @@ export class InvitationService extends CollectionService<InvitationState> {
     store: InvitationStore,
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
-    private orgService: OrganizationService,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
   ) {
@@ -67,58 +66,44 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /**
    * Create an invitation with mode "request"
-   * @param who Destination type
+   * @param orgId The org the request is made to
    */
-  request(who: 'user' | 'org', id: string) {
+  request(orgId: string, fromUser: User = this.authQuery.user) {
     return {
-      from: (fromType: 'user' | 'org', from?: User | Organization) => ({
-        to: async (type: 'attendEvent' | 'joinOrganization', eventId: string, write?: AtomicWrite) => {
-          const base = { mode: 'request', type, eventId } as Partial<Invitation>
-          if (who === 'user') {
-            base['toUser'] = createPublicUser({ uid: id });
-          } else if (who === 'org') {
-            base['toOrg'] = createPublicOrganization({ id });
-          }
-          if (fromType === 'user') {
-            base['fromUser'] = createPublicUser(from || this.authQuery.user);
-          } else if (fromType === 'org') {
-            base['fromOrg'] = createPublicOrganization(from || this.orgQuery.getActive());
-          }
-          const invitation = createInvitation(base);
-          await this.add(invitation, { write });
+      to: async (type: 'attendEvent' | 'joinOrganization', eventId?: string, write?: AtomicWrite) => {
+        const request = { mode: 'request', type } as Partial<Invitation>;
+        if (type === 'attendEvent') {
+          request.eventId = eventId;
         }
-      })
+
+        request.toOrg = createPublicOrganization({ id: orgId });
+
+        request.fromUser = createPublicUser(fromUser);
+        const invitation = createInvitation(request);
+        await this.add(invitation, { write });
+      }
     }
   }
 
   /**
    * Create an invitation with mode "invitation"
-   * @param who Destination type
    * @param idOrEmails "emails" for user, "ids" for org
    */
-  invite(who: 'user' | 'org', idOrEmails: string | string[]) {
+  invite(idOrEmails: string | string[], fromOrg: Organization = this.orgQuery.getActive()) {
     return {
-      from: (fromType: 'user' | 'org', from?: User | Organization) => ({
-        to: (type: 'attendEvent' | 'joinOrganization', eventId: string, write?: AtomicWrite) => {
-          const base = { mode: 'invitation', type, eventId } as Partial<Invitation>
-          if (fromType === 'user') {
-            base['fromUser'] = createPublicUser(from || this.authQuery.user);
-          } else if (fromType === 'org') {
-            base['fromOrg'] = createPublicOrganization(from || this.orgQuery.getActive());
-          }
-          const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
-          // We use mergeMap to keep all subscriptions in memory (switchMap unsubscribe automatically)
-          if (who === 'org') {
-            return this.orgService.getValue(recipients)
-              .then(orgs => orgs.map(toOrg => createInvitation({ ...base, toOrg: createPublicOrganization(toOrg) })))
-              .then(invitations => this.add(invitations, { write }));
-          } else if (who === 'user') {
-            const f = this.functions.httpsCallable('inviteUsers');
-            const app = getCurrentApp(this.routerQuery);
-            return f({ emails: recipients, invitation: base, app }).toPromise();
-          }
+      to: (type: 'attendEvent' | 'joinOrganization', eventId?: string) => {
+        const invitation = { mode: 'invitation', type } as Partial<Invitation>;
+        if (type === 'attendEvent') {
+          invitation.eventId = eventId;
         }
-      })
+        invitation.fromOrg = createPublicOrganization(fromOrg);
+        const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
+
+        const f = this.functions.httpsCallable('inviteUsers');
+        const app = getCurrentApp(this.routerQuery);
+        return f({ emails: recipients, invitation, app }).toPromise();
+
+      }
     }
   }
 }

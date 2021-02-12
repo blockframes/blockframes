@@ -12,6 +12,7 @@ import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/app
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -107,14 +108,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `A new movie has been submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}`, // TODO check url : see  #2716
+          url: `/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
         this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              imgRef: movie?.poster ?? 'empty_poster.webp',
+              imgRef: createStorageFile(movie?.poster),
               message: `${movie.title.international} was successfully published on the marketplace.`,
             };
           })
@@ -127,9 +128,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
-        // @TODO #4046 need text for notification
+        // @TODO #4046 Update text if needed
         return {
-          message: 'Error while displaying notification.'
+          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
+          message: 'Your organization\'s app access have changed.',
+          imgRef: notification.organization?.logo,
+          placeholderUrl: 'empty_organization.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'eventIsAboutToStart':
 
@@ -261,7 +266,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
     // Adding user data to the notification of meeting events
     if (!!event && event.type === 'meeting' && !!notification.organization) {
-      const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerId}`);
+      const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerUid}`);
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
@@ -280,7 +285,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
   public getPoster(id: string) {
     const movie = this.movieQuery.getEntity(id);
-    return movie?.poster ?? '';
+    return movie?.poster ?? createStorageFile({
+      privacy: 'public',
+      collection: 'movies',
+      docId: id,
+      field: 'poster',
+      storagePath: 'poster',
+    });
   }
 
   private getDocument<T>(path: string): Promise<T> {

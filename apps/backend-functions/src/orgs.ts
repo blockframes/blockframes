@@ -195,15 +195,9 @@ export async function onOrganizationDelete(
   }
 
   // Delete all events where organization is involved
-  const eventsOwnerIdCollectionRef = db.collection('events').where('ownerId', '==', org.id);
-  const eventsOwnerIdSnap = await eventsOwnerIdCollectionRef.get();
-  for (const event of eventsOwnerIdSnap.docs) {
-    await event.ref.delete();
-  }
-
-  const eventsOrganizerIdCollectionRef = db.collection('events').where('meta.organizerId', '==', org.id);
-  const eventsOrganizerIdSnap = await eventsOrganizerIdCollectionRef.get();
-  for (const event of eventsOrganizerIdSnap.docs) {
+  const eventsOwnerOrgIdCollectionRef = db.collection('events').where('ownerOrgId', '==', org.id);
+  const eventsOwnerOrgIdSnap = await eventsOwnerOrgIdCollectionRef.get();
+  for (const event of eventsOwnerOrgIdSnap.docs) {
     await event.ref.delete();
   }
 

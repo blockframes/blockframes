@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
    * This parameter is useful to create invitation on behalf of someone else in the admin-panel.
    * For use in the apps, it should be empty, and the invitation service will retrieve the needed info
    */
-  @Input() ownerId: string;
+  @Input() ownerOrgId: string;
 
   /**
    * Maximum number of persons that can be invited for a specific `eventId`.
@@ -42,7 +42,7 @@ export class UserComponent implements OnInit {
 
   separators = [ENTER, COMMA, SEMICOLON, SPACE];
   form = createAlgoliaUserForm(Validators.maxLength(50));
-  currentLimit$: Observable<{canSend: boolean, total: number}>;
+  currentLimit$: Observable<{ canSend: boolean, total: number }>;
   sending = new BehaviorSubject(false);
   hasLimit: boolean;
 
@@ -50,13 +50,13 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
-  ) {}
+  ) { }
 
   ngOnInit() {
 
     this.hasLimit = this.limit !== Infinity;
 
-    const existingInvitationNumber$ = this.invitationQuery.selectAll({filterBy: invitation => invitation.eventId === this.eventId}).pipe(
+    const existingInvitationNumber$ = this.invitationQuery.selectAll({ filterBy: invitation => invitation.eventId === this.eventId }).pipe(
       map(invitations => invitations.length)
     );
     const inFormInvitationNumber$ = this.form.valueChanges.pipe(
@@ -68,8 +68,8 @@ export class UserComponent implements OnInit {
       existingInvitationNumber$,
       inFormInvitationNumber$,
     ]).pipe(
-      map(([existing, current]) => ({canSend: existing + current <= this.limit, total: existing + current})),
-      startWith({canSend: false, total: -1}),
+      map(([existing, current]) => ({ canSend: existing + current <= this.limit, total: existing + current })),
+      startWith({ canSend: false, total: -1 }),
     )
   }
 
@@ -79,8 +79,8 @@ export class UserComponent implements OnInit {
       const emails = this.form.value.map(guest => guest.email);
       this.form.reset([]);
       this.sending.next(true);
-      const org = this.ownerId ? await this.orgService.getValue(this.ownerId) : undefined;
-      await this.invitationService.invite('user', emails).from('org', org).to('attendEvent', this.eventId);
+      const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
+      await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
       this.sending.next(false);
     }
   }
