@@ -1,24 +1,20 @@
 <section fxLayout="column" fxLayoutGap="24px">
   <!-- Image -->
   <ng-container *ngIf="dir.type === 'image'">
-    <image-uploader [ratio]="dir.ratio" [storagePath]="dir.storagePath" [form]="getSingleMediaForm()">
+    <image-uploader [ratio]="dir.ratio" [storagePath]="dir.storagePath" [form]="dir.form">
       <h3 title>{{ dir.name }}</h3>
     </image-uploader>
   </ng-container>
 
   <!-- File -->
   <ng-container *ngIf="dir.type === 'file'">
-    <file-uploader
-      [form]="getSingleMediaForm()"
-      [storagePath]="dir.storagePath"
-      [allowedFileType]="dir.accept"
-      [filePrivacy]="dir.privacy">
+    <file-new-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept">
       <h3 title>Upload {{ dir.name }}</h3>
-    </file-uploader>
+    </file-new-uploader>
   </ng-container>
 
   <div fxLayout="column" fxLayoutAlign="center center">
-    <button mat-stroked-button color="primary" (click)="update()" [disabled]="getSingleMediaForm().invalid || getSingleMediaForm().pristine">
+    <button mat-stroked-button color="primary" (click)="update()" [disabled]="dir.form.invalid || dir.form.pristine">
       <span>Update</span>
     </button>
   </div>

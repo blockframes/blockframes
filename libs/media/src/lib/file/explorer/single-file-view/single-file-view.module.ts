@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { SingleFileViewComponent } from './single-file-view.component';
 
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
-import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
+import { FileNewUploaderModule } from '../../file-new-uploader/file-uploader.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     ImageUploaderModule,
-    FileUploaderModule,
+    FileNewUploaderModule,
     MatIconModule,
     MatButtonModule
   ],
