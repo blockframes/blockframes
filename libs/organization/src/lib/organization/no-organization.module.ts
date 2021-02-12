@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
@@ -83,7 +82,6 @@ export const noOrganizationRoutes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     FlexLayoutModule,
-    ImageUploaderModule,
     OrganizationFormModule,
     ImageModule,
     AlgoliaAutocompleteModule,

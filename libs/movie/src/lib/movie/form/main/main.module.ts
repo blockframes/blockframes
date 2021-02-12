@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 
 // Blockframes Media
-import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/uploader.module';
 
 // Blockframes UI
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
@@ -44,7 +44,7 @@ import { IsTypePipeModule } from '@blockframes/movie/pipes/is-type.pipe';
     // Other Modules
     TunnelPageModule,
     ChipsAutocompleteModule,
-    ImageUploaderModule,
+    ImageNewUploaderModule,
     StaticSelectModule,
     FormTableModule,
     HasStatusModule,
