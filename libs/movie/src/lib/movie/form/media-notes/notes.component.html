@@ -5,7 +5,7 @@
       <bf-form-list [form]="form.promotional.get('notes')">
         <ng-template itemRef let-note>{{ note.firstName }} - {{ note.lastName }} - {{ note.role | titlecase }} -
           {{ note.ref?.fileName | fileName | maxLength: 30 }}</ng-template>
-        <ng-template formView let-noteForm>
+        <ng-template formView let-noteForm let-index="index">
           <article fxLayout="column" fxLayoutGap="24px">
             <form-display-name [form]="noteForm"></form-display-name>
             <mat-form-field appearance="outline">
@@ -16,9 +16,9 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <file-uploader test-id="intent-note" [form]="noteForm.get('ref')" [storagePath]="getPath()"
+            <file-new-uploader test-id="intent-note" [form]="noteForm.get('storagePath')" [meta]="['movies', 'notes', movieId, index"
               allowedFileType="pdf">
-            </file-uploader>
+            </file-new-uploader>
             <div fxLayout="column" class="captions">
               <span class="mat-caption">Attach a note / statement of intent from your project's director or
                 producer.</span>

@@ -1,3 +1,4 @@
+import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import {
   CrewRoleValue,
   ProducerRoleValue,
@@ -39,7 +40,7 @@ interface IdentityRaw {
 export interface Person extends IdentityRaw {
   firstName?: string,
   lastName?: string,
-  avatar?: string,
+  avatar?: StorageFile,
 }
 
 export type StakeholderRaw = IdentityRaw;
@@ -134,7 +135,7 @@ export function createCredit(params: Partial<Credit> = {}) {
     description: '',
     status: '',
     category: '',
-    avatar: '',
+    avatar: createStorageFile(params?.avatar),
     ...params
   }
 }

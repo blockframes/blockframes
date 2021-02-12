@@ -360,12 +360,12 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
-    if (needsToBeCleaned(before.banner, after.banner)) {
-      mediaToDelete.push(before.banner);
+    if (needsToBeCleaned(before.banner.storagePath, after.banner.storagePath)) {
+      mediaToDelete.push(before.banner.storagePath);
     }
 
-    if (needsToBeCleaned(before.poster, after.poster)) {
-      mediaToDelete.push(before.poster);
+    if (needsToBeCleaned(before.poster.storagePath, after.poster.storagePath)) {
+      mediaToDelete.push(before.poster.storagePath);
     }
 
     if (needsToBeCleaned(before.promotional.presentation_deck.storagePath, after.promotional.presentation_deck.storagePath)) {
@@ -394,8 +394,8 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
     if (before.promotional.still_photo?.length) {
       before.promotional.still_photo.forEach((photo, index) => {
-        const stillBefore = photo
-        const stillAfter = after.promotional.still_photo[index];
+        const stillBefore = photo.storagePath;
+        const stillAfter = after.promotional.still_photo[index].storagePath;
         if ((stillBefore !== stillAfter || stillAfter === '')) {
           mediaToDelete.push(stillBefore);
         }
@@ -415,11 +415,11 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
   } else { // Deleting
 
     if (!!before.banner) {
-      mediaToDelete.push(before.banner);
+      mediaToDelete.push(before.banner.storagePath);
     }
 
     if (!!before.poster) {
-      mediaToDelete.push(before.poster);
+      mediaToDelete.push(before.poster.storagePath);
     }
 
     if (!!before.promotional.presentation_deck) {
@@ -443,7 +443,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (before.promotional.still_photo?.length) {
-      before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
+      before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo.storagePath));
     }
 
     if (before.promotional.notes?.length) {
