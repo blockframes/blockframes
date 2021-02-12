@@ -1,4 +1,5 @@
 /** Gives information about an application */
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import {
   createOrganizationBase,
   PublicOrganization,
@@ -32,6 +33,6 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
   return {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
-    logo: org.logo ?? '',
+    logo: createStorageFile(org.logo),
   }
 }

@@ -19,7 +19,7 @@ function createOrgAdminControls(entity: Partial<Organization>) {
     email: new FormControl(org.email, Validators.email),
     fiscalNumber: new FormControl(org.fiscalNumber),
     activity: new FormControl(org.activity),
-    logo: new StorageFileForm({ storagePath: org.logo }),
+    logo: new StorageFileForm(org.logo),
     appAccess,
     status: new FormControl(org.status),
   };
