@@ -1,16 +1,16 @@
 import { Privacy } from "@blockframes/utils/file-sanitizer";
-import { FormList } from "@blockframes/utils/form";
 import { MediaRatioType } from '../../image/uploader/uploader.component';
-// import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
-// import { HostedMediaForm } from '@blockframes/media/form/media.form';
-// import { isMediaForm } from "@blockframes/media/+state/media.model";
-import { MovieForm, MovieNotesForm } from "@blockframes/movie/form/movie.form";
+import { MovieForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
 import { AllowedFileType } from "@blockframes/utils/utils";
 import { Movie } from "@blockframes/movie/+state";
 import { Organization } from "@blockframes/organization/+state/organization.model";
+import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
-import { StorageFile } from '../../+state/media.firestore';
+import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
+import { StorageFileForm } from "@blockframes/media/form/media.form";
+import { FormList } from "@blockframes/utils/form";
+import { StorageFile } from "@blockframes/media/+state/media.firestore";
 
 
 interface DirectoryBase {
@@ -41,33 +41,23 @@ interface FileDirectoryBase extends DirectoryBase {
   storagePath: string;
   privacy: Privacy;
   hasFile: boolean | number;
+  meta: [CollectionHoldingFile, FileLabel, string];
 }
 
 export interface ImgDirectory extends FileDirectoryBase {
   type: 'image';
   ratio: MediaRatioType;
+  form: StorageFileForm | FormList<StorageFile>;
 }
 
 export interface FileDirectory extends FileDirectoryBase {
   type: 'file';
-  accept: AllowedFileType
+  accept: AllowedFileType;
+  form: StorageFileForm | FormList<StorageFile>;
 }
 
-
-export function getCollection(file: StorageFile) {
-  return file.collection;
-}
-
-export function getId(file: StorageFile) {
-  return file.docId;
-}
-
-export function getDeepPath(file: StorageFile) {
-  return file.field;
-}
-
-export function getFormList(form: OrganizationForm | MovieForm, file: StorageFile) {
-  return file.field.split('.').reduce((res, key) => res?.controls?.[key], form);
+export function getFormList(form: OrganizationForm | MovieForm, field: string) {
+  return field.split('.').reduce((res, key) => res?.controls?.[key], form);
 }
 
 function titlesDirectory(titles: Movie[]) {
@@ -76,6 +66,16 @@ function titlesDirectory(titles: Movie[]) {
     document[title.id] = titleDirectory(title);
   }
   return documents;
+}
+
+function getFormStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return new StorageFileForm(value);
+}
+
+function getFormListStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return FormList.factory<StorageFile>(value, file => new StorageFileForm(file));
 }
 
 function titleDirectory(title: Movie): Directory {
@@ -88,6 +88,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'image',
         ratio: 'poster',
         multiple: false,
+        meta: ['movies', 'poster', title.id],
+        form: getFormStorage(title, 'movies', 'poster'),
         docNameField: 'poster',
         fileRefField: 'poster',
         storagePath: `movies/${title.id}/poster`,
@@ -99,6 +101,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'image',
         ratio: 'banner',
         multiple: false,
+        meta: ['movies', 'banner', title.id],
+        form: getFormStorage(title, 'movies', 'banner'),
         docNameField: 'banner',
         fileRefField: 'banner',
         storagePath: `movies/${title.id}/banner`,
@@ -110,6 +114,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         accept: 'pdf',
         multiple: false,
+        meta: ['movies', 'scenario', title.id],
+        form: getFormStorage(title, 'movies', 'scenario'),
         docNameField: 'scenario',
         fileRefField: 'scenario',
         storagePath: `movies/${title.id}/promotional.scenario`,
@@ -121,6 +127,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         accept: 'pdf',
         multiple: false,
+        meta: ['movies', 'moodboard', title.id],
+        form: getFormStorage(title, 'movies', 'moodboard'),
         docNameField: 'file',
         fileRefField: 'file',
         storagePath: `movies/${title.id}/promotional.moodboard`,
@@ -132,6 +140,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         accept: 'pdf',
         multiple: false,
+        meta: ['movies', 'presentation_deck', title.id],
+        form: getFormStorage(title, 'movies', 'presentation_deck'),
         docNameField: 'presentation_deck',
         fileRefField: 'presentation_deck',
         storagePath: `movies/${title.id}/promotional.presentation_deck`,
@@ -142,6 +152,8 @@ function titleDirectory(title: Movie): Directory {
         name: 'Images',
         type: 'image',
         multiple: true,
+        meta: ['movies', 'still_photo', title.id],
+        form: getFormListStorage(title, 'movies', 'still_photo'),
         docNameField: '',
         fileRefField: '',
         ratio: 'still',
@@ -154,6 +166,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         multiple: false,
         accept: 'video',
+        meta: ['movies', 'screener', title.id],
+        form: getFormStorage(title, 'movies', 'screener'),
         docNameField: 'ref',
         fileRefField: 'ref',
         storagePath: `movies/${title.id}/promotional.videos.screener`,
@@ -165,6 +179,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         accept: 'video',
         multiple: true,
+        meta: ['movies', 'otherVideo', title.id],
+        form: getFormListStorage(title, 'movies', 'otherVideo'),
         docNameField: 'ref',
         fileRefField: 'ref',
         storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
@@ -176,6 +192,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         accept: 'video',
         multiple: false,
+        meta: ['movies', 'salesPitch', title.id],
+        form: getFormStorage(title, 'movies', 'salesPitch'),
         docNameField: 'ref',
         fileRefField: 'ref',
         storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
@@ -187,6 +205,8 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         accept: 'pdf',
         multiple: true,
+        meta: ['movies', 'notes', title.id],
+        form: getFormListStorage(title, 'movies', 'notes'),
         docNameField: 'ref',
         fileRefField: 'ref',
         storagePath: `movies/${title.id}/promotional.notes`,
@@ -208,17 +228,21 @@ function orgDirectory(org: Organization): Directory {
         type: 'file',
         accept: 'pdf',
         multiple: true,
+        meta: ['orgs', 'documents', org.id],
+        form: getFormStorage(org, 'orgs', 'documents'),
         docNameField: 'title',
         fileRefField: 'ref',
         storagePath: `orgs/${org.id}/documents.notes`,
         privacy: 'protected',
         hasFile: org.documents?.notes.length
       },
-      logo:       {
+      logo: {
         name: 'Logo',
         type: 'image',
         ratio: 'square',
         multiple: false,
+        meta: ['orgs', 'logo', org.id],
+        form: getFormStorage(org, 'orgs', 'logo'),
         docNameField: 'logo',
         fileRefField: 'logo',
         storagePath: `orgs/${org.id}/logo`,
