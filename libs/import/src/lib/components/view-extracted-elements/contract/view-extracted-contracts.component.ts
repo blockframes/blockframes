@@ -208,8 +208,12 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.startOfContract]) {
-            const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.startOfContract]);
-            term.duration.from = new Date(`${y}-${m}-${d}`);
+            if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
+              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.startOfContract]);
+              term.duration.from = new Date(`${y}-${m}-${d}`);
+            } else {
+              term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract])
+            }
           } else {
             importErrors.errors.push({
               type: 'warning',
@@ -221,8 +225,12 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.endOfContract]) {
-            const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.endOfContract]);
-            term.duration.to = new Date(`${y}-${m}-${d}`);
+            if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
+              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.endOfContract]);
+              term.duration.from = new Date(`${y}-${m}-${d}`);
+            } else {
+              term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
+            }
           } else {
             importErrors.errors.push({
               type: 'warning',
