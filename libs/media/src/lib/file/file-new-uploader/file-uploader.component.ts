@@ -179,19 +179,4 @@ export class FileUploaderComponent implements OnInit {
     }
   }
 
-  private computeState() {
-    if (!!this.displayFile.value) {
-      this.state = 'file';
-      this.fileName = this.displayFile.value;
-    } else {
-      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
-      if (!!retrieved) {
-        this.state = 'ready';
-        this.fileName = retrieved.fileName;
-        this.localSize = computeSize(retrieved.file.size);
-      } else {
-        this.state = 'waiting';
-      }
-    }
-  }
 }
