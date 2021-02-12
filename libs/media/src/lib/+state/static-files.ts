@@ -29,6 +29,9 @@ export const fileLabels = [
   'otherVideo',
   'salesPitch',
 
+  // orgs & movies
+  'notes',
+
   // campaigns
   'budget',
   'financingPlan',
@@ -39,6 +42,7 @@ export type FileLabel = typeof fileLabels[number];
 export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabel, string>>> = {
   orgs: {
     logo: 'logo',
+    notes: 'documents.notes'
   },
   users: {
     avatar: 'avatar',
@@ -54,9 +58,12 @@ export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabe
     screener: 'promotional.videos.screener',
     otherVideo: 'promotional.videos.otherVideos',
     salesPitch: 'promotional.salesPitch',
+    notes: 'promotional.notes'
   },
   campaigns: {
-    // TODO issue#4002
+    budget: 'files.budget',
+    financingPlan: 'files.financingPlan',
+    waterfall: 'files.waterfall',
   },
 };
 
@@ -71,6 +78,7 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
   const metadatas: Record<CollectionHoldingFile, Partial<Record<FileLabel, FileMetaData>>> = {
     orgs: {
       logo: { uid: '', privacy: 'public', collection, docId, field: 'logo' },
+      notes: { uid: '', privacy: 'protected', collection, docId, field: `documents.notes[${index}]` },
     },
     users: {
       avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' },
@@ -83,12 +91,15 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       moodboard: { uid: '', privacy: 'public', collection, docId, field: 'promotional.moodboard' },
       'presentation_deck': { uid: '', privacy: 'public', collection, docId, field: 'promotional.presentation_deck' },
       'still_photo': { uid: '', privacy: 'public', collection, docId, field: `promotional.still_photo[${index}]` },
+      notes: { uid: '', privacy: 'public', collection, docId, field: `promotional.notes[${index}]` },
       screener: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.screener' },
       otherVideo: { uid: '', privacy: 'public', collection, docId, field: `promotional.videos.otherVideos[${index}]` },
       salesPitch: { uid: '', privacy: 'public', collection, docId, field: 'promotional.salesPitch' },
     },
     campaigns: {
-      // TODO issue#4002
+      budget: { uid: '', privacy: 'public', collection, docId, field: 'files.budget' },
+      financingPlan: { uid: '', privacy: 'public', collection, docId, field: 'files.financingPlan' },
+      waterfall: { uid: '', privacy: 'public', collection, docId, field: 'files.waterfall' },
     },
   };
   return metadatas[collection][label];
