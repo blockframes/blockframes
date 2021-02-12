@@ -10,6 +10,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormSalesPitchComponent {
+  movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
 
   constructor(
@@ -22,11 +23,6 @@ export class MovieFormSalesPitchComponent {
 
   get salesPitch() {
     return this.form.promotional.get('salesPitch');
-  }
-
-  public getPath() {
-    const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.salesPitch/`;
   }
 
 }

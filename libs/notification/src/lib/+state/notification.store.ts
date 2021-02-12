@@ -108,14 +108,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `A new movie has been submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}`, // TODO check url : see  #2716
+          url: `/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
         this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              imgRef: movie?.poster ?? 'empty_poster.webp',
+              imgRef: createStorageFile(movie?.poster),
               message: `${movie.title.international} was successfully published on the marketplace.`,
             };
           })

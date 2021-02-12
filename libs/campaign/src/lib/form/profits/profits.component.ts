@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -11,8 +11,8 @@ import { allowedFiles } from '@blockframes/utils/utils';
   styleUrls: ['./profits.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CampaignFormProfitsComponent implements OnInit {
-  storagePath: string;
+export class CampaignFormProfitsComponent {
+  movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('campaign');
   errorMatcher = new CrossFieldErrorMatcher();
 
@@ -29,10 +29,5 @@ export class CampaignFormProfitsComponent implements OnInit {
 
   get profits() {
     return this.form.get('profits');
-  }
-
-  ngOnInit() {
-    const { movieId } = this.route.snapshot.params;
-    this.storagePath = `campaigns/${movieId}/files.waterfall/`;
   }
 }
