@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/uploader.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileFormComponent } from './profile.component';
@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageUploaderModule,
+    ImageNewUploaderModule,
     ReactiveFormsModule,
 
     // Material

@@ -19,7 +19,7 @@ import { PromotionalLinksModule } from '@blockframes/movie/form/links/promotiona
 
 // Blockframes Media
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
-import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/uploader.module';
 
 import { MovieFormMediaImagesComponent } from './media-images.component';
 
@@ -33,7 +33,7 @@ import { MovieFormMediaImagesComponent } from './media-images.component';
     PromotionalLinksModule,
     FileUploaderModule,
     FormTableModule,
-    ImageUploaderModule,
+    ImageNewUploaderModule,
     FlexLayoutModule,
 
     // Material

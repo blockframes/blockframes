@@ -34,9 +34,9 @@
       <h2>Company Logo</h2>
       <h5>Upload company Logo</h5>
 
-      <image-uploader ratio="square" [storagePath]="storagePath" [form]="form.get('logo')">
+      <image-new-uploader ratio="square" [form]="form.get('logo')" [meta]="['orgs', 'logo', orgId]">
         <h3 title>Logo</h3>
-      </image-uploader>
+      </image-new-uploader>
     </article>
   </section>
 
