@@ -16,7 +16,6 @@ export class OrganizationFormComponent {
 
   @Input() form: OrganizationForm;
 
-  // TODO#2914 Re-enable the cropper here when we found a solution
   @Input() @boolean disableCropper = false;
 
   constructor(private service: OrganizationService, private query: OrganizationQuery) { }
