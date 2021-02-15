@@ -1,6 +1,7 @@
 import { FormList } from "@blockframes/utils/form/forms/list.form";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { OrganizationMember } from "@blockframes/user/+state/user.model";
+import { StorageFileForm } from "@blockframes/media/form/media.form";
 
 function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
   return new FormGroup({
@@ -9,7 +10,7 @@ function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
     lastName: new FormControl(member.lastName),
     email: new FormControl(member.email, Validators.email),
     role: new FormControl(member.role),
-    avatar: new FormControl(member.avatar)
+    avatar: new StorageFileForm(member.avatar)
   });
 }
 

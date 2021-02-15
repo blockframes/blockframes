@@ -7,7 +7,8 @@ import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage
 
 import { AuthQuery } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
-import { BehaviorStore, delay } from "@blockframes/utils/helpers";
+import { BehaviorStore } from "@blockframes/utils/behavior-store";
+import { delay } from '@blockframes/utils/helpers';
 
 import { UploadData, FileMetaData, isValidMetadata } from "./media.model";
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";

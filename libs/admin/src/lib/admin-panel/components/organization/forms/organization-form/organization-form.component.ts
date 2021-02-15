@@ -15,9 +15,6 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class AdminOrganizationFormComponent {
   @Input() form: OrganizationAdminForm;
-  @Input() set orgId(orgId: string) {
-    this.storagePath = `orgs/${orgId}/logo`;
-  } 
 
   // TODO#2914 Re-enable the cropper here when we found a solution
   @Input() @boolean disableCropper = false;
@@ -25,13 +22,10 @@ export class AdminOrganizationFormComponent {
   public organizationStatus = organizationStatus;
   public app = app;
   public notifyCheckbox = new FormControl(false);
-  public storagePath: string;
 
   constructor(
     private organizationService: OrganizationService
-  ) {
-
-  }
+  ) {}
 
   public async uniqueOrgName() {
     const orgName = this.form.get('denomination').get('full').value

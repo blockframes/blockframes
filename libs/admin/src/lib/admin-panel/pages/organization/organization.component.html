@@ -12,7 +12,7 @@
     </article>
 
       <mat-card *ngIf="orgForm" fxFlex fxLayoutGap="40px">
-        <admin-organization-form [form]="orgForm" [orgId]="orgId"></admin-organization-form>
+        <admin-organization-form [form]="orgForm"></admin-organization-form>
 
         <form [formGroup]="orgForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
           <mat-checkbox [formControl]="notifyCheckbox">
