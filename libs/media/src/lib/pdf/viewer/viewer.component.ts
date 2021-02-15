@@ -8,6 +8,7 @@ import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 
 import { toggleFullScreen } from '../../file/viewers/utils';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[ref] pdf-viewer',
@@ -19,10 +20,10 @@ export class PdfViewerComponent implements OnInit {
 
   fullScreen = false;
 
-  private _ref: string;
+  private _ref: StorageFile;
   get ref() { return this._ref; }
-  @Input() set ref(value: string) {
-    this._ref = value;
+  @Input() set ref(file: StorageFile) {
+    this._ref = file;
   }
 
   private _control: MeetingPdfControl;

@@ -10,6 +10,7 @@ import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen  } from '../../file/viewers/utils';
+import { StorageVideo } from "@blockframes/media/+state/media.firestore";
 
 declare const jwplayer: any;
 
@@ -34,9 +35,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   public loading$ = new BehaviorSubject(true);
 
-  private _ref: string;
+  private _ref: StorageVideo;
   get ref() { return this._ref; }
-  @Input() set ref(value: string) {
+  @Input() set ref(value: StorageVideo) {
     // if the video file has changed
     if (!!value && this.ref !== value) {
       this.resetPlayerState();
@@ -80,7 +81,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   async initPlayer() {
     try {
       const privateVideo = this.functions.httpsCallable('privateVideo');
-      const { error, result } = await privateVideo({ eventId: this.eventId, ref: this.ref }).toPromise();
+      const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref }).toPromise();
 
       if (!!error) {
         // if error is set, result will contain the error message

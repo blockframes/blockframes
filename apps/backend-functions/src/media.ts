@@ -1,14 +1,14 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { isEqual, set } from 'lodash';
+import { get, isEqual, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
-import { Meeting } from '@blockframes/event/+state/event.firestore';
+import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
 import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
@@ -213,8 +213,7 @@ export const deleteMedia = async (storagePath: string): Promise<void> => {
   }
 }
 
-async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string): Promise<boolean> {
-  // const pathInfo = getPathInfo(ref);
+export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string): Promise<boolean> {
 
   const user = await db.collection('users').doc(uid).get();
   if (!user.exists) { return false; }
@@ -222,6 +221,15 @@ async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: 
 
   const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
   if (blockframesAdmin.exists) { return true; }
+
+  // We should not trust `privacy` & `storagePath` that comes from the parameters
+  // instead we use `collection`, `docId` & `field` to retrieve the trusted values form the db
+  const docData = getDocument(`${file.collection}/${file.docId}`);
+  const storageFile: StorageFile | undefined = get(docData, file.field);
+  if (!storageFile) { return false; }
+  const { privacy, storagePath } = storageFile;
+
+  if (privacy === 'public') { return true; }
 
   let canAccess = false;
   switch (file.collection) {
@@ -254,48 +262,38 @@ async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: 
 
       const eventData = eventSnap.data()!;
 
+      const now = admin.firestore.Timestamp.now();
+
+      // check if meeting is ongoing (not too early nor too late)
+      if (now.seconds < eventData.start.seconds || now.seconds > eventData.end.seconds) {
+        return false;
+      }
+
       // if event is a Meeting and has the file
       if (eventData.type === 'meeting') {
 
         // Check if the given file exists among the event's files
         const match = (eventData.meta as Meeting).files.some(eventFile =>
-          eventFile.privacy === file.privacy &&
+          eventFile.privacy === privacy && //trusted value from db
           eventFile.collection === file.collection &&
           eventFile.docId === file.docId &&
           eventFile.field === file.field &&
-          eventFile.storagePath === file.storagePath
+          eventFile.storagePath === storagePath // trusted value from db
         );
 
         if (match) {
           // check if user is invited
           canAccess = await isUserInvitedToEvent(uid, eventId);
         }
+      } else if (eventData.type === 'screening') {
+        // only give access for this specific movie screener
+        canAccess = file.field === 'promotional.screener'
+          && file.docId === (eventData.meta as Screening).titleId;
       }
     }
   }
 
   return canAccess;
-}
-
-interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
-
-function getPathInfo(ref: string) {
-  const refParts = ref.split('/').filter(v => !!v);
-
-  const pathInfo: PathInfo = {
-    securityLevel: 'protected', // protected by default
-    collection: '',
-    docId: '',
-  };
-
-  if (privacies.includes(refParts[0] as any)) {
-    pathInfo.securityLevel = refParts.shift()! as Privacy;
-  }
-
-  pathInfo.collection = refParts.shift()!;
-  pathInfo.docId = refParts.shift()!;
-
-  return pathInfo;
 }
 
 
