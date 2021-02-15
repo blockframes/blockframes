@@ -9,6 +9,11 @@ import * as admin from 'firebase-admin';
 import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo, applicationUrl, appDescription } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 
+const substitutions = {
+  groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
+  preferenceUnsubscribe: "<%asm_preferences_raw_url%>"
+};
+
 /**
  * Sends a transactional email configured by the EmailRequest provided.
  *
@@ -20,7 +25,8 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
     to,
     subject,
     text,
-    asm: { groupId: groupId }
+    asm: { groupId: groupId },
+    substitutions: substitutions
   };
 
   return send(msg);
@@ -37,7 +43,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     from,
     to,
     templateId,
-    dynamicTemplateData: { ...data, app: appMailSettings, from },
+    dynamicTemplateData: { ...data, ...substitutions, app: appMailSettings, from },
     asm: { groupId: groupId }
   };
 
