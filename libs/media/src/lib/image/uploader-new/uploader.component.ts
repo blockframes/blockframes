@@ -1,15 +1,16 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject } from 'rxjs';
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
+import { MediaService } from '../../+state/media.service';
+import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
-import { FileMetaData } from '@blockframes/media/+state/media.model';
-import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '@blockframes/media/+state/static-files';
-import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
+import { FileMetaData } from '../../+state/media.model';
+import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
+import { FileUploaderService } from '../../+state/file-uploader.service';
+import { StorageFile } from '../../+state/media.firestore';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -172,7 +173,13 @@ export class ImageUploaderComponent implements OnInit {
   ///////////
 
   async goToShow() {
-    this.previewUrl$.next(await this.getDownloadUrl(this.storagePath));
+    this.previewUrl$.next(await this.getDownloadUrl({
+      privacy: this.metadata.privacy,
+      collection: this.metadata.collection,
+      docId: this.metadata.docId,
+      field: this.metadata.field,
+      storagePath: this.storagePath
+    }));
     this.nextStep('show');
   }
 
@@ -258,7 +265,7 @@ export class ImageUploaderComponent implements OnInit {
    * Returns a promise with the download url of an image based on its reference.
    * If media is protected, this will also try to fetch a security token.
    * */
-  private getDownloadUrl(ref: string): Promise<string> {
-    return this.mediaService.generateImgIxUrl(ref, this.parameters);
+  private getDownloadUrl(file: StorageFile): Promise<string> {
+    return this.mediaService.generateImgIxUrl(file, this.parameters);
   }
 }
