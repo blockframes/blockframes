@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ImageModule } from '../../image/directives/image.module';
 
 // Components
 import { ImageUploaderComponent } from './uploader.component';

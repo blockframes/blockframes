@@ -19,10 +19,10 @@ import {
   sanitizeFileName,
 } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { FileMetaData } from '@blockframes/media/+state/media.model';
+import { FileMetaData } from '../../+state/media.model';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { FormControl } from '@angular/forms';
-import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '@blockframes/media/+state/static-files';
+import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
