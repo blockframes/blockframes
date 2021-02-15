@@ -1,18 +1,21 @@
-import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db, getStorageBucketName } from './internals/firebase';
-import * as admin from 'firebase-admin';
-import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
-import { isUserInvitedToEvent } from './internals/invitations/events';
-import { PublicUser } from './data/types';
-import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
-import { createHash } from 'crypto';
-import firebase from 'firebase';
-import { getDocument, getOrganizationsOfMovie } from './data/internals';
-import { ErrorResultResponse } from './utils';
-import { getDocAndPath, upsertWatermark } from '@blockframes/firebase-utils';
-import { File as GFile } from '@google-cloud/storage';
-import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
+
 import { get } from 'lodash';
+import { createHash } from 'crypto';
+import * as admin from 'firebase-admin';
+import { File as GFile } from '@google-cloud/storage';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+
+import { upsertWatermark } from '@blockframes/firebase-utils';
+import { linkDuration } from '@blockframes/event/+state/event.firestore';
+import { StorageVideo } from '@blockframes/media/+state/media.firestore';
+
+import { PublicUser } from './data/types';
+import { ErrorResultResponse } from './utils';
+import { getDocument } from './data/internals';
+import { isAllowedToAccessMedia } from './media';
+import { db, getStorageBucketName } from './internals/firebase';
+import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
+
 
 // No typing
 const JWPlayerApi = require('jwplatform');
@@ -22,7 +25,7 @@ interface ReadVideoParams {
   /**
    * The reference to the video in storage
    */
-  ref: string;
+  video: StorageVideo;
 
   /**
    * The id of the event.
@@ -40,122 +43,39 @@ export const getPrivateVideoUrl = async (
     throw new Error(`Unauthorized call !`);
   }
 
-  if (!data.ref) {
+  if (!data.video) {
     return {
-      error: 'UNKNOWN_REFERENCE',
-      result: 'No reference in params, this parameter is mandatory !'
+      error: 'UNKNOWN_VIDEO',
+      result: 'No video in params, this parameter is mandatory!'
     }
   }
 
-  const uid = context.auth.uid;
-  const { privacy, collection, doc, docData, field } = await getDocAndPath(data.ref);
-
-  if (!docData) {
-    return {
-      error: 'UNKNOWN_DOCUMENT',
-      result: 'The reference points to an unknown document'
-    }
-  }
-
-  let access = privacy === 'public';
-
-  if (!access && privacy === 'protected') {
-
-    // CHECK FOR ORGANIZATION MEMBER
-    if (collection === 'movies') {
-      const orgs = await getOrganizationsOfMovie(doc.id);
-      access = orgs
-        .filter(org => !!org && !!org.userIds)
-        .some(org => org.userIds.some(userId => userId === uid));
-    }
-
-    // CHECK FOR EVENT MEMBER
-    if (!access && data.eventId) {
-      const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
-
-      if (!event) {
-        return {
-          error: 'UNKNOWN_EVENT',
-          result: `There is no event with the ID ${data.eventId}`
-        };
-      }
-
-      if (event.type !== 'screening' && event.type !== 'meeting') {
-        return {
-          error: 'WRONG_EVENT_TYPE',
-          result: `The event ${data.eventId} is a ${event.type} but only 'screening' & 'meeting' are supported.`
-        };
-      }
-
-      const now = firebase.firestore.Timestamp.now();
-
-      if (now.seconds < event.start.seconds) {
-        return {
-          error: 'TOO_EARLY',
-          result: `The event ${data.eventId} hasn't started yet`
-        };
-      }
-
-      if (now.seconds > event.end.seconds) {
-        return {
-          error: 'TOO_LATE',
-          result: `The event ${data.eventId} is finished`
-        };
-      }
-
-      // CHECK FOR A SCREENING
-      if (event.type === 'screening') {
-
-        if (!('titleId' in event.meta)) {
-          throw new Error(`Event ${data.eventId} is a screening but doesn't have a 'titleId' !`);
-        }
-
-        if (event.isPrivate && !await isUserInvitedToEvent(uid, data.eventId)) {
-          return {
-            error: 'NO_INVITATION',
-            result: `You have not been invited to see this movie`
-          };
-        }
-
-      // CHECK FOR A MEETING
-      } else {
-
-        if (!await isUserInvitedToEvent(uid, data.eventId)) {
-          return {
-            error: 'UNAUTHORIZED',
-            result: `You are not authorized to get the information of this video`
-          }
-        }
-      }
-
-      access = true;
-    }
-  }
+  const access = await isAllowedToAccessMedia(data.video, context.auth.uid, data.eventId);
 
   if (!access) {
     return {
       error: 'UNAUTHORIZED',
-      result: `You are not authorized to see this video`
+      result: `You are not authorized to see this video!`
     }
   }
 
-  // get JwPlayerId
-  let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, field)
-  if (Array.isArray(savedRef)) {
-    savedRef = savedRef.find(video => video.ref === data.ref);
-  }
+  // extract trusted values
+  const { collection, docId, field } = data.video;
 
-  if (!savedRef || !savedRef.jwPlayerId) {
+  // retrieve not-trusted values
+  const docData = getDocument(`${collection}/${docId}`);
+  let storageVideo: StorageVideo | undefined = get(docData, field);
+  if (!storageVideo || !storageVideo.jwPlayerId) {
     return {
       error: 'DOCUMENT_VIDEO_NOT_FOUND',
-      result: `The file ${data.ref} was pointing to the existing document (${doc.id}), but this document doesn't contain the file or it's not a video`
+      result: `The file ${field} of document (${collection}/${docId}) has no jwPlayerId!`
     }
   }
+  const { jwPlayerId } = storageVideo;
 
-  const jwPlayerId = savedRef.jwPlayerId
 
   // watermark fallback : in case the user's watermark doesn't exist we generate it
-  const userRef = db.collection('users').doc(uid);
+  const userRef = db.collection('users').doc(context.auth.uid);
   const userSnap = await userRef.get();
   const user = userSnap.data() as PublicUser;
 
