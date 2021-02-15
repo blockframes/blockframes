@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
+import { FilePreviewModule } from '../preview/preview.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { FilePickerComponent } from './picker.component';
 import { MaxLengthModule } from '@blockframes/utils/pipes';

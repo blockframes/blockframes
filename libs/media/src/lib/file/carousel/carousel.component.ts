@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
+import { FilePickerComponent } from '../picker/picker.component';
 import { MatDialog } from '@angular/material/dialog';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: '[files] file-carousel',
