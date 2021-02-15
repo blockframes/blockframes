@@ -224,7 +224,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
   // We should not trust `privacy` & `storagePath` that comes from the parameters
   // instead we use `collection`, `docId` & `field` to retrieve the trusted values form the db
-  const docData = getDocument(`${file.collection}/${file.docId}`);
+  const docData = await getDocument(`${file.collection}/${file.docId}`);
   const storageFile: StorageFile | undefined = get(docData, file.field);
   if (!storageFile) { return false; }
   const { privacy, storagePath } = storageFile;
@@ -274,7 +274,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
         // Check if the given file exists among the event's files
         const match = (eventData.meta as Meeting).files.some(eventFile =>
-          eventFile.privacy === privacy && //trusted value from db
+          eventFile.privacy === privacy && // trusted value from db
           eventFile.collection === file.collection &&
           eventFile.docId === file.docId &&
           eventFile.field === file.field &&
