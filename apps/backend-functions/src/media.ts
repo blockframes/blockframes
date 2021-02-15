@@ -175,18 +175,18 @@ export async function linkFile(data: storage.ObjectMetadata) {
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
  * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
  */
-export const getMediaToken = async (data: { ref: string, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
+export const getMediaToken = async (data: { file: StorageFile, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  const canAccess = await isAllowedToAccessMedia(data.ref, context.auth.uid, data.eventId);
+  const canAccess = await isAllowedToAccessMedia(data.file, context.auth.uid, data.eventId);
   if (!canAccess) {
     throw new Error('Permission denied. User is not allowed');
   }
 
   return data.parametersSet.map((p: ImageParameters) => {
     const params = formatParameters(p);
-    let toSign = `${imgixToken}${encodeURI(data.ref)}`;
+    let toSign = `${imgixToken}${encodeURI(data.file.storagePath)}`;
 
     if (!!params) {
       toSign = `${toSign}?${params}`;
@@ -213,8 +213,8 @@ export const deleteMedia = async (storagePath: string): Promise<void> => {
   }
 }
 
-async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string): Promise<boolean> {
-  const pathInfo = getPathInfo(ref);
+async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string): Promise<boolean> {
+  // const pathInfo = getPathInfo(ref);
 
   const user = await db.collection('users').doc(uid).get();
   if (!user.exists) { return false; }
@@ -224,20 +224,20 @@ async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string
   if (blockframesAdmin.exists) { return true; }
 
   let canAccess = false;
-  switch (pathInfo.collection) {
+  switch (file.collection) {
     case 'users':
-      canAccess = pathInfo.docId === uid;
+      canAccess = file.docId === uid;
       break;
     case 'orgs':
       if (!userDoc.orgId) { return false; }
-      canAccess = pathInfo.docId === userDoc.orgId;
+      canAccess = file.docId === userDoc.orgId;
       break;
     case 'movies':
       if (!userDoc.orgId) { return false; }
       const moviesCol = await db.collection('movies').where('orgIds', 'array-contains', userDoc.orgId).get();
       const movies = moviesCol.docs.map(doc => doc.data());
       const orgIds = movies.map(m => m.orgIds)
-      canAccess = orgIds.some(id => pathInfo.docId === id);
+      canAccess = orgIds.some(id => file.docId === id);
       break;
     default:
       canAccess = false;
@@ -257,19 +257,14 @@ async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string
       // if event is a Meeting and has the file
       if (eventData.type === 'meeting') {
 
-        // event.meta.files store the raw refs, but the ref in the function params
-        // has been transformed by the front, so we must apply the same transformations
-        // if we want to be able to match ref & files
-        const match = (eventData.meta as Meeting).files.some(file => {
-
-          if (file.startsWith('/')) file = file.substr(1); // remove leading '/' if exists
-          const fileParts = file.split('/');
-          fileParts.shift(); // remove privacy
-          let normalizedFile = fileParts.join('/');
-          if (!normalizedFile.startsWith('/')) normalizedFile = `/${normalizedFile}`; // put back a leading '/'
-
-          return normalizedFile === ref;
-        })
+        // Check if the given file exists among the event's files
+        const match = (eventData.meta as Meeting).files.some(eventFile =>
+          eventFile.privacy === file.privacy &&
+          eventFile.collection === file.collection &&
+          eventFile.docId === file.docId &&
+          eventFile.field === file.field &&
+          eventFile.storagePath === file.storagePath
+        );
 
         if (match) {
           // check if user is invited
@@ -308,16 +303,16 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
     // Check if avatar have been changed/removed
-    if (!!before.avatar && (before.avatar !== after.avatar || after.avatar === '')) { // Avatar was previously setted and was updated or removed
-      mediaToDelete.push(before.avatar);
+    if (!!before.avatar && (before.avatar.storagePath !== after.avatar.storagePath || after.avatar.storagePath === '')) { // Avatar was previously setted and was updated or removed
+      mediaToDelete.push(before.avatar.storagePath);
     }
   } else { // Deleting
     if (!!before.avatar) {
-      mediaToDelete.push(before.avatar);
+      mediaToDelete.push(before.avatar.storagePath);
     }
 
     if (!!before.watermark) {
-      mediaToDelete.push(before.watermark);
+      mediaToDelete.push(before.watermark.storagePath);
     }
   }
 
@@ -327,8 +322,8 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
-    if (!!before.logo && (before.logo !== after.logo || after.logo === '')) {
-      mediaToDelete.push(before.logo);
+    if (!!before.logo && (before.logo.storagePath !== after.logo.storagePath || after.logo.storagePath === '')) {
+      mediaToDelete.push(before.logo.storagePath);
     }
 
     if (before.documents?.notes.length) {
@@ -341,7 +336,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 
   } else { // Deleting
     if (!!before.logo) {
-      mediaToDelete.push(before.logo);
+      mediaToDelete.push(before.logo.storagePath);
     }
 
     if (before.documents?.notes.length) {
