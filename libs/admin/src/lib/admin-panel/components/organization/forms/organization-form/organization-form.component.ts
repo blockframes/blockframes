@@ -16,7 +16,6 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 export class AdminOrganizationFormComponent {
   @Input() form: OrganizationAdminForm;
 
-  // TODO#2914 Re-enable the cropper here when we found a solution
   @Input() @boolean disableCropper = false;
 
   public organizationStatus = organizationStatus;

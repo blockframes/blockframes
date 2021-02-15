@@ -79,17 +79,6 @@ export async function getOrganizationsOfMovie(movieId: string): Promise<Organiza
   return orgs.map((orgDoc: any) => orgDoc.data())
 }
 
-/** Get the number of elements in a firestore collection */
-export function getCount(collection: string): Promise<number> {
-  const db = admin.firestore();
-  // TODO: implement counters to make this function scalable. => ISSUE#646
-  // relevant docs: https://firebase.google.com/docs/firestore/solutions/counters
-  return db
-    .collection(collection)
-    .get()
-    .then(col => col.size);
-}
-
 /** Retrieve the list of superAdmins and admins of an organization */
 export async function getAdminIds(organizationId: string): Promise<string[]> { // @TODO #4046 this may be removed at the end
   const permissions = await getDocument<PermissionsDocument>(`permissions/${organizationId}`);
