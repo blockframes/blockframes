@@ -17,6 +17,7 @@ import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: 'festival-session',
@@ -150,8 +151,8 @@ export class SessionComponent implements OnInit, OnDestroy {
         // If the current selected file hasn't any controls yet we should create them
         if (!!(event as Event<Meeting>).meta.selectedFile) {
           const file = (event as Event<Meeting>).meta.selectedFile;
-          if (!(event as Event<Meeting>).meta.controls[file]) {
-            const fileType = extensionToType(getFileExtension(file));
+          if (!(event as Event<Meeting>).meta.controls[file.storagePath]) {
+            const fileType = extensionToType(getFileExtension(file.storagePath));
             switch (fileType) {
               case 'pdf': {
                 this.creatingControl$.next(true);
@@ -163,7 +164,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                 break;
               } case 'video': {
                 this.creatingControl$.next(true);
-                const control = await this.createVideoControl(file, event.id);
+                const control = await this.createVideoControl((file as StorageVideo), event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
@@ -220,9 +221,9 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.service.update(event.id, { meta })
   }
 
-  async createPdfControl(ref: string, eventId: string): Promise<MeetingPdfControl> {
+  async createPdfControl(file: StorageFile, eventId: string): Promise<MeetingPdfControl> {
     // locally download the pdf file to count it's number of pages
-    const url = await this.mediaService.generateImgIxUrl(ref, {}, eventId);
+    const url = await this.mediaService.generateImgIxUrl(file, {}, eventId);
     const response = await fetch(url);
     const textResult = await response.text();
     // this actually count the number of pages, the regex comes from stack overflow
@@ -231,10 +232,10 @@ export class SessionComponent implements OnInit, OnDestroy {
     return { type: 'pdf', currentPage: 1, totalPages };
   }
 
-  async createVideoControl(ref: string, eventId: string): Promise<MeetingVideoControl> {
+  async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
     const getVideoInfo = this.functions.httpsCallable('privateVideo');
 
-    const { error, result} = await getVideoInfo({ ref, eventId }).toPromise();
+    const { error, result} = await getVideoInfo({ video, eventId }).toPromise();
     if (!!error) {
       // if error is set, result will contain the error message
       throw new Error(result);
