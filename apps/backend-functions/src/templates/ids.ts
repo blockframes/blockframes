@@ -62,5 +62,6 @@ export const templateIds = {
 }
 
 export const unsubscribeGroupIds = {
-  allExceptCriticals: 15120
+  allExceptCriticals: 15120,
+  criticalsEmails: 15136
 }

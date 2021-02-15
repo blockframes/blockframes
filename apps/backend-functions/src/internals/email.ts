@@ -1,5 +1,6 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
+import { unsubscribeGroupIds } from '../templates/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
@@ -14,6 +15,9 @@ const substitutions = {
   preferenceUnsubscribe: "<%asm_preferences_raw_url%>"
 };
 
+const criticalsEmailsGroupId = unsubscribeGroupIds.criticalsEmails;
+const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
+
 /**
  * Sends a transactional email configured by the EmailRequest provided.
  *
@@ -25,14 +29,14 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
     to,
     subject,
     text,
-    asm: { groupId: groupId },
+    asm: { groupId: groupId, groupsToDisplay: groupsToDisplay },
     substitutions: substitutions
   };
 
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId?: number): Promise<any> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<any> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -44,7 +48,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     to,
     templateId,
     dynamicTemplateData: { ...data, ...substitutions, app: appMailSettings, from },
-    asm: { groupId: groupId }
+    asm: { groupId: groupId, groupsToDisplay: groupsToDisplay }
   };
 
   return send(msg);
