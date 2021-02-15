@@ -621,6 +621,106 @@ describe('DB cleaning script', () => {
     expect(every(cleanOutput)).toEqual(true);
   });
 
+  it('should remove duplicates in org.userIds', async () => {
+    const testUsers = [{ uid: 'A', email: 'A@fake.com' }, { uid: 'B', email: 'B@fake.com' }, { uid: 'C', email: 'C@fake.com' }, { uid: 'D', email: 'D@fake.com' }];
+    const testOrgs = [
+      { id: 'org-A', email: 'org-A@fake.com', userIds: [testUsers[0].uid, testUsers[1].uid, testUsers[0].uid, testUsers[2].uid] },
+      { id: 'org-B', email: 'org-B@fake.com', userIds: [testUsers[1].uid, testUsers[3].uid] },
+      { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[1].uid, testUsers[2].uid, testUsers[2].uid, testUsers[3].uid, testUsers[2].uid] },
+    ];
+
+    // Load our test set
+    await populate('users', testUsers);
+    await populate('orgs', testOrgs);
+
+    const [users, organizationsBefore, movies] = await Promise.all([
+      getCollectionRef('users'),
+      getCollectionRef('orgs'),
+      getCollectionRef('movies')
+    ]);
+
+    // Check if data have been correctly added
+    expect(users.docs.length).toEqual(4);
+    expect(organizationsBefore.docs.length).toEqual(3);
+    expect(movies.docs.length).toEqual(0);
+
+    const userIds = users.docs.map(ref => ref.id);
+
+    await cleanOrganizations(organizationsBefore, userIds, movies);
+
+    const organizationsAfter: Snapshot = await getCollectionRef('orgs');
+
+    const orgA = organizationsAfter.docs.find(o => o.data().id === 'org-A');
+    expect(orgA.data().userIds.length).toEqual(3);
+
+    const orgB = organizationsAfter.docs.find(o => o.data().id === 'org-B');
+    expect(orgB.data().userIds.length).toEqual(2);
+
+    const orgC = organizationsAfter.docs.find(o => o.data().id === 'org-C');
+    expect(orgC.data().userIds.length).toEqual(3);
+  });
+
+  it('should remove duplicates in org.wishlist', async () => {
+    const testOrgs = [
+      { id: 'org-A', email: 'org-A@fake.com', wishlist: ['mov-A', 'mov-A', 'mov-C'] },
+      { id: 'org-B', email: 'org-B@fake.com', wishlist: ['mov-B', 'mov-B'] },
+      { id: 'org-C', email: 'org-C@fake.com', wishlist: ['mov-B', 'mov-A', 'mov-C'] },
+    ];
+    const testMovies = [{ id: 'mov-A', storeConfig: { status: 'accepted' } }, { id: 'mov-B', storeConfig: { status: 'accepted' } }, { id: 'mov-C', storeConfig: { status: 'accepted' } }];
+
+    // Load our test set
+    await populate('orgs', testOrgs);
+    await populate('movies', testMovies);
+
+    const [organizationsBefore, movies] = await Promise.all([
+      getCollectionRef('orgs'),
+      getCollectionRef('movies')
+    ]);
+
+    // Check if data have been correctly added
+    expect(organizationsBefore.docs.length).toEqual(3);
+    expect(movies.docs.length).toEqual(3);
+
+    await cleanOrganizations(organizationsBefore, [], movies);
+
+    const organizationsAfter: Snapshot = await getCollectionRef('orgs');
+
+    const orgA = organizationsAfter.docs.find(o => o.data().id === 'org-A');
+    expect(orgA.data().wishlist.length).toEqual(2);
+
+    const orgB = organizationsAfter.docs.find(o => o.data().id === 'org-B');
+    expect(orgB.data().wishlist.length).toEqual(1);
+    expect(orgB.data().wishlist[0]).toEqual('mov-B');
+
+    const orgC = organizationsAfter.docs.find(o => o.data().id === 'org-C');
+    expect(orgC.data().wishlist.length).toEqual(3);
+  });
+
+  it('should remove duplicates in movie.orgIds', async () => {
+    const testMovies = [
+      { id: 'mov-A', orgIds: ['org-A', 'org-B', 'org-A'] },
+      { id: 'mov-B', orgIds: ['org-A', 'org-B', 'org-C'] },
+      { id: 'mov-C', orgIds: ['org-B', 'org-B', 'org-B'] },
+    ];
+
+    await populate('movies', testMovies);
+
+    const moviesBefore: Snapshot = await getCollectionRef('movies');
+    expect(moviesBefore.docs.length).toEqual(3);
+
+    await cleanMovies(moviesBefore);
+    const moviesAfter: Snapshot = await getCollectionRef('movies');
+
+    const movA = moviesAfter.docs.find(o => o.data().id === 'mov-A');
+    expect(movA.data().orgIds.length).toEqual(2);
+
+    const movB = moviesAfter.docs.find(o => o.data().id === 'mov-B');
+    expect(movB.data().orgIds.length).toEqual(3);
+
+    const movC = moviesAfter.docs.find(o => o.data().id === 'mov-C');
+    expect(movC.data().orgIds.length).toEqual(1);
+  });
+
 });
 
 function isMovieClean(d: any) {

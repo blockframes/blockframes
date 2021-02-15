@@ -60,3 +60,7 @@ export const templateIds = {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
   }
 }
+
+export const unsubscribeGroupIds = {
+  allExceptCriticals: 15120
+}
