@@ -66,7 +66,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     denomination: {
       denomination: org.denomination,
       id: org.id,
-      logo: org.logo
+      logo: org.logo.storagePath
     }
 
   };
