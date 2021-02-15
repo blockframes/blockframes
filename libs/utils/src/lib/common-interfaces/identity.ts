@@ -46,7 +46,7 @@ export interface Person extends IdentityRaw {
 export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
-  logo?: string;
+  logo?: StorageFile;
   countries?: Territory[],
 }
 
@@ -113,7 +113,7 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
     orgId: '',
     countries: [],
     ...params,
-    logo: params.logo ?? '',
+    logo: createStorageFile(params.logo),
   }
 }
 

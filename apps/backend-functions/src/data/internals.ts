@@ -13,6 +13,7 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { getDocument } from '@blockframes/firebase-utils';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 export { getDocument };
 
@@ -20,7 +21,7 @@ export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
-    logo: org.logo ?? '',
+    logo: createStorageFile(org.logo),
   }
 }
 
@@ -37,7 +38,7 @@ export function createPublicUserDocument(user: any = {}) {
   return {
     uid: user.uid,
     email: user.email,
-    avatar: user.avatar ?? '',
+    avatar: createStorageFile(user.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     orgId: user.orgId ?? ''

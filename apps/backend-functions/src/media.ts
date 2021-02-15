@@ -328,8 +328,8 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 
     if (before.documents?.notes.length) {
       before.documents.notes.forEach(nb => {
-        if (!after.documents?.notes.length || !after.documents.notes.some(na => na.ref === nb.ref)) {
-          mediaToDelete.push(nb.ref);
+        if (!after.documents?.notes.length || !after.documents.notes.some(na => na.storagePath === nb.storagePath)) {
+          mediaToDelete.push(nb.storagePath);
         }
       });
     }
@@ -340,7 +340,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
     }
 
     if (before.documents?.notes.length) {
-      before.documents.notes.forEach(n => mediaToDelete.push(n.ref));
+      before.documents.notes.forEach(n => mediaToDelete.push(n.storagePath));
     }
   }
 

@@ -169,5 +169,7 @@ export async function upgrade(db: Firestore) {
     })
 
     await userDoc.ref.set(data)
+
+    // TODO issue #4002 add invitation to migration too. fromUser and fromOrg have references too.
   })
 }
