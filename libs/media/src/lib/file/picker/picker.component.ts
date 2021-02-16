@@ -7,6 +7,7 @@ import { recursivelyListFiles } from '../../+state/media.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { FilePreviewComponent } from '../preview/preview.component';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: 'file-picker',
@@ -16,10 +17,10 @@ import { FilePreviewComponent } from '../preview/preview.component';
 })
 export class FilePickerComponent implements OnInit, OnDestroy {
 
-  orgFiles: { path: string, isSelected: boolean }[];
+  orgFiles: { file: StorageFile, isSelected: boolean }[];
   movies: Movie[];
-  moviesFiles: Record<string, { path: string, isSelected: boolean }[]>;
-  selectedFiles: string[];
+  moviesFiles: Record<string, { file: StorageFile, isSelected: boolean }[]>;
+  selectedFiles: StorageFile[];
 
   private sub: Subscription;
 
@@ -29,19 +30,19 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<FilePickerComponent>,
     private cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) private data: { selectedFiles: string[] }
+    @Inject(MAT_DIALOG_DATA) private data: { selectedFiles: StorageFile[] }
   ) { }
 
   async ngOnInit() {
     this.selectedFiles = this.data.selectedFiles ?? [];
 
     const org = this.orgQuery.getActive();
-    this.orgFiles = recursivelyListFiles(org).map(file => ({ path: file, isSelected: this.selectedFiles.includes(file) }));
+    this.orgFiles = recursivelyListFiles(org).map(file => ({ file, isSelected: this.selectedFiles.includes(file) }));
     this.movies = await this.movieService.getValue(fromOrg(org.id))
     this.moviesFiles = {};
     this.movies.forEach(movie =>
       this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file =>
-        ({ path: file, isSelected: this.selectedFiles.includes(file) })));
+        ({ file, isSelected: this.selectedFiles.includes(file) })));
     this.cdr.markForCheck();
 
     // we set disableClose to `true` on the dialog, so we have to fake the exits events
@@ -60,18 +61,18 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleSelect(event: MouseEvent, file: string) {
+  toggleSelect(event: MouseEvent, file: StorageFile) {
     event.preventDefault();
     event.stopPropagation();
     for (const orgFile of this.orgFiles) {
-      if (orgFile.path === file) {
+      if (orgFile.file.storagePath === file.storagePath) {
 
         orgFile.isSelected = !orgFile.isSelected;
 
         if (orgFile.isSelected) {
           this.selectedFiles.push(file);
         } else {
-          const newSelectedFiles = this.selectedFiles.filter(selected => selected !== file);
+          const newSelectedFiles = this.selectedFiles.filter(selected => selected.storagePath !== file.storagePath);
           this.selectedFiles = newSelectedFiles;
         }
         return; // avoid further iterations
@@ -82,14 +83,14 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     for (const movieId in this.moviesFiles) {
       for (const movieFile of this.moviesFiles[movieId]) {
 
-        if (movieFile.path === file) {
+        if (movieFile.file.storagePath === file.storagePath) {
 
           movieFile.isSelected = !movieFile.isSelected;
 
           if (movieFile.isSelected) {
             this.selectedFiles.push(file);
           } else {
-            const newSelectedFiles = this.selectedFiles.filter(selected => selected !== file);
+            const newSelectedFiles = this.selectedFiles.filter(selected => selected.storagePath !== file.storagePath);
             this.selectedFiles = newSelectedFiles;
           }
           return; // avoid further iterations
@@ -99,7 +100,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     }
   }
 
-  previewFile(ref: string) {
+  previewFile(ref: StorageFile) {
     this.dialog.open(FilePreviewComponent, { data: { ref }, width: '70vw', height: '70vh' })
   }
 

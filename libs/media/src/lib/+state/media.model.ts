@@ -1,13 +1,7 @@
 
 import { isSafari } from '@blockframes/utils/browser/utils';
-import type { MovieForm, MovieVideosForm } from '@blockframes/movie/form/movie.form';
-import type { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import type { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import type { MoviePictureAdminForm } from '@blockframes/admin/admin-panel/forms/movie-admin.form';
-import type { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
-import type { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
-import type { CampaignForm } from '@blockframes/campaign/form/form'
 import { privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { StorageFile } from './media.firestore';
 
 
 /**
@@ -42,121 +36,37 @@ export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: bo
   return true;
 }
 
-// ! DEPRECATED
-/**
- * This function prepare media references in db documents before updating it in firestore.
- * The function also return an array of media to upload, we can then pass this array to the media service.
- */
-export function extractMediaFromDocumentBeforeUpdate(
-  form: MovieForm |
-    ProfileForm |
-    OrganizationForm |
-    OrganizationAdminForm |
-    OrganizationMediasForm |
-    MovieVideosForm |
-    CampaignForm |
-    MoviePictureAdminForm
-): { documentToUpdate: any, mediasToUpload: any[] } {
-
-  const cleanedDocument = JSON.parse(JSON.stringify(form.value));
-
-  const medias = extractMediaFromDocument(cleanedDocument);
-  updateMediaFormInForm(form);
-
-  return {
-    documentToUpdate: cleanedDocument,
-    mediasToUpload: medias,
-  };
+export function isFile(object: any) {
+  return typeof object === 'object'
+    && 'privacy' in object
+    && 'collection' in object
+    && 'docId' in object
+    && 'field' in object
+    && 'storagePath' in object
+    ;
 }
 
-// ! DEPRECATED
-function extractMediaFromDocument(document: any) {
-  let medias: any[] = [];
+export function recursivelyListFiles(document: any): StorageFile[] {
 
-  for (const key in document) {
-
-    if (isMediaForm(document[key])) {
-
-      if (mediaNeedsUpdate(document[key])) {
-        medias.push(document[key]);
-      }
-
-    } else if (typeof document[key] === 'object' && !!document[key]) {
-
-      const childMedias = extractMediaFromDocument(document[key]);
-      medias = medias.concat(childMedias);
-
-    }
-  }
-  return medias;
-}
-
-// ! DEPRECATED
-/**
- * Loops over form looking for mediaForms that need to be updated and then resets that form.
- */
-function updateMediaFormInForm(form: any) {
-  if ('controls' in form) {
-    for (const key in form.controls) {
-      const control = form.controls[key];
-      if (isMediaForm(control.value)) {
-        if (mediaNeedsUpdate(control.value)) {
-
-          // emptying values in blobOrFile and delete to prevent redoing the action on multiple submits.
-          // patching oldRef with the new reference. Updating this value in the form prevents emptying the reference multiple saves.
-          control.patchValue({
-            blobOrFile: '',
-            oldRef: control.value,
-          });
-
-        }
-      } else if (typeof control === 'object' && !!control) {
-        updateMediaFormInForm(control);
-      }
-    }
-  }
-}
-
-// ! DEPRECATED
-export function recursivelyListFiles(document: any): string[] {
-
-  if (typeof document === 'string') {
-    return isMedia(document) ? [document] : []
+  if (!document) {
+    return [];
 
   } else if (Array.isArray(document)) {
     const result = document.map(el => recursivelyListFiles(el));
     return result.flat();
 
-  } else if (!document) {
-    return [];
-
   } else if (typeof document === 'object') {
-    const result = Object.keys(document).map(key => recursivelyListFiles(document[key]));
-    return result.flat();
+
+    if (isFile(document)) {
+      return [document];
+    } else {
+      const result = Object.keys(document).map(key => recursivelyListFiles(document[key]));
+      return result.flat();
+    }
 
   } else {
     return [];
   }
-}
-
-// ! DEPRECATED
-/** Check if a string is a media ref (i.e. if it starts with `public/` or `protected/`) */
-function isMedia(ref: string) {
-  return /^(public\/|protected\/)/gm.test(ref);
-}
-
-// ! DEPRECATED
-export function isMediaForm(obj: any) {
-  return (
-    typeof obj === 'object' &&
-    !!obj &&
-    'storagePath' in obj
-  );
-}
-
-// ! DEPRECATED
-function mediaNeedsUpdate(media: any) {
-  return !media.ref || (!!media.ref && !!media.blobOrFile);
 }
 
 // TODO issue#4002 MOVE THE 2 FUNCTIONS BELLOW ELSEWHERE
