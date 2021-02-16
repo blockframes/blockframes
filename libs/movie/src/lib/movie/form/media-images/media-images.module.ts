@@ -18,7 +18,7 @@ import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { PromotionalLinksModule } from '@blockframes/movie/form/links/promotional-links.module';
 
 // Blockframes Media
-import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
+import { FileNewUploaderModule } from '@blockframes/media/file/file-new-uploader/file-uploader.module';
 import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/uploader.module';
 
 import { MovieFormMediaImagesComponent } from './media-images.component';
@@ -31,7 +31,7 @@ import { MovieFormMediaImagesComponent } from './media-images.component';
     ReactiveFormsModule,
     TunnelPageModule,
     PromotionalLinksModule,
-    FileUploaderModule,
+    FileNewUploaderModule,
     FormTableModule,
     ImageNewUploaderModule,
     FlexLayoutModule,

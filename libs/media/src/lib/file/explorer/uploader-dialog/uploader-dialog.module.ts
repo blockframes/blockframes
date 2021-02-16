@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
+import { FileNewUploaderModule } from '@blockframes/media/file/file-new-uploader/file-uploader.module';
 import { FormDisplayNameModule } from '@blockframes/ui/form/display-name/display-name.module';
 
 import { FileExplorerUploaderDialogComponent } from './uploader-dialog.component';
@@ -24,7 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     FlexLayoutModule,
 
-    FileUploaderModule,
+    FileNewUploaderModule,
     FormDisplayNameModule,
 
     // Material
