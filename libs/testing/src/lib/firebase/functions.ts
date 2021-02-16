@@ -25,6 +25,11 @@ config();
  * @returns firebase-functions-test mock object
  */
 export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptions): FirebaseTestConfig {
+  let runtimeConfig: any = {};
+  try {
+    // tslint:disable-next-line: no-eval
+    runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
+  } catch (e) { }
   if (emulator) { // ** Connect to emulator
     const firebaseTest: FirebaseTestConfig = firebaseFunctionsTest();
     testIndex++;
@@ -33,7 +38,6 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     const app = admin.initializeApp({ projectId });
-    const runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
     firebaseTest.mockConfig(runtimeConfig);
     firebaseTest.firebaseConfig = { projectId, app };
     return firebaseTest;
@@ -41,8 +45,6 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
 
   const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
   const testObj: FeaturesList = firebaseFunctionsTest({ ...firebaseEnv(), ...overrideConfig }, pathToServiceAccountKey);
-  // tslint:disable-next-line: no-eval
-  const runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
   testObj.mockConfig(runtimeConfig);
   return testObj;
 }
