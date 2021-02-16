@@ -58,7 +58,7 @@ commands:
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+          key: dependencies-v1-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
       - save_cache:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
           paths:
