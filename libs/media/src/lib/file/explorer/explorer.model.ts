@@ -27,10 +27,11 @@ export interface Directory extends DirectoryBase {
 }
 
 interface FileDirectoryBase extends DirectoryBase {
+  meta: [CollectionHoldingFile, FileLabel, string];
   /** Wether or not this directory can contain several files *(like stills photo)* or only one *(like movie poster)* */
-  multiple: boolean;
-  docNameField: string;
-  fileRefField: string;
+  // multiple: boolean;
+  // docNameField: string;
+  // fileRefField: string;
   /**
    * Corresponding path to the firebase storage
    * @note it **SHOULD NOT** start with a `/`
@@ -38,10 +39,9 @@ interface FileDirectoryBase extends DirectoryBase {
    * @note it **SHOULD NOT** contain the privacy (`public`/`protected`)
    * @note it **SHOULD NOT** contain the file name at the end
    */
-  storagePath: string;
-  privacy: Privacy;
-  hasFile: boolean | number;
-  meta: [CollectionHoldingFile, FileLabel, string];
+  // storagePath: string;
+  // privacy: Privacy;
+  // hasFile: boolean | number;
 }
 
 export interface ImgDirectory extends FileDirectoryBase {
@@ -87,131 +87,132 @@ function titleDirectory(title: Movie): Directory {
         name: 'Poster',
         type: 'image',
         ratio: 'poster',
-        multiple: false,
         meta: ['movies', 'poster', title.id],
         form: getFormStorage(title, 'movies', 'poster'),
-        docNameField: 'poster',
-        fileRefField: 'poster',
-        storagePath: `movies/${title.id}/poster`,
-        privacy: 'public',
-        hasFile: !!title.poster
+        // multiple: false,
+        // docNameField: 'poster',
+        // fileRefField: 'poster',
+        // storagePath: `movies/${title.id}/poster`,
+        // privacy: 'public',
+        // hasFile: !!title.poster
       },
       banner: {
         name: 'Banner',
         type: 'image',
         ratio: 'banner',
-        multiple: false,
         meta: ['movies', 'banner', title.id],
         form: getFormStorage(title, 'movies', 'banner'),
-        docNameField: 'banner',
-        fileRefField: 'banner',
-        storagePath: `movies/${title.id}/banner`,
-        privacy: 'public',
-        hasFile: !!title.banner
+        // multiple: false,
+        // docNameField: 'banner',
+        // fileRefField: 'banner',
+        // storagePath: `movies/${title.id}/banner`,
+        // privacy: 'public',
+        // hasFile: !!title.banner
       },
       scenario: {
         name: 'Scenario',
         type: 'file',
         accept: 'pdf',
-        multiple: false,
         meta: ['movies', 'scenario', title.id],
         form: getFormStorage(title, 'movies', 'scenario'),
-        docNameField: 'scenario',
-        fileRefField: 'scenario',
-        storagePath: `movies/${title.id}/promotional.scenario`,
-        privacy: 'public',
-        hasFile: !!title.promotional.scenario
+        // multiple: false,
+        // docNameField: 'scenario',
+        // fileRefField: 'scenario',
+        // storagePath: `movies/${title.id}/promotional.scenario`,
+        // privacy: 'public',
+        // hasFile: !!title.promotional.scenario
       },
       moodboard: {
         name: 'Moodboard / Artistic Deck',
         type: 'file',
         accept: 'pdf',
-        multiple: false,
         meta: ['movies', 'moodboard', title.id],
         form: getFormStorage(title, 'movies', 'moodboard'),
-        docNameField: 'file',
-        fileRefField: 'file',
-        storagePath: `movies/${title.id}/promotional.moodboard`,
-        privacy: 'public',
-        hasFile: !!title.promotional.moodboard
+        // multiple: false,
+        // docNameField: 'file',
+        // fileRefField: 'file',
+        // storagePath: `movies/${title.id}/promotional.moodboard`,
+        // privacy: 'public',
+        // hasFile: !!title.promotional.moodboard
       },
       'presentation_deck': {
         name: 'Presentation Deck',
         type: 'file',
         accept: 'pdf',
-        multiple: false,
         meta: ['movies', 'presentation_deck', title.id],
         form: getFormStorage(title, 'movies', 'presentation_deck'),
-        docNameField: 'presentation_deck',
-        fileRefField: 'presentation_deck',
-        storagePath: `movies/${title.id}/promotional.presentation_deck`,
-        privacy: 'public',
-        hasFile: !!title.promotional.presentation_deck
+        // multiple: false,
+        // docNameField: 'presentation_deck',
+        // fileRefField: 'presentation_deck',
+        // storagePath: `movies/${title.id}/promotional.presentation_deck`,
+        // privacy: 'public',
+        // hasFile: !!title.promotional.presentation_deck
       },
       'still_photo': {
         name: 'Images',
         type: 'image',
-        multiple: true,
+        ratio: 'still',
         meta: ['movies', 'still_photo', title.id],
         form: getFormListStorage(title, 'movies', 'still_photo'),
-        docNameField: '',
-        fileRefField: '',
-        ratio: 'still',
-        storagePath: `movies/${title.id}/promotional.still_photo`,
-        privacy: 'public',
-        hasFile: title.promotional.still_photo.length
+        // multiple: true,
+        // docNameField: '',
+        // fileRefField: '',
+        // ratio: 'still',
+        // storagePath: `movies/${title.id}/promotional.still_photo`,
+        // privacy: 'public',
+        // hasFile: title.promotional.still_photo.length
       },
       screener: {
         name: 'Screener',
         type: 'file',
-        multiple: false,
         accept: 'video',
         meta: ['movies', 'screener', title.id],
         form: getFormStorage(title, 'movies', 'screener'),
-        docNameField: 'ref',
-        fileRefField: 'ref',
-        storagePath: `movies/${title.id}/promotional.videos.screener`,
-        privacy: 'protected',
-        hasFile: !!title.promotional.videos?.screener?.ref
+        // multiple: false,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.videos.screener`,
+        // privacy: 'protected',
+        // hasFile: !!title.promotional.videos?.screener?.ref
       },
       otherVideo: {
         name: 'Other Videos',
         type: 'file',
         accept: 'video',
-        multiple: true,
         meta: ['movies', 'otherVideo', title.id],
         form: getFormListStorage(title, 'movies', 'otherVideo'),
-        docNameField: 'ref',
-        fileRefField: 'ref',
-        storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
-        privacy: 'public',
-        hasFile: title.promotional.videos?.otherVideos?.length
+        // multiple: true,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
+        // privacy: 'public',
+        // hasFile: title.promotional.videos?.otherVideos?.length
       },
       salesPitch: {
         name: 'Sales Pitch',
         type: 'file',
         accept: 'video',
-        multiple: false,
         meta: ['movies', 'salesPitch', title.id],
         form: getFormStorage(title, 'movies', 'salesPitch'),
-        docNameField: 'ref',
-        fileRefField: 'ref',
-        storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
-        privacy: 'public',
-        hasFile: title.promotional.videos?.otherVideos?.length
+        // multiple: false,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
+        // privacy: 'public',
+        // hasFile: title.promotional.videos?.otherVideos?.length
       },
       notes: {
         name: 'Notes & Statements',
         type: 'file',
         accept: 'pdf',
-        multiple: true,
         meta: ['movies', 'notes', title.id],
         form: getFormListStorage(title, 'movies', 'notes'),
-        docNameField: 'ref',
-        fileRefField: 'ref',
-        storagePath: `movies/${title.id}/promotional.notes`,
-        privacy: 'public',
-        hasFile: title.promotional.notes.length
+        // multiple: true,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.notes`,
+        // privacy: 'public',
+        // hasFile: title.promotional.notes.length
       }
     }
   }
@@ -227,27 +228,27 @@ function orgDirectory(org: Organization): Directory {
         name: 'Documents',
         type: 'file',
         accept: 'pdf',
-        multiple: true,
         meta: ['orgs', 'notes', org.id],
         form: getFormStorage(org, 'orgs', 'notes'),
-        docNameField: 'title',
-        fileRefField: 'ref',
-        storagePath: `orgs/${org.id}/documents.notes`,
-        privacy: 'protected',
-        hasFile: org.documents?.notes.length
+        // multiple: true,
+        // docNameField: 'title',
+        // fileRefField: 'ref',
+        // storagePath: `orgs/${org.id}/documents.notes`,
+        // privacy: 'protected',
+        // hasFile: org.documents?.notes.length
       },
       logo: {
         name: 'Logo',
         type: 'image',
         ratio: 'square',
-        multiple: false,
         meta: ['orgs', 'logo', org.id],
         form: getFormStorage(org, 'orgs', 'logo'),
-        docNameField: 'logo',
-        fileRefField: 'logo',
-        storagePath: `orgs/${org.id}/logo`,
-        privacy: 'public',
-        hasFile: !!org.logo
+        // multiple: false,
+        // docNameField: 'logo',
+        // fileRefField: 'logo',
+        // storagePath: `orgs/${org.id}/logo`,
+        // privacy: 'public',
+        // hasFile: !!org.logo
       }
     }
   }
