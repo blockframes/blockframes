@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Library
-import { FileNewUploaderModule } from '@blockframes/media/file/file-new-uploader/file-uploader.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
@@ -67,7 +67,7 @@ export const organizationRoutes: Routes = [
     // Library
     EditableSidenavModule,
     AvatarListModule,
-    FileNewUploaderModule,
+    FileUploaderModule,
     PasswordConfirmModule,
     ImageModule,
     OrganizationFormModule,

@@ -9,7 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { FileNameModule } from '@blockframes/utils/pipes';
-import { FileNewUploaderModule } from '@blockframes/media/file/file-new-uploader/file-uploader.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -29,7 +29,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FlexLayoutModule,
     FormListModule,
     MaxLengthModule,
-    FileNewUploaderModule,
+    FileUploaderModule,
     FileNameModule,
 
     // Material

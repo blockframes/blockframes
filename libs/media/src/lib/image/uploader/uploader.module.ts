@@ -13,7 +13,7 @@ import { ImageModule } from '../../image/directives/image.module';
 
 // Components
 import { ImageUploaderComponent } from './uploader.component';
-import { ReferencePipe } from './reference-path.pipe';
+import { ReferencePipe } from '../uploader/reference-path.pipe';
 
 @NgModule({
   declarations: [ ImageUploaderComponent, ReferencePipe ],

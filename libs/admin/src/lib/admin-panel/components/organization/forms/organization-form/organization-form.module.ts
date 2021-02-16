@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 // Modules
 import { OrganizationFormAddressModule } from '@blockframes/organization/forms/organization-form-address/organization-form-address.module';
 import { OrganizationFormDescriptionModule } from '@blockframes/organization/forms/organization-form-description/organization-form-description.module';
-import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/uploader.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 
 
 @NgModule({
@@ -37,7 +37,7 @@ import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/up
     // Blockframes
     OrganizationFormAddressModule,
     OrganizationFormDescriptionModule,
-    ImageNewUploaderModule
+    ImageUploaderModule
   ],
   declarations: [AdminOrganizationFormComponent],
   exports: [AdminOrganizationFormComponent]

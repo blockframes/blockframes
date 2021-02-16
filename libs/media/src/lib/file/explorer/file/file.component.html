@@ -8,8 +8,8 @@
 
   <!-- File -->
   <ng-container *ngIf="dir.type === 'file'">
-    <file-new-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept" (change)="update()">
+    <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept" (change)="update()">
       <h3 title>Upload {{ dir.name }}</h3>
-    </file-new-uploader>
+    </file-uploader>
   </ng-container>
 </section>

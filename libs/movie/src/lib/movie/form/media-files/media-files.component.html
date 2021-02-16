@@ -4,42 +4,42 @@
     <section id="presentation-deck">
       <h3>Presentation Deck</h3>
 
-      <file-new-uploader
+      <file-uploader
         test-id="presentationDeck"
         accept="pdf"
         [form]="form.promotional.get('presentation_deck').get('storagePath')"
         [meta]="['movies', 'presentation_deck', movieId]"
       >
         <h3 title>Upload Presentation Deck</h3>
-      </file-new-uploader>
+      </file-uploader>
 
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
     <section id="scenario">
       <h3>Scenario</h3>
-      <file-new-uploader
+      <file-uploader
         test-id="scenario"
         accept="pdf"
         [form]="form.promotional.get('scenario').get('storagePath')"
         [meta]="['movies', 'scenario', movieId]"
       >
         <h3 title>Upload Scenario</h3>
-      </file-new-uploader>
+      </file-uploader>
 
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
 
     <section id="moodboard">
       <h3>Moodboard / Artistic Deck</h3>
-      <file-new-uploader
+      <file-uploader
         test-id="moodboard"
         accept="pdf"
         [form]="form.promotional.get('moodboard').get('storagePath')"
-        [metadata]="['movies', 'moodboard', movieId]"
+        [meta]="['movies', 'moodboard', movieId]"
       >
         <h3 title>Upload Moodboard / Artistic Deck</h3>
-      </file-new-uploader>
+      </file-uploader>
 
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>

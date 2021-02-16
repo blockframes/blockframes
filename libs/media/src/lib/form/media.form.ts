@@ -43,4 +43,6 @@ export class StorageFileForm extends FormEntity<StorageFileControl> {
     const control = createStorageFileControl(storageFile);
     super(control);
   }
+
+  get storagePath() { return this.get('storagePath') };
 }

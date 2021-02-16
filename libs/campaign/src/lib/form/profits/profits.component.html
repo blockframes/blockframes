@@ -47,9 +47,9 @@
         <br />
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
-      <file-new-uploader [form]="form.get('files').get('waterfall').get('storagePath')" [meta]="['campaigns', 'waterfall', movieId]" accept="pdf">
+      <file-uploader [form]="form.get('files').get('waterfall').get('storagePath')" [meta]="['campaigns', 'waterfall', movieId]" accept="pdf">
         <h3 title>Upload File</h3>
-      </file-new-uploader>
+      </file-uploader>
       <span class="mat-caption">Please note that this document will be available for download on the marketplace.</span>
     </section>
   </ng-container>

@@ -8,7 +8,7 @@ import { FileExplorerComponent, GetDirPipe } from './explorer.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { FileNewUploaderModule } from '../file-new-uploader/file-uploader.module';
+import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
@@ -40,7 +40,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     TableFilterModule,
     MaxLengthModule,
     OrgNameModule,
-    FileNewUploaderModule,
+    FileUploaderModule,
     ImageUploaderModule,
     FileNameModule,
     FormListModule,
