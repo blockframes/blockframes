@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { runChunks } from '@blockframes/firebase-utils';
-import { resolve } from 'path';
+import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
 import { initializeTestApp, loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
@@ -11,7 +11,7 @@ import fs from 'fs';
 import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 
 export interface FirebaseTestConfig extends FeaturesList {
-  firebaseConfig?: { projectId: string }
+  firebaseConfig?: { projectId: string , app: admin.app.App}
 }
 
 let testIndex = 0;
@@ -20,19 +20,21 @@ config();
 /**
  * Helper function that sets up `firebase-functions-test` using environment
  * config.
- * @param offline if set to true, tests will be offline-only
+ * @param emulator if set to true, tests will use firestore emulator
  * @param overrideConfig allows custom configuration of test object
  * @returns firebase-functions-test mock object
  */
-export function initFunctionsTestMock(offline = true, overrideConfig?: AppOptions): FirebaseTestConfig {
-  if (offline) { // ** Connect to emulator
-    const firebaseTest: any = firebaseFunctionsTest();
+export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptions): FirebaseTestConfig {
+  if (emulator) { // ** Connect to emulator
+    const firebaseTest: FirebaseTestConfig = firebaseFunctionsTest();
     testIndex++;
     const projectId = getTestingProjectId();
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     const app = admin.initializeApp({ projectId });
+    const runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
+    firebaseTest.mockConfig(runtimeConfig);
     firebaseTest.firebaseConfig = { projectId, app };
     return firebaseTest;
   }
@@ -40,7 +42,7 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
   const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
   const testObj: FeaturesList = firebaseFunctionsTest({ ...firebaseEnv(), ...overrideConfig }, pathToServiceAccountKey);
   // tslint:disable-next-line: no-eval
-  const runtimeConfig = eval('require')(resolve(process.cwd(), './.runtimeconfig.json'));
+  const runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
   testObj.mockConfig(runtimeConfig);
   return testObj;
 }
