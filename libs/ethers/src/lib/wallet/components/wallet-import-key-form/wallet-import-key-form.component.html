@@ -14,18 +14,12 @@
         mnemonic
       </mat-slide-toggle>
     </div>
-    <ng-container *ngIf="!isMnemonic; else: mnemonicImport">
-      <!-- <file-uploader
-        allowedFileType="json"
-        (uploaded)="importedJson($event)"
-      ></file-uploader> -->
-    </ng-container>
-    <ng-template #mnemonicImport>
+    <ng-container *ngIf="isMnemonic">
       <mat-form-field appearance="outline">
         <mat-label>Enter your mnemonic</mat-label>
         <textarea matInput placeholder="Enter or paste your mnemonic" [formControl]="mnemonic"></textarea>
       </mat-form-field>
-    </ng-template>
+    </ng-container>
     <div fxLayout="row" fxLayoutAlign="center">
       <img asset="key.webp">
     </div>
