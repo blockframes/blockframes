@@ -38,6 +38,10 @@ th, td {
   }
 }
 
+tbody tr:last-child td {
+  padding-bottom: 24px
+}
+
 .description {
   width: 80%;
 }
