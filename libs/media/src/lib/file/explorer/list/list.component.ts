@@ -32,13 +32,10 @@ export class FileExplorerListComponent {
     }
   }
 
-  public async downloadFile(item: Partial<StorageFile>, event: Event) {
+  public async downloadFile(item: StorageFile, event: Event) {
     event.stopPropagation();
-    const ref = item.storagePath;
-    if (ref) {
-      const url = await this.mediaService.generateImgIxUrl(ref);
-      window.open(url);
-    }
+    const url = await this.mediaService.generateImgIxUrl(item);
+    window.open(url);
   }
 
 }
