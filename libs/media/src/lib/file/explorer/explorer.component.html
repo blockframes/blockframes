@@ -1,7 +1,7 @@
 <ng-container fxLayout *ngIf="root$ | async as root">
   <ng-container *ngIf="path$ | async as path">
     <aside>
-      <mat-action-list [multiple]="false">
+      <mat-action-list>
         <ng-container *ngFor="let dir of root.children | keyvalue">
           <button mat-list-item (click)="setPath(dir.key)" [ngClass]="{ active: path.startWith(dir.key) }">
             <mat-icon mat-list-icon [svgIcon]="dir.value.icon"></mat-icon>
