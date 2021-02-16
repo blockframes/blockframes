@@ -49,6 +49,9 @@ commands:
             - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - dependencies-{{ .Environment.CACHE_VERSION }}
+      - restore_cache:
+          keys:
+            - build-v1-
       - run: touch .env # dotenv will crash without this
       - run: cp $ENV_TS env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install
@@ -81,6 +84,13 @@ commands:
         - run: npm run backend-ops use ${PROJECT_ID}
         - run: gcloud info
         - run: gsutil ls
+  save_build_cache:
+    description: 'Saves NX build cache for faster building'
+    steps:
+      - save_cache:
+          key: build-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ".cache"
   replace_prod_files:
     description: 'Replace files for production'
     steps:
@@ -96,6 +106,7 @@ commands:
             npm run deploy:storage &&
             npm run deploy:firestore &&
             npx nx run-many --target=deploy --all
+      - save_build_cache
   build_deploy_upgrade:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
@@ -131,6 +142,7 @@ jobs:
     steps:
       - checkout_project
       - run: npm run build:all
+      - save_build_cache
       - run: npm run lint
       - run:
           name: Check size of apps being build
@@ -146,6 +158,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm run affected:build
+      - save_build_cache
       - run: npm run affected:lint
       - run: npm run affected:test
       - run:
