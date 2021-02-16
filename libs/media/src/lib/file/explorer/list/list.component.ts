@@ -26,7 +26,7 @@ export class FileExplorerListComponent {
 
   public openView(item: Partial<StorageFile>, event: Event) {
     event.stopPropagation();
-    if (item) {
+    if (!!item) {
       this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh' });
     }
   }
