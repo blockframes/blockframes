@@ -4,7 +4,7 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 
 @Component({
   selector: 'movie-picture-upload',
@@ -27,7 +27,7 @@ export class MoviePictureUploadComponent implements OnInit {
   }
 
   addStill() {
-    this.moviePictureForm.get('still_photo').push(new HostedMediaForm());
+    this.moviePictureForm.get('still_photo').push(new StorageFileForm());
     this.cdr.markForCheck();
   }
 

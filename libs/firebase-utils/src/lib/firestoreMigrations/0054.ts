@@ -169,5 +169,45 @@ export async function upgrade(db: Firestore) {
     })
 
     await userDoc.ref.set(data)
-  })
+  });
+
+  // INVITATION
+  const invitations = await db.collection('invitations').get();
+  await runChunks(invitations.docs, async (invitationDoc) => {
+    const data = invitationDoc.data();
+
+    const orgFields = ['fromOrg', 'toOrg'];
+    orgFields.forEach(field => {
+      if (!!data[field]) {
+        data[field].logo = createStorageFile({
+          storagePath: data[field].logo,
+          privacy: 'public',
+          collection: 'orgs',
+          docId: data[field].id,
+          field: 'logo'
+        })
+      }
+    });
+
+    const userFields = ['fromUser', 'toUser'];
+    const userMediaFields = ['avatar', 'watermark'];
+    userFields.forEach(field => {
+
+      if (!!data[field]) {
+        userMediaFields.forEach(mediaField => {
+
+          data[field][mediaField] = createStorageFile({
+            storagePath: data[field][mediaField],
+            privacy: 'public',
+            collection: 'users',
+            docId: data[field].uid,
+            field: mediaField
+          });
+
+        });
+      }
+    });
+
+    await invitationDoc.ref.set(data);
+  });
 }

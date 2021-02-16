@@ -15,7 +15,7 @@ export interface StorageFile {
   [K: string]: string; // extra-data
 }
 
-export function createStorageFile(file: Partial<StorageFile>): StorageFile {
+export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile {
   return {
     privacy: 'public',
     collection: 'movies',

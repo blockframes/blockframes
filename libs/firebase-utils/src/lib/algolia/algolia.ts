@@ -66,7 +66,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     denomination: {
       denomination: org.denomination,
       id: org.id,
-      logo: org.logo
+      logo: org.logo.storagePath
     }
 
   };
@@ -138,8 +138,8 @@ export function storeSearchableMovie(
         status: movie.release.status,
         year: movie.release.year
       },
-      banner: movie.banner,
-      poster: movie.poster
+      banner: movie.banner.storagePath,
+      poster: movie.poster.storagePath
     };
 
     /* App specific properties */
@@ -184,7 +184,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
       email: user.email,
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
-      avatar: user.avatar ?? '',
+      avatar: user.avatar?.storagePath ?? '',
       orgName: orgData ? orgName(orgData) : ''
     };
 

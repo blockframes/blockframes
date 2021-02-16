@@ -9,7 +9,7 @@ import { slideUp } from '@blockframes/utils/animations/fade';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { deconstructFilePath } from '@blockframes/utils/file-sanitizer';
 import { MovieVideo, MovieNote } from '@blockframes/movie/+state/movie.firestore';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '../../+state/media.firestore';
 
 @Component({
   selector: 'file-upload-widget',

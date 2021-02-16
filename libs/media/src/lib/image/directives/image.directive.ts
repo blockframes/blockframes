@@ -4,7 +4,8 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { delayWhen, map } from 'rxjs/operators';
 import { getAssetPath } from '../../+state/media.model';
 import { ImageParameters } from './imgix-helpers';
-import { MediaService } from '@blockframes/media/+state/media.service';
+import { MediaService } from '../../+state/media.service';
+import { StorageFile } from '../../+state/media.firestore';
 
 @Directive({
   selector: 'img[ref][asset], img[asset]'
@@ -20,7 +21,7 @@ export class ImageDirective implements OnInit, OnDestroy {
   });
 
   private asset$ = new BehaviorSubject('');
-  private ref$ = new BehaviorSubject('');
+  private ref$ = new BehaviorSubject<StorageFile>(undefined);
 
   @HostBinding('srcset') srcset: string;
   @HostBinding('src') src: string;
@@ -32,8 +33,8 @@ export class ImageDirective implements OnInit, OnDestroy {
   // -----------------------------------
 
   /** the image to display */
-  @Input() set ref(image: string) {
-    this.ref$.next(image);
+  @Input() set ref(file: StorageFile) {
+    this.ref$.next(file);
   }
 
   @Input() set loading(strategy: 'lazy' | 'eager') {
@@ -114,7 +115,7 @@ export class ImageDirective implements OnInit, OnDestroy {
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
 
-      if (!!ref && typeof ref === 'string') {
+      if (!!ref) {
         // ref
         this.srcset = await this.mediaService.generateImageSrcset(ref, params);
 

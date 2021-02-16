@@ -1,23 +1,23 @@
 // Angular
 import { Injectable, Injector } from "@angular/core";
-import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { AngularFireFunctions } from "@angular/fire/functions";
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
 
 // State
-import { OldUploadData } from "./media.firestore";
 import { isValidMetadata } from "./media.model";
+import { OldUploadData, StorageFile } from "./media.firestore";
+import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
+import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 
 // Blockframes
-import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
-import { delay } from "@blockframes/utils/helpers";
-import { BehaviorStore } from '@blockframes/utils/behavior-store';
-import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 import { clamp } from '@blockframes/utils/utils';
-import { tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { delay } from "@blockframes/utils/helpers";
 import { AuthQuery } from "@blockframes/auth/+state";
+import { BehaviorStore } from '@blockframes/utils/behavior-store';
+import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -122,27 +122,21 @@ export class MediaService {
    * @param ref (without "/protected")
    * @param parametersSet ImageParameters[]
    */
-  private async getProtectedMediaToken(ref: string, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
-    ref = !ref.startsWith('/') ? `/${ref}` : ref;
-    return this.getMediaToken({ ref, parametersSet, eventId }).toPromise();
+  private async getProtectedMediaToken(file: StorageFile, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
+    return this.getMediaToken({ file, parametersSet, eventId }).toPromise();
   }
 
-  async generateImageSrcset(ref: string, _parameters: ImageParameters): Promise<string> {
-    const refParts = ref.split('/');
-    const privacy = refParts.shift() as Privacy;
-    const params: ImageParameters[] = getImgSize(ref).map(size => ({ ..._parameters, w: size }));
+  async generateImageSrcset(file: StorageFile, _parameters: ImageParameters): Promise<string> {
+    const params: ImageParameters[] = getImgSize(file.storagePath).map(size => ({ ..._parameters, w: size }));
     let tokens: string[] = [];
 
-    if (privacies.includes(privacy)) {
-      ref = refParts.join('/');
-      if (privacy === 'protected') {
-        tokens = await this.getProtectedMediaToken(ref, params);
-      }
+    if (file.privacy === 'protected') {
+      tokens = await this.getProtectedMediaToken(file, params);
     }
 
     const urls = params.map((param, index) => {
       if (tokens[index]) { param.s = tokens[index] };
-      return `${getImgIxResourceUrl(ref, param)} ${param.w}w`;
+      return `${getImgIxResourceUrl(file.storagePath, param)} ${param.w}w`;
     })
 
     return urls.join(', ');
@@ -153,26 +147,16 @@ export class MediaService {
    * @param ref string
    * @param parameters ImageParameters
    */
-  async generateImgIxUrl(ref: string, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
-    if (!ref) {
-      return '';
+  async generateImgIxUrl(file: StorageFile, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
+      if (file.privacy === 'protected') {
+      const [token] = await this.getProtectedMediaToken(file, [parameters], eventId);
+      parameters.s = token;
     }
 
-    const refParts = ref.split('/');
-    const privacy = refParts.shift() as Privacy;
-
-    if (privacies.includes(privacy)) {
-      ref = refParts.join('/');
-      if (privacy === 'protected') {
-        const [token] = await this.getProtectedMediaToken(ref, [parameters], eventId);
-        parameters.s = token;
-      }
-    }
-
-    return getImgIxResourceUrl(ref, parameters);
+    return getImgIxResourceUrl(file.storagePath, parameters);
   }
 
-  generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
+  generateBackgroundImageUrl(file: StorageFile, p: ImageParameters): Promise<string> {
 
     // default client width
     let clientWidth = 1024;
@@ -185,7 +169,7 @@ export class MediaService {
     // to prevent that we use Infinity to pick clientWidth if parameters.width is undefined
     p.w = Math.min(clientWidth, p.w || Infinity);
 
-    return this.generateImgIxUrl(ref, p);
+    return this.generateImgIxUrl(file, p);
   }
 
 }

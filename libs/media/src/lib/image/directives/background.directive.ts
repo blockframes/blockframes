@@ -3,9 +3,10 @@ import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
-import { getAssetPath } from '@blockframes/media/+state/media.model';
+import { getAssetPath } from '../../+state/media.model';
 import { ImageParameters } from './imgix-helpers';
-import { MediaService } from '@blockframes/media/+state/media.service';
+import { MediaService } from '../../+state/media.service';
+import { StorageFile } from '../../+state/media.firestore';
 
 @Directive({
   selector: '[bgRef] [bgAsset], [bgAsset]'
@@ -26,11 +27,11 @@ export class BackgroundDirective implements OnInit, OnDestroy {
 
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set bgRef(image: string) {
-    if (!image) {
+  @Input() set bgRef(file: StorageFile) {
+    if (!file) {
       this.ref$.next('');
     } else {
-      this.mediaService.generateBackgroundImageUrl(image, this.parameters)
+      this.mediaService.generateBackgroundImageUrl(file, this.parameters)
         .then(url => this.ref$.next(url))
         .catch(_ => this.ref$.next(''));
     }

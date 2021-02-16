@@ -12,11 +12,17 @@ import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { FileNewUploaderModule } from '../file-new-uploader/file-uploader.module';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+<<<<<<< HEAD
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 
 // File explorer
 import { FileExplorerListComponent } from './list/list.component';
+=======
+
+// File explorer
+import { MultipleFilesViewModule } from './multiple-files-view/multiple-files-view.module';
+>>>>>>> a6d357c74bfd24eb036234f9d27702e31c353d3b
 import { FileExplorerFileComponent } from './file/file.component';
 
 // Material

@@ -3,11 +3,12 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { MediaService } from '@blockframes/media/+state/media.service';
+import { MediaService } from '../../+state/media.service';
 import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
-import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
+import { ImageParameters } from '../../image/directives/imgix-helpers';
 
 import { toggleFullScreen } from '../../file/viewers/utils';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[ref] pdf-viewer',
@@ -19,10 +20,10 @@ export class PdfViewerComponent implements OnInit {
 
   fullScreen = false;
 
-  private _ref: string;
+  private _ref: StorageFile;
   get ref() { return this._ref; }
-  @Input() set ref(value: string) {
-    this._ref = value;
+  @Input() set ref(file: StorageFile) {
+    this._ref = file;
   }
 
   private _control: MeetingPdfControl;
