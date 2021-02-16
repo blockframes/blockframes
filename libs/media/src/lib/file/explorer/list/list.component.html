@@ -19,7 +19,7 @@
     </ng-template>
     <ng-template formView let-activeForm let-index="index">
       <file-uploader
-        [form]="activeForm.get('storagePath')"
+        [form]="activeForm"
         [meta]="[...dir.meta, index]"
         [accept]="dir.accept"
       >

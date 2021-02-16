@@ -16,7 +16,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <file-uploader test-id="intent-note" [form]="noteForm.get('storagePath')" [meta]="['movies', 'notes', movieId, index]"
+            <file-uploader test-id="intent-note" [form]="noteForm" [meta]="['movies', 'notes', movieId, index]"
               accept="pdf">
             </file-uploader>
             <div fxLayout="column" class="captions">

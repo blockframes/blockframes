@@ -20,8 +20,8 @@ import {
 import { FileUploaderService } from '@blockframes/media/+state';
 import { FileMetaData } from '../../+state/media.model';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
-import { FormControl } from '@angular/forms';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -48,7 +48,7 @@ export class FileUploaderComponent implements OnInit {
   public storagePath: string;
   public metadata: FileMetaData;
 
-  @Input() form: FormControl;
+  @Input() form: StorageFileForm;
   @Input() input: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
     const [ collection, label, docId, index] = value;
@@ -161,14 +161,14 @@ export class FileUploaderComponent implements OnInit {
     this.state = 'waiting';
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
-    this.form?.setValue('');
+    this.form?.reset();
     this.change.emit();
   }
 
   private computeState() {
-    if (!!this.form.value) {
+    if (!!this.form.storagePath.value) {
       this.state = 'file';
-      this.fileName = this.form.value;
+      this.fileName = this.form.storagePath.value;
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
       if (!!retrieved) {

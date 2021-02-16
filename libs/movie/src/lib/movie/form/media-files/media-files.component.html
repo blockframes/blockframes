@@ -7,7 +7,7 @@
       <file-uploader
         test-id="presentationDeck"
         accept="pdf"
-        [form]="form.promotional.get('presentation_deck').get('storagePath')"
+        [form]="form.promotional.get('presentation_deck')"
         [meta]="['movies', 'presentation_deck', movieId]"
       >
         <h3 title>Upload Presentation Deck</h3>
@@ -21,7 +21,7 @@
       <file-uploader
         test-id="scenario"
         accept="pdf"
-        [form]="form.promotional.get('scenario').get('storagePath')"
+        [form]="form.promotional.get('scenario')"
         [meta]="['movies', 'scenario', movieId]"
       >
         <h3 title>Upload Scenario</h3>
@@ -35,7 +35,7 @@
       <file-uploader
         test-id="moodboard"
         accept="pdf"
-        [form]="form.promotional.get('moodboard').get('storagePath')"
+        [form]="form.promotional.get('moodboard')"
         [meta]="['movies', 'moodboard', movieId]"
       >
         <h3 title>Upload Moodboard / Artistic Deck</h3>
