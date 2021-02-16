@@ -100,8 +100,17 @@
     </li>
     <li test-id="info-runtime">
       <strong>Running Time </strong>
-      <missing-control [control]="movie.runningTime" [link]="link" fragment="general-information">
-        <ng-template let-runningTime>{{ runningTime | getRunningTime }}</ng-template>
+      <missing-control [control]="movie.runningTime.get('time')" [link]="link" fragment="general-information">
+        <ng-template let-time>{{ time }} min </ng-template>
+      </missing-control>
+      <missing-control [control]="movie.runningTime.get('status')" [link]="link" fragment="general-information">
+        <ng-template let-status>({{ status | toLabel: 'screeningStatus'}})</ng-template>
+      </missing-control>
+    </li>
+    <li *ngIf="movie.runningTime.get('episodeCount').value">
+      <strong>Count of Episodes </strong>
+      <missing-control [control]="movie.runningTime.get('episodeCount')" [link]="link" fragment="general-information">
+        <ng-template let-count>{{ count }}</ng-template>
       </missing-control>
     </li>
   </ul>
