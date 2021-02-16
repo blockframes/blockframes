@@ -16,6 +16,11 @@ const substitutions = {
 };
 
 const criticalsEmailsGroupId = unsubscribeGroupIds.criticalsEmails;
+/**
+ * Array of unsubscribe groups we want to display when users click on the preference link.
+ * Like this, we can avoid showing the criticalEmails group, which is linked for example to the reset password email.
+ * Users won't be able to unsubscribe from this group and will always received email from the criticalsEmails group.
+*/
 const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
 
 /**
@@ -23,21 +28,21 @@ const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-// TODO Define which template is critical and pass the id to the function when it's called
+// TODO #4710 Define which template is critical and pass the id to the function when it's called
 export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId): Promise<any> {
   const msg: MailDataRequired = {
     from,
     to,
     subject,
     text,
-    asm: { groupId: groupId, groupsToDisplay: groupsToDisplay },
+    asm: { groupId, groupsToDisplay },
     substitutions: substitutions
   };
 
   return send(msg);
 }
 
-// TODO Define which template is critical and pass the id to the function when it's called
+// TODO #4710 Define which template is critical and pass the id to the function when it's called
 export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<any> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
@@ -50,7 +55,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     to,
     templateId,
     dynamicTemplateData: { ...data, ...substitutions, app: appMailSettings, from },
-    asm: { groupId: groupId, groupsToDisplay: groupsToDisplay }
+    asm: { groupId, groupsToDisplay }
   };
 
   return send(msg);
