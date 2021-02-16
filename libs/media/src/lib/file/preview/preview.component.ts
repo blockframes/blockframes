@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
-  selector: '[ref] file-preview',
+  selector: 'file-preview',
   templateUrl: 'preview.component.html',
   styleUrls: ['./preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

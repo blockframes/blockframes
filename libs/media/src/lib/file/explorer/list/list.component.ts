@@ -26,9 +26,8 @@ export class FileExplorerListComponent {
 
   public openView(item: Partial<StorageFile>, event: Event) {
     event.stopPropagation();
-    const ref = item.storagePath;
-    if (ref) {
-      this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh' });
+    if (item) {
+      this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh' });
     }
   }
 
