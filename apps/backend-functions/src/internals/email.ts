@@ -1,5 +1,6 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
+import { unsubscribeGroupIds } from '../templates/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
@@ -9,24 +10,40 @@ import * as admin from 'firebase-admin';
 import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo, applicationUrl, appDescription } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 
+const substitutions = {
+  groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
+  preferenceUnsubscribe: "<%asm_preferences_raw_url%>"
+};
+
+const criticalsEmailsGroupId = unsubscribeGroupIds.criticalsEmails;
+/**
+ * Array of unsubscribe groups we want to display when users click on the preference link.
+ * Like this, we can avoid showing the criticalEmails group, which is linked for example to the reset password email.
+ * Users won't be able to unsubscribe from this group and will always received email from the criticalsEmails group.
+*/
+const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
+
 /**
  * Sends a transactional email configured by the EmailRequest provided.
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId?: number): Promise<any> {
+// TODO #4710 Define which template is critical and pass the id to the function when it's called
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId): Promise<any> {
   const msg: MailDataRequired = {
     from,
     to,
     subject,
     text,
-    asm: { groupId: groupId }
+    asm: { groupId, groupsToDisplay },
+    substitutions: substitutions
   };
 
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId?: number): Promise<any> {
+// TODO #4710 Define which template is critical and pass the id to the function when it's called
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<any> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -37,8 +54,8 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     from,
     to,
     templateId,
-    dynamicTemplateData: { ...data, app: appMailSettings, from },
-    asm: { groupId: groupId }
+    dynamicTemplateData: { ...data, ...substitutions, app: appMailSettings, from },
+    asm: { groupId, groupsToDisplay }
   };
 
   return send(msg);
