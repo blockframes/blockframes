@@ -6,11 +6,11 @@ import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormControl } from '@angular/forms';
 import { FileMetaData } from '../../+state/media.model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { FileUploaderService } from '../../+state/file-uploader.service';
 import { StorageFile } from '../../+state/media.firestore';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -98,7 +98,7 @@ export class ImageUploaderComponent implements OnInit {
         throw new Error('Unknown ratio');
     }
   }
-  @Input() form: FormControl;
+  @Input() form: StorageFileForm;
 
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
     const [ collection, label, docId, index ] = value;
@@ -249,7 +249,7 @@ export class ImageUploaderComponent implements OnInit {
     }
 
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName)
-    this.form.setValue('');
+    this.form.reset();
 
     this.fileUploader.nativeElement.value = null;
 
