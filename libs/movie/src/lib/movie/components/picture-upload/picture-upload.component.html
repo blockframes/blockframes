@@ -1,19 +1,19 @@
 <h2>Poster</h2>
-<image-new-uploader [meta]="['movies', 'poster', movie.id]" ratio="poster" [form]="moviePictureForm.get('poster')">
+<image-uploader [meta]="['movies', 'poster', movie.id]" ratio="poster" [form]="moviePictureForm.get('poster')">
   <h2>Film Poster</h2>
-</image-new-uploader>
+</image-uploader>
 
 <h2>Banner</h2>
-<image-new-uploader [meta]="['movies', 'banner', movie.id]" ratio="banner" [form]="moviePictureForm.get('banner')">
+<image-uploader [meta]="['movies', 'banner', movie.id]" ratio="banner" [form]="moviePictureForm.get('banner')">
   <h2>Film Banner</h2>
-</image-new-uploader>
+</image-uploader>
 
 
 <h2>Promotional Images</h2>
 <ng-container *ngFor="let still of moviePictureForm.get('still_photo').controls; let i = index">
-  <image-new-uploader [meta]="['movies', 'still_photo', movie.id, i]" ratio="still" [form]="still">
+  <image-uploader [meta]="['movies', 'still_photo', movie.id, i]" ratio="still" [form]="still">
     <h3 title>Stills</h3>
-  </image-new-uploader>
+  </image-uploader>
 </ng-container>
 
 <article fxLayout="row" fxLayoutAlign="space-around">

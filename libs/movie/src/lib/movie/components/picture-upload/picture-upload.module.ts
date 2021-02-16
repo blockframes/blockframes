@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { MoviePictureUploadComponent } from './picture-upload.component';
-import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/uploader.module';
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 
 @NgModule({
   imports: [
@@ -17,7 +17,7 @@ import { ImageNewUploaderModule } from '@blockframes/media/image/uploader-new/up
     ReactiveFormsModule,
     RouterModule,
     FlexLayoutModule,
-    ImageNewUploaderModule,
+    ImageUploaderModule,
     MatButtonModule,
     MatIconModule
   ],

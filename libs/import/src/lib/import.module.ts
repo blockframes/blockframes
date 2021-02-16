@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 // Libraries
-import { FileNewUploaderModule } from '@blockframes/media/file/file-new-uploader/file-uploader.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { ViewExtractedElementsModule } from './components/view-extracted-elements/view-extracted-elements.module';
 
 // Components
@@ -49,7 +49,7 @@ const routes: Routes = [
     MatButtonModule,
 
     // Librairies
-    FileNewUploaderModule,
+    FileUploaderModule,
     ViewExtractedElementsModule,
     ImageModule
   ]

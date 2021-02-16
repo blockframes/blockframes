@@ -18,13 +18,13 @@
       </button>
     </ng-template>
     <ng-template formView let-activeForm let-index="index">
-      <file-new-uploader
+      <file-uploader
         [form]="activeForm.get('storagePath')"
         [meta]="[...dir.meta, index]"
         [accept]="dir.accept"
       >
         <h3 title>Upload File</h3>
-      </file-new-uploader>
+      </file-uploader>
 
       <ng-template saveButtonText>Save</ng-template>
       <ng-template addButtonText>Add</ng-template>

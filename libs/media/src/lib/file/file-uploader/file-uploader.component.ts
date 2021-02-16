@@ -1,3 +1,4 @@
+
 import {
   Component,
   Input,
@@ -5,88 +6,83 @@ import {
   ChangeDetectionStrategy,
   ContentChild,
   TemplateRef,
-  OnInit,
-  ChangeDetectorRef,
-  OnDestroy,
   ViewChild,
   ElementRef,
-  AfterViewInit,
+  OnInit,
+  Output,
+  EventEmitter,
 } from '@angular/core';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   getMimeType,
-  getStoragePath,
   sanitizeFileName,
-  Privacy,
 } from '@blockframes/utils/file-sanitizer';
-import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { HostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
+import { FileUploaderService } from '@blockframes/media/+state';
+import { FileMetaData } from '../../+state/media.model';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
-import { startWith, switchMap } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
+
+function computeSize(fileSize: number) {
+  const size = fileSize / 1000;
+  if (size < 1000) {
+    return `${size.toFixed(1)} KB`;
+  } else if (size < 1000 * 1000) {
+    return `${(size / 1000).toFixed(1)} MB`;
+  } else {
+    return `${(size / (1000 * 1000)).toFixed(1)} GB`;
+  }
+}
+
 @Component({
-  selector: '[form] [storagePath] file-uploader',
+  selector: '[meta] [accept] file-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileUploaderComponent implements AfterViewInit, OnDestroy {
-  /** firestore path */
-  @Input() storagePath: string;
-  @Input() set form(form: HostedMediaForm) {
-    this._form.next(form);
-  };
-  get form() {
-    return this._form.getValue();
-  }
+export class FileUploaderComponent implements OnInit {
 
-  @Input() filePrivacy: Privacy = 'public';
-  @Input() set allowedFileType(fileType: AllowedFileType | AllowedFileType[]) {
+  public storagePath: string;
+  public metadata: FileMetaData;
+
+  @Input() form: FormControl;
+  @Input() input: number;
+  @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
+    const [ collection, label, docId, index] = value;
+    this.storagePath = getFileStoragePath(collection, label);
+    this.metadata = getFileMetadata(collection, label, docId, index);
+  }
+  @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]
     types.forEach(type => {
-      this.accept = this.accept.concat(allowedFiles[type].extension);
+      this.allowedTypes = this.allowedTypes.concat(allowedFiles[type].extension);
       this.types = this.types.concat(allowedFiles[type].mime);
     })
   }
+  @Output() change = new EventEmitter<void>();
+
+  public allowedTypes: string[] = [];
+  public types: string[] = [];
 
   @ContentChild('onReady') onReadyTemplate: TemplateRef<any>;
   @ContentChild('onFile') onFileTemplate: TemplateRef<any>;
   @ViewChild('fileExplorer') fileExplorer: ElementRef<HTMLInputElement>;
 
-  public accept: string[] = [];
-  public types: string[] = [];
-
   public localSize: string;
   public state: UploadState = 'waiting';
-
-  private _form = new BehaviorSubject<HostedMediaForm>(undefined);
-  private sub: Subscription;
+  public file: File;
+  public fileName: string;
 
   constructor(
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef,
+    private uploaderService: FileUploaderService,
   ) { }
 
-  ngAfterViewInit() {
-
-    // show current file when component loads
-    if (!!this.form.blobOrFile.value) {
-      this.selected(this.form.blobOrFile.value);
-    } else if (!!this.form.oldRef?.value) {
-      this.state = 'file';
-    }
-
-    this.sub = this._form.asObservable().pipe(
-      switchMap(form => form.valueChanges.pipe(startWith(form.value)))
-    ).subscribe((value: HostedMediaFormValue) => this.setState(value));
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  ngOnInit() {
+    this.computeState();
   }
 
   @HostListener('drop', ['$event'])
@@ -104,31 +100,16 @@ export class FileUploaderComponent implements AfterViewInit, OnDestroy {
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
-    this.setState(this.form.value);
+    this.computeState();
   }
 
-  public setState(value: HostedMediaFormValue) {
-    let newState: UploadState;
-
-    if (!!value.blobOrFile && !!value.ref && !!value.fileName) {
-      newState = 'ready';
-    } else if (!!value.oldRef && !!value.fileName && !!value.ref) {
-      newState = 'file';
-    } else {
-      newState = 'waiting';
-      this.fileExplorer.nativeElement.value = null;
-    }
-    this.state = newState;
-    this.cdr.markForCheck();
-  }
 
   public selected(files: FileList | File) {
 
-    let file: File;
-    if ('item' in files) {
+    if ('item' in files) { // FileList
       if (!files.item(0)) {
         this.snackBar.open('No file found', 'close', { duration: 1000 });
-        if (!!this.form.oldRef.value) {
+        if (!!this.file) {
           this.state = 'file';
         } else {
           this.state = 'waiting';
@@ -136,28 +117,28 @@ export class FileUploaderComponent implements AfterViewInit, OnDestroy {
         }
         return;
       }
-      file = files.item(0);
-    } else {
-      if (!files) {
+      this.file = files.item(0);
+
+    } else if (!files) { // No files
         this.snackBar.open('No file found', 'close', { duration: 1000 });
-        if (!!this.form.oldRef.value) {
+        if (!!this.file) {
           this.state = 'file';
         } else {
           this.state = 'waiting';
           this.fileExplorer.nativeElement.value = null;
         }
         return;
-      }
-      file = files;
+    } else { // Single file
+      this.file = files;
     }
 
-    const fileType = getMimeType(file);
+    const fileType = getMimeType(this.file);
 
     // Hack around cypress issue with Files and events,
     // See https://github.com/cypress-io/cypress/issues/3613
-    if (!(file instanceof File)) {
+    if (!(this.file instanceof File)) {
       // @ts-ignore
-      file.__proto__ = new File([], fileType);
+      this.file.__proto__ = new File([], fileType);
     }
 
     const isFileTypeValid = this.types && this.types.includes(fileType);
@@ -168,29 +149,35 @@ export class FileUploaderComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const size = file.size / 1000;
-    if (size < 1000) {
-      this.localSize = `${size.toFixed(1)} KB`;
-    } else if (size < 1000 * 1000) {
-      this.localSize = `${(size / 1000).toFixed(1)} MB`;
-    } else {
-      this.localSize = `${(size / (1000 * 1000)).toFixed(1)} GB`;
-    }
+    this.state = 'ready';
+    this.fileName = sanitizeFileName(this.file.name);
+    this.localSize = computeSize(this.file.size);
 
-    this.form.patchValue({
-      ref: getStoragePath(this.storagePath, this.filePrivacy),
-      blobOrFile: file,
-      fileName: sanitizeFileName(file.name),
-    });
-    this.form.markAsDirty();
+    this.uploaderService.addToQueue(this.storagePath, { fileName: this.fileName, file: this.file, metadata: this.metadata });
+    this.change.emit();
   }
 
   public delete() {
-    this.form.patchValue({
-      ref: '',
-      blobOrFile: undefined,
-      fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
-    });
-    this.form.markAsDirty();
+    this.state = 'waiting';
+    this.fileExplorer.nativeElement.value = null;
+    this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
+    this.form?.setValue('');
+    this.change.emit();
+  }
+
+  private computeState() {
+    if (!!this.form.value) {
+      this.state = 'file';
+      this.fileName = this.form.value;
+    } else {
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
+      if (!!retrieved) {
+        this.state = 'ready';
+        this.fileName = retrieved.fileName;
+        this.localSize = computeSize(retrieved.file.size);
+      } else {
+        this.state = 'waiting';
+      }
+    }
   }
 }
