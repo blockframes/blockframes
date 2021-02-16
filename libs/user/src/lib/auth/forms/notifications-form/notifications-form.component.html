@@ -35,10 +35,10 @@
               </mat-checkbox>
             </th>
           </tr>
-          <tr class="mat-caption">Receive notifications when:</tr>
+          <tr><span class="mat-caption">Receive notifications when:</span></tr>
           <ng-container *ngFor="let type of table.types">
             <tr [formGroupName]="type">
-              <td class="description">{{ titleType[type] }}  <b>({{ type }})</b></td>
+              <td class="description">{{ titleType[type] }}</td>
               <td>
                 <mat-checkbox color="primary" name="email" formControlName="email"></mat-checkbox>
               </td>
