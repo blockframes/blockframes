@@ -11,11 +11,6 @@
 #
 version: 2.1
 references:
-  start_firestore_emulator: &start_firestore_emulator
-    run:
-      name: start firestore emulator in background
-      command: . ./.circleci/run-firebase-emulator.sh
-      background: true
   production_only: &production_only
     filters:
       branches:
@@ -43,17 +38,15 @@ commands:
   checkout_project:
     description: 'Checkout the project with caching'
     steps:
-      - checkout
       - restore_cache:
           keys:
             - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-{{ .Environment.CACHE_VERSION }}
+      - checkout
       - run: touch .env # dotenv will crash without this
+      - run: cp $ENV_TS env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install
-      - save_cache:
-          paths:
-            - node_modules
-          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-      - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
           command: |
@@ -64,21 +57,22 @@ commands:
             else
               exit 0
             fi
-  prepare_gcloud:
-    description: 'Ensure gcloud and gsutil are correctly configured & prepare service account key'
+      - save_cache:
+          paths:
+            - node_modules
+            - .git
+          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+  prepare_environment:
+    description: 'Checkout project and select env'
     steps:
+        - checkout_project
+        - run: echo $FIREBASE_CI_SERVICE_ACCOUNT > tools/credentials/ci-sak.json
+        - run: echo $FIREBASE_PRODUCTION_SERVICE_ACCOUNT > tools/credentials/prod-sak.json
+        - run: echo $FIREBASE_STAGING_SERVICE_ACCOUNT > tools/credentials/staging-sak.json
         - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
-        - run: gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
-        - run: gcloud --quiet config set project ${PROJECT_ID}
+        - run: npm run backend-ops use ${PROJECT_ID}
         - run: gcloud info
         - run: gsutil ls
-        - run: firebase use ${PROJECT_ID}
-  prepare_environment:
-    description: 'Set up CI environment'
-    steps:
-      - checkout_project
-      - prepare_gcloud
-      - run: cp $ENV_TS ./env/env.ts
   replace_prod_files:
     description: 'Replace files for production'
     steps:
@@ -104,20 +98,13 @@ commands:
     description: 'Build & deploy project & prepare by loading test data'
     steps:
       - deploy
-      - run: npm run backend-ops prepareForTesting
+      - run: npm run backend-ops prepareForTestingBeta
       - slack/status
   test_e2e_all:
     description: 'Run all e2e tests'
     steps:
         - run: npx cypress install
-        - run:
-            name: catalog e2e tests
-            command: npm run e2e:catalog
-            when: always
-        - run:
-            name: festival e2e tests
-            command: npm run e2e:festival
-            when: always
+        - run: npm run e2e
         - store_artifacts:
             name: Uploading screenshots
             path: ~/repo/dist/cypress/apps
@@ -133,10 +120,8 @@ executors:
 jobs:
   build-and-test-all:
     executor: blockframes-ci
-    environment:
-        ENV: ci
     steps:
-      - prepare_environment
+      - checkout_project
       - run: npm run build:all
       - run: npm run lint
       - run:
@@ -154,12 +139,7 @@ jobs:
       - prepare_environment
       - run: npm run affected:build
       - run: npm run affected:lint
-      - run:
-          name: Run unit-tests on affected apps
-          command: |
-            # Run npm command to unit tests on affected apps
-            firebase functions:config:get > .runtimeconfig.json
-            ./.circleci/emulator-test.sh 
+      - run: npm run affected:test
       - run:
           name: Check size of apps being build
           command: |
@@ -187,7 +167,7 @@ jobs:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - prepare_environment
       - build_deploy_prepare
-      - run: sleep 500 # TODO instead of wait, disable maintenance with command
+      - run: npm run backend-ops stopMaintenance
       - test_e2e_all
       - run: npm run test
       - run:
@@ -199,15 +179,13 @@ jobs:
     executor: blockframes-ci
     environment:
         NG_CONFIG: staging
-        ENV_TS: env/env.blockframes-staging.ts
-        SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
         PROJECT_ID: blockframes-staging
     steps:
       - slack/notify:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
       - prepare_environment
       - build_deploy_prepare
-      - run: sleep 500 # TODO instead of wait, disable maintenance with command
+      - run: npm run backend-ops stopMaintenance
       - test_e2e_all
       - run: npm run test
       - slack/status
@@ -215,9 +193,7 @@ jobs:
     executor: blockframes-ci
     environment:
         PROJECT_ID: blockframes
-        ENV_TS: 'env/env.blockframes.ts'
         NG_CONFIG: production
-        SERVICE_ACCOUNT: FIREBASE_PRODUCTION_SERVICE_ACCOUNT
     steps:
       - slack/notify:
           message: '🚚 Deploying to production...'
@@ -229,8 +205,6 @@ jobs:
     environment:
         PROJECT_ID: blockframes-staging
         NG_CONFIG: staging
-        SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
-        ENV_TS: 'env/env.blockframes-staging.ts'
     steps:
       - slack/notify:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
@@ -240,8 +214,7 @@ jobs:
     executor: blockframes-ci
     environment:
        PROJECT_ID: blockframes-demo-1
-       NG_CONFIG: demo1
-       ENV_TS: './env/env.blockframes-demo-1.ts'
+       NG_CONFIG: ''
     steps:
       - slack/notify:
           message: 'Deploying to demo1...'
@@ -252,7 +225,6 @@ jobs:
     environment:
        PROJECT_ID: blockframes-demo-2
        NG_CONFIG: ''
-       ENV_TS: './env/env.blockframes-demo-2.ts'
     steps:
       - slack/notify:
           message: 'Deploying to demo2...'
@@ -263,7 +235,6 @@ jobs:
     environment:
        PROJECT_ID: blockframes-demo-3
        NG_CONFIG: ''
-       ENV_TS: './env/env.blockframes-demo-3.ts'
     steps:
       - slack/notify:
           message: 'Deploying to demo3...'
@@ -274,7 +245,6 @@ jobs:
     environment:
        PROJECT_ID: blockframes-demo-4
        NG_CONFIG: ''
-       ENV_TS: './env/env.blockframes-demo-4.ts'
     steps:
       - slack/notify:
           message: 'Deploying to demo4...'
@@ -285,7 +255,6 @@ jobs:
     environment:
        PROJECT_ID: blockframes-demo-5
        NG_CONFIG: ''
-       ENV_TS: './env/env.blockframes-demo-5.ts'
     steps:
       - slack/notify:
           message: 'Deploying to demo5...'
@@ -302,15 +271,14 @@ jobs:
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
-      - prepare_gcloud
+      - prepare_environment
       - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
   backup-prod-db:
     executor: blockframes-ci
     environment:
-        SERVICE_ACCOUNT: FIREBASE_PRODUCTION_SERVICE_ACCOUNT
         PROJECT_ID: blockframes
     steps:
-      - prepare_gcloud
+      - prepare_environment
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
 workflows:
   nightly-backup:
