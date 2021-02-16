@@ -7,15 +7,14 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate, migrateBeta } from './migrations';
 import { importFirestore, restore } from './admin';
-import { copyFirestoreExportFromCiBucket, latestAnonDbDir, latestAnonDbFilename, loadAdminServices, runShellCommand } from "@blockframes/firebase-utils";
+import { copyFirestoreExportFromCiBucket, getBackupBucket, latestAnonDbDir, latestAnonDbFilename, loadAdminServices, runShellCommand } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode } from './tools';
-export const { storageBucket } = firebase();
-export { restore } from './admin';
+const { storageBucket } = firebase();
 
 export async function prepareForTesting() {
   const { db, auth, storage, getCI } = loadAdminServices();
@@ -66,7 +65,7 @@ export async function prepareForTesting() {
 }
 
 export async function prepareForTestingBeta() {
-  const { storage, getCI , db} = loadAdminServices();
+  const { storage, getCI, db, auth } = loadAdminServices();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.log('Copying AnonDb from CI...');
@@ -78,7 +77,7 @@ export async function prepareForTestingBeta() {
   console.log('DB imported!');
 
   console.info('Syncing users from db...');
-  await syncUsers();
+  await syncUsers(null, db, auth);
   console.info('Users synced!');
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
@@ -86,11 +85,11 @@ export async function prepareForTestingBeta() {
   console.info('Storage synced!');
 
   console.info('Preparing database & storage by running migrations...');
-  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
+  await migrateBeta({ db, storage, withBackup: false });
   console.info('Migrations complete!');
 
   console.info('Cleaning unused storage data...');
-  await cleanStorage(storage.bucket(storageBucket));
+  await cleanStorage(await getBackupBucket(storage));
   console.info('Storage data clean and fresh!');
 
   console.info('Generating fixtures...');
@@ -116,7 +115,7 @@ export async function prepareDb() {
   console.log('Restoring latest db from storage...')
   await importFirestore(latestAnonDbDir);
   console.log('Anonymized DB restored. Migrating...');
-  await migrateBeta(false);
+  await migrateBeta({ withBackup: false });
 }
 
 export async function prepareStorage() {
@@ -125,10 +124,6 @@ export async function prepareStorage() {
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   await restoreStorageFromCi(getCI());
   console.info('Storage synced!');
-
-  console.info('Preparing database & storage by running migrations...');
-  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
-  console.info('Migrations complete!');
 
   console.info('Cleaning unused storage data...');
   await cleanStorage(storage.bucket(storageBucket));
@@ -169,7 +164,7 @@ export async function upgradeBeta() {
   const { db, auth, storage } = loadAdminServices();
 
   console.info('Preparing the database...');
-  await migrateBeta(true);
+  await migrateBeta({ withBackup: true, db, storage });
   console.info('Database ready for deploy!');
 
   console.info('Cleaning unused db data...');
@@ -187,6 +182,6 @@ export async function upgradeBeta() {
   console.info('Algolia ready for testing!');
 
   console.info('Generating watermarks...');
-  await generateWatermarks();
+  await generateWatermarks({ db, storage });
   console.info('Watermarks generated!');
 }
