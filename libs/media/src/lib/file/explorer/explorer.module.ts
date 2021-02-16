@@ -12,9 +12,11 @@ import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { FileNewUploaderModule } from '../file-new-uploader/file-uploader.module';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { FileNameModule } from '@blockframes/utils/pipes';
+import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 
 // File explorer
-import { MultipleFilesViewModule } from './multiple-files-view/multiple-files-view.module';
+import { FileExplorerListComponent } from './list/list.component';
 import { FileExplorerFileComponent } from './file/file.component';
 
 // Material
@@ -23,9 +25,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [FileExplorerComponent, GetDirPipe, FileExplorerFileComponent],
+  declarations: [
+    GetDirPipe,
+    FileExplorerComponent,
+    FileExplorerFileComponent,
+    FileExplorerListComponent,
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -38,15 +46,16 @@ import { MatBadgeModule } from '@angular/material/badge';
     OrgNameModule,
     FileNewUploaderModule,
     ImageUploaderModule,
-    // File explorer
-    MultipleFilesViewModule,
+    FileNameModule,
+    FormListModule,
 
     // Material
     MatListModule,
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatDialogModule
   ],
   exports: [FileExplorerComponent]
 })
