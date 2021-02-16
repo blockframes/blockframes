@@ -1,6 +1,5 @@
 
 import { Privacy } from '@blockframes/utils/file-sanitizer';
-import { FileMetaData } from './media.model';
 
 /**
 * Representation of a storage file in our Firestore db.
@@ -28,18 +27,4 @@ export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile 
 
 export interface StorageVideo extends StorageFile {
   jwPlayerId: string;
-}
-
-
-// ! DEPRECATED
-export interface OldUploadData {
-  /**
-  * firebase storage upload path *(or ref)*,
-  * @note **Make sure that the path param does not include the filename.**
-  * @note **Make sure that the path does not ends with a `/`.**
-  */
-  path: string,
-  data: Blob | File,
-  fileName: string,
-  metadata: FileMetaData,
 }

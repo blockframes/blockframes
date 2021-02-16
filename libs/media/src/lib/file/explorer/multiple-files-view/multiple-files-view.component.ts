@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { Observable } from 'rxjs';
 // Blockframes
 import { extractMediaFromDocumentBeforeUpdate, MediaService } from '@blockframes/media/+state';
-import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
+import { HostedMediaWithMetadata, StorageFile } from '@blockframes/media/+state/media.firestore';
 import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -139,7 +139,7 @@ export class MultipleFilesViewComponent implements OnInit {
     return typeof (row) === "string" ? row : row[this.activeDirectory.docNameField];
   }
 
-  public previewFile(ref: string) {
+  public previewFile(ref: StorageFile) {
     this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 }

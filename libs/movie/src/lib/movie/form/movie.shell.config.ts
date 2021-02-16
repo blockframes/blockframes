@@ -9,9 +9,7 @@ import { mergeDeep } from "@blockframes/utils/helpers";
 import { FileUploaderService } from '@blockframes/media/+state';
 import { ProductionStatus } from "@blockframes/utils/static-model";
 import { App, getMoviePublishStatus } from "@blockframes/utils/apps";
-import { MediaService } from "@blockframes/media/+state/media.service";
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
-import { extractMediaFromDocumentBeforeUpdate } from "@blockframes/media/+state/media.model";
 
 import { MovieControl, MovieForm } from "./movie.form";
 import type { FormShellConfig } from './movie.shell.interfaces'
@@ -57,7 +55,6 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     private query: MovieQuery,
     private route: RouterQuery,
     private service: MovieService,
-    private mediaService: MediaService,
     private uploaderService: FileUploaderService,
   ) { }
 
@@ -87,9 +84,8 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   // TODO issue#4002
   async onSave(options: FormSaveOptions): Promise<any> {
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     const base = this.query.getActive();
-    const movie = mergeDeep(base, documentToUpdate);
+    const movie = mergeDeep(base, this.form.value);
 
     // -- Post merge operations -- //
 
@@ -117,7 +113,6 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
 
     // -- Update movie & media -- //
     await this.service.upsert(movie);
-    this.mediaService.uploadMedias(mediasToUpload);
     this.uploaderService.upload();
     this.form.markAsPristine();
   }
