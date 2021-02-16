@@ -43,9 +43,10 @@
     </ng-container>
 
     <ng-template #fileUpload>
-      <file-uploader [allowedFileType]="['xls', 'csv']" [storagePath]="" [form]="excelForm">
+      <!-- TODO issue #4002 refactor to file selector instead of uploader -->
+      <!-- <file-uploader [allowedFileType]="['xls', 'csv']" [storagePath]="" [form]="excelForm">
         <h3 title>Upload File</h3>
-      </file-uploader>
+      </file-uploader> -->
 
     </ng-template>
   </section>

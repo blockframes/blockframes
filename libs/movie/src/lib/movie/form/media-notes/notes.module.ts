@@ -28,9 +28,9 @@ import { MovieFormMediaNotesComponent } from './notes.component';
     FlexLayoutModule,
     FormDisplayNameModule,
     FormListModule,
-    FileNewUploaderModule,
     FileNameModule,
     MaxLengthModule,
+    FileNewUploaderModule,
 
     // Material
     MatFormFieldModule,
