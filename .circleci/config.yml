@@ -82,6 +82,7 @@ commands:
         - run: echo $FIREBASE_STAGING_SERVICE_ACCOUNT > tools/credentials/staging-sak.json
         - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
         - run: npm run backend-ops use ${PROJECT_ID}
+        - run: . ./.env
         - run: gcloud info
         - run: gsutil ls
   save_build_cache:
