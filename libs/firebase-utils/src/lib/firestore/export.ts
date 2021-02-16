@@ -71,6 +71,12 @@ export async function exportFirestoreToBucket(db: FirebaseFirestore.Firestore, b
     stream.end(res);
   });
 }
+/**
+ * This function runs `gcloud` shell command to export a Firestore backup into your projects backup GCS bucket
+ *
+ * @param dirName optional directory to which to export Firestore backup in GCS bucket, otherwise current date will be used
+ * with directory naming convention to generate dirName
+ */
 export async function exportFirestoreToBucketBeta(dirName?: string) {
   const suffix = dirName || getFirestoreExportDirname(new Date());
   const url = `gs://${backupBucket}/${suffix}`;
@@ -80,4 +86,8 @@ export async function exportFirestoreToBucketBeta(dirName?: string) {
   console.log(output);
 }
 
+/**
+ * This functino will generate conventional directory name for a Firestore backup given a date
+ * @param d `Date` object
+ */
 export const getFirestoreExportDirname = (d: Date) => `firestore-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`

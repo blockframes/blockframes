@@ -4,16 +4,16 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage, prepareForTestingBeta } from './firebaseSetup';
+import { prepareForTesting, upgrade, prepareDb, prepareStorage, prepareForTestingBeta } from './firebaseSetup';
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
-import { backup, exportFirestore, importFirestore } from './admin';
+import { backup, restore, exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonDbProcess, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
+import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
 
 const args = process.argv.slice(2);

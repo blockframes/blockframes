@@ -116,7 +116,7 @@ export async function anonDbProcess() {
   console.info('Users synced!');
 
   console.info('Preparing database & storage by running migrations...');
-  await migrateBeta(false, db, storage); // run the migration, do not trigger a backup before, since we already have it!
+  await migrateBeta({ withBackup: false, db, storage }); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Migrations complete!');
 
   console.info('Cleaning unused DB data...');
