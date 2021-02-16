@@ -55,6 +55,16 @@ commands:
       - run: touch .env # dotenv will crash without this
       - run: cp $ENV_TS env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install
+      - run:
+          name: 'Verify that this PR is not introducing weird package.json changes'
+          command: |
+            if git status | grep --quiet package.json; then
+              echo "package.json changed after npm install, please verify your PR";
+              git diff package.json
+              exit 1;
+            else
+              exit 0
+            fi
       - save_cache:
           paths:
             - node_modules
