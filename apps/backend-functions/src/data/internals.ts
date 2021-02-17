@@ -21,6 +21,7 @@ export function createPublicOrganizationDocument(org: OrganizationDocument) {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
     logo: org.logo ?? '',
+    activity: org.activity ?? null
   }
 }
 
