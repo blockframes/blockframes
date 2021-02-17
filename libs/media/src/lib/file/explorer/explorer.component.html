@@ -1,9 +1,9 @@
-<ng-container fxLayout *ngIf="root$ | async as root">
+<ng-container *ngIf="root$ | async as root">
   <ng-container *ngIf="path$ | async as path">
     <aside>
       <mat-action-list>
         <ng-container *ngFor="let dir of root.children | keyvalue">
-          <button mat-list-item (click)="setPath(dir.key)" [ngClass]="{ active: path.startWith(dir.key) }">
+          <button mat-list-item (click)="setPath(dir.key)" [ngClass]="{ active: path?.startsWith(dir.key) }">
             <mat-icon mat-list-icon [svgIcon]="dir.value.icon"></mat-icon>
             <span mat-line>{{ dir.value.name | maxLength: 20}}</span>
           </button>
@@ -12,13 +12,10 @@
     </aside>
 
     <section class="surface">
-
-      <header fxLayout fxLayoutAlign="space-between center" *ngIf="crumbs$ | async as crumbs">
-        <ng-container *ngIf="crumbs.length > 1">
-          <button mat-icon-button (click)="setPath(crumbs[crumbs.length - 2])" matTooltip="Navigate back one step">
-            <mat-icon svgIcon="arrow_back"></mat-icon>
-          </button>
-        </ng-container>
+      <header *ngIf="crumbs$ | async as crumbs">
+        <button mat-icon-button [disabled]="crumbs.length < 2" (click)="previous(crumbs)">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+        </button>
 
         <div fxLayout="row wrap" fxLayoutAlign="start center">
           <ng-container *ngFor="let crumb of crumbs; let isLast = last">
@@ -35,34 +32,88 @@
       <mat-divider></mat-divider>
 
       <ng-container *ngIf="path | getDir:root as dir">
-        <ng-container [ngSwitch]="dir.type">
-
-          <ng-container *ngSwitchCase="'directory'">
-            <mat-action-list>
-              <ng-container *ngFor="let child of dir.children | keyvalue">
-                <button mat-list-item (click)="setPath(child.key)">
-                  <ng-container *ngIf="child.value as node">
-                    <mat-icon [matBadge]="node.hasFile" matBadgeSize="small" *ngIf="node.type === 'directory' || node.multiple" mat-list-icon svgIcon="folder"></mat-icon>
-                    <mat-icon [matBadge]="node.hasFile ? '✔' : ''" matBadgeSize="small" *ngIf="node.type === 'file' && !node.multiple" mat-list-icon svgIcon="document"></mat-icon>
-                    <mat-icon [matBadge]="node.hasFile ? '✔' : ''" matBadgeSize="small" *ngIf="node.type === 'image' && !node.multiple" mat-list-icon svgIcon="image"></mat-icon>
-                    <span mat-line>{{ node.name }}</span>
-                  </ng-container>
-                </button>
-              </ng-container>
-            </mat-action-list>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="'list'">
-            <file-explorer-list [dir]="dir"></file-explorer-list>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="'file'">
-            <file-explorer-file [dir]="dir"></file-explorer-file>
-          </ng-container>
-        </ng-container>
-
+        <ng-container *ngTemplateOutlet="templates[dir.type]; context: {$implicit: dir}"></ng-container>
       </ng-container>
     </section>
-
   </ng-container>
 </ng-container>
+
+<!-- File -->
+<ng-template #file let-dir>
+  <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept">
+    <h3 title>Upload {{ dir.name }}</h3>
+  </file-uploader>
+</ng-template>
+
+<!-- Image -->
+<ng-template #image let-dir>
+  <image-uploader [ratio]="dir.ratio" [meta]="dir.meta" [form]="dir.form">
+    <h3 title>{{ dir.name }}</h3>
+  </image-uploader>
+</ng-template>
+
+<!-- Directory -->
+<ng-template #directory let-dir>
+  <mat-action-list>
+    <ng-container *ngFor="let child of dir.children | keyvalue">
+      <button mat-list-item (click)="next(child.key)">
+        <ng-container *ngIf="child.value as node">
+          <ng-container *ngIf="node.type === 'directory' || node.type === 'fileList'">
+            <mat-icon [matBadge]="node.hasFile" matBadgeSize="small" mat-list-icon svgIcon="folder"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="node.type === 'file'">
+            <mat-icon [matBadge]="node.hasFile ? '✔' : ''" matBadgeSize="small" mat-list-icon svgIcon="document"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="node.type === 'image'">
+            <mat-icon [matBadge]="node.hasFile ? '✔' : ''" matBadgeSize="small" mat-list-icon svgIcon="image"></mat-icon>
+          </ng-container>
+          <span mat-line>{{ node.name }}</span>
+        </ng-container>
+      </button>
+    </ng-container>
+  </mat-action-list>
+</ng-template>
+
+<!-- File List -->
+<ng-template #fileList let-dir>
+  <bf-form-list [form]="dir.form" listPosition="bottom" reverseList>
+    <ng-template itemRef let-item>
+      <button mat-list-icon (click)="openView(item, $event)">
+        <mat-icon [svgIcon]="item.storagePath | fileName | fileTypeImage: 'icon'"></mat-icon>
+      </button>
+      <p mat-line>{{ item.type | titlecase }} - {{ (item.storagePath | fileName) }}</p>
+      <button mat-icon-button (click)="downloadFile(item, $event)">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+      </button>
+    </ng-template>
+    <ng-template formView let-activeForm let-index="index">
+      <file-uploader [form]="activeForm" [meta]="getMeta(dir, index)" [accept]="dir.accept">
+        <h3 title>Upload File</h3>
+      </file-uploader>
+      <ng-template saveButtonText>Save</ng-template>
+      <ng-template addButtonText>Add</ng-template>
+    </ng-template>
+  </bf-form-list>
+</ng-template>
+
+<!-- Image List -->
+<ng-template #imageList let-dir>
+  <bf-form-list [form]="dir.form" listPosition="bottom" keepFormOpen reverseList>
+    <ng-template itemRef let-item>
+      <button mat-list-icon (click)="openView(item, $event)">
+        <mat-icon [svgIcon]="item.storagePath | fileName | fileTypeImage: 'icon'"></mat-icon>
+      </button>
+      <p mat-line>{{ item.type | titlecase }} - {{ (item.storagePath | fileName) }}</p>
+      <button mat-icon-button (click)="downloadFile(item, $event)">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+      </button>
+    </ng-template>
+    <ng-template formView let-activeForm let-index="index">
+      <image-uploader [form]="activeForm" [meta]="getMeta(dir, index)" [ratio]="dir.ratio">
+        <h3 title>{{ dir.name }}</h3>
+      </image-uploader>
+      <ng-template saveButtonText>Save</ng-template>
+      <ng-template addButtonText>Add</ng-template>
+    </ng-template>
+  </bf-form-list>
+</ng-template>

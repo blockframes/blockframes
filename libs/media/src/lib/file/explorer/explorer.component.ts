@@ -1,34 +1,25 @@
-import { ChangeDetectionStrategy, Component, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform } from '@angular/core';
 
 // Blockframes
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
-import { MediaService } from '@blockframes/media/+state/media.service';
-
-// Material
-import { MatDialog } from '@angular/material/dialog';
 
 // File Explorer
-import { getDirectories, Directory } from './explorer.model';
+import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 
 // RxJs
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-
-function back(current: string) {
-  return current.split('/').slice(0, -1).join('/');
-}
-
-function next(current: string, next: string) {
-  return `${current}/${next}`;
-}
+import { FileUploaderService, MediaService } from '@blockframes/media/+state';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { FilePreviewComponent } from '../preview/preview.component';
+import { MatDialog } from '@angular/material/dialog';
 
 function getDir(root: Directory, path: string) {
-  return path.split('/').reduce((parent, segment) => parent.children[segment], root);
+  return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
 }
 
 /**
@@ -37,9 +28,9 @@ function getDir(root: Directory, path: string) {
  */
 export function getCrumbs(path: string) {
   const crumbs = [];
-  path.split('/').forEach((segment, i) => {
-    const last = crumbs[i - 1] ? `${crumbs[i - 1]}/` : '';
-    crumbs.push(`${last}${segment}`);
+  path.split('/').filter(v => !!v).forEach((segment, i) => {
+    const previous = crumbs[i - 1] ? `${crumbs[i - 1]}/` : '';
+    crumbs.push(`${previous}${segment}`);
   });
   return crumbs;
 }
@@ -54,13 +45,23 @@ export function getCrumbs(path: string) {
 })
 export class FileExplorerComponent {
   root$: Observable<Directory>;
-  path$ = new BehaviorSubject<string>('/');
+  path$ = new BehaviorSubject<string>('org');
   crumbs$ = this.path$.pipe(map(getCrumbs));
+  templates: Record<string, TemplateRef<any>> = {};
+
+  @ViewChild('image') image?: TemplateRef<any>;
+  @ViewChild('file') file?: TemplateRef<any>;
+  @ViewChild('fileList') fileList?: TemplateRef<any>;
+  @ViewChild('imageList') imageList?: TemplateRef<any>;
+  @ViewChild('directory') directory?: TemplateRef<any>;
 
   constructor(
     private orgQuery: OrganizationQuery,
     private movieService: MovieService,
-    private routerQuery: RouterQuery
+    private mediaService: MediaService,
+    private service: FileUploaderService,
+    private routerQuery: RouterQuery,
+    private dialog: MatDialog,
   ) {
     const org = this.orgQuery.getActive();
     const app: App = this.routerQuery.getData('app');
@@ -73,110 +74,49 @@ export class FileExplorerComponent {
     );
   }
 
+  ngAfterViewInit() {
+    this.templates = {
+      image: this.image,
+      file: this.file,
+      directory: this.directory,
+      imageList: this.imageList,
+      fileList: this.fileList
+    }
+  }
+
   setPath(path: string) {
     this.path$.next(path);
   }
 
+  next(next: string) {
+    this.path$.next(`${this.path$.getValue()}/${next}`);
+  }
 
-  // public async openDialog(row?: HostedMediaWithMetadata | MovieNote | string) {
+  previous(crumbs: string) {
+    this.path$.next(crumbs[crumbs.length - 2]);
+  }
 
-  //   // safe guard
-  //   if (this.activeDirectory.type === 'directory') return;
+  getMeta(dir: FileDirectoryBase, index: number) {
+    return [ ...dir.meta, index ];
+  }
 
-  //   // retrieving useful values
-  //   const id = getId(this.activeDirectory.storagePath);
-  //   const collection = getCollection(this.activeDirectory.storagePath);
+  openView(item: Partial<StorageFile>, event: Event) {
+    event.stopPropagation();
+    if (!!item) {
+      this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh' });
+    }
+  }
 
-  //   // instantiating corresponding form
-  //   let form: OrganizationForm | MovieForm;
-  //   if (collection === 'orgs') {
-  //     const org = await this.organizationService.getValue(id);
-  //     form = new OrganizationForm(org);
-  //   } else if (collection === 'movies') {
-  //     const movie = await this.movieService.getValue(id);
-  //     form = new MovieForm(movie);
-  //   } else {
-  //     throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
-  //   }
+  async downloadFile(item: StorageFile, event: Event) {
+    event.stopPropagation();
+    const url = await this.mediaService.generateImgIxUrl(item);
+    window.open(url);
+  }
 
-  //   // retrieving the needed media from the form
-  //   let mediaForm: MediaFormTypes;
-  //   const formList = getFormList(form, this.activeDirectory.storagePath);
-  //   if (!!row) {
-  //     mediaForm = formList.controls.find(control => {
-  //       if (isHostedMediaForm(control)) { // HostedMediaForm
-
-  //         const ref = (row as string);
-  //         return control.get('ref').value === ref;
-
-  //       } else if (isHostedMediaWithMetadataForm(control)) { // HostedMediaWithMetadataForm
-
-  //         const title = (row as HostedMediaWithMetadata).title;
-  //         return control.get('title').value === title;
-
-  //       } else { // MovieNotesForm
-
-  //         const ref = (row as MovieNote).ref;
-  //         return control.get('ref').get('ref').value === ref;
-  //       }
-  //     });
-  //   } else {
-  //     mediaForm = formList.add();
-  //   }
-  //   if (!mediaForm) {
-  //     throw new Error(`Media Form not found!`);
-  //   }
-
-  //   // opening file/image upload dialog
-  //   let dialog: MatDialogRef<FileExplorerUploaderDialogComponent | FileExplorerCropperDialogComponent>;
-  //   if (this.activeDirectory.type === 'file') {
-  //     dialog = this.dialog.open(FileExplorerUploaderDialogComponent, {
-  //       width: '60vw',
-  //       data: {
-  //         form: mediaForm,
-  //         privacy: this.activeDirectory.privacy,
-  //         storagePath: this.activeDirectory.storagePath,
-  //         acceptedFileType: this.activeDirectory.acceptedFileType
-  //       },
-  //     });
-  //   } else if (this.activeDirectory.type === 'image') {
-  //     dialog = this.dialog.open(FileExplorerCropperDialogComponent, {
-  //       width: '60vw',
-  //       data: {
-  //         form: mediaForm,
-  //         ratio: this.activeDirectory.ratio,
-  //         storagePath: this.activeDirectory.storagePath
-  //       },
-  //     });
-  //   }
-
-  //   // on dialog close update the corresponding document & upload the file if needed
-  //   this.dialogSubscription = dialog.afterClosed().subscribe(async result => {
-  //     if (!!result) {
-  //       if (this.activeDirectory.type === 'directory') return;
-
-  //       const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(form);
-  //       if (collection === 'orgs') {
-  //         await this.organizationService.update(id, documentToUpdate);
-  //       } else if (collection === 'movies') {
-  //         documentToUpdate.id = id;
-  //         await this.movieService.update(documentToUpdate);
-  //       } else {
-  //         this.dialogSubscription.unsubscribe();
-  //         throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
-  //       }
-  //       const mediaIndex = mediasToUpload.findIndex(media => !!media.blobOrFile);
-  //       if (mediaIndex > -1) {
-  //         // oldRef is not set if it's a new upload and therefore a new file is added
-  //         if (!mediasToUpload[mediaIndex].oldRef && typeof this.activeDirectory.hasFile === 'number') {
-  //           this.activeDirectory.hasFile++
-  //         }
-  //       }
-  //       this.mediaService.uploadMedias(mediasToUpload);
-  //     }
-  //     this.dialogSubscription.unsubscribe();
-  //   });
-  // }
+  update() {
+    console.log('Update');
+    this.service.upload();
+  }
 
 }
 

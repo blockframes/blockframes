@@ -1,3 +1,21 @@
+:host {
+  display: flex;
+  aside {
+    width: 200px;
+    .active {
+      color: var(--primary);
+    }
+  }
+  section {
+    flex: 1;
+    height: fit-content;
+    header {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
 article {
   border-radius: 4px;
 

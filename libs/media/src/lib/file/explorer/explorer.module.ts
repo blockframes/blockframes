@@ -13,9 +13,6 @@ import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 
-// File explorer
-import { FileExplorerListComponent } from './list/list.component';
-import { FileExplorerFileComponent } from './file/file.component';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -29,8 +26,6 @@ import { MatDialogModule } from '@angular/material/dialog';
   declarations: [
     GetDirPipe,
     FileExplorerComponent,
-    FileExplorerFileComponent,
-    FileExplorerListComponent,
   ],
   imports: [
     CommonModule,
