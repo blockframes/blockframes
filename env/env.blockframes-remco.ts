@@ -157,4 +157,4 @@ export const centralOrgID = 'jnbHKBP5YLvRQGcyQ8In';
 
 export const backupBucket = 'backup-bucket-remco';
 export const heavyChunkSize = 5
-export const chunkSize = 1
+export const chunkSize = 25

@@ -64,7 +64,7 @@ export const getPrivateVideoUrl = async (
 
   // retrieve not-trusted values
   const docData = await getDocument(`${collection}/${docId}`);
-  let storageVideo: StorageVideo | undefined = get(docData, field);
+  const storageVideo: StorageVideo | undefined = get(docData, field);
   if (!storageVideo || !storageVideo.jwPlayerId) {
     return {
       error: 'DOCUMENT_VIDEO_NOT_FOUND',
