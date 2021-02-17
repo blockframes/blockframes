@@ -143,8 +143,8 @@ jobs:
     steps:
       - checkout_project
       - run: npm run build:all
-      - save_build_cache
       - run: npm run lint
+      - save_build_cache
       - run:
           name: Check size of apps being build
           command: npm run bundlesize
@@ -159,9 +159,9 @@ jobs:
     steps:
       - prepare_environment
       - run: npm run affected:build
-      - save_build_cache
       - run: npm run affected:lint
       - run: npm run affected:test
+      - save_build_cache
       - run:
           name: Check size of apps being build
           command: |
@@ -192,6 +192,7 @@ jobs:
       - run: npm run backend-ops stopMaintenance
       - test_e2e_all
       - run: npm run test
+      - save_build_cache
       - run:
           name: send stability data
           command: ./.circleci/submit-stability.sh dist/test-reports
@@ -210,6 +211,7 @@ jobs:
       - run: npm run backend-ops stopMaintenance
       - test_e2e_all
       - run: npm run test
+      - save_build_cache
       - slack/status
   deploy-to-prod:
     executor: blockframes-ci
