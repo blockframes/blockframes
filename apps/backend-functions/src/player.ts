@@ -12,7 +12,7 @@ import { StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { PublicUser } from './data/types';
 import { ErrorResultResponse } from './utils';
 import { getDocument } from './data/internals';
-import { isAllowedToAccessMedia } from './media';
+import { isAllowedToAccessMedia } from './internals/media';
 import { db, getStorageBucketName } from './internals/firebase';
 import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './environments/environment';
 
