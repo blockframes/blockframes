@@ -43,11 +43,9 @@
     </ng-container>
 
     <ng-template #fileUpload>
-      <!-- TODO issue #4002 refactor to file selector instead of uploader -->
-      <!-- <file-uploader [allowedFileType]="['xls', 'csv']" [storagePath]="" [form]="excelForm">
-        <h3 title>Upload File</h3>
-      </file-uploader> -->
-
+      <input #filePicker [accept]="['xls', 'csv']" type="file" (change)="importSpreadsheet($event.target.files)" />
+      <a mat-flat-button (click)="filePicker.click()">Import File</a>
+      <p class="mat-caption">Accepted Formats: .xls, .csv</p>
     </ng-template>
   </section>
 

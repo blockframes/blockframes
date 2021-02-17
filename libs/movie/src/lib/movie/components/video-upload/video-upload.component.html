@@ -1,0 +1,60 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
+  <h2>Upload screening</h2>
+  <div formGroupName="screener" fxLayout="column">
+    <mat-form-field appearance="outline">
+      <mat-label>Screener title</mat-label>
+      <input matInput formControlName="title" >
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Screener description</mat-label>
+      <input matInput formControlName="description" >
+    </mat-form-field>
+    <file-uploader
+      [form]="form.screener"
+      [meta]="['movies', 'screener', movie.id]"
+      accept="video"
+    >
+        <h3 title>Upload Screener</h3>
+    </file-uploader>
+  </div>
+
+  <h2>Upload other videos</h2>
+  <ng-container *ngFor="let otherVideo of form.otherVideos.controls; let index = index">
+    <article [formGroup]="otherVideo" fxLayout="column">
+      <mat-form-field appearance="outline">
+        <mat-label>Video title</mat-label>
+        <input matInput formControlName="title" >
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Video description</mat-label>
+        <input matInput formControlName="description" >
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Video type</mat-label>
+        <mat-select [formControl]="otherVideo.get('type')">
+          <mat-option *ngFor="let type of hostedVideoTypes" [value]="type">{{ type | toLabel: 'hostedVideoTypes' }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <file-uploader
+        [form]="otherVideo"
+        [meta]="['movies', 'screener', movie.id, index]"
+        accept="video"
+      >
+          <h3 title>Upload Video</h3>
+      </file-uploader>
+    </article>
+  </ng-container>
+
+  <article fxLayout="row" fxLayoutAlign="space-around">
+    <button mat-flat-button color="primary" (click)="uploadVideo()">
+      <span>Update</span>
+      <mat-icon svgIcon="send"></mat-icon>
+    </button>
+
+    <button mat-flat-button color="accent" (click)="addOtherVideo()">
+      <span>Add</span>
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
+  </article>
+
+</form>

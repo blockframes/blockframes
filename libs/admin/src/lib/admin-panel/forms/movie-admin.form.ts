@@ -57,4 +57,10 @@ export class MoviePictureAdminForm extends FormEntity<MoviePictureAdminControl> 
   constructor(movie?: Movie) {
     super(createMovieImageAdminControls(movie));
   }
+
+  get poster() { return this.get('poster'); }
+
+  get banner() { return this.get('banner'); }
+
+  get stillPhoto() { return this.get('still_photo'); }
 }

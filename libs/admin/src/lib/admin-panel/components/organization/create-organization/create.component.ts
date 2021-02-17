@@ -9,7 +9,6 @@ import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '@blockframes/user/+state';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { getOrgAppAccess } from '@blockframes/utils/apps';
 
 @Component({
@@ -66,9 +65,8 @@ export class OrganizationCreateComponent {
       superAdmin.uid = newUser.uid;
     }
 
-    const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(this.form);
-    const [firstApp] = getOrgAppAccess(documentToUpdate);
-    const orgId = await this.orgService.addOrganization(documentToUpdate, firstApp, superAdmin);
+    const [firstApp] = getOrgAppAccess(this.form.value);
+    const orgId = await this.orgService.addOrganization(this.form.value, firstApp, superAdmin);
 
     this.router.navigate(['/c/o/admin/panel/organization/', orgId]);
     this.dialogRef.close();

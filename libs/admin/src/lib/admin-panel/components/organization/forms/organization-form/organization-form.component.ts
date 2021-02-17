@@ -17,13 +17,14 @@ export class AdminOrganizationFormComponent {
   @Input() form: OrganizationAdminForm;
 
   @Input() @boolean disableCropper = false;
+  @Input() orgId: string;
 
   public organizationStatus = organizationStatus;
   public app = app;
   public notifyCheckbox = new FormControl(false);
 
   constructor(
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
   ) {}
 
   public async uniqueOrgName() {
