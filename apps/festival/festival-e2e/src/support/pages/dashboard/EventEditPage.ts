@@ -44,11 +44,11 @@ export default class EventEditPage {
   //set event access
   uncheckPrivate(isPublic: boolean = false) {
     if (!isPublic) {
-      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: 3 * SEC })
+      cy.get('event-edit mat-checkbox[test-id=event-private]', { timeout: 3 * SEC })
         .find('input')
         .check({ force: true });
     } else {
-      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: 3 * SEC })
+      cy.get('event-edit mat-checkbox[test-id=event-private]', { timeout: 3 * SEC })
         .find('input')
         .uncheck({ force: true });
     }
