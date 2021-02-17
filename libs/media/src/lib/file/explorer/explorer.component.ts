@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input } from '@angular/core';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state';
@@ -12,7 +12,7 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { QueryFn } from '@angular/fire/firestore';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { Organization } from '@blockframes/organization/+state';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { FilePreviewComponent } from '../preview/preview.component';
@@ -49,6 +49,8 @@ export class FileExplorerComponent {
   crumbs$ = this.path$.pipe(map(getCrumbs));
   templates: Record<string, TemplateRef<any>> = {};
 
+  @Input() org: Organization;
+
   @ViewChild('image') image?: TemplateRef<any>;
   @ViewChild('file') file?: TemplateRef<any>;
   @ViewChild('fileList') fileList?: TemplateRef<any>;
@@ -56,21 +58,20 @@ export class FileExplorerComponent {
   @ViewChild('directory') directory?: TemplateRef<any>;
 
   constructor(
-    private orgQuery: OrganizationQuery,
     private movieService: MovieService,
     private mediaService: MediaService,
     private service: FileUploaderService,
     private routerQuery: RouterQuery,
     private dialog: MatDialog,
-  ) {
-    const org = this.orgQuery.getActive();
-    const app: App = this.routerQuery.getData('app');
+  ) {}
 
+  ngOnInit() {
+    const app: App = this.routerQuery.getData('app');
     const query: QueryFn = ref => ref
-      .where('orgIds', 'array-contains', org.id)
+      .where('orgIds', 'array-contains', this.org.id)
       .where(`storeConfig.appAccess.${app}`, '==', true);
     this.root$ = this.movieService.valueChanges(query).pipe(
-      map(titles => getDirectories(org, titles))
+      map(titles => getDirectories(this.org, titles))
     );
   }
 
