@@ -1,4 +1,7 @@
 import { Component, Input, Directive, ChangeDetectionStrategy } from '@angular/core';
+
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+
 import { Movie } from '../../+state/movie.model';
 import { Title } from '../../+state/movie.firestore';
 
@@ -10,7 +13,7 @@ import { Title } from '../../+state/movie.firestore';
 })
 export class BannerComponent {
 
-  public poster: string;
+  public poster: StorageFile;
   public title: Title;
   public director: string;
   public countries: string[];

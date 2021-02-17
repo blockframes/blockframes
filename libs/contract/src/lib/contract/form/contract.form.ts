@@ -13,7 +13,6 @@ import {
 import { ContractPartyForm } from './party/party.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { createParty } from '@blockframes/utils/common-interfaces';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 // PARTY DETAILS
 
@@ -37,13 +36,13 @@ export class PartyDetailsForm extends FormEntity<PartyDetailsControl, ContractPa
 // LEGAL DOCUMENTS
 
 function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
-  const { id, label, media, language, country } = createLegalDocument(legalDocument);
+  const { id, label, storagePath, language, country } = createLegalDocument(legalDocument);
   return {
     id: new FormControl(id),
     label: new FormControl(label),
-    media: new HostedMediaForm(media),
-    language: new FormStaticValue(language, 'languages'),
-    country: new FormStaticValue(country, 'territories')
+    storagePath: new FormControl(storagePath),
+    language: new FormStaticValue<'languages'>(language, 'languages'),
+    country: new FormStaticValue<'territories'>(country, 'territories')
   };
 }
 
