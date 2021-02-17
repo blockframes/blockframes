@@ -137,7 +137,7 @@ export class CalendarWeekComponent {
     this.dialog.open(EventCreateComponent, { data, width: '650px' }).afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {
-          this.service.add(event);
+          await this.service.add(event);
           this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
         } else {
           this.refresh(this.baseEvents);
