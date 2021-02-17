@@ -5,7 +5,8 @@ import {
   Language,
   StoreType,
   StoreStatus,
-  ProductionStatus
+  ProductionStatus,
+  OrgActivity
 } from '../static-model';
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Module, ModuleAccess } from '../apps';
@@ -49,8 +50,9 @@ interface OrganizationIndexConfig {
   appModule: ModuleAccess,
   name: string,
   country: Territory,
-  isAccepted: boolean
-  hasAcceptedMovies: boolean;
+  isAccepted: boolean,
+  hasAcceptedMovies: boolean,
+  activity: OrgActivity
 }
 
 interface UserIndexConfig {
@@ -140,7 +142,8 @@ export interface AlgoliaOrganization extends AlgoliaDefaultProperty {
   country: Territory,
   isAccepted: boolean,
   hasAcceptedMovies: boolean,
-  denomination: PublicOrganization
+  denomination: PublicOrganization,
+  activity: OrgActivity
 }
 
 /* USER */
