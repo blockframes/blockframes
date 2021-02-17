@@ -11,13 +11,12 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { MediaService } from '@blockframes/media/+state/media.service';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { FileUploaderService } from '@blockframes/media/+state';
 
 @Component({
   selector: 'admin-organization',
@@ -79,7 +78,7 @@ export class OrganizationComponent implements OnInit {
     private permissionService: PermissionsService,
     private invitationService: InvitationService,
     private eventService: EventService,
-    private mediaService: MediaService,
+    private uploaderService: FileUploaderService,
     private contractService: ContractService,
     private dialog: MatDialog,
     private router: Router
@@ -134,9 +133,8 @@ export class OrganizationComponent implements OnInit {
       return;
     }
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.orgForm);
-    await this.organizationService.update(this.orgId, documentToUpdate);
-    this.mediaService.uploadMedias(mediasToUpload);
+    this.uploaderService.upload();
+    await this.organizationService.update(this.orgId, this.orgForm.value);
 
     if (this.notifyCheckbox.value) {
       this.organizationService.notifyAppAccessChange(this.orgId);

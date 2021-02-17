@@ -1,10 +1,9 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MoviePictureAdminForm } from "@blockframes/admin/admin-panel/forms/movie-admin.form";
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { FileUploaderService } from '@blockframes/media/+state';
 
 @Component({
   selector: 'movie-picture-upload',
@@ -19,7 +18,7 @@ export class MoviePictureUploadComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private movieService: MovieService,
-    private mediaService: MediaService,
+    private uploaderService: FileUploaderService,
     private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
@@ -37,13 +36,11 @@ export class MoviePictureUploadComponent implements OnInit {
       return;
     }
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.moviePictureForm);
+    this.movie.poster = this.moviePictureForm.poster.value;
+    this.movie.banner = this.moviePictureForm.banner.value;
+    this.movie.promotional.still_photo = this.moviePictureForm.stillPhoto.value;
 
-    this.movie.poster = documentToUpdate.poster;
-    this.movie.banner = documentToUpdate.banner;
-    this.movie.promotional.still_photo = documentToUpdate.still_photo;
-
+    this.uploaderService.upload();
     await this.movieService.update(this.movie.id, this.movie);
-    this.mediaService.uploadMedias(mediasToUpload);
   }
 }
