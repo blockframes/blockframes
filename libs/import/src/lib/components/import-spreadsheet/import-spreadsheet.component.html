@@ -44,7 +44,8 @@
 
     <ng-template #fileUpload>
       <input #filePicker [accept]="['xls', 'csv']" type="file" (change)="importSpreadsheet($event.target.files)" />
-      <a (click)="filePicker.click()">Import XLS or CSV</a>
+      <a mat-flat-button (click)="filePicker.click()">Import File</a>
+      <p class="mat-caption">Accepted Formats: .xls, .csv</p>
     </ng-template>
   </section>
 
