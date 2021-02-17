@@ -1,45 +1,36 @@
-<article fxLayout *ngIf="root$ | async as root">
+<ng-container fxLayout *ngIf="root$ | async as root">
   <ng-container *ngIf="path$ | async as path">
     <aside>
-      <mat-selection-list [multiple]="false">
+      <mat-action-list>
         <ng-container *ngFor="let dir of root.children | keyvalue">
-          <mat-list-option [selected]="path.startWith(dir.key)" (click)="setPath(dir.key)">
+          <button mat-list-item (click)="setPath(dir.key)" [ngClass]="{ active: path.startWith(dir.key) }">
             <mat-icon mat-list-icon [svgIcon]="dir.value.icon"></mat-icon>
             <span mat-line>{{ dir.value.name | maxLength: 20}}</span>
-          </mat-list-option>
+          </button>
         </ng-container>
-      </mat-selection-list>
+      </mat-action-list>
     </aside>
 
-    <section class="surface" *ngIf="crumbs$ | async as crumbs">
+    <section class="surface">
 
-      <header fxLayout fxLayoutAlign="space-between center">
+      <header fxLayout fxLayoutAlign="space-between center" *ngIf="crumbs$ | async as crumbs">
+        <ng-container *ngIf="crumbs.length > 1">
+          <button mat-icon-button (click)="setPath(crumbs[crumbs.length - 2])" matTooltip="Navigate back one step">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+          </button>
+        </ng-container>
 
         <div fxLayout="row wrap" fxLayoutAlign="start center">
-          <ng-container *ngFor="let crumb of crumbs$ | async; let isLast = last">
+          <ng-container *ngFor="let crumb of crumbs; let isLast = last">
             <ng-container *ngIf="crumb | getDir:root as dir">
-              <button mat-button color="primary" (click)="setPath(crumb)">{{ dir.name }}</button>
+              <button mat-button [color]="isLast ? 'primary' : ''" (click)="setPath(crumb)">
+                {{ dir.name }}
+              </button>
               <span *ngIf="!isLast">></span>
             </ng-container>
           </ng-container>
         </div>
-
-        <!--
-          <ng-container *ngIf="activeDirectory.type !== 'directory' && activeDirectory.multiple">
-            <button mat-stroked-button color="primary" (click)="openDialog()">
-              <mat-icon svgIcon="add"></mat-icon>
-              <span>Upload file</span>
-            </button>
-          </ng-container>
-        -->
-
       </header>
-
-      <ng-container *ngIf="crumbs.length > 1">
-        <button class="back_btn" mat-icon-button (click)="setPath(crumbs[crumbs.length - 2])" matTooltip="Navigate back one step">
-          <mat-icon svgIcon="arrow_back"></mat-icon>
-        </button>
-      </ng-container>
 
       <mat-divider></mat-divider>
 
@@ -47,18 +38,18 @@
         <ng-container [ngSwitch]="dir.type">
 
           <ng-container *ngSwitchCase="'directory'">
-            <mat-selection-list [multiple]="false">
+            <mat-action-list>
               <ng-container *ngFor="let child of dir.children | keyvalue">
-                <mat-list-option (click)="setPath(child.key)">
+                <button mat-list-item (click)="setPath(child.key)">
                   <ng-container *ngIf="child.value as node">
                     <mat-icon [matBadge]="node.hasFile" matBadgeSize="small" *ngIf="node.type === 'directory' || node.multiple" mat-list-icon svgIcon="folder"></mat-icon>
                     <mat-icon [matBadge]="node.hasFile ? '✔' : ''" matBadgeSize="small" *ngIf="node.type === 'file' && !node.multiple" mat-list-icon svgIcon="document"></mat-icon>
                     <mat-icon [matBadge]="node.hasFile ? '✔' : ''" matBadgeSize="small" *ngIf="node.type === 'image' && !node.multiple" mat-list-icon svgIcon="image"></mat-icon>
                     <span mat-line>{{ node.name }}</span>
                   </ng-container>
-                </mat-list-option>
+                </button>
               </ng-container>
-            </mat-selection-list>
+            </mat-action-list>
           </ng-container>
 
           <ng-container *ngSwitchCase="'list'">
@@ -74,4 +65,4 @@
     </section>
 
   </ng-container>
-</article>
+</ng-container>

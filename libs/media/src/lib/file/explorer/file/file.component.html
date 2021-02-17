@@ -1,7 +1,7 @@
 <section fxLayout="column" fxLayoutGap="24px">
   <!-- Image -->
   <ng-container *ngIf="dir.type === 'image'">
-    <image-uploader [ratio]="dir.ratio" [storagePath]="dir.storagePath" [form]="dir.form">
+    <image-uploader [ratio]="dir.ratio" [meta]="dir.meta" [form]="dir.form">
       <h3 title>{{ dir.name }}</h3>
     </image-uploader>
   </ng-container>
