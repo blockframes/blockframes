@@ -62,6 +62,12 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Set your own labe */
   @Input() label = 'Search...'
 
+  /** If true, will display a mat-option to create value */
+  @Input() @boolean showAddNew = false;
+
+  /** Label displayed into "create new option" if showAddNew is true */
+  @Input() createLabel = 'COMPANY';
+
   /** Set your own placeholder */
   @Input() placeholder = 'Search...'
 
@@ -71,8 +77,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Different behavior of the mat form field */
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
-  /** Wether to use a material input or a native html input */
-  @Input() @boolean native = false;
 
   /** The icon to display in the input prefix */
   @Input() prefixIcon: string;
@@ -84,6 +88,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   /** Output emitted on every select, it return the whole record object */
   @Output() selectionChange = new EventEmitter();
+
+  /** Will emit if user clicks on "create new" option */
+  @Output() createFromSelection = new EventEmitter();
 
   // PRIVATE --------------------------
   private sub: Subscription;
@@ -110,7 +117,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       this.keyToDisplay = 'value';
     }
 
-    this.indexSearch = this.algoliaService.getIndex(this.index)
+    this.indexSearch = this.algoliaService.getIndex(this.index);
 
     // create search functions
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
@@ -131,6 +138,10 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     if (this.resetInput) {
       this.control.reset();
     }
+  }
+
+  public createNew() {
+    this.createFromSelection.emit(this.control.value);
   }
 
   ngOnDestroy() {
