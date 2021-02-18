@@ -1,69 +1,124 @@
 import { join, resolve } from 'path';
 import { copyFileSync } from 'fs';
 import { runShellCommand, getServiceAccountObj } from '@blockframes/firebase-utils';
-import { promises } from 'fs';
+import { promises as fsPromises } from 'fs';
 import { execSync } from 'child_process';
 
-const { readdir, readFile, writeFile } = promises;
+const { readdir, readFile, writeFile } = fsPromises;
 
-async function getSAK(projectId: string) {
-  console.log('Attempting to find and set correct service account key.');
+const SAKDirPath = join('tools', 'credentials');
+
+const SAKKeyName = 'GOOGLE_APPLICATION_CREDENTIALS';
+
+/**
+ * Will return true if SAK project corresponds to given project.
+ */
+function SAKIsCorrect(projectId: string) {
   let key: any;
   try {
-    key = getServiceAccountObj(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+    key = getServiceAccountObj(process.env[SAKKeyName]);
+    console.log('Current SAK projectId:', key.project_id);
   } catch (e) {}
+  return projectId === key.project_id;
+}
 
-  if (key.project_id === projectId) {
+/**
+ * This function will find the correct SAK and set `GOOGLE_APPLICATION_CREDENTIALS` to
+ * point to it.
+ * @param projectId project ID to find and update SAK path in dotenv
+ */
+async function updateSAKPathInDotenv(projectId: string) {
+  console.log('Attempting to find and set correct service account key.');
+
+  if (SAKIsCorrect(projectId)) {
     console.log('Correct service account key already set!');
     return;
   }
 
-  const credFolder = resolve(process.cwd(), 'tools', 'credentials');
-  const credFileNames = await readdir(credFolder);
-  const jsonFiles = credFileNames.filter((fileName) => fileName.split('.').pop() === 'json');
-  // tslint:disable-next-line: no-eval
-  const SAKS = jsonFiles.map((fileName) => ({ fileName, key: eval('require')(resolve(process.cwd(), 'tools', 'credentials', fileName)), }));
-  const SAK = SAKS.find((account) => account.key.project_id === projectId);
-  if (!SAK) {
+  const SAKFilename = await findSAKFilename(SAKDirPath, projectId);
+
+  if (!SAKFilename) {
     console.warn('WARNING: Service account key may not exist or have correct permissions! Run health check to confirm...');
     return;
   }
 
-  const dotenvFile = await readFile(resolve(process.cwd(), '.env'), 'utf-8').catch(() => {
-    console.warn('Generating .env file - NOT FOUND');
-    return '';
-  });
-  const dotenvLines = dotenvFile.split('\n');
-  let GACLineFound = false;
-  const SAKPath = join('tools', 'credentials', SAK.fileName);
-  const GACLine = `GOOGLE_APPLICATION_CREDENTIALS="${SAKPath}"`;
-  function processEnvLine(line: string) {
-    const envKey = line.split('=').shift();
-    if (envKey === 'GOOGLE_APPLICATION_CREDENTIALS') {
-      GACLineFound = true;
-      return GACLine;
-    } else return line;
-  }
-  const updatedEnvFile = dotenvLines.map(processEnvLine);
-  if (!GACLineFound) updatedEnvFile.push('\n', GACLine, '\n');
-  await writeFile(resolve(process.cwd(), '.env'), updatedEnvFile.join('\n'));
-  process.env.GOOGLE_APPLICATION_CREDENTIALS = SAKPath;
-  console.log('.env file updated with:', GACLine)
+  const SAKPath = join(SAKDirPath, SAKFilename);
+  await updateDotenv(SAKKeyName, SAKPath);
+}
+
+/**
+ * This function will find the SAK file for a given project ID in
+ * specified directory.
+ * @param dirPath directory of credential files to search
+ * @param projectId the project ID for which to find corresponding SAK for
+ */
+async function findSAKFilename(dirPath: string, projectId: string) {
+  const credFileNames = await readdir(resolve(dirPath));
+  const jsonFiles = credFileNames.filter((fileName) => fileName.split('.').pop() === 'json');
+  // tslint:disable-next-line: no-eval
+  const SAKS = jsonFiles.map((fileName) => ({ fileName, key: eval('require')(resolve(dirPath, fileName)), }));
+  return SAKS.find((account) => account.key.project_id === projectId)?.fileName;
 }
 
 export async function selectEnvironment(projectId: string) {
-  await getSAK(projectId);
-  await runShellCommand(`firebase use ${projectId}`);
-  await runShellCommand(`gcloud config set pass_credentials_to_gsutil true`);
+  if (!projectId) throw Error('Please specify a project ID!');
+  console.log('Selecting project ID:', projectId);
 
-  let output = execSync(`gcloud auth activate-service-account --key-file=${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
-  console.log(output.toString());
-  output = execSync(`gcloud config set project ${projectId}`);
-  console.log(output.toString());
+  await updateDotenv('PROJECT_ID', projectId);
 
-  console.log('Firebase project selected for firebase, gcloud & gsutil...');
-  const localEnvFile = resolve(process.cwd(), 'env', 'env.ts');
-  const targetEnvFile = resolve(process.cwd(), 'env', `env.${projectId}.ts`);
+  await updateSAKPathInDotenv(projectId);
+
+  let cmd: string;
+  let output: string;
+
+  cmd = `firebase use ${projectId}`;
+  console.log('Run:', cmd);
+  await runShellCommand(cmd);
+
+  cmd = `gcloud config set pass_credentials_to_gsutil true`;
+  console.log('Run:', cmd);
+  await runShellCommand(cmd);
+
+  cmd = `gcloud auth activate-service-account --key-file=${process.env[SAKKeyName]}`;
+  console.log('Run:', cmd);
+  output = execSync(cmd).toString();
+  console.log(output);
+
+  cmd = `gcloud --quiet config set project ${projectId}`;
+  console.log('Run:', cmd);
+  output = execSync(cmd).toString();
+  console.log(output);
+
+  const localEnvFile = join(process.cwd(), 'env', 'env.ts');
+  const targetEnvFile = join(process.cwd(), 'env', `env.${projectId}.ts`);
   copyFileSync(targetEnvFile, localEnvFile);
   console.log(`env.ts file overwritten with env.${projectId}.ts`);
+}
+
+/**
+ * Update dotenv file with given key-value pair
+ * Will append value if not already present
+ * @param key key name to update
+ * @param value value to place for keyname
+ */
+async function updateDotenv(key: string, value: string) {
+  const file = await readFile(join(process.cwd(), '.env'), 'utf-8').catch(() => {
+    console.warn('Generating .env file - NOT FOUND');
+    return '';
+  });
+  const dotenvLines = file.split('\n');
+  let lineFound = false;
+  const updateLine = `${key}="${value}"`;
+  function processEnvLine(line: string) {
+    const envKey = line.split('=').shift();
+    if (envKey === key) {
+      lineFound = true;
+      return updateLine;
+    } else return line;
+  }
+  const updatedEnvFile = dotenvLines.map(processEnvLine);
+  if (!lineFound) updatedEnvFile.push('\n', updateLine, '\n');
+  process.env[key] = value;
+  await writeFile(join(process.cwd(), '.env'), updatedEnvFile.join('\n'));
+  console.log('./.env - successfully updated with:', updateLine);
 }
