@@ -1,5 +1,4 @@
 import { join } from 'path';
-import { backupBucket as backupBucketCI } from 'env/env.blockframes-ci';
 import * as admin from 'firebase-admin';
 import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';
@@ -17,7 +16,7 @@ export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin
   return catchErrors(async () => {
     // Get latest backup DB
     const ciStorage = ci.storage();
-    const last = await ciStorage.bucket(backupBucketCI).file(latestAnonDbFilename)
+    const last = await ciStorage.bucket(ciBucketName).file(latestAnonDbFilename)
 
     console.log('Latest backup:', last?.metadata?.timeCreated);
     console.log('Remote name:', last?.name);
@@ -59,6 +58,9 @@ export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin
 }
 
 export async function copyFirestoreExportFromCiBucket() {
+  // @ts-ignore
+  if (ciBucketName === backupBucket) return;
+
   const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
   const localBucketURL = `gs://${backupBucket}`;
 
