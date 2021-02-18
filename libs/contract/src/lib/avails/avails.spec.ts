@@ -84,7 +84,6 @@ describe('Avails', () => {
         const avails = filterSales(
             { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
             toDateSales);
-        console.log(avails)
         expect(avails).toBe(true);
     });
 
@@ -96,12 +95,18 @@ describe('Avails', () => {
     Expected result: Not available`, () => {
         const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
-            { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
+            {
+                duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true,
+                territories: ['germany', 'russia', 'czech'], medias: ['freeTv']
+            },
             acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const isRightPossible = filterSales(
-            { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
+            {
+                duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true,
+                territories: ['germany', 'russia', 'czech'], medias: ['freeTv']
+            },
             toDateSales);
         expect(isRightPossible).toBe(false);
     });
@@ -204,7 +209,6 @@ describe('Avails', () => {
       Exclusive: Yes
       Expected result: Not available`, () => {
         const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
-        console.log(JSON.stringify(acMandateTerms[0].medias))
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
             acMandateTerms)

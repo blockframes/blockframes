@@ -21,16 +21,17 @@ export function filterSales({ medias, duration, territories, exclusive }: Avails
   terms: Term<Date>[]): boolean {
   for (const term of terms) {
 
-    const isInTimeSpan = duration.from.getTime() > term.duration.from.getTime()
-      && duration.to.getTime() < term.duration.to.getTime();
+    const startDuringDuration = duration.from.getTime() >= term.duration.from.getTime() && duration.from.getTime() <= term.duration.to.getTime();
+    const endDuringDuration = duration.to.getTime() <= term.duration.from.getTime() && duration.to.getTime() >= duration.to.getTime();
+    const inDuration = startDuringDuration || endDuringDuration;
 
-    const hasMedia = medias.every(media => term.medias.includes(media))
+    const hasMedia = medias.some(media => term.medias.includes(media))
 
-    const hasTerritories = territories.every(territory => term.territories.includes(territory));
+    const hasTerritories = territories.some(territory => term.territories.includes(territory));
 
-    if (isInTimeSpan && hasMedia && hasTerritories && exclusive) {
+    if (inDuration && hasMedia && hasTerritories && exclusive) {
       return false;
-    } else if (isInTimeSpan && hasMedia && hasTerritories && term.exclusive) {
+    } else if (inDuration && hasMedia && hasTerritories && term.exclusive) {
       return false;
     }
   }
