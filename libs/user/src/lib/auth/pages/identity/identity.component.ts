@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { AlgoliaIndex, AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser } from '@blockframes/user/types';
-import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
+import { createOrganization, OrganizationService, PublicOrganization } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'auth-identity',
@@ -43,7 +43,8 @@ export class IdentityComponent implements OnInit {
     private route: ActivatedRoute,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
@@ -80,6 +81,19 @@ export class IdentityComponent implements OnInit {
     this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
     this.showOrgForm = true;
     this.existingOrgId = result.objectID;
+  }
+
+  public setOrgFromInvitation(org: PublicOrganization) {
+    console.log(org)
+    this.orgForm.reset();
+    this.orgForm.disable();
+    this.orgForm.get('denomination').get('full').setValue(org.denomination.full);
+    this.orgForm.get('activity').setValue(org.activity);
+    this.orgForm.get('addresses').get('main').get('country').setValue(org.addresses.main.country);
+    this.orgForm.get('appAccess').setValue(org.appAccess[this.app][0]);
+    this.showOrgForm = true;
+    this.existingOrgId = org.id;
+    this.cdr.markForCheck();
   }
 
   public createOrg(orgName: string) {
@@ -142,7 +156,7 @@ export class IdentityComponent implements OnInit {
         org.appAccess[this.app][appAccess] = true;
 
         await this.orgService.addOrganization(org, this.app, user);
-        // @TODO 4932 remove app-access page, guard & change email backend to admin (2 emails currently)? 
+        // @TODO 4932 remove app-access page, guard & change email backend to admin (2 emails currently)?
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
         this.creating = false;

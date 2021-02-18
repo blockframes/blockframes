@@ -3,10 +3,11 @@
   <img asset="join_orga.webp" alt="Join Organization Illustration">
   <mat-card>
     <form [formGroup]="form">
-      <mat-form-field appearance="outline">
+      <!-- <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" required />
-      </mat-form-field>
+      </mat-form-field> -->
+      <auth-email-input (organization)="setOrgFromInvitation($event)"></auth-email-input>
 
       <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
