@@ -2,19 +2,18 @@ import { Screening } from './type';
 
 export const EVENTS: Partial<Screening>[] = [
   {
-    event: 'Felicità Private Screening',
+    event: 'TKOTL Private Screening',
     by : {
       uid: '2OJUZoWtTVcew27YDZa8FQQdg5q2'
     },
     movie: { 
-      id: '1J5uLFThLziaj2j0xPPP',
+      id: '02L9gsoY4WTdGbxpOKha',
       title: {
-        international: 'Felicità'
+        international: 'The Killing Of Two Lovers'
       }
     },
     org : {
       id: 'sLchj1Ib4Cxhwr0ZBW4m',
-      name: 'Charades'
     },
     invitees: [{
         uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
@@ -37,7 +36,6 @@ export const EVENTS: Partial<Screening>[] = [
     },
     org : {
       id: 'sLchj1Ib4Cxhwr0ZBW4m',
-      name: 'Charades'
     },
     invitees: [{
         uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
