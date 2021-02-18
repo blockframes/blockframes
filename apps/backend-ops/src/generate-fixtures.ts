@@ -39,7 +39,6 @@ async function generateUsers() {
 
 /**
  * This function will generate `tools/fixtures/movies.json` from local Firestore
- * TODO: update movie fixture generator once model changes #3582
  */
 async function generateMovies() {
   console.log('Generating movie fixtures file from Firestore...');
