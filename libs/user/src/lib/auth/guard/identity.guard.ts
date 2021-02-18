@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService, AuthState } from '../+state';
-import { switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { of } from 'rxjs';
@@ -23,7 +23,9 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
         if (!userAuth) {
           return of(true);
         };
-        return this.service.sync();
+        return this.service.sync().pipe(
+          catchError(() => Promise.resolve(true)),
+        );
       })
     );
   }
