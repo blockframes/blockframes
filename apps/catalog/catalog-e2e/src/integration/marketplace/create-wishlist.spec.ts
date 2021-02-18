@@ -18,7 +18,7 @@ beforeEach(() => {
   cy.wait(1000);
 });
 
-//TODO: Rework the tests after App re-write
+//TODO: Issue 4965 Rework the tests after App re-write
 describe.skip('Test wishlist features from library, detail page',  () => {
   it('User clears all movies from Wish List', () => {
     const p1 = new HomePage();
