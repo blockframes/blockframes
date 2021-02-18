@@ -27,8 +27,8 @@ export default class EventPage {
   createEvent(eventTitle: string, eventDate: Date, 
               screeningName: string, isPublic: boolean = false) {
     cy.log(`createEvent : {${eventTitle}}`);
-    const event: EventEditPage = this.createDetailedEvent(eventDate);
-    event.addEventTitle(eventTitle);
+    const event: EventEditPage = this.createDetailedEvent(eventDate, 'Screening', eventTitle);
+    //event.addEventTitle(eventTitle);
     event.uncheckPrivate(isPublic);
 
     event.selectMovie(screeningName);
@@ -37,7 +37,8 @@ export default class EventPage {
     cy.get('[svgicon="arrow_back"]').click();
   }
 
-  createDetailedEvent(date: Date, eventType: string = 'Screening') {
+  createDetailedEvent(date: Date, eventType: string = 'Screening', title: string = '') {
+    cy.log(`#Creating event type: [${eventType}] on <${date.toLocaleDateString()}> :> ${title}`)
     const day = date.getDay();
     if (day === 0) {
       cy.get('button[test-id=arrow_forward]', {timeout: 3 * SEC})
@@ -51,7 +52,13 @@ export default class EventPage {
       .first()
       .click({force: true});
     cy.get('mat-option', {timeout: 3 * SEC})
-      .contains(eventType).click({force: true}); 
+      .contains(eventType).click({force: true});
+    
+    //Input the title string
+    cy.get('input[test-id="event-title"]', {timeout: 1 * SEC})
+      .click({force: true})
+      .clear()
+      .type(title);
 
     cy.get('button[test-id=more-details]')
       .click();
