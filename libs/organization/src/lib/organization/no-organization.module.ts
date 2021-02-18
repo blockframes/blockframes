@@ -39,6 +39,11 @@ import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 
 export const noOrganizationRoutes: Routes = [
   {
+    path: '',
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    pathMatch: 'full'
+  },
+  {
     path: 'join-congratulations',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationFeedbackComponent
