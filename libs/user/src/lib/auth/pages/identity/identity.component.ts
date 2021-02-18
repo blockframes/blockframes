@@ -134,15 +134,11 @@ export class IdentityComponent implements OnInit {
           this.snackBar.open(error.message, 'close', { duration: 2000 });
         }
       } else {
-        const { denomination, addresses, activity, marketplace } = this.orgForm.value;
+        const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
         const org = createOrganization({ denomination, addresses, activity });
 
-        if (marketplace) {
-          org.appAccess[this.app].marketplace = true;
-        } else {
-          org.appAccess[this.app].dashboard = true;
-        }
+        org.appAccess[this.app][appAccess] = true;
 
         await this.orgService.addOrganization(org, this.app, user);
 

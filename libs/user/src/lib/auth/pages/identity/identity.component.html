@@ -24,13 +24,13 @@
       </mat-form-field>
 
       <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"
-      hint='Please join an existing company account or create a new one.'
-      (selectionChange)="setOrg($event)"
-      (createFromSelection)="createOrg($event)">
-       <ng-template let-result>
-         <span>{{ result.name }}</span>
-       </ng-template>
-     </algolia-autocomplete>
+        hint='Please join an existing company account or create a new one.'
+        (selectionChange)="setOrg($event)"
+        (createFromSelection)="createOrg($event)">
+        <ng-template let-result>
+          <span>{{ result.name }}</span>
+        </ng-template>
+      </algolia-autocomplete>
 
      <organization-lite-form *ngIf="showOrgForm" [form]="orgForm"></organization-lite-form>
 
