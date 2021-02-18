@@ -4,6 +4,11 @@
   <mat-card>
     <form [formGroup]="form">
       <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
         <input matInput type="text" placeholder="First name" formControlName="firstName" required />
         <mat-error *ngIf="form.get('firstName').hasError('required')">
@@ -16,10 +21,6 @@
         <mat-error *ngIf="form.get('lastName').hasError('required')">
           Last name is <strong>required</strong>
         </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" required />
       </mat-form-field>
 
       <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"

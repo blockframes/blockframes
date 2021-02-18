@@ -21,7 +21,7 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
         if (!userAuth) {
-          return of('auth');
+          return of(true);
         };
         return this.service.sync();
       })
