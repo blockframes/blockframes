@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -40,7 +40,6 @@ export class IdentityComponent implements OnInit {
     private query: AuthQuery,
     private snackBar: MatSnackBar,
     private router: Router,
-    private route: ActivatedRoute,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
     private routerQuery: RouterQuery
@@ -142,7 +141,6 @@ export class IdentityComponent implements OnInit {
         org.appAccess[this.app][appAccess] = true;
 
         await this.orgService.addOrganization(org, this.app, user);
-        // @TODO 4932 remove app-access page, guard & change email backend to admin (2 emails currently)? 
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
         this.creating = false;
@@ -166,11 +164,18 @@ export class IdentityComponent implements OnInit {
 
   public async update() {
     try {
+      if (this.form.get('generatedPassword').value === this.form.get('password').value) {
+        this.snackBar.open('You must choose a new password', 'close', { duration: 5000 });
+        return;
+      }
+
       this.creating = true;
+
       await this.authService.updatePassword(
         this.form.get('generatedPassword').value,
         this.form.get('password').value
       );
+
       const privacyPolicy = await this.authService.getPrivacyPolicy();
       await this.authService.update({
         _meta: createDocumentMeta({ createdFrom: this.app }),
@@ -191,7 +196,7 @@ export class IdentityComponent implements OnInit {
       }
 
       this.creating = false;
-      this.router.navigate(['/c'], { relativeTo: this.route });
+      this.router.navigate(['/c/o']);
     } catch (error) {
       this.creating = false;
       this.snackBar.open(error.message, 'close', { duration: 5000 });

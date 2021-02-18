@@ -2,7 +2,7 @@ import OrganizationCreatePage from './OrganizationCreatePage';
 import OrganizationFindPage from './OrganizationFindPage';
 import { SEC } from '../../utils/env';
 
-const PATH = '/c/organization/home';
+const PATH = '/c/organization/home'; //@TODO #4932 update E2E tests
 
 export default class OrganizationHomePage {
   constructor() {

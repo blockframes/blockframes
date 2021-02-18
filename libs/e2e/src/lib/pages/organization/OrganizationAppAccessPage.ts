@@ -1,7 +1,7 @@
 import OrganizationCongratulationPage from "./OrganizationCongratulationPage";
 import { SEC } from '../../utils/env';
 
-const PATH = '/c/organization/app-access';
+const PATH = '/c/organization/app-access'; //@TODO #4932 update E2E tests
 
 export default class OrganizationAppAccessPage {
   constructor() {

@@ -135,6 +135,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   await notifyOnOrgMemberChanges(before, after);
 
   // check if appAccess have changed
+  // @TODO #4932 remove this email & add merge it with  organizationCreated
   await sendMailIfOrgAppAccessChanged(before, after);
 
   // Deploy org's smart-contract

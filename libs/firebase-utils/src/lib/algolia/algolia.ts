@@ -63,7 +63,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
     hasAcceptedMovies: org['hasAcceptedMovies'] ?? false,
-    denomination: {
+    denomination: { // @TODO #4932 denomination inside denomination ? need renaming ?
       denomination: org.denomination,
       id: org.id,
       logo: org.logo
