@@ -315,7 +315,7 @@ export function createSale(params: Partial<Sale> = {}): Sale {
   }
 }
 
-export function createTerm(params: Partial<Term> = {}): Term {
+export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
   return {
     id: '',
     titleId: '',

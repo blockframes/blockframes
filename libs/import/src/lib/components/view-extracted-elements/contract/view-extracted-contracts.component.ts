@@ -227,9 +227,9 @@ export class ViewExtractedContractsComponent implements OnInit {
           if (trimmedRow[SpreadSheetContract.endOfContract]) {
             if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
               const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.endOfContract]);
-              term.duration.from = new Date(`${y}-${m}-${d}`);
+              term.duration.to = new Date(`${y}-${m}-${d}`);
             } else {
-              term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
+              term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
             }
           } else {
             importErrors.errors.push({
