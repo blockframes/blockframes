@@ -147,7 +147,7 @@ jobs:
       - run: npm run backend-ops use $(cut -d'/' -f2<<<$CIRCLE_BRANCH)
       - build_deploy_prepare
       - slack/notify:
-          message: 'PFT complete for << pipeline.git.branch >>'
+          message: 'PFT complete for \<< pipeline.git.branch >>'
   prepare-for-testing:
     executor: blockframes-ci
     environment:
@@ -158,7 +158,7 @@ jobs:
       - run: npm run backend-ops prepareForTestingBeta
       - slack/status
       - slack/notify:
-          message: 'Deploy and PFT complete for << pipeline.git.branch >>'
+          message: 'Deploy and PFT complete for \<< pipeline.git.branch >>'
   build-and-test-all:
     executor: blockframes-ci
     steps:
