@@ -1,7 +1,7 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
-import { InvitationOrUndefined, OrganizationDocument } from './data/types';
+import { InvitationOrUndefined, OrganizationDocument, PublicOrganization } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
@@ -212,9 +212,12 @@ export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
   return invitationQuery.some(d => d.docs.length > 0);
 }
 
-export async function getInvitationLinkedToEmail(email: string) {
+export async function getInvitationLinkedToEmail(email: string): Promise<boolean | PublicOrganization> {
   const db = admin.firestore();
-  const invitationRef = await db.collection('invitations').where('toUser.email', '==', email).get();
+  const invitationRef = await db.collection('invitations')
+  .where('toUser.email', '==', email)
+  .where('status', '==', 'pending')
+  .get();
   const joinOrgInvit = invitationRef.docs.filter(invit => invit.data().type === 'joinOrganization');
 
   // We want to return invitation to join organization in priority
