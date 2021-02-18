@@ -70,7 +70,7 @@ export class FileUploaderService {
    * @note if the file does not exists in the queue,
    * this function will not throw any error and simply do nothing
    */
-  removeFromQueue(storagePath: string, fileName) {
+  removeFromQueue(storagePath: string, fileName: string) {
 
     const uploads = this.queue[storagePath];
 

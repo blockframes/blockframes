@@ -68,11 +68,11 @@ export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabe
   },
 };
 
-export function getFileStoragePath(collection: CollectionHoldingFile, label: FileLabel) {
+export function getFileStoragePath(collection: CollectionHoldingFile, label: FileLabel, docId: string) {
   const pathPart = storagePaths[collection][label];
   if (!pathPart) return '';
 
-  return `${collection}/${pathPart}`;
+  return `${collection}/${docId}/${pathPart}`;
 }
 
 // Get the the field element or the array parent if index is not provided

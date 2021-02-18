@@ -102,7 +102,7 @@ export class ImageUploaderComponent implements OnInit {
 
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
     const [ collection, label, docId, index ] = value;
-    this.storagePath = getFileStoragePath(collection, label);
+    this.storagePath = getFileStoragePath(collection, label, docId);
     this.metadata = getFileMetadata(collection, label, docId, index);
   }
 
@@ -227,14 +227,15 @@ export class ImageUploaderComponent implements OnInit {
       // regexp selects part of string after the last . in the string (which is always the file extension)
       // replaces this by '.webp'
       // and also postfix file name with a small random id allow the same image to be cropped several time without collision
-      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, `-${Math.random().toString(36).substr(2)}.webp`));
+      this.fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, `-${Math.random().toString(36).substr(2)}.webp`));
 
       this.uploaderService.addToQueue(this.storagePath, {
-        fileName: fileName,
+        fileName: this.fileName,
         file: blob,
         metadata: this.metadata
       });
 
+      this.form?.markAsDirty();
       // TODO keep track of crop state
       // cropped state = true
 
