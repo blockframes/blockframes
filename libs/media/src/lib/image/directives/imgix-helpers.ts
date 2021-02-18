@@ -78,6 +78,7 @@ export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParamete
     ? `${firebase().projectId}-${protectedMediaDir}`
     : firebase().projectId;
 
+  // This is a safeguard for old storagePaths. Image wont work if privacy is still in the path and is therefore removed in case its there.
   if (privacies.some(privacy => privacy === file.storagePath.split('/').shift())) {
     console.warn(`Expected storagePath without privacy prefix: ${file.storagePath}`);
     file.storagePath = file.storagePath.split('/').splice(1).join('/');
