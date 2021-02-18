@@ -13,7 +13,6 @@ export class NoOrganizationGuard {
 
   async canActivate() {
     const { orgId } = this.authQuery.user;
-    console.log(`>User Org: ${orgId}`)
     if (!orgId) {
       return true;
     }
