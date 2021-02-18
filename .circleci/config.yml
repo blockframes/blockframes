@@ -347,7 +347,7 @@ workflows:
       - test-e2e:
           requires:
             - build-and-test-all
-        filters:
+          filters:
             branches:
               only:
                 - ci
