@@ -50,10 +50,10 @@ describe('Avails', () => {
     Rights: Free TV
     Exclusive: No
     Expected result: Not licensed`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan'], medias: ['freeTv'] },
-            toDateAvails);
+            acMandateTerms);
         expect(ACRights).toBe(false)
     });
 
@@ -62,10 +62,10 @@ describe('Avails', () => {
     Rights: Planes
     Exclusive: No
     Expected result: Not licensed`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['france'], medias: ['planes'] },
-            toDateAvails);
+            acMandateTerms);
         expect(ACRights).toBe(false)
     });
 
@@ -75,16 +75,16 @@ describe('Avails', () => {
     Rights: Free TV
     Exclusive: Yes
     Expected result: Available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            toDateAvails);
+            acMandateTerms);
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const avails = filterSales(
             { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
             toDateSales);
-            console.log(avails)
+        console.log(avails)
         expect(avails).toBe(true);
     });
 
@@ -94,14 +94,14 @@ describe('Avails', () => {
     Rights: Free TV
     Exclusive: Yes
     Expected result: Not available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            toDateAvails)
+            acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const isRightPossible = filterSales(
-            { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2019') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
+            { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
             toDateSales);
         expect(isRightPossible).toBe(false);
     });
@@ -112,10 +112,10 @@ describe('Avails', () => {
         Rights: Free TV
         Exclusive: No
         Expected result: Available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            toDateAvails)
+            acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const avails = filterSales(
@@ -130,16 +130,16 @@ describe('Avails', () => {
         Rights: Free TV
         Exclusive: Yes
         Expected result: Not available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            toDateAvails)
+            acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const avails = filterSales(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
             toDateSales);
-        expect(!avails).toBe(false);
+        expect(avails).toBe(false);
     });
 
     it(`Rights check
@@ -148,10 +148,10 @@ describe('Avails', () => {
       Rights: S-VOD
       Exclusive: Yes
       Expected result: Available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['sVod'] },
-            toDateAvails)
+            acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const avails = filterSales(
@@ -167,29 +167,28 @@ describe('Avails', () => {
     Rights: Pay TV
     Exclusive: Yes
     Expected result: Not available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] },
-            toDateAvails)
+            acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const avails = filterSales(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] },
             toDateSales);
-            console.log(avails)
-        expect(!avails).toBe(false);
+        expect(avails).toBe(false);
     });
 
-    it(` Exclusivity test (non exclusive)
+    it(`Exclusivity test (non exclusive)
       Terms: 01/01/2022 - 06/30/2022
       Territory: Germany
       Rights: Free TV
       Exclusive: No
       Expected result: Available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
         const ACRights = isLicensed(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany'], medias: ['freeTv'] },
-            toDateAvails)
+            acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const avails = filterSales(
@@ -199,21 +198,22 @@ describe('Avails', () => {
     });
 
     it(`Exclusivity test (exclusive)
-      Terms: 01/01/2020 - 06/30/2020
+      Terms: 01/01/2021 - 06/30/2021
       Territory: Canada
       Rights: Free TV
       Exclusive: Yes
       Expected result: Not available`, () => {
-        const toDateAvails = mandateTerms.map(parseTimestampsOnTerms);
+        const acMandateTerms = mandateTerms.map(parseTimestampsOnTerms);
+        console.log(JSON.stringify(acMandateTerms[0].medias))
         const ACRights = isLicensed(
-            { duration: { to: new Date('06/30/2020'), from: new Date('01/01/2020') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
-            toDateAvails)
+            { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
+            acMandateTerms)
         expect(ACRights).toBe(true);
         const toDateSales = saleTerms.map(parseTimestampsOnTerms);
         const avails = filterSales(
-            { duration: { to: new Date('06/30/2020'), from: new Date('01/01/2020') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
+            { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
             toDateSales);
-        expect(!avails).toBe(false);
+        expect(avails).toBe(false);
     });
 })
 

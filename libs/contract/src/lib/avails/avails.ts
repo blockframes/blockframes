@@ -6,7 +6,7 @@ interface AvailsFilter { medias: Media[], duration: { from: Date, to: Date }, te
 export function isLicensed({ medias, duration, territories }: AvailsFilter,
   terms: Term<Date>[]): boolean {
   for (const term of terms) {
-    if (duration.from.getTime() > term.duration.from.getTime() && duration.to.getTime() < term.duration.to.getTime()) {
+    if (duration.from.getTime() >= term.duration.from.getTime() && duration.to.getTime() <= term.duration.to.getTime()) {
       if (medias.every(media => term.medias.includes(media))) {
         if (territories.every(territory => term.territories.includes(territory))) {
           return true
