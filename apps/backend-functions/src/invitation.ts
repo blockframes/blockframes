@@ -1,7 +1,7 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
-import { InvitationOrUndefined, OrganizationDocument } from './data/types';
+import { InvitationOrUndefined, OrganizationDocument, PublicOrganization } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
@@ -38,7 +38,7 @@ export async function onInvitationWrite(
   // Doc was deleted
   if (!invitationDoc) {
 
-    if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') { 
+    if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') {
       const user = await getUser(invitationDocBefore.toUser.uid)
 
       // Remove user in users collection
@@ -210,4 +210,28 @@ export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
   const invitationQuery = await Promise.all(invitationPromises);
 
   return invitationQuery.some(d => d.docs.length > 0);
+}
+
+export async function getInvitationLinkedToEmail(email: string): Promise<boolean | PublicOrganization> {
+  const db = admin.firestore();
+  const invitationRef = await db.collection('invitations')
+  .where('toUser.email', '==', email)
+  .where('status', '==', 'pending')
+  .get();
+  const joinOrgInvit = invitationRef.docs.filter(invit => invit.data().type === 'joinOrganization');
+
+  // We want to return invitation to join organization in priority
+  if (joinOrgInvit.length) {
+    const invit = joinOrgInvit[0].data();
+    const org = await getDocument<OrganizationDocument>(`orgs/${invit.fromOrg.id}`);
+    return createPublicOrganizationDocument(org);
+  }
+
+  // Otherwise, we return the fact we found an invitation and we can display the invitation code input in the front
+  for (const doc of invitationRef.docs) {
+    if (!!doc.data() && doc.data().type !== 'joinOrganization')
+    return true;
+  }
+
+  return false;
 }

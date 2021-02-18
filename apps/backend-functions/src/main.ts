@@ -101,6 +101,9 @@ export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationI
 /** Used to check if users have already an invitation to join org existing */
 export const hasUserAnOrgOrIsAlreadyInvited = functions.https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
 
+/** Used to get invitation linked to an email when users signup for the first time */
+export const getInvitationLinkedToEmail = functions.https.onCall(invitations.getInvitationLinkedToEmail);
+
 //--------------------------------
 //    Events Management          //
 //--------------------------------
