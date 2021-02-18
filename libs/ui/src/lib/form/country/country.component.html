@@ -1,5 +1,5 @@
 <mat-form-field appearance="outline">
-  <mat-label>Country</mat-label>
+  <mat-label>{{ label }}</mat-label>
   <input test-id="address-country" type="text" matInput [formControl]="form" [matAutocomplete]="auto"
     name="originCountry">
   <mat-error *ngIf="form.hasError('invalidValue')">

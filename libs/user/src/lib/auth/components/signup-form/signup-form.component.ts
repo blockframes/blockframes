@@ -7,7 +7,7 @@ import { SignupForm } from '../../forms/signup.form';
   styleUrls: ['./signup-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SignupFormComponent {
+export class SignupFormComponent { // @TODO 4932 remove
   @Output() opened = new EventEmitter();
   @Output() submited = new EventEmitter();
 
