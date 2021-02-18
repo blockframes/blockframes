@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormCountryModule } from '@blockframes/ui/form/country/country.module';
 
 // Material
-import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -24,7 +23,6 @@ import { MatRadioModule } from '@angular/material/radio';
 
     // Material
     MatFormFieldModule,
-    MatDividerModule,
     MatInputModule,
     MatCardModule,
     MatSelectModule,
