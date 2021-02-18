@@ -145,6 +145,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm run backend-ops use $(cut -d'/' -f2\<<<$CIRCLE_BRANCH)
+      - run: . ./.env
       - build_deploy_prepare
       - slack/notify:
           message: 'PFT complete for << pipeline.git.branch >>'
@@ -155,6 +156,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm run backend-ops use $(cut -d'/' -f2\<<<$CIRCLE_BRANCH)
+      - run: . ./.env
       - run: npm run backend-ops prepareForTestingBeta
       - slack/status
       - slack/notify:
