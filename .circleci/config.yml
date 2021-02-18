@@ -138,6 +138,27 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
+  build-deploy-prepare:
+    executor: blockframes-ci
+    environment:
+      NG_CONFIG: ''
+    steps:
+      - prepare_environment
+      - run: npm run backend-ops use $(cut -d'/' -f2<<<$CIRCLE_BRANCH)
+      - build_deploy_prepare
+      - slack/notify:
+          message: 'PFT complete for << pipeline.git.branch >>'
+  prepare-for-testing:
+    executor: blockframes-ci
+    environment:
+      NG_CONFIG: ''
+    steps:
+      - prepare_environment
+      - run: npm run backend-ops use $(cut -d'/' -f2<<<$CIRCLE_BRANCH)
+      - run: npm run backend-ops prepareForTestingBeta
+      - slack/status
+      - slack/notify:
+          message: 'Deploy and PFT complete for << pipeline.git.branch >>'
   build-and-test-all:
     executor: blockframes-ci
     steps:
@@ -234,56 +255,6 @@ jobs:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
       - prepare_environment
       - build_deploy_upgrade
-  deploy-to-demo1:
-    executor: blockframes-ci
-    environment:
-       PROJECT_ID: blockframes-demo-1
-       NG_CONFIG: ''
-    steps:
-      - slack/notify:
-          message: 'Deploying to demo1...'
-      - prepare_environment
-      - build_deploy_prepare
-  deploy-to-demo2:
-    executor: blockframes-ci
-    environment:
-       PROJECT_ID: blockframes-demo-2
-       NG_CONFIG: ''
-    steps:
-      - slack/notify:
-          message: 'Deploying to demo2...'
-      - prepare_environment
-      - build_deploy_prepare
-  deploy-to-demo3:
-    executor: blockframes-ci
-    environment:
-       PROJECT_ID: blockframes-demo-3
-       NG_CONFIG: ''
-    steps:
-      - slack/notify:
-          message: 'Deploying to demo3...'
-      - prepare_environment
-      - build_deploy_prepare
-  deploy-to-demo4:
-    executor: blockframes-ci
-    environment:
-       PROJECT_ID: blockframes-demo-4
-       NG_CONFIG: ''
-    steps:
-      - slack/notify:
-          message: 'Deploying to demo4...'
-      - prepare_environment
-      - build_deploy_prepare
-  deploy-to-demo5:
-    executor: blockframes-ci
-    environment:
-       PROJECT_ID: blockframes-demo-5
-       NG_CONFIG: ''
-    steps:
-      - slack/notify:
-          message: 'Deploying to demo5...'
-      - prepare_environment
-      - build_deploy_prepare
   push-anon-db-to-ci:
     executor: blockframes-ci
     steps:
@@ -305,6 +276,20 @@ jobs:
       - prepare_environment
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
 workflows:
+  build-deploy-prepare:
+    jobs:
+      - build-deploy-prepare:
+          filters:
+            branches:
+              only:
+                - /deploy\/.*/
+  prepare-for-testing:
+    jobs:
+      - prepare-for-testing:
+          filters:
+            branches:
+              only:
+                - /pft\/.*/
   nightly-backup:
     triggers:
       - schedule:
@@ -328,31 +313,6 @@ workflows:
       - copy-storage-from-prod
   deploy:
     jobs:
-      - deploy-to-demo3:
-          filters:
-            branches:
-              only:
-                - demo3
-      - deploy-to-demo2:
-          filters:
-            branches:
-              only:
-                - demo2
-      - deploy-to-demo1:
-          filters:
-            branches:
-              only:
-                - demo1
-      - deploy-to-demo4:
-          filters:
-            branches:
-              only:
-                - demo4
-      - deploy-to-demo5:
-          filters:
-            branches:
-              only:
-                - demo5
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
@@ -387,7 +347,7 @@ workflows:
       - test-e2e:
           requires:
             - build-and-test-all
-          filters:
+        filters:
             branches:
               only:
                 - ci
