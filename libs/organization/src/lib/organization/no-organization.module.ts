@@ -28,12 +28,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
 
 // Components
-import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
-import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
 import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
-import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
-import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
+
 
 // Guards
 import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
@@ -41,21 +38,6 @@ import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 
 export const noOrganizationRoutes: Routes = [
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
-  {
-    path: 'home',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationHomeComponent,
-  },
-  {
-    path: 'find',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationFindComponent,
-  },
   {
     path: 'join-congratulations',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
@@ -65,15 +47,6 @@ export const noOrganizationRoutes: Routes = [
     path: 'create-congratulations',
     canActivate: [PendingOrganizationGuard],
     component: OrganizationCreateFeedbackComponent
-  },
-  {
-    path: 'create',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationCreateComponent,
-  },
-  {
-    path: 'app-access',
-    component: OrganizationAppAccessComponent,
   }
 ];
 
@@ -108,11 +81,7 @@ export const noOrganizationRoutes: Routes = [
     RouterModule.forChild(noOrganizationRoutes),
   ],
   declarations: [
-    OrganizationHomeComponent,
-    OrganizationFindComponent,
     OrganizationFeedbackComponent,
-    OrganizationCreateComponent,
-    OrganizationAppAccessComponent,
     OrganizationCreateFeedbackComponent
   ]
 })

@@ -146,7 +146,6 @@ export class IdentityComponent implements OnInit {
         }
 
         await this.orgService.addOrganization(org, this.app, user);
-        // @TODO 4932 remove app-access page, guard & change email backend to admin (2 emails currently)? 
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
         this.creating = false;
