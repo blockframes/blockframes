@@ -77,7 +77,7 @@ export class IdentityComponent implements OnInit {
     this.orgForm.get('denomination').get('full').setValue(result.denomination.denomination.full);
     this.orgForm.get('activity').setValue(result.activity);
     this.orgForm.get('addresses').get('main').get('country').setValue(result.country);
-    this.orgForm.get('marketplace').setValue(result.appModule.includes('marketplace'));
+    this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
     this.showOrgForm = true;
     this.existingOrgId = result.objectID;
   }

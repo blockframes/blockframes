@@ -12,15 +12,15 @@
 
     <form-country label="Company's nationality" noWorld [form]="form.get('addresses').get('main').get('country')"></form-country>
 
-    <mat-radio-group [formControl]="form.get('marketplace')" fxLayout="wrap row" fxLayoutGap="16px">
+    <mat-radio-group [formControl]="form.get('appAccess')" fxLayout="wrap row" fxLayoutGap="16px">
       <mat-card [ngClass]="{ disabled: false }">
-        <mat-radio-button [value]="true" color="primary">
+        <mat-radio-button value="marketplace" color="primary">
           Buyer
         </mat-radio-button>
       </mat-card>
 
       <mat-card [ngClass]="{ disabled: false }">
-        <mat-radio-button [value]="false" color="primary">
+        <mat-radio-button value="dashboard" color="primary">
           Seller
         </mat-radio-button>
       </mat-card>
