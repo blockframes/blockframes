@@ -21,14 +21,26 @@
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" required />
       </mat-form-field>
-      <ng-container>
+
+      <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"
+      hint='Please join an existing company account or create a new one.'
+      (selectionChange)="setOrg($event)"
+      (createFromSelection)="createOrg($event)">
+       <ng-template let-result>
+         <span>{{ result.name }}</span>
+       </ng-template>
+     </algolia-autocomplete>
+
+     <organization-lite-form *ngIf="showOrgForm" [form]="orgForm"></organization-lite-form>
+
+      <ng-container *ngIf="showPreGeneratedPasswordField">
         <mat-form-field appearance="outline">
           <mat-label>Pre generated password</mat-label>
           <input matInput type="password" placeholder="Your pre generated password" formControlName="generatedPassword"
             required />
         </mat-form-field>
       </ng-container>
-      <password-confirm formControlName="newPassword"></password-confirm>
+      <password-confirm formControlName="password"></password-confirm>
       <div>
         <auth-accept-conditions [control]="form.get('termsOfUse')">
           <span conditionText>I hereby accept {{ appName }}</span>
@@ -51,7 +63,7 @@
   </mat-card>
 
   <ng-container *ngIf="!creating else creatingAccount">
-    <button @slideDown (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid">
+    <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid || orgForm.invalid">
       Sign up
     </button>
   </ng-container>
@@ -61,3 +73,11 @@
     </button>
   </ng-template>
 </section>
+
+<ng-template #customSnackBarTemplate>
+  <div class="custom-snackbar-message">
+    An account already exists for this email address.<br />
+    If you don’t remember your password, <a routerLink="../email-verification">please reset it</a> or try searching in
+    your past emails. You might have received an invitation containing credentials.
+  </div>
+</ng-template>

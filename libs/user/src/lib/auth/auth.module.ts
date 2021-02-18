@@ -30,6 +30,8 @@ import { PasswordResetComponent } from './pages/password-reset/password-reset.co
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
 import { PrivacyPolicyModule } from './components/privacy-policy/privacy-policy.module';
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
+import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
 
 // Guards
 import { IdentityGuard } from './guard/identity.guard';
@@ -44,8 +46,8 @@ export const AuthRoutes: Routes = [
   },
   {
     path: 'identity',
-    canActivate: [IdentityGuard],
-    canDeactivate: [IdentityGuard],
+    // @TODO #4932 uncomment / update guard canActivate: [IdentityGuard],
+    // @TODO #4932 uncomment / update guard canDeactivate: [IdentityGuard],
     component: IdentityComponent
   },
   // @TODO (#2875) rename to password-reset
@@ -65,6 +67,8 @@ export const AuthRoutes: Routes = [
     AcceptConditionsModule,
     PasswordConfirmModule,
     ImageModule,
+    AlgoliaAutocompleteModule,
+    OrganizationLiteFormModule,
 
     // Material
     MatSnackBarModule,

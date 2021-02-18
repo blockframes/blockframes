@@ -59,8 +59,11 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
 
-  /** Set your own labe */
+  /** Set your own label */
   @Input() label = 'Search...'
+
+  /** Set your own hint */
+  @Input() hint = '';
 
   /** If true, will display a mat-option to create value */
   @Input() @boolean showAddNew = false;

@@ -3,7 +3,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { OrganizationQuery, createPublicOrganization, Organization } from '@blockframes/organization/+state';
 import { AuthQuery, User } from '@blockframes/auth/+state';
-import { createPublicUser } from '@blockframes/user/+state';
+import { createPublicUser, PublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
@@ -68,7 +68,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    * Create an invitation with mode "request"
    * @param orgId The org the request is made to
    */
-  request(orgId: string, fromUser: User = this.authQuery.user) {
+  request(orgId: string, fromUser: User | PublicUser = this.authQuery.user) {
     return {
       to: async (type: 'attendEvent' | 'joinOrganization', eventId?: string, write?: AtomicWrite) => {
         const request = { mode: 'request', type } as Partial<Invitation>;
