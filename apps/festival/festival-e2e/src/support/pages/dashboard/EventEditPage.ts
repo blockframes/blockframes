@@ -10,7 +10,7 @@ export default class EventEditPage {
   }
 
   addEventTitle(title: string) {
-    cy.get('event-edit input[test-id=event-title]').clear().type(title);
+    cy.get('event-edit input[formControlName="title"]').clear().type(title);
   }
 
   //Sets if event is full day.
@@ -44,11 +44,11 @@ export default class EventEditPage {
   //set event access
   uncheckPrivate(isPublic: boolean = false) {
     if (!isPublic) {
-      cy.get('event-edit mat-checkbox[test-id=event-private]', { timeout: 3 * SEC })
+      cy.get('event-edit mat-checkbox[formControlName="isPrivate"]', { timeout: 3 * SEC })
         .find('input')
         .check({ force: true });
     } else {
-      cy.get('event-edit mat-checkbox[test-id=event-private]', { timeout: 3 * SEC })
+      cy.get('event-edit mat-checkbox[formControlName="isPrivate"]', { timeout: 3 * SEC })
         .find('input')
         .uncheck({ force: true });
     }
