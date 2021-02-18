@@ -1,6 +1,7 @@
-import  firebase from 'firebase';
+import firebase from 'firebase';
 import { staticModel, Scope } from './static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { User } from '@blockframes/user/types';
 
 /**
  * This method is used before pushing data on db
@@ -211,4 +212,9 @@ export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
     default:
       return 0;
   }
+}
+
+// Verify if the user exists and has a name and surname.
+export function hasIdentity(user: User) {
+  return !!user && !!user.firstName && !!user.lastName;
 }

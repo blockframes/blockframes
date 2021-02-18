@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AuthService, AuthState } from '../+state';
-import { catchError, switchMap } from 'rxjs/operators';
+import { AuthQuery, AuthService, AuthState } from '../+state';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { of } from 'rxjs';
+import { hasIdentity } from '@blockframes/utils/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ import { of } from 'rxjs';
 export class IdentityGuard extends CollectionGuard<AuthState> {
   constructor(
     service: AuthService,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private query: AuthQuery, 
   ) {
     super(service);
   }
@@ -25,6 +27,8 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
         };
         return this.service.sync().pipe(
           catchError(() => Promise.resolve(true)),
+          map(_ => this.query.user),
+          map(user => (hasIdentity(user)) ? '/' : true),
         );
       })
     );

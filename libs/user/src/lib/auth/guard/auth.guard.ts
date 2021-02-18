@@ -4,11 +4,8 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { hasIdentity } from '@blockframes/utils/helpers';
 
-// Verify if the user exists and has a name and surname.
-function hasIdentity(user: User) {
-  return !!user && !!user.firstName && !!user.lastName;
-}
 
 @Injectable({
   providedIn: 'root'
