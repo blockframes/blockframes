@@ -52,7 +52,7 @@ export class FileUploaderComponent implements OnInit {
   @Input() input: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
     const [ collection, label, docId, index] = value;
-    this.storagePath = getFileStoragePath(collection, label);
+    this.storagePath = getFileStoragePath(collection, label, docId);
     this.metadata = getFileMetadata(collection, label, docId, index);
   }
   @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {

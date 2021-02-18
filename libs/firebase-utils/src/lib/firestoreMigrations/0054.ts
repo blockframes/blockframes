@@ -1,11 +1,21 @@
 import { Firestore } from '@blockframes/firebase-utils';
 import { runChunks } from '../firebase-utils';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
-
+import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
-  if (!data.storagePath) data.storagePath = '';
+  if (!!data.storagePath) {
+    // Removing privacy prefix
+    const elements = data.storagePath.split('/');
+    if (privacies.some(privacy => privacy === elements[0])) {
+      elements.shift();
+    }
+    data.storagePath = elements.join('/');
+  } else {
+    data.storagePath = ''
+  }
+  
   return data;
 }
 

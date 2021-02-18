@@ -1,8 +1,6 @@
 
 import { ActivatedRoute } from '@angular/router';
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 
 import { hostedVideoTypes } from '@blockframes/utils/static-model/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -15,14 +13,12 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   styleUrls: ['./media-videos.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
+export class MovieFormMediaVideosComponent implements OnInit {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
 
   videoTypes = Object.keys(hostedVideoTypes);
-
-  private sub: Subscription;
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -33,10 +29,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   trackByIndex(index: number) { return index; }

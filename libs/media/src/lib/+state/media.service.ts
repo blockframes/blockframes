@@ -46,7 +46,7 @@ export class MediaService {
 
     const urls = params.map((param, index) => {
       if (tokens[index]) { param.s = tokens[index] };
-      return `${getImgIxResourceUrl(file.storagePath, param)} ${param.w}w`;
+      return `${getImgIxResourceUrl(file, param)} ${param.w}w`;
     })
 
     return urls.join(', ');
@@ -63,7 +63,7 @@ export class MediaService {
       parameters.s = token;
     }
 
-    return getImgIxResourceUrl(file.storagePath, parameters);
+    return getImgIxResourceUrl(file, parameters);
   }
 
   generateBackgroundImageUrl(file: StorageFile, p: ImageParameters): Promise<string> {
