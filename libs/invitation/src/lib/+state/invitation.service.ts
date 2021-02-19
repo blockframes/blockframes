@@ -110,7 +110,7 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        const app = getCurrentApp(this.routerQuery); // @TODO 4932 problem here if invite comes from CRM
+        const app = getCurrentApp(this.routerQuery); // @TODO #4932 problem here if invite comes from CRM
         return f({ emails: recipients, invitation, app }).toPromise();
 
       }

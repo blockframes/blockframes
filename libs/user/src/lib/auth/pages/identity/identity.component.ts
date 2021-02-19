@@ -12,7 +12,6 @@ import { OrganizationLiteForm } from '@blockframes/organization/forms/organizati
 import { IdentityForm } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
-import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'auth-identity',
@@ -35,6 +34,7 @@ export class IdentityComponent implements OnInit {
   public isTermsChecked: boolean;
   public showInvitationCodeField = false;
   public isOrgFromInvitation = false;
+  private existingUser = false;
   public isOrgFromAlgolia = true;
   private existingOrgId: string;
 
@@ -78,15 +78,14 @@ export class IdentityComponent implements OnInit {
   }
 
   private updateFormForNewUser() {
-    this.form.removeControl('generatedPassword');
+    this.form.get('generatedPassword').disable();
   }
 
   public showInvitationInputIfInvit(event: boolean) {
-    if (!this.form.get('generatedPassword')) {
-      this.form.addControl('generatedPassword', new FormControl('', Validators.required));
-    }
     this.showInvitationCodeField = event;
     if (event) {
+      this.existingUser = true;
+      this.form.get('generatedPassword').enable();
       this.form.get('email').disable();
     }
   }
@@ -105,6 +104,7 @@ export class IdentityComponent implements OnInit {
   public setOrgFromInvitation(org: AlgoliaOrganization) {
     this.isOrgFromAlgolia = false;
     this.isOrgFromInvitation = true;
+    this.existingUser = true;
     this.setOrg(org);
     this.cdr.markForCheck();
   }
@@ -123,7 +123,7 @@ export class IdentityComponent implements OnInit {
       return;
     }
 
-    if (!!this.query.user || !!this.isOrgFromInvitation) {
+    if (!!this.query.user || !!this.existingUser) {
       await this.update();
     } else {
       await this.create();
@@ -169,7 +169,6 @@ export class IdentityComponent implements OnInit {
         org.appAccess[this.app][appAccess] = true;
 
         await this.orgService.addOrganization(org, this.app, user);
-        // @TODO 4932 remove app-access page, guard & change email backend to admin (2 emails currently)?
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
         this.creating = false;
@@ -226,10 +225,31 @@ export class IdentityComponent implements OnInit {
         // We put invitation to accepted only if the invitation.type is joinOrganization.
         // Otherwise, user will have to create or join an org before accepting the invitation (to attend event for example)
         await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-      }
+        this.creating = false;
+        this.router.navigate(['/c/o']);
+      } else if (!!this.existingOrgId) {
+        try {
 
-      this.creating = false;
-      this.router.navigate(['/c/o']);
+          await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
+          this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+          this.creating = false;
+          return this.router.navigate(['c/organization/join-congratulations']);
+        } catch (error) {
+          this.snackBar.open(error.message, 'close', { duration: 2000 });
+        }
+      } else {
+        const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+
+        const org = createOrganization({ denomination, addresses, activity });
+
+        org.appAccess[this.app][appAccess] = true;
+        console.log(this.query.user)
+        await this.orgService.addOrganization(org, this.app, this.query.user);
+
+        this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
+        this.creating = false;
+        return this.router.navigate(['c/organization/create-congratulations']);
+      }
     } catch (error) {
       this.creating = false;
       this.snackBar.open(error.message, 'close', { duration: 5000 });
