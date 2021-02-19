@@ -24,10 +24,6 @@ export class FileExplorerListComponent {
     this.service.upload();
   }
 
-  public getMeta(index: number) {
-    return [ ...this.dir.meta, index ];
-  }
-
   public openView(item: Partial<StorageFile>, event: Event) {
     event.stopPropagation();
     if (!!item) {

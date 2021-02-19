@@ -75,16 +75,11 @@ export function getFileStoragePath(collection: CollectionHoldingFile, label: Fil
   return `${collection}/${docId}/${pathPart}`;
 }
 
-// Get the the field element or the array parent if index is not provided
-function listField(path: string, index?: number) {
-  return typeof index === 'number' ? `${path}[${index}]` : path;
-}
-
-export function getFileMetadata(collection: CollectionHoldingFile, label: FileLabel, docId: string, index?: number) {
+export function getFileMetadata(collection: CollectionHoldingFile, label: FileLabel, docId: string) {
   const metadatas: Record<CollectionHoldingFile, Partial<Record<FileLabel, FileMetaData>>> = {
     orgs: {
       logo: { uid: '', privacy: 'public', collection, docId, field: 'logo' },
-      notes: { uid: '', privacy: 'protected', collection, docId, field: listField('documents.notes', index) },
+      notes: { uid: '', privacy: 'protected', collection, docId, field: 'documents.notes' },
     },
     users: {
       avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' },
@@ -96,10 +91,10 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       scenario: { uid: '', privacy: 'public', collection, docId, field: 'promotional.scenario' },
       moodboard: { uid: '', privacy: 'public', collection, docId, field: 'promotional.moodboard' },
       'presentation_deck': { uid: '', privacy: 'public', collection, docId, field: 'promotional.presentation_deck' },
-      'still_photo': { uid: '', privacy: 'public', collection, docId, field: listField('promotional.still_photo', index) },
-      notes: { uid: '', privacy: 'public', collection, docId, field: listField('promotional.notes', index) },
+      'still_photo': { uid: '', privacy: 'public', collection, docId, field: 'promotional.still_photo' },
+      notes: { uid: '', privacy: 'public', collection, docId, field: 'promotional.notes' },
       screener: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.screener' },
-      otherVideo: { uid: '', privacy: 'public', collection, docId, field: listField('promotional.videos.otherVideos', index) },
+      otherVideo: { uid: '', privacy: 'public', collection, docId, field: 'promotional.videos.otherVideos' },
       salesPitch: { uid: '', privacy: 'public', collection, docId, field: 'promotional.salesPitch' },
     },
     campaigns: {
