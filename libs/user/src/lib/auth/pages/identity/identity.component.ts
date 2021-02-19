@@ -54,20 +54,19 @@ export class IdentityComponent implements OnInit {
   async ngOnInit() {
     const params = this.route.snapshot.queryParams;
 
-
     this.app = getCurrentApp(this.routerQuery);
     this.appName = getAppName(this.app).label;
 
-    if(!!params.code) {
+    if (!!params.code) {
       this.form.get('generatedPassword').setValue(params.code);
     }
 
     if (!!this.query.user) {
       // Updating user (invited)
       this.updateFormForExistingUser(this.query.user.email);
-    } else if(!!params.email) {
-      this.updateFormForExistingUser(params.email); 
-    }else {
+    } else if (!!params.email) {
+      this.updateFormForExistingUser(params.email);
+    } else {
       // Creating user
       this.updateFormForNewUser();
     }
@@ -75,7 +74,6 @@ export class IdentityComponent implements OnInit {
 
   private updateFormForExistingUser(email: string) {
     this.form.get('email').setValue(email);
-    this.form.get('email').disable();
     this.showInvitationCodeField = true;
   }
 

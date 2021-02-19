@@ -13,7 +13,7 @@ export const templateIds = {
     // Templates for informing new user that his account have been created
     credentials: {
       attendEvent: 'd-ce3e57248a694cefacad49bc4c820078',
-      joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
+      joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c' // @TODO 4932 we don't use pageURL var in template anymore. ask @vincent why
     },
   },
   // Templates for the org management flow

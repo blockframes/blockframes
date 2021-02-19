@@ -10,7 +10,7 @@ import { EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
-const USER_CREDENTIAL_INVITATION = '/auth/connexion#login';
+const USER_CREDENTIAL_INVITATION = '/auth/identity';
 export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
 
@@ -74,11 +74,11 @@ export function userInvite(
     userEmail: email,
     userPassword: password,
     orgName,
-    eventName: eventData.title || '',
-    eventStartDate: eventData.start || '',
-    eventEndDate: eventData.end || '',
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
-    sessionURL: eventData.id ? `${pageURL}/c/o/marketplace/event/${eventData.id}` : ''
+    eventName: eventData?.title || '',
+    eventStartDate: eventData?.start || '',
+    eventEndDate: eventData?.end || '',
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`,
+    sessionURL: eventData?.id ? `${pageURL}/c/o/marketplace/event/${eventData.id}` : ''
   };
   return { to: email, templateId, data };
 }
@@ -128,7 +128,7 @@ export function userJoinedYourOrganization(
   userFirstName: string,
   userLastName: string,
   userEmail: string):
-EmailTemplateRequest {
+  EmailTemplateRequest {
   const data = {
     adminFirstName,
     orgDenomination,
@@ -160,7 +160,7 @@ export function requestToJoinOrgDeclined(toUser: PublicUser, orgName: string): E
 }
 
 /** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization(admin: PublicUser, userRemoved: PublicUser ): EmailTemplateRequest {
+export function userLeftYourOrganization(admin: PublicUser, userRemoved: PublicUser): EmailTemplateRequest {
   const data = {
     userFirstName: userRemoved.firstName,
     userLastName: userRemoved.lastName,
