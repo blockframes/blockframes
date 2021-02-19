@@ -166,7 +166,8 @@ export function getOrgModuleAccess(org: OrganizationDocument | Organization, _a?
  * For app Festival, publish status is "accepted", "submitted" for other apps
  */
 export function getMoviePublishStatus(a: App): StoreStatus {
-  return a === 'festival' ? 'accepted' : 'submitted';
+  if (a === 'festival' || a === 'catalog') return 'accepted';
+  return 'submitted';
 }
 
 /**
