@@ -35,6 +35,14 @@ references:
     - staging
 
 commands:
+  select_environment:
+    description: Configure tools to use a project ID
+    steps:
+      - run: npm run backend-ops use ${PROJECT_ID}
+      - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> ~/.bashrc
+      - run: . ./.env && echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$GOOGLE_APPLICATION_CREDENTIALS\"" >> ~/.bashrc
+      - run: gcloud info
+      - run: gsutil ls
   checkout_project:
     description: 'Checkout the project with caching'
     steps:
@@ -53,7 +61,7 @@ commands:
           keys:
             - build-v1-
       - run: touch .env # dotenv will crash without this
-      - run: cp $ENV_TS env/env.ts # required for the typechecking & file rewrite to work
+      - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
@@ -81,10 +89,7 @@ commands:
         - run: echo $FIREBASE_PRODUCTION_SERVICE_ACCOUNT > tools/credentials/prod-sak.json
         - run: echo $FIREBASE_STAGING_SERVICE_ACCOUNT > tools/credentials/staging-sak.json
         - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
-        - run: npm run backend-ops use ${PROJECT_ID}
-        - run: . ./.env
-        - run: gcloud info
-        - run: gsutil ls
+        - select_environment
   save_build_cache:
     description: 'Saves NX build cache for faster building'
     steps:
@@ -144,8 +149,8 @@ jobs:
       NG_CONFIG: ''
     steps:
       - prepare_environment
-      - run: npm run backend-ops use $(cut -d'/' -f2\<<<$CIRCLE_BRANCH)
-      - run: . ./.env
+      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> ~/.bashrc
+      - select_environment
       - build_deploy_prepare
       - slack/notify:
           message: 'PFT complete for << pipeline.git.branch >>'
@@ -155,8 +160,8 @@ jobs:
       NG_CONFIG: ''
     steps:
       - prepare_environment
-      - run: npm run backend-ops use $(cut -d'/' -f2\<<<$CIRCLE_BRANCH)
-      - run: . ./.env
+      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> ~/.bashrc
+      - select_environment
       - run: npm run backend-ops prepareForTestingBeta
       - slack/status
       - slack/notify:
