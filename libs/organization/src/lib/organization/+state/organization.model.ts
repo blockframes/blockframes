@@ -30,11 +30,8 @@ export function createOrganization(
 /** Convert an organization object into a public organization */
 export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
   return {
-    activity: org.activity || null,
-    addresses: org.addresses ?? null,
-    appAccess: org.appAccess ?? null,
-    denomination: createDenomination(org.denomination),
     id: org.id ?? '',
+    denomination: createDenomination(org.denomination),
     logo: org.logo ?? '',
   }
 }

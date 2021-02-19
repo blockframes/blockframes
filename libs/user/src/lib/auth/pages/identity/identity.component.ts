@@ -11,7 +11,8 @@ import { AlgoliaIndex, AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser } from '@blockframes/user/types';
-import { createOrganization, OrganizationService, PublicOrganization } from '@blockframes/organization/+state';
+import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'auth-identity',
@@ -73,6 +74,9 @@ export class IdentityComponent implements OnInit {
   }
 
   public showInvitationInputIfInvit(event: boolean) {
+    if (!this.form.get('generatedPassword')) {
+      this.form.addControl('generatedPassword', new FormControl('', Validators.required));
+    }
     this.showInvitationCodeField = event;
     this.form.get('email').disable();
   }
@@ -88,23 +92,10 @@ export class IdentityComponent implements OnInit {
     this.existingOrgId = result.objectID;
   }
 
-  public setOrgFromInvitation(org: PublicOrganization) {
+  public setOrgFromInvitation(org: AlgoliaOrganization) {
     this.isOrgFromAlgolia = false;
     this.isOrgFromInvitation = true;
-    console.log(org)
-    this.orgForm.reset();
-    this.orgForm.disable();
-    this.orgForm.get('denomination').get('full').setValue(org.denomination.full);
-    this.orgForm.get('activity').setValue(org.activity);
-    this.orgForm.get('addresses').get('main').get('country').setValue(org.addresses.main.country);
-    if (org.appAccess[this.app].marketplace) {
-      this.orgForm.get('appAccess').setValue('marketplace');
-    }
-    if (org.appAccess[this.app].dashboard) {
-      this.orgForm.get('appAccess').setValue('dashboard');
-    }
-    this.showOrgForm = true;
-    this.existingOrgId = org.id;
+    this.setOrg(org);
     this.cdr.markForCheck();
   }
 
