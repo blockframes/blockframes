@@ -47,7 +47,7 @@ describe('Organiser invites other users to private screening', () => {
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar();
     cy.log(`Create screening {${TestEVENT.event}}`)
-    const p3: EventEditPage = p2.createDetailedEvent(NOW);
+    const p3: EventEditPage = p2.createDetailedEvent(NOW, 'Screening', TestEVENT.event);
     p3.addEventTitle(TestEVENT.event);
     p3.checkAllDay();
     p3.selectMovie(TestEVENT.movie.title.international);
