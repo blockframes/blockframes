@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { OrganizationLiteForm } from '@blockframes/organization/forms/organizati
 import { IdentityForm } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'auth-identity',
@@ -32,7 +33,9 @@ export class IdentityComponent implements OnInit {
 
   public orgForm = new OrganizationLiteForm();
   public isTermsChecked: boolean;
-  public showPreGeneratedPasswordField = false;
+  public showInvitationCodeField = false;
+  public isOrgFromInvitation = false;
+  public isOrgFromAlgolia = true;
   private existingOrgId: string;
 
   constructor(
@@ -43,6 +46,7 @@ export class IdentityComponent implements OnInit {
     private invitationService: InvitationService,
     private orgService: OrganizationService,
     private routerQuery: RouterQuery,
+    private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
   ) { }
 
@@ -72,11 +76,21 @@ export class IdentityComponent implements OnInit {
   private updateFormForExistingUser(email: string) {
     this.form.get('email').setValue(email);
     this.form.get('email').disable();
-    this.showPreGeneratedPasswordField = true;
+    this.showInvitationCodeField = true;
   }
 
   private updateFormForNewUser() {
     this.form.removeControl('generatedPassword');
+  }
+
+  public showInvitationInputIfInvit(event: boolean) {
+    if (!this.form.get('generatedPassword')) {
+      this.form.addControl('generatedPassword', new FormControl('', Validators.required));
+    }
+    this.showInvitationCodeField = event;
+    if (event) {
+      this.form.get('email').disable();
+    }
   }
 
   public setOrg(result: AlgoliaOrganization) {
@@ -88,6 +102,13 @@ export class IdentityComponent implements OnInit {
     this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
     this.showOrgForm = true;
     this.existingOrgId = result.objectID;
+  }
+
+  public setOrgFromInvitation(org: AlgoliaOrganization) {
+    this.isOrgFromAlgolia = false;
+    this.isOrgFromInvitation = true;
+    this.setOrg(org);
+    this.cdr.markForCheck();
   }
 
   public createOrg(orgName: string) {
@@ -104,7 +125,7 @@ export class IdentityComponent implements OnInit {
       return;
     }
 
-    if (!!this.query.user) {
+    if (!!this.query.user || !!this.isOrgFromInvitation) {
       await this.update();
     } else {
       await this.create();
@@ -150,6 +171,7 @@ export class IdentityComponent implements OnInit {
         org.appAccess[this.app][appAccess] = true;
 
         await this.orgService.addOrganization(org, this.app, user);
+        // @TODO 4932 remove app-access page, guard & change email backend to admin (2 emails currently)?
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
         this.creating = false;

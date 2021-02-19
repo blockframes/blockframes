@@ -5,10 +5,11 @@
   <p>Do you already have an account ? <a routerLink="/auth/connexion" >Login here</a></p>
   <mat-card>
     <form [formGroup]="form">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" required />
-      </mat-form-field>
+      <auth-email-input
+      (organization)="setOrgFromInvitation($event)"
+      (showInvitationInput)="showInvitationInputIfInvit($event)"
+      [emailForm]="form.get('email')"
+      ></auth-email-input>
 
       <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
@@ -25,24 +26,34 @@
         </mat-error>
       </mat-form-field>
 
-      <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"
-        hint='Please join an existing company account or create a new one.'
-        (selectionChange)="setOrg($event)"
-        (createFromSelection)="createOrg($event)">
-        <ng-template let-result>
-          <span>{{ result.name }}</span>
-        </ng-template>
-      </algolia-autocomplete>
+      <ng-container *ngIf="isOrgFromInvitation">
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name</mat-label>
+          <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
+        </mat-form-field>
+      </ng-container>
+
+      <ng-container *ngIf="isOrgFromAlgolia">
+        <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"
+          hint='Please join an existing company account or create a new one.'
+          (selectionChange)="setOrg($event)"
+          (createFromSelection)="createOrg($event)">
+          <ng-template let-result>
+            <span>{{ result.name }}</span>
+          </ng-template>
+        </algolia-autocomplete>
+      </ng-container>
 
      <organization-lite-form *ngIf="showOrgForm" [form]="orgForm"></organization-lite-form>
 
-      <ng-container *ngIf="showPreGeneratedPasswordField">
+      <ng-container *ngIf="showInvitationCodeField">
         <mat-form-field appearance="outline">
-          <mat-label>Pre generated password</mat-label>
-          <input matInput type="password" placeholder="Your pre generated password" formControlName="generatedPassword"
+          <mat-label>Invitation Code</mat-label>
+          <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
             required />
         </mat-form-field>
       </ng-container>
+
       <password-confirm formControlName="password"></password-confirm>
       <div>
         <auth-accept-conditions [control]="form.get('termsOfUse')">
