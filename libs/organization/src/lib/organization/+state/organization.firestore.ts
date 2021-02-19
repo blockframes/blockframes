@@ -15,12 +15,10 @@ interface Denomination {
 
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {
-  activity?: OrgActivity
-  addresses?: AddressSet;
-  appAccess?: OrgAppAccess;
-  denomination: Denomination;
   id: string;
+  denomination: Denomination;
   logo?: string;
+  activity?: OrgActivity
 }
 
 export interface OrgMedias {
@@ -30,6 +28,8 @@ export interface OrgMedias {
 /** Document model of an Organization */
 export interface OrganizationBase<D> extends PublicOrganization {
   _meta?: DocumentMeta<D>;
+  addresses: AddressSet;
+  appAccess: OrgAppAccess;
   bankAccounts?: BankAccount[]; // @TODO (#2692)
   cart: CatalogCart[];
   description?: string;

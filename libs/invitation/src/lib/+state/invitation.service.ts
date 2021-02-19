@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { OrganizationQuery, createPublicOrganization, Organization, PublicOrganization } from '@blockframes/organization/+state';
+import { OrganizationQuery, createPublicOrganization, Organization } from '@blockframes/organization/+state';
 import { AuthQuery, User } from '@blockframes/auth/+state';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -11,6 +11,7 @@ import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -65,7 +66,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
    * Return false if there is no invitation at all.
    */
-  public async getInvitationLinkedToAnEmail(email: string): Promise<PublicOrganization | boolean> {
+  public async getInvitationLinkedToAnEmail(email: string): Promise<AlgoliaOrganization | boolean> {
     return await this.getInvitationLinkedToEmail(email).toPromise();
   }
 

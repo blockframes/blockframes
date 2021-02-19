@@ -1,7 +1,7 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
-import { InvitationOrUndefined, OrganizationDocument, PublicOrganization } from './data/types';
+import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
@@ -14,6 +14,8 @@ import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@block
 import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { invitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -212,25 +214,25 @@ export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
   return invitationQuery.some(d => d.docs.length > 0);
 }
 
-export async function getInvitationLinkedToEmail(email: string): Promise<boolean | PublicOrganization> {
+export async function getInvitationLinkedToEmail(email: string): Promise<boolean | AlgoliaOrganization> {
   const db = admin.firestore();
   const invitationRef = await db.collection('invitations')
-  .where('toUser.email', '==', email)
-  .where('status', '==', 'pending')
-  .get();
+    .where('toUser.email', '==', email)
+    .where('status', '==', 'pending')
+    .get();
   const joinOrgInvit = invitationRef.docs.filter(invit => invit.data().type === 'joinOrganization');
 
   // We want to return invitation to join organization in priority
   if (joinOrgInvit.length) {
     const invit = joinOrgInvit[0].data();
     const org = await getDocument<OrganizationDocument>(`orgs/${invit.fromOrg.id}`);
-    return createPublicOrganizationDocument(org);
+    return createAlgoliaOrganization(org);
   }
 
   // Otherwise, we return the fact we found an invitation and we can display the invitation code input in the front
   for (const doc of invitationRef.docs) {
     if (!!doc.data() && doc.data().type !== 'joinOrganization')
-    return true;
+      return true;
   }
 
   return false;
