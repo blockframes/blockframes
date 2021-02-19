@@ -32,7 +32,9 @@ export class IdentityComponent implements OnInit {
 
   public orgForm = new OrganizationLiteForm();
   public isTermsChecked: boolean;
-  public showPreGeneratedPasswordField = false;
+  public showInvitationCodeField = false;
+  public isOrgFromInvitation = false;
+  public isOrgFromAlgolia = true;
   private existingOrgId: string;
 
   constructor(
@@ -49,7 +51,6 @@ export class IdentityComponent implements OnInit {
 
 
   ngOnInit() {
-
     this.app = getCurrentApp(this.routerQuery);
     this.appName = getAppName(this.app).label;
 
@@ -65,11 +66,16 @@ export class IdentityComponent implements OnInit {
   private updateFormForExistingUser() {
     this.form.get('email').setValue(this.query.user.email);
     this.form.get('email').disable();
-    this.showPreGeneratedPasswordField = true;
+    this.showInvitationCodeField = true;
   }
 
   private updateFormForNewUser() {
     this.form.removeControl('generatedPassword');
+  }
+
+  public showInvitationInputIfInvit(event: boolean) {
+    this.showInvitationCodeField = event;
+    this.form.get('email').disable();
   }
 
   public setOrg(result: AlgoliaOrganization) {
@@ -84,13 +90,20 @@ export class IdentityComponent implements OnInit {
   }
 
   public setOrgFromInvitation(org: PublicOrganization) {
+    this.isOrgFromAlgolia = false;
+    this.isOrgFromInvitation = true;
     console.log(org)
     this.orgForm.reset();
     this.orgForm.disable();
     this.orgForm.get('denomination').get('full').setValue(org.denomination.full);
     this.orgForm.get('activity').setValue(org.activity);
     this.orgForm.get('addresses').get('main').get('country').setValue(org.addresses.main.country);
-    this.orgForm.get('appAccess').setValue(org.appAccess[this.app][0]);
+    if (org.appAccess[this.app].marketplace) {
+      this.orgForm.get('appAccess').setValue('marketplace');
+    }
+    if (org.appAccess[this.app].dashboard) {
+      this.orgForm.get('appAccess').setValue('dashboard');
+    }
     this.showOrgForm = true;
     this.existingOrgId = org.id;
     this.cdr.markForCheck();
@@ -110,7 +123,7 @@ export class IdentityComponent implements OnInit {
       return;
     }
 
-    if (!!this.query.user) {
+    if (!!this.query.user || !!this.isOrgFromInvitation) {
       await this.update();
     } else {
       await this.create();
