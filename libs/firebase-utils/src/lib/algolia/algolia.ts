@@ -56,7 +56,20 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     return Promise.resolve(true);
   }
 
-  const orgRecord: AlgoliaOrganization = {
+  const orgRecord = createAlgoliaOrganization(org);
+
+  /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
+  const orgAppAccess = findOrgAppAccess(org)
+
+  // Update algolia's index
+  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
+
+  return Promise.all(promises)
+}
+
+
+export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrganization {
+  return {
     objectID: org.id,
     name: orgName(org),
     appModule: getOrgModuleAccess(org),
@@ -70,14 +83,6 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     },
     activity: org.activity
   };
-
-  /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-  const orgAppAccess = findOrgAppAccess(org)
-
-  // Update algolia's index
-  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
-
-  return Promise.all(promises)
 }
 
 // ------------------------------------

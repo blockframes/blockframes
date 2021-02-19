@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { PublicOrganization } from "@blockframes/organization/+state";
 import { InvitationService } from "@blockframes/invitation/+state";
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'auth-email-input',
@@ -11,10 +11,9 @@ import { InvitationService } from "@blockframes/invitation/+state";
 })
 export class EmailInputComponent implements OnInit {
 
-  @Output() private readonly organization = new EventEmitter<PublicOrganization>();
+  @Output() private readonly organization = new EventEmitter<AlgoliaOrganization>();
   @Output() showInvitationInput = new EventEmitter<boolean>(false);
-
-  public emailForm = new FormControl();
+  @Input() emailForm: FormControl;
 
   constructor(private invitationService: InvitationService) { }
 

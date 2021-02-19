@@ -17,7 +17,7 @@ interface Denomination {
 export interface PublicOrganization {
   id: string;
   denomination: Denomination;
-  logo: string;
+  logo?: string;
   activity?: OrgActivity
 }
 

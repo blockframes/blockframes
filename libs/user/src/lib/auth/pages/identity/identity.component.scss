@@ -21,6 +21,11 @@ h1 {
   margin-top: 80px;
 }
 
+organization-lite-form {
+  display: block;
+  margin-bottom: 24px;
+}
+
 @include layout-bp(xs) {
   form {
     width: 80%;
