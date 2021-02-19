@@ -1,13 +1,10 @@
-import { Component, ChangeDetectionStrategy, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSidenav } from '@angular/material/sidenav';
-import { SignupForm } from '../../forms/signup.form';
 import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+
 
 @Component({
   selector: 'auth-login-view',
@@ -16,10 +13,6 @@ import { getCurrentApp } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('signinSidenav') loginSidenav: MatSidenav;
-  @ViewChild('signupSidenav') signupSidenav: MatSidenav;
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
-
   public isSignin = true;
   private snackbarDuration = 8000;
 
@@ -27,16 +20,11 @@ export class LoginComponent implements OnInit {
     private service: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery,
   ) { }
 
   ngOnInit() {
-    this.isSignin = !(this.route.snapshot.fragment === 'login');
-    this.isSignin
-      ? this.dynTitle.setPageTitle('Create an account')
-      : this.dynTitle.setPageTitle('Login')
+    this.dynTitle.setPageTitle('Login')
   }
 
   public async signin(signinForm: SigninForm) {
@@ -60,55 +48,5 @@ export class LoginComponent implements OnInit {
       console.error(err); // let the devs see what happened
       this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
     }
-  }
-
-  public async signup(signupForm: SignupForm) {
-    if (signupForm.invalid) {
-      this.snackBar.open('Information not valid.', 'close', { duration: this.snackbarDuration });
-      return;
-    }
-    try {
-      const { email, password, firstName, lastName } = signupForm.value;
-      const createdFrom = getCurrentApp(this.routerQuery);
-      const privacyPolicy = await this.service.getPrivacyPolicy();
-      const ctx = {
-        firstName,
-        lastName,
-        _meta: { createdFrom },
-        privacyPolicy
-      };
-      await this.service.signup(email.trim(), password, { ctx });
-      // Reset page title to default
-      this.dynTitle.setPageTitle();
-      const redirectTo = localStorage.getItem('redirectTo');
-      if (redirectTo) {
-        localStorage.removeItem('redirectTo');
-        this.router.navigate([redirectTo]);
-      } else {
-        this.router.navigate(['c']);
-      }
-    } catch (err) {
-
-      switch (err.code) {
-        case 'auth/email-already-in-use':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration })
-          break;
-        default:
-          console.error(err); // let the devs see what happened
-          this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
-          break;
-      }
-    }
-  }
-
-  get align() {
-    return this.isSignin ? 'end center' : 'start center';
-  }
-
-  public refreshState() {
-    this.isSignin = !this.isSignin;
-    this.isSignin
-      ? this.dynTitle.setPageTitle('Create an account')
-      : this.dynTitle.setPageTitle('Login')
   }
 }

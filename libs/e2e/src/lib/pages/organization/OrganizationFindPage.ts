@@ -1,6 +1,6 @@
 import { SEC } from '../../utils/env';
 
-const PATH = '/c/organization/find';
+const PATH = '/c/organization/find'; //@TODO #4932 update E2E tests
 
 export default class OrganizationFindPage {
   constructor() {

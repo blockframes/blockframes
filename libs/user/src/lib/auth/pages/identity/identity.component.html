@@ -1,6 +1,8 @@
 <section fxLayout="column" fxLayoutAlign="center center">
-  <h1>Join {{ appName }}</h1>
-  <img asset="join_orga.webp" alt="Join Organization Illustration">
+  <app-logo></app-logo>
+  <h1>Create your account</h1>
+  <p>Please fill in the form to join the {{ appName }} platform</p>
+  <p>Do you already have an account ? <a routerLink="/auth/connexion" >Login here</a></p>
   <mat-card>
     <form [formGroup]="form">
       <auth-email-input

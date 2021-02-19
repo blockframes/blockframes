@@ -33,6 +33,7 @@ import { PrivacyPolicyModule } from './components/privacy-policy/privacy-policy.
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
 import { EmailInputModule } from '@blockframes/auth/components/email-input/email-input.module';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Guards
 import { IdentityGuard } from './guard/identity.guard';
@@ -71,6 +72,7 @@ export const AuthRoutes: Routes = [
     AlgoliaAutocompleteModule,
     OrganizationLiteFormModule,
     EmailInputModule,
+    AppLogoModule,
 
     // Material
     MatSnackBarModule,

@@ -3,7 +3,7 @@ import { Organization } from '../../utils/type';
 import { setForm, FormOptions } from '../../utils/functions';
 import { SEC } from '../../utils/env';
 
-const PATH = '/c/organization/create';
+const PATH = '/c/organization/create'; //@TODO #4932 update E2E tests
 
 export default class OrganizationCreatePage {
   constructor() {
