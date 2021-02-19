@@ -39,8 +39,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
         'asc(name)'
       ]
     };
-    await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);
     await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
+    await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);
 
     const { db } = loadAdminServices();
     const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
@@ -72,8 +72,8 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
     // reset config, clear index and fill it up from the db (which is the only source of truth)
     const config = movieConfig(appConfig)
 
-    await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
     await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
+    await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
 
     const { db } = loadAdminServices();
     const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300);
@@ -135,8 +135,8 @@ export async function upgradeAlgoliaUsers() {
     ],
   };
 
-  await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
+  await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
   const usersIterator = getCollectionInBatches<PublicUser>(db.collection('users'), 'uid', 300)

@@ -17,10 +17,13 @@ export class CrmFormDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      question: string,
+      title: string,
+      subTitle?: string,
+      text?: string,
       warning?: string,
       simulation?: string[],
       confirmationWord: string,
+      confirmButtonText: string,
       onConfirm?: () => void
     },
     public dialogRef: MatDialogRef<CrmFormDialogComponent>,

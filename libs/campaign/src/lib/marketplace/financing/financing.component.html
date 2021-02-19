@@ -6,14 +6,14 @@
     <section id="budget" *ngIf="campaign.budget | apexBudget as options">
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Budget</h2>
-        <ng-container *ngIf="campaign.files.budget | getUrl | async as file">
-          <a mat-button [href]="file" target="_blank">
+        <ng-container *ngIf="(campaign.files.budget)">
+          <a mat-button target="_blank" (click)="consentBeforeDownload()">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download Budget</span>
           </a>
         </ng-container>
       </header>
-
+      <!-- <a mat-button [href]="file" target="_blank" -->
       <article>
         <table>
           <ng-container *ngFor="let row of options.data; let i = index">

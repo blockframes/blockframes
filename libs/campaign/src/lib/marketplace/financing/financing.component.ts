@@ -7,6 +7,11 @@ import { switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 import { ThemeService } from '@blockframes/ui/theme';
 
+import { ConsentsService } from '@blockframes/consents/+state/consents.service';
+import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
   label: 'Development',
@@ -32,6 +37,7 @@ const budgetData: { serie: keyof Budget, label: string }[] = [{
 })
 export class MarketplaceFinancingComponent implements OnInit {
   public totalFundings: number;
+  public acceptConsent = false;
   campaign$: Observable<Campaign>;
   budgetData = budgetData;
   formatter = {
@@ -47,6 +53,10 @@ export class MarketplaceFinancingComponent implements OnInit {
     @Inject(LOCALE_ID) private locale,
     private service: CampaignService,
     private route: RouterQuery,
+
+    private queryOrg: OrganizationQuery,
+    private consentsService: ConsentsService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -54,6 +64,39 @@ export class MarketplaceFinancingComponent implements OnInit {
       switchMap(id => this.service.valueChanges(id)),
       tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
     );
+  }
+
+  consentBeforeDownload(file){
+    const orgId = this.queryOrg.getActiveId();
+    const a = document.createElement('a');
+    const content = a.innerHTML;
+    // a.innerHTML = ;
+    const linkText = document.createTextNode("Confidentiality Policy");
+    // a.appendChild(linkText);
+    // a.title = "Confidentiality Policy";
+    // a.href = "https://www.mediafinanciers.com/c/o/marketplace/privacy";
+
+    // document.body.appendChild(a);
+    a.innerHTML += `<a href="https://www.mediafinanciers.com/c/o/marketplace/privacy"> Confidentiality Policy </a>`;
+
+
+    // if(!!File){
+      this.dialog.open(CrmFormDialogComponent, {
+        data: {
+          title: 'Confidentiality Reminder',
+          subTitle: 'You are about to download a confidential document. Please make sure that you are aware of our '+console.log(a)+' before doing so.',
+          text: 'By submitting your project, you assume the responsibility of disclosing all of the information previously filled out to potential future investors. Before submitting your project, please confirm by writing “I AGREE” in the field below.',
+          confirmationWord: 'i agree',
+          confirmButtonText: 'Confirm and download',
+          onConfirm: async () => {
+
+              await this.consentsService.createConsent('access', orgId, file);
+              window.location.href = file;
+
+          }
+        }
+      })
+    // }
   }
 }
 
