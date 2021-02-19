@@ -200,16 +200,20 @@ export class IdentityComponent implements OnInit {
 
       this.creating = true;
 
+      const { generatedPassword, password, firstName, lastName } = this.form.value;
+      const email = this.form.get('email').value; // To retreive value even if control is disabled
+
       await this.authService.updatePassword(
-        this.form.get('generatedPassword').value,
-        this.form.get('password').value
+        generatedPassword,
+        password,
+        email
       );
 
       const privacyPolicy = await this.authService.getPrivacyPolicy();
       await this.authService.update({
         _meta: createDocumentMeta({ createdFrom: this.app }),
-        firstName: this.form.get('firstName').value,
-        lastName: this.form.get('lastName').value,
+        firstName,
+        lastName,
         privacyPolicy: privacyPolicy,
       });
 
