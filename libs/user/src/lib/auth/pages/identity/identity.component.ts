@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -42,26 +42,35 @@ export class IdentityComponent implements OnInit {
     private router: Router,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private route: ActivatedRoute,
   ) { }
 
 
-  ngOnInit() {
+  async ngOnInit() {
+    const params = this.route.snapshot.queryParams;
+
 
     this.app = getCurrentApp(this.routerQuery);
     this.appName = getAppName(this.app).label;
 
+    if(!!params.code) {
+      this.form.get('generatedPassword').setValue(params.code);
+    }
+
     if (!!this.query.user) {
       // Updating user (invited)
-      this.updateFormForExistingUser();
-    } else {
+      this.updateFormForExistingUser(this.query.user.email);
+    } else if(!!params.email) {
+      this.updateFormForExistingUser(params.email); 
+    }else {
       // Creating user
       this.updateFormForNewUser();
     }
   }
 
-  private updateFormForExistingUser() {
-    this.form.get('email').setValue(this.query.user.email);
+  private updateFormForExistingUser(email: string) {
+    this.form.get('email').setValue(email);
     this.form.get('email').disable();
     this.showPreGeneratedPasswordField = true;
   }
