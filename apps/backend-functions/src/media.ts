@@ -300,14 +300,14 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard.storagePath);
     }
 
-    if (needsToBeCleaned(before.promotional.videos?.screener?.ref, after.promotional.videos?.screener?.ref)) {
-      mediaToDelete.push(before.promotional.videos.screener.ref);
+    if (needsToBeCleaned(before.promotional.videos?.screener?.storagePath, after.promotional.videos?.screener?.storagePath)) {
+      mediaToDelete.push(before.promotional.videos.screener.storagePath);
     }
 
     if (before.promotional.videos?.otherVideos?.length) {
       before.promotional.videos.otherVideos.forEach(vb => {
-        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.ref === vb.ref)) {
-          mediaToDelete.push(vb.ref);
+        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.storagePath === vb.storagePath)) {
+          mediaToDelete.push(vb.storagePath);
         }
       });
     }
@@ -327,7 +327,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
         const noteBefore = note;
         const noteAfter = after.promotional.notes[index];
         if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
-          mediaToDelete.push(noteBefore.ref);
+          mediaToDelete.push(noteBefore.storagePath);
         }
       });
     }
@@ -354,12 +354,12 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard.storagePath);
     }
 
-    if (!!before.promotional.videos?.screener?.ref) {
-      mediaToDelete.push(before.promotional.videos.screener.ref);
+    if (!!before.promotional.videos?.screener?.storagePath) {
+      mediaToDelete.push(before.promotional.videos.screener.storagePath);
     }
 
     if (before.promotional.videos?.otherVideos?.length) {
-      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.ref));
+      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.storagePath));
     }
 
     if (before.promotional.still_photo?.length) {
@@ -367,7 +367,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (before.promotional.notes?.length) {
-      before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
+      before.promotional.notes.forEach(note => mediaToDelete.push(note.storagePath));
     }
   }
 
