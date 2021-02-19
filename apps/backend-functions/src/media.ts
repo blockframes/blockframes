@@ -104,7 +104,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
     const segments = data.name.split('/');
     segments.shift(); // remove tmp/
     const finalPath = segments.join('/');
-    const to = bucket.file(finalPath);
+    const to = bucket.file(`${metadata.privacy}/${finalPath}`);
 
     await file.copy(to);
 
@@ -220,7 +220,7 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
     // Check if avatar have been changed/removed
-    if (!!before.avatar && (before.avatar.storagePath !== after.avatar.storagePath || after.avatar.storagePath === '')) { // Avatar was previously setted and was updated or removed
+    if (!!before.avatar?.storagePath && (before.avatar.storagePath !== after.avatar.storagePath || after.avatar.storagePath === '')) { // Avatar was previously setted and was updated or removed
       mediaToDelete.push(before.avatar.storagePath);
     }
   } else { // Deleting
@@ -239,7 +239,7 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
   const mediaToDelete: string[] = [];
   if (!!after) { // Updating
-    if (!!before.logo && (before.logo.storagePath !== after.logo.storagePath || after.logo.storagePath === '')) {
+    if (!!before.logo?.storagePath && (before.logo.storagePath !== after.logo.storagePath || after.logo.storagePath === '')) {
       mediaToDelete.push(before.logo.storagePath);
     }
 
