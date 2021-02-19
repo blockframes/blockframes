@@ -692,7 +692,7 @@ export const territories = {
   "puerto-rico": "Puerto Rico",
   qatar: "Qatar",
   romania: "Romania",
-  russia: "Russian",
+  russia: "Russia",
   rwanda: "Rwanda",
   reunion: "Réunion",
   "saint-barthelemy": "Saint Barthélemy",
