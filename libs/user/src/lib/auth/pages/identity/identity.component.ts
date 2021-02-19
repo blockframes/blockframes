@@ -227,6 +227,9 @@ export class IdentityComponent implements OnInit {
         await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
         this.creating = false;
         this.router.navigate(['/c/o']);
+      } else if (!!this.query.user.orgId) {
+        this.creating = false;
+        this.router.navigate(['/c/o']);
       } else if (!!this.existingOrgId) {
         try {
 
