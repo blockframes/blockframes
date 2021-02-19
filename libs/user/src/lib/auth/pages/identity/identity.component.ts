@@ -78,7 +78,9 @@ export class IdentityComponent implements OnInit {
       this.form.addControl('generatedPassword', new FormControl('', Validators.required));
     }
     this.showInvitationCodeField = event;
-    this.form.get('email').disable();
+    if (event) {
+      this.form.get('email').disable();
+    }
   }
 
   public setOrg(result: AlgoliaOrganization) {
