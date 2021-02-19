@@ -41,7 +41,7 @@ commands:
       - run:
           name: 'Exit if run against production - failsafe'
           command: | # ? [[ "blockframes" == "blockframes" ]] && exit 1 || exit 0
-            if ["$PROJECT_ID" == "blockframes"]; then
+            if [ "$PROJECT_ID" == "blockframes" ]; then
               echo "PROJECT ID IS BLOCKFRAMES - DO NOT RUN ON PRODUCTION ENV!";
               exit 1;
             else
