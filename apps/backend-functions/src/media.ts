@@ -8,8 +8,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
-import { Meeting, Screening } from '@blockframes/event/+state/event.firestore';
-import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
+import { PublicUser, User } from '@blockframes/user/types';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
@@ -124,7 +123,16 @@ export async function linkFile(data: storage.ObjectMetadata) {
       storagePath: finalPath,
     }
 
-    set(doc, metadata.field, uploadData); // update the whole doc with only the new storagePath & extraData
+
+    let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
+
+    if (Array.isArray(fieldValue)) {
+      fieldValue.push(uploadData);
+    } else {
+      fieldValue = uploadData;
+    }
+
+    set(doc, metadata.field, fieldValue);
 
     await docRef.update(doc);
 

@@ -5,7 +5,7 @@
       <bf-form-list [form]="form.promotional.get('notes')">
         <ng-template itemRef let-note>{{ note.firstName }} - {{ note.lastName }} - {{ note.role | titlecase }} -
           {{ note.ref?.fileName | fileName | maxLength: 30 }}</ng-template>
-        <ng-template formView let-noteForm let-index="index">
+        <ng-template formView let-noteForm>
           <article fxLayout="column" fxLayoutGap="24px">
             <form-display-name [form]="noteForm"></form-display-name>
             <mat-form-field appearance="outline">
@@ -16,7 +16,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <file-uploader test-id="intent-note" [form]="noteForm" [meta]="['movies', 'notes', movieId, index]"
+            <file-uploader test-id="intent-note" [form]="noteForm" [meta]="['movies', 'notes', movieId]"
               accept="pdf">
             </file-uploader>
             <div fxLayout="column" class="captions">

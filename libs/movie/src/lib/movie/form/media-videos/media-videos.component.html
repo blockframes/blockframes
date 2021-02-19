@@ -36,7 +36,7 @@
         <ng-template itemRef let-video>
           {{ video.type | titlecase }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
         </ng-template>
-        <ng-template formView let-activeForm let-index="index">
+        <ng-template formView let-activeForm>
           <article fxLayout="column">
             <span fxFlex fxLayout="row" fxLayoutGap="16px">
               <mat-form-field appearance="outline" fxFlex>
@@ -52,7 +52,7 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <file-uploader [form]="activeForm" [meta]="['movies', 'otherVideos', movieId, index]" accept="video">
+            <file-uploader [form]="activeForm" [meta]="['movies', 'otherVideos', movieId]" accept="video">
               <h3 title>Upload Video</h3>
             </file-uploader>
 

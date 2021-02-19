@@ -50,10 +50,10 @@ export class FileUploaderComponent implements OnInit {
 
   @Input() form: StorageFileForm;
   @Input() input: number;
-  @Input() set meta(value: [CollectionHoldingFile, FileLabel, string] | [CollectionHoldingFile, FileLabel, string, number]) {
-    const [ collection, label, docId, index] = value;
+  @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
+    const [ collection, label, docId ] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
-    this.metadata = getFileMetadata(collection, label, docId, index);
+    this.metadata = getFileMetadata(collection, label, docId);
   }
   @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]

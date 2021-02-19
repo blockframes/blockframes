@@ -14,14 +14,14 @@
 
       <!-- Image -->
       <ng-container *ngIf="dir.type === 'image'">
-        <image-uploader [form]="activeForm" [meta]="getMeta(index)" [ratio]="dir.ratio">
+        <image-uploader [form]="activeForm" [meta]="dir.meta" [ratio]="dir.ratio">
           <h3 title>{{ dir.name }}</h3>
         </image-uploader>
       </ng-container>
 
       <!-- File -->
       <ng-container *ngIf="dir.type === 'file'">
-        <file-uploader [form]="activeForm" [meta]="getMeta(index)" [accept]="dir.accept" (change)="update()">
+        <file-uploader [form]="activeForm" [meta]="dir.meta" [accept]="dir.accept" (change)="update()">
           <h3 title>Upload File</h3>
         </file-uploader>
       </ng-container>
