@@ -39,8 +39,8 @@ commands:
     description: Configure tools to use a project ID
     steps:
       - run: npm run backend-ops use ${PROJECT_ID}
-      - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> ~/.bashrc
-      - run: . ./.env && echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$GOOGLE_APPLICATION_CREDENTIALS\"" >> ~/.bashrc
+      - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> $BASH_ENV
+      - run: . ./.env && echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$GOOGLE_APPLICATION_CREDENTIALS\"" >> $BASH_ENV
       - run: gcloud info
       - run: gsutil ls
   checkout_project:
@@ -149,7 +149,7 @@ jobs:
       NG_CONFIG: ''
     steps:
       - prepare_environment
-      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> ~/.bashrc
+      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
       - select_environment
       - build_deploy_prepare
       - slack/notify:
@@ -160,7 +160,7 @@ jobs:
       NG_CONFIG: ''
     steps:
       - prepare_environment
-      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> ~/.bashrc
+      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
       - select_environment
       - run: npm run backend-ops prepareForTestingBeta
       - slack/status
