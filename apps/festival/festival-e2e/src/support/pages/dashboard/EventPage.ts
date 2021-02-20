@@ -32,7 +32,7 @@ export default class EventPage {
     event.uncheckPrivate(isPublic);
 
     event.selectMovie(screeningName);
-    if (inviteeList.length != 0) {
+    if (inviteeList.length !== 0) {
       event.inviteUser(inviteeList);
       // We need to wait to fetch the invited user
       event.copyGuests();
