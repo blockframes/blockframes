@@ -29,15 +29,18 @@ export default class EventPage {
               inviteeList:string[] = []) {
     cy.log(`createEvent : {${eventTitle}}`);
     const event: EventEditPage = this.createDetailedEvent(eventDate, 'Screening', eventTitle);
-    event.uncheckPrivate(isPublic);
 
-    event.selectMovie(screeningName);
     if (inviteeList.length !== 0) {
       event.inviteUser(inviteeList);
       // We need to wait to fetch the invited user
       event.copyGuests();
       cy.wait(8000);
     }
+
+    event.checkAllDay();
+    event.uncheckPrivate(isPublic);
+
+    event.selectMovie(screeningName);
     event.saveEvent();
     cy.get('[svgicon="arrow_back"]').click();
   }
