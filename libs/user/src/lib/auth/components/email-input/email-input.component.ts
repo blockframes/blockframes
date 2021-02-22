@@ -18,6 +18,8 @@ export class EmailInputComponent implements OnInit {
   constructor(private invitationService: InvitationService) { }
 
   ngOnInit() {
+    if (!!this.emailForm.value) this.searchForInvitation();
+
     this.emailForm.valueChanges.subscribe(_ => {
       if (this.emailForm.valid) this.searchForInvitation();
     });

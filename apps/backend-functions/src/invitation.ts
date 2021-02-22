@@ -5,7 +5,7 @@ import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
-import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
+import { createPublicUser, PublicUser, User } from '@blockframes/user/+state/user.firestore';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
@@ -219,8 +219,11 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
   const invitationRef = await db.collection('invitations')
     .where('toUser.email', '==', email)
     .where('status', '==', 'pending')
+    .where('mode', '==', 'invitation')
+    .where('type', '==', 'joinOrganization')
     .get();
-  const joinOrgInvit = invitationRef.docs.filter(invit => invit.data().type === 'joinOrganization');
+
+  const joinOrgInvit = invitationRef.docs;
 
   // We want to return invitation to join organization in priority
   if (joinOrgInvit.length) {
@@ -229,10 +232,21 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
     return createAlgoliaOrganization(org);
   }
 
-  // Otherwise, we return the fact we found an invitation and we can display the invitation code input in the front
-  for (const doc of invitationRef.docs) {
-    if (!!doc.data() && doc.data().type !== 'joinOrganization')
-      return true;
+  const userRef = await db.collection('users').where('email', '==', email).get();
+  if (userRef.docs.length === 1) {
+    const user = userRef.docs[0].data();
+
+    if (!user.firstName && !user.lastName) {
+      if (!!user.orgId) {
+        // If user was created along with org in CRM (without invitation)
+        const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
+        return createAlgoliaOrganization(org);
+      } else {
+        return true;
+      }
+    } else {
+      // @TODO #4932 handle case user already exists and have already set identity
+    }
   }
 
   return false;

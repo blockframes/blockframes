@@ -1,5 +1,5 @@
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
@@ -27,7 +27,6 @@ export class OrganizationCreateComponent {
   });
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) data: {event: Event, types: string[] },
     public dialogRef: MatDialogRef<OrganizationCreateComponent>,
     private authService: AuthService,
     private snackBar: MatSnackBar,
@@ -56,14 +55,14 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    const superAdmin = createPublicUser(existingSuperAdmin);
+    let superAdmin = createPublicUser(existingSuperAdmin);
     if (!existingSuperAdmin) {
       const newUser = await this.authService.createUser(
         superAdminEmail,
         this.form.get('denomination').get('full').value,
-        "festival"
+        "festival" // @TODO #4932 clean
       );
-      superAdmin.uid = newUser.uid;
+      superAdmin = createPublicUser(newUser);
     }
 
     const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(this.form);

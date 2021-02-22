@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -12,7 +12,6 @@ import { OrganizationLiteForm } from '@blockframes/organization/forms/organizati
 import { IdentityForm } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
-import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'auth-identity',
@@ -35,6 +34,7 @@ export class IdentityComponent implements OnInit {
   public isTermsChecked: boolean;
   public showInvitationCodeField = false;
   public isOrgFromInvitation = false;
+  private existingUser = false;
   public isOrgFromAlgolia = true;
   private existingOrgId: string;
 
@@ -46,39 +46,46 @@ export class IdentityComponent implements OnInit {
     private invitationService: InvitationService,
     private orgService: OrganizationService,
     private routerQuery: RouterQuery,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
   ) { }
 
 
-  ngOnInit() {
+  async ngOnInit() {
+    const params = this.route.snapshot.queryParams;
+
     this.app = getCurrentApp(this.routerQuery);
     this.appName = getAppName(this.app).label;
 
+    if (!!params.code) {
+      this.form.get('generatedPassword').setValue(params.code);
+    }
+
     if (!!this.query.user) {
       // Updating user (invited)
-      this.updateFormForExistingUser();
+      this.updateFormForExistingUser(this.query.user.email);
+    } else if (!!params.email) {
+      this.updateFormForExistingUser(params.email);
     } else {
       // Creating user
       this.updateFormForNewUser();
     }
   }
 
-  private updateFormForExistingUser() {
-    this.form.get('email').setValue(this.query.user.email);
-    this.form.get('email').disable();
+  private updateFormForExistingUser(email: string) {
+    this.form.get('email').setValue(email);
     this.showInvitationCodeField = true;
   }
 
   private updateFormForNewUser() {
-    this.form.removeControl('generatedPassword');
+    this.form.get('generatedPassword').disable();
   }
 
   public showInvitationInputIfInvit(event: boolean) {
-    if (!this.form.get('generatedPassword')) {
-      this.form.addControl('generatedPassword', new FormControl('', Validators.required));
-    }
     this.showInvitationCodeField = event;
     if (event) {
+      this.existingUser = true;
+      this.form.get('generatedPassword').enable();
       this.form.get('email').disable();
     }
   }
@@ -97,6 +104,7 @@ export class IdentityComponent implements OnInit {
   public setOrgFromInvitation(org: AlgoliaOrganization) {
     this.isOrgFromAlgolia = false;
     this.isOrgFromInvitation = true;
+    this.existingUser = true;
     this.setOrg(org);
     this.cdr.markForCheck();
   }
@@ -115,7 +123,7 @@ export class IdentityComponent implements OnInit {
       return;
     }
 
-    if (!!this.query.user || !!this.isOrgFromInvitation) {
+    if (!!this.query.user || !!this.existingUser) {
       await this.update();
     } else {
       await this.create();
@@ -161,7 +169,6 @@ export class IdentityComponent implements OnInit {
         org.appAccess[this.app][appAccess] = true;
 
         await this.orgService.addOrganization(org, this.app, user);
-        // @TODO 4932 remove app-access page, guard & change email backend to admin (2 emails currently)?
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
         this.creating = false;
@@ -192,16 +199,20 @@ export class IdentityComponent implements OnInit {
 
       this.creating = true;
 
+      const { generatedPassword, password, firstName, lastName } = this.form.value;
+      const email = this.form.get('email').value; // To retreive value even if control is disabled
+
       await this.authService.updatePassword(
-        this.form.get('generatedPassword').value,
-        this.form.get('password').value
+        generatedPassword,
+        password,
+        email
       );
 
       const privacyPolicy = await this.authService.getPrivacyPolicy();
       await this.authService.update({
         _meta: createDocumentMeta({ createdFrom: this.app }),
-        firstName: this.form.get('firstName').value,
-        lastName: this.form.get('lastName').value,
+        firstName,
+        lastName,
         privacyPolicy: privacyPolicy,
       });
 
@@ -214,10 +225,34 @@ export class IdentityComponent implements OnInit {
         // We put invitation to accepted only if the invitation.type is joinOrganization.
         // Otherwise, user will have to create or join an org before accepting the invitation (to attend event for example)
         await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-      }
+        this.creating = false;
+        this.router.navigate(['/c/o']);
+      } else if (!!this.query.user.orgId) {
+        this.creating = false;
+        this.router.navigate(['/c/o']);
+      } else if (!!this.existingOrgId) {
+        try {
 
-      this.creating = false;
-      this.router.navigate(['/c/o']);
+          await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
+          this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+          this.creating = false;
+          return this.router.navigate(['c/organization/join-congratulations']);
+        } catch (error) {
+          this.snackBar.open(error.message, 'close', { duration: 2000 });
+        }
+      } else {
+        const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+
+        const org = createOrganization({ denomination, addresses, activity });
+
+        org.appAccess[this.app][appAccess] = true;
+        console.log(this.query.user)
+        await this.orgService.addOrganization(org, this.app, this.query.user);
+
+        this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
+        this.creating = false;
+        return this.router.navigate(['c/organization/create-congratulations']);
+      }
     } catch (error) {
       this.creating = false;
       this.snackBar.open(error.message, 'close', { duration: 5000 });
