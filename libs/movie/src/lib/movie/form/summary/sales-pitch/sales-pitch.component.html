@@ -12,7 +12,7 @@
       <missing-control [control]="salesPitch.get('description')" [link]="link" fragment="sales-pitch"></missing-control>
     </li>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [ref]="salesPitch.get('storagePath').value"><strong>Video </strong></bf-preview-modal>
+      <bf-preview-modal [ref]="salesPitch.value"><strong>Video </strong></bf-preview-modal>
       <missing-control [control]="salesPitch.get('storagePath')" [link]="link" fragment="sales-pitch">
         <ng-template let-ref>{{ ref | fileName }}</ng-template>
       </missing-control>

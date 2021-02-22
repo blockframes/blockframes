@@ -24,16 +24,16 @@ export interface ImageParameters {
   page?: number;
 }
 
-export function getImgSize(ref: string) {
-  if (ref.includes('avatar')) {
+export function getImgSize(ref?: string) {
+  if (ref?.includes('avatar')) {
     return [50, 100, 300];
-  } else if (ref.includes('logo')) {
+  } else if (ref?.includes('logo')) {
     return [50, 100, 300];
-  } else if (ref.includes('poster')) {
+  } else if (ref?.includes('poster')) {
     return [200, 400, 600];
-  } else if (ref.includes('banner')) {
+  } else if (ref?.includes('banner')) {
     return [300, 600, 1200];
-  } else if (ref.includes('still')) {
+  } else if (ref?.includes('still')) {
     return [300, 600, 1200];
   } else {
     return [1024];
@@ -79,9 +79,9 @@ export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParamete
     : firebase().projectId;
 
   // This is a safeguard for old storagePaths. Image wont work if privacy is still in the path and is therefore removed in case its there.
-  if (privacies.some(privacy => privacy === file.storagePath.split('/').shift())) {
+  if (privacies.some(privacy => privacy === file.storagePath?.split('/').shift())) {
     console.warn(`Expected storagePath without privacy prefix: ${file.storagePath}`);
-    file.storagePath = file.storagePath.split('/').splice(1).join('/');
+    file.storagePath = file.storagePath?.split('/').splice(1).join('/');
   }
 
   return `https://${imgixSource}.imgix.net/${encodeURI(file.storagePath)}?${query}`;
