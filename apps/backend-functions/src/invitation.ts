@@ -104,6 +104,7 @@ export async function onInvitationWrite(
          * a request from an user who wants to attend an event.
          * an invitation to an user that can be interested to attend an event.
          */
+        console.log('i-attendEvent: ', JSON.stringify(invitationDoc));
         await onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, { ...invitationDoc, id: before.id });
         break;
       default:

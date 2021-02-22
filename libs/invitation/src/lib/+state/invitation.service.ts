@@ -101,6 +101,8 @@ export class InvitationService extends CollectionService<InvitationState> {
 
         const f = this.functions.httpsCallable('inviteUsers');
         const app = getCurrentApp(this.routerQuery);
+
+        console.log(`E->> ${JSON.stringify(invitation)} : ${app}}`);
         return f({ emails: recipients, invitation, app }).toPromise();
 
       }

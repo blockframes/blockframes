@@ -79,7 +79,9 @@ export class UserComponent implements OnInit {
       const emails = this.form.value.map(guest => guest.email);
       this.form.reset([]);
       this.sending.next(true);
-      const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
+      console.log(`E0-> Attend event : ${this.ownerOrgId}`);
+      const fromOrg = this.ownerOrgId ? undefined : await this.orgService.getValue(this.ownerOrgId);
+      console.log(`E-> Attend event : ${fromOrg} : ${JSON.stringify(emails)}`);
       await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
       this.sending.next(false);
     }
