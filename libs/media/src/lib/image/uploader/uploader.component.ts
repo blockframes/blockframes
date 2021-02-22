@@ -125,15 +125,22 @@ export class ImageUploaderComponent implements OnInit {
     private uploaderService: FileUploaderService,
   ) { }
 
-  ngOnInit() {
-    const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
-    if (!!retrieved) {
-      const blobUrl = URL.createObjectURL(retrieved);
-      const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
+  async ngOnInit() {
+    if (!!this.form.storagePath.value) {
+      const previewUrl = await this.mediaService.generateImgIxUrl({
+        ...this.metadata,
+        storagePath: this.form.storagePath.value,
+      });
       this.previewUrl$.next(previewUrl);
       this.nextStep('show');
     } else {
-      this.goToShow();
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
+      if (!!retrieved) {
+        const blobUrl = URL.createObjectURL(retrieved.file);
+        const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
+        this.previewUrl$.next(previewUrl);
+        this.nextStep('show');
+      }
     }
   }
 

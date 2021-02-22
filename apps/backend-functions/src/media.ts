@@ -206,38 +206,40 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 }
 
 // TODO issue#4813 refactor
-// TODO - to use parent object instead of storagePath
 // TODO - check if parent object has a `jwPlayerId`, if so delete video from JWPlayer API
-export const deleteMedia = async (storagePath: string): Promise<void> => {
+export const deleteMedia = async (file: StorageFile): Promise<void> => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
-  const file = bucket.file(storagePath);
+  const filePath = `${file.privacy}/${file.storagePath}`;
+  const fileObject = bucket.file(filePath);
 
-  const [exists] = await file.exists();
+  const [exists] = await fileObject.exists();
   if (!exists) {
-    console.log(`Upload Error : File "${storagePath}" does not exists in the storage`);
+    console.log(`Delete Error : File "${filePath}" does not exists in the storage`);
   } else {
-    await file.delete();
+    await fileObject.delete();
   }
 }
 
-
+function needsToBeCleaned(before: StorageFile | undefined, after: StorageFile | undefined) {
+  return !!before.storagePath && before.storagePath !== after.storagePath && !after.storagePath;
+};
 
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
-  const mediaToDelete: string[] = [];
+  const mediaToDelete: StorageFile[] = [];
   if (!!after) { // Updating
     // Check if avatar have been changed/removed
-    if (!!before.avatar?.storagePath && (before.avatar.storagePath !== after.avatar.storagePath || after.avatar.storagePath === '')) { // Avatar was previously setted and was updated or removed
-      mediaToDelete.push(before.avatar.storagePath);
+    if (needsToBeCleaned(before.avatar, after.avatar)) {
+      mediaToDelete.push(before.avatar);
     }
   } else { // Deleting
     if (!!before.avatar) {
-      mediaToDelete.push(before.avatar.storagePath);
+      mediaToDelete.push(before.avatar);
     }
 
     if (!!before.watermark) {
-      mediaToDelete.push(before.watermark.storagePath);
+      mediaToDelete.push(before.watermark);
     }
   }
 
@@ -245,27 +247,27 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
 }
 
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
-  const mediaToDelete: string[] = [];
+  const mediaToDelete: StorageFile[] = [];
   if (!!after) { // Updating
-    if (!!before.logo?.storagePath && (before.logo.storagePath !== after.logo.storagePath || after.logo.storagePath === '')) {
-      mediaToDelete.push(before.logo.storagePath);
+    if (needsToBeCleaned(before.logo, after.logo)) {
+      mediaToDelete.push(before.logo);
     }
 
     if (before.documents?.notes.length) {
       before.documents.notes.forEach(nb => {
         if (!after.documents?.notes.length || !after.documents.notes.some(na => na.storagePath === nb.storagePath)) {
-          mediaToDelete.push(nb.storagePath);
+          mediaToDelete.push(nb);
         }
       });
     }
 
   } else { // Deleting
     if (!!before.logo) {
-      mediaToDelete.push(before.logo.storagePath);
+      mediaToDelete.push(before.logo);
     }
 
     if (before.documents?.notes.length) {
-      before.documents.notes.forEach(n => mediaToDelete.push(n.storagePath));
+      before.documents.notes.forEach(n => mediaToDelete.push(n));
     }
   }
 
@@ -274,40 +276,36 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
 
-  const needsToBeCleaned = (beforeStoragePath: string | undefined, afterStoragePath: string) => {
-    return !!beforeStoragePath && beforeStoragePath !== afterStoragePath && afterStoragePath === '';
-  };
-
-  const mediaToDelete: string[] = [];
+  const mediaToDelete: StorageFile[] = [];
   if (!!after) { // Updating
-    if (needsToBeCleaned(before.banner.storagePath, after.banner.storagePath)) {
-      mediaToDelete.push(before.banner.storagePath);
+    if (needsToBeCleaned(before.banner, after.banner)) {
+      mediaToDelete.push(before.banner);
     }
 
-    if (needsToBeCleaned(before.poster.storagePath, after.poster.storagePath)) {
-      mediaToDelete.push(before.poster.storagePath);
+    if (needsToBeCleaned(before.poster, after.poster)) {
+      mediaToDelete.push(before.poster);
     }
 
-    if (needsToBeCleaned(before.promotional.presentation_deck.storagePath, after.promotional.presentation_deck.storagePath)) {
-      mediaToDelete.push(before.promotional.presentation_deck.storagePath);
+    if (needsToBeCleaned(before.promotional.presentation_deck, after.promotional.presentation_deck)) {
+      mediaToDelete.push(before.promotional.presentation_deck);
     }
 
-    if (needsToBeCleaned(before.promotional.scenario.storagePath, after.promotional.scenario.storagePath)) {
-      mediaToDelete.push(before.promotional.scenario.storagePath);
+    if (needsToBeCleaned(before.promotional.scenario, after.promotional.scenario)) {
+      mediaToDelete.push(before.promotional.scenario);
     }
 
-    if (needsToBeCleaned(before.promotional.moodboard.storagePath, after.promotional.moodboard.storagePath)) {
-      mediaToDelete.push(before.promotional.moodboard.storagePath);
+    if (needsToBeCleaned(before.promotional.moodboard, after.promotional.moodboard)) {
+      mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (needsToBeCleaned(before.promotional.videos?.screener?.storagePath, after.promotional.videos?.screener?.storagePath)) {
-      mediaToDelete.push(before.promotional.videos.screener.storagePath);
+    if (needsToBeCleaned(before.promotional.videos?.screener, after.promotional.videos?.screener)) {
+      mediaToDelete.push(before.promotional.videos.screener);
     }
 
     if (before.promotional.videos?.otherVideos?.length) {
       before.promotional.videos.otherVideos.forEach(vb => {
         if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.storagePath === vb.storagePath)) {
-          mediaToDelete.push(vb.storagePath);
+          mediaToDelete.push(vb);
         }
       });
     }
@@ -317,7 +315,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
         const stillBefore = photo.storagePath;
         const stillAfter = after.promotional.still_photo[index].storagePath;
         if ((stillBefore !== stillAfter || stillAfter === '')) {
-          mediaToDelete.push(stillBefore);
+          mediaToDelete.push(photo);
         }
       });
     }
@@ -327,7 +325,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
         const noteBefore = note;
         const noteAfter = after.promotional.notes[index];
         if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
-          mediaToDelete.push(noteBefore.storagePath);
+          mediaToDelete.push(noteBefore);
         }
       });
     }
@@ -335,39 +333,39 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
   } else { // Deleting
 
     if (!!before.banner) {
-      mediaToDelete.push(before.banner.storagePath);
+      mediaToDelete.push(before.banner);
     }
 
     if (!!before.poster) {
-      mediaToDelete.push(before.poster.storagePath);
+      mediaToDelete.push(before.poster);
     }
 
     if (!!before.promotional.presentation_deck) {
-      mediaToDelete.push(before.promotional.presentation_deck.storagePath);
+      mediaToDelete.push(before.promotional.presentation_deck);
     }
 
     if (!!before.promotional.scenario) {
-      mediaToDelete.push(before.promotional.scenario.storagePath);
+      mediaToDelete.push(before.promotional.scenario);
     }
 
     if (!!before.promotional.moodboard) {
-      mediaToDelete.push(before.promotional.moodboard.storagePath);
+      mediaToDelete.push(before.promotional.moodboard);
     }
 
     if (!!before.promotional.videos?.screener?.storagePath) {
-      mediaToDelete.push(before.promotional.videos.screener.storagePath);
+      mediaToDelete.push(before.promotional.videos.screener);
     }
 
     if (before.promotional.videos?.otherVideos?.length) {
-      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.storagePath));
+      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n));
     }
 
     if (before.promotional.still_photo?.length) {
-      before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo.storagePath));
+      before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
     }
 
     if (before.promotional.notes?.length) {
-      before.promotional.notes.forEach(note => mediaToDelete.push(note.storagePath));
+      before.promotional.notes.forEach(note => mediaToDelete.push(note));
     }
   }
 

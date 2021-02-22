@@ -6,7 +6,7 @@
 </h6>
 <ul>
   <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <bf-preview-modal [ref]="movie.promotional.get('presentation_deck').get('storagePath').value"><strong> Presentation Deck </strong></bf-preview-modal>
+    <bf-preview-modal [ref]="movie.promotional.get('presentation_deck').value"><strong> Presentation Deck </strong></bf-preview-modal>
     <missing-control [control]="movie.promotional.get('presentation_deck').get('storagePath')" [link]="link" fragment="files">
       <ng-template let-deck>
         {{ deck | fileName | maxLength: 30  }}
@@ -14,7 +14,7 @@
     </missing-control>
   </li>
   <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <bf-preview-modal [ref]="movie.promotional.get('scenario').get('storagePath').value"><strong> Scenario </strong></bf-preview-modal>
+    <bf-preview-modal [ref]="movie.promotional.get('scenario').value"><strong> Scenario </strong></bf-preview-modal>
     <missing-control [control]="movie.promotional.get('scenario').get('storagePath')" fragment="files" [link]="link">
       <ng-template let-scenario>
         {{ scenario | fileName | maxLength: 30  }}
@@ -22,7 +22,7 @@
     </missing-control>
   </li>
   <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <bf-preview-modal [ref]="movie.promotional.get('moodboard').get('storagePath').value"><strong> Moodboard / Artistic Deck </strong></bf-preview-modal>
+    <bf-preview-modal [ref]="movie.promotional.get('moodboard').value"><strong> Moodboard / Artistic Deck </strong></bf-preview-modal>
     <missing-control [control]="movie.promotional.get('moodboard').get('storagePath')" fragment="files" [link]="link">
       <ng-template let-moodboard>
         {{ moodboard | fileName | maxLength: 30  }}

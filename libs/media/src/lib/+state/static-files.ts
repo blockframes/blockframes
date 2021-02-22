@@ -54,7 +54,7 @@ export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabe
     banner: 'banner',
     scenario: 'promotional.scenario',
     moodboard: 'promotional.moodboard',
-    'presentation_deck': 'promotional.',
+    'presentation_deck': 'promotional.presentation_deck',
     'still_photo': 'promotional.still_photo',
     screener: 'promotional.videos.screener',
     otherVideo: 'promotional.videos.otherVideos',
