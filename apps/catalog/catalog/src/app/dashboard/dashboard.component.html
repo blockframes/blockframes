@@ -9,10 +9,10 @@
         <mat-icon matListIcon svgIcon="video_library"></mat-icon>
         <span matLine><b>My Titles</b></span>
       </a>
-      <a mat-list-item routerLink="deals" routerLinkActive="active">
+<!--       <a mat-list-item routerLink="deals" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="account_balance_wallet"></mat-icon>
         <span matLine><b>Offers & Deals</b></span>
-      </a>
+      </a> -->
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
