@@ -121,6 +121,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return callOnAccessToAppChanged(orgId).toPromise();
   }
 
+  public requestToAccessToApp(app: App, orgId: string) {
+    const f = this.functions.httpsCallable('requestFromOrgToAccessApp');
+    return f({app, orgId}).toPromise();
+  }
+
   ////////////
   // MEMBER //
   ////////////

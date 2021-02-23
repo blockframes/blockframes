@@ -11,8 +11,9 @@ import { OrganizationQuery, OrganizationService } from '@blockframes/organizatio
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrgRequestAccessComponent {
-  private app = getCurrentApp(this.routerQuery)
+  private app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
+  public orgId = this.orgQuery.getActiveId();
 
   constructor(
     private routerQuery: RouterQuery,
@@ -22,7 +23,7 @@ export class OrgRequestAccessComponent {
     ) {}
 
   async requestAccess() {
-    await this.orgService.notifyAppAccessChange(this.orgQuery.getActiveId());
+    await this.orgService.requestToAccessToApp(this.app, this.orgId);
     this.snackBar.open('Your request to access to this platform has been sent.', 'close', { duration: 5000 });
   }
 }
