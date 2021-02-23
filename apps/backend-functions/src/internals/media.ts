@@ -12,12 +12,15 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 // Internal dependencies
 import { db } from './firebase';
 import { isUserInvitedToEvent } from './invitations/events';
+import { MovieDocument } from '../data/types';
 
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string): Promise<boolean> {
 
   const user = await db.collection('users').doc(uid).get();
   if (!user.exists) { return false; }
   const userDoc = createPublicUser(user.data());
+
+  if (!userDoc.orgId) { return false; }
 
   const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
   if (blockframesAdmin.exists) { return true; }
@@ -37,15 +40,13 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
       canAccess = file.docId === uid;
       break;
     case 'orgs':
-      if (!userDoc.orgId) { return false; }
       canAccess = file.docId === userDoc.orgId;
       break;
     case 'movies':
-      if (!userDoc.orgId) { return false; }
-      const moviesCol = await db.collection('movies').where('orgIds', 'array-contains', userDoc.orgId).get();
-      const movies = moviesCol.docs.map(doc => doc.data());
-      const orgIds = movies.map(m => m.orgIds)
-      canAccess = orgIds.some(id => file.docId === id);
+      const movieSnap = await db.collection('movies').doc(file.docId).get();
+      if (!movieSnap.exists) { return false; }
+      const movie = movieSnap.data() as MovieDocument;
+      canAccess = movie.orgIds.some(id => userDoc.orgId === id);
       break;
     default:
       canAccess = false;

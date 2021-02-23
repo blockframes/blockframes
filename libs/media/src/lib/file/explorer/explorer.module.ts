@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialogModule } from '@angular/material/dialog';
+import { FilePreviewModule } from '../preview/preview.module';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ImageUploaderModule,
     FileNameModule,
     FormListModule,
+    FilePreviewModule,
 
     // Material
     MatListModule,
