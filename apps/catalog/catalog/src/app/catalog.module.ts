@@ -29,7 +29,12 @@ const routes: Routes = createRoutes({
     path: 'dashboard',
     canActivate: [AppGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
-  }]
+  },
+  {
+    path: 'request-access',
+    loadChildren: () => import('@blockframes/organization/pages/request-access/request-access.module').then(m => m.OrgRequestAccessModule)
+  }
+]
 });
 
 @NgModule({
