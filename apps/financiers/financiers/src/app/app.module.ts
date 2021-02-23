@@ -113,12 +113,12 @@ export class AppModule {
     navEnds.subscribe((event: NavigationEnd) => {
       try {
         analytics.event('pageView', {
-          page_location: 'Media Financiers',
+          page_location: 'financiers',
           page_path: event.urlAfterRedirects
         });
       } catch {
         analytics.event('pageView', {
-          page_location: 'Media Financiers',
+          page_location: 'financiers',
           page_path: event.urlAfterRedirects
         });
       }

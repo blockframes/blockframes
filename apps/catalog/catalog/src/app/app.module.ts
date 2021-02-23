@@ -127,12 +127,12 @@ export class AppModule {
     navEnds.subscribe((event: NavigationEnd) => {
       try {
         analytics.event('pageView', {
-          page_location: 'Archipel Content',
+          page_location: 'catalog',
           page_path: event.urlAfterRedirects
         });
       } catch {
         analytics.event('pageView', {
-          page_location: 'Archipel Content',
+          page_location: 'catalog',
           page_path: event.urlAfterRedirects
         });
       }
