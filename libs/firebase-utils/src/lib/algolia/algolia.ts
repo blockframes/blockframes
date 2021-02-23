@@ -37,14 +37,16 @@ export function clearIndex(indexName: string, adminKey?: string) {
   return indexBuilder(indexName, adminKey).delete();
 }
 
-export function  setIndexConfiguration(indexName: string, config: AlgoliaConfig, adminKey?: string) {
+export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, adminKey?: string) {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
 
   return indexBuilder(indexName, adminKey).setSettings({
-    attributesForFaceting: config.attributesForFaceting, searchableAttributes: config.searchableAttributes, customRanking: config.customRanking
+    attributesForFaceting: config.attributesForFaceting,
+    searchableAttributes: config.searchableAttributes,
+    customRanking: config.customRanking
   });
 }
 

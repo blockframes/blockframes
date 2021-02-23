@@ -5,7 +5,6 @@
   "scripts": {
     "ng": "nx",
     "start": "nx serve --hmr --disable-host-check",
-    "start:catalog": "nx serve catalog --hmr",
     "build:catalog": "cross-env nx build catalog --configuration=$NG_CONFIG",
     "build:festival": "cross-env nx build festival --configuration=$NG_CONFIG",
     "build:financiers": "cross-env nx build financiers --configuration=$NG_CONFIG",

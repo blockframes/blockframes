@@ -1,7 +1,12 @@
 import { Media, Territory } from "@blockframes/utils/static-model";
 import { Term } from "../term/+state/term.model";
 
-interface AvailsFilter { medias: Media[], duration: { from: Date, to: Date }, territories: Territory[], exclusive: boolean }
+interface AvailsFilter {
+  medias: Media[],
+  duration: { from: Date, to: Date },
+  territories: Territory[],
+  exclusive: boolean
+}
 
 export function isLicensed({ medias, duration, territories }: AvailsFilter,
   terms: Term<Date>[]): boolean {
