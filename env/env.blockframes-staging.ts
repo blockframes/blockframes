@@ -103,7 +103,11 @@ export const supportEmails = {
 // Yandex 
 // =======
 
-export const yandexId = 0;
+export const yandex = {
+  festival: 0,
+  financiers: 0,
+  catalog: 0
+};
 
 // Intercom
 // ========

@@ -6,7 +6,6 @@ import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/mark
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 // Guards
@@ -94,19 +93,6 @@ const routes: Routes = [{
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
         data: { redirect: '/c/o/marketplace/home' }
-      }]
-    },
-    {
-      path: 'tunnel',
-      canActivate: [TunnelGuard],
-      children: [{
-        path: 'contract/:contractId',
-        canActivate: [ActiveContractGuard],
-        canDeactivate: [ActiveContractGuard],
-        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
-        data: {
-          redirect: '/c/o/dashboard/selection'
-        }
       }]
     }]
 }];

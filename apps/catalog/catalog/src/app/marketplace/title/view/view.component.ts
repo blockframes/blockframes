@@ -18,10 +18,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
     artisticRoute,
     productionRoute,
     additionalRoute,
-  {
-    path: 'finance',
-    label: 'Financing Conditions'
-  },
   // TODO 4368 Uncomment and reactivate this section when we relaunch Archipel Content
   // {
   //   path: 'avails',

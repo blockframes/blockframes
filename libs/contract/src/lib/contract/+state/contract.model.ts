@@ -257,7 +257,7 @@ export function getValidatedContracts(contracts: Contract[]): Contract[] {
 
 ///////////////////////////// NEW DATA MODEL OF CONTRACT
 
-interface ContractNew {
+interface ContractBase {
   id: string;
   titleId: string;
   termsIds: string[];
@@ -269,10 +269,10 @@ interface ContractNew {
     buyer: 'draft' | 'accepted' | 'declined'
   };
 }
-export interface Mandate extends ContractNew {
+export interface Mandate extends ContractBase {
   type: 'mandate';
 }
-export interface Sale extends ContractNew {
+export interface Sale extends ContractBase {
   type: 'sale';
   /** Free text provided by the buyer, addressed to the seller */
   specificTerms: string;
@@ -316,7 +316,7 @@ export function createSale(params: Partial<Sale> = {}): Sale {
   }
 }
 
-export function createTerm(params: Partial<Term> = {}): Term {
+export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
   return {
     id: '',
     titleId: '',

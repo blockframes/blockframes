@@ -43,7 +43,11 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
     return Promise.resolve(true);
   }
 
-  return indexBuilder(indexName, adminKey).setSettings(config);
+  return indexBuilder(indexName, adminKey).setSettings({
+    attributesForFaceting: config.attributesForFaceting,
+    searchableAttributes: config.searchableAttributes,
+    customRanking: config.customRanking
+  });
 }
 
 // ------------------------------------
