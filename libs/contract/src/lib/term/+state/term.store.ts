@@ -4,7 +4,7 @@ import { Term } from "./term.model";
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'terms' })
-export class TermStore extends EntityStore<Term> {
+export class TermStore extends EntityStore<Term<Date>> {
   constructor() {
     super();
   }
