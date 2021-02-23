@@ -1,7 +1,8 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 
-import { yandexId } from '@env';
+import { yandex } from '@env';
+import { App } from '../apps';
 
 @Injectable({ providedIn: 'root' })
 export class YandexMetricaService {
@@ -10,7 +11,9 @@ export class YandexMetricaService {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  public insertMetrika() {
+  public insertMetrika(app: App) {
+    const yandexId = yandex[app];
+
     if (!isPlatformBrowser(this.platformId) || !yandexId) {
       return;
     }
