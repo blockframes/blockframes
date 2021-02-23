@@ -105,7 +105,11 @@ export const supportEmails = {
 // Yandex 
 // =======
 
-export const yandexId = 56105038;
+export const yandex = {
+  festival: 65689861,
+  financiers: 70097020,
+  catalog: 56105038
+};
 
 // Intercom
 // ========
