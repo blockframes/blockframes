@@ -47,18 +47,10 @@ describe('Organiser invites other users to private screening', () => {
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar();
     cy.log(`Create screening {${TestEVENT.event}}`)
-    const p3: EventEditPage = p2.createDetailedEvent(NOW, 'Screening', TestEVENT.event);
-    p3.addEventTitle(TestEVENT.event);
-    p3.checkAllDay();
-    p3.selectMovie(TestEVENT.movie.title.international);
-
     const invitees = [users[UserIndex.InvitedUser1].email,
                       users[UserIndex.InvitedUser2].email];
-    p3.inviteUser(invitees);
-    // We need to wait to fetch the invited user
-    p3.copyGuests();
-    cy.wait(8000);
-    p3.saveEvent();
+    p2.createEvent(TestEVENT.event, NOW, 
+      TestEVENT.movie.title.international, false, invitees);
   });
 
   it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {

@@ -59,6 +59,14 @@ export default class EventEditPage {
     cy.get('mat-option').contains(movieName).click();
   }
 
+  inputDescription(description: string) {
+    //Input description
+    cy.get('textarea[formControlName="description"]', {timeout: 1 * SEC})
+      .click({force: true})
+      .clear()
+      .type(description);
+  }
+
   inviteUser(email: string | string[]) {
     if (Array.isArray(email)) {
       let index = 0;
@@ -78,12 +86,12 @@ export default class EventEditPage {
   }
 
   saveEvent() {
-    cy.get('button[test-id=event-save]', { timeout: 1 * SEC }).click();
+    cy.get('button[test-id=event-save]', { timeout:  30 * SEC }).click();
     cy.wait(2 * SEC);
   }
 
   clickMoreDetails() {
-    cy.get('button[test-id=more-details]', { timeout: 1 * SEC }).click();
+    cy.get('button[test-id=more-details]', { timeout: 10 * SEC }).click();
     cy.wait(1 * SEC);
   }
 
