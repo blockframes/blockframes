@@ -6,11 +6,12 @@ import { yandexId } from '@env';
 @Injectable({ providedIn: 'root' })
 export class YandexMetricaService {
   constructor(
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   public insertMetrika() {
-    if (!isPlatformBrowser(PLATFORM_ID) || !yandexId) {
+    if (!isPlatformBrowser(this.platformId) || !yandexId) {
       return;
     }
 
