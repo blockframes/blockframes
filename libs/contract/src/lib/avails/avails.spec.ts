@@ -4,8 +4,8 @@ import { mandateTerms as acTerms } from './fixtures/mandateTerms'
 import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
 
 describe('Avails', () => {
-    let mandateTerms: Term<Date>[] = (acTerms as unknown[]).map(parseTimestampsOnTerms)
-    let saleTerms: Term<Date>[] = (acSaleTerms as unknown[]).map(parseTimestampsOnTerms)
+    const mandateTerms: Term<Date>[] = (acTerms as unknown[]).map(parseTimestampsOnTerms)
+    const saleTerms: Term<Date>[] = (acSaleTerms as unknown[]).map(parseTimestampsOnTerms)
 
     it(`Mandate test (territory)
     Terms: 01/01/2022 - 06/30/2023 
