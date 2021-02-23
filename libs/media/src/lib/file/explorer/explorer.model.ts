@@ -1,4 +1,3 @@
-import { Privacy } from "@blockframes/utils/file-sanitizer";
 import { MediaRatioType } from '../../image/uploader/uploader.component';
 import { MovieForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
@@ -14,7 +13,7 @@ import { StorageFile } from "@blockframes/media/+state/media.firestore";
 
 
 interface DirectoryBase {
-  type: 'directory' | 'file' | 'image' | 'list';
+  type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';
   /** Display Name use in the UI */
   name: string;
 }
@@ -23,10 +22,10 @@ export interface Directory extends DirectoryBase {
   type: 'directory';
   icon?: string;
   /** Array of sub-folders */
-  children: Record<string, (Directory | FileDirectory | ImgDirectory)>;
+  children: Record<string, (Directory | FileDirectory | ImgDirectory | FileListDirectory | ImgListDirectory)>;
 }
 
-interface FileDirectoryBase extends DirectoryBase {
+export interface FileDirectoryBase extends DirectoryBase {
   meta: [CollectionHoldingFile, FileLabel, string];
   /** Wether or not this directory can contain several files *(like stills photo)* or only one *(like movie poster)* */
   // multiple: boolean;
@@ -54,6 +53,18 @@ export interface FileDirectory extends FileDirectoryBase {
   type: 'file';
   accept: AllowedFileType;
   form: StorageFileForm | FormList<StorageFile>;
+}
+
+export interface FileListDirectory extends FileDirectoryBase {
+  type: 'fileList',
+  form: FormList<StorageFile>;
+  accept: AllowedFileType;
+}
+
+export interface ImgListDirectory extends FileDirectoryBase {
+  type: 'imageList',
+  form: FormList<StorageFile>;
+  ratio: MediaRatioType;
 }
 
 export function getFormList(form: OrganizationForm | MovieForm, field: string) {
@@ -150,7 +161,7 @@ function titleDirectory(title: Movie): Directory {
       },
       'still_photo': {
         name: 'Images',
-        type: 'image',
+        type: 'imageList',
         ratio: 'still',
         meta: ['movies', 'still_photo', title.id],
         form: getFormListStorage(title, 'movies', 'still_photo'),
@@ -177,7 +188,7 @@ function titleDirectory(title: Movie): Directory {
       },
       otherVideo: {
         name: 'Other Videos',
-        type: 'file',
+        type: 'fileList',
         accept: 'video',
         meta: ['movies', 'otherVideo', title.id],
         form: getFormListStorage(title, 'movies', 'otherVideo'),
@@ -203,7 +214,7 @@ function titleDirectory(title: Movie): Directory {
       },
       notes: {
         name: 'Notes & Statements',
-        type: 'file',
+        type: 'fileList',
         accept: 'pdf',
         meta: ['movies', 'notes', title.id],
         form: getFormListStorage(title, 'movies', 'notes'),
@@ -220,16 +231,16 @@ function titleDirectory(title: Movie): Directory {
 
 function orgDirectory(org: Organization): Directory {
   return {
-    name: 'Org',
+    name: 'Company',
     type: 'directory',
     icon: 'home',
     children: {
       documents: {
         name: 'Documents',
-        type: 'file',
+        type: 'fileList',
         accept: 'pdf',
         meta: ['orgs', 'notes', org.id],
-        form: getFormStorage(org, 'orgs', 'notes'),
+        form: getFormListStorage(org, 'orgs', 'notes'),
         // multiple: true,
         // docNameField: 'title',
         // fileRefField: 'ref',
@@ -255,7 +266,7 @@ function orgDirectory(org: Organization): Directory {
 }
 
 export interface RootDirectory {
-  orgs: Directory;
+  org: Directory;
   titles: Directory;
 }
 
@@ -264,7 +275,7 @@ export function getDirectories(org: Organization, titles: Movie[]): Directory {
     name: 'Root',
     type: 'directory',
     children: {
-      orgs: orgDirectory(org),
+      org: orgDirectory(org),
       titles: {
         type: 'directory',
         name: 'Titles',

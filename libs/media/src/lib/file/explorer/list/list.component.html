@@ -1,5 +1,4 @@
-<section fxLayout="column" fxLayoutGap="24px">
-
+<ng-container *ngIf="dir">
   <bf-form-list [form]="dir.form" listPosition="bottom" keepFormOpen reverseList>
     <ng-template itemRef let-item>
       <button mat-list-icon (click)="openView(item, $event)">
@@ -11,23 +10,24 @@
       </button>
     </ng-template>
     <ng-template formView let-activeForm let-index="index">
-
+  
       <!-- Image -->
       <ng-container *ngIf="dir.type === 'image'">
         <image-uploader [form]="activeForm" [meta]="dir.meta" [ratio]="dir.ratio">
           <h3 title>{{ dir.name }}</h3>
         </image-uploader>
       </ng-container>
-
+  
       <!-- File -->
       <ng-container *ngIf="dir.type === 'file'">
         <file-uploader [form]="activeForm" [meta]="dir.meta" [accept]="dir.accept" (change)="update()">
           <h3 title>Upload File</h3>
         </file-uploader>
       </ng-container>
-
+  
       <ng-template saveButtonText>Save</ng-template>
       <ng-template addButtonText>Add</ng-template>
     </ng-template>
   </bf-form-list>
-</section>
+</ng-container>
+

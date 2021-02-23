@@ -1,4 +1,4 @@
-<section fxLayout="column" fxLayoutGap="24px">
+<ng-container *ngIf="dir">
   <!-- Image -->
   <ng-container *ngIf="dir.type === 'image'">
     <image-uploader [ratio]="dir.ratio" [meta]="dir.meta" [form]="dir.form">
@@ -12,4 +12,4 @@
       <h3 title>Upload {{ dir.name }}</h3>
     </file-uploader>
   </ng-container>
-</section>
+</ng-container>

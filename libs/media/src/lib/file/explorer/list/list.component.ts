@@ -21,7 +21,7 @@ export class FileExplorerListComponent {
   ) {}
 
   public async update() {
-    this.service.upload();
+    // this.service.upload();
   }
 
   public openView(item: Partial<StorageFile>, event: Event) {

@@ -710,6 +710,7 @@
             "polyfills": "apps/festival/festival/src/polyfills.ts",
             "tsConfig": "apps/festival/festival/tsconfig.app.json",
             "aot": true,
+            "sourceMap": true,
             "stylePreprocessorOptions": {
               "includePaths": [
                 "styles"
@@ -741,7 +742,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -769,10 +769,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -798,10 +796,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,

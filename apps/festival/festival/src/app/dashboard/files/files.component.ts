@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'festival-dashboard-files',
@@ -6,4 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./files.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilesViewComponent {}
+export class FilesViewComponent {
+  org = this.orgQuery.getActive();
+  constructor(private orgQuery: OrganizationQuery) {}
+}

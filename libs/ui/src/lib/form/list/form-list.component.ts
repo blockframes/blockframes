@@ -14,7 +14,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 // RxJs
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { startWith, distinctUntilChanged, map } from 'rxjs/operators';
+import { startWith, distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
@@ -64,7 +64,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.list$ = combineLatest([
-      this.form.valueChanges.pipe(startWith(this.form.value), distinctUntilChanged()),
+      this.form.valueChanges.pipe(startWith(this.form.value), tap(console.log), distinctUntilChanged()),
       this.reverseList$
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
