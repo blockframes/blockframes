@@ -100,7 +100,7 @@ export class AppModule {
     gdprService: GDPRService,
   ) {
     const { intercom, yandex } = gdprService.cookieConsent;
-    if (yandex) yandexService.insertMetrika();
+    if (yandex) yandexService.insertMetrika('festival');
     intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());
