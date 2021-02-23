@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FileMetaData } from '../+state/media.model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
-import { StorageFile } from '../+state/media.firestore';
+import { createStorageFile, StorageFile } from '../+state/media.firestore';
 
 
 // ------------------------------
@@ -30,9 +30,14 @@ export class FileMetaDataForm extends FormEntity<FileMetaDataControl> {
 
 
 
-function createStorageFileControl(storageFile: Partial<StorageFile>) {
+export function createStorageFileControl(storageFile: Partial<StorageFile> = {}) {
+  const file = createStorageFile(storageFile);
   return {
-    storagePath: new FormControl(storageFile.storagePath),
+    privacy: new FormControl(file.privacy),
+    collection: new FormControl(file.collection),
+    docId: new FormControl(file.docId),
+    field: new FormControl(file.field),
+    storagePath: new FormControl(file.storagePath),
   };
 }
 

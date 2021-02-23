@@ -1039,6 +1039,10 @@ type MovieAudianceAndGoalsControl = ReturnType<typeof createAudianceAndGoalsForm
 function createMovieVideoControl(movieVideo: Partial<MovieVideo> = {}) {
   const file = createStorageFile(movieVideo);
   return {
+    privacy: new FormControl(file.privacy),
+    collection: new FormControl(file.collection),
+    docId: new FormControl(file.docId),
+    field: new FormControl(file.field),
     storagePath: new FormControl(file.storagePath),
     title: new FormControl(movieVideo?.title ?? ''),
     description: new FormControl(movieVideo?.description ?? ''),

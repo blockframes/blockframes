@@ -22,7 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
     MatDialogModule
   ],
-  exports: [],
+  exports: [FilePreviewComponent],
   declarations: [FilePreviewComponent],
 })
 export class FilePreviewModule { }
