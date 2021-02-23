@@ -3,6 +3,7 @@ import { copyFileSync } from 'fs';
 import { runShellCommand, getServiceAccountObj } from '@blockframes/firebase-utils';
 import { promises as fsPromises } from 'fs';
 import { execSync } from 'child_process';
+import camelcase from 'camelcase';
 
 const { readdir, readFile, writeFile } = fsPromises;
 
@@ -22,6 +23,15 @@ function SAKIsCorrect(projectId: string) {
   return projectId === key.project_id;
 }
 
+function isJSON(input: string) {
+  try {
+    JSON.parse(input);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * This function will find the correct SAK and set `GOOGLE_APPLICATION_CREDENTIALS` to
  * point to it.
@@ -29,6 +39,16 @@ function SAKIsCorrect(projectId: string) {
  */
 async function updateSAKPathInDotenv(projectId: string) {
   console.log('Attempting to find and set correct service account key.');
+
+  const GAPKey = `GAP_${camelcase(projectId)}`;
+  if (process.env.hasOwnProperty(GAPKey)) {
+    console.log(`GAP key found in env: ${GAPKey}`);
+    if (isJSON(process.env[GAPKey])) {
+      // * Is an object, write to disk
+      await writeFile(resolve(SAKDirPath, 'creds.json'), process.env[GAPKey], 'utf-8');
+      return updateDotenv(SAKKeyName, join(SAKDirPath, 'creds.json'));
+    } else return updateDotenv(SAKKeyName, process.env[GAPKey]); // * Is a path
+  }
 
   if (SAKIsCorrect(projectId)) {
     console.log('Correct service account key already set!');
@@ -38,12 +58,12 @@ async function updateSAKPathInDotenv(projectId: string) {
   const SAKFilename = await findSAKFilename(SAKDirPath, projectId);
 
   if (!SAKFilename) {
+    const SAKPath = join(SAKDirPath, SAKFilename);
+    return updateDotenv(SAKKeyName, SAKPath);
+  } else {
     console.warn('WARNING: Service account key may not exist or have correct permissions! Run health check to confirm...');
-    return;
   }
 
-  const SAKPath = join(SAKDirPath, SAKFilename);
-  await updateDotenv(SAKKeyName, SAKPath);
 }
 
 /**
