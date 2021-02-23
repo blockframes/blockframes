@@ -76,7 +76,7 @@ export const supportEmails = {
 export const yandex = {
   festival: 0,
   financiers: 0,
-  catalog: 56105038
+  catalog: 0
 };
 
 // Intercom
