@@ -67,13 +67,17 @@ async function send(msg: MailDataRequired): Promise<any> {
   }
 
   SendGrid.setApiKey(sendgridAPIKey);
-  return SendGrid.send(msg).catch(e => {
+
+  try {
+    SendGrid.send(msg);
+  }
+  catch (e) {
     if (e.message === 'Unauthorized') {
       throw new Error(emailErrorCodes.unauthorized.code);
     } else {
       throw new Error(emailErrorCodes.general.code);
     }
-  });
+  }
 }
 
 /**
