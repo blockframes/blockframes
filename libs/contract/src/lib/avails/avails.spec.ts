@@ -1,38 +1,14 @@
-import { Mandate, Sale } from '../contract/+state/contract.model';
 import { Term } from '../term/+state/term.model';
 import { isLicensed, filterSales } from './avails';
-import firebase from 'firebase';
-
-export type Timestamp = firebase.firestore.Timestamp;
+import { mandateTerms as acTerms } from './fixtures/mandateTerms'
+import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
 
 describe('Avails', () => {
-    const titleId = 'Cr3NYe9RXaMwP98LQMyD';
-    let contracts;
-    let mandateTerms: Term<Timestamp>[];
-    let saleTerms: Term<Timestamp>[];
-    firebase.initializeApp({ projectId: 'test' }).firestore().useEmulator('localhost', 8080);
-    const db = firebase.firestore()
-
-    beforeEach(async () => {
-        const contractsRef = await db.collection('contracts').where('titleId', '==', titleId).get()
-        contracts = contractsRef.docs.map(ref => ref.data());
-
-        const mandates = contracts.filter((contract: Mandate) => contract.type === 'mandate') as Mandate[]
-        const sales = contracts.filter((contract: Sale) => contract.type === 'sale') as Sale[]
-
-        const mandateTermsIds = mandates.map(mandate => mandate.termsIds).flat();
-        const saleTermsIds = sales.map(sale => sale.termsIds).flat();
-
-        const mandateTermsRef = await Promise.all(mandateTermsIds.map(id => db.doc(`terms/${id}`).get()));
-        mandateTerms = mandateTermsRef.map(ref => ref.data()) as Term<Timestamp>[];
-
-        const salesTermsRef = await Promise.all(saleTermsIds.map(id => db.doc(`terms/${id}`).get()))
-        saleTerms = salesTermsRef.map(ref => ref.data()) as Term<Timestamp>[];
-        const d = await db.collection('terms').doc('HJvSSzBny8BHdFFoor4y').get();
-    });
+    let mandateTerms: Term<Date>[] = (acTerms as unknown[]).map(parseTimestampsOnTerms)
+    let saleTerms: Term<Date>[] = (acSaleTerms as unknown[]).map(parseTimestampsOnTerms)
 
     it(`Mandate test (territory)
-    Terms: 01/01/2022 - 06/30/2023
+    Terms: 01/01/2022 - 06/30/2023 
     Territory: South Korea
     Rights: Free TV
     Exclusive: No
@@ -221,10 +197,8 @@ describe('Avails', () => {
     });
 })
 
-function parseTimestampsOnTerms(term: Term<Timestamp>): Term<Date> {
-    const fromDate = term.duration.from.toDate()
-    const toDate = term.duration.to.toDate()
-    term.duration.from = fromDate as any;
-    term.duration.to = toDate as any
-    return term as any
+function parseTimestampsOnTerms(term: Term<Date>): Term<Date> {
+    term.duration.from = new Date(term.duration.from)
+    term.duration.to = new Date(term.duration.to)
+    return term
 }
