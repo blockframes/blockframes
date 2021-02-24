@@ -29,13 +29,13 @@ export class PendingOrganizationGuard extends CollectionGuard<OrganizationState>
     return this.authQuery.user$.pipe(
       switchMap(user => {
         if (!user.orgId) {
-          return of('/c/organization');
+          return of('/auth/identity');
         } else {
           return this.service.syncActive({ id: user.orgId }).pipe(
             map(_ => this.query.getActive()),
             map(org => {
               if (!org) {
-                return '/c/organization';
+                return '/auth/identity';
               }
 
               if (org.status === 'accepted') {

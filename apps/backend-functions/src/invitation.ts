@@ -245,7 +245,7 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
         return true;
       }
     } else {
-      // @TODO #4932 handle case user already exists and have already set identity
+      // @TODO #4932 handle case user already exists and have already set identity. Juste return false ?
     }
   }
 

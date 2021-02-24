@@ -10,8 +10,9 @@ import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaIndex, AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser } from '@blockframes/user/types';
+import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
+import { hasIdentity } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'auth-identity',
@@ -33,6 +34,7 @@ export class IdentityComponent implements OnInit {
   public orgForm = new OrganizationLiteForm();
   public isTermsChecked: boolean;
   public showInvitationCodeField = false;
+  public showPasswordField = true;
   public isOrgFromInvitation = false;
   private existingUser = false;
   public isOrgFromAlgolia = true;
@@ -61,20 +63,36 @@ export class IdentityComponent implements OnInit {
       this.form.get('generatedPassword').setValue(params.code);
     }
 
-    if (!!this.query.user) {
+    if (!!this.query.user && !hasIdentity(this.query.user)) {
       // Updating user (invited)
-      this.updateFormForExistingUser(this.query.user.email);
+      this.updateFormForExistingUser(this.query.user);
+    } else if (!!this.query.user && !!hasIdentity(this.query.user)) {
+      // Updating user (already logged in)
+      this.updateFormForExistingIdentity(this.query.user);
     } else if (!!params.email) {
-      this.updateFormForExistingUser(params.email);
+      this.updateFormForExistingUser({ email: params.email });
     } else {
       // Creating user
       this.updateFormForNewUser();
     }
   }
 
-  private updateFormForExistingUser(email: string) {
-    this.form.get('email').setValue(email);
+  private updateFormForExistingUser(user: Partial<PublicUser>) {
+    this.form.get('email').setValue(user.email);
     this.showInvitationCodeField = true;
+  }
+
+  private updateFormForExistingIdentity(user: Partial<PublicUser>) {
+    this.form.get('email').setValue(user.email);
+    this.form.get('firstName').setValue(user.firstName);
+    this.form.get('lastName').setValue(user.lastName);
+    this.form.get('email').disable();
+    this.form.get('firstName').disable();
+    this.form.get('lastName').disable();
+    this.form.get('password').disable();
+    this.showInvitationCodeField = false;
+    this.showPasswordField = false;
+    this.form.get('generatedPassword').disable();
   }
 
   private updateFormForNewUser() {
@@ -192,7 +210,7 @@ export class IdentityComponent implements OnInit {
 
   public async update() {
     try {
-      if (this.form.get('generatedPassword').value === this.form.get('password').value) {
+      if (this.showInvitationCodeField && this.showPasswordField && this.form.get('generatedPassword').value === this.form.get('password').value) {
         this.snackBar.open('You must choose a new password', 'close', { duration: 5000 });
         return;
       }
@@ -202,19 +220,23 @@ export class IdentityComponent implements OnInit {
       const { generatedPassword, password, firstName, lastName } = this.form.value;
       const email = this.form.get('email').value; // To retreive value even if control is disabled
 
-      await this.authService.updatePassword(
-        generatedPassword,
-        password,
-        email
-      );
+      if (this.showInvitationCodeField) {
+        await this.authService.updatePassword(
+          generatedPassword,
+          password,
+          email
+        );
+      }
 
-      const privacyPolicy = await this.authService.getPrivacyPolicy();
-      await this.authService.update({
-        _meta: createDocumentMeta({ createdFrom: this.app }),
-        firstName,
-        lastName,
-        privacyPolicy: privacyPolicy,
-      });
+      if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
+        const privacyPolicy = await this.authService.getPrivacyPolicy();
+        await this.authService.update({
+          _meta: createDocumentMeta({ createdFrom: this.app }),// @TODO #4932 update to updatedFrom ?
+          firstName,
+          lastName,
+          privacyPolicy: privacyPolicy,
+        });
+      }
 
       // Accept the invitation from the organization.
       const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')

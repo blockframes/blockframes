@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
       }
     } catch (err) {
       console.error(err); // let the devs see what happened
+      // @TODO #4932 customize sidebar to add "create-account" link CF figma
       this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
     }
   }
