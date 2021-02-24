@@ -40,7 +40,6 @@ export async function upsertWatermark(user: PublicUser, bucketName: string, stor
   const db = admin.firestore();
   const doc = db.collection('users').doc(user.uid);
   const storageFile = createStorageFile({ storagePath: ref, privacy: 'public', collection: 'users', field: 'watermark', docId: user.uid });
-  console.log('storageFile: ', JSON.stringify(storageFile));
   await doc.update({ watermark: storageFile });
 
   return file;
