@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { FormControl } from "@angular/forms";
 import { InvitationService } from "@blockframes/invitation/+state";
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { debounceTime } from "rxjs/operators";
 
 @Component({
   selector: 'auth-email-input',
@@ -20,7 +21,7 @@ export class EmailInputComponent implements OnInit {
   ngOnInit() {
     if (!!this.emailForm.value) this.searchForInvitation();
 
-    this.emailForm.valueChanges.subscribe(_ => {
+    this.emailForm.valueChanges.pipe(debounceTime(500)).subscribe(_ => {
       if (this.emailForm.valid) this.searchForInvitation();
     });
   }

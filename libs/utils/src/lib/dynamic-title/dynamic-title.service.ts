@@ -1,5 +1,4 @@
-import { Subscription } from 'rxjs';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, App, getCurrentApp } from '../apps';
@@ -17,10 +16,8 @@ function displayEntityWithSection(section: string, titleName: string, showAppNam
 }
 
 @Injectable({ providedIn: 'root' })
-export class DynamicTitleService implements OnDestroy {
+export class DynamicTitleService {
   private app = getCurrentApp(this.routerQuery);
-
-  private sub: Subscription;
 
   /**
    * This variable holds the value that this service gets when 
@@ -57,9 +54,5 @@ export class DynamicTitleService implements OnDestroy {
 
   public useDefault() {
     this.title.setTitle(this.initTitle);
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 }
