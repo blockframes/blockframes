@@ -9,7 +9,7 @@ import {
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
@@ -217,6 +217,9 @@ export const onOrganizationUpdateEvent = functions
 
 /** Trigger: when an organization is removed. */
 export const onOrganizationDeleteEvent = onDocumentDelete('orgs/{orgID}', onOrganizationDelete);
+
+/** Trigger when an organization ask to access to a new platform  */
+export const requestFromOrgToAccessApp = functions.https.onCall(skipInMaintenance(onRequestFromOrgToAccessApp));
 
 //--------------------------------
 //      Files management        //

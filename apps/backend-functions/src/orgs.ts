@@ -11,12 +11,13 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
+import { app, App, modules, getSendgridFrom } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail, getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -275,4 +276,15 @@ export const accessToAppChanged = async (
     error: '',
     result: 'OK'
   };
+}
+
+/** Send an email to C8 Admins when an organization requests to access to a new platform */
+export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string}, context?: CallableContext) => {
+  if (!!context.auth.uid && !!data.app && !!data.orgId) {
+    const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
+    const mailRequest = await organizationRequestedAccessToApp(organization);
+    const from = await getSendgridFrom(data.app);
+    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
+  }
+  return;
 }

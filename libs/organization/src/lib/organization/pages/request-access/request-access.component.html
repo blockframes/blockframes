@@ -1,0 +1,11 @@
+<app-logo></app-logo>
+
+<ng-container *ngIf="!(orgHasAccess$ | async); else accessGranted">
+  <p class="mat-body-2">You have no access to this platform.</p>
+  <p class="mat-body-2">You can ask for access by clicking the button below.</p>
+  <button mat-flat-button color="accent" (click)="requestAccess()">Ask access to {{ appName }}</button>
+</ng-container>
+<ng-template #accessGranted>
+  <p class="mat-body-2">You have now access to this platform. Please enjoy !</p>
+  <a mat-flat-button color="accent" routerLink="../marketplace">Access to {{ appName }}</a>
+</ng-template>
