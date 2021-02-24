@@ -5,7 +5,7 @@ import { Movie, MovieService } from '@blockframes/movie/+state';
 import { hostedVideoTypes } from '@blockframes/utils/static-model';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { MovieVideos } from '@blockframes/movie/+state/movie.firestore';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 
 @Component({
   selector: 'movie-video-upload',
