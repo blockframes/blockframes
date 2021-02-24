@@ -87,7 +87,7 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
     },
     movies: {
       poster: { uid: '', privacy: 'public', collection, docId, field: 'poster' },
-      banner: { uid: '', privacy: 'public', collection, docId, field: 'poster' },
+      banner: { uid: '', privacy: 'public', collection, docId, field: 'banner' },
       scenario: { uid: '', privacy: 'public', collection, docId, field: 'promotional.scenario' },
       moodboard: { uid: '', privacy: 'public', collection, docId, field: 'promotional.moodboard' },
       'presentation_deck': { uid: '', privacy: 'public', collection, docId, field: 'promotional.presentation_deck' },

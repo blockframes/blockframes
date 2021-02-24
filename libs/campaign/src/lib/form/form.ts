@@ -134,9 +134,9 @@ function createCampaignControls(value?: Partial<Campaign>) {
     ),
     budget: new BudgetForm(campaign.budget),
     files: new FormGroup({
-      financingPlan: new StorageFileForm({ storagePath: campaign.files.financingPlan }),
-      waterfall: new StorageFileForm({ storagePath: campaign.files.waterfall }),
-      budget: new StorageFileForm({ storagePath: campaign.files.budget }),
+      financingPlan: new StorageFileForm(campaign.files.financingPlan),
+      waterfall: new StorageFileForm(campaign.files.waterfall),
+      budget: new StorageFileForm(campaign.files.budget),
     })
   }
 }
