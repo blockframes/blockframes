@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthQuery, User, AuthService, AuthState } from '../+state';
+import { AuthQuery, AuthService, AuthState } from '../+state';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';

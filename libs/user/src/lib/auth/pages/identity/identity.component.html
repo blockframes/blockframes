@@ -1,8 +1,8 @@
 <section fxLayout="column" fxLayoutAlign="center center">
   <app-logo></app-logo>
-  <h1>Create your account</h1>
+  <h1>Create your account</h1><!-- @TODO #4932 "finnish registration" if user just need to choose or create org  ?-->
   <p>Please fill in the form to join the {{ appName }} platform</p>
-  <p>Do you already have an account ? <a routerLink="/auth/connexion" >Login here</a></p>
+  <p>Do you already have an account ? <a routerLink="/auth/connexion" >Login here</a></p><!-- @TODO #4932 hide if already logged in-->
   <mat-card>
     <form [formGroup]="form">
       <auth-email-input
@@ -54,7 +54,7 @@
         </mat-form-field>
       </ng-container>
 
-      <password-confirm formControlName="password"></password-confirm>
+      <password-confirm *ngIf="showPasswordField" formControlName="password"></password-confirm>
       <div>
         <auth-accept-conditions [control]="form.get('termsOfUse')">
           <span conditionText>I hereby accept {{ appName }}</span>
