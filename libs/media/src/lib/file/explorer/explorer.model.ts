@@ -186,12 +186,12 @@ function titleDirectory(title: Movie): Directory {
         // privacy: 'protected',
         // hasFile: !!title.promotional.videos?.screener?.ref
       },
-      otherVideo: {
+      otherVideos: {
         name: 'Other Videos',
         type: 'fileList',
         accept: 'video',
-        meta: ['movies', 'otherVideo', title.id],
-        form: getFormListStorage(title, 'movies', 'otherVideo'),
+        meta: ['movies', 'otherVideos', title.id],
+        form: getFormListStorage(title, 'movies', 'otherVideos'),
         // multiple: true,
         // docNameField: 'ref',
         // fileRefField: 'ref',
