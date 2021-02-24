@@ -10,7 +10,7 @@ import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 import { BehaviorStore } from "@blockframes/utils/behavior-store";
 import { delay } from '@blockframes/utils/helpers';
 
-import { UploadData, FileMetaData, isValidMetadata } from "./media.model";
+import { UploadData, isValidMetadata } from "./media.model";
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 
 
@@ -57,12 +57,10 @@ export class FileUploaderService {
     // instantiate array if it doesn't exists yet
     if (!this.queue[storagePath]) this.queue[storagePath] = [];
 
-    const uploads = this.queue[storagePath];
-
     // Throw in case of duplicated path, instead of silently overwriting the first occurrence
-    if (uploads.some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
+    if (this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
 
-    uploads.push({ file, fileName, metadata });
+    this.queue[storagePath].push({ file, fileName, metadata });
   }
 
   /**
@@ -115,7 +113,13 @@ export class FileUploaderService {
         upload.metadata.uid = this.userQuery.userId;
 
         // upload
-        const afTask = this.storage.upload(`${tempUploadDir}/${storagePath}/${upload.fileName}`, upload.file, { customMetadata: upload.metadata });
+        const finalPath = `${tempUploadDir}/${storagePath}/${upload.fileName}`;
+
+        // avoid double uploading
+        const alreadyUploading = (fullPath: string) => this.tasks.value.some(task => task.task.snapshot.ref.fullPath === fullPath);
+        if (alreadyUploading(finalPath)) return undefined;
+
+        const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata });
 
         // clean on success
         afTask.task.then(() => {
@@ -127,12 +131,7 @@ export class FileUploaderService {
       });
     });
 
-    // convert a [][] into a []
-    // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
-    const flattenedTasks = ([] as AngularFireUploadTask[]).concat(...tasks);
-
-    // this.tasks.value = [...this.tasks.value, ...flattenedTasks];
-    this.tasks.value = [...this.tasks.value, ...tasks.flat()];
+    this.tasks.value = [...this.tasks.value, ...tasks.flat().filter(task => !!task)];
     (Promise as any).allSettled(tasks)
       .then(() => delay(3000))
       .then(() => this.detachWidget());

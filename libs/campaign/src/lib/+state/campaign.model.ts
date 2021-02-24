@@ -1,3 +1,4 @@
+import { StorageFile } from "@blockframes/media/+state/media.firestore"
 import { MovieCurrency } from "@blockframes/utils/static-model"
 
 export interface Campaign {
@@ -15,9 +16,9 @@ export interface Campaign {
   };
   budget?: Budget,
   files: {
-    financingPlan?: string;
-    waterfall?: string;
-    budget?: string;
+    financingPlan?: StorageFile;
+    waterfall?: StorageFile;
+    budget?: StorageFile;
   }
 }
 
