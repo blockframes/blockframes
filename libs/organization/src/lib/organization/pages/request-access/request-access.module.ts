@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
 // BlockFrames
 import { OrgRequestAccessComponent } from './request-access.component';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
