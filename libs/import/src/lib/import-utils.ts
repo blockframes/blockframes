@@ -23,7 +23,7 @@ export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
   newContract: boolean;
   contract: Sale | Mandate;
-  terms: Term[]
+  terms: Term<Date>[]
 }
 
 export interface OrganizationsImportState {
