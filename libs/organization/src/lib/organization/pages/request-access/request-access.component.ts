@@ -16,7 +16,7 @@ export class OrgRequestAccessComponent implements OnInit {
   private app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public org$ = this.orgQuery.selectActive();
-  public org : Organization;
+  public orgId = this.orgQuery.getActiveId();
   public orgHasAccess$: Observable<boolean>;
 
   constructor(
@@ -33,8 +33,7 @@ export class OrgRequestAccessComponent implements OnInit {
   }
 
   async requestAccess() {
-    const orgId = this.org.id;
-    await this.orgService.requestToAccessToApp(this.app, orgId);
+    await this.orgService.requestToAccessToApp(this.app, this.orgId);
     this.snackBar.open('Your request to access to this platform has been sent.', 'close', { duration: 5000 });
   }
 }
