@@ -18,11 +18,8 @@ import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { OrgAccessModule } from '@blockframes/organization/pipes'
 
 // Guards
-import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
-import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
-import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
@@ -81,20 +78,20 @@ const routes: Routes = [
           data: { redirect: '/c/o/dashboard/title' }
         }]
       },
-      {
-        path: 'deals',
-        children: [{
-          path: '',
-          canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-          canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-          loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule)
-        }, {
-          path: ':contractId', // One right: different state of a right (offer, counter-offer, payment),
-          canActivate: [ActiveContractGuard],
-          canDeactivate: [ActiveContractGuard],
-          loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
-        }]
-      },
+      /*  {
+         path: 'deals',
+         children: [{
+           path: '',
+           canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+           canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+           loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule)
+         }, {
+           path: ':contractId', // One right: different state of a right (offer, counter-offer, payment),
+           canActivate: [ActiveContractGuard],
+           canDeactivate: [ActiveContractGuard],
+           loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
+         }]
+       }, */
       {
         path: 'about',
         loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
@@ -125,20 +122,6 @@ const routes: Routes = [
         children: tunnelRoutes,
         data: {
           redirect: '/c/o/dashboard/tunnel/movie'
-        },
-      }]
-    }, {
-      path: 'contract',
-      children: [{
-        path: '',
-        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
-      }, {
-        path: ':contractId',
-        canActivate: [ActiveContractGuard],
-        canDeactivate: [ActiveContractGuard],
-        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
-        data: {
-          redirect: '/c/o/dashboard/tunnel/contract'
         },
       }]
     }]

@@ -9,7 +9,7 @@ import { TermStore } from './term.store'
 @CollectionConfig({
   path: 'terms'
 })
-export class TermService extends CollectionService<Term> {
+export class TermService extends CollectionService<Term<Date>> {
   constructor(store: TermStore) {
     super(store)
   }
