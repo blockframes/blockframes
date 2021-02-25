@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { SSF } from 'xlsx';
 import { createTerm, createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { Intercom } from 'ng-intercom';
@@ -209,8 +208,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.startOfContract]) {
             if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
-              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.startOfContract]);
-              term.duration.from = new Date(`${y}-${m}-${d}`);
+              term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract] - (25567 + 1) * 86400 * 1000);
             } else {
               term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract])
             }
@@ -226,8 +224,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.endOfContract]) {
             if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
-              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.endOfContract]);
-              term.duration.to = new Date(`${y}-${m}-${d}`);
+              term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract] - (25567 + 1) * 86400 * 1000);
             } else {
               term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
             }
