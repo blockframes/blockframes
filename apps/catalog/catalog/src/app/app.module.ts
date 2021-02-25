@@ -118,7 +118,7 @@ export class AppModule {
   ) {
 
     const { intercom, yandex } = gdprService.cookieConsent;
-    if (yandex) yandexService.insertMetrika();
+    if (yandex) yandexService.insertMetrika('catalog');
     intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());
@@ -127,12 +127,12 @@ export class AppModule {
     navEnds.subscribe((event: NavigationEnd) => {
       try {
         analytics.event('pageView', {
-          page_location: 'marketplace',
+          page_location: 'catalog',
           page_path: event.urlAfterRedirects
         });
       } catch {
         analytics.event('pageView', {
-          page_location: 'marketplace',
+          page_location: 'catalog',
           page_path: event.urlAfterRedirects
         });
       }

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
 import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component';
 import { GDPRService } from '../gdpr-service/gdpr.service'
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'cookie-banner',
@@ -21,6 +22,7 @@ export class CookieBannerComponent implements OnInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private gdpr: GDPRService,
+    private routerQuery: RouterQuery,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
