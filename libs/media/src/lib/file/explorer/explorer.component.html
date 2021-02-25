@@ -76,6 +76,7 @@
 
 <!-- File List -->
 <ng-template #fileList let-dir>
+  <!-- TODO INSERT NEW COMPONENT HERE INSTEAD OF EVERYTHING ELSE -->
   <bf-form-list [form]="dir.form" listPosition="bottom" reverseList>
     <ng-template itemRef let-item>
       <button mat-list-icon (click)="openView(item, $event)">
@@ -98,6 +99,7 @@
 
 <!-- Image List -->
 <ng-template #imageList let-dir>
+  <!-- TODO INSERT NEW COMPONENT HERE INSTEAD OF EVERYTHING ELSE -->
   <bf-form-list [form]="dir.form" listPosition="bottom" keepFormOpen reverseList>
     <ng-template itemRef let-item>
       <button mat-list-icon (click)="openView(item, $event)">
