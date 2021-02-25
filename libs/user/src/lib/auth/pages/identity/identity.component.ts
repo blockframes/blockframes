@@ -23,7 +23,7 @@ import { hasIdentity } from '@blockframes/utils/helpers';
 })
 export class IdentityComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
-  user$ = this.query.user$;
+  public user$ = this.query.user$;
   public creating = false;
   public app: App;
   public appName: string;
@@ -33,7 +33,7 @@ export class IdentityComponent implements OnInit {
   public form = new IdentityForm();
 
   public orgForm = new OrganizationLiteForm();
-  public isTermsChecked: boolean;
+
   public showInvitationCodeField = false;
   public showPasswordField = true;
   public isOrgFromInvitation = false;
@@ -171,15 +171,9 @@ export class IdentityComponent implements OnInit {
       });
 
       if (!!this.existingOrgId) {
-        try {
-
-          await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
-          this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
-          this.creating = false;
-          return this.router.navigate(['c/organization/join-congratulations']);
-        } catch (error) {
-          this.snackBar.open(error.message, 'close', { duration: 2000 });
-        }
+        await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
+        this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+        return this.router.navigate(['c/organization/join-congratulations']);
       } else {
         const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
@@ -190,15 +184,15 @@ export class IdentityComponent implements OnInit {
         await this.orgService.addOrganization(org, this.app, user);
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
-        this.creating = false;
         return this.router.navigate(['c/organization/create-congratulations']);
       }
 
     } catch (err) {
-
+      this.creating = false;
+      this.cdr.markForCheck();
       switch (err.code) {
         case 'auth/email-already-in-use':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration })
+          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration });
           break;
         default:
           console.error(err); // let the devs see what happened
@@ -207,7 +201,6 @@ export class IdentityComponent implements OnInit {
       }
     }
   }
-
 
   public async update() {
     try {
@@ -248,21 +241,13 @@ export class IdentityComponent implements OnInit {
         // We put invitation to accepted only if the invitation.type is joinOrganization.
         // Otherwise, user will have to create or join an org before accepting the invitation (to attend event for example)
         await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-        this.creating = false;
         this.router.navigate(['/c/o']);
       } else if (!!this.query.user.orgId) {
-        this.creating = false;
         this.router.navigate(['/c/o']);
       } else if (!!this.existingOrgId) {
-        try {
-
-          await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
-          this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
-          this.creating = false;
-          return this.router.navigate(['c/organization/join-congratulations']);
-        } catch (error) {
-          this.snackBar.open(error.message, 'close', { duration: 2000 });
-        }
+        await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
+        this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+        return this.router.navigate(['c/organization/join-congratulations']);
       } else {
         const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
@@ -272,11 +257,11 @@ export class IdentityComponent implements OnInit {
         await this.orgService.addOrganization(org, this.app, this.query.user);
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
-        this.creating = false;
         return this.router.navigate(['c/organization/create-congratulations']);
       }
     } catch (error) {
       this.creating = false;
+      this.cdr.markForCheck();
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
   }

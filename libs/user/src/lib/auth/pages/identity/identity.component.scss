@@ -57,3 +57,12 @@ organization-lite-form {
 app-logo {
   margin-top: 30px;
 }
+
+.custom-snackbar-message {
+  text-align: center;
+  a {
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 120px;
+  }
+}
