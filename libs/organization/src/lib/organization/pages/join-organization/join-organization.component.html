@@ -7,29 +7,11 @@
     <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
       <p class="mat-body-1">
         <b>We care a lot about security</b> on our applications.
-        Before you get full access to {{ appName }} please validate your email and Blabla
-        should accept your request to join them.
+        Before you get full access to {{ appName }} please <b>validate your email</b> and <b>{{ org.denomination.full }}
+        should accept your request</b> to join them.
       </p>
       <p class="mat-body-1">Feel free to <b>contact us</b> if you have any questions.</p>
-      <ul>
-        <li>
-          <mat-checkbox checked="profileData">Profile data</mat-checkbox>
-          <mat-icon svgIcon="info"></mat-icon>
-        </li>
-        <li>
-          <mat-checkbox>Organization data</mat-checkbox>
-          <mat-icon svgIcon="info"></mat-icon>
-        </li>
-        <li>
-          <mat-checkbox>Email validation</mat-checkbox>
-          <mat-icon svgIcon="info"></mat-icon>
-        </li>
-        <li>
-          <mat-checkbox>Organization approval</mat-checkbox>
-          <mat-icon svgIcon="info"></mat-icon>
-        </li>
-      </ul>
-      <img asset="servicing_included.webp">
+      <auth-data-validation [organization]="org"></auth-data-validation>
     </mat-card-content>
     <mat-card-actions fxLayout="column" fxLayoutAlign="space-around center">
       <button mat-flat-button color="accent">Contact {{ appName }} Team</button>

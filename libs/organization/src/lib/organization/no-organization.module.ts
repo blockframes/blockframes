@@ -11,6 +11,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { WorkspacePipeModule } from '@blockframes/utils/pipes';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+import { AuthDataValidationModule } from '@blockframes/auth/components/data-validation/data-validation.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -27,7 +28,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
@@ -69,6 +69,7 @@ export const noOrganizationRoutes: Routes = [
     AlgoliaAutocompleteModule,
     WorkspacePipeModule,
     AppLogoModule,
+    AuthDataValidationModule,
 
     // Material
     MatFormFieldModule,
@@ -85,7 +86,6 @@ export const noOrganizationRoutes: Routes = [
     MatSnackBarModule,
     MatRadioModule,
     MatRippleModule,
-    MatCheckboxModule,
     MatTooltipModule,
 
     RouterModule.forChild(noOrganizationRoutes),

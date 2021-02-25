@@ -1,0 +1,19 @@
+<ul>
+  <li>
+    <mat-checkbox [checked]="profileData">Profile data</mat-checkbox>
+    <mat-icon svgIcon="info"></mat-icon>
+  </li>
+  <li>
+    <mat-checkbox [checked]="orgData">Organization data</mat-checkbox>
+    <mat-icon svgIcon="info"></mat-icon>
+  </li>
+  <li>
+    <mat-checkbox [checked]="(emailValidate$ | async)">Email validation</mat-checkbox>
+    <mat-icon svgIcon="info"></mat-icon>
+  </li>
+  <li>
+    <mat-checkbox [checked]="orgApproval">Organization approval</mat-checkbox>
+    <mat-icon svgIcon="info"></mat-icon>
+  </li>
+</ul>
+<img asset="servicing_included.webp">
