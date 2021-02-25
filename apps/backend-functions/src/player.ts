@@ -84,9 +84,9 @@ export const getPrivateVideoUrl = async (
   let fileExists = false;
 
   // if we have a ref we should assert that it points to an existing file
+  const { privacy, storagePath } = user.watermark;
   if (!!user.watermark.storagePath) {
-    const ref = `${user.watermark.privacy}/${user.watermark.storagePath}`;
-    const file = admin.storage().bucket(bucketName).file(ref);
+    const file = admin.storage().bucket(bucketName).file(`${privacy}/${storagePath}`);
     [fileExists] = await file.exists();
   }
 
