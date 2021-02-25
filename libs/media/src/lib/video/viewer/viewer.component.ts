@@ -39,7 +39,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   get ref() { return this._ref; }
   @Input() set ref(value: StorageVideo) {
     // if the video file has changed
-    if (!!value && this.ref !== value) {
+    if (!!value && this.ref?.storagePath !== value.storagePath) {
       this.resetPlayerState();
       this._ref = value;
       this.initPlayer();
@@ -50,11 +50,21 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   private _control: MeetingVideoControl;
   get control() { return this._control; }
   @Input() set control(value: MeetingVideoControl) {
-    this._control = value;
-    this.updatePlayer();
+
+    const controlChange = this.control?.isPlaying !== value.isPlaying
+      || this.control.position !== value.position;
+
+    if (!!value && controlChange) {
+      this._control = value;
+      this.updatePlayer();
+    }
   }
 
-  @Input() eventId: string;
+  private _eventId: string;
+  get eventId() { return this._eventId; }
+  @Input() set eventId(value: string) {
+    this._eventId = value;
+  }
 
   // in order to have several player displayed in the same page
   // we need to randomize the html id,
@@ -92,7 +102,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
           fit: 'crop',
         };
         const watermarkRef = this.authQuery.user.watermark;
-        if (!watermarkRef) {
+        if (!watermarkRef.storagePath) {
           throw new Error('We cannot load video without watermark.');
         }
         const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);

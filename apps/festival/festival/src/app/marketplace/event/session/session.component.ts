@@ -31,7 +31,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
-  public screeningFileRef: string;
+  public screeningFileRef: StorageVideo;
 
   public creatingControl$ = new BehaviorSubject(false);
 
@@ -71,7 +71,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
-          this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
+          this.screeningFileRef = movie.promotional.videos?.screener;
         }
 
       // MEETING
@@ -150,7 +150,13 @@ export class SessionComponent implements OnInit, OnDestroy {
 
         // If the current selected file hasn't any controls yet we should create them
         if (!!(event as Event<Meeting>).meta.selectedFile) {
-          const file = (event as Event<Meeting>).meta.selectedFile;
+          const file = (event as Event<Meeting>).meta.files.find(file =>
+            file.storagePath === (event as Event<Meeting>).meta.selectedFile
+          );
+          if (!file) {
+            console.warn('Selected file doesn\'t exists in this Meeting!');
+            this.select('');
+          }
           if (!(event as Event<Meeting>).meta.controls[file.storagePath]) {
             const fileType = extensionToType(getFileExtension(file.storagePath));
             switch (fileType) {

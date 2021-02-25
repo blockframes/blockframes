@@ -41,8 +41,10 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this.movies = await this.movieService.getValue(fromOrg(org.id))
     this.moviesFiles = {};
     this.movies.forEach(movie =>
-      this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file =>
-        ({ file, isSelected: this.selectedFiles.includes(file) })));
+      this.moviesFiles[movie.id] = recursivelyListFiles(movie)
+        .filter(file => !!file.storagePath)
+        .map(file => ({ file, isSelected: this.selectedFiles.includes(file) })));
+
     this.cdr.markForCheck();
 
     // we set disableClose to `true` on the dialog, so we have to fake the exits events
