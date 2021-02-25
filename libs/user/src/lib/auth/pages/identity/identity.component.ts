@@ -23,6 +23,7 @@ import { hasIdentity } from '@blockframes/utils/helpers';
 })
 export class IdentityComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
+  user$ = this.query.user$;
   public creating = false;
   public app: App;
   public appName: string;

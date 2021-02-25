@@ -2,7 +2,7 @@
   <app-logo></app-logo>
   <h1>Create your account</h1><!-- @TODO #4932 "finnish registration" if user just need to choose or create org  ?-->
   <p>Please fill in the form to join the {{ appName }} platform</p>
-  <p>Do you already have an account ? <a routerLink="/auth/connexion" >Login here</a></p><!-- @TODO #4932 hide if already logged in-->
+  <p *ngIf="!(user$ | async)">Do you already have an account ? <a routerLink="/auth/connexion" >Login here</a></p>
   <mat-card>
     <form [formGroup]="form">
       <auth-email-input

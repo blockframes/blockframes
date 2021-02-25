@@ -49,7 +49,6 @@ export const AuthRoutes: Routes = [
   {
     path: 'identity',
     canActivate: [IdentityGuard],
-    canDeactivate: [IdentityGuard],
     component: IdentityComponent
   },
   // @TODO (#2875) rename to password-reset
