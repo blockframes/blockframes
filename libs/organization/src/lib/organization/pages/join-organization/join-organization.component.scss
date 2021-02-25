@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background-color: var(--background-card);
+  height: 100vh;
+}
+
+app-logo {
+  display: block;
+  height: 48px;
+  margin-bottom: 80px;
+}
+
+h1 {
+  margin-bottom: 32px;
+}
+
+mat-card {
+  width: 50%;
+  text-align: center;
+}
+
+img {
+  height: auto;
+  width: 200px;
+}

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

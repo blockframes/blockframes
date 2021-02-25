@@ -10,6 +10,7 @@ import { OrganizationFormModule } from './forms/organization-form/organization-f
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { WorkspacePipeModule } from '@blockframes/utils/pipes';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -26,11 +27,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
-import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
+import { JoinOrganizationComponent } from './pages/join-organization/join-organization.component';
 import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
-
 
 // Guards
 import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
@@ -46,7 +48,7 @@ export const noOrganizationRoutes: Routes = [
   {
     path: 'join-congratulations',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationFeedbackComponent
+    component: JoinOrganizationComponent
   },
   {
     path: 'create-congratulations',
@@ -66,6 +68,7 @@ export const noOrganizationRoutes: Routes = [
     ImageModule,
     AlgoliaAutocompleteModule,
     WorkspacePipeModule,
+    AppLogoModule,
 
     // Material
     MatFormFieldModule,
@@ -82,11 +85,13 @@ export const noOrganizationRoutes: Routes = [
     MatSnackBarModule,
     MatRadioModule,
     MatRippleModule,
+    MatCheckboxModule,
+    MatTooltipModule,
 
     RouterModule.forChild(noOrganizationRoutes),
   ],
   declarations: [
-    OrganizationFeedbackComponent,
+    JoinOrganizationComponent,
     OrganizationCreateFeedbackComponent
   ]
 })
