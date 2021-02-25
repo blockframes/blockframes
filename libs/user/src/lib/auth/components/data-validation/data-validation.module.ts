@@ -13,6 +13,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [AuthDataValidation],
@@ -24,7 +25,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ImageModule,
     MatIconModule,
     MatInputModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatButtonModule
   ],
   exports: [AuthDataValidation]
 })

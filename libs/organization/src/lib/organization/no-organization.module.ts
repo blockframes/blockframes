@@ -32,7 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
 import { JoinOrganizationComponent } from './pages/join-organization/join-organization.component';
-import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
+import { CreateOrganizationPendingComponent } from './pages/create-organization-pending/create-organization-pending.component';
 
 // Guards
 import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
@@ -53,7 +53,7 @@ export const noOrganizationRoutes: Routes = [
   {
     path: 'create-congratulations',
     canActivate: [PendingOrganizationGuard],
-    component: OrganizationCreateFeedbackComponent
+    component: CreateOrganizationPendingComponent
   }
 ];
 
@@ -92,7 +92,7 @@ export const noOrganizationRoutes: Routes = [
   ],
   declarations: [
     JoinOrganizationComponent,
-    OrganizationCreateFeedbackComponent
+    CreateOrganizationPendingComponent
   ]
 })
 export class NoOrganizationModule { }
