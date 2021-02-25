@@ -30,14 +30,7 @@
 
       <!-- ORGANIZATION -->
 
-      <ng-container *ngIf="isOrgFromInvitation">
-        <mat-form-field appearance="outline">
-          <mat-label>Company Name</mat-label>
-          <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
-        </mat-form-field>
-      </ng-container>
-
-      <ng-container *ngIf="isOrgFromAlgolia">
+      <ng-container *ngIf="useAlgolia else orgInput">
         <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"
           hint='Please join an existing company account or create a new one.'
           (selectionChange)="setOrg($event)"
@@ -47,6 +40,13 @@
           </ng-template>
         </algolia-autocomplete>
       </ng-container>
+
+      <ng-template #orgInput>
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name</mat-label>
+          <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
+        </mat-form-field>
+      </ng-template>
 
      <organization-lite-form *ngIf="!!orgForm.get('denomination').get('full').value" [form]="orgForm"></organization-lite-form>
 

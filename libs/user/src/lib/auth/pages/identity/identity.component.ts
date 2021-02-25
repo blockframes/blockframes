@@ -31,10 +31,8 @@ export class IdentityComponent implements OnInit {
   private snackbarDuration = 8000;
   public form = new IdentityForm();
   public orgForm = new OrganizationLiteForm();
-
-  public isOrgFromInvitation = false;
+  public useAlgolia = true;
   private existingUser = false;
-  public isOrgFromAlgolia = true;
   private existingOrgId: string;
 
   constructor(
@@ -94,8 +92,7 @@ export class IdentityComponent implements OnInit {
     }
 
     if (typeof event === 'object') { // User have an invitation to joinOrg
-      this.isOrgFromAlgolia = false;
-      this.isOrgFromInvitation = true;
+      this.useAlgolia = false;
       this.setOrg(event);
     } else if (!event) { // User does not have invitation
       this.form.get('generatedPassword').disable();
