@@ -60,7 +60,7 @@ export class IdentityComponent implements OnInit {
 
     if (!!params.email || (!!this.query.user && !hasIdentity(this.query.user))) {
       // Updating user (invited)
-      this.form.get('email').setValue(params.email || this.query.user);
+      this.form.get('email').setValue(params.email || this.query.user.email);
     } else if (!!this.query.user && !!hasIdentity(this.query.user)) {
       // Updating user (already logged in)
       this.updateFormForExistingIdentity(this.query.user);
