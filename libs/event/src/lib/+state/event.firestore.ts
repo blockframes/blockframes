@@ -15,7 +15,7 @@ export interface Meeting {
   description: string;
   attendees: Record<string, AttendeeStatus>;
   files: StorageFile[];
-  selectedFile: StorageFile;
+  selectedFile: string;
   controls: Record<string, MeetingMediaControl>
 }
 

@@ -21,7 +21,7 @@
 
         <ng-template #showVideo>
           <article class="screen">
-            <video-viewer [ref]="screeningFileRef" [eventId]="event.id" class="overlay"></video-viewer>
+            <video-viewer [eventId]="event.id" [ref]="screeningFileRef" class="overlay"></video-viewer>
           </article>
         </ng-template>
 
@@ -47,7 +47,7 @@
                 </section>
               </ng-container>
               <ng-template #controlReady>
-                <file-viewers [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
+                <file-viewers [eventId]="event.id" [ref]="event.meta.files | selectedFile: event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
               </ng-template>
               <section *ngIf="event.isOwner">
                 <mat-divider></mat-divider>

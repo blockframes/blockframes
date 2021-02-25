@@ -61,7 +61,7 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
     description: '',
     attendees: {},
     files: [],
-    selectedFile: createStorageFile(),
+    selectedFile: '',
     controls: {},
 
     ...meeting

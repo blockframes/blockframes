@@ -70,11 +70,14 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
         return false;
       }
 
+      const isInvited = await isUserInvitedToEvent(uid, eventId);
+      if (!isInvited) { return false; }
+
       // if event is a Meeting and has the file
       if (eventData.type === 'meeting') {
 
         // Check if the given file exists among the event's files
-        const match = (eventData.meta as Meeting).files.some(eventFile =>
+        canAccess = (eventData.meta as Meeting).files.some(eventFile =>
           eventFile.privacy === privacy && // trusted value from db
           eventFile.collection === file.collection &&
           eventFile.docId === file.docId &&
@@ -82,13 +85,9 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
           eventFile.storagePath === storagePath // trusted value from db
         );
 
-        if (match) {
-          // check if user is invited
-          canAccess = await isUserInvitedToEvent(uid, eventId);
-        }
       } else if (eventData.type === 'screening') {
         // only give access for this specific movie screener
-        canAccess = file.field === 'promotional.screener'
+        canAccess = file.field === 'promotional.videos.screener'
           && file.docId === (eventData.meta as Screening).titleId;
       }
     }

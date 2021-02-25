@@ -19,6 +19,11 @@ import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 
+
+const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
+  return meetingEvent.type === 'meeting';
+};
+
 @Component({
   selector: 'festival-session',
   templateUrl: './session.component.html',
@@ -31,7 +36,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
-  public screeningFileRef: string;
+  public screeningFileRef: StorageVideo;
 
   public creatingControl$ = new BehaviorSubject(false);
 
@@ -71,11 +76,12 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
-          this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
+          this.screeningFileRef = movie.promotional.videos?.screener;
         }
 
       // MEETING
-      } else if (event.type === 'meeting') {
+      } else if (isMeeting(event)) {
+
         this.dynTitle.setPageTitle(event.title, 'Meeting');
 
         const fileSelected = !!event?.meta?.selectedFile;
@@ -118,7 +124,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         // Manage redirect depending on attendees status & presence of meeting owners
         const uid = this.authQuery.userId;
         if (event.isOwner) {
-          const attendees = (event.meta as Meeting).attendees;
+          const attendees = event.meta.attendees;
           if (attendees[uid] !== 'owner') {
             const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
             this.service.update(event.id, { meta });
@@ -130,7 +136,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
           }
         } else {
-          const userStatus = (event.meta as Meeting).attendees[uid];
+          const userStatus = event.meta.attendees[uid];
 
           if (!userStatus || userStatus === 'ended') { // meeting session is over
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/ended`);
@@ -138,7 +144,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);
           } else {
 
-            const hasOwner = Object.values((event.meta as Meeting).attendees).some(status => status === 'owner');
+            const hasOwner = Object.values(event.meta.attendees).some(status => status === 'owner');
             if (!hasOwner) {
               this.createCountDown();
             } else if (!!hasOwner && !!this.countdownId) {
@@ -149,9 +155,15 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
 
         // If the current selected file hasn't any controls yet we should create them
-        if (!!(event as Event<Meeting>).meta.selectedFile) {
-          const file = (event as Event<Meeting>).meta.selectedFile;
-          if (!(event as Event<Meeting>).meta.controls[file.storagePath]) {
+        if (!!event.meta.selectedFile) {
+          const file = event.meta.files.find(file =>
+            file.storagePath === event.meta.selectedFile
+          );
+          if (!file) {
+            console.warn('Selected file doesn\'t exists in this Meeting!');
+            this.select('');
+          }
+          if (!event.meta.controls[file.storagePath]) {
             const fileType = extensionToType(getFileExtension(file.storagePath));
             switch (fileType) {
               case 'pdf': {
