@@ -16,8 +16,8 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const convertedOriginalLanguages = originalLanguages.map(language => languages[language]);
   const convertedOriginCountries = originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
   const statusLabel = productionStatus[movie.productionStatus];
-  const season = `Season ${movie.title.series || 'TBA'}`;
-  const episodeCount = `${runningTime.episodeCount ||'TBA'} episodes`
+  const season = movie.title.series > 0 ? `Season ${movie.title.series}` : '';
+  const episodeCount = runningTime.episodeCount > 0 ? `${runningTime.episodeCount} episodes` : '';
   const features = [
     contentType[movie.contentType],
     convertedRunTime,
