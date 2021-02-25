@@ -142,49 +142,11 @@ export class IdentityComponent implements OnInit {
       return;
     }
 
-    if (!!this.query.user || !!this.existingUser) {
-      await this.update();
-    } else {
-      await this.create();
-    }
-  }
-
-  public async create() {
     try {
-      this.creating = true;
-      const { email, password, firstName, lastName } = this.form.value;
-
-      const privacyPolicy = await this.authService.getPrivacyPolicy();
-      const ctx = {
-        firstName,
-        lastName,
-        _meta: { createdFrom: this.app },
-        privacyPolicy
-      };
-
-      const credentials = await this.authService.signup(email.trim(), password, { ctx });
-      const user = createPublicUser({
-        firstName,
-        lastName,
-        email,
-        uid: credentials.user.uid
-      });
-
-      if (!!this.existingOrgId) {
-        await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
-        this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
-        return this.router.navigate(['c/organization/join-congratulations']);
+      if (!!this.query.user || !!this.existingUser) {
+        await this.update();
       } else {
-        const { denomination, addresses, activity, appAccess } = this.orgForm.value;
-
-        const org = createOrganization({ denomination, addresses, activity });
-
-        org.appAccess[this.app][appAccess] = true;
-
-        await this.orgService.addOrganization(org, this.app, user);
-
-        this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
-        return this.router.navigate(['c/organization/create-congratulations']);
+        await this.create();
       }
 
     } catch (err) {
@@ -202,67 +164,99 @@ export class IdentityComponent implements OnInit {
     }
   }
 
-  public async update() {
-    try {
-      if (this.showInvitationCodeField && this.showPasswordField && this.form.get('generatedPassword').value === this.form.get('password').value) {
-        this.snackBar.open('You must choose a new password', 'close', { duration: 5000 });
-        return;
-      }
+  private async create() {
+    this.creating = true;
+    const { email, password, firstName, lastName } = this.form.value;
 
-      this.creating = true;
+    const privacyPolicy = await this.authService.getPrivacyPolicy();
+    const ctx = {
+      firstName,
+      lastName,
+      _meta: { createdFrom: this.app },
+      privacyPolicy
+    };
 
-      const { generatedPassword, password, firstName, lastName } = this.form.value;
-      const email = this.form.get('email').value; // To retreive value even if control is disabled
+    const credentials = await this.authService.signup(email.trim(), password, { ctx });
+    const user = createPublicUser({
+      firstName,
+      lastName,
+      email,
+      uid: credentials.user.uid
+    });
 
-      if (this.showInvitationCodeField) {
-        await this.authService.updatePassword(
-          generatedPassword,
-          password,
-          email
-        );
-      }
+    if (!!this.existingOrgId) {
+      await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
+      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+      return this.router.navigate(['c/organization/join-congratulations']);
+    } else {
+      const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
-      if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
-        const privacyPolicy = await this.authService.getPrivacyPolicy();
-        await this.authService.update({
-          _meta: createDocumentMeta({ createdFrom: this.app }),// @TODO #4932 update to updatedFrom ?
-          firstName,
-          lastName,
-          privacyPolicy: privacyPolicy,
-        });
-      }
+      const org = createOrganization({ denomination, addresses, activity });
 
-      // Accept the invitation from the organization.
-      const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
-        .where('type', '==', 'joinOrganization')
-        .where('toUser.uid', '==', this.query.userId));
-      const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
-      if (!!pendingInvitation) {
-        // We put invitation to accepted only if the invitation.type is joinOrganization.
-        // Otherwise, user will have to create or join an org before accepting the invitation (to attend event for example)
-        await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
-        this.router.navigate(['/c/o']);
-      } else if (!!this.query.user.orgId) {
-        this.router.navigate(['/c/o']);
-      } else if (!!this.existingOrgId) {
-        await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
-        this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
-        return this.router.navigate(['c/organization/join-congratulations']);
-      } else {
-        const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+      org.appAccess[this.app][appAccess] = true;
 
-        const org = createOrganization({ denomination, addresses, activity });
+      await this.orgService.addOrganization(org, this.app, user);
 
-        org.appAccess[this.app][appAccess] = true;
-        await this.orgService.addOrganization(org, this.app, this.query.user);
+      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
+      return this.router.navigate(['c/organization/create-congratulations']);
+    }
+  }
 
-        this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
-        return this.router.navigate(['c/organization/create-congratulations']);
-      }
-    } catch (error) {
-      this.creating = false;
-      this.cdr.markForCheck();
-      this.snackBar.open(error.message, 'close', { duration: 5000 });
+  private async update() {
+    if (this.showInvitationCodeField && this.showPasswordField && this.form.get('generatedPassword').value === this.form.get('password').value) {
+      this.snackBar.open('You must choose a new password', 'close', { duration: 5000 });
+      return;
+    }
+
+    this.creating = true;
+
+    const { generatedPassword, password, firstName, lastName } = this.form.value;
+    const email = this.form.get('email').value; // To retreive value even if control is disabled
+
+    if (this.showInvitationCodeField) {
+      await this.authService.updatePassword(
+        generatedPassword,
+        password,
+        email
+      );
+    }
+
+    if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
+      const privacyPolicy = await this.authService.getPrivacyPolicy();
+      await this.authService.update({
+        _meta: createDocumentMeta({ createdFrom: this.app }),// @TODO #4932 update to updatedFrom ?
+        firstName,
+        lastName,
+        privacyPolicy: privacyPolicy,
+      });
+    }
+
+    // Accept the invitation from the organization.
+    const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
+      .where('type', '==', 'joinOrganization')
+      .where('toUser.uid', '==', this.query.userId));
+    const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
+    if (!!pendingInvitation) {
+      // We put invitation to accepted only if the invitation.type is joinOrganization.
+      // Otherwise, user will have to create or join an org before accepting the invitation (to attend event for example)
+      await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
+      this.router.navigate(['/c/o']);
+    } else if (!!this.query.user.orgId) {
+      this.router.navigate(['/c/o']);
+    } else if (!!this.existingOrgId) {
+      await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
+      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+      return this.router.navigate(['c/organization/join-congratulations']);
+    } else {
+      const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+
+      const org = createOrganization({ denomination, addresses, activity });
+
+      org.appAccess[this.app][appAccess] = true;
+      await this.orgService.addOrganization(org, this.app, this.query.user);
+
+      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
+      return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
 }
