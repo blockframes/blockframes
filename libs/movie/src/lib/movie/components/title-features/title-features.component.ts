@@ -17,7 +17,7 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const convertedOriginCountries = originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
   const statusLabel = productionStatus[movie.productionStatus];
   const season = `Season ${movie.title.series || 'TBA'}`;
-  const episodeCount = `${runningTime.episodeCount} episodes`
+  const episodeCount = `${runningTime.episodeCount ||'TBA'} episodes`
   const features = [
     contentType[movie.contentType],
     convertedRunTime,
