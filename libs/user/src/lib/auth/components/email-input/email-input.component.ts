@@ -12,8 +12,8 @@ import { debounceTime } from "rxjs/operators";
 })
 export class EmailInputComponent implements OnInit {
 
-  @Output() private readonly organization = new EventEmitter<AlgoliaOrganization>();
-  @Output() showInvitationInput = new EventEmitter<boolean>(false);
+  @Output() private readonly hasInvitation = new EventEmitter<AlgoliaOrganization | boolean>(false);
+
   @Input() emailForm: FormControl;
 
   constructor(private invitationService: InvitationService) { }
@@ -27,12 +27,7 @@ export class EmailInputComponent implements OnInit {
   }
 
   async searchForInvitation() {
-    const doc = await this.invitationService.getInvitationLinkedToAnEmail(this.emailForm.value);
-
-    if (typeof doc === 'object') {
-      this.showInvitationInput.emit(true);
-      return this.organization.emit(doc);
-    }
-    else return this.showInvitationInput.emit(doc);
+    const output = await this.invitationService.getInvitationLinkedToAnEmail(this.emailForm.value);
+    this.hasInvitation.emit(output);
   }
 }
