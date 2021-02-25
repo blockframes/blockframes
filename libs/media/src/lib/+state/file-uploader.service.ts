@@ -12,12 +12,13 @@ import { delay } from '@blockframes/utils/helpers';
 
 import { UploadData, isValidMetadata } from "./media.model";
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
-
+import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
 
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
 
   private tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
+  private tasksState = new BehaviorStore<any[]>([]);
 
   private queue: Record<string, UploadData[] | null> = {};
 
@@ -131,7 +132,9 @@ export class FileUploaderService {
       });
     });
 
+    const tasksState = tasks.flat().filter(task => !!task).map(task => getTaskStateObservable(task).toPromise());
     this.tasks.value = [...this.tasks.value, ...tasks.flat().filter(task => !!task)];
+    this.tasksState.value = [...this.tasksState.value, ...tasksState];    
     (Promise as any).allSettled(tasks)
       .then(() => delay(3000))
       .then(() => this.detachWidget());
@@ -143,15 +146,16 @@ export class FileUploaderService {
   //          WIDGET         //
   // --------------------------
 
-  private detachWidget() {
+  private async detachWidget() {
     if (!this.overlayRef) return;
 
-    const canClose = this.tasks.value.every(task => task.task.snapshot.state === 'success');
+    const states = await Promise.all(this.tasksState.value)
+    const canClose = states.every(state => state === 'success')
     if (canClose) {
       this.overlayRef.detach();
       delete this.overlayRef;
-      const tasks = this.tasks.value.filter(task => task.task.snapshot.state !== 'success');
-      this.tasks.value = tasks;
+      this.tasks.value = [];
+      this.tasksState.value = [];
     }
   }
 
