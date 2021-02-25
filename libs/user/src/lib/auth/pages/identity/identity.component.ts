@@ -87,19 +87,21 @@ export class IdentityComponent implements OnInit {
   }
 
   public hasInvitation(event: boolean | AlgoliaOrganization) {
-    if (typeof event === 'object') { // User have an invitation to joinOrg
-      this.isOrgFromAlgolia = false;
-      this.isOrgFromInvitation = true;
-      this.existingUser = true;
-      this.setOrg(event);
-      this.cdr.markForCheck();
-    } else if (event) { // User have an invitation to attendEvent
+    if (!!event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();
       this.form.get('email').disable();
-    } else { // User does not have invitation
+    }
+
+    if (typeof event === 'object') { // User have an invitation to joinOrg
+      this.isOrgFromAlgolia = false;
+      this.isOrgFromInvitation = true;
+      this.setOrg(event);
+    } else if (!event) { // User does not have invitation
       this.form.get('generatedPassword').disable();
     }
+
+    this.cdr.markForCheck();
   }
 
   public setOrg(result: AlgoliaOrganization) {
