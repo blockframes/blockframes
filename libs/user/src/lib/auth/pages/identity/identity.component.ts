@@ -269,7 +269,6 @@ export class IdentityComponent implements OnInit {
         const org = createOrganization({ denomination, addresses, activity });
 
         org.appAccess[this.app][appAccess] = true;
-        console.log(this.query.user)
         await this.orgService.addOrganization(org, this.app, this.query.user);
 
         this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
