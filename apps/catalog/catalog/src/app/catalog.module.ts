@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 
 // Guards
@@ -21,8 +20,7 @@ const routes: Routes = createRoutes({
   },
   {
     path: 'marketplace',
-    canActivate: [AppGuard, MovieCollectionGuard],
-    canDeactivate: [MovieCollectionGuard],
+    canActivate: [AppGuard],
     loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
   },
   {
