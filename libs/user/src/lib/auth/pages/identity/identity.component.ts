@@ -226,12 +226,12 @@ export class IdentityComponent implements OnInit {
       // User already have an orgId (created from CRM)
       this.router.navigate(['/c/o']);
     } else if (!!this.existingOrgId) {
-      // User selected an existing org, make a request to be accepted and is redirect him to waiting room
+      // User selected an existing org, make a request to be accepted and is redirected to waiting room
       await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
       this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
-      // User decided to create his own org and is redirect him to waiting room
+      // User decided to create his own org and is redirected to waiting room
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
       const org = createOrganization({ denomination, addresses, activity });
