@@ -14,6 +14,11 @@ const templateSections = {
   home: (params: TemplateParams) => homeSection(params),
 }
 
+const mediaFields = {
+  banner: ['background', 'image'],
+  hero: ['background']
+}
+
 @Component({
   selector: 'cms-template',
   templateUrl: './template.component.html',
@@ -85,26 +90,20 @@ export class TemplateComponent implements OnInit, OnDestroy {
 
   updateMediaMetadata(value: CmsTemplate<Section>, params: CmsParams) {
     const { app, page, template } = params;
-    const getCollection = () => ['cms', app, page].filter(v => !!v).join('/');
+    const collection = ['cms', app, page].filter(v => !!v).join('/') as any;
 
     value.sections.forEach((section, i) => {
-      let fields = [];
-      if (section._type === 'banner') {
-        fields = ['background', 'image'];
-      } else if (section._type === 'hero') {
-        fields = ['background'];
-      }
-
-      fields.forEach(field => {
+      const fields = mediaFields[section._type] ?? [];
+      for (const field of fields) {
         section[field] = createStorageFile({
-          collection: getCollection() as any,
+          collection: collection,
           docId: template,
           field: `section[${i}].${field}`,
           privacy: 'public',
           storagePath: section[field].storagePath
-        })
-      })
-    })
+        });
+      }
+    });
 
     return value;
   }
