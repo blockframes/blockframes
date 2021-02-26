@@ -6,11 +6,11 @@
   <mat-card *ngIf="(org$ | async) as org">
     <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
       <p class="mat-body-1">
-        <b>We care a lot about security</b> on our applications.
-        Before you get full access to {{ appName }} please <b>validate your email</b> and <b>{{ org.denomination.full }}
-        should accept your request</b> to join them.
+        We care a lot about security on our applications.
+        Before you get full access to {{ appName }} please validate your email and {{ org.denomination.full }}
+        should accept your request to join them.
       </p>
-      <p class="mat-body-1">Feel free to <b>contact us</b> if you have any questions.</p>
+      <p class="mat-body-2">Feel free to <span class="text-primary">contact us</span> if you have any questions.</p>
       <auth-data-validation [organization]="org"></auth-data-validation>
     </mat-card-content>
   </mat-card>

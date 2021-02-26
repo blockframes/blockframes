@@ -1,23 +1,48 @@
-<ul>
-  <li>
-    <mat-checkbox [checked]="profileData">Profile data</mat-checkbox>
-    <mat-icon svgIcon="info"></mat-icon>
-  </li>
-  <li>
-    <mat-checkbox [checked]="orgData">Organization data</mat-checkbox>
-    <mat-icon svgIcon="info"></mat-icon>
-  </li>
-  <li>
-    <mat-checkbox [checked]="(emailValidate$ | async)">Email validation</mat-checkbox>
-    <mat-icon svgIcon="info"></mat-icon>
-  </li>
-  <li>
-    <mat-checkbox [checked]="orgApproval">Organization approval</mat-checkbox>
-    <mat-icon svgIcon="info"></mat-icon>
-  </li>
-</ul>
-<img asset="servicing_included.webp">
+<section fxLayout="column">
+  <article fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="row">
+      <img class="illustration" asset="profil_user.webp"/>
+      <p>Profile Data</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Info about the action"></mat-icon>
+    </div>
+    <mat-icon [svgIcon]="profileData ? 'check_circle' : 'update'" [color]="profileData ? 'primary' : '' "></mat-icon>
+  </article>
+
+  <mat-divider inset="true"></mat-divider>
+
+  <article fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="row">
+      <img class="illustration" asset="image.webp"/>
+      <p>Organization Data</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Info about the action"></mat-icon>
+    </div>
+    <mat-icon [svgIcon]="orgData ? 'check_circle' : 'update'" [color]="orgData ? 'primary' : '' "></mat-icon>
+  </article>
+
+  <mat-divider inset="true"></mat-divider>
+
+  <article fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="row">
+      <img class="illustration" asset="image.webp"/>
+      <p>Email Validation</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Info about the action"></mat-icon>
+    </div>
+    <mat-icon [svgIcon]="(emailValidate$ | async) ? 'check_circle' : 'update'" [color]="(emailValidate$ | async) ? 'primary' : '' "></mat-icon>
+  </article>
+
+  <mat-divider inset="true"></mat-divider>
+
+  <article fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="row">
+      <img class="illustration" asset="image.webp"/>
+      <p>Organization Approval</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Info about the action"></mat-icon>
+    </div>
+    <mat-icon [svgIcon]="orgApproval ? 'check_circle' : 'update'" [color]="orgApproval ? 'primary' : '' "></mat-icon>
+  </article>
+</section>
+
 <article fxLayout="column">
-  <button mat-flat-button color="accent" (click)="openIntercom()">Contact {{ appName }} Team</button>
-  <button mat-button (click)="refresh()">Refresh your page</button>
+  <button mat-flat-button color="primary" (click)="openIntercom()">Contact {{ appName }} Team</button>
+  <button mat-button color="primary" (click)="refresh()">Refresh your page</button>
 </article>
