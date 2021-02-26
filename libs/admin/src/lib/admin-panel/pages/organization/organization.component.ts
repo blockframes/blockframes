@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
@@ -8,7 +8,7 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
@@ -24,9 +24,9 @@ import { FileUploaderService } from '@blockframes/media/+state/file-uploader.ser
   styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationComponent implements OnInit {
+export class OrganizationComponent implements OnInit, OnDestroy {
   public orgId = '';
-  public org: Organization;
+  public org$: Observable<Organization>;
   public orgForm: OrganizationAdminForm;
   public movies: Movie[];
   public members: any[];
@@ -69,6 +69,8 @@ export class OrganizationComponent implements OnInit {
 
   public memberColumnsIndex = ['firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
 
+  public sub: Subscription;
+
   constructor(
     private organizationService: OrganizationService,
     private movieService: MovieService,
@@ -86,10 +88,13 @@ export class OrganizationComponent implements OnInit {
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
-    this.org = await this.organizationService.getValue(this.orgId);
-    this.orgForm = new OrganizationAdminForm(this.org);
+    this.org$ = await this.organizationService.syncDoc({ id: this.orgId });
 
-    const movies = await this.movieService.getValue(fromOrg(this.org.id))
+    this.org$.subscribe(org => {
+      this.orgForm = new OrganizationAdminForm(org);
+    });
+
+    const movies = await this.movieService.getValue(fromOrg(this.orgId))
     this.movies = movies.filter(m => !!m);
 
     this.members = await this.getMembers();
@@ -101,6 +106,10 @@ export class OrganizationComponent implements OnInit {
     this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
     this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
 
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   public acceptInvitation(invitation: Invitation) {
@@ -184,7 +193,7 @@ export class OrganizationComponent implements OnInit {
   }
 
   public async deleteOrg() {
-    const simulation = await this.simulateDeletion(this.org);
+    const simulation = await this.simulateDeletion(this.orgId);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         question: 'You are currently deleting this organization from Archipel, are you sure ?',
@@ -197,18 +206,19 @@ export class OrganizationComponent implements OnInit {
           this.router.navigate(['c/o/admin/panel/organizations']);
         }
       }
-    })
+    });
   }
 
   /**
    * Simulate how many others documents will be deleted if we delete this organization
    * @param organization The organization that will be deleted
    */
-  private async simulateDeletion(organization: Organization) {
+  private async simulateDeletion(orgId: string) {
+    const organization = await this.organizationService.getValue(orgId);
     const output: string[] = [];
 
     // Calculate how many users will be remove from the org
-    const users = this.org.userIds;
+    const users = organization.userIds;
     if (users.length) {
       output.push(`${users.length} user(s) will be erased from the organization.`);
     }

@@ -1,0 +1,32 @@
+
+<file-uploader [form]="newFileForm" [meta]="meta" [accept]="accept"></file-uploader>
+<section fxLayout="row" fxLayoutAlign="end center">
+  <button mat-stroked-button (click)="save()">
+    <mat-icon matPrefix svgIcon="save"></mat-icon>
+    <span>Save</span>
+  </button>
+</section>
+
+<mat-divider></mat-divider>
+
+<ng-container *ngIf="form.length !== 0; else empty">
+  <mat-list>
+    <ng-container *ngFor="let file of form.value; let index = index">
+      <div mat-list-item fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon fxFlex="noshrink" mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
+        <span fxFlex="grow" [matTooltip]="file.storagePath | fileName">
+          {{file.storagePath | fileName}}
+        </span>
+
+        <bf-preview-modal [ref]="file"></bf-preview-modal>
+        <button mat-icon-button color="primary" matTooltip="Delete file" (click)="delete(file, index)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+
+      </div>
+    </ng-container>
+  </mat-list>
+</ng-container>
+<ng-template #empty>
+  <p>There is no file in here. You can add files with the upload box above.</p>
+</ng-template>

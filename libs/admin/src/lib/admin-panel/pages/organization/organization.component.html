@@ -81,7 +81,7 @@
   <mat-card *ngIf="org" class="file-explorer">
     <mat-card-title>Organization's resources</mat-card-title>
     <mat-card-content>
-      <file-explorer [org]="org"></file-explorer>
+      <file-explorer [org]="org$ | async"></file-explorer>
     </mat-card-content>
   </mat-card>
 </main>
