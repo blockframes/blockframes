@@ -105,7 +105,11 @@ export const supportEmails = {
 // Yandex 
 // =======
 
-export const yandexId = 56105038;
+export const yandex = {
+  festival: 65689861,
+  financiers: 70097020,
+  catalog: 56105038
+};
 
 // Intercom
 // ========
@@ -178,7 +182,7 @@ export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
 // ========
 
 export const datastudio = {
-  user: ''
+  user: 'fd0ee9b3-0306-4404-ae96-a67d708e2c58/page/dLd2B'
 }
 
 // Archipel Content OrgId

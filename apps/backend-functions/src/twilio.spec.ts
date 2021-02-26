@@ -82,6 +82,7 @@ describe('Twilio test script', () => {
   });
 
   it('should return error when event has not started yet', async () => {
+    testEvents[0].start = new Date();
     testEvents[0].end = new Date();
     testEvents[0].start.setHours(new Date().getHours() + 1);
     testEvents[0].end.setHours(new Date().getHours() + 4);
@@ -92,6 +93,8 @@ describe('Twilio test script', () => {
   });
 
   it('should return error when event is finished', async () => {
+    testEvents[0].start = new Date();
+    testEvents[0].end = new Date();
     testEvents[0].start.setHours(new Date().getHours() - 5);
     testEvents[0].end.setHours(new Date().getHours() - 1);
     // Load our test set
@@ -100,6 +103,8 @@ describe('Twilio test script', () => {
   });
 
   it('should return error if user is not invited', async () => {
+    testEvents[0].start = new Date();
+    testEvents[0].end = new Date();
     testEvents[0].end.setHours(new Date().getHours() + 4);
     // Load our test set
     const output = await populateAndGetTwilioAccessToken(true, null, { uid: 'uidUserTestNotAccepted' });
@@ -107,6 +112,8 @@ describe('Twilio test script', () => {
   });
 
   it('should be successful when informations are correct', async () => {
+    testEvents[0].start = new Date();
+    testEvents[0].end = new Date();
     testEvents[0].end.setHours(new Date().getHours() + 4);
     // Load our test set
     const output = await populateAndGetTwilioAccessToken();
