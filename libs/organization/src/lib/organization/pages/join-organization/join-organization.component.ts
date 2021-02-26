@@ -5,7 +5,8 @@ import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { Subscription, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'join-organization',
@@ -19,7 +20,6 @@ export class JoinOrganizationComponent implements OnInit {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public user = this.authQuery.user;
-  public sub: Subscription;
 
   constructor(
     private service: OrganizationService,
@@ -30,13 +30,11 @@ export class JoinOrganizationComponent implements OnInit {
 
   async ngOnInit() {
     const uid = this.authQuery.userId;
-    this.invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')
+    this.org$ = this.invitationService.valueChanges(ref => ref.where('mode', '==', 'request')
       .where('type', '==', 'joinOrganization')
-      .where('fromUser.uid', '==', uid));
-
-    //? Return empty array ?!?!?!?!?!?!?!
-    this.org$ = this.service.valueChanges(this.invitations[0].toOrg.id);
-    console.log(this.invitations)
+      .where('fromUser.uid', '==', uid)).pipe(
+        switchMap(invitations => this.service.valueChanges(invitations[0].toOrg.id))
+      )
   }
 
 }
