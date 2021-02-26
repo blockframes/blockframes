@@ -65,36 +65,40 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // (1) Security checks
 
-    const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
+    const blockframesAdmin = await db.doc(`blockframesAdmin/${metadata.uid}`).get();
+    if (!blockframesAdmin.exists) {
 
-    // Is the user allowed to upload this file ?
-    switch (metadata.collection) {
-      case 'users': {
-        // only the user is allowed to upload files about himself
-        await assertFile(metadata.docId === metadata.uid, notAllowedError);
-        break;
+      const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
 
-      } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
-        // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-        const user = await getDocument<User>(`users/${metadata.uid}`);
-        await assertFile(!!user, notAllowedError);
-
-        const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
-        await assertFile(!!movie, notAllowedError);
-
-        const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
-        await assertFile(isAllowed, notAllowedError);
-        break;
-
-      } case 'orgs': {
-        // only member of an org can upload to this org
-        const user = await getDocument<User>(`users/${metadata.uid}`);
-        await assertFile(!!user, notAllowedError);
-        await assertFile(user.orgId === metadata.docId, notAllowedError);
-        break;
-
-      } default: {
-        await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+      // Is the user allowed to upload this file ?
+      switch (metadata.collection) {
+        case 'users': {
+          // only the user is allowed to upload files about himself
+          await assertFile(metadata.docId === metadata.uid, notAllowedError);
+          break;
+  
+        } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
+          // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
+          const user = await getDocument<User>(`users/${metadata.uid}`);
+          await assertFile(!!user, notAllowedError);
+  
+          const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
+          await assertFile(!!movie, notAllowedError);
+  
+          const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
+          await assertFile(isAllowed, notAllowedError);
+          break;
+  
+        } case 'orgs': {
+          // only member of an org can upload to this org
+          const user = await getDocument<User>(`users/${metadata.uid}`);
+          await assertFile(!!user, notAllowedError);
+          await assertFile(user.orgId === metadata.docId, notAllowedError);
+          break;
+  
+        } default: {
+          await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+        }
       }
     }
 

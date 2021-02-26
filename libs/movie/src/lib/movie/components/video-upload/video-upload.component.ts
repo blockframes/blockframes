@@ -54,7 +54,7 @@ export class MovieVideoUploadComponent implements OnInit {
     }
 
     const videos : MovieVideos = {
-      ...this.form,
+      ...this.form.value,
       otherVideos: this.form.otherVideos.value.filter(n => !!n.storagePath)
     };
 
