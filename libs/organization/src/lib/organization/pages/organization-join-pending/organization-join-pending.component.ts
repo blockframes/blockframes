@@ -9,12 +9,12 @@ import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'join-organization',
-  templateUrl: './join-organization.component.html',
-  styleUrls: ['./join-organization.component.scss'],
+  selector: 'organization-join-pending',
+  templateUrl: './organization-join-pending.component.html',
+  styleUrls: ['./organization-join-pending.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JoinOrganizationComponent implements OnInit {
+export class OrganizationJoinPendingComponent implements OnInit {
   public invitations: Invitation[];
   public org$: Observable<Organization>;
   public app = getCurrentApp(this.routerQuery);

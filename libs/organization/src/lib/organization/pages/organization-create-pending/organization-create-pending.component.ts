@@ -5,11 +5,11 @@ import { Organization, OrganizationQuery } from '@blockframes/organization/+stat
 
 @Component({
   selector: 'organization-create-pending',
-  templateUrl: './create-organization-pending.component.html',
-  styleUrls: ['./create-organization-pending.component.scss'],
+  templateUrl: './organization-create-pending.component.html',
+  styleUrls: ['./organization-create-pending.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateOrganizationPendingComponent {
+export class OrganizationCreatePendingComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public org: Organization;

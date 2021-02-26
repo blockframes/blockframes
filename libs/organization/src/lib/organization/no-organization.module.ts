@@ -31,8 +31,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
-import { JoinOrganizationComponent } from './pages/join-organization/join-organization.component';
-import { CreateOrganizationPendingComponent } from './pages/create-organization-pending/create-organization-pending.component';
+import { OrganizationJoinPendingComponent } from './pages/organization-join-pending/organization-join-pending.component';
+import { OrganizationCreatePendingComponent } from './pages/organization-create-pending/organization-create-pending.component';
 
 // Guards
 import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
@@ -48,12 +48,12 @@ export const noOrganizationRoutes: Routes = [
   {
     path: 'join-congratulations',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: JoinOrganizationComponent
+    component: OrganizationJoinPendingComponent
   },
   {
     path: 'create-congratulations',
     canActivate: [PendingOrganizationGuard],
-    component: CreateOrganizationPendingComponent
+    component: OrganizationCreatePendingComponent
   }
 ];
 
@@ -91,8 +91,8 @@ export const noOrganizationRoutes: Routes = [
     RouterModule.forChild(noOrganizationRoutes),
   ],
   declarations: [
-    JoinOrganizationComponent,
-    CreateOrganizationPendingComponent
+    OrganizationJoinPendingComponent,
+    OrganizationCreatePendingComponent
   ]
 })
 export class NoOrganizationModule { }
