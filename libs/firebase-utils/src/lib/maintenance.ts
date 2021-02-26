@@ -28,14 +28,25 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
   );
 }
 
-export function endMaintenance(db?: FirebaseFirestore.Firestore) {
+/**
+ * Disabled maintenance mode
+ * @param db db to operate on
+ * @param ago if set, will offset endedAt time into the past - seconds
+ */
+export function endMaintenance(db?: FirebaseFirestore.Firestore, ago?: number) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
+
+  let endedAt = admin.firestore.FieldValue.serverTimestamp();
+  if (ago) {
+    const time = new Date(new Date().getTime() - ago)
+    endedAt = admin.firestore.Timestamp.fromDate(time);
+  }
   return maintenanceRef(db).set(
     {
-      endedAt: admin.firestore.FieldValue.serverTimestamp(),
+      endedAt,
       startedAt: null,
     },
-    { merge: true }
+    { merge: false }
   );
 }
 
