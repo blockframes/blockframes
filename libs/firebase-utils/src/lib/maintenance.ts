@@ -35,22 +35,18 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
  */
 export function endMaintenance(db?: FirebaseFirestore.Firestore, ago?: number) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
+
+  let endedAt = admin.firestore.FieldValue.serverTimestamp();
   if (ago) {
-    const time = new Date(new Date().getTime() - (ago * 1000))
-    return maintenanceRef(db).set(
-      {
-        endedAt: admin.firestore.Timestamp.fromDate(time),
-        startedAt: null,
-      },
-      { merge: false }
-    );
+    const time = new Date(new Date().getTime() - ago)
+    endedAt = admin.firestore.Timestamp.fromDate(time);
   }
   return maintenanceRef(db).set(
     {
-      endedAt: admin.firestore.FieldValue.serverTimestamp(),
+      endedAt,
       startedAt: null,
     },
-    { merge: true }
+    { merge: false }
   );
 }
 

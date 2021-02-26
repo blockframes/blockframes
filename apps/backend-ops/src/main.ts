@@ -15,6 +15,7 @@ import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
 import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
+import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -26,7 +27,7 @@ async function runCommand() {
     case 'prepareForTestingBeta':
       await startMaintenance(db);
       await prepareForTestingBeta();
-      await endMaintenance(db, 8 * 60);
+      await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'prepareForTesting':
       await startMaintenance(db);
