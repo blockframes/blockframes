@@ -1,11 +1,13 @@
 <app-logo></app-logo>
 
-<ng-container *ngIf="!(orgHasAccess$ | async); else accessGranted">
-  <p class="mat-body-2">You have no access to this platform.</p>
-  <p class="mat-body-2">You can ask for access by clicking the button below.</p>
-  <button mat-flat-button color="accent" (click)="requestAccess()">Ask access to {{ appName }}</button>
-</ng-container>
-<ng-template #accessGranted>
-  <p class="mat-body-2">You have now access to this platform. Please enjoy !</p>
-  <a mat-flat-button color="accent" routerLink="../marketplace">Access to {{ appName }}</a>
-</ng-template>
+<mat-card fxLayout="column" fxLayoutAlign="center center">
+  <img asset="wait.webp"/>
+  <h3>Looks like you already have an account on Blockframes</h3>
+  <p class="mat-body-1">
+    We saw that you’re already using one of our applications.<br/>
+    Please confirm your email to get access.
+  </p>
+  <p class="mat-body-2">PS : All your company members will also have an access to {{ appName }}.</p>
+  <button mat-flat-button color="primary" (click)="requestAccess()">Request Access</button>
+  <button mat-button color="primary" (click)="refresh()">Refresh the page</button>
+</mat-card>

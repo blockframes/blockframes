@@ -36,4 +36,8 @@ export class OrgRequestAccessComponent implements OnInit {
     await this.orgService.requestToAccessToApp(this.app, this.orgId);
     this.snackBar.open('Your request to access to this platform has been sent.', 'close', { duration: 5000 });
   }
+
+  refresh() {
+    window.location.reload();
+  }
 }

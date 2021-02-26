@@ -1,18 +1,39 @@
 :host {
-  margin: 40px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-p {
-  margin: 0;
+  justify-content: center;
+  background-image: url('/assets/images/cloud_top_left.png'),
+                    url('/assets/images/cloud_top_left.png'),
+                    url('/assets//images//star_middle_left.png');
+  background-position: top 190px left 90px, bottom 240px right 130px, bottom 190px left 120px;
+  background-size: 20% auto, auto 10%, auto auto;
+  background-repeat: no-repeat;
 }
 
 app-logo {
-  margin-bottom: 24px;
+  position: absolute;
+  top: 24px;
+  left: 24px;
 }
 
-button, a {
-  margin-top: 24px;
+mat-card {
+  max-width: 700px;
+  text-align: center;
+
+  img {
+    height: auto;
+    width: 200px;
+  }
+
+  p.mat-body-1 {
+    margin-bottom: 8px;
+  }
+
+  p.mat-body-2 {
+    margin-bottom: 40px;
+  }
 }
+
+
