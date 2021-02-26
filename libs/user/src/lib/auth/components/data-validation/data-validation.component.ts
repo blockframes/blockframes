@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, Optional } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'auth-data-validation',
@@ -22,12 +23,12 @@ export class AuthDataValidation implements OnInit {
 
   public user = this.query.user;
 
-  constructor(private query: AuthQuery, private routerQuery: RouterQuery) {}
+  constructor(
+    private query: AuthQuery,
+    private routerQuery: RouterQuery,
+    @Optional() private intercom: Intercom) {}
 
   ngOnInit() {
-    //! problème avec l'org à cause du fait qu'on est connecté
-    //! mais on n'a pas d'org donc pas moyen d'accéder au document de l'org dans firebase ?
-    //! quand on veut rejonidre une org
     // Filled checkbox
     if (!!this.user.firstName && !!this.user.lastName && !!this.user.email) this.profileData = true;
     if (!!this.organization && !!this.organization.denomination.full) this.orgData = true;
@@ -39,5 +40,13 @@ export class AuthDataValidation implements OnInit {
       this.orgApproval = true;
     }
     this.emailValidate$ = this.query.hasVerifiedEmail$;
+  }
+
+  openIntercom(): void {
+    return this.intercom.show();
+  }
+
+  refresh() {
+    window.location.reload();
   }
 }

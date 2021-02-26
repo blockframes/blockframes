@@ -18,6 +18,6 @@
 </ul>
 <img asset="servicing_included.webp">
 <article fxLayout="column">
-  <button mat-flat-button color="accent">Contact {{ appName }} Team</button>
-  <button mat-button>Refresh your page</button>
+  <button mat-flat-button color="accent" (click)="openIntercom()">Contact {{ appName }} Team</button>
+  <button mat-button (click)="refresh()">Refresh your page</button>
 </article>
