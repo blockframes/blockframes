@@ -5,7 +5,7 @@ import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 @Component({
   selector: 'join-organization',
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 })
 export class JoinOrganizationComponent implements OnInit {
   public invitations: Invitation[];
-  public org: Organization;
+  public org$: Observable<Organization>;
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public user = this.authQuery.user;
@@ -34,11 +34,9 @@ export class JoinOrganizationComponent implements OnInit {
       .where('type', '==', 'joinOrganization')
       .where('fromUser.uid', '==', uid));
 
-    //? Return empty aray ?!?!?!?!?!?!?!
-    const organizations = await this.service.getValue(ref => ref.where('id', '==', this.invitations[0].toOrg.id));
-    this.org = organizations[0];
+    //? Return empty array ?!?!?!?!?!?!?!
+    this.org$ = this.service.valueChanges(this.invitations[0].toOrg.id);
     console.log(this.invitations)
-    console.log(this.org)
   }
 
 }

@@ -32,6 +32,10 @@ section {
     &.mat-body-2 {
       margin-bottom: 24px;
     }
+    a {
+      cursor: pointer;
+      font-weight: 600;
+    }
   }
 
   mat-card {
@@ -43,11 +47,6 @@ section {
 
     button {
       margin-top: 40px;
-    }
-
-    a {
-      cursor: pointer;
-      font-weight: 600;
     }
   }
 }
