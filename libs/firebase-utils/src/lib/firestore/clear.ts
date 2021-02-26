@@ -53,7 +53,7 @@ const clearedCollection = async (firestore: Firestore): Promise<CollectionRefere
  */
 export async function clearDbCLI(db: FirebaseFirestore.Firestore) {
   throwOnProduction();
-  const collections = (await db.listCollections()).filter((ref) => ref.id !== META_COLLECTION_NAME);
+  const collections = (await db.listCollections()).filter((ref) => ref.id !== META_COLLECTION_NAME).map(ref => ref.id);
   const cmds = collections.map(collection => `firebase firestore:delete -P ${firebase().projectId} -r -y ${collection}`)
   for (const cmd of cmds) {
     console.log('Run:', cmd);

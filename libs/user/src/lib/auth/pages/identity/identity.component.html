@@ -2,12 +2,14 @@
 <section fxLayout="column" fxLayoutAlign="center center">
   <h1>Create your account</h1><!-- @TODO #4932 "finnish registration" if user just need to choose or create org  ?-->
   <p>Please fill in the form below to join the {{ appName }} platform</p>
-  <p class="mat-body-2 text-primary">Already have an account ? <a routerLink="/auth/connexion">Log in here</a></p><!-- @TODO #4932 hide if already logged in-->
+  <p *ngIf="!(user$ | async)" class="mat-body-2 text-primary">Already have an account ? <a routerLink="/auth/connexion">Log in here</a></p>
   <mat-card fxLayout="column" fxLayoutAlign="center center">
     <form [formGroup]="form" fxLayout="column">
+
+      <!-- IDENTITY -->
+
       <auth-email-input
-      (organization)="setOrgFromInvitation($event)"
-      (showInvitationInput)="showInvitationInputIfInvit($event)"
+      (hasInvitation)="hasInvitation($event)"
       [emailForm]="form.get('email')"
       ></auth-email-input>
 
@@ -29,14 +31,9 @@
         </mat-form-field>
       </article>
 
-      <ng-container *ngIf="isOrgFromInvitation">
-        <mat-form-field appearance="outline">
-          <mat-label>Company Name</mat-label>
-          <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
-        </mat-form-field>
-      </ng-container>
+      <!-- ORGANIZATION -->
 
-      <ng-container *ngIf="isOrgFromAlgolia">
+      <ng-container *ngIf="useAlgolia else orgInput">
         <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"
           hint='Please join an existing company account or create a new one.'
           (selectionChange)="setOrg($event)"
@@ -47,9 +44,18 @@
         </algolia-autocomplete>
       </ng-container>
 
-     <organization-lite-form *ngIf="showOrgForm" [form]="orgForm"></organization-lite-form>
+      <ng-template #orgInput>
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name</mat-label>
+          <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
+        </mat-form-field>
+      </ng-template>
 
-      <ng-container *ngIf="showInvitationCodeField">
+     <organization-lite-form *ngIf="!!orgForm.get('denomination').get('full').value" [form]="orgForm"></organization-lite-form>
+
+      <!-- PASSWORD FIELDS -->
+
+      <ng-container *ngIf="form.get('generatedPassword').enabled">
         <mat-form-field appearance="outline">
           <mat-label>Invitation Code</mat-label>
           <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
@@ -57,7 +63,10 @@
         </mat-form-field>
       </ng-container>
 
-      <password-confirm *ngIf="showPasswordField" formControlName="password"></password-confirm>
+      <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
+
+      <!-- TERMS OF USE & PRIVACY POLICY -->
+
       <div>
         <auth-accept-conditions [control]="form.get('termsOfUse')">
           <span conditionText>I hereby accept {{ appName }}</span>
@@ -94,8 +103,6 @@
 
 <ng-template #customSnackBarTemplate>
   <div class="custom-snackbar-message">
-    An account already exists for this email address.<br />
-    If you don’t remember your password, <a routerLink="../email-verification">please reset it</a> or try searching in
-    your past emails. You might have received an invitation containing credentials.
+    This email already exists.  <a routerLink="/auth/connexion">LOG IN</a>
   </div>
 </ng-template>

@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-
 
 @Component({
   selector: 'auth-login-view',
@@ -13,7 +12,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  public isSignin = true;
+  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
   private snackbarDuration = 8000;
 
   constructor(
@@ -45,9 +44,14 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['c']);
       }
     } catch (err) {
-      console.error(err); // let the devs see what happened
-      // @TODO #4932 customize sidebar to add "create-account" link CF figma
-      this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+      switch (err.code) {
+        case 'auth/user-not-found':
+          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration });
+          break;
+        default:
+          this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+          break;
+      }
     }
   }
 }

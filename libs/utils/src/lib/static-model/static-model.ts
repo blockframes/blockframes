@@ -115,7 +115,8 @@ export const contentType = {
   episode: 'Episode',
   collection: 'Collection',
   tv_film: 'TV Film',
-  flow: 'Flow'
+  flow: 'Flow',
+  documentary: 'Documentary'
 }
 
 export const crewRoles = {

@@ -1,1 +1,7 @@
-<auth-signin-form (opened)="isSignin=true" (submited)="signin($event)"></auth-signin-form>
+<auth-signin-form (submited)="signin($event)"></auth-signin-form>
+
+<ng-template #customSnackBarTemplate>
+  <div class="custom-snackbar-message">
+    This email does not exists.  <a routerLink="/auth/identity">CREATE AN ACCOUNT</a>
+  </div>
+</ng-template>
