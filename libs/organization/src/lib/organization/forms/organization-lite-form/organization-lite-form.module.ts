@@ -9,10 +9,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { OrganizationLiteFormComponent } from './organization-lite-form.component';
-import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatInputModule,
     MatCardModule,
     MatSelectModule,
-    MatRadioModule,
+    MatIconModule,
+    MatButtonToggleModule,
   ],
   declarations: [
     OrganizationLiteFormComponent,

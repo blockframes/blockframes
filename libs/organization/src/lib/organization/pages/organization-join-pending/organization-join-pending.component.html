@@ -1,0 +1,18 @@
+<app-logo></app-logo>
+
+<section fxLayout="column" fxLayoutAlign="space-around center">
+  <h1>Thank you for joining us!</h1>
+
+  <mat-card *ngIf="(org$ | async) as org">
+    <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
+      <p class="mat-body-1">
+        We care a lot about security on our applications.
+        Before you get full access to {{ appName }} please validate your email and {{ org.denomination.full }}
+        should accept your request to join them.
+      </p>
+      <p class="mat-body-2">Feel free to <span class="text-primary">contact us</span> if you have any questions.</p>
+      <auth-data-validation [organization]="org"></auth-data-validation>
+    </mat-card-content>
+  </mat-card>
+
+</section>

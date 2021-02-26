@@ -18,22 +18,11 @@ app-logo {
   left: 24px;
 }
 
-mat-card {
-  text-align: center;
-
-  img {
-    height: auto;
-    width: 200px;
-    margin-bottom: 32px;
-  }
-
-  p.mat-body-1 {
-    margin-bottom: 8px;
-  }
-
-  p.mat-body-2 {
-    margin-bottom: 40px;
-  }
+h1 {
+  margin-bottom: 32px;
 }
 
-
+mat-card {
+  width: 50%;
+  text-align: center;
+}
