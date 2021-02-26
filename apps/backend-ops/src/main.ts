@@ -27,7 +27,7 @@ async function runCommand() {
     case 'prepareForTestingBeta':
       await startMaintenance(db);
       await prepareForTestingBeta();
-      await endMaintenance(db, EIGHT_MINUTES_IN_MS);
+      await endMaintenance(db);
       break;
     case 'prepareForTesting':
       await startMaintenance(db);
@@ -106,7 +106,7 @@ async function runCommand() {
       await startMaintenance();
       break;
     case 'endMaintenance':
-      await endMaintenance();
+      await endMaintenance(undefined, arg1 === 'no-delay' ? EIGHT_MINUTES_IN_MS : 0);
       break;
     case 'healthCheck':
       await healthCheck();
