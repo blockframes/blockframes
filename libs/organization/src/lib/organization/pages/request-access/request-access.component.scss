@@ -19,12 +19,12 @@ app-logo {
 }
 
 mat-card {
-  max-width: 700px;
   text-align: center;
 
   img {
     height: auto;
     width: 200px;
+    margin-bottom: 32px;
   }
 
   p.mat-body-1 {
