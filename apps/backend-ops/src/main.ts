@@ -26,7 +26,7 @@ async function runCommand() {
     case 'prepareForTestingBeta':
       await startMaintenance(db);
       await prepareForTestingBeta();
-      await endMaintenance(db);
+      await endMaintenance(db, 8 * 60);
       break;
     case 'prepareForTesting':
       await startMaintenance(db);
