@@ -49,6 +49,14 @@ const fields = {
     multiLine: false,
     index: index++
   },
+  series: {
+    multiLine: false,
+    index: index++
+  },
+  episodeCount: {
+    multiLine: false,
+    index: index++
+  },
   productionStatus: {
     multiLine: false,
     index: index++
@@ -330,6 +338,14 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // INTERNAL REF (Film Code)
       if (this.mapping.internalRef) {
         movie.internalRef = this.mapping.internalRef;
+      }
+
+      if (this.mapping.series) {
+        movie.title.series = parseInt(this.mapping.series, 10)
+      }
+
+      if (this.mapping.episodeCount) {
+        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10)
       }
 
       // WORK TYPE
