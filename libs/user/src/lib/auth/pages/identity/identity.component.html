@@ -1,30 +1,33 @@
+<app-logo></app-logo>
 <section fxLayout="column" fxLayoutAlign="center center">
-  <app-logo></app-logo>
   <h1>Create your account</h1><!-- @TODO #4932 "finnish registration" if user just need to choose or create org  ?-->
-  <p>Please fill in the form to join the {{ appName }} platform</p>
-  <p>Do you already have an account ? <a routerLink="/auth/connexion" >Login here</a></p><!-- @TODO #4932 hide if already logged in-->
-  <mat-card>
-    <form [formGroup]="form">
+  <p>Please fill in the form below to join the {{ appName }} platform</p>
+  <p class="mat-body-2 text-primary">Already have an account ? <a routerLink="/auth/connexion">Log in here</a></p><!-- @TODO #4932 hide if already logged in-->
+  <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <form [formGroup]="form" fxLayout="column">
       <auth-email-input
       (organization)="setOrgFromInvitation($event)"
       (showInvitationInput)="showInvitationInputIfInvit($event)"
       [emailForm]="form.get('email')"
       ></auth-email-input>
 
-      <mat-form-field appearance="outline">
-        <mat-label>First name</mat-label>
-        <input matInput type="text" placeholder="First name" formControlName="firstName" required />
-        <mat-error *ngIf="form.get('firstName').hasError('required')">
-          First name is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Last name</mat-label>
-        <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
-        <mat-error *ngIf="form.get('lastName').hasError('required')">
-          Last name is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
+      <article fxFlex fxLayout="row" fxLayoutGap="24px">
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput type="text" placeholder="First name" formControlName="firstName" required />
+          <mat-error *ngIf="form.get('firstName').hasError('required')">
+            First name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
+          <mat-error *ngIf="form.get('lastName').hasError('required')">
+            Last name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </article>
 
       <ng-container *ngIf="isOrgFromInvitation">
         <mat-form-field appearance="outline">
@@ -74,18 +77,19 @@
         </auth-accept-conditions>
       </div>
     </form>
-  </mat-card>
 
-  <ng-container *ngIf="!creating else creatingAccount">
-    <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid || orgForm.invalid">
-      Sign up
-    </button>
-  </ng-container>
-  <ng-template #creatingAccount>
-    <button @slideUp mat-flat-button disabled>
-      Creating the account please wait a few seconds
-    </button>
-  </ng-template>
+    <ng-container *ngIf="!creating else creatingAccount">
+      <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid || orgForm.invalid">
+        Sign up
+      </button>
+    </ng-container>
+    <ng-template #creatingAccount>
+      <button @slideUp mat-flat-button disabled>
+        Creating the account please wait a few seconds
+      </button>
+    </ng-template>
+
+  </mat-card>
 </section>
 
 <ng-template #customSnackBarTemplate>

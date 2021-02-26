@@ -1,59 +1,54 @@
-@import '~@angular/flex-layout/mq';
-
-mat-card {
-  margin-top: 20px;
-}
-
-button {
-  margin: 80px 0;
-}
-
-mat-form-field {
-  width: 100%;
-}
-
-img {
-  margin-top: 35px;
-  width: 380px;
-}
-
-h1 {
-  margin-top: 80px;
-}
-
-organization-lite-form {
-  display: block;
-  margin-bottom: 24px;
-}
-
-@include layout-bp(xs) {
-  form {
-    width: 80%;
-    padding-left: 0;
-  }
-  img {
-    height: 200px;
-    width: 200px;
-  }
-  button {
-    margin-top: 40px;
-  }
-}
-
-@include layout-bp(sm) {
-  form {
-    width: 60%;
-    padding-left: 0;
-  }
-  img {
-    height: 350px;
-    width: 350px;
-  }
-  button {
-    margin-top: 40px;
-  }
+:host {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+  background-image: url('/assets/images/rocket_bottom_right.png');
+  background-size: auto 75%;
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-color: var(--background-card);
 }
 
 app-logo {
-  margin-top: 30px;
+  position: absolute;
+  display: block;
+  top: 24px;
+  left: 24px;
+  height: 48px;
+  width: auto;
 }
+
+section {
+  h1 {
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 16px;
+    &.mat-body-2 {
+      margin-bottom: 24px;
+    }
+  }
+
+  mat-card {
+    padding: 36px;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    button {
+      margin-top: 40px;
+    }
+
+    a {
+      cursor: pointer;
+      font-weight: 600;
+    }
+  }
+}
+
+
+
