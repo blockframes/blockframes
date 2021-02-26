@@ -220,4 +220,37 @@ export async function upgrade(db: Firestore) {
 
     await invitationDoc.ref.set(data);
   });
+
+  // CMS
+  const cms = await db.collection('cms/festival/home').get();
+  await runChunks(cms.docs, async (cmsDoc) => {
+    const data = cmsDoc.data();
+
+    data.sections.forEach((section, i) => {
+      if (section._type === 'banner') {
+
+        const fields = ['background', 'image'];
+        fields.forEach(field => {
+          section[field] = createStorageFile({
+            storagePath: section[field],
+            collection: 'cms/festival/home',
+            docId: cmsDoc.id,
+            field: `section[${i}].${field}`,
+            privacy: 'public'
+          });
+        });
+      }
+
+      if (section._type === 'hero') {
+        section.background = createStorageFile({
+          storagePath: section.background,
+          collection: 'cms/festival/home',
+          docId: cmsDoc.id,
+          field: `section[${i}].background`,
+          privacy: 'public'
+        });
+      }
+    });
+    await cmsDoc.ref.set(data);
+  })
 }

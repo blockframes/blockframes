@@ -19,8 +19,26 @@ export const bannerSchema: FormGroupSchema<BannerSection> = {
     title: matText({ label: 'title' }),
     subtitle: matText({ label: 'subtitle' }),
     description: matText({ label: 'description', size: 'long' }),
-    background: matText({ label: 'background' }),
-    image: matText({ label: 'Image' }),
+    background: {
+      form: 'group',
+      controls: {
+        storagePath: matText({ label: 'backround' }),
+        privacy: { form: 'control' },
+        collection: { form: 'control' },
+        field: { form: 'control' },
+        docId: { form: 'control' }
+      }
+    },
+    image: {
+      form: 'group',
+      controls: {
+        storagePath: matText({ label: 'Image' }),
+        privacy: { form: 'control' },
+        collection: { form: 'control' },
+        field: { form: 'control' },
+        docId: { form: 'control' }
+      }
+    },
     links: { form: 'array', controls: [], factory: linkSchema }
   },
 }
