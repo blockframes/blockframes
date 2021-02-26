@@ -12,7 +12,7 @@ import { Intercom } from 'ng-intercom';
   styleUrls: ['./data-validation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuthDataValidation implements OnInit {
+export class AuthDataValidationComponent implements OnInit {
   @Input() organization: Organization;
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];

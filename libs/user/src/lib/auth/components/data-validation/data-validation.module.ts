@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
-import { AuthDataValidation } from './data-validation.component';
+import { AuthDataValidationComponent } from './data-validation.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
@@ -17,7 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [AuthDataValidation],
+  declarations: [AuthDataValidationComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -30,6 +30,6 @@ import { MatDividerModule } from '@angular/material/divider';
     MatTooltipModule,
     MatDividerModule
   ],
-  exports: [AuthDataValidation]
+  exports: [AuthDataValidationComponent]
 })
 export class AuthDataValidationModule {}

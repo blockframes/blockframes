@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
 import { Organization, OrganizationQuery } from '@blockframes/organization/+state';
@@ -9,7 +9,7 @@ import { Organization, OrganizationQuery } from '@blockframes/organization/+stat
   styleUrls: ['./organization-create-pending.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationCreatePendingComponent {
+export class OrganizationCreatePendingComponent implements OnInit {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public org: Organization;
