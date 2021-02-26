@@ -7,7 +7,7 @@ import { Privacy } from '@blockframes/utils/file-sanitizer';
 */
 export interface StorageFile {
   privacy: Privacy;
-  collection: 'movies' | 'users' | 'orgs' | 'campaigns';
+  collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home';
   docId: string;
   field: string;
   storagePath: string;

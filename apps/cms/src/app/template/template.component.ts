@@ -8,6 +8,7 @@ import { CmsService, CmsParams } from '../cms.service'
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';
 import { switchMap } from 'rxjs/operators';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 const templateSections = {
   home: (params: TemplateParams) => homeSection(params),
@@ -78,6 +79,33 @@ export class TemplateComponent implements OnInit, OnDestroy {
 
   save() {
     const params = this.route.snapshot.params as CmsParams;
-    this.service.save(this.form.value, params);
+    const value = this.updateMediaMetadata(this.form.value, params)
+    this.service.save(value, params);
+  }
+
+  updateMediaMetadata(value: CmsTemplate<Section>, params: CmsParams) {
+    const { app, page, template } = params;
+    const getCollection = () => ['cms', app, page].filter(v => !!v).join('/');
+
+    value.sections.forEach((section, i) => {
+      let fields = [];
+      if (section._type === 'banner') {
+        fields = ['background', 'image'];
+      } else if (section._type === 'hero') {
+        fields = ['background'];
+      }
+
+      fields.forEach(field => {
+        section[field] = createStorageFile({
+          collection: getCollection() as any,
+          docId: template,
+          field: `section[${i}].${field}`,
+          privacy: 'public',
+          storagePath: section[field].storagePath
+        })
+      })
+    })
+
+    return value;
   }
 }
