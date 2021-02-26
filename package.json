@@ -30,7 +30,6 @@
     "test": "firebase functions:config:get > .runtimeconfig.json && firebase emulators:exec 'cross-env nx run-many --target=test --all --configuration=$NG_CONFIG'",
     "lint": "nx lint",
     "e2e": "cross-env nx run-many --target=e2e --all  --configuration=$NG_CONFIG",
-    "pree2e": "cross-env nx build backend-ops --configuration=$NG_CONFIG && node dist/apps/backend-ops/main.js",
     "e2e:catalog": "cross-env nx e2e catalog-e2e --configuration=$NG_CONFIG --headless",
     "e2e:festival": "cross-env nx e2e festival-e2e --configuration=$NG_CONFIG --headless",
     "affected:apps": "cross-env nx affected:apps --configuration=$NG_CONFIG",

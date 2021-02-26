@@ -9,7 +9,7 @@ import {
   populateMovieLanguageSpecification
 } from "@blockframes/movie/+state/movie.model";
 import { MovieImportState } from "libs/import/src/lib/import-utils";
-import { createCredit, createFilmography, createStakeholder } from "../common-interfaces/identity";
+import { createCredit, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
 import { TerritoryValue } from "../static-model";
 import { Scope } from "../static-model/static-model";
@@ -22,6 +22,9 @@ export function formatOriginalRelease(originalRelease: { date: string, country: 
     let date: Date;
     if (dateParts && dateParts.length === 4) {
       date = new Date(`${dateParts[3]}-${dateParts[2]}-${dateParts[1]}`);
+    } else if (r.date.length === 5) {
+      // https://gist.github.com/christopherscott/2782634
+      date = new Date((parseInt(r.date, 10) - (25567 + 1)) * 86400 * 1000);
     }
 
     if (!!date) {
