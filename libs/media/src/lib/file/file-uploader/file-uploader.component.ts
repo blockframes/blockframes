@@ -11,6 +11,7 @@ import {
   OnInit,
   Output,
   EventEmitter,
+  OnDestroy,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -22,6 +23,7 @@ import { FileMetaData } from '../../+state/media.model';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { Subscription } from 'rxjs';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -38,12 +40,12 @@ function computeSize(fileSize: number) {
 }
 
 @Component({
-  selector: '[meta] [accept] file-uploader',
+  selector: '[form][meta][accept] file-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileUploaderComponent implements OnInit {
+export class FileUploaderComponent implements OnInit, OnDestroy {
 
   public storagePath: string;
   public metadata: FileMetaData;
@@ -53,7 +55,7 @@ export class FileUploaderComponent implements OnInit {
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
     const [ collection, label, docId ] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
-    this.metadata = getFileMetadata(collection, label, docId);
+    this.metadata = { ...getFileMetadata(collection, label, docId), ...this.getExtra() };
   }
   @Input() set accept(fileType: AllowedFileType | AllowedFileType[]) {
     const types = Array.isArray(fileType) ? fileType : [fileType]
@@ -76,6 +78,8 @@ export class FileUploaderComponent implements OnInit {
   public file: File;
   public fileName: string;
 
+  private sub: Subscription;
+
   constructor(
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
@@ -83,6 +87,20 @@ export class FileUploaderComponent implements OnInit {
 
   ngOnInit() {
     this.computeState();
+    this.sub = this.form.valueChanges.subscribe(() => {
+      const extra = this.getExtra();
+      if (!!extra) {
+        this.metadata = { ...this.metadata, ...extra }
+        const task = this.uploaderService.retrieveFromQueue(this.storagePath);
+        if (!!task) {
+          task.metadata = this.metadata;
+        }
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])
@@ -161,14 +179,14 @@ export class FileUploaderComponent implements OnInit {
     this.state = 'waiting';
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
-    this.form?.reset();
+    this.form.reset();
     this.change.emit();
   }
 
   private computeState() {
-    if (!!this.form.storagePath.value) {
+    if (!!this.form.get('storagePath').value) {
       this.state = 'file';
-      this.fileName = this.form.storagePath.value;
+      this.fileName = this.form.get('storagePath').value;
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
       if (!!retrieved) {
@@ -178,6 +196,17 @@ export class FileUploaderComponent implements OnInit {
       } else {
         this.state = 'waiting';
       }
+    }
+  }
+
+  private getExtra() {
+    const extraKeys = Object.keys(this.form.value).filter(key => !['privacy', 'collection', 'docId', 'field', 'storagePath'].includes(key));
+    if (!!extraKeys.length) {
+      const extra = {};
+      for (const key of extraKeys) {
+        extra[key] = this.form.value[key];
+      }
+      return extra;
     }
   }
 }

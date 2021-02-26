@@ -16,7 +16,7 @@ export class MovieFormSalesPitchComponent {
   constructor(
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService,
+    private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Sales Pitch')
   }
@@ -24,5 +24,4 @@ export class MovieFormSalesPitchComponent {
   get salesPitch() {
     return this.form.promotional.get('salesPitch');
   }
-
 }
