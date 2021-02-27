@@ -1,7 +1,10 @@
-{
+﻿{
   "extends": "../../../tsconfig.base.json",
-  "files": [],
+  "compilerOptions": {
+    "types": ["cypress", "node", "cypress-wait-until"],
+  },
   "include": [],
+  "files": [],
   "references": [
     {
       "path": "./tsconfig.e2e.json"
