@@ -4,6 +4,7 @@ import { createRoutes } from '@blockframes/utils/routes/create-routes';
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
+import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
 
 // TODO: Add AppGuard
 
@@ -32,6 +33,7 @@ const routes: Routes = createRoutes({
     },
     {
       path: 'request-access',
+      canActivate: [RequestAccessGuard],
       loadChildren: () => import('@blockframes/organization/pages/request-access/request-access.module').then(m => m.OrgRequestAccessModule)
     }
   ]
