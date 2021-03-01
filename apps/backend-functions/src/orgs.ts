@@ -69,24 +69,6 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-/** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
-function newAppAccessGranted(before: OrganizationDocument, after: OrganizationDocument): boolean {
-  if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    return app.some(a => modules.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
-  }
-  return false;
-}
-
-/** Sends a mail to admin to inform that an org is waiting approval */
-async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
-  if (newAppAccessGranted(before, after)) {
-    // Send a mail to c8 admin to accept the organization given it's choosen app access
-    const mailRequest = await organizationRequestedAccessToApp(after);
-    const from = await getFromEmail(after);
-    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
-  }
-}
-
 export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const org = snap.data() as OrganizationDocument;
 
@@ -134,10 +116,6 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 
   // Send notifications when a member is added or removed
   await notifyOnOrgMemberChanges(before, after);
-
-  // check if appAccess have changed
-  // @TODO #4932 remove this email & add merge it with  organizationCreated
-  await sendMailIfOrgAppAccessChanged(before, after);
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
