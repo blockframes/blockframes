@@ -64,7 +64,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       this.types = this.types.concat(allowedFiles[type].mime);
     })
   }
-  @Output() change = new EventEmitter<void>();
+  @Output() selectionChange = new EventEmitter<void>();
 
   public allowedTypes: string[] = [];
   public types: string[] = [];
@@ -172,7 +172,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     this.localSize = computeSize(this.file.size);
 
     this.uploaderService.addToQueue(this.storagePath, { fileName: this.fileName, file: this.file, metadata: this.metadata });
-    this.change.emit();
+    this.selectionChange.emit();
   }
 
   public delete() {
@@ -180,7 +180,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.form.reset();
-    this.change.emit();
+    this.selectionChange.emit();
   }
 
   private computeState() {

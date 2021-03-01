@@ -19,6 +19,7 @@ import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 })
 export class FileListUploaderComponent {
 
+  public disabled = true;
   public newFileForm = new StorageFileForm();
 
   @Input() form: FormList<StorageFile>;
@@ -48,5 +49,9 @@ export class FileListUploaderComponent {
 
     files.splice(index, 1); // remove element at index
     docRef.update({ [file.field]: files });
+  }
+
+  change() {
+    this.disabled = !this.disabled;
   }
 }
