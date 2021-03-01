@@ -17,6 +17,7 @@ import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'admin-organization',
@@ -73,6 +74,7 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   constructor(
     private organizationService: OrganizationService,
+    private organizationQuery: OrganizationQuery,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -88,11 +90,10 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
-    this.org$ = await this.organizationService.syncDoc({ id: this.orgId });
+    this.org$ = this.organizationQuery.select(this.orgId);
 
-    this.org$.subscribe(org => {
-      this.orgForm = new OrganizationAdminForm(org);
-    });
+    this.orgForm = new OrganizationAdminForm();
+    this.sub = this.org$.subscribe(org => this.orgForm.reset(org));
 
     const movies = await this.movieService.getValue(fromOrg(this.orgId))
     this.movies = movies.filter(m => !!m);

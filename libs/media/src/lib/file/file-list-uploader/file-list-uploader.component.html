@@ -12,9 +12,9 @@
 <ng-container *ngIf="form.length !== 0; else empty">
   <mat-list>
     <ng-container *ngFor="let file of form.value; let index = index">
-      <div mat-list-item fxLayout="row" fxLayoutAlign="start center">
-        <mat-icon fxFlex="noshrink" mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
-        <span fxFlex="grow" [matTooltip]="file.storagePath | fileName">
+      <mat-list-item >
+        <mat-icon mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
+        <span mat-line [matTooltip]="file.storagePath | fileName">
           {{file.storagePath | fileName}}
         </span>
 
@@ -23,7 +23,7 @@
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
 
-      </div>
+      </mat-list-item>
     </ng-container>
   </mat-list>
 </ng-container>

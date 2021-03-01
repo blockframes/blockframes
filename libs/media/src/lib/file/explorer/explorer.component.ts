@@ -11,6 +11,7 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 // RxJs
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { QueryFn } from '@angular/fire/firestore';
 import { Organization } from '@blockframes/organization/+state';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
@@ -49,27 +50,13 @@ export class FileExplorerComponent implements AfterViewInit {
   crumbs$ = this.path$.pipe(map(getCrumbs));
   templates: Record<string, TemplateRef<any>> = {};
 
-  private _org: Organization;
-  get org() { return this._org; }
-  @Input() set org(value: Organization) {
-
-    const needUpdate = !!value && (
-      value.id !== this._org?.id
-      || this._org?.logo.storagePath !== value.logo.storagePath
-      || this._org?.documents?.notes?.length !== value.documents?.notes?.length
-      );
-
-    if (needUpdate) {
-      this._org = value;
-      const app: App = this.routerQuery.getData('app');
-      const query: QueryFn = ref => ref
-        .where('orgIds', 'array-contains', this.org.id)
-        .where(`storeConfig.appAccess.${app}`, '==', true);
-
-      this.root$ = this.movieService.valueChanges(query).pipe(
-        map(titles => getDirectories(this.org, titles))
-      );
-    }
+  org$ = new BehaviorSubject<Organization>(undefined);
+  @Input()
+  set org(org: Organization) {
+    this.org$.next(org);
+  }
+  get org() {
+    return this.org$.getValue();
   }
 
   @ViewChild('image') image?: TemplateRef<any>;
@@ -85,6 +72,20 @@ export class FileExplorerComponent implements AfterViewInit {
     private routerQuery: RouterQuery,
     private dialog: MatDialog,
   ) {}
+
+  ngOnInit() {
+    const app: App = this.routerQuery.getData('app');
+    const query: QueryFn = ref => ref
+      .where('orgIds', 'array-contains', this.org.id)
+      .where(`storeConfig.appAccess.${app}`, '==', true);
+
+    this.root$ = combineLatest([
+      this.org$.asObservable(),
+      this.movieService.valueChanges(query)
+    ]).pipe(
+      map(([org, titles]) => getDirectories(org, titles)),
+    );
+  }
 
   ngAfterViewInit() {
     this.templates = {
