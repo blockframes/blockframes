@@ -68,7 +68,7 @@
       clickable
       (rowClick)="goToMovieEdit($event)">
       <ng-template colRef="poster" let-posters>
-        <ng-container *ngIf="posters; else noposter">
+        <ng-container *ngIf="posters.storagePath; else noposter">
           <img class="poster" [ref]="posters" asset="empty_poster.webp">
         </ng-container>
         <ng-template #noposter>
