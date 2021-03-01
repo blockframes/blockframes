@@ -197,9 +197,14 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
   }
 
   return data.parametersSet.map((p: ImageParameters) => {
-    const params = formatParameters(p);
-    let toSign = `${imgixToken}${encodeURI(data.file.storagePath)}`;
 
+    // ImgIx secured URLs doc : https://github.com/imgix/imgix-blueprint#securing-urls
+
+    // add a leading '/' to the path if it doesn't exists
+    const storagePath = data.file.storagePath.startsWith('/') ? data.file.storagePath : `/${data.file.storagePath}`;
+    let toSign = `${imgixToken}${encodeURI(storagePath)}`;
+
+    const params = formatParameters(p);
     if (!!params) {
       toSign = `${toSign}?${params}`;
     }

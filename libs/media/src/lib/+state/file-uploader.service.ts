@@ -134,7 +134,7 @@ export class FileUploaderService {
 
     const tasksState = tasks.flat().filter(task => !!task).map(task => getTaskStateObservable(task).toPromise());
     this.tasks.value = [...this.tasks.value, ...tasks.flat().filter(task => !!task)];
-    this.tasksState.value = [...this.tasksState.value, ...tasksState];    
+    this.tasksState.value = [...this.tasksState.value, ...tasksState];
     (Promise as any).allSettled(tasks)
       .then(() => delay(3000))
       .then(() => this.detachWidget());

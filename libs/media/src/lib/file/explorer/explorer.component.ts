@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit } from '@angular/core';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state';
@@ -11,6 +11,7 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 // RxJs
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { QueryFn } from '@angular/fire/firestore';
 import { Organization } from '@blockframes/organization/+state';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
@@ -43,13 +44,20 @@ export function getCrumbs(path: string) {
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileExplorerComponent implements OnInit, AfterViewInit {
+export class FileExplorerComponent implements AfterViewInit {
   root$: Observable<Directory>;
   path$ = new BehaviorSubject<string>('org');
   crumbs$ = this.path$.pipe(map(getCrumbs));
   templates: Record<string, TemplateRef<any>> = {};
 
-  @Input() org: Organization;
+  org$ = new BehaviorSubject<Organization>(undefined);
+  @Input()
+  set org(org: Organization) {
+    this.org$.next(org);
+  }
+  get org() {
+    return this.org$.getValue();
+  }
 
   @ViewChild('image') image?: TemplateRef<any>;
   @ViewChild('file') file?: TemplateRef<any>;
@@ -70,8 +78,12 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     const query: QueryFn = ref => ref
       .where('orgIds', 'array-contains', this.org.id)
       .where(`storeConfig.appAccess.${app}`, '==', true);
-    this.root$ = this.movieService.valueChanges(query).pipe(
-      map(titles => getDirectories(this.org, titles))
+
+    this.root$ = combineLatest([
+      this.org$.asObservable(),
+      this.movieService.valueChanges(query)
+    ]).pipe(
+      map(([org, titles]) => getDirectories(org, titles)),
     );
   }
 

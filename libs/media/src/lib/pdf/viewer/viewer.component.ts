@@ -77,8 +77,11 @@ export class PdfViewerComponent implements OnInit {
       const url = await this.mediaService.generateImgIxUrl(this.ref);
       const response = await fetch(url);
       const textResult = await response.text();
+
+      if (response.status !== 200) console.warn(`ERROR ${response.status} fetching the pdf:`, textResult);
+
       // this actually count the number of pages, the regex comes from stack overflow
-      const totalPages = textResult.match(/\/Type[\s]*\/Page[^s]/g).length;
+      const totalPages = textResult.match(/\/Type[\s]*\/Page[^s]/g)?.length ?? 0;
 
       this.control = { type: 'pdf', currentPage: 1, totalPages };
     }

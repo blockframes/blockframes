@@ -58,7 +58,7 @@
     <ng-container *ngFor="let child of dir.children | keyvalue">
       <button mat-list-item (click)="next(child.key)">
         <ng-container *ngIf="child.value as node">
-          <ng-container *ngIf="node.type === 'directory' || node.type === 'fileList'">
+          <ng-container *ngIf="['directory', 'fileList', 'imageList'].includes(node.type)">
             <mat-icon [matBadge]="node.hasFile" matBadgeSize="small" mat-list-icon svgIcon="folder"></mat-icon>
           </ng-container>
           <ng-container *ngIf="node.type === 'file'">
@@ -76,44 +76,10 @@
 
 <!-- File List -->
 <ng-template #fileList let-dir>
-  <bf-form-list [form]="dir.form" listPosition="bottom" reverseList>
-    <ng-template itemRef let-item>
-      <button mat-list-icon (click)="openView(item, $event)">
-        <mat-icon [svgIcon]="item.storagePath | fileName | fileTypeImage: 'icon'"></mat-icon>
-      </button>
-      <p mat-line>{{ item.type | titlecase }} - {{ (item.storagePath | fileName) }}</p>
-      <button mat-icon-button (click)="downloadFile(item, $event)">
-        <mat-icon svgIcon="cloud_download"></mat-icon>
-      </button>
-    </ng-template>
-    <ng-template formView let-activeForm let-index="index">
-      <file-uploader [form]="activeForm" [meta]="getMeta(dir, index)" [accept]="dir.accept">
-        <h3 title>Upload File</h3>
-      </file-uploader>
-      <ng-template saveButtonText>Save</ng-template>
-      <ng-template addButtonText>Add</ng-template>
-    </ng-template>
-  </bf-form-list>
+  <file-list-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept"></file-list-uploader>
 </ng-template>
 
 <!-- Image List -->
 <ng-template #imageList let-dir>
-  <bf-form-list [form]="dir.form" listPosition="bottom" keepFormOpen reverseList>
-    <ng-template itemRef let-item>
-      <button mat-list-icon (click)="openView(item, $event)">
-        <mat-icon [svgIcon]="item.storagePath | fileName | fileTypeImage: 'icon'"></mat-icon>
-      </button>
-      <p mat-line>{{ item.type | titlecase }} - {{ (item.storagePath | fileName) }}</p>
-      <button mat-icon-button (click)="downloadFile(item, $event)">
-        <mat-icon svgIcon="cloud_download"></mat-icon>
-      </button>
-    </ng-template>
-    <ng-template formView let-activeForm let-index="index">
-      <image-uploader [form]="activeForm" [meta]="getMeta(dir, index)" [ratio]="dir.ratio">
-        <h3 title>{{ dir.name }}</h3>
-      </image-uploader>
-      <ng-template saveButtonText>Save</ng-template>
-      <ng-template addButtonText>Add</ng-template>
-    </ng-template>
-  </bf-form-list>
+  <file-list-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept"></file-list-uploader>
 </ng-template>

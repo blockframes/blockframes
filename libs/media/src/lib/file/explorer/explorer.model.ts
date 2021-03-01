@@ -74,7 +74,7 @@ export function getFormList(form: OrganizationForm | MovieForm, field: string) {
 function titlesDirectory(titles: Movie[]) {
   const documents = {};
   for (const title of titles) {
-    document[title.id] = titleDirectory(title);
+    documents[title.id] = titleDirectory(title);
   }
   return documents;
 }
