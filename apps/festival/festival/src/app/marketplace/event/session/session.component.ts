@@ -156,8 +156,8 @@ export class SessionComponent implements OnInit, OnDestroy {
 
         // If the current selected file hasn't any controls yet we should create them
         if (!!event.meta.selectedFile) {
-          const file = event.meta.files.find(file =>
-            file.storagePath === event.meta.selectedFile
+          const file = event.meta.files.find(f =>
+            f.storagePath === event.meta.selectedFile
           );
           if (!file) {
             console.warn('Selected file doesn\'t exists in this Meeting!');
