@@ -92,23 +92,23 @@ commands:
       - save_cache:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
           paths:
-            - ".git"
+            - '.git'
   prepare_environment:
     description: 'Checkout project and select env'
     steps:
-        - checkout_project
-        - run: echo $FIREBASE_CI_SERVICE_ACCOUNT > tools/credentials/ci-sak.json
-        - run: echo $FIREBASE_PRODUCTION_SERVICE_ACCOUNT > tools/credentials/prod-sak.json
-        - run: echo $FIREBASE_STAGING_SERVICE_ACCOUNT > tools/credentials/staging-sak.json
-        - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
-        - select_environment
+      - checkout_project
+      - run: echo $FIREBASE_CI_SERVICE_ACCOUNT > tools/credentials/ci-sak.json
+      - run: echo $FIREBASE_PRODUCTION_SERVICE_ACCOUNT > tools/credentials/prod-sak.json
+      - run: echo $FIREBASE_STAGING_SERVICE_ACCOUNT > tools/credentials/staging-sak.json
+      - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
+      - select_environment
   save_build_cache:
     description: 'Saves NX build cache for faster building'
     steps:
       - save_cache:
           key: build-v1-{{ .Branch }}-{{ .Revision }}
           paths:
-            - ".cache"
+            - '.cache'
   replace_prod_files:
     description: 'Replace files for production'
     steps:
@@ -140,18 +140,18 @@ commands:
   test_e2e_all:
     description: 'Run all e2e tests'
     steps:
-        - run: npx cypress install
-        - run: npm run e2e
-        - store_artifacts:
-            name: Uploading screenshots
-            path: ~/repo/dist/cypress/apps
+      - run: npx cypress install
+      - run: npm run e2e
+      - store_artifacts:
+          name: Uploading screenshots
+          path: ~/repo/dist/cypress/apps
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
 executors:
   blockframes-ci:
     docker:
-      - image: blockframes/ci:latest
+      - image: zenmano/ci:browsers-latest
     working_directory: ~/repo
     resource_class: large
 jobs:
@@ -242,8 +242,8 @@ jobs:
   test-e2e-release: # * Will build and test each release commit against staging
     executor: blockframes-ci
     environment:
-        NG_CONFIG: staging
-        PROJECT_ID: blockframes-staging
+      NG_CONFIG: staging
+      PROJECT_ID: blockframes-staging
     steps:
       - slack/notify:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
@@ -256,8 +256,8 @@ jobs:
   deploy-to-prod:
     executor: blockframes-ci
     environment:
-        PROJECT_ID: blockframes
-        NG_CONFIG: production
+      PROJECT_ID: blockframes
+      NG_CONFIG: production
     steps:
       - slack/notify:
           message: '🚚 Deploying to production...'
@@ -267,8 +267,8 @@ jobs:
   deploy-to-staging:
     executor: blockframes-ci
     environment:
-        PROJECT_ID: blockframes-staging
-        NG_CONFIG: staging
+      PROJECT_ID: blockframes-staging
+      NG_CONFIG: staging
     steps:
       - slack/notify:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
@@ -290,7 +290,7 @@ jobs:
   backup-prod-db:
     executor: blockframes-ci
     environment:
-        PROJECT_ID: blockframes
+      PROJECT_ID: blockframes
     steps:
       - prepare_environment
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
