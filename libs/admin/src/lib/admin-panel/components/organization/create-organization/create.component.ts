@@ -10,7 +10,7 @@ import { UserService } from '@blockframes/user/+state';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { getOrgAppAccess } from '@blockframes/utils/apps';
+import { getOrgAppAccess, appName } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'organization-create',
@@ -19,12 +19,14 @@ import { getOrgAppAccess } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationCreateComponent {
+  public appList = appName;
   public form = new OrganizationAdminForm();
   public superAdminForm = new FormEntity({
     email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this))
   }, {
     updateOn: 'blur'
   });
+  public fromApp = new FormControl('');
 
   constructor(
     public dialogRef: MatDialogRef<OrganizationCreateComponent>,
@@ -60,7 +62,7 @@ export class OrganizationCreateComponent {
       const newUser = await this.authService.createUser(
         superAdminEmail,
         this.form.get('denomination').get('full').value,
-        "festival" // @TODO #4932 clean
+        this.fromApp.value
       );
       superAdmin = createPublicUser(newUser);
     }

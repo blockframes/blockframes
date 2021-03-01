@@ -1,20 +1,25 @@
-<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px">
+<section fxLayout="column" fxLayoutAlign="center center">
   <h1>Create Organization </h1>
   <!-- SUPER ADMIN -->
   <form [formGroup]="superAdminForm">
-    <mat-card>
-      <mat-form-field appearance="outline">
-        <mat-label>Super Admin Email</mat-label>
-        <input matInput type="email" placeholder="Email" aria-label="email" formControlName="email" required />
-        <mat-error *ngIf="superAdminForm.get('email').hasError('email') && !superAdminForm.get('email').hasError('required')">
-          Please enter a <strong>valid</strong> email address.
-        </mat-error>
-        <mat-error *ngIf="superAdminForm.get('email').hasError('taken')">
-          User of this email address already has an organization.
-        </mat-error>
-      </mat-form-field>
-    </mat-card>
+    <mat-form-field appearance="outline">
+      <mat-label>Super Admin Email</mat-label>
+      <input matInput type="email" placeholder="Email" aria-label="email" formControlName="email" required />
+      <mat-error *ngIf="superAdminForm.get('email').hasError('email') && !superAdminForm.get('email').hasError('required')">
+        Please enter a <strong>valid</strong> email address.
+      </mat-error>
+      <mat-error *ngIf="superAdminForm.get('email').hasError('taken')">
+        User of this email address already has an organization.
+      </mat-error>
+    </mat-form-field>
   </form>
+
+  <mat-form-field appearance="outline">
+    <mat-label>From App</mat-label>
+    <mat-select [formControl]="fromApp" placeholder="From app" required>
+      <mat-option *ngFor="let app of appList | keyvalue" [value]="app.key">{{ app.value }}</mat-option>
+    </mat-select>
+  </mat-form-field>
 
   <admin-organization-form [form]="form" disableCropper></admin-organization-form>
 
