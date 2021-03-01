@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit } from '@angular/core';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state';
@@ -44,7 +44,7 @@ export function getCrumbs(path: string) {
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileExplorerComponent implements AfterViewInit {
+export class FileExplorerComponent implements OnInit, AfterViewInit {
   root$: Observable<Directory>;
   path$ = new BehaviorSubject<string>('org');
   crumbs$ = this.path$.pipe(map(getCrumbs));
