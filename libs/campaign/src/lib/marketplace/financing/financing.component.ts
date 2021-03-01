@@ -66,7 +66,7 @@ export class MarketplaceFinancingComponent implements OnInit {
     );
   }
 
-  consentBeforeDownload(file){
+  consentBeforeDownload(file: Partial<Campaign>){
     const orgId = this.queryOrg.getActiveId();
     const a = document.createElement('a');
     const content = a.innerHTML;
@@ -89,9 +89,19 @@ export class MarketplaceFinancingComponent implements OnInit {
           confirmationWord: 'i agree',
           confirmButtonText: 'Confirm and download',
           onConfirm: async () => {
+              if(file.files.budget){
+                await this.consentsService.createConsent('access', orgId, file.files.budget);
+                window.location.href = file.files.budget;
+              }
+              if(file.files.financingPlan){
+                await this.consentsService.createConsent('access', orgId, file.files.financingPlan);
+              }
+              if(file.files.waterfall){
+                await this.consentsService.createConsent('access', orgId, file.files.waterfall);
+              }
+              // window.location.href = file;
+              console.log(file.files.budget);
 
-              await this.consentsService.createConsent('access', orgId, file);
-              window.location.href = file;
 
           }
         }
