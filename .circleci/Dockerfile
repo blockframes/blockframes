@@ -6,7 +6,7 @@
 #    docker build -t blockframes/ci:latest .
 #    docker push blockframes/ci:latest
 #
-FROM circleci/node:14
+FROM circleci/node:12
 
 # Required cypress packages
 RUN sudo apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
@@ -42,9 +42,8 @@ RUN sudo apt-get update -q -y && sudo apt-get install google-cloud-sdk -q -y
 RUN gcloud config set pass_credentials_to_gsutil true
 
 # Used in CI
-ENV GOOGLE_APPLICATION_CREDENTIALS creds.json
+ENV GOOGLE_APPLICATION_CREDENTIALS tools/credentials/creds.json
 ENV NODE_OPTIONS --max_old_space_size=7168
 ENV PROJECT_ID blockframes-ci
 ENV NG_CONFIG ci
 ENV SERVICE_ACCOUNT FIREBASE_CI_SERVICE_ACCOUNT
-ENV ENV_TS env/env.blockframes-ci.ts

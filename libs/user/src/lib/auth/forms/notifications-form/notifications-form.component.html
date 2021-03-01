@@ -13,7 +13,7 @@
 
     <ng-container *ngFor="let table of tables; let index = index">
       <table class="surface" *ngIf="index | showNotification">
-        <tbody>
+        <thead>
           <tr>
             <th class="description mat-title">{{ table.title }}</th>
             <th>
@@ -35,10 +35,12 @@
               </mat-checkbox>
             </th>
           </tr>
-          <tr class="mat-caption">Receive notifications when:</tr>
+        </thead>
+        <tbody>
+          <tr class="mat-caption"><td colspan="3">Receive notifications when:</td></tr>
           <ng-container *ngFor="let type of table.types">
             <tr [formGroupName]="type">
-              <td class="description">{{ titleType[type] }}  <b>({{ type }})</b></td>
+              <td class="description">{{ titleType[type] }}</td>
               <td>
                 <mat-checkbox color="primary" name="email" formControlName="email"></mat-checkbox>
               </td>

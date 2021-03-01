@@ -110,9 +110,9 @@ async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
  */
 export async function syncUsers(
   jsonl?: DbRecord[],
-  db: FirebaseFirestore.Firestore = loadAdminServices().db
+  db = loadAdminServices().db,
+  auth = loadAdminServices().auth
 ): Promise<any> {
-  const { auth } = loadAdminServices();
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   await deleteAllUsers(auth);
   const createResult = await importAllUsers(auth, expectedUsers);
@@ -189,11 +189,10 @@ export async function createUsers(): Promise<any> {
   return createAllUsers(users, auth);
 }
 
-export async function generateWatermarks() {
-  const { db, storage } = loadAdminServices();
-  // activate maintenance to prevent cloud functions to trigger
+export async function generateWatermarks({ db = loadAdminServices().db, storage = loadAdminServices().storage } = {}) {
+  // * activate maintenance to prevent cloud functions to trigger
 
-  const usersBatch = getCollectionInBatches<User>(db.collection('users'), 'uid')
+  const usersBatch = getCollectionInBatches<User>(db.collection('users'), 'uid');
   for await (const users of usersBatch) {
     await runChunks(
       users,
@@ -201,6 +200,4 @@ export async function generateWatermarks() {
       env?.['heavyChunkSize'] ?? 10
     );
   }
-
-
 }

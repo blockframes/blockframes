@@ -4,17 +4,18 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, restore, upgrade, prepareDb, prepareStorage, prepareForTestingBeta } from './firebaseSetup';
+import { prepareForTesting, upgrade, prepareDb, prepareStorage, prepareForTestingBeta } from './firebaseSetup';
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
-import { backup, exportFirestore, importFirestore } from './admin';
+import { backup, restore, exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonDbProcess, anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
+import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
+import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -26,7 +27,7 @@ async function runCommand() {
     case 'prepareForTestingBeta':
       await startMaintenance(db);
       await prepareForTestingBeta();
-      await endMaintenance(db);
+      await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'prepareForTesting':
       await startMaintenance(db);

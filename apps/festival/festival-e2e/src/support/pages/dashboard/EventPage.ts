@@ -25,19 +25,28 @@ export default class EventPage {
    * @param isPublic  : true for public event, false for private
    */
   createEvent(eventTitle: string, eventDate: Date, 
-              screeningName: string, isPublic: boolean = false) {
+              screeningName: string, isPublic: boolean = false,
+              inviteeList:string[] = []) {
     cy.log(`createEvent : {${eventTitle}}`);
-    const event: EventEditPage = this.createDetailedEvent(eventDate);
-    event.addEventTitle(eventTitle);
+    const event: EventEditPage = this.createDetailedEvent(eventDate, 'Screening', eventTitle);
+
+    if (inviteeList.length !== 0) {
+      event.inviteUser(inviteeList);
+      // We need to wait to fetch the invited user
+      event.copyGuests();
+      cy.wait(8000);
+    }
+
+    event.checkAllDay();
     event.uncheckPrivate(isPublic);
 
     event.selectMovie(screeningName);
-
     event.saveEvent();
     cy.get('[svgicon="arrow_back"]').click();
   }
 
-  createDetailedEvent(date: Date, eventType: string = 'Screening') {
+  createDetailedEvent(date: Date, eventType: string = 'Screening', title: string = '') {
+    cy.log(`#Creating event type: [${eventType}] on <${date.toLocaleDateString()}> :> ${title}`)
     const day = date.getDay();
     if (day === 0) {
       cy.get('button[test-id=arrow_forward]', {timeout: 3 * SEC})
@@ -51,7 +60,13 @@ export default class EventPage {
       .first()
       .click({force: true});
     cy.get('mat-option', {timeout: 3 * SEC})
-      .contains(eventType).click({force: true}); 
+      .contains(eventType).click({force: true});
+    
+    //Input the title string
+    cy.get('input[test-id="event-title"]', {timeout: 1 * SEC})
+      .click({force: true})
+      .clear()
+      .type(title);
 
     cy.get('button[test-id=more-details]')
       .click();

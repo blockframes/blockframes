@@ -4,11 +4,9 @@ import { filter } from 'rxjs/operators';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
-import { OverlayModule } from '@angular/cdk/overlay';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Akita
@@ -58,10 +56,8 @@ import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
     // Angular
     BrowserModule,
     BrowserAnimationsModule,
-    FlexLayoutModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: production }),
-    OverlayModule,
 
     // Intercom
     IntercomModule.forRoot({ appId: intercomId }),
@@ -118,7 +114,7 @@ export class AppModule {
   ) {
 
     const { intercom, yandex } = gdprService.cookieConsent;
-    if (yandex) yandexService.insertMetrika();
+    if (yandex) yandexService.insertMetrika('catalog');
     intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());
@@ -127,12 +123,12 @@ export class AppModule {
     navEnds.subscribe((event: NavigationEnd) => {
       try {
         analytics.event('pageView', {
-          page_location: 'marketplace',
+          page_location: 'catalog',
           page_path: event.urlAfterRedirects
         });
       } catch {
         analytics.event('pageView', {
-          page_location: 'marketplace',
+          page_location: 'catalog',
           page_path: event.urlAfterRedirects
         });
       }

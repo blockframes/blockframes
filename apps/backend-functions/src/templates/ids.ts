@@ -61,6 +61,12 @@ export const templateIds = {
   }
 }
 
+/**
+ * This is the ids of the unsubscribe group on Sendgrid.
+ * We need to pass an id for each template we send to Sendgrid to avoid the default unsubscribe link at the end of the email.
+ * The criticalsEmails has been created only for this purpose and it is used for email like reset password.
+*/
 export const unsubscribeGroupIds = {
-  allExceptCriticals: 15120
+  allExceptCriticals: 15120,
+  criticalsEmails: 15136
 }

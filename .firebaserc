@@ -296,6 +296,9 @@
         "financiers": [
           "blockframes-george-financiers"
         ],
+        "cms": [
+          "blockframes-george-cms"
+        ],
         "crm": [
           "blockframes-george-crm"
         ]

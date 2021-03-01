@@ -43,7 +43,11 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
     return Promise.resolve(true);
   }
 
-  return indexBuilder(indexName, adminKey).setSettings(config);
+  return indexBuilder(indexName, adminKey).setSettings({
+    attributesForFaceting: config.attributesForFaceting,
+    searchableAttributes: config.searchableAttributes,
+    customRanking: config.customRanking
+  });
 }
 
 // ------------------------------------
@@ -67,8 +71,8 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
       denomination: org.denomination,
       id: org.id,
       logo: org.logo
-    }
-
+    },
+    activity: org.activity
   };
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */

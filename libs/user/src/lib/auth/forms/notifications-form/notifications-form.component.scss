@@ -17,6 +17,10 @@ table {
   margin-bottom: 24px;
 }
 
+span.mat-caption {
+  padding-left: 24px;
+}
+
 th {
   background-color: var(--background-card);
   position: sticky;
@@ -32,6 +36,10 @@ th, td {
   &:last-child {
     padding-right: 24px;
   }
+}
+
+tbody tr:last-child td {
+  padding-bottom: 24px
 }
 
 .description {

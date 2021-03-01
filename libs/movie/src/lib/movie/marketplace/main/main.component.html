@@ -69,6 +69,18 @@
       </p>
     </article>
 
+    <ng-container *ngIf="movie.contentType === 'series'">
+      <article>
+        <h5>Season Number</h5>
+        <p>{{movie.title.series}}</p>
+      </article>
+
+      <article>
+        <h5>Number Of Episodes</h5>
+        <p>{{movie.runningTime.episodeCount}}</p>
+      </article>
+    </ng-container>
+
     <article *ngIf="movie.runningTime.time || movie.runningTime.status">
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">

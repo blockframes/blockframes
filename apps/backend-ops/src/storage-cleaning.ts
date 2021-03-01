@@ -1,10 +1,10 @@
-import { File as GFile } from '@google-cloud/storage';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';
+import type { Bucket, File as GFile } from '@google-cloud/storage';
 
-export async function cleanStorage(bucket) {
+export async function cleanStorage(bucket: Bucket) {
 
   const cleanMovieDirOutput = await cleanMovieDir(bucket);
   console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "public/movie" directory.`);
@@ -25,7 +25,7 @@ export async function cleanStorage(bucket) {
  * @dev this should be usefull only once
  * @param bucket
  */
-export async function cleanMovieDir(bucket) {
+export async function cleanMovieDir(bucket: Bucket) {
   // Movie dir should not exists
   const files: GFile[] = (await bucket.getFiles({ prefix: 'public/movie/' }))[0];
   let deleted = 0;
@@ -49,7 +49,7 @@ export async function cleanMovieDir(bucket) {
   return { deleted, total: files.length };
 }
 
-export async function cleanMoviesDir(bucket) {
+export async function cleanMoviesDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'public/movies/' }))[0];
   let deleted = 0;
 
@@ -76,7 +76,7 @@ export async function cleanMoviesDir(bucket) {
  * files that belongs to deleted orgs on DB.
  * @param bucket
  */
-export async function cleanOrgsDir(bucket) {
+export async function cleanOrgsDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'public/orgs/' }))[0];
   let deleted = 0;
 
@@ -97,7 +97,7 @@ export async function cleanOrgsDir(bucket) {
   return { deleted, total: files.length };
 }
 
-export async function cleanUsersDir(bucket) {
+export async function cleanUsersDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'public/users/' }))[0];
   let deleted = 0;
 
@@ -123,7 +123,7 @@ export async function cleanUsersDir(bucket) {
  * watermarks are in public/users/${userId}/${userId}.svg
  * @param bucket
  */
-export async function cleanWatermarkDir(bucket) {
+export async function cleanWatermarkDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'public/watermark/' }))[0];
   let deleted = 0;
 

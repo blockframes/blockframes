@@ -115,7 +115,8 @@ export const contentType = {
   episode: 'Episode',
   collection: 'Collection',
   tv_film: 'TV Film',
-  flow: 'Flow'
+  flow: 'Flow',
+  documentary: 'Documentary'
 }
 
 export const crewRoles = {
@@ -566,7 +567,7 @@ export const territories = {
   curacao: "Curaçao",
   cyprus: "Cyprus",
   "northern-cyprus": "Northern Cyprus",
-  czech: "Czech Republic (Czechia) ",
+  czech: "Czech Republic (Czechia)",
   "ivory-coast-cote-d-ivoire": "Ivory Coast (Côte d’Ivoire)",
   denmark: "Denmark",
   djibouti: "Djibouti",
@@ -692,7 +693,7 @@ export const territories = {
   "puerto-rico": "Puerto Rico",
   qatar: "Qatar",
   romania: "Romania",
-  russia: "Russian",
+  russia: "Russia",
   rwanda: "Rwanda",
   reunion: "Réunion",
   "saint-barthelemy": "Saint Barthélemy",

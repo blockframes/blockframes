@@ -10,7 +10,7 @@ export default class EventEditPage {
   }
 
   addEventTitle(title: string) {
-    cy.get('event-edit input[test-id=event-title]').clear().type(title);
+    cy.get('event-edit input[formControlName="title"]').clear().type(title);
   }
 
   //Sets if event is full day.
@@ -44,11 +44,11 @@ export default class EventEditPage {
   //set event access
   uncheckPrivate(isPublic: boolean = false) {
     if (!isPublic) {
-      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: 3 * SEC })
+      cy.get('event-edit mat-checkbox[formControlName="isPrivate"]', { timeout: 3 * SEC })
         .find('input')
         .check({ force: true });
     } else {
-      cy.get('event-edit mat-slide-toggle[test-id=event-private]', { timeout: 3 * SEC })
+      cy.get('event-edit mat-checkbox[formControlName="isPrivate"]', { timeout: 3 * SEC })
         .find('input')
         .uncheck({ force: true });
     }
@@ -57,6 +57,14 @@ export default class EventEditPage {
   selectMovie(movieName: string) {
     cy.get('event-edit mat-select[formControlName=titleId]', { timeout: 100 * SEC }).click();
     cy.get('mat-option').contains(movieName).click();
+  }
+
+  inputDescription(description: string) {
+    //Input description
+    cy.get('textarea[formControlName="description"]', {timeout: 1 * SEC})
+      .click({force: true})
+      .clear()
+      .type(description);
   }
 
   inviteUser(email: string | string[]) {
@@ -78,12 +86,12 @@ export default class EventEditPage {
   }
 
   saveEvent() {
-    cy.get('button[test-id=event-save]', { timeout: 1 * SEC }).click();
+    cy.get('button[test-id=event-save]', { timeout:  30 * SEC }).click();
     cy.wait(2 * SEC);
   }
 
   clickMoreDetails() {
-    cy.get('button[test-id=more-details]', { timeout: 1 * SEC }).click();
+    cy.get('button[test-id=more-details]', { timeout: 10 * SEC }).click();
     cy.wait(1 * SEC);
   }
 
