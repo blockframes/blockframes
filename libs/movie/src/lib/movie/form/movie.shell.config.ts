@@ -61,7 +61,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   onInit(): Observable<any>[] {
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.getValue(id)),
+      switchMap((id: string) => this.service.valueChanges(id)),
       tap(movie => {
         this.form.reset();
         this.form.setAllValue(movie);

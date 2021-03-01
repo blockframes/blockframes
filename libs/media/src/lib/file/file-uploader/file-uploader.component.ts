@@ -24,7 +24,6 @@ import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { Subscription } from 'rxjs';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -171,15 +170,6 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     this.state = 'ready';
     this.fileName = sanitizeFileName(this.file.name);
     this.localSize = computeSize(this.file.size);
-
-    this.form.setValue(createStorageFile({
-      ...this.form.value,
-      storagePath: this.storagePath,
-      collection: this.metadata.collection,
-      docId: this.metadata.docId,
-      field: this.metadata.field,
-      privacy: this.metadata.privacy
-    }))
 
     this.uploaderService.addToQueue(this.storagePath, { fileName: this.fileName, file: this.file, metadata: this.metadata });
     this.selectionChange.emit();
