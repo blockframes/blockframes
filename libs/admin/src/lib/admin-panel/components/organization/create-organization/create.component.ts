@@ -25,6 +25,7 @@ export class OrganizationCreateComponent {
   }, {
     updateOn: 'blur'
   });
+  public fromApp = new FormControl('');
 
   constructor(
     public dialogRef: MatDialogRef<OrganizationCreateComponent>,
@@ -60,7 +61,7 @@ export class OrganizationCreateComponent {
       const newUser = await this.authService.createUser(
         superAdminEmail,
         this.form.get('denomination').get('full').value,
-        "festival" // @TODO #4932 clean
+        this.fromApp.value
       );
       superAdmin = createPublicUser(newUser);
     }
