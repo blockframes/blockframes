@@ -11,16 +11,9 @@ import { OrganizationLiteForm } from '../organization-lite.form';
 })
 export class OrganizationLiteFormComponent {
   public activities = orgActivity;
-  
+
   @Input() form: OrganizationLiteForm;
 
   constructor(private service: OrganizationService) { }
 
-  public async uniqueOrgName() { // @TODO #4932 not used here
-    const orgName = this.form.get('denomination').get('full').value
-    const unique = await this.service.uniqueOrgName(orgName);
-    if(!unique){
-      this.form.get('denomination').get('full').setErrors({ notUnique: true });
-    }
-  }
 }

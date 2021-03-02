@@ -174,6 +174,16 @@ export class IdentityComponent implements OnInit {
     } else {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
+      // Check if the org name is already existing
+      const unique = await this.orgService.uniqueOrgName(denomination.full);
+      if(!unique){
+        this.orgForm.get('denomination').setErrors({ notUnique: true });
+        this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
+        this.creating = false;
+        this.cdr.markForCheck();
+        return;
+      }
+
       const org = createOrganization({ denomination, addresses, activity });
 
       org.appAccess[this.app][appAccess] = true;
@@ -233,6 +243,16 @@ export class IdentityComponent implements OnInit {
     } else {
       // User decided to create his own org and is redirected to waiting room
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+
+      // Check if the org name is already existing
+      const unique = await this.orgService.uniqueOrgName(denomination.full);
+      if(!unique){
+        this.orgForm.get('denomination').setErrors({ notUnique: true });
+        this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
+        this.creating = false;
+        this.cdr.markForCheck();
+        return;
+      }
 
       const org = createOrganization({ denomination, addresses, activity });
 
