@@ -108,7 +108,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     indexSearch = this.algoliaService.getIndex(this.index)
 
     // create search functions
-    const regularSearch = (text: string) => indexSearch.search(text, this.getFilter()).then(result => result.hits);
+    const regularSearch = (text: string) => indexSearch.search(text, { facetFilters: this.getFilter() }).then(result => result.hits);
     const facetSearch = (text: string) => indexSearch.searchForFacetValues(this.facet, text).then(result => result.facetHits);
 
     // perform search
