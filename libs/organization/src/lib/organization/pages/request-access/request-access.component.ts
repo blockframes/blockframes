@@ -18,6 +18,7 @@ export class OrgRequestAccessComponent implements OnInit {
   public org$ = this.orgQuery.selectActive();
   public orgId = this.orgQuery.getActiveId();
   public orgHasAccess$: Observable<boolean>;
+  public disabledRequest = false;
 
   constructor(
     private routerQuery: RouterQuery,
@@ -33,6 +34,7 @@ export class OrgRequestAccessComponent implements OnInit {
   }
 
   async requestAccess() {
+    this.disabledRequest = true;
     await this.orgService.requestToAccessToApp(this.app, this.orgId);
     this.snackBar.open('Your request to access to this platform has been sent.', 'close', { duration: 5000 });
   }
