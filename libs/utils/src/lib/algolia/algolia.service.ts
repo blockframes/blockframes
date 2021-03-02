@@ -9,7 +9,7 @@ import { parseFilters, parseFacets } from './helper.utils';
 @Injectable({ providedIn: 'root' })
 export class AlgoliaService {
 
-    private indices = {}
+    private indices: Record<string, SearchIndex> = {};
 
     private appName: App;
 
@@ -25,7 +25,7 @@ export class AlgoliaService {
                 this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.appName]);
             }
         }
-        return this.indices[name] as SearchIndex;
+        return this.indices[name];
 
     }
 
