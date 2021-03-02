@@ -10,7 +10,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { of } from 'rxjs';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getOrgModuleAccess, getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -26,7 +26,6 @@ export class RequestAccessGuard extends CollectionGuard<OrganizationState> {
   }
 
   sync() {
-    const app = this.routerQuery
     return this.authQuery.user$.pipe(
       switchMap(user => {
         if (!user) {
