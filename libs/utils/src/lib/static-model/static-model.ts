@@ -1,3 +1,4 @@
+import { appName } from '@blockframes/utils/apps';
 import {
   Territory,
   TerritoryISOA2,
@@ -1862,7 +1863,8 @@ export const staticModel = {
   territoriesISOA2,
   territoriesISOA3,
   territoriesNUMCODE,
-  territoriesFR
+  territoriesFR,
+  appName
 };
 
 export type StaticModel = typeof staticModel;

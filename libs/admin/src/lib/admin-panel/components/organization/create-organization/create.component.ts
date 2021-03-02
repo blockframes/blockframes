@@ -10,7 +10,7 @@ import { UserService } from '@blockframes/user/+state';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { getOrgAppAccess, appName } from '@blockframes/utils/apps';
+import { getOrgAppAccess } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'organization-create',
@@ -19,7 +19,6 @@ import { getOrgAppAccess, appName } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationCreateComponent {
-  public appList = appName;
   public form = new OrganizationAdminForm();
   public superAdminForm = new FormEntity({
     email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this))

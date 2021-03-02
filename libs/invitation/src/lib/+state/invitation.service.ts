@@ -110,9 +110,7 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        const app = getCurrentApp(this.routerQuery); // @TODO #4932 problem here if invite comes from CRM
-        //? Is it really a problem ? When the user will log for the first time, he will update his profile,
-        //? and we will have a new createdFrom or updatedFrom
+        const app = getCurrentApp(this.routerQuery); // @TODO #5049 problem here if invite comes from CRM
         return f({ emails: recipients, invitation, app }).toPromise();
 
       }
