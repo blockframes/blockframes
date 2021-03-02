@@ -231,7 +231,6 @@ jobs:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - prepare_environment
       - build_deploy_prepare
-      - run: npm run backend-ops endMaintenance
       - test_e2e_all
       - run: npm run test
       - save_build_cache
@@ -250,7 +249,6 @@ jobs:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
       - prepare_environment
       - build_deploy_prepare
-      - run: npm run backend-ops endMaintenance
       - test_e2e_all
       - run: npm run test
       - save_build_cache
