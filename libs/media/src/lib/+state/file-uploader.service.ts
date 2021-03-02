@@ -123,10 +123,12 @@ export class FileUploaderService {
         const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata });
 
         // clean on success
-        afTask.task.then(() => {
-          console.log('task success, cleaning', storagePath); // TODO REMOVE DEBUG LOG
-          this.removeFromQueue(storagePath, upload.fileName);
-        });
+        if (!!afTask) {
+          afTask.task.then(() => {
+            console.log('task success, cleaning', storagePath); // TODO REMOVE DEBUG LOG
+            this.removeFromQueue(storagePath, upload.fileName);
+          });
+        }
 
         return afTask;
       });
