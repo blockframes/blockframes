@@ -23,6 +23,7 @@
       <bf-table-filter [source]="movies | filterBy: filterByMovie: filter.value" [columns]="columns"
         [initialColumns]="initialColumns" clickable showFilter showPaginator (rowClick)="goToTitle($event)">
         <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
+        <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
         <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b></ng-template>
         <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
       </bf-table-filter>
