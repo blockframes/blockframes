@@ -40,9 +40,9 @@ export class RequestAccessGuard extends CollectionGuard<OrganizationState> {
               if (org.status === 'accepted') {
                 const app = getCurrentApp(this.routerQuery);
                 if (!!org.appAccess[app].marketplace) {
-                  return '/c/o/marketplace/home'
+                  return '/c/o/marketplace/home';
                 }
-                if (!!org.appAccess[app].dashboard) {
+                else if (!!org.appAccess[app].dashboard) {
                   return '/c/o/dashboard/home';
                 }
                 return;
