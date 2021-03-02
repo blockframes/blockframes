@@ -33,7 +33,7 @@
 
         <static-select test-id="content-type" scope="contentType" [control]="form.contentType" fxFlex
           [withoutValues]="['volume', 'episode', 'collection']">
-          <mat-label>Content Type</mat-label>
+          <mat-label>Format</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project's content type.
           </mat-error>

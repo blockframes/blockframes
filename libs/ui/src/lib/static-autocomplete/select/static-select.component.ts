@@ -32,5 +32,4 @@ export class StaticSelectComponent implements OnInit {
       this.staticValue = Object.keys(staticModel[this.scope]);
     }
   }
-
 }
