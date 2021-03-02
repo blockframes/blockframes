@@ -4,6 +4,7 @@ import { loadAdminServices } from '@blockframes/firebase-utils';
 import { cleanStorage, cleanMovieDir, cleanMoviesDir, cleanOrgsDir, cleanUsersDir, cleanWatermarkDir } from './storage-cleaning';
 import { clearFirestoreData } from '@firebase/testing';
 import { getCollectionRef } from '@blockframes/firebase-utils';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 let db: FirebaseFirestore.Firestore;
 let bucket;
@@ -134,8 +135,17 @@ describe('Storage cleaning script', () => {
     expect(filesAfter.length).toEqual(2);
   });
 
-  it('should empty public/watermark directory if migration 29 went well', async () => {
-    const users = [{ uid: 'A' }, { uid: 'C' }];
+  it('should empty public/watermark directory', async () => {
+    const users = [
+      {
+        uid: 'A',
+        watermark: { storagePath: null }
+      },
+      { 
+        uid: 'C',
+        watermark: { storagePath: null }
+      }
+    ];
 
     const prefix = 'public/watermark';
     const filesBefore = [
@@ -163,8 +173,18 @@ describe('Storage cleaning script', () => {
   it('should skip files while emptying public/watermark directory if migration 29 went badly', async () => {
     const prefix = 'public/watermark';
     const users = [
-      { uid: 'A', watermark: `public/users/A/watermark/A.svg` }, // Good watermark location
-      { uid: 'C', watermark: `${prefix}/C.svg` } // Bad watermark location
+      { 
+        uid: 'A',
+        watermark: createStorageFile({
+          storagePath: `public/users/A/watermark/A.svg` // Good watermark location
+        })
+      }, 
+      { 
+        uid: 'C',
+        watermark: createStorageFile({
+          storagePath: `${prefix}/C.svg` // Bad watermark location
+        })
+      } 
     ];
 
     const filesBefore = [
