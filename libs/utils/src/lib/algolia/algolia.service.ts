@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { algolia } from '@env';
-import algoliasearch from 'algoliasearch';
+import algoliasearch, { SearchIndex, } from 'algoliasearch';
 import { App, getCurrentApp } from "../apps";
-import { algoliaIndex, AlgoliaObject, AlgoliaQueries, AlgoliaRecord } from "./algolia.interfaces";
+import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from "./algolia.interfaces";
 import { parseFilters, parseFacets } from './helper.utils';
 
 @Injectable({ providedIn: 'root' })
@@ -17,7 +17,7 @@ export class AlgoliaService {
         this.appName = getCurrentApp(this.routerQuery);
     }
 
-    getIndex(name: 'movie' | 'org' | 'user') {
+    getIndex(name: 'movie' | 'org' | 'user'): SearchIndex {
         if (!this.indices[name]) {
             if (name === 'user') {
                 this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name]);
@@ -25,17 +25,16 @@ export class AlgoliaService {
                 this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.appName]);
             }
         }
-        return this.indices[name];
+        return this.indices[name] as SearchIndex;
 
     }
 
-    query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]): Promise<AlgoliaRecord<AlgoliaObject[K]>> {
-        return this.getIndex(name).search({
-            query: config.text ?? '',
+    query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]): Promise<SearchResponse<AlgoliaObject[K]>> {
+        return this.getIndex(name).search<AlgoliaObject[K]>(config.text ?? '', {
             hitsPerPage: config.limitResultsTo,
             page: config.activePage,
             facetFilters: parseFacets(config.facets),
             filters: parseFilters(config.filters)
-        })
+        }).then(e => e);
     }
 }
