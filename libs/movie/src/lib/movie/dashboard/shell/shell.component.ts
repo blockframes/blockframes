@@ -5,6 +5,9 @@ import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: '[routes] title-dashboard-shell',
@@ -17,11 +20,16 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   movie$ = this.query.selectActive();
 
+  public appName = getCurrentApp(this.routerQuery);
+  public org$ = this.orgQuery.selectActive();
+
   @Input() routes: RouteDescription[];
 
   constructor(
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private query: MovieQuery,
+    private routerQuery: RouterQuery,
+    private orgQuery: OrganizationQuery
   ) { }
 
   ngOnInit() {
