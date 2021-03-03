@@ -80,11 +80,7 @@ export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrg
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
     hasAcceptedMovies: org['hasAcceptedMovies'] ?? false,
-    denomination: { // @TODO #4932 denomination inside denomination ? need renaming ?
-      denomination: org.denomination,
-      id: org.id,
-      logo: org.logo
-    },
+    logo: org.logo,
     activity: org.activity
   };
 }

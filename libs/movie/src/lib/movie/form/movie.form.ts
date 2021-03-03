@@ -530,7 +530,7 @@ function createTitleFormControl(title?: Partial<Movie['title']>) {
   return {
     original: new FormControl(original),
     international: new FormControl(international, Validators.required),
-    series: new FormControl(series),
+    series: new FormControl(series, [Validators.max(100), Validators.min(1)]),
   }
 }
 
@@ -571,7 +571,7 @@ function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']
   return {
     time: new FormControl(time, [Validators.min(1)]),
     status: new FormControl(status),
-    episodeCount: new FormControl(episodeCount, [Validators.min(1)])
+    episodeCount: new FormControl(episodeCount, [Validators.max(1000)])
   }
 }
 
@@ -653,10 +653,10 @@ function createMoviePromotionalElementsControls(movieId: string, promotionalElem
     still_photo: FormList.factory(entity.still_photo, (el, i) => new HostedMediaForm(el, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: `promotional.still_photo[${i}]` })),
 
     // Hosted Media
-    financialDetails: new HostedMediaForm(entity.financialDetails, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.financialDetails'}),
-    presentation_deck: new HostedMediaForm(entity.presentation_deck, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.presentation_deck'}),
-    scenario: new HostedMediaForm(entity.scenario, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.scenario'}),
-    moodboard: new HostedMediaForm(entity.moodboard, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.moodboard'}),
+    financialDetails: new HostedMediaForm(entity.financialDetails, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.financialDetails' }),
+    presentation_deck: new HostedMediaForm(entity.presentation_deck, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.presentation_deck' }),
+    scenario: new HostedMediaForm(entity.scenario, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.scenario' }),
+    moodboard: new HostedMediaForm(entity.moodboard, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.moodboard' }),
     notes: FormList.factory(entity.notes, (el, i) => new MovieNotesForm(el, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: `promotional.notes[${i}].ref` })),
     salesPitch: new MovieSalesPitchForm(movieId, entity.salesPitch),
 

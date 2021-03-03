@@ -94,7 +94,21 @@ const routes: Routes = [{
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
         data: { redirect: '/c/o/marketplace/home' }
       }]
-    }]
+    },
+    {
+      path: 'organization',
+      children: [{
+        path: '',
+        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
+        data: { animation: 'list' }
+      },
+      {
+        path: ':orgId',
+        loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule),
+        data: { animation: 'view' },
+      }]
+    },
+  ]
 }];
 
 @NgModule({

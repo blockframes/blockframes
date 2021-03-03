@@ -10,12 +10,16 @@ export async function upgrade(db: Firestore) {
   await runChunks(notifications.docs, async (notificationDoc) => {
     const data = notificationDoc.data();
 
-    data._meta = {
-      createdBy: 'internal',
-      createdAt: data.date
-    };
+    if (data.date !== undefined) {
+      data._meta = {
+        createdBy: 'internal',
+        createdAt: data.date
+      };
+    }
 
-    data.app = { isRead: data.isRead };
+    if (data.isRead !== undefined) {
+      data.app = { isRead: data.isRead };
+    }
 
     delete data.date;
     delete data.isRead;
