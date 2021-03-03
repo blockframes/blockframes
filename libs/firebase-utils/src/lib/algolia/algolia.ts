@@ -67,12 +67,8 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
     hasAcceptedMovies: org['hasAcceptedMovies'] ?? false,
-    denomination: {
-      denomination: org.denomination,
-      id: org.id,
-      logo: org.logo,
-    },
-    activity: org.activity,
+    logo: org.logo.storagePath,
+    activity: org.activity
   };
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */

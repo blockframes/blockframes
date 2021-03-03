@@ -528,7 +528,7 @@ function createTitleFormControl(title?: Partial<Movie['title']>) {
   return {
     original: new FormControl(original),
     international: new FormControl(international, Validators.required),
-    series: new FormControl(series),
+    series: new FormControl(series, [Validators.max(100), Validators.min(1)]),
   }
 }
 
@@ -569,7 +569,7 @@ function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']
   return {
     time: new FormControl(time, [Validators.min(1)]),
     status: new FormControl(status),
-    episodeCount: new FormControl(episodeCount, [Validators.min(1)])
+    episodeCount: new FormControl(episodeCount, [Validators.max(1000)])
   }
 }
 
