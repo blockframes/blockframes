@@ -1,6 +1,6 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
@@ -11,6 +11,9 @@ import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath }
 import { FileUploaderService } from '../../+state/file-uploader.service';
 import { StorageFile } from '../../+state/media.firestore';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { getDeepValue } from '@blockframes/utils/pipes';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -43,7 +46,7 @@ function b64toBlob(data: string) {
   styleUrls: ['./uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageUploaderComponent implements OnInit {
+export class ImageUploaderComponent implements OnInit, OnDestroy {
 
   ////////////////////////
   // Private Variables //
@@ -116,9 +119,14 @@ export class ImageUploaderComponent implements OnInit {
   @Input() types: string[] = ['image/jpeg', 'image/png'];
   @Input() accept: string[] = ['.jpg', '.png'];
 
+  @Input() @boolean listenToChanges: boolean;
+
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
+  private docSub: Subscription;
+
   constructor(
+    private db: AngularFirestore,
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
@@ -142,6 +150,20 @@ export class ImageUploaderComponent implements OnInit {
         this.nextStep('show');
       }
     }
+
+    // listen to db changes to keep form up-to-date after an upload
+    this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(value => {
+      const media = this.index 
+        ? getDeepValue(value, this.metadata.field)[this.index]
+        : getDeepValue(value, this.metadata.field);
+      if (!!media) {
+        this.form.setValue(media);
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.docSub.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])

@@ -24,6 +24,9 @@ import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { Subscription } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { getDeepValue } from '@blockframes/utils/pipes';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -65,6 +68,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     })
   }
   @Output() selectionChange = new EventEmitter<void>();
+  @Input() @boolean listenToChanges: boolean;
 
   public allowedTypes: string[] = [];
   public types: string[] = [];
@@ -79,8 +83,10 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   public fileName: string;
 
   private sub: Subscription;
+  private docSub: Subscription;
 
   constructor(
+    private db: AngularFirestore,
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
   ) { }
@@ -97,10 +103,21 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
         }
       }
     })
+
+    // listen to db changes to keep form up-to-date after an upload
+    this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
+      const media = this.input 
+        ? getDeepValue(data, this.metadata.field)[this.input]
+        : getDeepValue(data, this.metadata.field);
+      if (!!media) {
+        this.form.setValue(media);
+      }
+    })
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.docSub.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])
