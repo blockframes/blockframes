@@ -11,6 +11,7 @@ import {
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Module, ModuleAccess } from '../apps';
 import { PublicOrganization } from '@blockframes/organization/+state';
+export { SearchResponse } from '@algolia/client-search';
 
 export interface AlgoliaConfig {
   searchableAttributes: string[];
@@ -83,17 +84,6 @@ export const algoliaIndex = {
 export type AlgoliaIndex = keyof typeof algoliaIndex;
 
 ///// TYPES //////
-
-export interface AlgoliaRecord<T> {
-  objectID: string,
-  nbHits: number,
-  nbPages: number,
-  hits: T[],
-  query: string,
-  params: string,
-  page: number,
-  hitsPerPage: number
-}
 
 export interface AlgoliaSearch {
   query: string;
