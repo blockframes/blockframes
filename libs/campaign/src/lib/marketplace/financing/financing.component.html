@@ -6,8 +6,8 @@
     <section id="budget" *ngIf="campaign.budget | apexBudget as options">
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Budget</h2>
-        <ng-container *ngIf="(campaign.files.budget)">
-          <a mat-button target="_blank" (click)="consentBeforeDownload()">
+        <ng-container *ngIf="(campaign.files.budget) | getUrl | async">
+          <a mat-button target="_blank" (click)="consentBeforeDownload(campaign.files.budget)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download Budget</span>
           </a>

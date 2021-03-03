@@ -11,6 +11,10 @@ import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { fileURLToPath } from 'url';
+import { stringToKeyValue } from '@angular/flex-layout/extended/typings/style/style-transforms';
+import { GetUrlPipe } from '@blockframes/media/file/pipes/download.pipe';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -38,6 +42,7 @@ const budgetData: { serie: keyof Budget, label: string }[] = [{
 export class MarketplaceFinancingComponent implements OnInit {
   public totalFundings: number;
   public acceptConsent = false;
+  // file = GetUrlPipe;
   campaign$: Observable<Campaign>;
   budgetData = budgetData;
   formatter = {
@@ -53,6 +58,7 @@ export class MarketplaceFinancingComponent implements OnInit {
     @Inject(LOCALE_ID) private locale,
     private service: CampaignService,
     private route: RouterQuery,
+    private mediaService: MediaService,
 
     private queryOrg: OrganizationQuery,
     private consentsService: ConsentsService,
@@ -66,9 +72,13 @@ export class MarketplaceFinancingComponent implements OnInit {
     );
   }
 
-  consentBeforeDownload(file: Partial<Campaign>){
+  consentBeforeDownload(file: string){
+    // let file: Partial<Campaign> ;
+    // let test: GetUrlPipe;
     const orgId = this.queryOrg.getActiveId();
     const a = document.createElement('a');
+    // console.log(file);
+    // console.log(orgId);
     const content = a.innerHTML;
     // a.innerHTML = ;
     const linkText = document.createTextNode("Confidentiality Policy");
@@ -80,27 +90,34 @@ export class MarketplaceFinancingComponent implements OnInit {
     a.innerHTML += `<a href="https://www.mediafinanciers.com/c/o/marketplace/privacy"> Confidentiality Policy </a>`;
 
 
+    // let urlPipe: GetUrlPipe;
+    // urlPipe.transform(file);
+
+    console.log(file);
     // if(!!File){
       this.dialog.open(CrmFormDialogComponent, {
         data: {
           title: 'Confidentiality Reminder',
-          subTitle: 'You are about to download a confidential document. Please make sure that you are aware of our '+console.log(a)+' before doing so.',
+          subTitle: 'You are about to download a confidential document. Please make sure that you are aware of our '+a+' before doing so.',
           text: 'By submitting your project, you assume the responsibility of disclosing all of the information previously filled out to potential future investors. Before submitting your project, please confirm by writing “I AGREE” in the field below.',
           confirmationWord: 'i agree',
           confirmButtonText: 'Confirm and download',
           onConfirm: async () => {
-              if(file.files.budget){
-                await this.consentsService.createConsent('access', orgId, file.files.budget);
-                window.location.href = file.files.budget;
-              }
-              if(file.files.financingPlan){
-                await this.consentsService.createConsent('access', orgId, file.files.financingPlan);
-              }
-              if(file.files.waterfall){
-                await this.consentsService.createConsent('access', orgId, file.files.waterfall);
-              }
+            // console.log(file);
+            // file.files.budget.toString();
+              // if(file.files.budget){
+                await this.consentsService.createConsent('access', orgId, file);
+                window.location.href = file;
+                // window.open(file, '_blank');
+              // }
+              // if(file.files.financingPlan){
+              //   await this.consentsService.createConsent('access', orgId, file.files.financingPlan);
+              // }
+              // if(file.files.waterfall){
+              //   await this.consentsService.createConsent('access', orgId, file.files.waterfall);
+              // }
               // window.location.href = file;
-              console.log(file.files.budget);
+              // console.log(file.files.budget);
 
 
           }
