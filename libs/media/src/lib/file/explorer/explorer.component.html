@@ -43,6 +43,12 @@
   <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept">
     <h3 title>Upload {{ dir.name }}</h3>
   </file-uploader>
+  <section fxLayout="row" fxLayoutAlign="end center" class="save">
+    <button mat-stroked-button (click)="update()">
+      <mat-icon svgIcon="save"></mat-icon>
+      <span>Save</span>
+    </button>
+  </section>
 </ng-template>
 
 <!-- Image -->
@@ -50,6 +56,12 @@
   <image-uploader [ratio]="dir.ratio" [meta]="dir.meta" [form]="dir.form">
     <h3 title>{{ dir.name }}</h3>
   </image-uploader>
+  <section fxLayout="row" fxLayoutAlign="end center" class="save">
+    <button mat-stroked-button (click)="update()">
+      <mat-icon svgIcon="save"></mat-icon>
+      <span>Save</span>
+    </button>
+  </section>
 </ng-template>
 
 <!-- Directory -->
