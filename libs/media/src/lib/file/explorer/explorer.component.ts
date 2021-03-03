@@ -127,7 +127,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   }
 
   update() {
-    console.log('Update');
     this.service.upload();
   }
 

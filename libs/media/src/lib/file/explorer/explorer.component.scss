@@ -55,9 +55,19 @@ article {
         flex-shrink: 0;
       }
     }
-
-    .back_btn {
-      margin-bottom: 24px;
-    }
   }
+}
+
+file-uploader {
+  display: block;
+  margin: 12px 0;
+}
+
+image-uploader {
+  display: block;
+  margin: 12px 0;
+}
+
+.save {
+  margin-bottom: 12px;
 }
