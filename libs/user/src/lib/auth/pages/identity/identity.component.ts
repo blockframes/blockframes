@@ -104,7 +104,7 @@ export class IdentityComponent implements OnInit {
   public setOrg(result: AlgoliaOrganization) {
     this.orgForm.reset();
     this.orgForm.disable();
-    this.orgForm.get('denomination').get('full').setValue(result.denomination.denomination.full);
+    this.orgForm.get('denomination').get('full').setValue(result.name);
     this.orgForm.get('activity').setValue(result.activity);
     this.orgForm.get('addresses').get('main').get('country').setValue(result.country);
     this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
