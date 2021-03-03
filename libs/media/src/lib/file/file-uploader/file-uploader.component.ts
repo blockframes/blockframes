@@ -8,7 +8,6 @@ import {
   TemplateRef,
   ViewChild,
   ElementRef,
-  OnInit,
   Output,
   EventEmitter,
   OnDestroy,
@@ -45,12 +44,31 @@ function computeSize(fileSize: number) {
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileUploaderComponent implements OnInit, OnDestroy {
+export class FileUploaderComponent implements OnDestroy {
 
   public storagePath: string;
   public metadata: FileMetaData;
 
-  @Input() form: StorageFileForm;
+  private _form: StorageFileForm;
+  get form() { return this._form; }
+  @Input() set form(value: StorageFileForm) {
+    this._form = value;
+    this.computeState();
+    if (!!this.sub) this.sub.unsubscribe();
+    this.sub = this.form.valueChanges.subscribe(storageFile => {
+      if (!!storageFile.storagePath) this.computeState();
+      const extra = this.getExtra();
+      if (!!extra) {
+        this.metadata = { ...this.metadata, ...extra }
+        const task = this.uploaderService.retrieveFromQueue(this.storagePath);
+        if (!!task) {
+          task.metadata = this.metadata;
+        }
+      }
+    })
+  }
+
+
   @Input() index: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
     const [ collection, label, docId ] = value;
@@ -85,20 +103,6 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
   ) { }
-
-  ngOnInit() {
-    this.computeState();
-    this.sub = this.form.valueChanges.subscribe(() => {
-      const extra = this.getExtra();
-      if (!!extra) {
-        this.metadata = { ...this.metadata, ...extra }
-        const task = this.uploaderService.retrieveFromQueue(this.storagePath);
-        if (!!task) {
-          task.metadata = this.metadata;
-        }
-      }
-    })
-  }
 
   ngOnDestroy() {
     this.sub.unsubscribe();

@@ -13,7 +13,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./notes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
+export class MovieFormMediaNotesComponent {
   movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
 
