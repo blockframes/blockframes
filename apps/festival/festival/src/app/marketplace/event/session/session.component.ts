@@ -156,19 +156,19 @@ export class SessionComponent implements OnInit, OnDestroy {
 
         // If the current selected file hasn't any controls yet we should create them
         if (!!event.meta.selectedFile) {
-          const file = event.meta.files.find(f =>
-            f.storagePath === event.meta.selectedFile
+          const selectedFile = event.meta.files.find(file =>
+            file.storagePath === event.meta.selectedFile
           );
-          if (!file) {
+          if (!selectedFile) {
             console.warn('Selected file doesn\'t exists in this Meeting!');
             this.select('');
           }
-          if (!event.meta.controls[file.storagePath]) {
-            const fileType = extensionToType(getFileExtension(file.storagePath));
+          if (!event.meta.controls[selectedFile.storagePath]) {
+            const fileType = extensionToType(getFileExtension(selectedFile.storagePath));
             switch (fileType) {
               case 'pdf': {
                 this.creatingControl$.next(true);
-                const control = await this.createPdfControl(file, event.id);
+                const control = await this.createPdfControl(selectedFile, event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
@@ -176,7 +176,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                 break;
               } case 'video': {
                 this.creatingControl$.next(true);
-                const control = await this.createVideoControl((file as StorageVideo), event.id);
+                const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
