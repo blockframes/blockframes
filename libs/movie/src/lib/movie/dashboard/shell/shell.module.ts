@@ -10,6 +10,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -28,6 +29,8 @@ import { MatButtonModule } from '@angular/material/button';
     ToLabelModule,
     DisplayNameModule,
     ImageModule,
+    OrgAccessModule,
+
     // Material
     MatTabsModule,
     MatIconModule,
