@@ -23,8 +23,7 @@ const routes = [{
     path: 'member',
     loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule),
     data: { animation: '1' }
-  }
-]
+  }]
 }]
 
 @NgModule({
