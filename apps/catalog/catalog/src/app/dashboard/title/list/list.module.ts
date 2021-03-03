@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TitleListComponent } from './list.component';
 
 // Blockframes
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
@@ -32,6 +32,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ImageModule,
     FilterByModule,
     AnalyticsPipeModule,
+    DisplayNameModule,
     // Material
     MatButtonModule,
     MatTabsModule,

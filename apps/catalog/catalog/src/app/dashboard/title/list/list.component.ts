@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { startWith, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -10,15 +10,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { storeStatus } from '@blockframes/utils/static-model';
 
-interface TitleView {
-  id: string;
-  title: string;
-  views: number
-  sales: number;
-  receipt: number;
-  status: StoreStatus;
-}
-
 @Component({
   selector: 'catalog-title-list',
   templateUrl: './list.component.html',
@@ -27,14 +18,15 @@ interface TitleView {
 })
 export class TitleListComponent {
   columns = {
-    title: 'Title',
-    sales: 'Sales',
-    views: 'Views',
-    receipt: 'Total Gross Receipts',
-    status: 'Status'
+    title: 'TITLE',
+    release: 'RELEASE YEAR',
+    directors: 'DIRECTOR(S)',
+    views: '# VIEWS',
+    sales: 'SALES (Total Gross Receipts)',
+    storeConfig: 'STATUS'
   };
-  initialColumns = ['title', 'sales', 'views', 'receipt', 'status'];
-  titles$: Observable<TitleView[]>;
+  initialColumns = ['title', 'release', 'directors', 'views', 'sales', 'storeConfig'];
+  titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
