@@ -18,6 +18,7 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -33,6 +34,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('catalog', this.storeStatus);
+  public availsForm = new AvailsForm()
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -50,6 +52,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.availsForm.valueChanges.subscribe(console.log)
     this.movies$ = this.movieResultsState.asObservable();
 
     const params = this.route.snapshot.queryParams;
