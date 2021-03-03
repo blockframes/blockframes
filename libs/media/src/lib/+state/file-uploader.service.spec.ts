@@ -72,13 +72,13 @@ describe('Media Service Test Suite', () => {
     expect(task).toBeDefined();
   })
 
-  // it('Upload a file with invalid metadata & verify storage upload not is invoked', async () => {
-  //   TESTDATA.file = new File([JSON.stringify({ blockframes: 'movies' })], 'test');
-  //   const storagePath = 'unit-test/testFile.tst';
-  //   service.addToQueue(storagePath, TESTDATA);
-  //   service.upload()
-  //   expect(storage.upload).not.toHaveBeenCalled()
-  // })
+  it('Upload a file with invalid metadata & verify storage upload not is invoked', async () => {
+    TESTDATA.file = new File([JSON.stringify({ blockframes: 'movies' })], 'test');
+    const storagePath = 'unit-test/testFile.tst';
+    service.addToQueue(storagePath, TESTDATA);
+    service.upload()
+    expect(storage.upload).not.toHaveBeenCalled()
+  })
 
   it('Upload a file with valid metadata & verify storage upload is invoked', async () => {
     TESTDATA.file = new File([JSON.stringify({ blockframes: 'movies' })], 'test');
