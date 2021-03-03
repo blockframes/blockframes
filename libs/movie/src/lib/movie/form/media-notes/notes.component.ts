@@ -13,7 +13,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./notes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaNotesComponent {
+export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
   movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
 
@@ -21,6 +21,17 @@ export class MovieFormMediaNotesComponent {
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
     private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Notes')
+    this.dynTitle.setPageTitle('Notes');
+  }
+
+  computeIndex(realIndex: number) {
+    const nonEmptyCount = this.form.promotional.get('notes').value.reduce((acc, note) => {
+      if (!!note.storagePath) return acc + 1;
+      return acc;
+    }, 0);
+
+    const indexInUploaderQueue = realIndex - nonEmptyCount;
+    if (indexInUploaderQueue >= 0) return indexInUploaderQueue;
+    return undefined;
   }
 }

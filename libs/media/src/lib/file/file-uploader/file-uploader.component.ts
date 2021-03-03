@@ -51,7 +51,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   public metadata: FileMetaData;
 
   @Input() form: StorageFileForm;
-  @Input() input: number;
+  @Input() index: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
     const [ collection, label, docId ] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
@@ -64,6 +64,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       this.types = this.types.concat(allowedFiles[type].mime);
     })
   }
+
   @Output() selectionChange = new EventEmitter<void>();
 
   public allowedTypes: string[] = [];
@@ -188,7 +189,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       this.state = 'file';
       this.fileName = this.form.get('storagePath').value;
     } else {
-      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.input);
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
       if (!!retrieved) {
         this.state = 'ready';
         this.fileName = retrieved.fileName;

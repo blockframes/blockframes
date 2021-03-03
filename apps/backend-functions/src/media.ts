@@ -76,26 +76,26 @@ export async function linkFile(data: storage.ObjectMetadata) {
           // only the user is allowed to upload files about himself
           await assertFile(metadata.docId === metadata.uid, notAllowedError);
           break;
-  
+
         } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
           // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
           const user = await getDocument<User>(`users/${metadata.uid}`);
           await assertFile(!!user, notAllowedError);
-  
+
           const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
           await assertFile(!!movie, notAllowedError);
-  
+
           const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
           await assertFile(isAllowed, notAllowedError);
           break;
-  
+
         } case 'orgs': {
           // only member of an org can upload to this org
           const user = await getDocument<User>(`users/${metadata.uid}`);
           await assertFile(!!user, notAllowedError);
           await assertFile(user.orgId === metadata.docId, notAllowedError);
           break;
-  
+
         } default: {
           await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
         }
@@ -234,6 +234,14 @@ function needsToBeCleaned(before: StorageFile | undefined, after: StorageFile | 
   return !!before.storagePath && before.storagePath !== after.storagePath && !after.storagePath;
 };
 
+function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] | undefined) {
+  const filesToClean: StorageFile[] = [];
+  before?.forEach(beforeFile => {
+    const existsInAfter = after?.some(afterFile => afterFile.storagePath === beforeFile.storagePath);
+    if (!existsInAfter) filesToClean.push(beforeFile);
+  });
+  return filesToClean;
+};
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
   const mediaToDelete: StorageFile[] = [];
@@ -262,13 +270,11 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(before.logo);
     }
 
-    if (before.documents?.notes.length) {
-      before.documents.notes.forEach(nb => {
-        if (!after.documents?.notes.length || !after.documents.notes.some(na => na.storagePath === nb.storagePath)) {
-          mediaToDelete.push(nb);
-        }
-      });
-    }
+    const notesToDelete = checkFileList(
+      before.documents.notes,
+      after.documents.notes
+    );
+    mediaToDelete.push(...notesToDelete);
 
   } else { // Deleting
     if (!!before.logo) {
@@ -287,6 +293,9 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
   const mediaToDelete: StorageFile[] = [];
   if (!!after) { // Updating
+
+    // SINGLE FILE
+
     if (needsToBeCleaned(before.banner, after.banner)) {
       mediaToDelete.push(before.banner);
     }
@@ -311,33 +320,26 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.videos.screener);
     }
 
-    if (before.promotional.videos?.otherVideos?.length) {
-      before.promotional.videos.otherVideos.forEach(vb => {
-        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.storagePath === vb.storagePath)) {
-          mediaToDelete.push(vb);
-        }
-      });
-    }
+    // FILES LIST
 
-    if (before.promotional.still_photo?.length) {
-      before.promotional.still_photo.forEach((photo, index) => {
-        const stillBefore = photo.storagePath;
-        const stillAfter = after.promotional.still_photo[index].storagePath;
-        if ((stillBefore !== stillAfter || stillAfter === '')) {
-          mediaToDelete.push(photo);
-        }
-      });
-    }
+    const otherVideosToDelete = checkFileList(
+      before.promotional.videos.otherVideos,
+      after.promotional.videos.otherVideos
+    );
+    mediaToDelete.push(...otherVideosToDelete);
 
-    if (before.promotional.notes?.length) {
-      before.promotional.notes.forEach((note, index) => {
-        const noteBefore = note;
-        const noteAfter = after.promotional.notes[index];
-        if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
-          mediaToDelete.push(noteBefore);
-        }
-      });
-    }
+    const stillToDelete = checkFileList(
+      before.promotional.still_photo,
+      after.promotional.still_photo
+    );
+    mediaToDelete.push(...stillToDelete);
+
+    const notesToDelete = checkFileList(
+      before.promotional.notes,
+      after.promotional.notes
+    );
+    mediaToDelete.push(...notesToDelete);
+
 
   } else { // Deleting
 

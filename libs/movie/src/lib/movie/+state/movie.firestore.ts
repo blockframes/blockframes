@@ -252,7 +252,7 @@ export interface MovieShootingDateRaw<D> {
 
 export interface MovieShootingDate extends MovieShootingDateRaw<Date> { }
 
-export type MovieNote = Person & StorageFile;
+export type MovieNote = { firstName: string, lastName: string, role: string } & StorageFile;
 
 export interface MoviePlannedShootingDateRange {
   from?: MoviePlannedShooting,

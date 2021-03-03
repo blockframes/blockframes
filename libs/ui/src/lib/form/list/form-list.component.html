@@ -32,7 +32,7 @@
   <!---------->
 
   ​<div *ngIf="formItem">
-    <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem, index: activeIndex }">
+    <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem, index: computeIndex() }">
     </ng-template>
 
     <!-- If we keep the form open, there is no point to have a cancel button -->

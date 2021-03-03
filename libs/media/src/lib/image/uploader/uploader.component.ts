@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
@@ -115,6 +115,8 @@ export class ImageUploaderComponent implements OnInit {
 
   @Input() types: string[] = ['image/jpeg', 'image/png'];
   @Input() accept: string[] = ['.jpg', '.png'];
+
+  @Output() selectionChange = new EventEmitter<void>();
 
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
@@ -241,6 +243,7 @@ export class ImageUploaderComponent implements OnInit {
         file: blob,
         metadata: this.metadata
       });
+      this.selectionChange.emit();
 
       this.form?.markAsDirty();
       // TODO keep track of crop state
@@ -260,6 +263,7 @@ export class ImageUploaderComponent implements OnInit {
     this.form.reset();
 
     this.fileUploader.nativeElement.value = null;
+    this.selectionChange.emit();
 
     this.nextStep('drop');
   }
