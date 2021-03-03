@@ -53,8 +53,6 @@ export class FileUploaderService {
 
     const { fileName, file, metadata } = uploadData;
 
-    console.log('ADD TO QUEUE', storagePath, fileName, file, metadata); // TODO REMOVE DEBUG LOG
-
     // instantiate array if it doesn't exists yet
     if (!this.queue[storagePath]) this.queue[storagePath] = [];
 
@@ -97,14 +95,6 @@ export class FileUploaderService {
 
   /** Upload all files in the queue */
   upload() {
-    
-    console.log('before: ', JSON.stringify(this.queue));
-
-    Object.entries(this.queue).filter(([storagePath, uploads]) => {
-      console.log('storagePath: ', storagePath)
-      console.log('uploads: ', uploads);
-    })
-
     const validQueue = Object.entries(this.queue).filter(([storagePath, uploads]) => {
       const arr = uploads.filter(upload => {
         const isValid = isValidMetadata(upload.metadata, { uidRequired: false });
@@ -116,8 +106,6 @@ export class FileUploaderService {
       })
       return !!arr.length
     });
-
-    console.log('after: ', JSON.stringify(validQueue));
 
     const tasks = validQueue.map(([storagePath, uploads]) => {
       return uploads.map(upload => {
@@ -135,7 +123,6 @@ export class FileUploaderService {
         // clean on success
         if (!!afTask) {
           afTask.task.then(() => {
-            console.log('task success, cleaning', storagePath); // TODO REMOVE DEBUG LOG
             this.removeFromQueue(storagePath, upload.fileName);
           });
         }
