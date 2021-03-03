@@ -52,7 +52,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.availsForm.valueChanges.subscribe(console.log)
     this.movies$ = this.movieResultsState.asObservable();
 
     const params = this.route.snapshot.queryParams;
