@@ -13,6 +13,7 @@ import { storeStatus } from '@blockframes/utils/static-model';
 interface TitleView {
   id: string;
   title: string;
+  views: number
   sales: number;
   receipt: number;
   status: StoreStatus;
@@ -28,14 +29,14 @@ export class TitleListComponent {
   columns = {
     title: 'Title',
     sales: 'Sales',
+    views: 'Views',
     receipt: 'Total Gross Receipts',
     status: 'Status'
   };
-  initialColumns = ['title', 'sales', 'receipt', 'status'];
+  initialColumns = ['title', 'sales', 'views', 'receipt', 'status'];
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  // TODO #4797 Implement analytics when ready
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('No titles')));
 

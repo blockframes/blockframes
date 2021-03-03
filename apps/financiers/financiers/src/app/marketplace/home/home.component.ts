@@ -2,14 +2,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 
 // Blockframes
-import { AlgoliaMovie, AlgoliaOrganization, AlgoliaRecord, AlgoliaService } from '@blockframes/utils/algolia';
+import { AlgoliaMovie, AlgoliaOrganization, AlgoliaService, SearchResponse } from '@blockframes/utils/algolia';
 
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface CarouselSection {
   title: string;
-  movies: Promise<AlgoliaRecord<AlgoliaMovie>>;
+  movies: Promise<SearchResponse<AlgoliaMovie>>;
   queryParams?: Record<string, string>;
   size: 'banner' | 'poster'
 }
@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
   @HostBinding('test-id="content"') testId
 
   public sections: CarouselSection[];
-  public orgs: Promise<AlgoliaRecord<AlgoliaOrganization>>;
+  public orgs: Promise<SearchResponse<AlgoliaOrganization>>;
 
   public benefits = [
     {
