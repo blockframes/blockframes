@@ -7,7 +7,6 @@ import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { SearchIndex } from 'algoliasearch';
 
 const Separators = {
   [COMMA]: ',',
