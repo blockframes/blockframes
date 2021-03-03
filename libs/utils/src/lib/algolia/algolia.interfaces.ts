@@ -10,7 +10,6 @@ import {
 } from '../static-model';
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Module, ModuleAccess } from '../apps';
-import { PublicOrganization } from '@blockframes/organization/+state';
 
 export interface AlgoliaConfig {
   searchableAttributes: string[];
@@ -142,7 +141,7 @@ export interface AlgoliaOrganization extends AlgoliaDefaultProperty {
   country: Territory,
   isAccepted: boolean,
   hasAcceptedMovies: boolean,
-  denomination: PublicOrganization,
+  logo: string,
   activity: OrgActivity
 }
 
