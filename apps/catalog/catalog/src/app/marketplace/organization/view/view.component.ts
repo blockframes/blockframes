@@ -9,13 +9,10 @@ const navLinks = [{
 },  {
   path: 'member',
   label: 'Contact'
-}, {
-  path: 'screening',
-  label: 'Screening Schedule'
 }];
 
 @Component({
-  selector: 'festival-marketplace-organization-view',
+  selector: 'catalog-marketplace-organization-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

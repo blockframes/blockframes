@@ -1,0 +1,44 @@
+<list-page [items]="orgs$ | async">
+
+  <list-page-app-bar>
+    <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
+      <mat-icon matPrefix svgIcon="search"></mat-icon>
+      <input type="text" formControlName="query" [value]="searchForm.query.value"
+        placeholder="Search for a sales company...">
+    </form>
+  </list-page-app-bar>
+
+  <list-page-title>
+    <h1 class="mat-display-2 page-title">Sales Agents</h1>
+  </list-page-title>
+
+  <list-page-search>
+    <mat-form-field appearance="outline" [formGroup]="searchForm">
+      <mat-label>Search for a sales company...</mat-label>
+      <mat-icon matPrefix svgIcon="search"></mat-icon>
+      <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
+    </mat-form-field>
+  </list-page-search>
+
+  <list-page-description>
+    <span i18n *ngIf="nbHits" class="mat-body-2">
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partner{nbHits, plural, =0 {} =1 {} other {s}}
+      available.
+    </span>
+  </list-page-description>
+
+  <list-filter>
+    <ng-template filter label="Company's Nationality" [form]="searchForm.country">
+      <form-country [form]="searchForm.country" noWorld></form-country>
+    </ng-template>
+  </list-filter>
+
+  <ng-template listPageCard let-org>
+    <org-card [org]="org"></org-card>
+  </ng-template>
+
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
+    <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
+  </list-page-progress>
+
+</list-page>
