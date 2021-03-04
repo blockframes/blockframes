@@ -153,7 +153,7 @@ export class MediaService {
    * @param parameters ImageParameters
    */
   async generateImgIxUrl(ref: string, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
-    if (!ref) {
+    if (!ref || typeof ref !== 'string') {
       return '';
     }
 

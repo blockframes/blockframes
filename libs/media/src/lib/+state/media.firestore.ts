@@ -35,7 +35,7 @@ export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: bo
 }
 
 export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
-  if (!formValue.ref) return '';
+  if (!formValue.ref || typeof formValue.ref !== 'string') return '';
   const ref = formValue.ref;
   const refParts = ref.split('/');
   return refParts.pop() === formValue.fileName ?
