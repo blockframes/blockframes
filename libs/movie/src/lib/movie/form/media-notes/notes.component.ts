@@ -1,11 +1,16 @@
 // Angular
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
 
+// Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MovieService } from '../../+state';
+import { getDeepValue } from '@blockframes/utils/pipes';
+import { getFileMetadata } from '@blockframes/media/+state/static-files';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'movie-form-media-notes',
@@ -13,14 +18,32 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./notes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaNotesComponent {
+export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
   movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
 
   roles = ['producer', 'director', 'other'];
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService) {
+  private sub: Subscription;
+
+  constructor(
+    private movie: MovieService,
+    private shell: MovieFormShellComponent,
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService
+  ) {
     this.dynTitle.setPageTitle('Notes');
+  }
+
+  ngOnInit() {
+    this.sub = this.movie.valueChanges(this.movieId).subscribe(title => {
+      const metadata = getFileMetadata('movies', 'notes', this.movieId);
+      const mediaArray = getDeepValue(title, metadata.field);
+      this.form.promotional.get('notes').patchValue(mediaArray);
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

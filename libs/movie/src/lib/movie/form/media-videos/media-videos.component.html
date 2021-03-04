@@ -17,8 +17,7 @@
         </mat-list>
       </ng-container>
       <ng-template #noScreener>
-        <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video">
-          filePrivacy="protected">
+        <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
           <h3 title>Upload Screener</h3>
         </file-uploader>
         <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
@@ -52,7 +51,7 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <file-uploader [index]="index | fileListIndex: videoList.value" [form]="activeForm" [meta]="['movies', 'otherVideos', movieId]" accept="video">
+            <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
               <h3 title>Upload Video</h3>
             </file-uploader>
 

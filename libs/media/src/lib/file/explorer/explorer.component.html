@@ -40,7 +40,7 @@
 
 <!-- File -->
 <ng-template #file let-dir>
-  <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept">
+  <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept" (selectionChange)="change($event, dir.meta)">
     <h3 title>Upload {{ dir.name }}</h3>
   </file-uploader>
   <section fxLayout="row" fxLayoutAlign="end center" class="save">
@@ -53,7 +53,7 @@
 
 <!-- Image -->
 <ng-template #image let-dir>
-  <image-uploader [ratio]="dir.ratio" [meta]="dir.meta" [form]="dir.form">
+  <image-uploader [ratio]="dir.ratio" [meta]="dir.meta" [form]="dir.form" (selectionChange)="change($event, dir.meta)">
     <h3 title>{{ dir.name }}</h3>
   </image-uploader>
   <section fxLayout="row" fxLayoutAlign="end center" class="save">
