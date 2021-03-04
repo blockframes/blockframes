@@ -57,7 +57,7 @@ async function updateSAKPathInDotenv(projectId: string) {
 
   const SAKFilename = await findSAKFilename(SAKDirPath, projectId);
 
-  if (!SAKFilename) {
+  if (SAKFilename) {
     const SAKPath = join(SAKDirPath, SAKFilename);
     return updateDotenv(SAKKeyName, SAKPath);
   } else {

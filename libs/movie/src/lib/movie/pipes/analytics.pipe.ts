@@ -27,8 +27,6 @@ export class GetTitlesAnalyticsPipe implements PipeTransform {
   }
 }
 
-
-
 @NgModule({
   exports: [GetViewsPipe, GetTitlesAnalyticsPipe],
   declarations: [GetViewsPipe, GetTitlesAnalyticsPipe],

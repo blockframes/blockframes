@@ -20,10 +20,12 @@
           <mat-icon svgIcon="edit"></mat-icon>
           <span>Edit</span>
         </a>
-        <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-          <mat-icon svgIcon="marketplace"></mat-icon>
-          <span>See on the marketplace</span>
-        </a>
+        <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
+          <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+            <mat-icon svgIcon="marketplace"></mat-icon>
+            <span>See on the marketplace</span> 
+          </a>
+        </ng-container>
         <ng-content></ng-content>
       </aside>
     </ng-container>
