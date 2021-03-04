@@ -16,7 +16,7 @@
       <p>Choose your role*:</p>
       <mat-icon svgIcon="info"></mat-icon>
     </div>
-    <mat-button-toggle-group [ngClass]="{ disabled: false }" name="appAccess" [formControl]="form.get('appAccess')">
+    <mat-button-toggle-group test-id="appAccessToggleGroup" [ngClass]="{ disabled: false }" name="appAccess" [formControl]="form.get('appAccess')">
       <mat-button-toggle value="marketplace">Buyer</mat-button-toggle>
       <mat-button-toggle value="dashboard">Seller</mat-button-toggle>
     </mat-button-toggle-group>

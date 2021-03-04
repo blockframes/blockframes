@@ -26,4 +26,20 @@ export default class AuthIdentityPage {
     cy.get('button[type="submit"]').click();
     cy.wait(5000);
   }
+
+  public fillUserInformations(user: Partial<User>) {
+    const name = user.email.split('@')[0];
+    cy.get('input[test-id="email"]').type(user.email);
+    cy.get('input[formControlName="firstName"]').type(name);
+    cy.get('input[formControlName="lastName"]').type(name);
+  }
+
+  public fillPasswordAndSubmit() {
+    cy.get('input[formControlName="password"]').type('blockframes');
+    cy.get('input[formControlName="confirm"]').type('blockframes');
+    this.clickTermsAndCondition();
+    this.clickPrivacyPolicy();
+    // cy.get('button[type="submit"]').click();
+    cy.wait(5000);
+  }
 }
