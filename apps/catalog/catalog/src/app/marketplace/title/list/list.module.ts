@@ -28,7 +28,7 @@ import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
-import {AvailsFilterModule} from '@blockframes/movie/form/filters/avails/avails-filter.module';
+import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
 
 @NgModule({
   declarations: [ListComponent],

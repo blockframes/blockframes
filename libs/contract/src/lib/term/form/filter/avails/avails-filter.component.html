@@ -1,8 +1,8 @@
-<mat-divider></mat-divider>
+<hr />
 <!-- TODO #4997 implement territories search select component -->
 
 <h3>Terms*</h3>
-<div fxLayout fxLayoutAlign="center" fxLayoutGap="24px">
+<div fxLayout fxLayoutAlign="space-between">
   <mat-form-field appearance="outline">
     <mat-label>Licence Start Date</mat-label>
     <input matInput [matDatepicker]="datepickerFrom" [formControl]="form.get('duration').get('from')">
@@ -19,7 +19,7 @@
 
 <!-- TODO# 5065 implement media checkboxes reusable component -->
 
-<mat-divider></mat-divider>
+<hr />
 
 <h3>Exclusivity*</h3>
 <mat-form-field appearance="outline" [formGroup]="form">
