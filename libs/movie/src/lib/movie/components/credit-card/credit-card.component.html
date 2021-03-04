@@ -5,7 +5,7 @@
     <p class="mat-caption">
       <ng-container [ngSwitch]="type">
         <ng-container *ngSwitchCase="'director'">
-          {{ credit['category'] ? (credit['category'] | toLabel:'directorCategory') : 'Director' }}
+          Director's Category: {{ credit['category'] ? (credit['category'] | toLabel:'directorCategory') : 'Director' }}
         </ng-container>
         <ng-container *ngSwitchCase="'crew'">
           {{ credit.role ? (credit.role | toLabel:'crewRoles') : 'Crew' }}
@@ -51,7 +51,7 @@
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
       <ng-container *ngIf="credit.filmography | hasFilmography; else emptyFilmography">
         <ng-container *ngFor="let filmography of credit.filmography">
-          <p class="mat-caption">{{ filmography | filmography }}</p>
+          <p class="mat-caption description">{{ filmography | filmography }}</p>
         </ng-container>
       </ng-container>
       <ng-template #emptyFilmography>
