@@ -1,6 +1,5 @@
 import {
   MovieStakeholders,
-  MovieLegalDocuments,
   BoxOffice,
   Prize,
   MoviePromotionalElements,
@@ -25,7 +24,6 @@ import {
   Movie,
   Credit,
   createMovie,
-  createMovieLegalDocuments,
   createTitle,
   createReleaseYear,
   createStoreConfig,

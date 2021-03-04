@@ -4,7 +4,6 @@ import {
   Title,
   StoreConfig,
   MovieAnalytics,
-  MovieLegalDocuments,
   MovieStakeholders,
   MovieLanguageSpecification,
   LanguageRecord,
@@ -52,7 +51,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
     _type: 'movies',
-    documents: createMovieLegalDocuments(params.documents),
     // Mandatory fields
     contentType: 'feature_film',
     directors: [],
@@ -250,15 +248,6 @@ export function populateMovieLanguageSpecification(
 
   spec[slug][type] = value;
   return spec;
-}
-
-export function createMovieLegalDocuments(
-  params: Partial<MovieLegalDocuments> = {}
-): MovieLegalDocuments {
-  return {
-    chainOfTitles: [],
-    ...params
-  }
 }
 
 export function createShooting(params: Partial<MovieShooting> = {}): MovieShooting {
