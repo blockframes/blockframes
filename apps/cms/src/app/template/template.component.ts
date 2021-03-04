@@ -46,7 +46,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
       const factory = (section: Section) => sections[section._type];
       this.types = Object.keys(sections);
       this.schema = templateSchema(factory, template);
-      this.form = createForms(this.schema, template);
+      if (!this.form) {
+        this.form = createForms(this.schema, template);
+      } else {
+        this.form.reset(createForms(this.schema, template).value)
+      }
       this.cdr.markForCheck();
     });
   }
