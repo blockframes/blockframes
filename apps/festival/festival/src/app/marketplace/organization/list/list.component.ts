@@ -3,9 +3,10 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap, filter } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
+import { centralOrgID } from '@env';
 
 @Component({
   selector: 'festival-organization-list',
@@ -46,9 +47,9 @@ export class ListComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search()),
-      tap(res => this.nbHits = res.nbHits),
+      tap(res => this.nbHits = res.nbHits - 1),
       pluck('hits'),
-      map(results => results.map(org => org.objectID)),
+      map(results => results.filter(org => org.objectID !== centralOrgID).map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
     ).subscribe(orgs => {
       if (this.loadMoreToggle) {
