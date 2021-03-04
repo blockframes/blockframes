@@ -21,9 +21,9 @@
             </mat-form-field>
             <file-uploader
               test-id="intent-note"
+              [queueIndex]="index | fileListIndex: form.promotional.get('notes').value"
               [form]="noteForm"
               [meta]="['movies', 'notes', movieId]"
-              [queueIndex]="index | fileListIndex: form.promotional.get('notes').value"
               [formIndex]="index"
               accept="pdf"
             >
