@@ -22,10 +22,10 @@ export class TitleListComponent {
     release: 'RELEASE YEAR',
     directors: 'DIRECTOR(S)',
     views: '# VIEWS',
-    sales: 'SALES (Total Gross Receipts)',
+    // sales: 'SALES (Total Gross Receipts)', // TODO Commented it due to the #5060 issue
     storeConfig: 'STATUS'
   };
-  initialColumns = ['title', 'release', 'directors', 'views', 'sales', 'storeConfig'];
+  initialColumns = ['title', 'release', 'directors', 'views', 'storeConfig']; // 'sales' should be added here but removed due to the #5060 issue
   titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
