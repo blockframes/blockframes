@@ -9,7 +9,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
 import { PublicUser, User } from '@blockframes/user/types';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
@@ -168,7 +168,27 @@ export async function linkFile(data: storage.ObjectMetadata) {
       const docSnap = await docRef.get();
       if (!docSnap.exists) return false;
       const doc = docSnap.data()!;
-      set(doc, `${metadata.field}.jwPlayerId`, uploadResult.key); // update the whole doc with only the new jwPlayerId
+
+      const fieldValue: StorageVideo | StorageVideo[] = get(doc, metadata.field);
+      if (Array.isArray(fieldValue)) {
+
+        const parts = data.name.split('/');
+        parts.shift(); // remove public/ or protected/
+        const storagePath = parts.join('/');
+        const index = fieldValue.findIndex(video => video.storagePath === storagePath);
+
+        if (index < 0) {
+          console.error(`UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`, JSON.stringify(data.name), JSON.stringify(data.metadata));
+          return false;
+        }
+
+        fieldValue[index].jwPlayerId = uploadResult.key;
+
+      } else {
+        fieldValue.jwPlayerId = uploadResult.key;
+      }
+
+      set(doc, metadata.field, fieldValue); // update the whole doc with only the new jwPlayerId
       await docRef.update(doc);
 
       return true;

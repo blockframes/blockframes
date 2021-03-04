@@ -43,7 +43,11 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
   return {
     ...promotional,
     still_photo: promotional.still_photo.filter(photo => !!photo.storagePath),
-    notes: promotional.notes.filter(note => !!note.storagePath)
+    notes: promotional.notes.filter(note => !!note.storagePath),
+    videos: {
+      ...promotional.videos,
+      otherVideos: promotional.videos.otherVideos.filter(video => !!video.storagePath),
+    }
   }
 }
 
