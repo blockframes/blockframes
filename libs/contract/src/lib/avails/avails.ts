@@ -1,7 +1,7 @@
 import { Media, Territory } from "@blockframes/utils/static-model";
 import { Term } from "../term/+state/term.model";
 
-interface AvailsFilter {
+export interface AvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
   territories: Territory[],
