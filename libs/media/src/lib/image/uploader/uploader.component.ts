@@ -142,6 +142,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   @Input() types: string[] = ['image/jpeg', 'image/png'];
   @Input() accept: string[] = ['.jpg', '.png'];
 
+  // listen to db changes to keep form up-to-date after an upload
   @Input() @boolean listenToChanges: boolean;
 
   @Output() selectionChange = new EventEmitter<'added' | 'removed'>();
@@ -159,7 +160,6 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
-    // listen to db changes to keep form up-to-date after an upload
     if (this.listenToChanges) {
       this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
         const media = this.formIndex !== undefined 

@@ -125,7 +125,6 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
         }
       })
     }
-    this.form.valueChanges.subscribe(console.log)
   }
 
   ngOnDestroy() {
