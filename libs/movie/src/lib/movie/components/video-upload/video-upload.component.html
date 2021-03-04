@@ -13,6 +13,7 @@
       [form]="form.screener"
       [meta]="['movies', 'screener', movie.id]"
       accept="video"
+      listenToChanges
     >
         <h3 title>Upload Screener</h3>
     </file-uploader>
@@ -37,8 +38,10 @@
       </mat-form-field>
       <file-uploader
         [form]="otherVideo"
-        [meta]="['movies', 'otherVideos', movie.id, index]"
+        [meta]="['movies', 'otherVideos', movie.id]"
+        [formIndex]="index"
         accept="video"
+        listenToChanges
       >
           <h3 title>Upload Video</h3>
       </file-uploader>

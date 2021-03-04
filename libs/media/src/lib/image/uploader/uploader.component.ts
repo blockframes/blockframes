@@ -1,6 +1,6 @@
-import { Component, Input, ChangeDetectionStrategy, HostListener, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
@@ -11,6 +11,9 @@ import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath }
 import { FileUploaderService } from '../../+state/file-uploader.service';
 import { StorageFile } from '../../+state/media.firestore';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { getDeepValue } from '@blockframes/utils/pipes';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -43,7 +46,7 @@ function b64toBlob(data: string) {
   styleUrls: ['./uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageUploaderComponent {
+export class ImageUploaderComponent implements OnInit, OnDestroy {
 
   ////////////////////////
   // Private Variables //
@@ -112,7 +115,7 @@ export class ImageUploaderComponent {
         this.nextStep('show');
       });
     } else {
-      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
       if (!!retrieved) {
         const blobUrl = URL.createObjectURL(retrieved.file);
         const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
@@ -128,7 +131,8 @@ export class ImageUploaderComponent {
     this.metadata = getFileMetadata(collection, label, docId);
   }
 
-  @Input() index: number;
+  @Input() queueIndex: number;
+  @Input() formIndex: number;
 
   @Input() setWidth?: number;
   /** Disable fileUploader & delete buttons in 'show' step */
@@ -138,17 +142,39 @@ export class ImageUploaderComponent {
   @Input() types: string[] = ['image/jpeg', 'image/png'];
   @Input() accept: string[] = ['.jpg', '.png'];
 
-  @Output() selectionChange = new EventEmitter<void>();
+  @Input() @boolean listenToChanges: boolean;
+
+  @Output() selectionChange = new EventEmitter<'added' | 'removed'>();
 
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
+  private docSub: Subscription;
+
   constructor(
+    private db: AngularFirestore,
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
   ) { }
 
+  async ngOnInit() {
+    // listen to db changes to keep form up-to-date after an upload
+    if (this.listenToChanges) {
+      this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
+        const media = this.formIndex !== undefined 
+          ? getDeepValue(data, this.metadata.field)[this.formIndex]
+          : getDeepValue(data, this.metadata.field);
+        if (!!media) {
+          this.form.setValue(media);
+        }
+      })
+    }
+  }
+
+  ngOnDestroy() {
+    if (!!this.docSub) this.docSub.unsubscribe()
+  }
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
@@ -173,7 +199,7 @@ export class ImageUploaderComponent {
   }
 
   private resetState() {
-    const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
+    const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
     if (!!retrieved) {
       this.nextStep('show');
     } else {
@@ -247,7 +273,7 @@ export class ImageUploaderComponent {
         file: blob,
         metadata: this.metadata
       });
-      this.selectionChange.emit();
+      this.selectionChange.emit('added');
 
       this.form?.markAsDirty();
       // TODO keep track of crop state
@@ -267,7 +293,7 @@ export class ImageUploaderComponent {
     this.form.reset();
 
     this.fileUploader.nativeElement.value = null;
-    this.selectionChange.emit();
+    this.selectionChange.emit('removed');
 
     this.nextStep('drop');
   }

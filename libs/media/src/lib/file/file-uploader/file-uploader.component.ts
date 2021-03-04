@@ -11,6 +11,7 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
+  OnInit
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -23,6 +24,9 @@ import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { Subscription } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { getDeepValue } from '@blockframes/utils/pipes';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -44,7 +48,7 @@ function computeSize(fileSize: number) {
   styleUrls: ['./file-uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileUploaderComponent implements OnDestroy {
+export class FileUploaderComponent implements OnInit, OnDestroy {
 
   public storagePath: string;
   public metadata: FileMetaData;
@@ -69,7 +73,8 @@ export class FileUploaderComponent implements OnDestroy {
   }
 
 
-  @Input() index: number;
+  @Input() queueIndex: number;
+  @Input() formIndex: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
     const [ collection, label, docId ] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
@@ -83,7 +88,10 @@ export class FileUploaderComponent implements OnDestroy {
     })
   }
 
-  @Output() selectionChange = new EventEmitter<void>();
+  // listen to db changes to keep form up-to-date after an upload
+  @Input() @boolean listenToChanges: boolean;
+
+  @Output() selectionChange = new EventEmitter<'added' | 'removed'>();
 
   public allowedTypes: string[] = [];
   public types: string[] = [];
@@ -98,14 +106,31 @@ export class FileUploaderComponent implements OnDestroy {
   public fileName: string;
 
   private sub: Subscription;
+  private docSub: Subscription;
 
   constructor(
+    private db: AngularFirestore,
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
   ) { }
 
+  ngOnInit() {
+    if (this.listenToChanges) {
+      this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
+        const media = this.formIndex !== undefined 
+          ? getDeepValue(data, this.metadata.field)[this.formIndex]
+          : getDeepValue(data, this.metadata.field);
+        if (!!media) {
+          this.form.setValue(media);
+        }
+      })
+    }
+    this.form.valueChanges.subscribe(console.log)
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
+    if (!!this.docSub) this.docSub.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])
@@ -177,7 +202,7 @@ export class FileUploaderComponent implements OnDestroy {
     this.localSize = computeSize(this.file.size);
 
     this.uploaderService.addToQueue(this.storagePath, { fileName: this.fileName, file: this.file, metadata: this.metadata });
-    this.selectionChange.emit();
+    this.selectionChange.emit('added');
   }
 
   public delete() {
@@ -185,7 +210,7 @@ export class FileUploaderComponent implements OnDestroy {
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.form.reset();
-    this.selectionChange.emit();
+    this.selectionChange.emit('removed');
   }
 
   private computeState() {
@@ -193,7 +218,7 @@ export class FileUploaderComponent implements OnDestroy {
       this.state = 'file';
       this.fileName = this.form.get('storagePath').value;
     } else {
-      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
       if (!!retrieved) {
         this.state = 'ready';
         this.fileName = retrieved.fileName;

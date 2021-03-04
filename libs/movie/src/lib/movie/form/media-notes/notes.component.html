@@ -23,7 +23,8 @@
               test-id="intent-note"
               [form]="noteForm"
               [meta]="['movies', 'notes', movieId]"
-              [index]="index | fileListIndex: form.promotional.get('notes').value"
+              [queueIndex]="index | fileListIndex: form.promotional.get('notes').value"
+              [formIndex]="index"
               accept="pdf"
             >
             </file-uploader>

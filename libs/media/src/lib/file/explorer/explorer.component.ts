@@ -12,12 +12,13 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { QueryFn } from '@angular/fire/firestore';
+import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { Organization } from '@blockframes/organization/+state';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
 import { FilePreviewComponent } from '../preview/preview.component';
 import { MatDialog } from '@angular/material/dialog';
+import { getFileMetadata } from '@blockframes/media/+state/static-files';
 
 function getDir(root: Directory, path: string) {
   return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
@@ -66,6 +67,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   @ViewChild('directory') directory?: TemplateRef<any>;
 
   constructor(
+    private db: AngularFirestore,
     private movieService: MovieService,
     private mediaService: MediaService,
     private service: FileUploaderService,
@@ -130,6 +132,20 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     this.service.upload();
   }
 
+  change($event: 'removed' | 'added', meta) {
+    if ($event === 'removed') {
+      const metadata = getFileMetadata(meta[0], meta[1], meta[2])
+      const emptyStorageFile = {}
+      emptyStorageFile[metadata.field] = createStorageFile({
+        collection: null,
+        docId: null,
+        field: null,
+        privacy: null,
+        storagePath: null
+      })
+      this.db.doc(`${metadata.collection}/${metadata.docId}`).update(emptyStorageFile)
+    }
+  }
 }
 
 
