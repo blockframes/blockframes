@@ -3,7 +3,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap, filter } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
 
