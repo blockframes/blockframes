@@ -28,4 +28,10 @@ export class OrganizationFormComponent {
       this.form.get('denomination').get('full').setErrors({ notUnique: true });
     }
   }
+
+  public change() {
+    // user has selected & cropped an image to upload for his org logo
+    // in order to let him click the "update" button we need to mark the form as dirty
+    this.form.markAsDirty();
+  }
 }

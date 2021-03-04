@@ -21,6 +21,6 @@ export class MovieFormMediaNotesComponent {
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
     private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Notes')
+    this.dynTitle.setPageTitle('Notes');
   }
 }

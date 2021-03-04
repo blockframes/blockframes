@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, HostListener, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
@@ -43,7 +43,7 @@ function b64toBlob(data: string) {
   styleUrls: ['./uploader.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageUploaderComponent implements OnInit {
+export class ImageUploaderComponent {
 
   ////////////////////////
   // Private Variables //
@@ -98,7 +98,29 @@ export class ImageUploaderComponent implements OnInit {
         throw new Error('Unknown ratio');
     }
   }
-  @Input() form: StorageFileForm;
+
+  private _form: StorageFileForm;
+  get form() { return this._form; }
+  @Input() set form(value: StorageFileForm) {
+    this._form = value;
+    if (!!this.form.storagePath.value) {
+      this.mediaService.generateImgIxUrl({
+        ...this.metadata,
+        storagePath: this.form.storagePath.value,
+      }).then(previewUrl => {
+        this.previewUrl$.next(previewUrl);
+        this.nextStep('show');
+      });
+    } else {
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
+      if (!!retrieved) {
+        const blobUrl = URL.createObjectURL(retrieved.file);
+        const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
+        this.previewUrl$.next(previewUrl);
+        this.nextStep('show');
+      }
+    }
+  }
 
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
     const [ collection, label, docId ] = value;
@@ -116,6 +138,8 @@ export class ImageUploaderComponent implements OnInit {
   @Input() types: string[] = ['image/jpeg', 'image/png'];
   @Input() accept: string[] = ['.jpg', '.png'];
 
+  @Output() selectionChange = new EventEmitter<void>();
+
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -125,24 +149,6 @@ export class ImageUploaderComponent implements OnInit {
     private uploaderService: FileUploaderService,
   ) { }
 
-  async ngOnInit() {
-    if (!!this.form.storagePath.value) {
-      const previewUrl = await this.mediaService.generateImgIxUrl({
-        ...this.metadata,
-        storagePath: this.form.storagePath.value,
-      });
-      this.previewUrl$.next(previewUrl);
-      this.nextStep('show');
-    } else {
-      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.index);
-      if (!!retrieved) {
-        const blobUrl = URL.createObjectURL(retrieved.file);
-        const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
-        this.previewUrl$.next(previewUrl);
-        this.nextStep('show');
-      }
-    }
-  }
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
@@ -241,6 +247,7 @@ export class ImageUploaderComponent implements OnInit {
         file: blob,
         metadata: this.metadata
       });
+      this.selectionChange.emit();
 
       this.form?.markAsDirty();
       // TODO keep track of crop state
@@ -260,6 +267,7 @@ export class ImageUploaderComponent implements OnInit {
     this.form.reset();
 
     this.fileUploader.nativeElement.value = null;
+    this.selectionChange.emit();
 
     this.nextStep('drop');
   }

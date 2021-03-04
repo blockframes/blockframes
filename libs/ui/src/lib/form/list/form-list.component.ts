@@ -64,7 +64,10 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.list$ = combineLatest([
-      this.form.valueChanges.pipe(startWith(this.form.value), tap(console.log), distinctUntilChanged()),
+      this.form.valueChanges.pipe(
+        startWith(this.form.value),
+        distinctUntilChanged()
+      ),
       this.reverseList$
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
@@ -127,5 +130,11 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     if (this.isFormEmpty) {
       this.formItem = this.form.createControl({});
     }
+  }
+
+  computeIndex() {
+    // angular template parser doesn't understand the new '??' operator
+    // so we extract it in a typescript function
+    return this.activeIndex ?? this.form.value.length;
   }
 }

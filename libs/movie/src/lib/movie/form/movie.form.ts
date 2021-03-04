@@ -38,7 +38,8 @@ import {
   createAudienceGoals,
   createSalesPitch,
   createShooting,
-  createMovieVideos
+  createMovieVideos,
+  createMovieNote,
 } from '../+state/movie.model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
@@ -655,7 +656,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     presentation_deck: new StorageFileForm(entity.presentation_deck),
     scenario: new StorageFileForm(entity.scenario),
     moodboard: new StorageFileForm(entity.moodboard),
-    notes: FormList.factory(entity.notes, el => new StorageFileForm(el)),
+    notes: FormList.factory(entity.notes, el => new MovieNoteForm(el)),
     salesPitch: new MovieSalesPitchForm(entity.salesPitch),
 
     // Hosted Videos
@@ -1091,3 +1092,32 @@ export class MovieVideosForm extends FormEntity<MovieVideosControls, MovieVideos
     return this.get('screener');
   }
 }
+
+
+// ---------------------------------
+//        MOVIE NOTES
+// ---------------------------------
+
+export class MovieNoteForm extends FormEntity<MovieNoteControl> {
+  constructor(note?: Partial<MovieNote>) {
+    super(createMovieNoteFormControl(note));
+  }
+}
+
+function createMovieNoteFormControl(entity?: Partial<MovieNote>) {
+  const note = createMovieNote(entity);
+  return {
+    firstName: new FormControl(note.firstName),
+    lastName: new FormControl(note.lastName),
+    role: new FormControl(note.role),
+
+    privacy: new FormControl(note.privacy),
+    collection: new FormControl(note.collection),
+    docId: new FormControl(note.docId),
+    field: new FormControl(note.field),
+    storagePath: new FormControl(note.storagePath),
+  }
+}
+
+type MovieNoteControl = ReturnType<typeof createMovieNoteFormControl>;
+

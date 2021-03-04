@@ -10,6 +10,7 @@ import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
+import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -31,6 +32,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MaxLengthModule,
     FileUploaderModule,
     FileNameModule,
+    FileListPipeModule,
 
     // Material
     MatFormFieldModule,

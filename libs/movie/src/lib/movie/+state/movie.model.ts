@@ -23,7 +23,8 @@ import {
   MovieSalesPitch,
   MovieVideos,
   MovieVideo,
-  MovieBase
+  MovieBase,
+  MovieNote
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -120,7 +121,7 @@ export function createMoviePromotional(
 
     financialDetails: createStorageFile(params?.financialDetails),
     moodboard: createStorageFile(params?.moodboard),
-    notes: params?.notes?.map(note => createStorageFile(note)) ?? [],
+    notes: params?.notes?.map(note => createMovieNote(note)) ?? [],
     salesPitch: createSalesPitch(params.salesPitch),
     still_photo: params?.still_photo?.map(still => createStorageFile(still)) ?? [],
     presentation_deck: createStorageFile(params?.presentation_deck),
@@ -299,6 +300,17 @@ export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): M
   return {
     targets: [],
     goals: [],
+    ...params,
+  }
+}
+
+export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
+  const file = createStorageFile(params);
+  return {
+    firstName: '',
+    lastName: '',
+    role: '',
+    ...file,
     ...params,
   }
 }
