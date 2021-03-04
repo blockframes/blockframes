@@ -372,7 +372,7 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
 function createPrizeFormControl(entity?: Partial<Prize>) {
   const { name, year, prize, premiere } = createPrize(entity);
   return {
-    name: new FormControl(name),
+    name: new FormControl(name, [Validators.required]),
     year: new FormControl(year, [yearValidators()]),
     prize: new FormControl(prize, [Validators.maxLength(200)]),
     premiere: new FormControl(premiere),

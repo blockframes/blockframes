@@ -9,7 +9,7 @@
 
             <div fxLayout="row" fxLayoutGap="24px">
               <static-select test-id="festival-name" [control]="prizesForm.get('name')" scope="festival"
-                [withoutValues]="['']" fxFlex>
+                [withoutValues]="['']" fxFlex required>
                 <mat-label>Festival Name</mat-label>
                 <mat-hint>If you can't find the festival you're looking for, go to 'Custom Festival' section.</mat-hint>
               </static-select>
@@ -65,7 +65,7 @@
 
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Other Festival Name</mat-label>
-              <input matInput formControlName="name">
+              <input matInput formControlName="name" required>
             </mat-form-field>
 
             <div fxLayout fxLayoutGap="24px">
