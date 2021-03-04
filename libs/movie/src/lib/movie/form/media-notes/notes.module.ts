@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
+import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe.ts';
 import { FormDisplayNameModule } from '@blockframes/ui/form/display-name/display-name.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
@@ -31,6 +32,7 @@ import { MovieFormMediaNotesComponent } from './notes.component';
     FileNameModule,
     MaxLengthModule,
     FileUploaderModule,
+    FileListPipeModule,
 
     // Material
     MatFormFieldModule,

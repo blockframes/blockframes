@@ -23,15 +23,4 @@ export class MovieFormMediaNotesComponent {
     private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Notes');
   }
-
-  computeIndex(realIndex: number) {
-    const nonEmptyCount = this.form.promotional.get('notes').value.reduce((acc, note) => {
-      if (!!note.storagePath) return acc + 1;
-      return acc;
-    }, 0);
-
-    const indexInUploaderQueue = realIndex - nonEmptyCount;
-    if (indexInUploaderQueue >= 0) return indexInUploaderQueue;
-    return undefined;
-  }
 }
