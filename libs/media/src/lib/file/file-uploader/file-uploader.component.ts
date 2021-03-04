@@ -54,7 +54,7 @@ export class FileUploaderComponent implements OnDestroy {
   @Input() set form(value: StorageFileForm) {
     this._form = value;
     this.computeState();
-    if (!!this.sub) this.sub.unsubscribe();
+    this.sub?.unsubscribe();
     this.sub = this.form.valueChanges.subscribe(storageFile => {
       if (!!storageFile.storagePath) this.computeState();
       const extra = this.getExtra();
