@@ -9,6 +9,8 @@ import { IpService } from '@blockframes/utils/ip';
 import { AngularFireFunctions, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { firebaseRegion } from '@env';
 
+const projectIdUT = 'test-consents-ut';
+
 class MockIpService {
   public get(): Promise<string> {
     return new Promise(async (res) => {
@@ -17,10 +19,6 @@ class MockIpService {
   }
 }
 
-// @TODO #4913 Need to remove skipInMaintenanceCheck
-// need to pass auth context to httpsCallable
-// must use actual projectId to work (blockframes-bruce for example) https://github.com/firebase/firebase-tools/issues/1960
-
 describe('Consents when user click on the button', () => {
   let service: ConsentsService;
   let db: AngularFirestore;
@@ -28,13 +26,12 @@ describe('Consents when user click on the button', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFireModule.initializeApp({ projectId: 'test' }),
+        AngularFireModule.initializeApp({ projectId: projectIdUT }),
         AngularFirestoreModule
       ],
       providers: [
         ConsentsService,
         { provide: IpService, useClass: MockIpService },
-        { provide: AngularFireFunctions, useClass: AngularFireFunctions },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } },
         { provide: REGION, useValue: firebaseRegion },
         { provide: USE_FUNCTIONS_EMULATOR, useValue: ['localhost', 5001] }
@@ -44,12 +41,12 @@ describe('Consents when user click on the button', () => {
     service = TestBed.inject(ConsentsService);
 
     await loadFirestoreRules({
-      projectId: "test",
+      projectId: projectIdUT,
       rules: readFileSync('./firestore.test.rules', "utf8")
     });
 
   });
-  afterEach(() => clearFirestoreData({ projectId: 'test' }));
+  afterEach(() => clearFirestoreData({ projectId: projectIdUT }));
 
   // To prevent "This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue."
   afterAll(() => db.firestore.disableNetwork());
@@ -57,12 +54,5 @@ describe('Consents when user click on the button', () => {
   test('Should check if the consent service is created', () => {
     expect(service).toBeTruthy();
   })
-
-  test.skip('Should check if the consent is created on db with expected values', async () => {
-    await service.createConsent('share', '1');
-    const doc = await db.doc('consents/1').ref.get();
-    const consents = doc.data() as Consents<Date>;
-    expect(consents.share[0].ip).toEqual('127.0.0.1');
-  });
 
 });
