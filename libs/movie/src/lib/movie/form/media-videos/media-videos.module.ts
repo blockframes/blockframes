@@ -11,6 +11,7 @@ import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -33,6 +34,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FileUploaderModule,
     FileNameModule,
     FileListPipeModule,
+    StaticSelectModule,
 
     // Material
     MatFormFieldModule,

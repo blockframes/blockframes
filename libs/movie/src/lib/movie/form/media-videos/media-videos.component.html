@@ -42,14 +42,9 @@
                 <mat-label>Title</mat-label>
                 <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
               </mat-form-field>
-              <mat-form-field appearance="outline" fxFlex>
+              <static-select scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
                 <mat-label>Video Type</mat-label>
-                <mat-select test-id="video-type" [formControl]="activeForm.get('type')">
-                  <mat-option *ngFor="let type of videoTypes" [value]="type">
-                    {{ type | titlecase }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+              </static-select>
             </span>
             <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
               <h3 title>Upload Video</h3>

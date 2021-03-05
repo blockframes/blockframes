@@ -172,7 +172,7 @@ export const genres = {
 export const hostedVideoTypes = {
   trailer: 'Trailer',
   teaser: 'Teaser',
-  reel: 'Reel',
+  reel: 'Promo Reel',
   clip: 'Clip',
   pitch: 'Pitch',
 } as const
