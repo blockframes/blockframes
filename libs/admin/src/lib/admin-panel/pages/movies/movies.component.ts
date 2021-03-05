@@ -2,8 +2,6 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { BehaviorStore } from '@blockframes/utils/behavior-store';
-import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 
@@ -34,8 +32,6 @@ export class MoviesComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
-    private distributionRightService: DistributionRightService,
-    private contractService: ContractService,
     private orgService: OrganizationService,
     private cdRef: ChangeDetectorRef,
     private router: Router
@@ -78,20 +74,6 @@ export class MoviesComponent implements OnInit {
       const movies = await this.movieService.getAllMovies();
       const promises = movies.map(async m => {
         const row = { ...m } as any;
-
-        // We add distribution rights infos to the row
-        const distributionRights = await this.distributionRightService.getMovieDistributionRights(m.id);
-        row.distributionRightsInfo = {
-          link: `/c/o/admin/panel/rights/${m.id}`,
-          count: distributionRights.length
-        };
-
-        // We add contracts infos to the row
-        const contract = await this.contractService.getMovieContracts(m.id);
-        row.contractsInfo = {
-          link: `/c/o/admin/panel/contracts/${m.id}`,
-          count: contract.length
-        };
 
         return row;
       })

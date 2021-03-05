@@ -6,7 +6,6 @@
 import * as admin from 'firebase-admin';
 import { InvitationDocument, OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
-import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
@@ -53,16 +52,6 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}):
     createdAt: admin.firestore.Timestamp.now(),
     ...meta
   }
-}
-
-/**
- * Gets all the organizations from contract.partyIds
- * @param contract
- * @returns the organizations that are in the contract
- */
-export async function getOrganizationsOfContract(contract: ContractDocument): Promise<OrganizationDocument[]> {
-  const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`));
-  return Promise.all(promises);
 }
 
 /**

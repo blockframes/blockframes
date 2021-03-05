@@ -1,13 +1,8 @@
-import { AvailsSearchForm } from '@blockframes/distribution-rights/form/search.form';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
-import { DistributionRightService, DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { TerritoryValue, Territory } from '@blockframes/utils/static-model';
-import { arrayAdd } from '@datorama/akita';
-import { areTermsValid } from '@blockframes/distribution-rights/form/terms/terms.form';
 import { territories, territoriesISOA3 } from '@blockframes/utils/static-model';
 
 @Component({
@@ -17,7 +12,7 @@ import { territories, territoriesISOA3 } from '@blockframes/utils/static-model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieAvailsComponent {
-  public availsForm: AvailsSearchForm = new AvailsSearchForm();
+  public availsForm
   public movie: Movie = this.movieQuery.getActive();
   public territories = territories;
 
@@ -33,7 +28,6 @@ export class MarketplaceMovieAvailsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-    private rightService: DistributionRightService,
     private marketplaceStore: MarketplaceStore,
     private marketplaceQuery: MarketplaceQuery,
     private snackBar: MatSnackBar
@@ -59,7 +53,7 @@ export class MarketplaceMovieAvailsComponent {
     try {
       // TODO: bind every controls to the form to avoid tricky error handling => ISSUE#1942
       // Check if terms are valid, throw an error in the snackbar if not
-      areTermsValid(this.availsForm.value.terms);
+/*       areTermsValid(this.availsForm.value.terms);
       if (!this.availsForm.value.licenseType.length) {
         throw new Error('Please fill all the required fields (Terms and Media)');
       }
@@ -74,10 +68,10 @@ export class MarketplaceMovieAvailsComponent {
       const filteredRights = this.movie.distributionRights.filter(
         right => !mandateRightIds.includes(right.id)
       );
-
-      this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateRights)
+ */
+/*       this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateRights)
       this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateRights, filteredRights);
-      this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateRights, filteredRights);
+      this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateRights, filteredRights); */
 
       this.availsForm.disable();
     } catch (error) {
@@ -95,7 +89,7 @@ export class MarketplaceMovieAvailsComponent {
   /** Add a distribution right to the user selection for the active movie. */
   public addRight() {
     try {
-      // Verify the form values and throw errors if some are missing/incorrect.
+/*       // Verify the form values and throw errors if some are missing/incorrect.
       this.rightService.verifyRight(this.availsForm.getRawValue(), this.availableTerritories)
 
       // Then check if the right in preparation doesn't match an already existing right.
@@ -108,7 +102,7 @@ export class MarketplaceMovieAvailsComponent {
       const { terms, licenseType, territory, territoryExcluded, exclusive } = this.availsForm.getRawValue()
       const distributionRight: DistributionRight = createDistributionRight(
         { terms, licenseType, territory, territoryExcluded, exclusive }
-      );
+      ); */
 
       // If title don't exist in the marketplace store, create one.
       if (!this.marketplaceQuery.getEntity(this.movie.id)) {
@@ -116,9 +110,9 @@ export class MarketplaceMovieAvailsComponent {
       }
 
       // Update the title with the new right.
-      this.marketplaceStore.update(this.movie.id, title => ({
+/*       this.marketplaceStore.update(this.movie.id, title => ({
         rights: arrayAdd(title.rights, distributionRight)
-      }));
+      })); */
 
       this.snackBar.open('Exploitation Rights added to your Selection', 'close', {
         duration: 3000

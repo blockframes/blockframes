@@ -24,7 +24,6 @@ import { NumberRange } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
-import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
@@ -40,7 +39,6 @@ export interface MovieBase<D> {
   _type: 'movies';
   _meta?: DocumentMeta<D>;
   id: string;
-  documents: MovieLegalDocuments;
 
   // Only section left
   promotional: MoviePromotionalElements;
@@ -199,10 +197,6 @@ export interface MovieReview {
   journalName?: string,
   criticQuote?: string,
   revueLink?: string,
-}
-
-export interface MovieLegalDocuments {
-  chainOfTitles: LegalDocument[],
 }
 
 export interface MovieStakeholders {

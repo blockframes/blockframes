@@ -4,7 +4,6 @@ import {
   Title,
   StoreConfig,
   MovieAnalytics,
-  MovieLegalDocuments,
   MovieStakeholders,
   MovieLanguageSpecification,
   LanguageRecord,
@@ -26,8 +25,6 @@ import {
   MovieBase,
   MovieNote
 } from './movie.firestore';
-import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
-import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
@@ -43,9 +40,7 @@ export {
   MovieReview
 } from './movie.firestore';
 
-export interface Movie extends MovieBase<Date> {
-  distributionRights?: DistributionRight[]
-}
+export interface Movie extends MovieBase<Date> {}
 
 export interface SyncMovieAnalyticsOptions {
   filterBy: (movie: Movie) => boolean
@@ -56,7 +51,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
     _type: 'movies',
-    documents: createMovieLegalDocuments(params.documents),
     // Mandatory fields
     contentType: 'feature_film',
     directors: [],
@@ -256,15 +250,6 @@ export function populateMovieLanguageSpecification(
   return spec;
 }
 
-export function createMovieLegalDocuments(
-  params: Partial<MovieLegalDocuments> = {}
-): MovieLegalDocuments {
-  return {
-    chainOfTitles: [],
-    ...params
-  }
-}
-
 export function createShooting(params: Partial<MovieShooting> = {}): MovieShooting {
   return {
     locations: [],
@@ -325,16 +310,6 @@ export function getMovieTitleList(movies: Movie[]): string[] {
     : movie.title.original
   )
   return movieTitles;
-}
-
-/**
- * Returns the total gross receipts of a movie from the contracts.
- * @param contracts
- * @param movieId
- */
-export function getMovieReceipt(contracts: Contract[], movieId: string): number {
-  const sales = getValidatedContracts(contracts);
-  return sales.reduce((sum, contract) => sum + contract.lastVersion.titles[movieId].price.amount, 0);
 }
 
 /**
