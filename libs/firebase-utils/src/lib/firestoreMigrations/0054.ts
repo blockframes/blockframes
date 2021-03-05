@@ -7,7 +7,7 @@ function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
   if (data.storagePath === 'object') {
     data.storagePath = ''
-    console.log(`Invalid value in storagePath for : ${data.docId}`);
+    console.log(`Invalid value in storagePath for : ${data.docId} ${data.collection}`);
     return data;
   }
   if (!!data.storagePath) {
