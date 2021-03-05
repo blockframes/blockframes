@@ -7,8 +7,6 @@ import { MarketplaceSelectionComponent } from './selection.component';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 
 import { MovieBannerModule } from '@blockframes/movie/components/banner/banner.module';
-import { RightListModule } from '@blockframes/distribution-rights/components/right-list/right-list.module';
-
 // Material
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +24,6 @@ import { MatCardModule } from '@angular/material/card';
     ReactiveFormsModule,
 
     MovieBannerModule,
-    RightListModule,
     WishlistButtonModule,
 
     // Material

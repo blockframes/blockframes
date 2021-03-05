@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RightListComponent } from './list.component';
 
-import { ContractTableModule } from '@blockframes/contract/contract/components';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
@@ -20,7 +19,6 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    ContractTableModule,
     ImageModule,
 
     // Material

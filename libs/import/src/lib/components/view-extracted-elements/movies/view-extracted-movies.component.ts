@@ -11,7 +11,6 @@ import {
   formatCertifications,
   formatContentType,
   formatCredits,
-  formatDistributionRights,
   formatGenres,
   formatOriginalLanguages,
   formatOriginalRelease,
@@ -452,12 +451,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
       if (this.mapping.pitchTeaserLink) {
         movie.promotional.teaser_link = this.mapping.pitchTeaserLink;
       }
-
-      //////////////////
-      // FESTIVAL FIELDS
-      //////////////////
-
-      formatDistributionRights(this.mapping.territoriesSold, this.mapping.territoriesExcluded, importErrors);
 
       //////////////////
       // ADMIN FIELDS

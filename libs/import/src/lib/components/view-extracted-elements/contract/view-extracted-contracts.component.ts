@@ -83,7 +83,7 @@ export class ViewExtractedContractsComponent implements OnInit {
         if (!!existingContract) {
           contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale(existingContract as any)
           newContract = false;
-          const terms = await this.termService.getValue(contract.termsIds);
+          const terms = await this.termService.getValue(contract.termIds);
           const parsedTerms = terms.map(createTerm)
           this.contractsToUpdate.data.push({ contract, newContract: false, errors: [], terms: parsedTerms })
           // Forcing change detection
