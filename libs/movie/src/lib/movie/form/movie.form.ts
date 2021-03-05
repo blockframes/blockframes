@@ -57,7 +57,7 @@ function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
   return {
     // Sections
-    promotional: new MoviePromotionalElementsForm(movie.id, entity.promotional),
+    promotional: new MoviePromotionalElementsForm(entity.promotional),
 
     // Root data
     audience: new AudienceAndGoalsForm(entity.audience),
