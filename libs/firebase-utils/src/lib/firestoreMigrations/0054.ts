@@ -15,7 +15,7 @@ function createStorageFile(data: StorageFile) {
   } else {
     data.storagePath = ''
   }
-  
+
   return data;
 }
 
@@ -101,7 +101,7 @@ export async function upgrade(db: Firestore) {
         ...data.promotional.salesPitch
       })
     }
-  
+
     if (!!data.promotional.videos) {
       // promotional.videos.screener
       if (!!data.promotional.videos.screener) {
@@ -150,7 +150,7 @@ export async function upgrade(db: Firestore) {
 
     const fields = ['budget', 'financingPlan', 'waterfall'];
     fields.forEach(field => {
-       data.files[field] = createStorageFile({
+      data.files[field] = createStorageFile({
         storagePath: data.files[field],
         privacy: 'public',
         collection: 'campaigns',
@@ -177,6 +177,8 @@ export async function upgrade(db: Firestore) {
           docId: data.uid,
           field
         })
+      } else {
+        console.log(`Error while processing user: ${data.uid}`)
       }
     })
 
@@ -191,13 +193,17 @@ export async function upgrade(db: Firestore) {
     const orgFields = ['fromOrg', 'toOrg'];
     orgFields.forEach(field => {
       if (!!data[field]) {
-        data[field].logo = createStorageFile({
-          storagePath: data[field].logo,
-          privacy: 'public',
-          collection: 'orgs',
-          docId: data[field].id,
-          field: 'logo'
-        })
+        if (typeof data[field] !== 'object') {
+          data[field].logo = createStorageFile({
+            storagePath: data[field].logo,
+            privacy: 'public',
+            collection: 'orgs',
+            docId: data[field].id,
+            field: 'logo'
+          })
+        } else {
+          console.log(`Error while processing invitation : ${data[field].id}`)
+        }
       }
     });
 
