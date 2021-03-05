@@ -169,13 +169,15 @@ export async function upgrade(db: Firestore) {
 
     const fields = ['avatar', 'watermark'];
     fields.forEach(field => {
-      data[field] = createStorageFile({
-        storagePath: data[field],
-        privacy: 'public',
-        collection: 'users',
-        docId: data.uid,
-        field
-      })
+      if (typeof data[field] !== 'object') {
+        data[field] = createStorageFile({
+          storagePath: data[field],
+          privacy: 'public',
+          collection: 'users',
+          docId: data.uid,
+          field
+        })
+      }
     })
 
     await userDoc.ref.set(data)
