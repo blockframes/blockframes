@@ -188,7 +188,7 @@ export async function upgrade(db: Firestore) {
   });
 
   // INVITATION
-  const invitations = await db.collection('invitations').get();
+  /*const invitations = await db.collection('invitations').get();
   await runChunks(invitations.docs, async (invitationDoc) => {
     const data = invitationDoc.data();
 
@@ -225,7 +225,7 @@ export async function upgrade(db: Firestore) {
     });
 
     await invitationDoc.ref.set(data);
-  });
+  });*/
 
   // CMS
   const cms = await db.collection('cms/festival/home').get();
