@@ -11,7 +11,6 @@ function createStorageFile(data: StorageFile) {
     return data;
   }
   if (!!data.storagePath) {
-    console.log(data);
     // Removing privacy prefix
     const elements = data.storagePath.split('/');
     if (privacies.some(privacy => privacy === elements[0])) {
