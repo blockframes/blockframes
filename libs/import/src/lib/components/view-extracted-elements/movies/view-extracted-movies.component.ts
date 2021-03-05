@@ -341,11 +341,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
       }
 
       if (this.mapping.series) {
-        movie.title.series = parseInt(this.mapping.series, 10)
+        movie.title.series = parseInt(this.mapping.series, 10);
       }
 
       if (this.mapping.episodeCount) {
-        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10)
+        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10);
       }
 
       // WORK TYPE
