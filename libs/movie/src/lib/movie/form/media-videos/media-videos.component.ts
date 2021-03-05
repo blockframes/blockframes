@@ -25,7 +25,7 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
 
-  public videoTypes = hostedVideoTypes;
+  videoTypes = hostedVideoTypes;
 
   private sub: Subscription;
 
