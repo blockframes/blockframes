@@ -107,8 +107,8 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   edit(index: number) {
-    this.activeIndex = index
-    this.formItem = this.form.at(index);
+    this.activeIndex = this.reverseList$.value ? this.form.controls.length - index - 1 : index;
+    this.formItem = this.form.at(this.activeIndex);
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
   }
@@ -123,8 +123,9 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   remove(index: number) {
-    this.form.removeAt(index);
-    if (this.activeIndex > index) {
+    const i = this.reverseList$.value ? this.form.controls.length - index - 1 : index;
+    this.form.removeAt(i);
+    if (this.activeIndex > i) {
       this.activeIndex--;
     }
     if (this.isFormEmpty) {
