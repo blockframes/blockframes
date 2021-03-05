@@ -92,7 +92,7 @@ function updateOrg(org: Organization | PublicOrganization) {
 }
 
 function updateHostedVideo(screener: HostedVideo): HostedVideo {
-  const jwPlayerId = 'Ek2LPn3W';
+  const jwPlayerId = 'sduHGGRk';
   return {
     ...screener,
     jwPlayerId
