@@ -35,31 +35,31 @@ export interface FileDefinition { mime: string[], extension: string[] };
 export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
   pdf: {
     mime: ['application/pdf'],
-    extension: ['pdf'],
+    extension: ['.pdf'],
   },
   image: {
     mime: ['image/jpeg', 'image/png', 'image/webp'],
-    extension: ['jpg', 'jpeg', 'png', 'webp'],
+    extension: ['.jpg', 'jpeg', '.png', '.webp'],
   },
   video: {
     mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4', 'video/3gpp', 'video/quicktime', 'video/x-ms-wmv'],
-    extension: ['avi', 'mkv', 'mp4', '3gp', 'mov', 'wmv'],
+    extension: ['.avi', '.mkv', '.mp4', '.3gp', '.mov', '.wmv'],
   },
   docx: {
     mime: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-    extension: ['doc', 'docx'],
+    extension: ['.doc', '.docx'],
   },
   xls: {
     mime: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet'],
-    extension: ['xls', 'xlsx', 'ods'],
+    extension: ['.xls', '.xlsx', '.ods'],
   },
   json: {
     mime: ['application/json'],
-    extension: ['json']
+    extension: ['.json']
   },
   csv: {
     mime: ['text/csv'],
-    extension: ['csv']
+    extension: ['.csv']
   }
 }
 
