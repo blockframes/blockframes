@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ImageModule } from '../../image/directives/image.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
 import { PdfViewerModule } from '../../pdf/viewer/viewer.module';

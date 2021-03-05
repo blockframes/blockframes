@@ -1,6 +1,5 @@
-<section fxLayout="row" fxLayout="space-between center" fxLayoutGap="24px">
+<!-- <section fxLayout="row" fxLayout="space-between center" fxLayoutGap="24px">
 
-  <!-- Filters -->
   <aside>
     <mat-card>
       <mat-card-content>
@@ -23,7 +22,7 @@
     </mat-card>
   </aside>
 
-  <!-- World Map -->
+
   <mat-card class="map-card">
     <mat-card-header></mat-card-header>
     <mat-card-content>
@@ -47,7 +46,7 @@
           <map-feature [tag]="tag" color="color-4"></map-feature>
         </ng-container>
 
-        <!-- Territory Informations Tooltip -->
+   
         <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
           <ul>
             <li> {{ hoveredTerritory.name }} </li>
@@ -55,7 +54,7 @@
           </ul>
         </mat-card>
 
-        <!-- World Map Legends -->
+   
         <mat-card class="colors-card">
           <mat-list>
             <mat-list-item>
@@ -80,12 +79,12 @@
         </mat-card>
       </world-map>
 
-      <!-- Territories Input -->
+  
       <region-chips-autocomplete [form]="availsForm.territory" placeholder="Choose your territories"
         [items]="territories" store="slug" display="label">
       </region-chips-autocomplete>
 
-      <!-- View of right in preparation -->
+ 
     </mat-card-content>
     <mat-card [formGroup]="availsForm">
       <mat-card-content>
@@ -141,4 +140,4 @@
     </mat-card>
   </mat-card>
 
-</section>
+</section> -->

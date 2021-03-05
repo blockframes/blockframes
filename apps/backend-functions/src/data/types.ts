@@ -1,5 +1,4 @@
 export { MovieDocument, PublicMovie } from '@blockframes/movie/+state/movie.firestore';
-export { ContractDocument, PublicContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 export {
   OrganizationDocument,
   PublicOrganization

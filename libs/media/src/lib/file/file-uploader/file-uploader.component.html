@@ -1,5 +1,5 @@
 <ng-container [ngSwitch]="state">
-  <input #fileExplorer [accept]="accept" type="file" (change)="selected($event.target.files)" />
+  <input #fileExplorer [accept]="allowedTypes" type="file" (change)="selected($event.target.files)" />
 
   <!-- Waiting -->
   <section *ngSwitchCase="'waiting'" class="drop-zone">
@@ -10,7 +10,7 @@
 
     </label>
     <ng-content select="[title]"></ng-content>
-    <p class="mat-caption">Accepted Formats: {{ accept.join(', ') }}</p>
+    <p class="mat-caption">Accepted Formats: {{ allowedTypes.join(', ') }}</p>
     <p class="mat-caption">Drag and drop a file here or
       <a (click)="fileExplorer.click()">browse</a>
     </p>
@@ -35,8 +35,8 @@
 </ng-container>
 
 <ng-template #default>
-  <img [asset]="form.fileName.value | fileTypeImage" alt="file image" class="file-uploaded">
-  <h3>{{ form.fileName.value }}</h3>
+  <img [asset]="fileName | fileTypeImage" alt="file image" class="file-uploaded">
+  <h3>{{ fileName | fileName }}</h3>
   <span *ngIf="!!localSize" class="mat-body-2">{{ localSize }}</span>
   <button mat-mini-fab color="divider">
     <mat-icon (click)="delete()" svgIcon="close" matTooltip="Delete File"></mat-icon>

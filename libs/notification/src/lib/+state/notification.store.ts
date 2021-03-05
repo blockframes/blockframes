@@ -12,6 +12,7 @@ import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/app
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -107,14 +108,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `A new movie has been submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}`, // TODO check url : see  #2716
+          url: `/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
         this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              imgRef: movie?.poster ?? 'empty_poster.webp',
+              imgRef: createStorageFile(movie?.poster),
               message: `${movie.title.international} was successfully published on the marketplace.`,
             };
           })
@@ -284,7 +285,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
   public getPoster(id: string) {
     const movie = this.movieQuery.getEntity(id);
-    return movie?.poster ?? '';
+    return movie?.poster ?? createStorageFile({
+      privacy: 'public',
+      collection: 'movies',
+      docId: id,
+      field: 'poster',
+      storagePath: 'poster',
+    });
   }
 
   private getDocument<T>(path: string): Promise<T> {

@@ -1,4 +1,4 @@
-import { Language, Territory } from "@blockframes/utils/static-model";
+import { HostedVideoType, Language, Territory } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
 
 export interface OldPromotionalElement {
@@ -161,3 +161,19 @@ const ResourceSizes = {
   thumbnail: 'Thumbnail'
 };
 type ResourceSizes = keyof typeof ResourceSizes;
+
+export interface OldHostedVideo {
+  ref: string,
+  jwPlayerId: string,
+  title?: string,
+  description?: string,
+  type?: HostedVideoType,
+}
+
+export function createOldHostedVideo(params: Partial<OldHostedVideo>): OldHostedVideo {
+  return {
+    ref: '',
+    jwPlayerId: '',
+    ...params,
+  }
+}

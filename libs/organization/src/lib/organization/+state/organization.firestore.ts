@@ -3,12 +3,12 @@ import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, app, App } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
-import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
+import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 type Timestamp = firebase.firestore.Timestamp;
 
-interface Denomination {
+export interface Denomination {
   full: string;
   public?: string;
 }
@@ -17,11 +17,11 @@ interface Denomination {
 export interface PublicOrganization {
   id: string;
   denomination: Denomination;
-  logo: string;
+  logo: StorageFile;
 }
 
 export interface OrgMedias {
-  notes: HostedMediaWithMetadata[],
+  notes: StorageFile[],
 };
 
 /** Document model of an Organization */
@@ -73,7 +73,7 @@ export function createOrganizationBase(
     ...params,
     addresses: createAddressSet(params.addresses),
     denomination: createDenomination(params.denomination),
-    logo: params.logo ?? '',
+    logo: createStorageFile(params?.logo),
     appAccess: createOrgAppAccess(params.appAccess),
   };
 }

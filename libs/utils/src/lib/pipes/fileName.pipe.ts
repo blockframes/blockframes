@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
@@ -38,39 +39,32 @@ export class FilePathPipe implements PipeTransform {
    * Returns a readable version of the file path
    * e.g. org/id/documents.notes/abc.jpg => 'Organization > Cascade8 > Note > abc.jpg'
    */
-  async transform(filePath: string, separator = '/') {
-    if (typeof filePath !== 'string') {
-      console.warn('UNEXPECTED FILE', filePath);
-      console.warn('This pipe require a string as input');
+  async transform(file: StorageFile, separator = '/') {
+    if (!file) return '';
+    if (typeof file !== 'object') {
+      console.warn('UNEXPECTED FILE', file);
+      console.warn('This pipe require a StorageFile as input');
       return '';
     }
-    const arrayedRef = filePath.split('/');
-    if (arrayedRef.length < 5) {
-      console.warn('MALFORMED FILE PATH', filePath);
-      console.warn('Path should be formed of <privacy>/<collection>/<ID>/<folders>/<fileName>');
-      return '';
-    }
-    let collection = arrayedRef[1];
-    const docId = arrayedRef[2];
-    const fileName = arrayedRef.pop();
-    const subFolders = arrayedRef.pop();
-    const folder = getFileFolder(subFolders.split('.').pop());
 
-    let docName = docId;
+    const folder = getFileFolder(file.field);
+    let collection: string = file.collection;
+    let docName = file.docId;
     if (collection === 'movies') {
       collection = 'Movie';
-      const movie = await this.movieService.getValue(docId);
+      const movie = await this.movieService.getValue(file.docId);
       docName = movie?.title?.original ?? 'Unknown Movie';
     } else if (collection === 'orgs') {
       collection = 'Organization';
-      const org = await this.orgService.getValue(docId);
+      const org = await this.orgService.getValue(file.docId);
       docName = org?.denomination?.public ?? 'Unknown Organization';
     } else if (collection === 'users') {
       collection = 'User';
-      const user = await this.userService.getValue(docId);
+      const user = await this.userService.getValue(file.docId);
       docName = `${user?.firstName} ${user?.lastName}`;
     }
 
+    const fileName = file.storagePath.split('/').pop();
     return [collection, docName, folder, fileName].join(separator);
   }
 }
@@ -85,6 +79,7 @@ export class FileTypePipe implements PipeTransform {
    * e.g. abc.jpg => 'image'
    */
   transform(fileName: string) {
+    if (!fileName) return 'unknown';
     if (typeof fileName !== 'string') {
       console.warn('UNEXPECTED FILE', fileName);
       console.warn('This pipe require a string as input');
@@ -107,6 +102,7 @@ export class FileTypeImagePipe implements PipeTransform {
    */
   transform(fileName: string, kind: 'image' | 'icon' = 'image'): string {
 
+    if (!fileName) return kind === 'image' ? 'image.webp' : 'document';
     if (typeof fileName !== 'string') {
       console.warn('UNEXPECTED FILE', fileName);
       console.warn('This pipe require a string as input');
@@ -138,7 +134,7 @@ export const getFileFolder = (folder: string) => {
     case 'notes':
       return 'Note'
     case 'still_photo':
-      return 'Image' 
+      return 'Image'
     case 'otherVideos':
       return 'Video'
     case 'presentation_deck':
@@ -150,13 +146,20 @@ export const getFileFolder = (folder: string) => {
 
 @Pipe({ name: 'fileFolder' })
 export class FileFolderPipe implements PipeTransform {
-  
+
   /**
    * Returns the name of the folder where the file is stored
    * e.g. orgs/id/documents.notes/abc.pdf => 'Note'
    * movie/promotional/screener/abc.mp4 => 'Screener'
    */
   transform(filePath: string) {
+    if (!filePath) return 'Unknown';
+    if (typeof filePath !== 'string') {
+      console.warn('UNEXPECTED FILE', filePath);
+      console.warn('This pipe require a string as input');
+      return 'Unknown';
+    }
+
     const segments = filePath.split('/')
     segments.pop();
     const field = segments.pop();
@@ -166,8 +169,20 @@ export class FileFolderPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'selectedFile' })
+export class SelectedFilePipe implements PipeTransform {
+
+  /**
+   * Retrieve the selected file of a Meeting form its file array
+   */
+  transform(files: StorageFile[], selected: string) {
+    if (!selected) return;
+    return files.find(file => file.storagePath === selected);
+  }
+}
+
 @NgModule({
-  exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe],
-  declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe],
+  exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe, SelectedFilePipe],
+  declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe, FilePathPipe, FileFolderPipe, SelectedFilePipe],
 })
 export class FileNameModule { }
