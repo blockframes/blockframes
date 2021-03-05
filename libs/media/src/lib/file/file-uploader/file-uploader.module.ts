@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileUploaderComponent } from './file-uploader.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ImageModule } from '../../image/directives/image.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

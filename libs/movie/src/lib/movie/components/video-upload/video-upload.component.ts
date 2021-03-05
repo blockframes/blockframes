@@ -1,12 +1,11 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { HostedVideos } from '@blockframes/movie/+state/movie.firestore';
 import { Movie, MovieService } from '@blockframes/movie/+state';
-import { MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { hostedVideoTypes } from '@blockframes/utils/static-model';
+import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
+import { MovieVideos } from '@blockframes/movie/+state/movie.firestore';
+import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 
 @Component({
   selector: 'movie-video-upload',
@@ -16,22 +15,22 @@ import { hostedVideoTypes } from '@blockframes/utils/static-model';
 })
 export class MovieVideoUploadComponent implements OnInit {
 
-  public form: MovieHostedVideosForm;
+  public form: MovieVideosForm;
   public filePrivacy: Privacy = 'protected';
   @Input() movie: Movie;
   public hostedVideoTypes = Object.keys(hostedVideoTypes);
 
   constructor(
     private snackBar: MatSnackBar,
-    private mediaService: MediaService,
+    private uploaderService: FileUploaderService,
     private movieService: MovieService,
     private cdr: ChangeDetectorRef
   ) {
-    this.form = new MovieHostedVideosForm(this.movie.id);
+    this.form = new MovieVideosForm();
   }
 
   async ngOnInit() {
-    this.form = new MovieHostedVideosForm(this.movie.id, this.movie.promotional.videos);
+    this.form = new MovieVideosForm(this.movie.promotional.videos);
 
     // Add empty upload zone
     this.form.otherVideos.add({ ref: '' });
@@ -54,17 +53,15 @@ export class MovieVideoUploadComponent implements OnInit {
       return;
     }
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-
-    const videos : HostedVideos = {
-      ...documentToUpdate,
-      otherVideos: documentToUpdate.otherVideos.filter(n => !!n.ref)
+    const videos : MovieVideos = {
+      ...this.form.value,
+      otherVideos: this.form.otherVideos.value.filter(n => !!n.storagePath)
     };
 
     this.movie.promotional.videos = videos;
+    this.uploaderService.upload();
     await this.movieService.update(this.movie.id, this.movie);
 
-    this.mediaService.uploadMedias(mediasToUpload);
     this.snackBar.open('Videos upload started !', 'close', { duration: 5000 });
   }
 

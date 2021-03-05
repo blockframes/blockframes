@@ -20,6 +20,7 @@ import {
 import { LegalRole } from '@blockframes/utils/static-model/types';
 import { getKeyIfExists, toDate } from '@blockframes/utils/helpers';
 import { Term } from '@blockframes/contract/term/+state/term.model';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
@@ -158,10 +159,10 @@ export function createLegalDocument(
   params: Partial<LegalDocument> = {}
 ): LegalDocument {
   return {
-    id: '',
-    label: '',
+    id: params?.id ?? '',
+    label: params?.label ?? '',
     ...params,
-    media: params.media ?? '',
+    ...createStorageFile(params),
   }
 }
 

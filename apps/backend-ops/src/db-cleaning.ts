@@ -6,11 +6,12 @@ import { PermissionsDocument } from '@blockframes/permissions/+state/permissions
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks, } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
-const EMPTY_MEDIA = '';
+const EMPTY_MEDIA = createStorageFile();
 
 /** Reusable data cleaning script that can be updated along with data model */
 

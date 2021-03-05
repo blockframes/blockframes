@@ -16,7 +16,16 @@ export const heroSchema: FormGroupSchema<HeroSection> = {
     _type: { form: 'control' },
     title: matText({ label: 'Title' }),
     description: matText({ label: 'Description', size: 'long' }),
-    background: matText({ label: 'Background Image' }),
+    background: { 
+      form: 'group',
+      controls: { 
+        storagePath: matText({ label: 'Background Image' }),
+        privacy: { form: 'control' },
+        collection: { form: 'control' },
+        field: { form: 'control' },
+        docId: { form: 'control' }
+      }
+    },
     links: {form: 'array', controls: [], factory: linkSchema }
   },
 }
