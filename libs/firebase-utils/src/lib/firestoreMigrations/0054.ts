@@ -5,6 +5,11 @@ import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
+  if (data.storagePath == 'object') {
+    data.storagePath = ''
+    console.log(`Invalid value in storagePath for : ${data.docId}`):
+    return data;
+  }
   if (!!data.storagePath) {
     // Removing privacy prefix
     const elements = data.storagePath.split('/');
@@ -193,7 +198,7 @@ export async function upgrade(db: Firestore) {
     const orgFields = ['fromOrg', 'toOrg'];
     orgFields.forEach(field => {
       if (!!data[field]) {
-        if (typeof data[field] !== 'object') {
+        if (typeof data[field].logo !== 'object') {
           data[field].logo = createStorageFile({
             storagePath: data[field].logo,
             privacy: 'public',
