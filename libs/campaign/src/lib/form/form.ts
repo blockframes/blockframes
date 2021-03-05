@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormEntity, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { Campaign, createCampaign, Perk, createPerk, Funding, Budget } from '../+state/campaign.model';
 
@@ -134,9 +134,9 @@ function createCampaignControls(value?: Partial<Campaign>) {
     ),
     budget: new BudgetForm(campaign.budget),
     files: new FormGroup({
-      financingPlan: new HostedMediaForm(campaign.files.financingPlan, { privacy: 'protected', collection: 'campaigns', docId: campaign.id ?? '', field: 'files.financingPlan' }),
-      waterfall: new HostedMediaForm(campaign.files.waterfall, { privacy: 'protected', collection: 'campaigns', docId: campaign.id ?? '', field: 'files.waterfall' }),
-      budget: new HostedMediaForm(campaign.files.budget, { privacy: 'protected', collection: 'campaigns', docId: campaign.id ?? '', field: 'files.budget' }),
+      financingPlan: new StorageFileForm(campaign.files.financingPlan),
+      waterfall: new StorageFileForm(campaign.files.waterfall),
+      budget: new StorageFileForm(campaign.files.budget),
     })
   }
 }

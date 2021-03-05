@@ -14,9 +14,9 @@
     </button>
 
     <ng-container *ngFor="let file of files">
-      <button carouselItem class="file" (click)="selectFile(file)" [disabled]="isSelected(file)" matTooltip="Share on screen">
-        <mat-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
-        <p>{{ file | fileName }}</p>
+      <button carouselItem class="file" (click)="selectFile(file.storagePath)" [disabled]="isSelected(file.storagePath)" matTooltip="Share on screen">
+        <mat-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
+        <p>{{ file.storagePath | fileName }}</p>
       </button>
     </ng-container>
   </bf-carousel>

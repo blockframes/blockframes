@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 
 import { FilePreviewComponent } from './preview.component';
 
-import { PdfViewerModule } from '@blockframes/media/pdf/viewer/viewer.module';
-import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
+import { PdfViewerModule } from '../../pdf/viewer/viewer.module';
+import { VideoViewerModule } from '../../video/viewer/viewer.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ImageModule } from '../../image/directives/image.module';
 
 // Material
 import { MatDialogModule } from '@angular/material/dialog';
@@ -22,7 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
     MatDialogModule
   ],
-  exports: [],
+  exports: [FilePreviewComponent],
   declarations: [FilePreviewComponent],
 })
 export class FilePreviewModule { }

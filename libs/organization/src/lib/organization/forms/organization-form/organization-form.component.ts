@@ -16,15 +16,9 @@ export class OrganizationFormComponent {
 
   @Input() form: OrganizationForm;
 
-  // TODO#2914 Re-enable the cropper here when we found a solution
   @Input() @boolean disableCropper = false;
 
   constructor(private service: OrganizationService, private query: OrganizationQuery) { }
-
-  // ISSUE#2692
-  // get bankAccounts() {
-  //   return this.form.get('bankAccounts');
-  // }
 
   /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {
@@ -33,5 +27,11 @@ export class OrganizationFormComponent {
     if(!unique){
       this.form.get('denomination').get('full').setErrors({ notUnique: true });
     }
+  }
+
+  public change() {
+    // user has selected & cropped an image to upload for his org logo
+    // in order to let him click the "update" button we need to mark the form as dirty
+    this.form.markAsDirty();
   }
 }
