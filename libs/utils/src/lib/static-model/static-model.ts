@@ -284,6 +284,9 @@ export const medias = {
   planes: 'Planes',
   boats: 'Boats',
   hotels: 'Hotels',
+  educational: 'Educational',
+  rental: 'Rental',
+  through: 'Sell Through'
 } as const
 
 export const memberStatus = {
