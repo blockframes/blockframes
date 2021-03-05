@@ -5,7 +5,7 @@ import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
-  if (data.storagePath == 'object') {
+  if (data.storagePath === 'object') {
     data.storagePath = ''
     console.log(`Invalid value in storagePath for : ${data.docId}`);
     return data;
