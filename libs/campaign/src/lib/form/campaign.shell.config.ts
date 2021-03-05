@@ -3,10 +3,10 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 import type { FormShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { CampaignControls, CampaignForm } from './form';
 import { Campaign, CampaignService } from '../+state';
-import { MediaService, extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from "rxjs";
 import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
+import { FileUploaderService } from "@blockframes/media/+state";
 
 @Injectable({ providedIn: 'root' })
 export class CampaignShellConfig implements FormShellConfig<CampaignControls, Campaign>{
@@ -15,7 +15,7 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
   constructor(
     private route: RouterQuery,
     private service: CampaignService,
-    private mediaService: MediaService
+    private uploaderService: FileUploaderService,
   ) { }
 
   onInit(): Observable<any>[] {
@@ -32,9 +32,9 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
   async onSave(options: FormSaveOptions): Promise<any> {
     const id: string = this.route.getParams('movieId');
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-    await this.service.save(id, documentToUpdate);
-    this.mediaService.uploadMedias(mediasToUpload);
+    this.uploaderService.upload();
+    await this.service.save(id, this.form.value);
+
     this.form.markAsPristine();
     return id;
   }

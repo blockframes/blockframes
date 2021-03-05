@@ -23,7 +23,7 @@
     clickable
     (rowClick)="goToEdit($event)">
     <ng-template colRef="poster" let-posters>
-      <ng-container *ngIf="posters">
+      <ng-container *ngIf="posters.storagePath">
         <img class="poster" [ref]="posters" asset="empty_poster.webp">
       </ng-container>
     </ng-template>

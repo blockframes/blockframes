@@ -11,7 +11,6 @@ import { MovieImportState, SpreadsheetImportError } from '../../../import-utils'
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { createContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 
@@ -99,34 +98,6 @@ export class TableExtractedMoviesComponent implements OnInit {
       hint: 'Movie already saved'
     });
     this.rows.data = data;
-
-    if (importState.distributionRights) {
-      const orgId = !!importState.movie.orgIds.length ? importState.movie.orgIds[0] : this.orgQuery.getActiveId();
-
-      const movieId = importState.movie.id;
-      const titlesAndRights = { [movieId]: importState.distributionRights };
-
-      // Initializes a new 'mandate' contract
-      const mandateContract = createContract({ type: 'mandate' });
-
-      // Set movie producing company as licensor
-      const licensor = createContractPartyDetail();
-      licensor.party.role = 'licensor';
-      licensor.party.displayName = `${importState.movie.internalRef}'s producer`;
-
-      // Lets try to add more info about licensor with movie producing company
-      if (importState.movie.stakeholders?.productionCompany.length) {
-        const firstProducer = importState.movie.stakeholders?.productionCompany.pop();
-        if (firstProducer?.orgId) {
-          licensor.party.orgId = firstProducer.orgId;
-        } else if (firstProducer.displayName) {
-          licensor.party.displayName = firstProducer.displayName;
-        }
-      }
-      mandateContract.parties.push(licensor);
-
-      await this.contractService.createContractAndRight(orgId, titlesAndRights, mandateContract);
-    }
 
     return true;
   }

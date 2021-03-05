@@ -3,8 +3,7 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { FileUploaderService } from '@blockframes/media/+state';
 
 @Component({
   selector: 'organization-edit',
@@ -19,7 +18,7 @@ export class OrganizationComponent implements OnInit {
     private query: OrganizationQuery,
     private service: OrganizationService,
     private snackBar: MatSnackBar,
-    private mediaService: MediaService
+    private uploaderService: FileUploaderService,
   ) { }
 
   ngOnInit() {
@@ -34,9 +33,8 @@ export class OrganizationComponent implements OnInit {
           throw new Error('Your organization profile information are not valid');
         }
 
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.organizationForm);
-        this.service.update(this.query.getActiveId(), documentToUpdate);
-        this.mediaService.uploadMedias(mediasToUpload);
+        this.uploaderService.upload();
+        this.service.update(this.query.getActiveId(), this.organizationForm.value);
 
         this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
       }

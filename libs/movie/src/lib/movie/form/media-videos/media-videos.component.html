@@ -8,8 +8,8 @@
       <ng-container *ngIf="hasScreener; else noScreener">
         <mat-list>
           <mat-list-item>
-            <mat-icon mat-list-icon [svgIcon]="screenerForm.get('fileName').value | fileTypeImage: 'icon'"></mat-icon>
-            <div mat-line>{{screenerForm.get('fileName').value}}</div>
+            <mat-icon mat-list-icon [svgIcon]="screenerForm.get('storagePath').value | fileTypeImage: 'icon'"></mat-icon>
+            <div mat-line>{{screenerForm.get('storagePath').value}}</div>
             <button mat-icon-button (click)="deleteScreener()">
               <mat-icon svgIcon="delete"></mat-icon>
             </button>
@@ -17,8 +17,7 @@
         </mat-list>
       </ng-container>
       <ng-template #noScreener>
-        <file-uploader [form]="screenerForm" [storagePath]="getPath('screener')" allowedFileType="video"
-          filePrivacy="protected">
+        <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
           <h3 title>Upload Screener</h3>
         </file-uploader>
         <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
@@ -34,10 +33,9 @@
 
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
-          {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.ref.fileName ? video.ref.fileName :
-          (video.ref.ref | fileName) }}
+          {{ video.type | titlecase }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
         </ng-template>
-        <ng-template formView let-activeForm>
+        <ng-template formView let-activeForm let-index="index">
           <article fxLayout="column">
             <span fxFlex fxLayout="row" fxLayoutGap="16px">
               <mat-form-field appearance="outline" fxFlex>
@@ -53,7 +51,7 @@
                 </mat-select>
               </mat-form-field>
             </span>
-            <file-uploader [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video">
+            <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
               <h3 title>Upload Video</h3>
             </file-uploader>
 

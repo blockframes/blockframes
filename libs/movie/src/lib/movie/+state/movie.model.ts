@@ -4,7 +4,6 @@ import {
   Title,
   StoreConfig,
   MovieAnalytics,
-  MovieLegalDocuments,
   MovieStakeholders,
   MovieLanguageSpecification,
   LanguageRecord,
@@ -21,16 +20,15 @@ import {
   MoviePlannedShooting,
   MovieGoalsAudience,
   MovieSalesPitch,
-  MovieNote,
-  HostedVideos,
-  HostedVideo,
-  MovieBase
+  MovieVideos,
+  MovieVideo,
+  MovieBase,
+  MovieNote
 } from './movie.firestore';
-import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
-import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -42,9 +40,7 @@ export {
   MovieReview
 } from './movie.firestore';
 
-export interface Movie extends MovieBase<Date> {
-  distributionRights?: DistributionRight[]
-}
+export interface Movie extends MovieBase<Date> {}
 
 export interface SyncMovieAnalyticsOptions {
   filterBy: (movie: Movie) => boolean
@@ -55,7 +51,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
     _type: 'movies',
-    documents: createMovieLegalDocuments(params.documents),
     // Mandatory fields
     contentType: 'feature_film',
     directors: [],
@@ -92,10 +87,10 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
-    banner: params.banner ?? '',
+    banner: createStorageFile(params?.banner),
     audience: createAudienceGoals(params.audience),
     languages: createLanguageKey(params.languages ? params.languages : {}),
-    poster: params.poster ?? '',
+    poster: createStorageFile(params?.poster),
     promotional: createMoviePromotional(params.promotional),
     release: createReleaseYear(params.release),
     shooting: createShooting(params.shooting),
@@ -109,28 +104,32 @@ export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
   return {
-    ...params,
     clip_link: params.clip_link ?? '',
-    financialDetails: params.financialDetails ?? '',
-    moodboard: params.moodboard ?? '',
-    notes: params.notes ?? [],
-    salesPitch: createSalesPitch(params.salesPitch),
-    still_photo: params.still_photo ?? [],
-    presentation_deck: params.presentation_deck ?? '',
-    scenario: params.scenario ?? '',
     promo_reel_link: params.promo_reel_link ?? '',
     screener_link: params.screener_link ?? '',
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
-    videos: createHostedVideos(params.videos),
+
+    ...params,
+
+    financialDetails: createStorageFile(params?.financialDetails),
+    moodboard: createStorageFile(params?.moodboard),
+    notes: params?.notes?.map(note => createMovieNote(note)) ?? [],
+    salesPitch: createSalesPitch(params.salesPitch),
+    still_photo: params?.still_photo?.map(still => createStorageFile(still)) ?? [],
+    presentation_deck: createStorageFile(params?.presentation_deck),
+    scenario: createStorageFile(params?.scenario),
+    videos: createMovieVideos(params?.videos),
   };
 }
 
 export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
+  const video = createStorageFile(params);
   return {
     description: '',
-    ref: '',
+    jwPlayerId: '',
+    ...video,
     ...params,
   }
 }
@@ -251,15 +250,6 @@ export function populateMovieLanguageSpecification(
   return spec;
 }
 
-export function createMovieLegalDocuments(
-  params: Partial<MovieLegalDocuments> = {}
-): MovieLegalDocuments {
-  return {
-    chainOfTitles: [],
-    ...params
-  }
-}
-
 export function createShooting(params: Partial<MovieShooting> = {}): MovieShooting {
   return {
     locations: [],
@@ -299,6 +289,17 @@ export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): M
   }
 }
 
+export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
+  const file = createStorageFile(params);
+  return {
+    firstName: '',
+    lastName: '',
+    role: '',
+    ...file,
+    ...params,
+  }
+}
+
 /**
  * Takes an array of movies and returns a list of their titles.
  * @param movies
@@ -309,16 +310,6 @@ export function getMovieTitleList(movies: Movie[]): string[] {
     : movie.title.original
   )
   return movieTitles;
-}
-
-/**
- * Returns the total gross receipts of a movie from the contracts.
- * @param contracts
- * @param movieId
- */
-export function getMovieReceipt(contracts: Contract[], movieId: string): number {
-  const sales = getValidatedContracts(contracts);
-  return sales.reduce((sum, contract) => sum + contract.lastVersion.titles[movieId].price.amount, 0);
 }
 
 /**
@@ -341,26 +332,18 @@ export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
   }
 }
 
-export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
+export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
-    ref: '',
-    ...note
-  }
-}
-
-
-export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
-  return {
-    screener: createHostedVideo(params?.screener),
-    otherVideos: params?.otherVideos?.map(video => createHostedVideo(video)) || [],
     ...params,
+    screener: createMovieVideo(params?.screener),
+    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
   }
 }
 
-export function createHostedVideo(params: Partial<HostedVideo>): HostedVideo {
+export function createMovieVideo(params: Partial<MovieVideo>): MovieVideo {
   return {
-    ref: '',
     jwPlayerId: '',
     ...params,
+    ...createStorageFile(params),
   }
 }
