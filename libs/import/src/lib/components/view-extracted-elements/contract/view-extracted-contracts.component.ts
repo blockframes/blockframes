@@ -10,7 +10,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 import { TermService } from '@blockframes/contract/term/+state/term.service'
 import { centralOrgID } from '@env';
@@ -22,6 +22,7 @@ enum SpreadSheetContract {
   contractType,
   licensorName,
   licenseeName,
+  stakeholders,
   contractId,
   territories,
   medias,
@@ -137,6 +138,19 @@ export class ViewExtractedContractsComponent implements OnInit {
               field: 'contract.titleId',
               name: 'Title Id',
               reason: 'We need to know the title otherwise we can\'t map the contract to the a movie',
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
+
+          if (trimmedRow[SpreadSheetContract.stakeholders].length) {
+            const orgs: Organization[] = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
+            contract.stakeholders = orgs.map(org => org.id);
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contracts.stakeholders',
+              name: 'Stakeholders',
+              reason: 'If this mandate has stakeholders, please fill in the name',
               hint: 'Edit corresponding sheet field.'
             })
           }
