@@ -1,5 +1,5 @@
 import algoliasearch from 'algoliasearch';
-import { algolia as algoliaClient } from '@env';
+import { algolia as algoliaClient, centralOrgID } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
@@ -59,6 +59,8 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
+
+  if (org.id === centralOrgID) return;
 
   const orgRecord: AlgoliaOrganization = {
     objectID: org.id,
