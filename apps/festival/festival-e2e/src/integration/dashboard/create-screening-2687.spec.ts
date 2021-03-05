@@ -50,15 +50,18 @@ describe('User create a screening', () => {
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const homePage = new FestivalDashboardHomePage();
     const eventPage: EventPage = homePage.goToCalendar();
-
-    [[0, tomorrow, false], [1, tomorrow, true], 
-      [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
+    const eventInfo = [
+        [0, tomorrow, false], 
+        [1, tomorrow, true], 
+        [0, twodayslater, true], 
+        [1, twodayslater, false]
+    ];
+    eventInfo.forEach((x: any, index:number) => {
         const [i, d, p] = x;
         const eventName = EVENTS[i].event + index;
-        eventPage.createEvent(eventName, d, 
-                EVENTS[i].movie.title.international, p);
+        eventPage.createEvent(eventName, d, EVENTS[i].movie.title.international, p);
     });
-  })  
+  })
 
   it('Invitee1, Verify screening page and created screenings', () => {
     const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
