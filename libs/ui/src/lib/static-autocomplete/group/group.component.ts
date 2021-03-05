@@ -13,6 +13,7 @@ import {
 import { BehaviorSubject, combineLatest, Observable, Subscription } from "rxjs";
 import { map, startWith, shareReplay } from "rxjs/operators";
 import { Scope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
 type GroupMode = 'indeterminate' | 'checked' | 'unchecked';
@@ -79,9 +80,8 @@ export class StaticGroupComponent implements ControlValueAccessor {
   hidden: Record<string, boolean> = {}
   
   @Input() displayAll = '';
-  @Input() label = '';
-  @Input() hint = '';
-  @Input() disabled: boolean = false;
+  @Input() @boolean required = false;
+  @Input() @boolean disabled = false;
   @Input() set scope(scope: Scope) {
     this._scope = scope;
     this.groups$.next(staticGroups[scope]);
@@ -139,11 +139,12 @@ export class StaticGroupComponent implements ControlValueAccessor {
       event.preventDefault();
       event.stopPropagation();
     }
-    const value = this.form.value;
+    const value = this.form.value || [];
+    const items = group.items || [];
     if (checked) {
-      this.form.setValue(Array.from(new Set([...value, ...group.items])));
+      this.form.setValue(Array.from(new Set([...value, ...items])));
     } else {
-      this.form.setValue(value.filter(item => !group.items.includes(item)));
+      this.form.setValue(value.filter(item => !items.includes(item)));
     }
   }
   hideGroup(group: StaticGroup, event: MouseEvent) {

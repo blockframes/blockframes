@@ -1,7 +1,9 @@
 <ng-container *ngIf="groups$ | async as groups">
 	<ng-container *ngIf="value$ | async as value">
 		<mat-form-field appearance="outline">
-			<mat-label>{{ label }}</mat-label>
+			<mat-label>
+				<ng-content select="mat-label"></ng-content>{{ required ? ' *' : '' }}
+			</mat-label>
 			<mat-select multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen()">
 				<header>
 					<mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
@@ -39,6 +41,11 @@
 				</mat-select-trigger>
 			</mat-select>
 		</mat-form-field>
-		<mat-hint>{{ hint }}</mat-hint>
+		<mat-hint>
+			<ng-content select="mat-hint"></ng-content>
+		</mat-hint>
+		<mat-error>
+			<ng-content select="mat-error"></ng-content>
+		</mat-error>
 	</ng-container>
 </ng-container>
