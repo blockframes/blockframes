@@ -31,10 +31,10 @@
         <div class="note" fxLayout fxLayoutAlign="space-between center" *ngIf="note.ref">
           <p>{{ note | noteName }}</p>
           <div fxLayout fxLayoutGap="24px">
-            <a mat-icon-button [href]="note.ref | getUrl | async" target="_blank">
+            <a mat-icon-button [href]="note | getUrl | async" target="_blank">
               <mat-icon svgIcon="visibility"></mat-icon>
             </a>
-            <a mat-icon-button [href]="note.ref | toBlob | async" [download]="note.ref | fileName">
+            <a mat-icon-button [href]="note | toBlob | async" [download]="note.storagePath | fileName">
               <mat-icon svgIcon="cloud_download"></mat-icon>
             </a>
           </div>

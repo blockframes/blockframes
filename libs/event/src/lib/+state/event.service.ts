@@ -92,12 +92,9 @@ export class EventService extends CollectionService<EventState> {
     delete e.color;
     delete e.cssClass;
     delete e.isOwner;
-
-    // remove possible undefined values to avoid
-    // FirebaseError: [code=invalid-argument]: Unsupported field value: undefined
-    if (!!e.movie) delete e.movie;
-    if (!!e.organizedBy) delete e.organizedBy;
-    if (!!e.org) delete e.org;
+    delete e.movie;
+    delete e.organizedBy;
+    delete e.org;
 
     return e;
   }

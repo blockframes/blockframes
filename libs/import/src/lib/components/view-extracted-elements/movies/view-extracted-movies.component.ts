@@ -4,7 +4,6 @@ import { MovieService, createMovie } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
-// import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
   formatAvailableLanguages,
@@ -351,7 +350,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // WORK TYPE
       formatContentType(this.mapping.contentType, movie, importErrors);
 
-      // DIRECTORS 
+      // DIRECTORS
       movie.directors = formatCredits(this.mapping.directors);
 
       // ORIGIN COUNTRIES (Countries of Origin)
@@ -393,10 +392,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // KEYWORDS
       movie.keywords = this.mapping.keywords;
 
-      // PRODUCERS 
+      // PRODUCERS
       movie.producers = formatCredits(this.mapping.producers, 'producerRoles') as Producer[];
 
-      // CREW 
+      // CREW
       movie.crew = formatCredits(this.mapping.crew, 'crewRoles') as Crew[];
 
       // BUDGET RANGE

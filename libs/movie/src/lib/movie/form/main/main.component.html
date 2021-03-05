@@ -62,13 +62,15 @@
       </ng-container>
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
-        <mat-form-field appearance="outline" fxFlex>
-          <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
-          <input test-id="run-time" matInput type="number" name="runningTime"
-            [formControl]="form.runningTime.get('time')" min="0" required />
-          <mat-hint>In minutes.</mat-hint>
-          <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
-        </mat-form-field>
+        <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined'">
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
+            <input test-id="run-time" matInput type="number" name="runningTime"
+              [formControl]="form.runningTime.get('time')" min="0" required />
+            <mat-hint>In minutes.</mat-hint>
+            <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
+          </mat-form-field>
+        </ng-container>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
           <static-select test-id="screening-status" scope="screeningStatus" [control]="form.runningTime.get('status')"
@@ -97,7 +99,7 @@
           The poster image will be used as the main image to represent your film on the marketplace, and, more
           generally, for all film components requiring vertical formats on the marketplace.
         </p>
-        <image-uploader [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
+        <image-uploader [meta]="['movies', 'poster', movieId]" ratio="poster" [form]="form.poster" listenToChanges>
           <h3 title>Film Poster</h3>
         </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the
@@ -110,7 +112,7 @@
           The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
           for all film components requiring horizontal formats on the marketplace.
         </p>
-        <image-uploader [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
+        <image-uploader [meta]="['movies', 'banner', movieId]" ratio="banner" [form]="form.banner" listenToChanges>
           <h3 title>Film Banner Image</h3>
         </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the

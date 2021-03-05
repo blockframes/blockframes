@@ -1,14 +1,15 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
 
 export interface Profile {
   firstName: string;
   lastName: string;
   phoneNumber: string;
   position: string;
-  avatar: string;
+  avatar: StorageFile;
   email: string;
 }
 
@@ -20,7 +21,7 @@ export function createProfile(params: Partial<User> = {}): Profile {
     position: '',
     email: '',
     ...params,
-    avatar: params.avatar ?? '',
+    avatar: createStorageFile(params?.avatar),
   };
 }
 
@@ -31,7 +32,7 @@ function createProfileControls(entity: Partial<User>) {
     lastName: new FormControl(profile.lastName),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
-    avatar: new HostedMediaForm(profile.avatar, { privacy: 'public', collection: 'users', docId: entity.uid ?? '', field: 'avatar'  }),
+    avatar: new StorageFileForm(profile.avatar),
     email: new FormControl({ value: profile.email, disabled: true })
   };
 }

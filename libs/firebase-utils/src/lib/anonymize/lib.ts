@@ -6,7 +6,6 @@ import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { FirestoreEmulator } from '../firestore';
@@ -14,6 +13,7 @@ import { firebase } from '@env'
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
+import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -91,7 +91,7 @@ function updateOrg(org: Organization | PublicOrganization) {
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
-function updateHostedVideo(screener: HostedVideo): HostedVideo {
+function updateHostedVideo(screener: MovieVideo): MovieVideo {
   const jwPlayerId = 'Ek2LPn3W';
   return {
     ...screener,

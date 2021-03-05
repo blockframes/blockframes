@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+
 @Component({
   selector: '[ref] bf-preview-modal',
   templateUrl: 'preview.component.html',
@@ -9,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class PreviewModalComponent {
 
-  @Input() ref: string;
+  @Input() ref: StorageFile;
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
 
   constructor(
