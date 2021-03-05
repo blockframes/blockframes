@@ -42,7 +42,7 @@
                 <mat-label>Title</mat-label>
                 <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
               </mat-form-field>
-              <static-select scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
+              <static-select test-id="video-type" scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
                 <mat-label>Video Type</mat-label>
               </static-select>
             </span>

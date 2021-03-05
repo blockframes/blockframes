@@ -16,7 +16,7 @@
 
     <section id="sales-video-pitch" fxLayout="column">
       <h3>Sales Pitch Video</h3>
-      <file-uploader [form]="salesPitch.get('ref')" [storagePath]="getPath()" allowedFileType="video" >
+      <file-uploader [form]="salesPitch" [meta]="['movies', 'salesPitch', movieId]" accept="video" listenToChanges>
         <h3 title>Sales Pitch Video</h3>
       </file-uploader>
     </section>
