@@ -1,12 +1,16 @@
+/// <reference types="cypress" />
+
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
+import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
 import { clearDataAndPrepareTest, acceptCookie } from "@blockframes/e2e/utils";
 import { LandingPage } from "../../support/pages/landing"
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { Orgs } from '@blockframes/e2e/fixtures/orgs';
+import { Orgs, ORG } from '@blockframes/e2e/fixtures/orgs';
 
 const userFixture = new User();
 const orgsFixture = new Orgs();
 const user  = userFixture.getByUID(USER.Vincent);
+const org = orgsFixture.getByID(ORG.Xara);
 
 
 describe('New user registers', () => {
@@ -20,14 +24,13 @@ describe('New user registers', () => {
     const p1 = new AuthIdentityPage();
     acceptCookie();
     p1.fillUserInformations(user);
-    cy.get('algolia-autocomplete').type('newOrganization');
-    cy.get('mat-option[test-id="createNewOrgOption"]').click();
-    cy.get('organization-lite-form mat-select[test-id="activity"]').click();
-    cy.get('mat-option').first().click({force: true});
-    cy.get('form-country input[test-id="address-country"]').click();
-    cy.get('mat-option').first().click({force: true});
-    cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').click();
-    cy.get('mat-button-toggle[value="marketplace"]').click();
-    p1.fillPasswordAndSubmit();
+    const p2 = new OrganizationLiteFormPage();
+    p2.createNewOrg();
+    p2.fillOrganizationInformation();
+    p2.chooseMarketplaceAccess();
+    p1.fillPassword();
+    p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
+    p1.submitCreationOrg();
   })
 })

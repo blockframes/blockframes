@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 import { User } from '../../utils/type';
+import { OrganizationCreatePendingPage, OrganizationJoinPendingPage } from '../organization';
 
 export default class AuthIdentityPage {
 
@@ -14,32 +15,31 @@ export default class AuthIdentityPage {
     cy.get('.mat-checkbox-inner-container').last().click({ force: true });
   }
 
-  public confirm(user: Partial<User>) {
-    const name = user.email.split('@')[0];
-    cy.get('input[formControlName="firstName"]').type(name);
-    cy.get('input[formControlName="lastName"]').type(name);
-    cy.get('input[formControlName="generatedPassword"]').type('blockframes');
-    cy.get('input[formControlName="password"]').type('blockframes');
-    cy.get('input[formControlName="confirm"]').type('blockframes');
-    this.clickTermsAndCondition();
-    this.clickPrivacyPolicy();
-    cy.get('button[type="submit"]').click();
-    cy.wait(5000);
-  }
-
   public fillUserInformations(user: Partial<User>) {
     const name = user.email.split('@')[0];
-    cy.get('input[test-id="email"]').type(user.email);
+    cy.get('input[test-id="email"]').type('cmandonnet+e2etest@cascade8.com');
     cy.get('input[formControlName="firstName"]').type(name);
     cy.get('input[formControlName="lastName"]').type(name);
   }
 
-  public fillPasswordAndSubmit() {
+  public fillInvitationCode() {
+    cy.get('input[formControlName="generatedPassword"]').type('blockframes');
+  }
+
+  public fillPassword() {
     cy.get('input[formControlName="password"]').type('blockframes');
     cy.get('input[formControlName="confirm"]').type('blockframes');
-    this.clickTermsAndCondition();
-    this.clickPrivacyPolicy();
-    // cy.get('button[type="submit"]').click();
+  }
+
+  public submitCreationOrg() {
+    cy.get('button[type="submit"]').click();
     cy.wait(5000);
+    return new OrganizationCreatePendingPage;
+  }
+
+  public submitJoinOrg() {
+    cy.get('button[type="submit"]').click();
+    cy.wait(5000);
+    return new OrganizationJoinPendingPage;
   }
 }

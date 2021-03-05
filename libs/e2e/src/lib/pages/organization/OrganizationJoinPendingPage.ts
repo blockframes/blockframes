@@ -1,13 +1,12 @@
-﻿import OrganizationAppAccessPage from './OrganizationAppAccessPage';
 import { Organization } from '../../utils/type';
 import { setForm, FormOptions } from '../../utils/functions';
 import { SEC } from '../../utils/env';
 
-const PATH = '/c/organization/create'; //@TODO #4932 update E2E tests
+const PATH = '/c/organization/join-congratulations'; //@TODO #4932 update E2E tests
 
-export default class OrganizationCreatePage {
+export default class OrganizationJoinPendingPage {
   constructor() {
-    cy.get('organization-create', {timeout: 150 * SEC});
+    cy.get('organization-join-pending', {timeout: 150 * SEC});
   }
 
   public assertMoveToOrgCreatePage() {
@@ -19,16 +18,6 @@ export default class OrganizationCreatePage {
   public fillName(name: string) {
     cy.get('organization-form input[test-id=name]', {timeout: 3 * SEC})
       .type(name);
-  }
-
-  /** If navigate is set to false, this doesn't return a new page. */
-  public clickCreate(navigate: boolean = true) {
-    cy.get('organization-create button[test-id=create]', {timeout: 3 * SEC})
-      .click({ force: true });
-    cy.wait(3 * SEC);
-    if (navigate) {
-      return new OrganizationAppAccessPage();
-    }
   }
 
   // Set the organization create form
