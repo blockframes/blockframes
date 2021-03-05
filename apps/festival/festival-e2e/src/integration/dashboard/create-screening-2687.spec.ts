@@ -46,33 +46,18 @@ describe('User create a screening', () => {
     signIn(users[0], true);
     acceptCookie();
 
-    //const marketPage = new FestivalMarketplaceHomePage();
-    //const eventPage: EventPage = marketPage.goToCalendar();
     cy.log('From Marketplace Homepage, navigating to calendar...');
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const homePage = new FestivalDashboardHomePage();
     const eventPage: EventPage = homePage.goToCalendar();
 
-    //cy.get('a[test-id="calendar"]').then($menu => {
-      /*
-      if ($menu.length) {
-        cy.wrap($menu).click();
-      } else {
-        cy.get('button[test-id=menu]').click();
-        cy.get('a[test-id="calendar"]').click();
-      }
-      cy.wait(1000);
-      cy.get('button[test-id="menu"]', {timeout: 1200}).first().click();
-      */
-
-      [[0, tomorrow, false], [1, tomorrow, true], 
-        [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
-          const [i, d, p] = x;
-          const eventName = EVENTS[i].event + index;
-          eventPage.createEvent(eventName, d, 
-                  EVENTS[i].movie.title.international, p);
-      });
-    //});
+    [[0, tomorrow, false], [1, tomorrow, true], 
+      [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
+        const [i, d, p] = x;
+        const eventName = EVENTS[i].event + index;
+        eventPage.createEvent(eventName, d, 
+                EVENTS[i].movie.title.international, p);
+    });
   })  
 
   it('Invitee1, Verify screening page and created screenings', () => {
