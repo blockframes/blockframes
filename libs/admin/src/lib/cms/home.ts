@@ -1,14 +1,15 @@
 import { Section } from "./template";
 import { FirestoreQuery, Link } from './utils';
 import { SortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
+import { StorageFile } from "@blockframes/media/+state/media.firestore";
 
 export interface BannerSection extends Section {
   _type: 'banner',
   title: string;
   subtitle: string;
   description: string;
-  background: string;
-  image: string;
+  background: StorageFile;
+  image: StorageFile;
   links: Link[]
 }
 
@@ -16,7 +17,7 @@ export interface HeroSection extends Section {
   _type: 'hero',
   title: string;
   description: string;
-  background: string;
+  background: StorageFile;
   links: Link[];
 }
 

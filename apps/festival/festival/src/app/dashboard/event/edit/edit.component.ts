@@ -18,6 +18,7 @@ import { FilePickerComponent } from '@blockframes/media/file/picker/picker.compo
 import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { FilePreviewComponent } from '@blockframes/media/file/preview/preview.component';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: 'festival-event-edit',
@@ -112,7 +113,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.files.removeAt(index);
   }
 
-  previewFile(ref: string) {
+  previewFile(ref: StorageFile) {
     this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 

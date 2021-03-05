@@ -69,7 +69,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
     hasAcceptedMovies: org['hasAcceptedMovies'] ?? false,
-    logo: org.logo,
+    logo: org.logo.storagePath,
     activity: org.activity
   };
 
@@ -140,8 +140,8 @@ export function storeSearchableMovie(
         status: movie.release.status,
         year: movie.release.year
       },
-      banner: movie.banner,
-      poster: movie.poster
+      banner: movie.banner.storagePath,
+      poster: movie.poster.storagePath
     };
 
     /* App specific properties */
@@ -186,7 +186,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
       email: user.email,
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
-      avatar: user.avatar ?? '',
+      avatar: user.avatar?.storagePath ?? '',
       orgName: orgData ? orgName(orgData) : ''
     };
 

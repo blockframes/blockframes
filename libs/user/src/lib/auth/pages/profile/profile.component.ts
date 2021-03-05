@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { FileUploaderService } from '@blockframes/media/+state';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 
@@ -21,15 +21,15 @@ import { EditPasswordForm } from '@blockframes/utils/form/controls/password.cont
 export class ProfileComponent implements OnInit {
   public profileForm: ProfileForm;
   public passwordForm = new EditPasswordForm();
-  
+
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private mediaService: MediaService,
+    private uploaderService: FileUploaderService,
     private snackBar: MatSnackBar,
     ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.profileForm = new ProfileForm(this.authQuery.user);
   }
 
@@ -41,10 +41,8 @@ export class ProfileComponent implements OnInit {
       } else {
         const uid = this.authQuery.userId;
 
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.profileForm);
-
-        await this.authService.update({ uid, ...documentToUpdate });
-        this.mediaService.uploadMedias(mediasToUpload);
+        this.uploaderService.upload();
+        await this.authService.update({ uid, ...this.profileForm.value });
 
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
       }

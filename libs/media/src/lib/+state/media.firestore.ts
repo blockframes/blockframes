@@ -1,64 +1,30 @@
 
-import { privacies, Privacy } from "@blockframes/utils/file-sanitizer";
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 
-
-export interface FileMetaData {
-  uid: string;
+/**
+* Representation of a storage file in our Firestore db.
+* @note this is not the same as the data needed to upload into the storage: `UploadData`
+*/
+export interface StorageFile {
   privacy: Privacy;
-  collection: 'users' | 'orgs' | 'movies' | 'campaigns';
+  collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home';
   docId: string;
   field: string;
+  storagePath: string;
   [K: string]: string; // extra-data
-};
-
-export interface HostedMediaFormValue {
-  ref: string;
-  oldRef: string;
-  blobOrFile: Blob | File;
-  fileName: string;
-  metadata: FileMetaData;
 }
 
-export interface HostedMediaWithMetadata {
-  ref: string,
-  title: string
-}
-
-export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: boolean }) {
-  if (!meta) return false;
-  if (!!options?.uidRequired && (!meta.uid || typeof meta.uid !== 'string')) return false;
-  if (!meta.privacy || !privacies.includes(meta.privacy)) return false;
-  if (!meta.collection || typeof meta.collection !== 'string') return false;
-  if (!meta.docId || typeof meta.docId !== 'string') return false;
-  if (!meta.field || typeof meta.field !== 'string') return false;
-  return true;
-}
-
-export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
-  if (!formValue.ref) return '';
-  const ref = formValue.ref;
-  const refParts = ref.split('/');
-  return refParts.pop() === formValue.fileName ?
-    `${formValue.ref}` :
-    `${formValue.ref}/${formValue.fileName}`;
-}
-
-export function createHostedMediaWithMetadata(params: Partial<HostedMediaWithMetadata> = {}): HostedMediaWithMetadata {
+export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile {
   return {
-    ref: '',
-    title: '',
-    ...params
-  }
+    privacy: 'public',
+    collection: 'movies',
+    docId: '',
+    field: '',
+    storagePath: '',
+    ...file,
+  };
 }
 
-export interface UploadData {
-  /**
-  * firebase storage upload path *(or ref)*,
-  * @note **Make sure that the path param does not include the filename.**
-  * @note **Make sure that the path does not ends with a `/`.**
-  */
-  path: string,
-  data: Blob | File,
-  fileName: string,
-  metadata: FileMetaData,
+export interface StorageVideo extends StorageFile {
+  jwPlayerId: string;
 }
