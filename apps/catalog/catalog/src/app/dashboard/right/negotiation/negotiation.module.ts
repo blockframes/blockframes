@@ -7,8 +7,6 @@ import { NegotiationComponent } from './negotiation.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
-import { RightListModule } from '@blockframes/distribution-rights/components/right-list/right-list.module';
-import { VersionTableModule } from '@blockframes/contract/version/components';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -24,8 +22,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FlexLayoutModule,
     TableFilterModule,
     ImageModule,
-    RightListModule,
-    VersionTableModule,
     DisplayNameModule,
     ToLabelModule,
     // Material

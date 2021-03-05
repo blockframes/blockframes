@@ -1,6 +1,5 @@
 import {
   MovieStakeholders,
-  MovieLegalDocuments,
   BoxOffice,
   Prize,
   MoviePromotionalElements,
@@ -18,14 +17,13 @@ import {
   MovieSalesPitch,
   MovieNote,
   MovieShooting,
-  HostedVideo,
-  HostedVideos
+  MovieVideos,
+  MovieVideo,
 } from '../+state/movie.firestore';
 import {
   Movie,
   Credit,
   createMovie,
-  createMovieLegalDocuments,
   createTitle,
   createReleaseYear,
   createStoreConfig,
@@ -38,72 +36,32 @@ import {
   createAudienceGoals,
   createSalesPitch,
   createShooting,
+  createMovieVideos,
   createMovieNote,
-  createHostedVideos,
-  createHostedVideo
 } from '../+state/movie.model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
-import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue, FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
-import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
-import { FileMetaData } from '@blockframes/media/+state/media.firestore';
-
-// LEGAL DOCUMENTS
-
-function createLegalDocumentControl(metadata: Partial<FileMetaData>, legalDocument?: Partial<LegalDocument>) {
-  const { id, label, media, language, country } = createLegalDocument(legalDocument);
-  return {
-    id: new FormControl(id),
-    label: new FormControl(label),
-    media: new HostedMediaForm(media, metadata),
-    language: new FormStaticValue<'languages'>(language, 'languages'),
-    country: new FormStaticValue<'territories'>(country, 'territories')
-  };
-}
-
-export type LegalDocumentControl = ReturnType<typeof createLegalDocumentControl>;
-
-export class LegalDocumentForm extends FormEntity<LegalDocumentControl, LegalDocument> {
-  constructor(metadata: Partial<FileMetaData>, legalDocument?: Partial<LegalDocument>) {
-    super(createLegalDocumentControl(metadata, legalDocument));
-  }
-}
-
-function createMovieLegalDocumentsControl(movieId: string, legalDocuments?: Partial<MovieLegalDocuments>) {
-  const entity = createMovieLegalDocuments(legalDocuments);
-  return {
-    chainOfTitles: FormList.factory(entity.chainOfTitles, (el, i) => new LegalDocumentForm({ privacy: 'protected', collection: 'movies', docId: movieId ?? '', field: `documents.chainOfTitles[${i}].media` }, el)),
-  };
-}
-
-export type MovieLegalDocumentsControl = ReturnType<typeof createMovieLegalDocumentsControl>;
-
-export class MovieLegalDocumentsForm extends FormEntity<MovieLegalDocumentsControl, MovieLegalDocuments> {
-  constructor(movieId: string, legalDocuments?: Partial<MovieLegalDocuments>) {
-    super(createMovieLegalDocumentsControl(movieId, legalDocuments));
-  }
-}
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
   return {
     // Sections
-    promotional: new MoviePromotionalElementsForm(movie.id, entity.promotional),
-    documents: new MovieLegalDocumentsForm(movie.id, entity.documents),
+    promotional: new MoviePromotionalElementsForm(entity.promotional),
 
     // Root data
     audience: new AudienceAndGoalsForm(entity.audience),
-    banner: new HostedMediaForm(entity.banner, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: 'banner' }),
+    banner: new StorageFileForm(entity.banner),
     boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
     certifications: new FormControl(entity.certifications),
@@ -130,7 +88,7 @@ function createMovieControls(movie: Partial<Movie>) {
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el =>
       new FormStaticValue<'territories'>(el, 'territories'), [Validators.required]),
-    poster: new HostedMediaForm(entity.poster, { privacy: 'public', collection: 'movies', docId: entity.id ?? '', field: 'poster' }),
+    poster: new StorageFileForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
@@ -530,7 +488,7 @@ function createTitleFormControl(title?: Partial<Movie['title']>) {
   return {
     original: new FormControl(original),
     international: new FormControl(international, Validators.required),
-    series: new FormControl(series),
+    series: new FormControl(series, [Validators.max(100), Validators.min(1)]),
   }
 }
 
@@ -571,7 +529,7 @@ function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']
   return {
     time: new FormControl(time, [Validators.min(1)]),
     status: new FormControl(status),
-    episodeCount: new FormControl(episodeCount, [Validators.min(1)])
+    episodeCount: new FormControl(episodeCount, [Validators.max(1000)])
   }
 }
 
@@ -646,22 +604,22 @@ function createOtherLinkFormControl(otherLink?: Partial<OtherLink>) {
 
 type OtherLinkControl = ReturnType<typeof createOtherLinkFormControl>;
 
-function createMoviePromotionalElementsControls(movieId: string, promotionalElements?: Partial<MoviePromotionalElements>) {
+function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotional(promotionalElements);
   return {
     // Images
-    still_photo: FormList.factory(entity.still_photo, (el, i) => new HostedMediaForm(el, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: `promotional.still_photo[${i}]` })),
+    still_photo: FormList.factory(entity.still_photo, el => new StorageFileForm(el)),
 
     // Hosted Media
-    financialDetails: new HostedMediaForm(entity.financialDetails, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.financialDetails'}),
-    presentation_deck: new HostedMediaForm(entity.presentation_deck, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.presentation_deck'}),
-    scenario: new HostedMediaForm(entity.scenario, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.scenario'}),
-    moodboard: new HostedMediaForm(entity.moodboard, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.moodboard'}),
-    notes: FormList.factory(entity.notes, (el, i) => new MovieNotesForm(el, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: `promotional.notes[${i}].ref` })),
-    salesPitch: new MovieSalesPitchForm(movieId, entity.salesPitch),
+    financialDetails: new StorageFileForm(entity.financialDetails),
+    presentation_deck: new StorageFileForm(entity.presentation_deck),
+    scenario: new StorageFileForm(entity.scenario),
+    moodboard: new StorageFileForm(entity.moodboard),
+    notes: FormList.factory(entity.notes, el => new MovieNoteForm(el)),
+    salesPitch: new MovieSalesPitchForm(entity.salesPitch),
 
     // Hosted Videos
-    videos: new MovieHostedVideosForm(movieId, entity.videos),
+    videos: new MovieVideosForm(entity.videos),
 
     // External Media
     clip_link: new FormControl(entity.clip_link, urlValidators),
@@ -676,8 +634,8 @@ function createMoviePromotionalElementsControls(movieId: string, promotionalElem
 export type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
-  constructor(movieId: string, promotionalElements?: MoviePromotionalElements) {
-    super(createMoviePromotionalElementsControls(movieId, promotionalElements));
+  constructor(promotionalElements?: MoviePromotionalElements) {
+    super(createMoviePromotionalElementsControls(promotionalElements));
   }
 
   get videos() {
@@ -689,21 +647,21 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
 //              NOTES
 // ------------------------------
 
-function createMovieNoteControls(note?: Partial<MovieNote>, metadata?: Partial<FileMetaData>) {
-  const entity = createMovieNote(note)
+function createMovieNoteControls(note?: Partial<MovieNote>) {
+  const entity = createStorageFile(note);
   return {
     role: new FormControl(entity.role),
     firstName: new FormControl(entity.firstName),
     lastName: new FormControl(entity.lastName),
-    ref: new HostedMediaForm(entity.ref, metadata)
-  }
+    storagePath: new FormControl(entity.storagePath),
+  };
 }
 
 export type MovieNotesControl = ReturnType<typeof createMovieNoteControls>
 
 export class MovieNotesForm extends FormEntity<MovieNotesControl> {
-  constructor(note?: Partial<MovieNote>, metadata?: Partial<FileMetaData>) {
-    super(createMovieNoteControls(note, metadata));
+  constructor(note?: Partial<MovieNote>) {
+    super(createMovieNoteControls(note));
   }
 }
 
@@ -711,19 +669,23 @@ export class MovieNotesForm extends FormEntity<MovieNotesControl> {
 //         SALES PITCH
 // ------------------------------
 
-function createMovieSalesPitchControl(movieId: string, pitch: Partial<MovieSalesPitch> = {}) {
-  const { description, ref } = createSalesPitch(pitch);
+function createMovieSalesPitchControl(pitch: Partial<MovieSalesPitch> = {}) {
+  const salesPitch = createSalesPitch(pitch);
   return {
-    description: new FormControl(description),
-    ref: new HostedMediaForm(ref, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: 'promotional.salesPitch.ref' }),
+    description: new FormControl(salesPitch.description ?? ''),
+    privacy: new FormControl(salesPitch.privacy),
+    collection: new FormControl(salesPitch.collection),
+    docId: new FormControl(salesPitch.docId),
+    field: new FormControl(salesPitch.field),
+    storagePath: new FormControl(salesPitch.storagePath),
   }
 }
 
 export type MovieSalesPitchControls = ReturnType<typeof createMovieSalesPitchControl>;
 
 export class MovieSalesPitchForm extends FormEntity<MovieSalesPitchControls, MovieSalesPitch> {
-  constructor(movieId: string, review?: Partial<MovieSalesPitch>) {
-    super(createMovieSalesPitchControl(movieId, review));
+  constructor(review?: Partial<MovieSalesPitch>) {
+    super(createMovieSalesPitchControl(review));
   }
 }
 
@@ -1038,44 +1000,46 @@ type MovieAudianceAndGoalsControl = ReturnType<typeof createAudianceAndGoalsForm
 //         HOSTED VIDEOS
 // ------------------------------
 
-function createMovieHostedVideoControl(hostedVideo: Partial<HostedVideo> = {}, metadata?: Partial<FileMetaData>) {
-  const { ref, jwPlayerId, title, description, type } = createHostedVideo(hostedVideo);
+function createMovieVideoControl(movieVideo: Partial<MovieVideo> = {}) {
+  const file = createStorageFile(movieVideo);
   return {
-    ref: new HostedMediaForm(ref, metadata),
-    jwPlayerId: new FormControl(jwPlayerId),
-    title: new FormControl(title),
-    description: new FormControl(description),
-    type: new FormControl(type),
+    privacy: new FormControl(file.privacy),
+    collection: new FormControl(file.collection),
+    docId: new FormControl(file.docId),
+    field: new FormControl(file.field),
+    storagePath: new FormControl(file.storagePath),
+    title: new FormControl(movieVideo?.title ?? ''),
+    description: new FormControl(movieVideo?.description ?? ''),
+    type: new FormControl(movieVideo?.type ?? ''),
   }
 }
 
-export type MovieHostedVideoControls = ReturnType<typeof createMovieHostedVideoControl>;
+export type MovieVideoControls = ReturnType<typeof createMovieVideoControl>;
 
-export class MovieHostedVideoForm extends FormEntity<MovieHostedVideoControls, HostedVideo> {
-  constructor(video?: Partial<HostedVideo>, metadata?: Partial<FileMetaData>) {
-    super(createMovieHostedVideoControl(video, metadata));
+export class MovieVideoForm extends FormEntity<MovieVideoControls, MovieVideo> {
+  constructor(video?: Partial<MovieVideo>) {
+    super(createMovieVideoControl(video));
   }
 
-  get ref() { return this.get('ref'); }
-  get jwPlayerId() { return this.get('jwPlayerId'); }
+  get storagePath() { return this.get('storagePath'); }
   get title() { return this.get('title'); }
   get description() { return this.get('description'); }
   get type() { return this.get('type'); }
 }
 
-function createMovieHostedVideosControl(movieId: string, videos: Partial<HostedVideos> = {}) {
-  const { screener, otherVideos } = createHostedVideos(videos);
+function createMovieVideosControl(videos: Partial<MovieVideos> = {}) {
+  const { screener, otherVideos } = createMovieVideos(videos);
   return {
-    screener: new MovieHostedVideoForm(screener, { privacy: 'protected', collection: 'movies', docId: movieId ?? '', field: 'promotional.videos.screener.ref' }),
-    otherVideos: FormList.factory(otherVideos, (otherVideo, i) => new MovieHostedVideoForm(otherVideo, { privacy: 'public', collection: 'movies', docId: movieId ?? '', field: `promotional.videos.otherVideos[${i}].ref` })),
+    screener: new MovieVideoForm(screener),
+    otherVideos: FormList.factory(otherVideos, (otherVideo, i) => new MovieVideoForm(otherVideo)),
   }
 }
 
-export type MovieHostedVideosControls = ReturnType<typeof createMovieHostedVideosControl>;
+export type MovieVideosControls = ReturnType<typeof createMovieVideosControl>;
 
-export class MovieHostedVideosForm extends FormEntity<MovieHostedVideosControls, HostedVideos> {
-  constructor(movieId: string, videos?: Partial<HostedVideos>) {
-    super(createMovieHostedVideosControl(movieId, videos));
+export class MovieVideosForm extends FormEntity<MovieVideosControls, MovieVideos> {
+  constructor(videos?: Partial<MovieVideos>) {
+    super(createMovieVideosControl(videos));
   }
 
 
@@ -1087,3 +1051,32 @@ export class MovieHostedVideosForm extends FormEntity<MovieHostedVideosControls,
     return this.get('screener');
   }
 }
+
+
+// ---------------------------------
+//        MOVIE NOTES
+// ---------------------------------
+
+export class MovieNoteForm extends FormEntity<MovieNoteControl> {
+  constructor(note?: Partial<MovieNote>) {
+    super(createMovieNoteFormControl(note));
+  }
+}
+
+function createMovieNoteFormControl(entity?: Partial<MovieNote>) {
+  const note = createMovieNote(entity);
+  return {
+    firstName: new FormControl(note.firstName),
+    lastName: new FormControl(note.lastName),
+    role: new FormControl(note.role),
+
+    privacy: new FormControl(note.privacy),
+    collection: new FormControl(note.collection),
+    docId: new FormControl(note.docId),
+    field: new FormControl(note.field),
+    storagePath: new FormControl(note.storagePath),
+  }
+}
+
+type MovieNoteControl = ReturnType<typeof createMovieNoteFormControl>;
+

@@ -1,5 +1,6 @@
 import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 type Timestamp = firebase.firestore.Timestamp;
 
@@ -13,7 +14,7 @@ export interface Meeting {
   organizerUid: string;
   description: string;
   attendees: Record<string, AttendeeStatus>;
-  files: string[];
+  files: StorageFile[];
   selectedFile: string;
   controls: Record<string, MeetingMediaControl>
 }

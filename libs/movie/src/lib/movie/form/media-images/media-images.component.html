@@ -7,7 +7,14 @@
       <h6 class="mat-caption">Promotional Images</h6>
       <ng-container *ngFor="let still of stillPhoto.controls; let i = index; trackBy: trackByFn">
         <article>
-          <image-uploader [storagePath]="movieId | ref: 'movie' : 'still'" ratio="still" [form]="still">
+          <image-uploader 
+            [meta]="['movies', 'still_photo', movieId]" 
+            ratio="still"
+            [queueIndex]="i | fileListIndex: stillPhoto.value"
+            [form]="still"
+            [formIndex]="i"
+            listenToChanges
+          >
             <h3 title>Stills</h3>
           </image-uploader>
           <span class="mat-caption">Please note that this document will be available for download on the

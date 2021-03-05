@@ -7,7 +7,8 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   styleUrls: ['./files.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilesViewComponent {
-  public org = this.query.getActive();
-  constructor(public query: OrganizationQuery) {}
+export class FilesViewComponent  {
+  org$ = this.orgQuery.selectActive();
+
+  constructor(private orgQuery: OrganizationQuery) {}
 }

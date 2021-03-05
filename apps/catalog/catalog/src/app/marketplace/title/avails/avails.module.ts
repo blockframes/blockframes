@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MarketplaceMovieAvailsComponent } from './avails.component';
-import { AvailsFilterModule } from '@blockframes/distribution-rights/components/avails-filter/avails-filter.module';
 import { MapModule } from '@blockframes/ui/map';
 import { RegionChipsAutocompleteModule } from '@blockframes/ui/form/region-chips-autocomplete/region-chips-autocomplete.module';
 import {  ToLabelModule } from '@blockframes/utils/pipes';
@@ -23,7 +22,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [MarketplaceMovieAvailsComponent],
   imports: [
     CommonModule,
-    AvailsFilterModule,
     FlexLayoutModule,
     ReactiveFormsModule,
     MapModule,

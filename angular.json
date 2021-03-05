@@ -214,21 +214,6 @@
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
-            },
-            "demo1": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-demo-1.ts"
-                },
-                {
-                  "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
-                }
-              ]
             }
           }
         },
@@ -269,13 +254,6 @@
             "color": true
           },
           "configurations": {
-            "demo1": {
-              "commands": [
-                "npx nx build backend-functions --configuration=demo1",
-                "npx npm run deploy:functions:config blockframes-demo-1",
-                "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=blockframes-demo-1 --force --only functions"
-              ]
-            },
             "staging": {
               "commands": [
                 "npx nx build backend-functions --configuration=staging",
@@ -515,24 +493,6 @@
                 }
               ],
               "serviceWorker": false
-            },
-            "demo1": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-demo-1.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "serviceWorker": false
             }
           }
         },
@@ -582,12 +542,6 @@
             "color": true
           },
           "configurations": {
-            "demo1": {
-              "commands": [
-                "npx nx build catalog --configuration=demo1",
-                "npx firebase deploy --project=blockframes-demo-1 --only hosting:catalog"
-              ]
-            },
             "staging": {
               "commands": [
                 "npx nx build catalog --configuration=staging",
@@ -652,6 +606,7 @@
             "polyfills": "apps/festival/festival/src/polyfills.ts",
             "tsConfig": "apps/festival/festival/tsconfig.app.json",
             "aot": true,
+            "sourceMap": true,
             "stylePreprocessorOptions": {
               "includePaths": ["styles"]
             },
@@ -681,7 +636,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -709,10 +663,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -738,10 +690,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -756,24 +706,6 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "serviceWorker": false
-            },
-            "demo1": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-demo-1.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "serviceWorker": false
             }
           }
@@ -868,12 +800,6 @@
             "color": true
           },
           "configurations": {
-            "demo1": {
-              "commands": [
-                "npx nx build festival --configuration=demo1",
-                "npx firebase deploy --project=blockframes-demo-1 --only hosting:festival"
-              ]
-            },
             "staging": {
               "commands": [
                 "npx nx build festival --configuration=staging",
@@ -1202,24 +1128,6 @@
                 }
               ],
               "serviceWorker": false
-            },
-            "demo1": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-demo-1.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "serviceWorker": false
             }
           }
         },
@@ -1266,12 +1174,6 @@
             "color": true
           },
           "configurations": {
-            "demo1": {
-              "commands": [
-                "npx nx build crm --configuration=demo1",
-                "npx firebase deploy --project=blockframes-demo-1 --only hosting:crm"
-              ]
-            },
             "staging": {
               "commands": [
                 "npx nx build crm --configuration=staging",
@@ -1477,22 +1379,6 @@
                   "with": "env/env.blockframes-staging.ts"
                 }
               ]
-            },
-            "demo1": {
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-demo-1.ts"
-                }
-              ]
             }
           }
         },
@@ -1543,12 +1429,6 @@
             "color": true
           },
           "configurations": {
-            "demo1": {
-              "commands": [
-                "npx nx build financiers --configuration=demo1",
-                "npx firebase deploy --project blockframes-demo-1 --only hosting:financiers"
-              ]
-            },
             "staging": {
               "commands": [
                 "npx nx build financiers --configuration=staging",
@@ -1677,6 +1557,34 @@
                 }
               ]
             },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes-staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
             "ci": {}
           }
         },
@@ -1714,6 +1622,10 @@
             ],
             "parallel": false,
             "color": true
+          },
+          "configurations": {
+            "production": {},
+            "staging": {}
           }
         }
       }

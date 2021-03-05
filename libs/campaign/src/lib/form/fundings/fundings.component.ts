@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -17,8 +17,8 @@ const columns = {
   styleUrls: ['./fundings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CampaignFormFundingsComponent implements OnInit {
-  storagePath: string;
+export class CampaignFormFundingsComponent {
+  movieId = this.route.snapshot.params.movieId;
   columns = columns;
   form = this.shell.getForm('campaign');
 
@@ -28,11 +28,6 @@ export class CampaignFormFundingsComponent implements OnInit {
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Financing plan')
-  }
-
-  ngOnInit() {
-    const { movieId } = this.route.snapshot.params;
-    this.storagePath = `campaigns/${movieId}/files.financingPlan/`;
   }
 
   get fundings() {

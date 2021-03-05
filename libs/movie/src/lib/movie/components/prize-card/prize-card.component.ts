@@ -3,6 +3,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Blockframes
 import { Prize } from '../../+state/movie.model'
+import { festival } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[prize] title-prize-card',
@@ -12,4 +13,5 @@ import { Prize } from '../../+state/movie.model'
 })
 export class PrizeCardComponent {
   @Input() prize: Prize;
+  public festival = festival;
 }

@@ -3,11 +3,12 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { MediaService } from '@blockframes/media/+state/media.service';
+import { MediaService } from '../../+state/media.service';
 import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
-import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
+import { ImageParameters } from '../../image/directives/imgix-helpers';
 
 import { toggleFullScreen } from '../../file/viewers/utils';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[ref] pdf-viewer',
@@ -19,10 +20,10 @@ export class PdfViewerComponent implements OnInit {
 
   fullScreen = false;
 
-  private _ref: string;
+  private _ref: StorageFile;
   get ref() { return this._ref; }
-  @Input() set ref(value: string) {
-    this._ref = value;
+  @Input() set ref(file: StorageFile) {
+    this._ref = file;
   }
 
   private _control: MeetingPdfControl;
@@ -76,8 +77,11 @@ export class PdfViewerComponent implements OnInit {
       const url = await this.mediaService.generateImgIxUrl(this.ref);
       const response = await fetch(url);
       const textResult = await response.text();
+
+      if (response.status !== 200) console.warn(`ERROR ${response.status} fetching the pdf:`, textResult);
+
       // this actually count the number of pages, the regex comes from stack overflow
-      const totalPages = textResult.match(/\/Type[\s]*\/Page[^s]/g).length;
+      const totalPages = textResult.match(/\/Type[\s]*\/Page[^s]/g)?.length ?? 0;
 
       this.control = { type: 'pdf', currentPage: 1, totalPages };
     }

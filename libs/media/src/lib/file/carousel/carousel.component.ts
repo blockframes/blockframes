@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { take } from 'rxjs/operators';
+
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+
+import { FilePickerComponent } from '../picker/picker.component';
 
 @Component({
   selector: '[files] file-carousel',
@@ -13,7 +15,7 @@ import { take } from 'rxjs/operators';
 export class FileCarouselComponent {
 
   /** Array of file path to display in the Carousel */
-  @Input() files: string[];
+  @Input() files: StorageFile[];
 
   /** Emit the file path that has been selected by the user */
   @Output() select = new EventEmitter<string>();

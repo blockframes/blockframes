@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import { PublicUser } from '@blockframes/user/types';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 export function getWatermark(email: string, firstName: string = '', lastName: string = '') {
   return `
@@ -37,8 +38,9 @@ export async function upsertWatermark(user: PublicUser, bucketName: string, stor
   await file.save(watermark, { metadata });
 
   const db = admin.firestore();
-  const doc = await db.collection('users').doc(user.uid);
-  await doc.update({ watermark: ref });
+  const doc = db.collection('users').doc(user.uid);
+  const storageFile = createStorageFile({ storagePath: ref, privacy: 'public', collection: 'users', field: 'watermark', docId: user.uid });
+  await doc.update({ watermark: storageFile });
 
   return file;
 }

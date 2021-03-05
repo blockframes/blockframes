@@ -8,9 +8,15 @@ import { CmsService, CmsParams } from '../cms.service'
 import { Subscription } from 'rxjs';
 import { sections as homeSection } from '../home';
 import { switchMap } from 'rxjs/operators';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 const templateSections = {
   home: (params: TemplateParams) => homeSection(params),
+}
+
+const mediaFields = {
+  banner: ['background', 'image'],
+  hero: ['background']
 }
 
 @Component({
@@ -46,7 +52,14 @@ export class TemplateComponent implements OnInit, OnDestroy {
       const factory = (section: Section) => sections[section._type];
       this.types = Object.keys(sections);
       this.schema = templateSchema(factory, template);
-      this.form = createForms(this.schema, template);
+
+      // quick fix waiting for lib to be updated. Don't let this too long (4 march 2021). Ask Francois for that
+      if (!this.form) {
+        this.form = createForms(this.schema, template);
+      } else {
+        this.form.reset(createForms(this.schema, template).value)
+      }
+
       this.cdr.markForCheck();
     });
   }
@@ -78,6 +91,27 @@ export class TemplateComponent implements OnInit, OnDestroy {
 
   save() {
     const params = this.route.snapshot.params as CmsParams;
-    this.service.save(this.form.value, params);
+    const value = this.updateMediaMetadata(this.form.value, params)
+    this.service.save(value, params);
+  }
+
+  updateMediaMetadata(value: CmsTemplate<Section>, params: CmsParams) {
+    const { app, page, template } = params;
+    const collection = ['cms', app, page].filter(v => !!v).join('/') as any;
+
+    value.sections.forEach((section, i) => {
+      const fields = mediaFields[section._type] ?? [];
+      for (const field of fields) {
+        section[field] = createStorageFile({
+          collection: collection,
+          docId: template,
+          field: `section[${i}].${field}`,
+          privacy: 'public',
+          storagePath: section[field].storagePath
+        });
+      }
+    });
+
+    return value;
   }
 }
