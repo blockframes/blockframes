@@ -21,11 +21,6 @@ const routes = [{
       pathMatch: 'full'
     },
     {
-      path: 'activity',
-      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule),
-      data: { animation: 0 }
-    },
-    {
       path: 'main',
       loadChildren: () => import('@blockframes/movie/dashboard/main/main.module').then(m => m.MovieViewMainModule),
       data: { animation: 1 }
