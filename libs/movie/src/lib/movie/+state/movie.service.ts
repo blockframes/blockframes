@@ -19,6 +19,8 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string): QueryFn => ref => ref.where('storeConfig.status', '==', 'accepted').where('orgIds', 'array-contains', orgId);
+export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
+export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.where('internalRef', '==', internalRef);
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -98,9 +100,9 @@ export class MovieService extends CollectionService<MovieState> {
    * Fetch a movie from its internal reference (example : AAA1)
    * @param internalRef
    */
-  public async getFromInternalRef(internalRef: string): Promise<Movie> {
-    const movies = await this.getValue(ref => ref.where('internalRef', '==', internalRef))
-
+  public async getFromInternalRef(internalRef: string, orgId?: string): Promise<Movie> {
+    const query = !!orgId ? fromOrgAndInternalRef(orgId, internalRef) : fromInternalRef(internalRef)
+    const movies = await this.getValue(query);
     return movies.length ? createMovie(movies[0]) : undefined;
   }
 
