@@ -9,6 +9,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { FileNameModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
 import { MatInputModule } from '@angular/material/input';
@@ -31,6 +33,8 @@ import { MatSelectModule } from '@angular/material/select';
     MaxLengthModule,
     FileUploaderModule,
     FileNameModule,
+    ToLabelModule,
+    StaticSelectModule,
 
     // Material
     MatFormFieldModule,
