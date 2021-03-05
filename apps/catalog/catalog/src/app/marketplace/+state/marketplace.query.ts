@@ -27,7 +27,7 @@ export class MarketplaceQuery extends QueryEntity<MarketplaceState> {
   /** Get the rights from a specific title in the cart */
   getTitleRights(titleId: string) {
     const titleCart = this.getEntity(titleId)
-    return (!!titleCart) ? titleCart.rights : [];
+    return (!!titleCart) ? titleCart : [];
   }
 
 }

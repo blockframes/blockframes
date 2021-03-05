@@ -1,6 +1,5 @@
 import {
   MovieStakeholders,
-  MovieLegalDocuments,
   BoxOffice,
   Prize,
   MoviePromotionalElements,
@@ -25,7 +24,6 @@ import {
   Movie,
   Credit,
   createMovie,
-  createMovieLegalDocuments,
   createTitle,
   createReleaseYear,
   createStoreConfig,
@@ -43,9 +41,7 @@ import {
 } from '../+state/movie.model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
-import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue, FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
-import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -57,48 +53,11 @@ import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
-// LEGAL DOCUMENTS
-
-function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
-  const { id, label, storagePath, language, country } = createLegalDocument(legalDocument);
-  return {
-    id: new FormControl(id),
-    label: new FormControl(label),
-    storagePath: new FormControl(storagePath),
-    language: new FormStaticValue<'languages'>(language, 'languages'),
-    country: new FormStaticValue<'territories'>(country, 'territories')
-  };
-}
-
-export type LegalDocumentControl = ReturnType<typeof createLegalDocumentControl>;
-
-export class LegalDocumentForm extends FormEntity<LegalDocumentControl, LegalDocument> {
-  constructor(legalDocument?: Partial<LegalDocument>) {
-    super(createLegalDocumentControl(legalDocument));
-  }
-}
-
-function createMovieLegalDocumentsControl(legalDocuments?: Partial<MovieLegalDocuments>) {
-  const entity = createMovieLegalDocuments(legalDocuments);
-  return {
-    chainOfTitles: FormList.factory(entity.chainOfTitles, el => new LegalDocumentForm(el)),
-  };
-}
-
-export type MovieLegalDocumentsControl = ReturnType<typeof createMovieLegalDocumentsControl>;
-
-export class MovieLegalDocumentsForm extends FormEntity<MovieLegalDocumentsControl, MovieLegalDocuments> {
-  constructor(legalDocuments?: Partial<MovieLegalDocuments>) {
-    super(createMovieLegalDocumentsControl(legalDocuments));
-  }
-}
-
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
   return {
     // Sections
     promotional: new MoviePromotionalElementsForm(entity.promotional),
-    documents: new MovieLegalDocumentsForm(entity.documents),
 
     // Root data
     audience: new AudienceAndGoalsForm(entity.audience),

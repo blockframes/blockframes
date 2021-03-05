@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin.form';
-import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { storeType, storeStatus, staticModel } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -13,7 +12,6 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
-import { DistributionRightDocumentWithDates } from '@blockframes/distribution-rights/+state/distribution-right.firestore';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
@@ -34,7 +32,6 @@ export class MovieComponent implements OnInit {
   public storeStatus = storeStatus;
   public staticConsts = staticModel;
   public app = app;
-  public rights: DistributionRightDocumentWithDates[] = [];
 
   public versionColumnsTable = {
     'id': { value: 'Id', disableSort: true },
@@ -56,7 +53,6 @@ export class MovieComponent implements OnInit {
     private permissionsService: PermissionsService,
     private eventService: EventService,
     private invitationService: InvitationService,
-    private distributionRightService: DistributionRightService,
     private contractService: ContractService,
     private campaignService: CampaignService,
     private route: ActivatedRoute,
@@ -71,8 +67,6 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
     this.movieAppAccessForm = new MovieAppAccessAdminForm(this.movie);
-
-    this.rights = await this.distributionRightService.getMovieDistributionRights(this.movieId);
 
     this.cdRef.markForCheck();
   }
@@ -173,10 +167,6 @@ export class MovieComponent implements OnInit {
       output.push(`${invitationsCount} invitations to events will be removed.`);
     }
 
-    if (this.rights.length) {
-      output.push(`${this.rights.length} distribution rights will be removed.`);
-    }
-
     const orgPromises = movie.orgIds.map(o => this.organizationService.getValue(ref => ref.where('id', '==', o)));
     const orgs = await Promise.all(orgPromises);
     const promises = orgs.flat().map(o => this.permissionsService.getDocumentPermissions(movie.id, o.id));
@@ -191,10 +181,6 @@ export class MovieComponent implements OnInit {
     }
 
     return output;
-  }
-
-  goToRights(right: DistributionRightDocumentWithDates) {
-    this.router.navigate([`/c/o/admin/panel/right/${right.id}/m/${this.movieId}`]);
   }
 
 }
