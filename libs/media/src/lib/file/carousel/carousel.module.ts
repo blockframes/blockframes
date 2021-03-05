@@ -8,7 +8,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
 import { FileCarouselComponent } from './carousel.component';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ImageModule } from '../../image/directives/image.module';
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 
 import { MatTooltipModule } from '@angular/material/tooltip';

@@ -7,6 +7,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { OrgAddressModule } from '../../pipes/org-address.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -32,6 +33,7 @@ import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe
     MatIconModule,
     MatRippleModule,
     OrgMoviesModule,
+    StorageFileModule,
   ]
 })
 export class OrganizationCardModule { }

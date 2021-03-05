@@ -1,117 +1,28 @@
 // Angular
-import { Injectable, Injector } from "@angular/core";
-import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { Injectable } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { UploadData, HostedMediaFormValue, isValidMetadata } from "./media.firestore";
+import { StorageFile } from "./media.firestore";
+import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 
 // Blockframes
-import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
-import { delay } from "@blockframes/utils/helpers";
-import { BehaviorStore } from '@blockframes/utils/behavior-store';
-import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 import { clamp } from '@blockframes/utils/utils';
-import { deconstructFilePath, tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
-import { AuthQuery } from "@blockframes/auth/+state";
-
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
-  private _tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
-
   private breakpoints = [600, 1024, 1440, 1920];
 
-  private overlayOptions = {
-    width: '500px',
-    panelClass: 'upload-widget',
-    positionStrategy: this.overlay.position().global().bottom('16px').left('16px')
-  }
-
-  public overlayRef: OverlayRef;
   private getMediaToken = this.functions.httpsCallable('getMediaToken');
 
   constructor(
-    private userQuery: AuthQuery,
-    private storage: AngularFireStorage,
     private functions: AngularFireFunctions,
-    private overlay: Overlay,
-    private db: AngularFirestore
   ) { }
 
-  async upload(uploadFiles: UploadData | UploadData[]) {
-    const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
-    /**
-     * @dev Every file goes into tmp dir.
-     * Then a backend functions performs a check on DB document to check if
-     * file have to be moved to correct folder or deleted.
-     */
-    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data, { customMetadata: file.metadata }));
-    this.addTasks(tasks);
-    (Promise as any).allSettled(tasks)
-      .then(() => delay(3000))
-      .then(() => this.detachWidget());
-    this.showWidget();
-  }
 
-  private addTasks(tasks: AngularFireUploadTask[]) {
-    const t = this._tasks.value;
-    t.push(...tasks);
-    this._tasks.value = t
-  }
 
-  private detachWidget() {
-    if (!this.overlayRef) return;
 
-    const canClose = this._tasks.value.every(task => task.task.snapshot.state === 'success');
-    if (canClose) {
-      this.overlayRef.detach();
-      delete this.overlayRef;
-      const tasks = this._tasks.value.filter(task => task.task.snapshot.state !== 'success');
-      this._tasks.value = tasks;
-    }
-  }
 
-  private async showWidget() {
-    if (!this.overlayRef) {
-      this.overlayRef = this.overlay.create(this.overlayOptions);
-      const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this._tasks }, { provide: 'db', useValue: this.db }] });
-      this.overlayRef.attach(instance);
-    }
-  }
-
-  uploadMedias(mediaForms: HostedMediaFormValue[]) {
-    mediaForms.forEach(mediaForm => {
-      if (!!mediaForm.blobOrFile) {
-
-        const isValid = isValidMetadata(mediaForm.metadata);
-        if (!isValid) {
-          console.error('Invalid File Metadata: upload of this file will be skipped!');
-          console.error(mediaForm);
-          return; // skip the current `forEach` iteration
-        }
-
-        // upload the new file
-        this.upload({
-          data: mediaForm.blobOrFile,
-          path: mediaForm.ref,
-          fileName: mediaForm.fileName,
-          metadata: {
-            uid: this.userQuery.userId,
-            privacy: mediaForm.metadata.privacy,
-            collection: mediaForm.metadata.collection,
-            docId: mediaForm.metadata.docId,
-            field: mediaForm.metadata.field,
-          },
-        });
-
-      }
-    });
-  }
 
   /**
    * This https callable method will check if current user asking for the media
@@ -121,27 +32,21 @@ export class MediaService {
    * @param ref (without "/protected")
    * @param parametersSet ImageParameters[]
    */
-  private async getProtectedMediaToken(ref: string, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
-    ref = !ref.startsWith('/') ? `/${ref}` : ref;
-    return this.getMediaToken({ ref, parametersSet, eventId }).toPromise();
+  private async getProtectedMediaToken(file: StorageFile, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
+    return this.getMediaToken({ file, parametersSet, eventId }).toPromise();
   }
 
-  async generateImageSrcset(ref: string, _parameters: ImageParameters): Promise<string> {
-    const refParts = ref.split('/');
-    const privacy = refParts.shift() as Privacy;
-    const params: ImageParameters[] = getImgSize(ref).map(size => ({ ..._parameters, w: size }));
+  async generateImageSrcset(file: StorageFile, _parameters: ImageParameters): Promise<string> {
+    const params: ImageParameters[] = getImgSize(file.storagePath).map(size => ({ ..._parameters, w: size }));
     let tokens: string[] = [];
 
-    if (privacies.includes(privacy)) {
-      ref = refParts.join('/');
-      if (privacy === 'protected') {
-        tokens = await this.getProtectedMediaToken(ref, params);
-      }
+    if (file.privacy === 'protected') {
+      tokens = await this.getProtectedMediaToken(file, params);
     }
 
     const urls = params.map((param, index) => {
       if (tokens[index]) { param.s = tokens[index] };
-      return `${getImgIxResourceUrl(ref, param)} ${param.w}w`;
+      return `${getImgIxResourceUrl(file, param)} ${param.w}w`;
     })
 
     return urls.join(', ');
@@ -152,26 +57,16 @@ export class MediaService {
    * @param ref string
    * @param parameters ImageParameters
    */
-  async generateImgIxUrl(ref: string, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
-    if (!ref) {
-      return '';
+  async generateImgIxUrl(file: StorageFile, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
+      if (file.privacy === 'protected') {
+      const [token] = await this.getProtectedMediaToken(file, [parameters], eventId);
+      parameters.s = token;
     }
 
-    const refParts = ref.split('/');
-    const privacy = refParts.shift() as Privacy;
-
-    if (privacies.includes(privacy)) {
-      ref = refParts.join('/');
-      if (privacy === 'protected') {
-        const [token] = await this.getProtectedMediaToken(ref, [parameters], eventId);
-        parameters.s = token;
-      }
-    }
-
-    return getImgIxResourceUrl(ref, parameters);
+    return getImgIxResourceUrl(file, parameters);
   }
 
-  generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
+  generateBackgroundImageUrl(file: StorageFile, p: ImageParameters): Promise<string> {
 
     // default client width
     let clientWidth = 1024;
@@ -184,7 +79,7 @@ export class MediaService {
     // to prevent that we use Infinity to pick clientWidth if parameters.width is undefined
     p.w = Math.min(clientWidth, p.w || Infinity);
 
-    return this.generateImgIxUrl(ref, p);
+    return this.generateImgIxUrl(file, p);
   }
 
 }

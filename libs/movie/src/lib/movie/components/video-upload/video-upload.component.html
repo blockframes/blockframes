@@ -10,16 +10,17 @@
       <input matInput formControlName="description" >
     </mat-form-field>
     <file-uploader
-      [form]="form.screener.get('ref')"
-      [storagePath]="getPath('screener')"
-      allowedFileType="video"
-      [filePrivacy]="filePrivacy">
+      [form]="form.screener"
+      [meta]="['movies', 'screener', movie.id]"
+      accept="video"
+      listenToChanges
+    >
         <h3 title>Upload Screener</h3>
     </file-uploader>
   </div>
 
   <h2>Upload other videos</h2>
-  <ng-container *ngFor="let otherVideo of form.otherVideos.controls">
+  <ng-container *ngFor="let otherVideo of form.otherVideos.controls; let index = index">
     <article [formGroup]="otherVideo" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label>Video title</mat-label>
@@ -36,10 +37,12 @@
         </mat-select>
       </mat-form-field>
       <file-uploader
-        [form]="otherVideo.get('ref')"
-        [storagePath]="getPath('otherVideos')"
-        allowedFileType="video"
-        [filePrivacy]="filePrivacy">
+        [form]="otherVideo"
+        [meta]="['movies', 'otherVideos', movie.id]"
+        [formIndex]="index"
+        accept="video"
+        listenToChanges
+      >
           <h3 title>Upload Video</h3>
       </file-uploader>
     </article>

@@ -1,23 +1,29 @@
 ﻿import { TestBed } from '@angular/core/testing';
-import { Overlay } from '@angular/cdk/overlay';
 import { MediaService } from './media.service';
-import { UploadData } from "./media.firestore";
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorage } from "@angular/fire/storage";
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/testing';
 import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
+import { UploadData } from './media.model';
+import { createStorageFile } from './media.firestore';
 
 describe('Media Service Test Suite', () => {
   let service: MediaService;
   let db: AngularFirestore;
   let storage: AngularFireStorage;
+
   const TESTDATA: UploadData = {
-    metadata: null,
-    path: 'unit-test/',
-    data: null,
-    fileName: 'test.tst'
+    file: undefined, // insert blob or file
+    fileName: 'test.tst',
+    metadata: {
+      uid: '',
+      collection: 'users',
+      docId: '',
+      field: '',
+      privacy: 'public'
+    }
   };
 
   beforeEach(async () => {
@@ -28,14 +34,6 @@ describe('Media Service Test Suite', () => {
       ],
       providers: [
         MediaService,
-        {
-          provide: AngularFireStorage, useFactory: () => ({
-            upload: jest.fn()
-        })},
-        { provide: Overlay, useFactory: () => ({
-            create: () => ({attach: _ => ({}), detach: _ => ({})}),
-            position: () => ({ global: () => ({ bottom: () => ({ left: () => true }) }) })
-        })},
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
@@ -50,20 +48,6 @@ describe('Media Service Test Suite', () => {
     expect(service).toBeTruthy();
   })
 
-  it('Upload a blob & verify storage upload is invoked', async () => {
-    TESTDATA.data = new Blob([JSON.stringify({ blockframes: 'movies' })],
-                              { type: 'application/json' });
-    await service.upload(TESTDATA);
-    expect(storage.upload).toHaveBeenCalled();
-  });
-
-  it('Upload a file & verify storage upload is invoked', async () => {
-    TESTDATA.data = new File([JSON.stringify({ blockframes: 'movies' })],
-                              'test');
-    await service.upload(TESTDATA);
-    expect(storage.upload).toHaveBeenCalled();
-  });
-
   it('Verify generated ImgIx URL', async () => {
     const imgParam: ImageParameters = {
       auto: 'format', fit: 'facearea', w: 123, h: 321, page: 99,
@@ -71,13 +55,27 @@ describe('Media Service Test Suite', () => {
     }
     const query = formatParameters(imgParam);
     const expURL = `https://${firebase().projectId}-protected.imgix.net/test?${query}`;
-    const genURL = await service.generateImgIxUrl('test', imgParam)
+    const storageFile = createStorageFile({
+      storagePath: 'test',
+      collection: TESTDATA.metadata.collection,
+      docId: TESTDATA.metadata.docId,
+      field: TESTDATA.metadata.field,
+      privacy: TESTDATA.metadata.privacy
+    })
+    const genURL = await service.generateImgIxUrl(storageFile, imgParam);
     expect(genURL).toBe(expURL);
   });
 
   it('Verify generated background ImgIx URL', async () => {
+    const storageFile = createStorageFile({
+      storagePath: 'test',
+      collection: TESTDATA.metadata.collection,
+      docId: TESTDATA.metadata.docId,
+      field: TESTDATA.metadata.field,
+      privacy: TESTDATA.metadata.privacy
+    })
     const expURL = `https://${firebase().projectId}.imgix.net/test?w=1024`;
-    const genURL = await service.generateBackgroundImageUrl('test', {})
+    const genURL = await service.generateBackgroundImageUrl(storageFile, {});
     expect(genURL).toBe(expURL);
   });
 });
