@@ -5,12 +5,13 @@ import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
-  if (typeof data.storagePath === 'object') {
-    data.storagePath = ''
-    console.log(`Invalid value in storagePath for : ${data.docId} ${data.collection}`);
-    return data;
-  }
   if (!!data.storagePath) {
+    if (typeof data.storagePath === 'object') {
+      console.log(data);
+      data.storagePath = ''
+      console.log(`Invalid value in storagePath for : ${data.docId} ${data.collection}`);
+      return data;
+    }
     // Removing privacy prefix
     const elements = data.storagePath.split('/');
     if (privacies.some(privacy => privacy === elements[0])) {
