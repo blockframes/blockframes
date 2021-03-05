@@ -7,7 +7,6 @@ function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
   if (!!data.storagePath) {
     if (typeof data.storagePath === 'object') {
-      console.log(data);
       data.storagePath = ''
       console.log(`Invalid value in storagePath for : ${data.docId} ${data.collection}`);
       return data;
@@ -188,7 +187,7 @@ export async function upgrade(db: Firestore) {
   });
 
   // INVITATION
-  /*const invitations = await db.collection('invitations').get();
+  const invitations = await db.collection('invitations').get();
   await runChunks(invitations.docs, async (invitationDoc) => {
     const data = invitationDoc.data();
 
@@ -225,7 +224,7 @@ export async function upgrade(db: Firestore) {
     });
 
     await invitationDoc.ref.set(data);
-  });*/
+  });
 
   // CMS
   const cms = await db.collection('cms/festival/home').get();
