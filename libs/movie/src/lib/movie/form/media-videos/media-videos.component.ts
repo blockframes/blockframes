@@ -22,8 +22,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
 
-  videoTypes = Object.keys(hostedVideoTypes);
-
   private sub: Subscription;
 
   constructor(
