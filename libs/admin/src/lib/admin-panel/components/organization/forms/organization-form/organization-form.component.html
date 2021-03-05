@@ -30,11 +30,11 @@
     </article>
 
     <!-- Company Logo -->
-    <article *ngIf="!disableCropper" fxFlex>
+    <article *ngIf="!disableCropper && !!orgId" fxFlex>
       <h2>Company Logo</h2>
       <h5>Upload company Logo</h5>
 
-      <image-uploader ratio="square" [storagePath]="storagePath" [form]="form.get('logo')">
+      <image-uploader ratio="square" [form]="form.get('logo')" [meta]="['orgs', 'logo', orgId]" listenToChanges>
         <h3 title>Logo</h3>
       </image-uploader>
     </article>

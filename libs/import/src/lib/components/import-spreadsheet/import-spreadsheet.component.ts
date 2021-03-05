@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -6,8 +6,9 @@ import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { Subscription } from 'rxjs';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -27,7 +28,9 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   public isUserBlockframesAdmin = false;
   public pageTitle = 'Import multiple titles at once';
 
-  public excelForm = new HostedMediaForm(); // TODO issue#4002
+  public excelForm = new StorageFileForm();
+
+  @ViewChild('filePicker') filePicker: ElementRef<HTMLInputElement>;
 
   private sub: Subscription;
   private fileTypeSub: Subscription;
@@ -38,6 +41,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     private authQuery: AuthQuery,
     private cdRef: ChangeDetectorRef,
     private routerQuery: RouterQuery,
+    private snackBar: MatSnackBar,
   ) {
     this.fileType.setValue('movies');
   }
@@ -69,7 +73,24 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     this.fileTypeSub.unsubscribe();
   }
 
-  importSpreadsheet(blob: Blob) {
+  importSpreadsheet(files: FileList | File) {
+
+    let file: File;
+
+    if ('item' in files) { // FileList
+      if (!files.item(0)) {
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        return;
+      }
+      file = files.item(0);
+    } else if (!files) { // No files
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        return;
+    } else { // Single file
+      file = files;
+    }
+    this.filePicker.nativeElement.value = null;
+
     let sheetRange: string;
     if (this.fileType.value === 'movies') {
       sheetRange = 'A14:BZ100';
@@ -87,7 +108,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
       this.sheets = importSpreadsheet(buffer, sheetRange);
       this.cdRef.markForCheck();
     })
-    reader.readAsArrayBuffer(blob);
+    reader.readAsArrayBuffer(file);
   }
 
   next(): void {

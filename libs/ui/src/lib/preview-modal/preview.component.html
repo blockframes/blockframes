@@ -6,7 +6,7 @@
 
 <ng-template #dialogTemplate let-ref>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <ng-container [ngSwitch]="ref | fileType">
+    <ng-container [ngSwitch]="ref.storagePath | fileType">
 
       <ng-container *ngSwitchCase="'image'">
         <img [ref]="ref" asset="empty_banner.webp"/>

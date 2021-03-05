@@ -5,11 +5,12 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
-import { MediaService } from "@blockframes/media/+state/media.service";
-import { ImageParameters } from '@blockframes/media/image/directives/imgix-helpers';
+import { MediaService } from "../../+state/media.service";
+import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { loadJWPlayerScript } from "@blockframes/utils/utils";
 import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen  } from '../../file/viewers/utils';
+import { StorageVideo } from "@blockframes/media/+state/media.firestore";
 
 declare const jwplayer: any;
 
@@ -34,11 +35,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   public loading$ = new BehaviorSubject(true);
 
-  private _ref: string;
+  private _ref: StorageVideo;
   get ref() { return this._ref; }
-  @Input() set ref(value: string) {
+  @Input() set ref(value: StorageVideo) {
     // if the video file has changed
-    if (!!value && this.ref !== value) {
+    if (!!value && this.ref?.storagePath !== value.storagePath) {
       this.resetPlayerState();
       this._ref = value;
       this.initPlayer();
@@ -49,11 +50,21 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   private _control: MeetingVideoControl;
   get control() { return this._control; }
   @Input() set control(value: MeetingVideoControl) {
-    this._control = value;
-    this.updatePlayer();
+
+    const controlChange = this.control?.isPlaying !== value.isPlaying
+      || this.control.position !== value.position;
+
+    if (!!value && controlChange) {
+      this._control = value;
+      this.updatePlayer();
+    }
   }
 
-  @Input() eventId: string;
+  private _eventId: string;
+  get eventId() { return this._eventId; }
+  @Input() set eventId(value: string) {
+    this._eventId = value;
+  }
 
   // in order to have several player displayed in the same page
   // we need to randomize the html id,
@@ -80,7 +91,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   async initPlayer() {
     try {
       const privateVideo = this.functions.httpsCallable('privateVideo');
-      const { error, result } = await privateVideo({ eventId: this.eventId, ref: this.ref }).toPromise();
+      const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref }).toPromise();
 
       if (!!error) {
         // if error is set, result will contain the error message
@@ -91,7 +102,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
           fit: 'crop',
         };
         const watermarkRef = this.authQuery.user.watermark;
-        if (!watermarkRef) {
+        if (!watermarkRef.storagePath) {
           throw new Error('We cannot load video without watermark.');
         }
         const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
