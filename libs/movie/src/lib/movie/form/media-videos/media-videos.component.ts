@@ -2,7 +2,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 
-import { hostedVideoTypes } from '@blockframes/utils/static-model/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 import { MovieFormShellComponent } from '../shell/shell.component';
@@ -21,9 +20,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
-
-  allowedFilesTypes = allowedFiles.video.mime;
-  allowedFilesExtensions =  allowedFiles.video.extension;
 
   private sub: Subscription;
 
