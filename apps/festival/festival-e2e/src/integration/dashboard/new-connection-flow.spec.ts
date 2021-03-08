@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
+import { AuthIdentityPage, AuthLoginPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
 import { clearDataAndPrepareTest, acceptCookie } from "@blockframes/e2e/utils";
 import { LandingPage } from "../../support/pages/landing"
@@ -16,21 +16,44 @@ const org = orgsFixture.getByID(ORG.Xara);
 describe('New user registers', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
-    const p1 = new LandingPage();
-    p1.clickSignup();
   })
 
   it('A new user creates its account and a new organization', () => {
-    const p1 = new AuthIdentityPage();
+    const p1 = new LandingPage();
+    p1.clickSignup();
+    const p2 = new AuthIdentityPage();
     acceptCookie();
-    p1.fillUserInformations(user);
-    const p2 = new OrganizationLiteFormPage();
-    p2.createNewOrg();
-    p2.fillOrganizationInformation();
-    p2.chooseMarketplaceAccess();
-    p1.fillPassword();
-    p1.clickTermsAndCondition();
-    p1.clickPrivacyPolicy();
-    p1.submitCreationOrg();
-  })
+    p2.fillUserInformations(user);
+    const p3 = new OrganizationLiteFormPage();
+    p3.createNewOrg();
+    p3.fillOrganizationInformation();
+    p3.chooseMarketplaceAccess();
+    p2.fillPassword();
+    p2.clickTermsAndCondition();
+    p2.clickPrivacyPolicy();
+    p2.submitCreationOrg();
+  });
+
+  it.only('A new user creates its account and join an org', () => {
+    const p1 = new LandingPage();
+    p1.clickSignup();
+    const p2 = new AuthIdentityPage();
+    acceptCookie();
+    p2.fillUserInformations(user);
+    const p3 = new OrganizationLiteFormPage();
+    p3.joinExistingOrg();
+    p2.fillPassword();
+    p2.clickTermsAndCondition();
+    p2.clickPrivacyPolicy();
+    p2.submitJoinOrg();
+  });
+
+  it('An user connects to the app', () => {
+    const p1 = new LandingPage();
+    p1.clickLogin();
+    const p2 = new AuthLoginPage();
+    p2.fillSignin(user);
+    p2.clickSignIn();
+  });
+
 })

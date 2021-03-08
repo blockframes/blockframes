@@ -1,10 +1,12 @@
 /// <reference types="cypress" />
 import { User } from '../../utils/type';
 import { OrganizationCreatePendingPage, OrganizationJoinPendingPage } from '../organization';
+import { SEC } from '../../utils/env';
 
 export default class AuthIdentityPage {
 
   constructor() {
+    cy.get('auth-identity', { timeout: 60 * SEC });
   }
 
   public clickTermsAndCondition() {
@@ -17,7 +19,7 @@ export default class AuthIdentityPage {
 
   public fillUserInformations(user: Partial<User>) {
     const name = user.email.split('@')[0];
-    cy.get('input[test-id="email"]').type('cmandonnet+e2etest@cascade8.com');
+    cy.get('input[test-id="email"]').type('cmandonnet+e2etest1-2@cascade8.com');
     cy.get('input[formControlName="firstName"]').type(name);
     cy.get('input[formControlName="lastName"]').type(name);
   }

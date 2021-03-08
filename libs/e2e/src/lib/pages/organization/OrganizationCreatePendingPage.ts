@@ -15,11 +15,6 @@ export default class OrganizationCreatePendingPage {
     });
   }
 
-  public fillName(name: string) {
-    cy.get('organization-form input[test-id=name]', {timeout: 3 * SEC})
-      .type(name);
-  }
-
   // Set the organization create form
   public testOrgForm(org: Organization) {
     cy.log("OrganizationCreatePage: Test all form fields");

@@ -1,5 +1,5 @@
 // import OrganizationCreatePage from './OrganizationCreatePage';
-// import { SEC } from '../../utils/env';
+import { SEC } from '../../utils/env';
 
 export default class OrganizationLiteFormPage {
   constructor() {
@@ -29,13 +29,13 @@ export default class OrganizationLiteFormPage {
   // }
 
   public createNewOrg() {
-    cy.get('algolia-autocomplete').type('newOrganization');
+    cy.get('algolia-autocomplete').type('newOrganization1');
     cy.get('mat-option[test-id="createNewOrgOption"]').click();
   }
 
   public joinExistingOrg() {
-    cy.get('algolia-autocomplete').type('newOrganization');
-    cy.get('mat-option [value="newOrganization"]').click({force: true});
+    cy.get('algolia-autocomplete').type('newOrganization1');
+    cy.get('mat-option').wait(3 * SEC).first().click({force: true});
   }
 
   public fillOrganizationInformation() {
@@ -53,6 +53,11 @@ export default class OrganizationLiteFormPage {
   public chooseMarketplaceAccess() {
     cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').find;
     cy.get('mat-button-toggle[value="marketplace"]').click();
+  }
+
+  public verifyInformation() {
+    cy.get('organization-lite-form mat-select[test-id="activity"]').contains('Actor');
+    // cy.get('form-country input[test-id="address-country"]').contains();
   }
 
 }

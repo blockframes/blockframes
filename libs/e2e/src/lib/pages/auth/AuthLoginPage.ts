@@ -1,5 +1,5 @@
 import { User } from '../../utils/type';
-import { OrganizationHomePage } from '../organization';
+// import { OrganizationHomePage } from '../organization';
 import { SEC } from '../../utils/env';
 
 export default class AuthLoginPage {
