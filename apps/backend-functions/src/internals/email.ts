@@ -12,7 +12,8 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 
 const substitutions = {
   groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
-  preferenceUnsubscribe: "<%asm_preferences_raw_url%>"
+  preferenceUnsubscribe: "<%asm_preferences_raw_url%>",
+  notificationPage: "/c/o/account/profile/view/notifications"
 };
 
 const criticalsEmailsGroupId = unsubscribeGroupIds.criticalsEmails;
@@ -48,6 +49,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   const appLogoLink = appLogo[app];
   const appLink = applicationUrl[app];
   const appMailSettings: AppMailSetting = { description: appText, logo: appLogoLink, name: label, url: appLink }
+
   const msg: MailDataRequired = {
     from,
     to,
