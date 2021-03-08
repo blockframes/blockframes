@@ -1,7 +1,7 @@
 import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { App } from "../apps";
 import { format } from "date-fns";
-import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
+import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
 
 export interface EmailRequest {
   to: string;
@@ -29,7 +29,8 @@ export interface EventEmailData {
   id: string,
   title: string,
   start: string,
-  end: string
+  end: string,
+  type: EventTypes
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -81,6 +82,7 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     id: event?.id || '',
     title: event?.title || '',
     start: eventStart,
-    end: eventEnd
+    end: eventEnd,
+    type: event?.type
   }
 }

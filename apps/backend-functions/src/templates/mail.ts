@@ -162,6 +162,7 @@ export function requestToJoinOrgDeclined(toUser: PublicUser, orgName: string): E
 /** Send email to org admin to inform him that an user has left his org */
 export function userLeftYourOrganization(admin: PublicUser, userRemoved: PublicUser ): EmailTemplateRequest {
   const data = {
+    adminFirstName: admin.firstName,
     userFirstName: userRemoved.firstName,
     userLastName: userRemoved.lastName,
     userEmail: userRemoved.email
@@ -240,10 +241,17 @@ export function requestToAttendEventFromUser(
 }
 
 /** Generate an email to inform users their request to attend an event has been sent */
-export function requestToAttendEventFromUserSent(toUser: PublicUser, event: EventEmailData, organizerOrgName: string): EmailTemplateRequest {
+export function requestToAttendEventFromUserSent(
+  toUser: PublicUser,
+  event: EventEmailData,
+  organizerOrgName: string,
+  pageURL: string = appUrl.market,
+): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     event,
+    eventViewUrl: `${pageURL}/c/o/marketplace/event/${event.id}`,
+    sessionUrl: `${pageURL}/c/o/marketplace/event/${event.id}/session`,
     organizerOrgName
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.sent, data };
@@ -263,7 +271,7 @@ export function requestToAttendEventFromUserAccepted(
     eventName: eventData.title,
     eventStartDate: eventData.start,
     eventEndDate: eventData.end,
-    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
+    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}/session`
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
