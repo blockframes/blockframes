@@ -55,7 +55,7 @@ const tables = [
 ];
 
 @Component({
-  selector: '[form] user-notifications-form',
+  selector: '[form] auth-notifications-form',
   templateUrl: './notifications-form.component.html',
   styleUrls: ['./notifications-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
