@@ -6,13 +6,13 @@
 import * as admin from 'firebase-admin';
 import { InvitationDocument, OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
-import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { getDocument } from '@blockframes/firebase-utils';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 export { getDocument };
 
@@ -20,7 +20,7 @@ export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
-    logo: org.logo ?? '',
+    logo: createStorageFile(org.logo),
     activity: org.activity ?? null,
   }
 }
@@ -38,7 +38,7 @@ export function createPublicUserDocument(user: any = {}) {
   return {
     uid: user.uid,
     email: user.email,
-    avatar: user.avatar ?? '',
+    avatar: createStorageFile(user.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     orgId: user.orgId ?? ''
@@ -56,16 +56,6 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}):
 }
 
 /**
- * Gets all the organizations from contract.partyIds
- * @param contract
- * @returns the organizations that are in the contract
- */
-export async function getOrganizationsOfContract(contract: ContractDocument): Promise<OrganizationDocument[]> {
-  const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`));
-  return Promise.all(promises);
-}
-
-/**
  * Gets all the organizations of a movie document
  * @param movieId
  * @returns the organizations that have movie id in organization.movieIds
@@ -77,17 +67,6 @@ export async function getOrganizationsOfMovie(movieId: string): Promise<Organiza
   const promises = orgIds.map(id => db.doc(`orgs/${id}`).get())
   const orgs = await Promise.all(promises);
   return orgs.map((orgDoc: any) => orgDoc.data())
-}
-
-/** Get the number of elements in a firestore collection */
-export function getCount(collection: string): Promise<number> {
-  const db = admin.firestore();
-  // TODO: implement counters to make this function scalable. => ISSUE#646
-  // relevant docs: https://firebase.google.com/docs/firestore/solutions/counters
-  return db
-    .collection(collection)
-    .get()
-    .then(col => col.size);
 }
 
 /** Retrieve the list of superAdmins and admins of an organization */

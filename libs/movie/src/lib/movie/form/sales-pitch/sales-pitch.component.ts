@@ -10,12 +10,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormSalesPitchComponent {
+  movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
 
   constructor(
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService,
+    private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Sales Pitch')
   }
@@ -23,10 +24,4 @@ export class MovieFormSalesPitchComponent {
   get salesPitch() {
     return this.form.promotional.get('salesPitch');
   }
-
-  public getPath() {
-    const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.salesPitch/`;
-  }
-
 }

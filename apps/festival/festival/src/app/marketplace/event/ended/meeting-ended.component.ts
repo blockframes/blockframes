@@ -4,10 +4,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
-import { UserService } from '@blockframes/user/+state';
+import { UserService, User } from '@blockframes/user/+state';
 import { Event, EventQuery } from '@blockframes/event/+state';
 import { Meeting } from '@blockframes/event/+state/event.firestore';
-import { User } from '@sentry/browser';
 
 @Component({
   selector: 'festival-event-meeting-session-ended',

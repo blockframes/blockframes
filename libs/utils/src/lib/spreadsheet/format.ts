@@ -1,4 +1,3 @@
-import { createDistributionRight } from "@blockframes/distribution-rights/+state/distribution-right.model";
 import {
   createBoxOffice,
   createMovieOriginalRelease,
@@ -11,7 +10,6 @@ import {
 import { MovieImportState } from "libs/import/src/lib/import-utils";
 import { createCredit, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
-import { TerritoryValue } from "../static-model";
 import { Scope } from "../static-model/static-model";
 
 const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/;
@@ -400,56 +398,4 @@ export function formatAvailableLanguages(versions: { language: string, dubbed: s
       });
     }
   });
-}
-
-export function formatDistributionRights(territories: string, territoriesExcluded: string, state: MovieImportState) {
-  // Here we need to create 'lite' version of distribution deals with only the reserved territories.
-  // This feature is used on festival app.
-  const separator = ';';
-  const distributionRight = createDistributionRight();
-  let hasData = false;
-  // TERRITORIES
-  if (territories) {
-    hasData = true;
-    distributionRight.territory = [];
-    territories.split(separator).forEach((c: TerritoryValue) => {
-      const territory = getKeyIfExists('territories', c);
-      if (territory) {
-        distributionRight.territory.push(territory);
-      } else {
-        state.errors.push({
-          type: 'error',
-          field: 'territories',
-          name: 'Territories sold',
-          reason: `${c} not found in territories list`,
-          hint: 'Edit corresponding sheet field.'
-        });
-      }
-    });
-  }
-
-  // TERRITORIES EXCLUDED
-  if (territoriesExcluded) {
-    hasData = true;
-    distributionRight.territoryExcluded = [];
-    territoriesExcluded.split(separator).forEach((c: TerritoryValue) => {
-      const territory = getKeyIfExists('territories', c);
-      if (territory) {
-        distributionRight.territoryExcluded.push(territory);
-      } else {
-        state.errors.push({
-          type: 'error',
-          field: 'territories excluded',
-          name: 'Territories excluded',
-          reason: `${c} not found in territories list`,
-          hint: 'Edit corresponding sheet field.'
-        });
-      }
-    });
-  }
-
-  if (hasData) {
-    // We keep it for save in the next component
-    state.distributionRights = [distributionRight];
-  }
 }

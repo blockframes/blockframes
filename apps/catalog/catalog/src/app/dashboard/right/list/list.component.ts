@@ -1,8 +1,7 @@
 import { Intercom } from 'ng-intercom';
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { ContractQuery, ContractService, Contract } from '@blockframes/contract/contract/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
@@ -26,9 +25,7 @@ export class RightListComponent {
 
   constructor(
     @Optional() private intercom: Intercom,
-    private orgQuery: OrganizationQuery,
     private query: ContractQuery,
-    private contractService: ContractService,
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,

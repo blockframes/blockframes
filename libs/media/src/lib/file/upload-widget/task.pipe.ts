@@ -6,6 +6,28 @@ import { UploadTaskSnapshot } from '@angular/fire/storage/interfaces';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+export function getTaskStateObservable(task: AngularFireUploadTask): Observable<string> {
+
+  return new Observable(subscriber => {
+    let state = '';
+    const progress = (snap: UploadTaskSnapshot) => {
+      if (snap.state !== state) {
+        state = snap.state;
+        subscriber.next(snap.state);
+      }
+      if (snap.bytesTransferred === snap.totalBytes) {
+        subscriber.next('success');
+        subscriber.complete();
+      }
+    }
+    const error = () => {
+      subscriber.next('error');
+      subscriber.complete();
+    }
+    task.task.on('state_changed', progress, error);
+  })
+}
+
 @Pipe({
   name: 'progress'
 })
@@ -22,24 +44,7 @@ export class TaskProgressPipe implements PipeTransform {
 })
 export class TaskStatePipe implements PipeTransform {
   transform(task: AngularFireUploadTask): Observable<string> {
-    return new Observable(subscriber => {
-      let state = '';
-      const progress = (snap: UploadTaskSnapshot) => {
-        if (snap.state !== state) {
-          state = snap.state;
-          subscriber.next(snap.state);
-        }
-        if (snap.bytesTransferred === snap.totalBytes) {
-          subscriber.next('success');
-          subscriber.complete();
-        }
-      }
-      const error = () => {
-        subscriber.next('error');
-        subscriber.complete();
-      }
-      task.task.on('state_changed', progress, error);
-    })
+    return getTaskStateObservable(task);
   }
 }
 

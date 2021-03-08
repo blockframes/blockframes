@@ -1,213 +1,157 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit } from '@angular/core';
 
 // Blockframes
-import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { Organization } from '@blockframes/organization/+state/organization.model';
-import { fromOrg, MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
-import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
-import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { sortMovieBy } from '@blockframes/utils/helpers';
-
-// Material
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 // File Explorer
-import { FileExplorerCropperDialogComponent } from './cropper-dialog/cropper-dialog.component';
-import { FileExplorerUploaderDialogComponent } from './uploader-dialog/uploader-dialog.component';
-import {
-  createMovieFileStructure,
-  createOrgFileStructure,
-  Directory,
-  getCollection,
-  getFormList,
-  getId,
-  isHostedMediaForm,
-  isHostedMediaWithMetadataForm,
-  MediaFormTypes,
-  SubDirectoryFile,
-  SubDirectoryImage
-} from './explorer.model';
+import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 
 // RxJs
-import { Subscription } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
+import { Organization } from '@blockframes/organization/+state';
+import { FileUploaderService, MediaService } from '@blockframes/media/+state';
+import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
+import { FilePreviewComponent } from '../preview/preview.component';
+import { MatDialog } from '@angular/material/dialog';
+import { getFileMetadata } from '@blockframes/media/+state/static-files';
+
+function getDir(root: Directory, path: string) {
+  return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
+}
+
+/**
+ * Create crumbs path based on the current path
+ * "titles/:id/poster" -> ["tiles", "titles/:id", "titles/:id/poster"]
+ */
+export function getCrumbs(path: string) {
+  const crumbs = [];
+  path.split('/').filter(v => !!v).forEach((segment, i) => {
+    const previous = crumbs[i - 1] ? `${crumbs[i - 1]}/` : '';
+    crumbs.push(`${previous}${segment}`);
+  });
+  return crumbs;
+}
+
+
 
 @Component({
-  selector: '[org] file-explorer',
+  selector: 'file-explorer',
   templateUrl: 'explorer.component.html',
   styleUrls: ['./explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileExplorerComponent implements OnInit, OnDestroy {
+export class FileExplorerComponent implements OnInit, AfterViewInit {
+  root$: Observable<Directory>;
+  path$ = new BehaviorSubject<string>('org');
+  crumbs$ = this.path$.pipe(map(getCrumbs));
+  templates: Record<string, TemplateRef<any>> = {};
 
-  @Input() org: Organization;
+  org$ = new BehaviorSubject<Organization>(undefined);
+  @Input()
+  set org(org: Organization) {
+    this.org$.next(org);
+  }
+  get org() {
+    return this.org$.getValue();
+  }
 
-  public directories: Directory[] = [];
-  public activeDirectory: Directory | SubDirectoryImage | SubDirectoryFile;
-
-  public breadCrumbs: { name: string, path: number[] }[] = [];
-
-  private dialogSubscription: Subscription;
+  @ViewChild('image') image?: TemplateRef<any>;
+  @ViewChild('file') file?: TemplateRef<any>;
+  @ViewChild('fileList') fileList?: TemplateRef<any>;
+  @ViewChild('imageList') imageList?: TemplateRef<any>;
+  @ViewChild('directory') directory?: TemplateRef<any>;
 
   constructor(
-    private dialog: MatDialog,
-    private mediaService: MediaService,
+    private db: AngularFirestore,
     private movieService: MovieService,
-    private organizationService: OrganizationService,
-    private cdr: ChangeDetectorRef,
-    private routerQuery: RouterQuery
-  ) { }
+    private mediaService: MediaService,
+    private service: FileUploaderService,
+    private routerQuery: RouterQuery,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit() {
+    const app: App = this.routerQuery.getData('app');
+    const query: QueryFn = ref => ref
+      .where('orgIds', 'array-contains', this.org.id)
+      .where(`storeConfig.appAccess.${app}`, '==', true);
 
-    // create org's folders & files
-    const orgFileStructure = createOrgFileStructure(this.org);
-    this.directories.push(orgFileStructure);
-
-    // set the org folder as active
-    this.goTo([0]);
-
-    // create folders & files for every movies of this org
-    this.movieService.getValue(fromOrg(this.org.id)).then(titlesRaw => {
-      const currentApp: App = this.routerQuery.getData('app');
-      const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
-      titles.sort((a, b) => sortMovieBy(a, b, 'Title'));
-
-      titles.forEach((title, index) =>
-        this.directories.push(createMovieFileStructure(title, index + 1)) // we do `index + 1` because `[0]` is the org
-      );
-      this.cdr.markForCheck();
-    });
+    this.root$ = combineLatest([
+      this.org$.asObservable(),
+      this.movieService.valueChanges(query)
+    ]).pipe(
+      map(([org, titles]) => getDirectories(org, titles)),
+    );
   }
 
-  ngOnDestroy() {
-    if (!!this.dialogSubscription) {
-      this.dialogSubscription.unsubscribe();
+  ngAfterViewInit() {
+    this.templates = {
+      image: this.image,
+      file: this.file,
+      directory: this.directory,
+      imageList: this.imageList,
+      fileList: this.fileList
     }
   }
 
-
-  public goTo(path: number[]) {
-
-    const pathCopy = [...path]; // without a copy we would be modifying the path of the parent directory
-
-    let currentDirectory: Directory | SubDirectoryImage | SubDirectoryFile = this.directories[pathCopy.shift()];
-    this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path }];
-
-    pathCopy.forEach(index => {
-      if (currentDirectory.type === 'directory') {
-        currentDirectory = currentDirectory.directories[index];
-        this.breadCrumbs.push({ name: currentDirectory.name, path: currentDirectory.path });
-      } else throw new Error('Not able to navigate to this element in breadcrumb');
-    });
-
-    this.activeDirectory = currentDirectory;
+  setPath(path: string) {
+    this.path$.next(path);
   }
 
-
-  public async openDialog(row?: HostedMediaWithMetadata | MovieNote | string) {
-
-    // safe guard
-    if (this.activeDirectory.type === 'directory') return;
-
-    // retrieving useful values
-    const id = getId(this.activeDirectory.storagePath);
-    const collection = getCollection(this.activeDirectory.storagePath);
-
-    // instantiating corresponding form
-    let form: OrganizationForm | MovieForm;
-    if (collection === 'orgs') {
-      const org = await this.organizationService.getValue(id);
-      form = new OrganizationForm(org);
-    } else if (collection === 'movies') {
-      const movie = await this.movieService.getValue(id);
-      form = new MovieForm(movie);
-    } else {
-      throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
-    }
-
-    // retrieving the needed media from the form
-    let mediaForm: MediaFormTypes;
-    const formList = getFormList(form, this.activeDirectory.storagePath);
-    if (!!row) {
-      mediaForm = formList.controls.find(control => {
-        if (isHostedMediaForm(control)) { // HostedMediaForm
-
-          const ref = (row as string);
-          return control.get('ref').value === ref;
-
-        } else if (isHostedMediaWithMetadataForm(control)) { // HostedMediaWithMetadataForm
-
-          const title = (row as HostedMediaWithMetadata).title;
-          return control.get('title').value === title;
-
-        } else { // MovieNotesForm
-
-          const ref = (row as MovieNote).ref;
-          return control.get('ref').get('ref').value === ref;
-        }
-      });
-    } else {
-      mediaForm = formList.add();
-    }
-    if (!mediaForm) {
-      throw new Error(`Media Form not found!`);
-    }
-
-    // opening file/image upload dialog
-    let dialog: MatDialogRef<FileExplorerUploaderDialogComponent | FileExplorerCropperDialogComponent>;
-    if (this.activeDirectory.type === 'file') {
-      dialog = this.dialog.open(FileExplorerUploaderDialogComponent, {
-        width: '60vw',
-        data: {
-          form: mediaForm,
-          privacy: this.activeDirectory.privacy,
-          storagePath: this.activeDirectory.storagePath,
-          acceptedFileType: this.activeDirectory.acceptedFileType
-        },
-      });
-    } else if (this.activeDirectory.type === 'image') {
-      dialog = this.dialog.open(FileExplorerCropperDialogComponent, {
-        width: '60vw',
-        data: {
-          form: mediaForm,
-          ratio: this.activeDirectory.ratio,
-          storagePath: this.activeDirectory.storagePath
-        },
-      });
-    }
-
-    // on dialog close update the corresponding document & upload the file if needed
-    this.dialogSubscription = dialog.afterClosed().subscribe(async result => {
-      if (!!result) {
-        if (this.activeDirectory.type === 'directory') return;
-
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(form);
-        if (collection === 'orgs') {
-          await this.organizationService.update(id, documentToUpdate);
-        } else if (collection === 'movies') {
-          documentToUpdate.id = id;
-          await this.movieService.update(documentToUpdate);
-        } else {
-          this.dialogSubscription.unsubscribe();
-          throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
-        }
-        const mediaIndex = mediasToUpload.findIndex(media => !!media.blobOrFile);
-        if (mediaIndex > -1) {
-          // oldRef is not set if it's a new upload and therefore a new file is added
-          if (!mediasToUpload[mediaIndex].oldRef && typeof this.activeDirectory.hasFile === 'number') {
-            this.activeDirectory.hasFile++
-          }
-        }
-        this.mediaService.uploadMedias(mediasToUpload);
-      }
-      this.dialogSubscription.unsubscribe();
-    });
+  next(next: string) {
+    this.path$.next(`${this.path$.getValue()}/${next}`);
   }
 
+  previous(crumbs: string) {
+    this.path$.next(crumbs[crumbs.length - 2]);
+  }
+
+  getMeta(dir: FileDirectoryBase, index: number) {
+    return [ ...dir.meta, index ];
+  }
+
+  openView(item: Partial<StorageFile>, event: Event) {
+    event.stopPropagation();
+    if (!!item) {
+      this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh' });
+    }
+  }
+
+  async downloadFile(item: StorageFile, event: Event) {
+    event.stopPropagation();
+    const url = await this.mediaService.generateImgIxUrl(item);
+    window.open(url);
+  }
+
+  update() {
+    this.service.upload();
+  }
+
+  change($event: 'removed' | 'added', meta) {
+    if ($event === 'removed') {
+      const metadata = getFileMetadata(meta[0], meta[1], meta[2])
+      const emptyStorageFile = {}
+      emptyStorageFile[metadata.field] = createStorageFile({
+        collection: null,
+        docId: null,
+        field: null,
+        privacy: null,
+        storagePath: null
+      })
+      this.db.doc(`${metadata.collection}/${metadata.docId}`).update(emptyStorageFile)
+    }
+  }
+}
+
+
+@Pipe({ name: 'getDir' })
+export class GetDirPipe implements PipeTransform {
+  transform(path: string, root: Directory) {
+    return getDir(root, path);
+  }
 }

@@ -1,9 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { MovieFormShellComponent } from '../shell/shell.component';
+
 import { ActivatedRoute } from '@angular/router';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+
 import { Subscription } from 'rxjs';
+
+import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+
+import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'movie-form-media-images',
@@ -45,7 +49,7 @@ export class MovieFormMediaImagesComponent implements OnInit, OnDestroy {
   }
 
   addStill() {
-    this.stillPhoto.push(new HostedMediaForm('', { privacy: 'public', collection: 'movies', docId: this.movieId, field: `promotional.still_photo[${this.stillPhoto.controls.length}]` }));
+    this.stillPhoto.push(new StorageFileForm());
   }
 
   trackByFn(index: number) {

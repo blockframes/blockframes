@@ -1,36 +1,36 @@
-import { Privacy } from "@blockframes/utils/file-sanitizer";
-import { FormList } from "@blockframes/utils/form";
 import { MediaRatioType } from '../../image/uploader/uploader.component';
-import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { isMediaForm } from "@blockframes/media/+state/media.model";
-import { MovieForm, MovieNotesForm } from "@blockframes/movie/form/movie.form";
+import { MovieForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
 import { AllowedFileType } from "@blockframes/utils/utils";
 import { Movie } from "@blockframes/movie/+state";
 import { Organization } from "@blockframes/organization/+state/organization.model";
+import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
-type DirectoryType = 'directory' | 'file' | 'image';
+import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
+import { StorageFileForm } from "@blockframes/media/form/media.form";
+import { FormList } from "@blockframes/utils/form";
+import { StorageFile } from "@blockframes/media/+state/media.firestore";
+
 
 interface DirectoryBase {
-  type: DirectoryType;
+  type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';
   /** Display Name use in the UI */
   name: string;
-  /** Path to this directory starting from the root array */
-  path: number[];
 }
 
 export interface Directory extends DirectoryBase {
   type: 'directory';
+  icon?: string;
   /** Array of sub-folders */
-  directories: (Directory | SubDirectoryImage | SubDirectoryFile)[];
+  children: Record<string, (Directory | FileDirectory | ImgDirectory | FileListDirectory | ImgListDirectory)>;
 }
 
-interface FileDirectoryBase extends DirectoryBase {
+export interface FileDirectoryBase extends DirectoryBase {
+  meta: [CollectionHoldingFile, FileLabel, string];
   /** Wether or not this directory can contain several files *(like stills photo)* or only one *(like movie poster)* */
-  multiple: boolean;
-  docNameField: string;
-  fileRefField: string;
+  // multiple: boolean;
+  // docNameField: string;
+  // fileRefField: string;
   /**
    * Corresponding path to the firebase storage
    * @note it **SHOULD NOT** start with a `/`
@@ -38,216 +38,251 @@ interface FileDirectoryBase extends DirectoryBase {
    * @note it **SHOULD NOT** contain the privacy (`public`/`protected`)
    * @note it **SHOULD NOT** contain the file name at the end
    */
-  storagePath: string;
-  privacy: Privacy;
-  hasFile: boolean | number;
+  // storagePath: string;
+  // privacy: Privacy;
+  // hasFile: boolean | number;
 }
 
-export interface SubDirectoryImage extends FileDirectoryBase {
+export interface ImgDirectory extends FileDirectoryBase {
   type: 'image';
+  ratio: MediaRatioType;
+  form: StorageFileForm | FormList<StorageFile>;
+}
+
+export interface FileDirectory extends FileDirectoryBase {
+  type: 'file';
+  accept: AllowedFileType;
+  form: StorageFileForm | FormList<StorageFile>;
+}
+
+export interface FileListDirectory extends FileDirectoryBase {
+  type: 'fileList',
+  form: FormList<StorageFile>;
+  accept: AllowedFileType;
+}
+
+export interface ImgListDirectory extends FileDirectoryBase {
+  type: 'imageList',
+  form: FormList<StorageFile>;
   ratio: MediaRatioType;
 }
 
-export interface SubDirectoryFile extends FileDirectoryBase {
-  acceptedFileType: AllowedFileType
-  type: 'file';
+export function getFormList(form: OrganizationForm | MovieForm, field: string) {
+  return field.split('.').reduce((res, key) => res?.controls?.[key], form);
 }
 
-export type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm)[], HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm>;
-export type MediaFormTypes = HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm;
-
-export function getCollection(storagePath: string) {
-  return storagePath.split('/')[0] as 'movies' | 'orgs';
+function titlesDirectory(titles: Movie[]) {
+  const documents = {};
+  for (const title of titles) {
+    documents[title.id] = titleDirectory(title);
+  }
+  return documents;
 }
 
-export function getId(storagePath: string) {
-  return storagePath.split('/')[1];
+function getFormStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return new StorageFileForm(value);
 }
 
-/**
- * Remove `collection` & `docId` from the storage path, then join path parts with a `.`
- * @example
- * getDeepPath('movies/1234/promotional/videos.screener');
- * // 'promotional.videos.screener'
- */
-export function getDeepPath(storagePath: string) {
-  return storagePath.split('/').splice(2).join('.');
+function getFormListStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return FormList.factory<StorageFile>(value, file => new StorageFileForm(file));
 }
 
-export function getFormList(form: OrganizationForm | MovieForm, storagePath: string): MediaFormList {
-  return getDeepPath(storagePath).split('.').reduce((res, key) => res?.controls?.[key], form);
-}
-
-export function isHostedMediaForm(form: MediaFormTypes): form is HostedMediaForm {
-  return isMediaForm(form);
-}
-
-export function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMediaWithMetadataForm): form is HostedMediaWithMetadataForm {
-  return !!(form as HostedMediaWithMetadataForm).get('title');
-}
-
-export function createOrgFileStructure(org: Organization): Directory {
-  return {
-    name: 'Company Files',
-    type: 'directory',
-    path: [0],
-    directories: [
-      {
-        name: 'Documents',
-        type: 'file',
-        acceptedFileType: 'pdf',
-        multiple: true,
-        docNameField: 'title',
-        fileRefField: 'ref',
-        storagePath: `orgs/${org.id}/documents.notes`,
-        privacy: 'protected',
-        path: [0, 0],
-        hasFile: org.documents?.notes.length
-      },
-      {
-        name: 'Logo',
-        type: 'image',
-        ratio: 'square',
-        multiple: false,
-        docNameField: 'logo',
-        fileRefField: 'logo',
-        storagePath: `orgs/${org.id}/logo`,
-        privacy: 'public',
-        path: [0, 1],
-        hasFile: !!org.logo
-      }
-    ]
-  };
-}
-
-export function createMovieFileStructure(title: Movie, index: number): Directory {
+function titleDirectory(title: Movie): Directory {
   return {
     name: title.title.international,
     type: 'directory',
-    path: [index],
-    directories: [
-      {
-        name: 'Poster & Banner',
-        type: 'directory',
-        path: [index, 0],
-        directories: [
-          {
-            name: 'Poster',
-            type: 'image',
-            ratio: 'poster',
-            multiple: false,
-            docNameField: 'poster',
-            fileRefField: 'poster',
-            storagePath: `movies/${title.id}/poster`,
-            privacy: 'public',
-            path: [index, 0, 0],
-            hasFile: !!title.poster
-          },
-          {
-            name: 'Banner',
-            type: 'image',
-            ratio: 'banner',
-            multiple: false,
-            docNameField: 'banner',
-            fileRefField: 'banner',
-            storagePath: `movies/${title.id}/banner`,
-            privacy: 'public',
-            path: [index, 0, 1],
-            hasFile: !!title.banner
-          },
-        ]
+    children: {
+      poster: {
+        name: 'Poster',
+        type: 'image',
+        ratio: 'poster',
+        meta: ['movies', 'poster', title.id],
+        form: getFormStorage(title, 'movies', 'poster'),
+        // multiple: false,
+        // docNameField: 'poster',
+        // fileRefField: 'poster',
+        // storagePath: `movies/${title.id}/poster`,
+        // privacy: 'public',
+        // hasFile: !!title.poster
       },
-      {
-        name: 'Promotional Elements',
-        type: 'directory',
-        path: [index, 1],
-        directories: [
-          {
-            name: 'Presentation Deck',
-            type: 'file',
-            acceptedFileType: 'pdf',
-            multiple: false,
-            docNameField: 'presentation_deck',
-            fileRefField: 'presentation_deck',
-            storagePath: `movies/${title.id}/promotional.presentation_deck`,
-            privacy: 'public',
-            path: [index, 1, 0],
-            hasFile: !!title.promotional.presentation_deck
-          },
-          {
-            name: 'Scenario',
-            type: 'file',
-            acceptedFileType: 'pdf',
-            multiple: false,
-            docNameField: 'scenario',
-            fileRefField: 'scenario',
-            storagePath: `movies/${title.id}/promotional.scenario`,
-            privacy: 'public',
-            path: [index, 1, 1],
-            hasFile: !!title.promotional.scenario
-          },
-          {
-            name: 'Moodboard / Artistic Deck',
-            type: 'file',
-            acceptedFileType: 'pdf',
-            multiple: false,
-            docNameField: 'file',
-            fileRefField: 'file',
-            storagePath: `movies/${title.id}/promotional.moodboard`,
-            privacy: 'public',
-            path: [index, 1, 2],
-            hasFile: !!title.promotional.moodboard
-          },
-          {
-            name: 'Images',
-            type: 'image',
-            multiple: true,
-            docNameField: '',
-            fileRefField: '',
-            ratio: 'still',
-            storagePath: `movies/${title.id}/promotional.still_photo`,
-            privacy: 'public',
-            path: [index, 1, 3],
-            hasFile: title.promotional.still_photo.length
-          },
-          {
-            name: 'Screener',
-            type: 'file',
-            multiple: false,
-            acceptedFileType: 'video',
-            docNameField: 'ref',
-            fileRefField: 'ref',
-            storagePath: `movies/${title.id}/promotional.videos.screener`,
-            privacy: 'protected',
-            path: [index, 1, 4],
-            hasFile: !!title.promotional.videos?.screener?.ref
-          },
-          {
-            name: 'Other Videos',
-            type: 'file',
-            acceptedFileType: 'video',
-            multiple: true,
-            docNameField: 'ref',
-            fileRefField: 'ref',
-            storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
-            privacy: 'public',
-            path: [index, 1, 5],
-            hasFile: title.promotional.videos?.otherVideos?.length
-          }
-        ]
+      banner: {
+        name: 'Banner',
+        type: 'image',
+        ratio: 'banner',
+        meta: ['movies', 'banner', title.id],
+        form: getFormStorage(title, 'movies', 'banner'),
+        // multiple: false,
+        // docNameField: 'banner',
+        // fileRefField: 'banner',
+        // storagePath: `movies/${title.id}/banner`,
+        // privacy: 'public',
+        // hasFile: !!title.banner
       },
-      {
-        name: 'Notes & Statements',
+      scenario: {
+        name: 'Scenario',
         type: 'file',
-        acceptedFileType: 'pdf',
-        multiple: true,
-        docNameField: 'ref',
-        fileRefField: 'ref',
-        storagePath: `movies/${title.id}/promotional.notes`,
-        privacy: 'public',
-        path: [index, 2],
-        hasFile: title.promotional.notes.length
+        accept: 'pdf',
+        meta: ['movies', 'scenario', title.id],
+        form: getFormStorage(title, 'movies', 'scenario'),
+        // multiple: false,
+        // docNameField: 'scenario',
+        // fileRefField: 'scenario',
+        // storagePath: `movies/${title.id}/promotional.scenario`,
+        // privacy: 'public',
+        // hasFile: !!title.promotional.scenario
+      },
+      moodboard: {
+        name: 'Moodboard / Artistic Deck',
+        type: 'file',
+        accept: 'pdf',
+        meta: ['movies', 'moodboard', title.id],
+        form: getFormStorage(title, 'movies', 'moodboard'),
+        // multiple: false,
+        // docNameField: 'file',
+        // fileRefField: 'file',
+        // storagePath: `movies/${title.id}/promotional.moodboard`,
+        // privacy: 'public',
+        // hasFile: !!title.promotional.moodboard
+      },
+      'presentation_deck': {
+        name: 'Presentation Deck',
+        type: 'file',
+        accept: 'pdf',
+        meta: ['movies', 'presentation_deck', title.id],
+        form: getFormStorage(title, 'movies', 'presentation_deck'),
+        // multiple: false,
+        // docNameField: 'presentation_deck',
+        // fileRefField: 'presentation_deck',
+        // storagePath: `movies/${title.id}/promotional.presentation_deck`,
+        // privacy: 'public',
+        // hasFile: !!title.promotional.presentation_deck
+      },
+      'still_photo': {
+        name: 'Images',
+        type: 'imageList',
+        ratio: 'still',
+        meta: ['movies', 'still_photo', title.id],
+        form: getFormListStorage(title, 'movies', 'still_photo'),
+        // multiple: true,
+        // docNameField: '',
+        // fileRefField: '',
+        // ratio: 'still',
+        // storagePath: `movies/${title.id}/promotional.still_photo`,
+        // privacy: 'public',
+        // hasFile: title.promotional.still_photo.length
+      },
+      screener: {
+        name: 'Screener',
+        type: 'file',
+        accept: 'video',
+        meta: ['movies', 'screener', title.id],
+        form: getFormStorage(title, 'movies', 'screener'),
+        // multiple: false,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.videos.screener`,
+        // privacy: 'protected',
+        // hasFile: !!title.promotional.videos?.screener?.ref
+      },
+      otherVideos: {
+        name: 'Other Videos',
+        type: 'fileList',
+        accept: 'video',
+        meta: ['movies', 'otherVideos', title.id],
+        form: getFormListStorage(title, 'movies', 'otherVideos'),
+        // multiple: true,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
+        // privacy: 'public',
+        // hasFile: title.promotional.videos?.otherVideos?.length
+      },
+      salesPitch: {
+        name: 'Sales Pitch',
+        type: 'file',
+        accept: 'video',
+        meta: ['movies', 'salesPitch', title.id],
+        form: getFormStorage(title, 'movies', 'salesPitch'),
+        // multiple: false,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.videos.otherVideos`,
+        // privacy: 'public',
+        // hasFile: title.promotional.videos?.otherVideos?.length
+      },
+      notes: {
+        name: 'Notes & Statements',
+        type: 'fileList',
+        accept: 'pdf',
+        meta: ['movies', 'notes', title.id],
+        form: getFormListStorage(title, 'movies', 'notes'),
+        // multiple: true,
+        // docNameField: 'ref',
+        // fileRefField: 'ref',
+        // storagePath: `movies/${title.id}/promotional.notes`,
+        // privacy: 'public',
+        // hasFile: title.promotional.notes.length
       }
-    ]
-  };
+    }
+  }
 }
+
+function orgDirectory(org: Organization): Directory {
+  return {
+    name: 'Company',
+    type: 'directory',
+    icon: 'home',
+    children: {
+      documents: {
+        name: 'Documents',
+        type: 'fileList',
+        accept: 'pdf',
+        meta: ['orgs', 'notes', org.id],
+        form: getFormListStorage(org, 'orgs', 'notes'),
+        // multiple: true,
+        // docNameField: 'title',
+        // fileRefField: 'ref',
+        // storagePath: `orgs/${org.id}/documents.notes`,
+        // privacy: 'protected',
+        // hasFile: org.documents?.notes.length
+      },
+      logo: {
+        name: 'Logo',
+        type: 'image',
+        ratio: 'square',
+        meta: ['orgs', 'logo', org.id],
+        form: getFormStorage(org, 'orgs', 'logo'),
+        // multiple: false,
+        // docNameField: 'logo',
+        // fileRefField: 'logo',
+        // storagePath: `orgs/${org.id}/logo`,
+        // privacy: 'public',
+        // hasFile: !!org.logo
+      }
+    }
+  }
+}
+
+export interface RootDirectory {
+  org: Directory;
+  titles: Directory;
+}
+
+export function getDirectories(org: Organization, titles: Movie[]): Directory {
+  return {
+    name: 'Root',
+    type: 'directory',
+    children: {
+      org: orgDirectory(org),
+      titles: {
+        type: 'directory',
+        name: 'Titles',
+        icon: 'movie',
+        children: titlesDirectory(titles),
+      }
+    },
+  }
+}
+

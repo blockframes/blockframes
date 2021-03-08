@@ -1,5 +1,7 @@
 import { firebase } from '@env';
-import { Privacy } from '@blockframes/utils/file-sanitizer';
+import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { storage } from 'firebase-admin';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -22,16 +24,16 @@ export interface ImageParameters {
   page?: number;
 }
 
-export function getImgSize(ref: string) {
-  if (ref.includes('avatar')) {
+export function getImgSize(ref?: string) {
+  if (ref?.includes('avatar')) {
     return [50, 100, 300];
-  } else if (ref.includes('logo')) {
+  } else if (ref?.includes('logo')) {
     return [50, 100, 300];
-  } else if (ref.includes('poster')) {
+  } else if (ref?.includes('poster')) {
     return [200, 400, 600];
-  } else if (ref.includes('banner')) {
+  } else if (ref?.includes('banner')) {
     return [300, 600, 1200];
-  } else if (ref.includes('still')) {
+  } else if (ref?.includes('still')) {
     return [300, 600, 1200];
   } else {
     return [1024];
@@ -63,7 +65,7 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param ref
  * @param parameters
  */
-export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
+export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParameters) {
   /**
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
@@ -75,5 +77,12 @@ export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
   const imgixSource = parameters.s
     ? `${firebase().projectId}-${protectedMediaDir}`
     : firebase().projectId;
-  return `https://${imgixSource}.imgix.net/${encodeURI(ref)}?${query}`;
+
+  // This is a safeguard for old storagePaths. Image wont work if privacy is still in the path and is therefore removed in case its there.
+  if (privacies.some(privacy => privacy === file.storagePath?.split('/').shift())) {
+    console.warn(`Expected storagePath without privacy prefix: ${file.storagePath}`);
+    file.storagePath = file.storagePath?.split('/').splice(1).join('/');
+  }
+
+  return `https://${imgixSource}.imgix.net/${encodeURI(file.storagePath)}?${query}`;
 }
