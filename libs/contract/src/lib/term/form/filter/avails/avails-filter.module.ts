@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatInputModule
+    MatInputModule,
+    StaticGroupModule,
   ],
   exports: [AvailsFilterComponent],
   declarations: [AvailsFilterComponent],
