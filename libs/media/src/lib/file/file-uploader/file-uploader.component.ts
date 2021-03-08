@@ -117,7 +117,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.listenToChanges) {
       this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
-        const media = this.formIndex !== undefined 
+        const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (!!media) {
