@@ -10,7 +10,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 import { TermService } from '@blockframes/contract/term/+state/term.service'
 import { centralOrgID } from '@env';
@@ -22,6 +22,7 @@ enum SpreadSheetContract {
   contractType,
   licensorName,
   licenseeName,
+  stakeholders,
   contractId,
   territories,
   medias,
@@ -89,6 +90,8 @@ export class ViewExtractedContractsComponent implements OnInit {
           // Forcing change detection
           this.contractsToUpdate.data = [...this.contractsToUpdate.data]
         }
+      } else {
+        contract = trimmedRow[SpreadSheetContract.contractType] === 'mandate' ? createMandate() : createSale()
       }
 
       if (trimmedRow.length) {
@@ -140,6 +143,18 @@ export class ViewExtractedContractsComponent implements OnInit {
               hint: 'Edit corresponding sheet field.'
             })
           }
+          if (trimmedRow[SpreadSheetContract.stakeholders]?.length) {
+            const orgs: Organization[] = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
+            contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contracts.stakeholders',
+              name: 'Stakeholders',
+              reason: 'If this mandate has stakeholders, please fill in the name',
+              hint: 'Edit corresponding sheet field.'
+            })
+          }
 
           if (trimmedRow[SpreadSheetContract.licensorName]) {
             const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licensorName]))
@@ -173,7 +188,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           /* Create term */
           const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
-          if (trimmedRow[SpreadSheetContract.territories].length) {
+          if (trimmedRow[SpreadSheetContract.territories]?.length) {
             const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
             const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
             term.territories = territories;
@@ -187,7 +202,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
           }
 
-          if (trimmedRow[SpreadSheetContract.medias].length) {
+          if (trimmedRow[SpreadSheetContract.medias]?.length) {
             const mediaValues: MediaValue[] = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
             const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim())).filter(media => !!media)
             term.medias = medias;
