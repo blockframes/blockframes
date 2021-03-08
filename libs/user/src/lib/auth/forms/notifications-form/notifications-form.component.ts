@@ -11,36 +11,35 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
-const titleType: Record<NotificationTypesBase, string> = {
-  movieAccepted: 'A title gets published to the marketplace.',
-  requestFromUserToJoinOrgCreate: 'A new user requests to join your organization.',
-  requestFromUserToJoinOrgDeclined: 'User\'s request to join your org declined.',
-  invitationToJoinOrgDeclined: 'An user declined your invitation to join your organization.',
-  orgMemberUpdated: 'A member joins or leaves your organization.',
-  requestToAttendEventSent: 'Your request to access an event has been sent.',
-  eventIsAboutToStart: 'Reminder 1h before an event starts.',
-  oneDayReminder: 'Reminder 24h before an event starts.',
-  invitationToAttendEventUpdated: 'An users answers your invitation to an event.',
-  requestToAttendEventUpdated: 'An organization answers your request to access an event.',
-  requestToAttendEventCreated: 'An user requests an access to an event your organize.',
-  invitationToAttendMeetingCreated: 'An user invites you to a meeting.',
-  invitationToAttendScreeningCreated: 'An organization invites you to a screening.',
+interface notificationSetting { text: string, tooltip: boolean};
+const titleType: Record<NotificationTypesBase, notificationSetting> = {
+  movieAccepted: { text: 'A title is succesfully published on the marketplace.', tooltip: false },
+  requestFromUserToJoinOrgCreate: { text:'A user requests to join your organization.', tooltip: true },
+  requestFromUserToJoinOrgDeclined: { text:'A user\'s request to join your organization was declined. ', tooltip: false },
+  orgMemberUpdated: { text:'A user joins or leaves your organization.', tooltip: false },
+  requestToAttendEventSent: { text:'Your request to join an event is successfully sent.', tooltip: false },
+  eventIsAboutToStart: { text:'REMINDER - An event you\'re attending will start in 1 hour. (RECOMMENDED)', tooltip: false },
+  oneDayReminder: { text:'REMINDER - An event you\'re attending will start in 24 hours. (RECOMMENDED)', tooltip: false },
+  invitationToAttendEventUpdated: { text:'A user answers your invitation to an event you\'re organizing.', tooltip: false },
+  requestToAttendEventUpdated: { text:'Your request to join an event gets accepted or declined.', tooltip: false },
+  requestToAttendEventCreated: { text:'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
+  invitationToAttendMeetingCreated: { text:'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
+  invitationToAttendScreeningCreated: { text:'You are invited to a screening. (RECOMMENDED)', tooltip: true }
 };
 
 const tables = [
   {
-    title: 'Company Management Notifications',
-    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'requestFromUserToJoinOrgDeclined', 'invitationToJoinOrgDeclined'],
+    title: 'Company Management',
+    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'requestFromUserToJoinOrgDeclined'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
-    title: 'Content Management Notifications',
+    title: 'Content Management',
     types: ['movieAccepted'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
-    title: 'Event Management Notifications',
+    title: 'Event Management',
     types: [
       'invitationToAttendScreeningCreated',
       'invitationToAttendMeetingCreated',
