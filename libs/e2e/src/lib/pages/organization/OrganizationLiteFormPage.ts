@@ -1,32 +1,8 @@
-// import OrganizationCreatePage from './OrganizationCreatePage';
 import { SEC } from '../../utils/env';
 
 export default class OrganizationLiteFormPage {
   constructor() {
   }
-
-  // public assertMoveToOrgHomepage() {
-  //   cy.location().should(loc => {
-  //     expect(loc.pathname).to.eq(PATH);
-  //   });
-  // }
-
-  // public clickCreateOrganization() {
-  //   cy.get('organization-home [value=create]mat-radio-button', {timeout: 3 * SEC})
-  //     .click();
-  // }
-
-  // public clickFindOrganization() {
-  //   cy.get('organization-home [value=find]mat-radio-button', {timeout: 3 * SEC})
-  //     .click();
-  // }
-
-  // public clickSubmitToCreate() {
-  //   cy.get('organization-home a[test-id=submit]', {timeout: 3 * SEC})
-  //     .click();
-  //   cy.wait(1 * SEC);
-  //   return new OrganizationCreatePage();
-  // }
 
   public createNewOrg() {
     cy.get('algolia-autocomplete').type('newOrganization1');

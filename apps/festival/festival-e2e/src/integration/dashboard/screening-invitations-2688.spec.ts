@@ -36,7 +36,7 @@ describe('Organiser invites other users to private screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     const p1 = new LandingPage();
-    p1.clickSignup();
+    p1.clickLogin();
   });
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
@@ -49,7 +49,7 @@ describe('Organiser invites other users to private screening', () => {
     cy.log(`Create screening {${TestEVENT.event}}`)
     const invitees = [users[UserIndex.InvitedUser1].email,
                       users[UserIndex.InvitedUser2].email];
-    p2.createEvent(TestEVENT.event, NOW, 
+    p2.createEvent(TestEVENT.event, NOW,
       TestEVENT.movie.title.international, false, invitees);
   });
 

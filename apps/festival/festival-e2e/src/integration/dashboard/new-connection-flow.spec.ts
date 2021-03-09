@@ -34,7 +34,8 @@ describe('New user registers', () => {
     p2.submitCreationOrg();
   });
 
-  it.only('A new user creates its account and join an org', () => {
+  //! Problem with the information of organization that are not pre-filled when clicking on the org algolia search option
+  it.skip('A new user creates its account and join an org', () => {
     const p1 = new LandingPage();
     p1.clickSignup();
     const p2 = new AuthIdentityPage();

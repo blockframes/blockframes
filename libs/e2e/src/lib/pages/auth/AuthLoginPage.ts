@@ -1,5 +1,5 @@
 import { User } from '../../utils/type';
-// import { OrganizationHomePage } from '../organization';
+import { AuthIdentityPage } from '../auth';
 import { SEC } from '../../utils/env';
 
 export default class AuthLoginPage {
@@ -8,9 +8,28 @@ export default class AuthLoginPage {
     cy.get('auth-login-view', {timeout: 60 * SEC});
   }
 
-  // public switchMode() {
-  //   cy.get('auth-login-view [test-id=switch-mode] button').click();
-  // }
+  public assertStayInLoginView() {
+    cy.location().should((loc) => {
+      expect(loc.pathname).to.eq('/auth/connexion')
+    })
+  }
+
+  public fillSignin(user) {
+    cy.get('auth-signin-form input[type="email"]').type(user.email);
+    cy.get('auth-signin-form input[type="password"]').type(user.password);
+  }
+
+  /** Connection returns to the home page of the application in which you are. You have to create it. */
+  public clickSignIn() {
+    cy.get('auth-signin-form button[type=submit]', {timeout: 3 * SEC})
+      .click();
+    cy.wait(3 * SEC);
+  }
+
+  public goToSignUpPage() {
+    cy.get('button[id="tosignup"]').click();
+    return new AuthIdentityPage();
+  }
 
   // Signup
 
@@ -83,51 +102,5 @@ export default class AuthLoginPage {
   //         user.email = originalEmail;
   //       break
   //   }
-  // }
-
-  // public clickTermsAndCondition() {
-  //   cy.get('auth-accept-conditions [test-id="checkbox"] input').first().check({ force: true });
-  // }
-
-  // public clickPrivacyPolicy() {
-  //   cy.get('auth-accept-conditions [test-id="checkbox"] input').last().check({ force: true });
-  // }
-
-  // public clickSignupToOrgHome() {
-  //   cy.get('auth-signup-form button[type=submit]', {timeout: 3 * SEC})
-  //     .click();
-  //   cy.wait(3 * SEC);
-  //   return new OrganizationHomePage();
-  // }
-
-  // public clickSignup() {
-  //   cy.get('auth-signup-form button[type=submit]').click({ force: true });
-  // }
-
-  // public assertStayInLoginView() {
-  //   cy.location().should((loc) => {
-  //     expect(loc.pathname).to.eq('/auth/connexion')
-  //   })
-  // }
-
-  // Signin
-
-  public fillSignin(user) {
-    cy.get('auth-signin-form input[type="email"]').type(user.email);
-    cy.get('auth-signin-form input[type="password"]').type(user.password);
-  }
-
-  /** Connection returns to the home page of the application in which you are. You have to create it. */
-  public clickSignIn() {
-    cy.get('auth-signin-form button[type=submit]', {timeout: 3 * SEC})
-      .click();
-    cy.wait(3 * SEC);
-  }
-
-  // public clickSigninToOrgHome() {
-  //   cy.get('auth-signin-form button[type=submit]', {timeout: 3 * SEC})
-  //     .click();
-  //   cy.wait(1 * SEC);
-  //   return new OrganizationHomePage();
   // }
 }

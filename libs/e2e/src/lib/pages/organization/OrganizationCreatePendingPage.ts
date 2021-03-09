@@ -1,8 +1,6 @@
-﻿import { Organization } from '../../utils/type';
-import { setForm, FormOptions } from '../../utils/functions';
-import { SEC } from '../../utils/env';
+﻿import { SEC } from '../../utils/env';
 
-const PATH = '/c/organization/create-congratulations'; //@TODO #4932 update E2E tests
+const PATH = '/c/organization/create-congratulations';
 
 export default class OrganizationCreatePendingPage {
   constructor() {
@@ -13,16 +11,5 @@ export default class OrganizationCreatePendingPage {
     cy.location().should(loc => {
       expect(loc.pathname).to.eq(PATH);
     });
-  }
-
-  // Set the organization create form
-  public testOrgForm(org: Organization) {
-    cy.log("OrganizationCreatePage: Test all form fields");
-    const selector = 'organization-form form input, mat-select';
-
-    const formOpt: FormOptions = {
-      inputValue: org
-    }
-    setForm(selector, formOpt);
   }
 }

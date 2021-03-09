@@ -1,15 +1,15 @@
 import { LandingPage } from '../../support/pages/landing';
-import { acceptCookie, signIn, selectAction, clickOnMenu } from '@blockframes/e2e/utils/functions';
+import { acceptCookie, signIn, clickOnMenu } from '@blockframes/e2e/utils/functions';
 import { SEC, User } from '@blockframes/e2e/utils';
 
 export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: string = '') {
   cy.log('Reach LandingPage and accept cookies');
   const p1 = new LandingPage();
-    
+
   //Note: Here we click sign-up because inside signIn
   //we switchmode to Login.
   cy.log(`Sign-in user: ${user.email}`);
-  p1.clickSignup();   
+  p1.clickLogin();
   signIn(user);
   cy.get('festival-marketplace', {timeout: 60 * SEC});
   acceptCookie();
