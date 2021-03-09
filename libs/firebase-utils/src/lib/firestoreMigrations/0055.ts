@@ -23,7 +23,7 @@ export async function upgrade(db: Firestore) {
 
     // boxOffice[].territory
     if (!!data.boxOffice) {
-      data.boxOffice.map(office => {
+      data.boxOffice = data.boxOffice.map(office => {
         if (isReplaced(office.territory)) {
           office.territory = replaced[office.territory];
           update = true;
@@ -34,7 +34,7 @@ export async function upgrade(db: Firestore) {
 
     // rating[].country
     if (!!data.rating) {
-      data.rating.map(rating => {
+      data.rating = data.rating.map(rating => {
         if (isReplaced(rating.country)) {
           rating.country = replaced[rating.country];
           update = true;
@@ -44,7 +44,7 @@ export async function upgrade(db: Firestore) {
     }
 
     // originCountries
-    data.originCountries.map(country => {
+    data.originCountries = data.originCountries.map(country => {
       if (isReplaced(country)) {
         update = true;
         return replaced[country];
@@ -53,7 +53,7 @@ export async function upgrade(db: Firestore) {
 
     // originalRelease[].country
     if (!!data.originalRelease) {
-      data.originalRelease.map(release => {
+      data.originalRelease = data.originalRelease.map(release => {
         if (isReplaced(release.country)) {
           release.country = replaced[release.country];
           update = true;
@@ -66,9 +66,9 @@ export async function upgrade(db: Firestore) {
     if (!!data.stakeholders) {
       for (const key in data.stakeholders) {
         const stakeholders = data.stakeholders[key] as Stakeholder[]
-        stakeholders.map(stakeholder => {
+        data.stakeholders[key] = stakeholders.map(stakeholder => {
           if (!!stakeholder.countries) {
-            stakeholder.countries.map(country => {
+            stakeholder.countries = stakeholder.countries.map(country => {
               if (isReplaced(country)) {
                 update = true;
                 return replaced[country];
@@ -90,7 +90,7 @@ export async function upgrade(db: Firestore) {
       }
     }
  
-    if (update) await movieDoc.ref.set(data)
+    if (update) await movieDoc.ref.set(data);
   })
 
   // ORG
