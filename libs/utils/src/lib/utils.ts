@@ -35,31 +35,31 @@ export interface FileDefinition { mime: string[], extension: string[] };
 export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
   pdf: {
     mime: ['application/pdf'],
-    extension: ['pdf'],
+    extension: ['.pdf'],
   },
   image: {
     mime: ['image/jpeg', 'image/png', 'image/webp'],
-    extension: ['jpg', 'jpeg', 'png', 'webp'],
+    extension: ['.jpg', 'jpeg', '.png', '.webp'],
   },
   video: {
     mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4', 'video/3gpp', 'video/quicktime', 'video/x-ms-wmv'],
-    extension: ['avi', 'mkv', 'mp4', '3gp', 'mov', 'wmv'],
+    extension: ['.avi', '.mkv', '.mp4', '.3gp', '.mov', '.wmv'],
   },
   docx: {
     mime: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-    extension: ['doc', 'docx'],
+    extension: ['.doc', '.docx'],
   },
   xls: {
     mime: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet'],
-    extension: ['xls', 'xlsx', 'ods'],
+    extension: ['.xls', '.xlsx', '.ods'],
   },
   json: {
     mime: ['application/json'],
-    extension: ['json']
+    extension: ['.json']
   },
   csv: {
     mime: ['text/csv'],
-    extension: ['csv']
+    extension: ['.csv']
   }
 }
 
@@ -73,10 +73,12 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
  */
 export function extensionToType(extension: string): AllowedFileType | 'unknown' {
 
+  const dotExtension = extension.startsWith('.') ? extension : '.' + extension;
+
   // we use a for in loop so we can directly return when a match is found
   // (returning in a forEach just end the current iteration)
   for (const type in allowedFiles) {
-    const match = allowedFiles[type].extension.some(fileExtension => fileExtension === extension);
+    const match = allowedFiles[type].extension.some(fileExtension => fileExtension === dotExtension);
     if (match) return type as AllowedFileType;
   }
 

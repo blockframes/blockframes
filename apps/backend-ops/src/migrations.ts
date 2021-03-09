@@ -132,8 +132,10 @@ export async function migrateBeta({
     await updateDBVersion(db, lastVersion);
   } catch (e) {
     console.error(e);
-    console.error('Migration failed. Restoring pre-migration backup...');
-    await importFirestore(backupDir);
+    if (withBackup) {
+      console.error('Migration failed. Restoring pre-migration backup...');
+      await importFirestore(backupDir);
+    }
     throw e;
   } finally {
     if (withBackup) {

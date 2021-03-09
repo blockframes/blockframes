@@ -47,7 +47,7 @@
       <h5>Release Year</h5>
       <p>
         <span>{{ movie.release.year }}</span>
-        <span *ngIf="movie.release.status"> ({{ movie.release.status | toLabel: 'screeningStatus' }})</span>
+        <span *ngIf="movie.release.status && movie.release.status !== 'confirmed'"> ({{ movie.release.status | toLabel: 'screeningStatus' }})</span>
       </p>
     </article>
 
@@ -104,7 +104,7 @@
 
 
   <h1 *ngIf="(movie | hasKeys: keys.prizes) && (movie | hasStatus: status.afterProd)">
-    Selection & reviews
+    Selection & Reviews
   </h1>
 
 
