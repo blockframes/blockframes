@@ -40,7 +40,12 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
       const urlToUse = applicationUrl[app];
 
-      const templateId = templateIds.user.credentials[invitationType];
+      let templateId = '';
+
+      invitationType === 'joinOrganization'
+      ?  templateId = templateIds.user.credentials[invitationType][app]
+      : templateId = templateIds.user.credentials[invitationType];
+
       const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
       return newUser.user;
@@ -73,7 +78,7 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
   logger.info(`Successfuly created user "${user.uid}" with email : "${email}" and password: "${password}"`);
 
   // We don't have the time to wait for the trigger onUserCreate,
-  // So we create it here first. 
+  // So we create it here first.
   const userDb = { uid: user.uid, email, _meta: createDocumentMeta({ createdFrom }) };
   await db.collection('users').doc(userDb.uid).set(userDb);
 

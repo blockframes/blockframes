@@ -67,18 +67,16 @@ export function userInvite(
   password: string,
   orgName: string,
   pageURL: string = appUrl.market,
-  templateId: string = templateIds.user.credentials.joinOrganization,
-  eventData?: EventEmailData
+  templateId: string = templateIds.user.credentials.joinOrganization.festival,
+  event?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
     orgName,
-    eventName: eventData.title || '',
-    eventStartDate: eventData.start || '',
-    eventEndDate: eventData.end || '',
+    event: event,
     pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
-    sessionURL: eventData.id ? `${pageURL}/c/o/marketplace/event/${eventData.id}` : ''
+    sessionURL: event.id ? `${pageURL}/c/o/marketplace/event/${event.id}` : ''
   };
   return { to: email, templateId, data };
 }
@@ -162,6 +160,7 @@ export function requestToJoinOrgDeclined(toUser: PublicUser, orgName: string): E
 /** Send email to org admin to inform him that an user has left his org */
 export function userLeftYourOrganization(admin: PublicUser, userRemoved: PublicUser ): EmailTemplateRequest {
   const data = {
+    adminFirstName: admin.firstName,
     userFirstName: userRemoved.firstName,
     userLastName: userRemoved.lastName,
     userEmail: userRemoved.email
@@ -185,18 +184,16 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
 export function invitationToEventFromOrg(
   recipient: User,
   orgDenomination: string,
-  eventData: EventEmailData,
+  event: EventEmailData,
   link: string,
   url: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: recipient.firstName,
     orgName: orgDenomination,
-    eventName: eventData.title,
+    event: event,
     pageURL: `${url}/${link}`,
-    sessionURL: `${url}/c/o/marketplace/event/${eventData.id}`,
-    eventStartDate: eventData.start,
-    eventEndDate: eventData.end
+    sessionURL: `${url}/c/o/marketplace/event/${event.id}`,
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
@@ -225,7 +222,7 @@ export function requestToAttendEventFromUser(
   fromUserFirstname: string,
   fromUserOrgName: string,
   recipient: User,
-  eventTitle: string,
+  event: EventEmailData,
   link: string,
   url: string = appUrl.market
 ): EmailTemplateRequest {
@@ -233,17 +230,24 @@ export function requestToAttendEventFromUser(
     adminFirstName: recipient.firstName,
     userFirstName: fromUserFirstname,
     orgName: fromUserOrgName,
-    eventName: eventTitle,
+    event,
     pageURL: `${url}/${link}`
   };
   return { to: recipient.email, templateId: templateIds.request.attendEvent.created, data };
 }
 
 /** Generate an email to inform users their request to attend an event has been sent */
-export function requestToAttendEventFromUserSent(toUser: PublicUser, event: EventEmailData, organizerOrgName: string): EmailTemplateRequest {
+export function requestToAttendEventFromUserSent(
+  toUser: PublicUser,
+  event: EventEmailData,
+  organizerOrgName: string,
+  pageURL: string = appUrl.market,
+): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     event,
+    eventViewUrl: `${pageURL}/c/o/marketplace/event/${event.id}`,
+    sessionUrl: `${pageURL}/c/o/marketplace/event/${event.id}/session`,
     organizerOrgName
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.sent, data };
@@ -253,17 +257,15 @@ export function requestToAttendEventFromUserSent(toUser: PublicUser, event: Even
 export function requestToAttendEventFromUserAccepted(
   toUser: PublicUser,
   organizerOrgName: string,
-  eventData: EventEmailData,
+  event: EventEmailData,
   pageURL: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     userLastName: toUser.lastName,
     organizerOrgName,
-    eventName: eventData.title,
-    eventStartDate: eventData.start,
-    eventEndDate: eventData.end,
-    sessionURL: `${pageURL}/c/o/marketplace/event/${eventData.id}`
+    event,
+    sessionURL: `${pageURL}/c/o/marketplace/event/${event.id}/session`
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
@@ -272,12 +274,12 @@ export function requestToAttendEventFromUserAccepted(
 export function requestToAttendEventFromUserRefused(
   toUser: PublicUser,
   organizerOrgName: string,
-  eventData: EventEmailData
+  event: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     organizerOrgName,
-    event: eventData,
+    event,
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.declined, data };
 }
@@ -287,7 +289,7 @@ export function reminderEventToUser(
   movieTitle: string,
   toUser: PublicUser,
   organizerOrgName: string,
-  eventData: EventEmailData,
+  event: EventEmailData,
   template: string,
   url: string = appUrl.market
 ): EmailTemplateRequest {
@@ -295,10 +297,8 @@ export function reminderEventToUser(
     movieTitle,
     userFirstName: toUser.firstName,
     organizerOrgName,
-    eventName: eventData.title,
-    eventStartDate: eventData.start,
-    eventEndDate: eventData.end,
-    pageURL: eventData.id ? `${url}/c/o/marketplace/event/${eventData.id}` : ''
+    event,
+    pageURL: event.id ? `${url}/c/o/marketplace/event/${event.id}` : ''
   };
   return { to: toUser.email, templateId: template, data };
 }

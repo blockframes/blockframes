@@ -35,6 +35,7 @@ th, td {
   }
   &:last-child {
     padding-right: 24px;
+    padding-left: 16px;
   }
 }
 
@@ -44,6 +45,10 @@ tbody tr:last-child td {
 
 .description {
   width: 80%;
+  mat-icon {
+    width: 16px;
+    margin: 0;
+  }
 }
 
 .general {
