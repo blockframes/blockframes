@@ -149,7 +149,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.parentTermId]) {
             const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Timestamp>[]
-            if (term.length) {
+            if (term?.length) {
               contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
             } else {
               contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
@@ -171,7 +171,12 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
 
             if (trimmedRow[SpreadSheetContract.stakeholders]?.length) {
-              const orgs: Organization[] = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
+              let orgs: Organization[];
+              if (Array.isArray(trimmedRow[SpreadSheetContract.stakeholders])) {
+                orgs = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
+              } else {
+                orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.stakeholders]))
+              }
               contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
             } else {
               importErrors.errors.push({
