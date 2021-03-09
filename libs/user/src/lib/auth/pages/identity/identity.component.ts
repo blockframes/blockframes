@@ -28,7 +28,7 @@ export class IdentityComponent implements OnInit {
   public app: App;
   public appName: string;
   public orgIndex: AlgoliaIndex = 'org';
-  public indexGroup: string = 'indexNameOrganizations';
+  public indexGroup = 'indexNameOrganizations';
   private snackbarDuration = 8000;
   public form = new IdentityForm();
   public orgForm = new OrganizationLiteForm();
