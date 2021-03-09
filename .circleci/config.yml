@@ -295,6 +295,13 @@ jobs:
       - prepare_environment
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
 workflows:
+  anon-db:
+    jobs:
+      - push-anon-db-to-ci:
+          filters:
+            branches:
+              only:
+                - anon-db
   build-deploy-prepare:
     jobs:
       - build-deploy-prepare:
@@ -328,8 +335,8 @@ workflows:
               only:
                 - develop
     jobs:
-      - push-anon-db-to-ci
       - copy-storage-from-prod
+      - push-anon-db-to-ci
   deploy:
     jobs:
       - deploy-to-prod:

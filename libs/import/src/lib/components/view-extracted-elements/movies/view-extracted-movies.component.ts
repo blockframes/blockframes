@@ -320,8 +320,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // Fetch movie from internalRef if set or create a new movie
       let movie = createMovie();
       if (this.mapping.internalRef) {
-        const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef);
-        if (_movie) { movie = _movie };
+        try {
+          const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef, !this.isUserBlockframesAdmin ? this.authQuery.user.orgId : undefined);
+          if (_movie) { movie = _movie };
+        } catch (e) { console.log(e) }
       }
       const importErrors = { movie, errors: [] } as MovieImportState;
 
@@ -339,11 +341,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
       }
 
       if (this.mapping.series) {
-        movie.title.series = parseInt(this.mapping.series, 10)
+        movie.title.series = parseInt(this.mapping.series, 10);
       }
 
       if (this.mapping.episodeCount) {
-        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10)
+        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10);
       }
 
       // WORK TYPE
