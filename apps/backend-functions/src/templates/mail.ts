@@ -76,7 +76,6 @@ export function userInvite(
     orgName,
     event: event,
     pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
-    sessionURL: event.id ? `${pageURL}/c/o/marketplace/event/${event.id}` : ''
   };
   return { to: email, templateId, data };
 }
@@ -192,7 +191,6 @@ export function invitationToEventFromOrg(
     orgName: orgDenomination,
     event: event,
     pageURL: `${url}/${link}`,
-    sessionURL: `${url}/c/o/marketplace/event/${event.id}`,
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
@@ -240,13 +238,10 @@ export function requestToAttendEventFromUserSent(
   toUser: PublicUser,
   event: EventEmailData,
   organizerOrgName: string,
-  pageURL: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     event,
-    eventViewUrl: `${pageURL}/c/o/marketplace/event/${event.id}`,
-    sessionUrl: `${pageURL}/c/o/marketplace/event/${event.id}/session`,
     organizerOrgName
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.sent, data };
@@ -256,15 +251,13 @@ export function requestToAttendEventFromUserSent(
 export function requestToAttendEventFromUserAccepted(
   toUser: PublicUser,
   organizerOrgName: string,
-  event: EventEmailData,
-  pageURL: string = appUrl.market,
+  event: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     userLastName: toUser.lastName,
     organizerOrgName,
     event,
-    sessionURL: `${pageURL}/c/o/marketplace/event/${event.id}/session`
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.accepted, data };
 }
@@ -289,15 +282,13 @@ export function reminderEventToUser(
   toUser: PublicUser,
   organizerOrgName: string,
   event: EventEmailData,
-  template: string,
-  url: string = appUrl.market
+  template: string
 ): EmailTemplateRequest {
   const data = {
     movieTitle,
     userFirstName: toUser.firstName,
     organizerOrgName,
     event,
-    pageURL: event.id ? `${url}/c/o/marketplace/event/${event.id}` : ''
   };
   return { to: toUser.email, templateId: template, data };
 }
