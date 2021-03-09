@@ -34,7 +34,7 @@
       <!-- ORGANIZATION -->
 
       <ng-container *ngIf="useAlgolia else orgInput">
-        <algolia-autocomplete [index]="orgIndex" showAddNew keyToDisplay="name" label="Company Name"
+        <algolia-autocomplete [index]="orgIndex" [indexGroup]="indexGroup" showAddNew keyToDisplay="name" label="Company Name"
           hint='Please join an existing company account or create a new one.'
           (selectionChange)="setOrg($event)"
           (createFromSelection)="createOrg($event)">

@@ -38,6 +38,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
    */
   @Input() index: AlgoliaIndex;
 
+  @Input() indexGroup: string;
+
   /**
    * The path of the key to display : i.e. What part of the result should be displayed by the input ?
    * @note The value pointed by `keyToDisplay` will also be put in the FormControl of the input field.
@@ -123,6 +125,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     this.indexSearch = this.algoliaService.getIndex(this.index);
 
     // create search functions
+    const multipleSearch = (text: string) => this.algoliaService.multipleQuery(this.indexGroup, text);
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
     const facetSearch = (text: string) => this.indexSearch.searchForFacetValues(this.facet, text).then(result => result.facetHits);
 
@@ -131,7 +134,13 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
-      switchMap(text => (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)),
+      switchMap(async text => {
+        if (!!this.indexGroup) {
+          return multipleSearch(text);
+        } else {
+          return (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)
+        }
+      }),
       tap(data => this.lastValue$.next(data)),
     );
   }
@@ -150,4 +159,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe() }
   }
+
+
 }
