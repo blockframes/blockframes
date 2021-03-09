@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { algolia } from '@env';
-import algoliasearch, { SearchIndex, } from 'algoliasearch';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { App, getCurrentApp } from "../apps";
 import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from "./algolia.interfaces";
 import { parseFilters, parseFacets } from './helper.utils';
@@ -36,5 +36,9 @@ export class AlgoliaService {
       facetFilters: parseFacets(config.facets),
       filters: parseFilters(config.filters)
     }).then(e => e);
+  }
+
+  multipleQuery() {
+    return algoliasearch(algolia.appId, algolia.searchKey).multipleQueries;
   }
 }

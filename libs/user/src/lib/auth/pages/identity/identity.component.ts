@@ -28,6 +28,7 @@ export class IdentityComponent implements OnInit {
   public app: App;
   public appName: string;
   public orgIndex: AlgoliaIndex = 'org';
+  public indexGroup: string = 'indexNameOrganizations';
   private snackbarDuration = 8000;
   public form = new IdentityForm();
   public orgForm = new OrganizationLiteForm();
@@ -176,7 +177,7 @@ export class IdentityComponent implements OnInit {
 
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(denomination.full);
-      if(!unique){
+      if (!unique) {
         this.orgForm.get('denomination').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
@@ -246,7 +247,7 @@ export class IdentityComponent implements OnInit {
 
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(denomination.full);
-      if(!unique){
+      if (!unique) {
         this.orgForm.get('denomination').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;

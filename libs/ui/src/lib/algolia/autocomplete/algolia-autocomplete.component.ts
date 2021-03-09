@@ -22,6 +22,7 @@ import { AlgoliaService, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { algolia } from '@env';
 
 @Component({
   selector: '[index] [keyToDisplay] algolia-autocomplete',
@@ -37,6 +38,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
    * Set index
    */
   @Input() index: AlgoliaIndex;
+
+  @Input() indexGroup: string;
 
   /**
    * The path of the key to display : i.e. What part of the result should be displayed by the input ?
@@ -123,6 +126,11 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     this.indexSearch = this.algoliaService.getIndex(this.index);
 
     // create search functions
+    const multipleSearch = (text: string) => this.algoliaService.multipleQuery()(this.createMultipleQueries(text)).then(output => {
+      const hits = [];
+      output.results.forEach(r => { r.hits.forEach(hit => { if (!hits.some(h => h.objectID === hit.objectID)) hits.push(hit) }) });
+      return hits;
+    });
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
     const facetSearch = (text: string) => this.indexSearch.searchForFacetValues(this.facet, text).then(result => result.facetHits);
 
@@ -131,7 +139,13 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
-      switchMap(text => (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)),
+      switchMap(async text => {
+        if (!!this.indexGroup) {
+          return multipleSearch(text);
+        } else {
+          return (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)
+        }
+      }),
       tap(data => this.lastValue$.next(data)),
     );
   }
@@ -149,5 +163,17 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe() }
+  }
+
+  private createMultipleQueries(text: string) {
+    const queries = [];
+    Object.values(algolia[this.indexGroup]).forEach(indexName => {
+      queries.push({
+        indexName,
+        query: text
+      })
+    });
+
+    return queries;
   }
 }
