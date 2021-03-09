@@ -23,12 +23,7 @@ export const mediaGroup: StaticGroup<'medias'>[] = [{
   items: ['rental', 'through']
 }];
 
-
-export const staticGroups: StaticGroupMap = {
-  medias: mediaGroup,
-}
-
-export const territoryGroup: StaticGroup<'territories'>[] = [{
+export const territoriesGroup: StaticGroup<'territories'>[] = [{
   label: 'Asia',
   items: [
     'afghanistan',
@@ -297,3 +292,8 @@ export const territoryGroup: StaticGroup<'territories'>[] = [{
     'virgin-islands-us'
   ]
 }]
+
+export const staticGroups: StaticGroupMap = {
+  medias: mediaGroup,
+  territories: territoriesGroup
+}
