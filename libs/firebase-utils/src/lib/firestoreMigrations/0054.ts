@@ -5,7 +5,26 @@ import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
+  
   if (!!data.storagePath) {
+
+    // fallback on known bug : reconstruct correct storagePath from mapping
+    if (typeof data.storagePath !== 'string') {
+      if (Object.keys(data.storagePath)[0] === '0') {
+        data.storagePath = Object.entries(data.storagePath as Record<string, string>)
+          .reduce((acc, curr) => {
+            if (isNaN(parseInt(curr[0]))) {
+              return acc;
+            } else {
+              return acc + curr[1];
+            }
+          },
+        '');
+      } else {
+        data.storagePath = '';
+      }
+    }
+
     // Removing privacy prefix
     const elements = data.storagePath.split('/');
     if (privacies.some(privacy => privacy === elements[0])) {
@@ -15,7 +34,7 @@ function createStorageFile(data: StorageFile) {
   } else {
     data.storagePath = ''
   }
-  
+
   return data;
 }
 
@@ -101,7 +120,7 @@ export async function upgrade(db: Firestore) {
         ...data.promotional.salesPitch
       })
     }
-  
+
     if (!!data.promotional.videos) {
       // promotional.videos.screener
       if (!!data.promotional.videos.screener) {
