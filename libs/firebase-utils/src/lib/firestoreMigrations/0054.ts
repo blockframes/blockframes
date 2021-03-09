@@ -5,7 +5,7 @@ import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
   if (!!data.ref) delete data.ref;
-  
+
   if (!!data.storagePath) {
 
     // fallback on known bug : reconstruct correct storagePath from mapping
@@ -13,13 +13,12 @@ function createStorageFile(data: StorageFile) {
       if (Object.keys(data.storagePath)[0] === '0') {
         data.storagePath = Object.entries(data.storagePath as Record<string, string>)
           .reduce((acc, curr) => {
-            if (isNaN(parseInt(curr[0]))) {
+            if (isNaN(parseInt(curr[0], 10))) {
               return acc;
             } else {
               return acc + curr[1];
             }
-          },
-        '');
+          }, '');
       } else {
         data.storagePath = '';
       }
@@ -169,7 +168,7 @@ export async function upgrade(db: Firestore) {
 
     const fields = ['budget', 'financingPlan', 'waterfall'];
     fields.forEach(field => {
-       data.files[field] = createStorageFile({
+      data.files[field] = createStorageFile({
         storagePath: data.files[field],
         privacy: 'public',
         collection: 'campaigns',
