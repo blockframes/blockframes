@@ -255,7 +255,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
             if (trimmedRow[SpreadSheetContract.startOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
-                term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract] - (25567 + 1) * 86400 * 1000);
+                term.duration.from = new Date(Math.round((spreadSheetRow[SpreadSheetContract.startOfContract] - 25569) * 86400 * 1000));
               } else {
                 term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract])
               }
@@ -271,7 +271,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
             if (trimmedRow[SpreadSheetContract.endOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
-                term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract] - (25567 + 1) * 86400 * 1000);
+                term.duration.to = new Date(Math.round((spreadSheetRow[SpreadSheetContract.endOfContract] - 25569) * 86400 * 1000));
               } else {
                 term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
               }
