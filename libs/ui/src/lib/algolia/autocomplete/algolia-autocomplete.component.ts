@@ -22,7 +22,6 @@ import { AlgoliaService, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { algolia } from '@env';
 
 @Component({
   selector: '[index] [keyToDisplay] algolia-autocomplete',
@@ -126,11 +125,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     this.indexSearch = this.algoliaService.getIndex(this.index);
 
     // create search functions
-    const multipleSearch = (text: string) => this.algoliaService.multipleQuery()(this.createMultipleQueries(text)).then(output => {
-      const hits = [];
-      output.results.forEach(r => { r.hits.forEach(hit => { if (!hits.some(h => h.objectID === hit.objectID)) hits.push(hit) }) });
-      return hits;
-    });
+    const multipleSearch = (text: string) => this.algoliaService.multipleQuery(this.indexGroup, text);
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
     const facetSearch = (text: string) => this.indexSearch.searchForFacetValues(this.facet, text).then(result => result.facetHits);
 
@@ -165,15 +160,5 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     if (this.sub) { this.sub.unsubscribe() }
   }
 
-  private createMultipleQueries(text: string) {
-    const queries = [];
-    Object.values(algolia[this.indexGroup]).forEach(indexName => {
-      queries.push({
-        indexName,
-        query: text
-      })
-    });
 
-    return queries;
-  }
 }

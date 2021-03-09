@@ -38,7 +38,24 @@ export class AlgoliaService {
     }).then(e => e);
   }
 
-  multipleQuery() {
-    return algoliasearch(algolia.appId, algolia.searchKey).multipleQueries;
+  multipleQuery(indexGroup: string, text: string) {
+    const queries = this.createMultipleQueries(indexGroup, text);
+    return algoliasearch(algolia.appId, algolia.searchKey).multipleQueries(queries).then(output => {
+      const hits = [];
+      output.results.forEach(r => { r.hits.forEach(hit => { if (!hits.some(h => h.objectID === hit.objectID)) hits.push(hit) }) });
+      return hits;
+    });
+  }
+
+  private createMultipleQueries(indexGroup: string, text: string) {
+    const queries = [];
+    Object.values(algolia[indexGroup]).forEach(indexName => {
+      queries.push({
+        indexName,
+        query: text
+      })
+    });
+
+    return queries;
   }
 }
