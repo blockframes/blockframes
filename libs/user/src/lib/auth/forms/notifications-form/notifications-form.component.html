@@ -3,7 +3,7 @@
     <header class="surface general">
       <h2>Notifications Settings</h2>
       <article fxLayout="row" fxLayoutAlign="space-between">
-        <p>Activate all the notifications :</p>
+        <p>Activate all notifications :</p>
         <div fxLayout="row" fxLayoutGap="32px">
           <mat-slide-toggle color="primary" labelPosition="before" name="email" [checked]="form.value | everyChecked: 'email' : types" (change)="toogleAll($event, 'email')">By Email:</mat-slide-toggle>
           <mat-slide-toggle color="primary" labelPosition="before" name="app" [checked]="form.value | everyChecked: 'app' : types" (change)="toogleAll($event, 'app')">In App:</mat-slide-toggle>
@@ -40,7 +40,14 @@
           <tr class="mat-caption"><td colspan="3">Receive notifications when:</td></tr>
           <ng-container *ngFor="let type of table.types">
             <tr [formGroupName]="type">
-              <td class="description">{{ titleType[type] }}</td>
+              <td class="description">
+                <span>{{ titleType[type].text }}</span>
+                <mat-icon
+                  *ngIf="titleType[type].tooltip"
+                  svgIcon="info"
+                  matTooltip="This notification can't be disabled as it requires an answer from you.">
+                </mat-icon>
+              </td>
               <td>
                 <mat-checkbox color="primary" name="email" formControlName="email"></mat-checkbox>
               </td>

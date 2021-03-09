@@ -13,7 +13,11 @@ export const templateIds = {
     // Templates for informing new user that his account have been created
     credentials: {
       attendEvent: 'd-ce3e57248a694cefacad49bc4c820078',
-      joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c' // @TODO #4932 we don't use pageURL var in template anymore. ask @vincent why
+      joinOrganization: {
+        catalog: 'd-a34ce9ea59c5477f9feae8f556157b6b',
+        festival: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
+        financiers: 'd-4b8c8ebb99464f87b8eaf8223ba4b562'
+      }
     },
   },
   // Templates for the org management flow
@@ -64,7 +68,7 @@ export const templateIds = {
 /**
  * This is the ids of the unsubscribe group on Sendgrid.
  * We need to pass an id for each template we send to Sendgrid to avoid the default unsubscribe link at the end of the email.
- * The criticalsEmails has been created only for this purpose and it is used for email like reset password.
+ * Presently, there is only the Reset Password email, the Verification Email and the first invitation email with credentials that are mandatory
 */
 export const unsubscribeGroupIds = {
   allExceptCriticals: 15120,
