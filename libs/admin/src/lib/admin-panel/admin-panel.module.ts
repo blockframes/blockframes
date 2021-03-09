@@ -20,7 +20,6 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
-import { TermDateModule } from '@blockframes/utils/pipes/term-date.pipe';
 import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
@@ -90,7 +89,6 @@ export const panelRoutes: Routes = [
     EventModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
-    TermDateModule,
     ToLabelModule,
     OrgNameModule,
     MemberPermissionsModule,
