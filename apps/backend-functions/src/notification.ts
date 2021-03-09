@@ -1,6 +1,6 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import * as admin from 'firebase-admin';
-import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta } from './data/internals';
+import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
@@ -226,13 +226,11 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
 
   if (org.userIds.includes(notification.user.uid)) {
+    const memberAdded = createPublicUserDocument(notification.user);
     const template = userJoinedYourOrganization(
-      recipient.email,
-      recipient.firstName!,
+      recipient,
       orgName(org),
-      notification.user!.firstName,
-      notification.user!.lastName,
-      notification.user!.email
+      memberAdded
     );
 
     const appKey = await getOrgAppKey(org);
@@ -241,7 +239,8 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     // Member left/removed from org
     const userRemoved = createPublicUserDocument(notification.user);
     const app = await getOrgAppKey(org);
-    const template = userLeftYourOrganization(recipient, userRemoved);
+    const publicOrg = createPublicOrganizationDocument(org);
+    const template = userLeftYourOrganization(recipient, userRemoved, publicOrg);
     await sendMailFromTemplate(template, app, unsubscribeId);
   }
 
