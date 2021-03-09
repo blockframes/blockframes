@@ -73,10 +73,12 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
  */
 export function extensionToType(extension: string): AllowedFileType | 'unknown' {
 
+  const dotExtension = extension.startsWith('.') ? extension : '.' + extension;
+
   // we use a for in loop so we can directly return when a match is found
   // (returning in a forEach just end the current iteration)
   for (const type in allowedFiles) {
-    const match = allowedFiles[type].extension.some(fileExtension => fileExtension === extension);
+    const match = allowedFiles[type].extension.some(fileExtension => fileExtension === dotExtension);
     if (match) return type as AllowedFileType;
   }
 
