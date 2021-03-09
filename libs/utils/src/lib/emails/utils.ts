@@ -30,7 +30,9 @@ export interface EventEmailData {
   title: string,
   start: string,
   end: string,
-  type: EventTypes
+  type: EventTypes,
+  viewUrl: string,
+  sessionUrl: string
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -83,6 +85,8 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     title: event?.title || '',
     start: eventStart,
     end: eventEnd,
-    type: event?.type
+    type: event?.type,
+    viewUrl: `/c/o/marketplace/event/${event.id}` || '',
+    sessionUrl: `/c/o/marketplace/event/${event.id}/session` || ''
   }
 }

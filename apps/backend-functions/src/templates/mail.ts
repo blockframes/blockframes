@@ -4,7 +4,7 @@
 import { supportEmails, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
-import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
+import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
 import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
@@ -118,23 +118,20 @@ export function userJoinedAnOrganization(userEmail: string, url: string = appUrl
   return { to: userEmail, templateId: templateIds.request.joinOrganization.accepted, data };
 }
 
-/** Send email to org admin to inform him that a new user has joined his org */
+/** Send email to all membersof an org to inform them that a new user has joined their org */
 export function userJoinedYourOrganization(
-  orgAdminEmail: string,
-  adminFirstName: string,
-  orgDenomination: string,
-  userFirstName: string,
-  userLastName: string,
-  userEmail: string):
+  user: PublicUser,
+  orgName: string,
+  memberAdded: PublicUser):
 EmailTemplateRequest {
   const data = {
-    adminFirstName,
-    orgDenomination,
-    userFirstName,
-    userLastName,
-    userEmail
+    userFirstName: user.firstName,
+    orgName,
+    memberAddedFirstName: memberAdded.firstName,
+    memberAddedLastName: memberAdded.lastName,
+    memberAddedEmail: memberAdded.email
   };
-  return { to: orgAdminEmail, templateId: templateIds.org.memberAdded, data };
+  return { to: user.email, templateId: templateIds.org.memberAdded, data };
 }
 
 /** Send email to org admins to inform them that an user declined their invitation to join his org */
@@ -158,12 +155,14 @@ export function requestToJoinOrgDeclined(toUser: PublicUser, orgName: string): E
 }
 
 /** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization(admin: PublicUser, userRemoved: PublicUser ): EmailTemplateRequest {
+export function userLeftYourOrganization (admin: PublicUser, userRemoved: PublicUser, org: PublicOrganization): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
     userFirstName: userRemoved.firstName,
     userLastName: userRemoved.lastName,
-    userEmail: userRemoved.email
+    userEmail: userRemoved.email,
+    orgName: org.denomination.full,
+    pageURL: `${ORG_HOME}${org.id}/view/members`
   };
   return { to: admin.email, templateId: templateIds.org.memberRemoved, data };
 }
