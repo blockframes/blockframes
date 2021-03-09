@@ -11,8 +11,8 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-interface notificationSetting { text: string, tooltip: boolean};
-const titleType: Record<NotificationTypesBase, notificationSetting> = {
+interface NotificationSetting { text: string, tooltip: boolean};
+const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   movieAccepted: { text: 'A title is succesfully published on the marketplace.', tooltip: false },
   requestFromUserToJoinOrgCreate: { text:'A user requests to join your organization.', tooltip: true },
   requestFromUserToJoinOrgDeclined: { text:'A user\'s request to join your organization was declined. ', tooltip: false },
