@@ -1011,6 +1011,7 @@ function createMovieVideoControl(movieVideo: Partial<MovieVideo> = {}) {
     title: new FormControl(movieVideo?.title ?? ''),
     description: new FormControl(movieVideo?.description ?? ''),
     type: new FormControl(movieVideo?.type ?? ''),
+    jwPlayerId: new FormControl(movieVideo?.jwPlayerId ?? ''),
   }
 }
 
