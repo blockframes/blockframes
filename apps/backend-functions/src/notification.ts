@@ -323,14 +323,15 @@ async function sendOrgAppAccessChangedEmail(recipient: User, notification: Notif
 }
 
 async function sendRequestToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+  const eventDoc = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+  const eventData: EventEmailData = getEventEmailData(eventDoc);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
   const link = getEventLink(org);
   const urlToUse = applicationUrl[eventAppKey];
   const userName = `${notification.user.firstName} ${notification.user.lastName}`;
 
   console.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user} to : ${recipient.email}`);
-  const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, event.title, link, urlToUse);
+  const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, eventData, link, urlToUse);
   return sendMailFromTemplate(templateRequest, eventAppKey, unsubscribeId).catch(e => console.warn(e.message));
 }
 

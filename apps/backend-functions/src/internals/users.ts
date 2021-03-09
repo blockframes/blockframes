@@ -41,10 +41,10 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
       const urlToUse = applicationUrl[app];
 
       let templateId = '';
-      if (invitationType === 'joinOrganization') {
-        templateId = templateIds.user.credentials[invitationType][app];
-      }
-      else templateId = templateIds.user.credentials[invitationType];
+
+      invitationType === 'joinOrganization'
+      ?  templateId = templateIds.user.credentials[invitationType][app]
+      : templateId = templateIds.user.credentials[invitationType];
 
       const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
