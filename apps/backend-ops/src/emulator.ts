@@ -54,7 +54,7 @@ export interface StartEmulatorOptions {
  * Not much use over manually running the command, other than less flags...
  * @param param0 this is a relative path to local Firestore backup to import into emulator
  */
-export async function loadEmulator({ importFrom = 'defaultImport'}: StartEmulatorOptions) {
+export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
@@ -141,7 +141,7 @@ export async function anonymizeLatestProdDb() {
   } finally {
     await shutdownEmulator(proc);
   }
-  await uploadBackup({ localRelPath: defaultEmulatorBackupPath, remoteDir: latestAnonDbDir });
+  await uploadBackup({ localRelPath: `${defaultEmulatorBackupPath}/firestore_export`, remoteDir: latestAnonDbDir });
 }
 
 /**

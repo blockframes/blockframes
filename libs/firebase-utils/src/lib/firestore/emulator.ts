@@ -110,6 +110,7 @@ function createEmulatorMetadataJson(emuPath: string) {
  */
 export function shutdownEmulator(proc: ChildProcess) {
   proc.kill('SIGINT');
+  // @TODO not killed
   return awaitProcOutput(proc, 'Stopping Logging Emulator');
 }
 
@@ -185,15 +186,15 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   emulatorMetaData.firestore.metadata_file = join(firestoreFolderName, newFirestoreMetaFilename);
   writeFileSync(emulatorMetadataJsonPath, JSON.stringify(emulatorMetaData, null, 4), 'utf-8');
 
-  let cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
+  /*let cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
   console.log('Running command:', cmd);
   if (!remoteDir) throw Error('remoteDir is empty... this will clear the entire bucket!');
   let output = await runInBackground(cmd).procPromise;
-  console.log(output);
+  console.log(output);*/
 
-  cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${remoteDir}"`;
+  let cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${remoteDir}"`;
   console.log('Running command:', cmd);
-  output = await runInBackground(cmd).procPromise;
+  let output = await runInBackground(cmd).procPromise;
   console.log(output);
 }
 
