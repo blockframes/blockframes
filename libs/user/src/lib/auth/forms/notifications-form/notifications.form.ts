@@ -25,7 +25,6 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     requestToAttendEventSent: new NotificationSettingsForm(settings.requestToAttendEventSent),
     requestFromUserToJoinOrgCreate: new NotificationSettingsForm(settings.requestFromUserToJoinOrgCreate, true),
     requestFromUserToJoinOrgDeclined: new NotificationSettingsForm(settings.requestFromUserToJoinOrgDeclined),
-    invitationToJoinOrgDeclined: new NotificationSettingsForm(settings.invitationToJoinOrgDeclined),
     invitationToAttendEventUpdated: new NotificationSettingsForm(settings.invitationToAttendEventUpdated),
     requestToAttendEventUpdated: new NotificationSettingsForm(settings.requestToAttendEventUpdated),
     movieAccepted: new NotificationSettingsForm(settings.movieAccepted),
