@@ -364,6 +364,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /buckets/{bucketId} {
+      allow read: if (userOrgId() == bucketId) && notInMaintenance();
+      allow read: if (userOrgId() == bucketId) && notInMaintenance();
+    }
+
     ////////////////////////////////
     // EVENTS RULES               //
     ////////////////////////////////
