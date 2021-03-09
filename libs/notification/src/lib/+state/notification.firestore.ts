@@ -14,7 +14,6 @@ export const notificationTypesBase = [
   // Notifications relative to invitations
   'requestFromUserToJoinOrgCreate',
   'requestFromUserToJoinOrgDeclined',
-  'invitationToJoinOrgDeclined',
   'orgMemberUpdated',
 
   // Events related notifications
@@ -33,6 +32,7 @@ export const notificationTypesPlus = [
   'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
   'orgAppAccessChanged',
+  'invitationToJoinOrgDeclined',
 
   // @TODO #4859 remove once all notification of theses types are read or deleted (since we cannot make a migration script)
   'invitationToAttendEventAccepted',
