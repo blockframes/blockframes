@@ -54,7 +54,7 @@ export interface StartEmulatorOptions {
  * Not much use over manually running the command, other than less flags...
  * @param param0 this is a relative path to local Firestore backup to import into emulator
  */
-export async function loadEmulator({ importFrom = 'defaultImport'}: StartEmulatorOptions) {
+export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
@@ -101,6 +101,13 @@ export async function anonDbProcess() {
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
   console.log(o.map((snap) => snap.id));
+
+  const { getCI, storage, auth } = loadAdminServices();
+
+  console.info('Preparing database & storage by running migrations...');
+  await migrateBeta({ withBackup: false, db, storage }); // run the migration, do not trigger a backup before, since we already have it!
+  console.info('Migrations complete!');
+
   await runAnonymization(db);
   console.log('Anonymization complete!')
 
@@ -108,16 +115,12 @@ export async function anonDbProcess() {
   const p1 = syncUsers(null, db);
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
-  const { getCI, storage, auth } = loadAdminServices();
   const p2 = restoreStorageFromCi(getCI());
 
   await Promise.all([p1, p2]);
   console.info('Storage synced!');
   console.info('Users synced!');
 
-  console.info('Preparing database & storage by running migrations...');
-  await migrateBeta({ withBackup: false, db, storage }); // run the migration, do not trigger a backup before, since we already have it!
-  console.info('Migrations complete!');
 
   console.info('Cleaning unused DB data...');
   await cleanDeprecatedData(db, auth);
