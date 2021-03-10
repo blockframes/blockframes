@@ -1,4 +1,4 @@
-interface Offer {
+export interface Offer {
   id: string;
   buyerId: string;
   status: 'pending';
