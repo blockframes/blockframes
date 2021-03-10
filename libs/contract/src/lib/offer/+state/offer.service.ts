@@ -6,9 +6,7 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 @CollectionConfig({ path: 'offers' })
 export class OfferService extends CollectionService<OfferState> {
 
-  constructor(
-    store: OfferStore
-  ) {
+  constructor(store: OfferStore) {
     super(store);
   }
 }

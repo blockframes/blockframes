@@ -6,9 +6,7 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 @CollectionConfig({ path: 'incomes' })
 export class IncomeService extends CollectionService<IncomeState> {
 
-  constructor(
-    store: IncomeStore
-  ) {
+  constructor(store: IncomeStore) {
     super(store);
   }
 }

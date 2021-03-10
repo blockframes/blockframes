@@ -83,7 +83,7 @@ export class BucketService extends CollectionService<BucketState> {
           contractId,
         }, { write: tx });
       }
-      // Clear out all contract from the bucket
+      // We empty the selection but leave the currency
       return { contracts: [] };
     })
   }
