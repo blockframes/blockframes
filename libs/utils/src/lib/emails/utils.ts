@@ -86,7 +86,7 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: `/c/o/marketplace/event/${event.id}` || '',
-    sessionUrl: `/c/o/marketplace/event/${event.id}/session` || ''
+    viewUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}` : '',
+    sessionUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
   }
 }
