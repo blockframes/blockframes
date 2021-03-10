@@ -22,7 +22,7 @@ const USERS: Partial<User>[] = [
   }
 ];
 
-const ORGANIZATION: Organization = {
+export const ORGANIZATION: Organization = {
   id: 'Cy1234',
   name: `Org-${Date.now()}-Cypress`,
   email: `dev+${Date.now()}@cascade8.com`,

@@ -3,8 +3,9 @@
 import { LandingPage } from '../../support/pages/landing';
 import { User } from "@blockframes/e2e/utils/type";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
-import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
-import { OrganizationHomePage } from "@blockframes/e2e/pages/organization";
+import { AuthIdentityPage, AuthLoginPage } from "@blockframes/e2e/pages/auth";
+import { OrganizationLiteFormPage, OrganizationCreatePendingPage } from "@blockframes/e2e/pages/organization";
+import { ORGANIZATION } from './organization-creation.spec';
 
 const USER: Partial<User> = {
   email: `dev+user-${Date.now()}@cascade8.com`,
@@ -27,15 +28,19 @@ beforeEach(() => {
   p1.clickSignup();
 })
 
-describe('User can create new account', () => {
+describe.only('User can create new account and create a new organization', () => {
   it('Fill all the fields appropriately', () => {
-    const p1 = new AuthLoginPage();
-    p1.fillSignup(USER);
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+    const p2 = new OrganizationLiteFormPage();
+    p2.createNewOrg();
+    p2.fillOrganizationInformation();
+    p2.chooseDashboardAccess();
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
+    const p3: OrganizationCreatePendingPage = p1.submitCreationOrg();
+    p3.assertMoveToOrgCreatePage();
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
-    p2.assertMoveToOrgHomepage();
   });
 });
 

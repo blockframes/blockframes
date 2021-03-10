@@ -9,28 +9,47 @@ export default class AuthIdentityPage {
     cy.get('auth-identity', { timeout: 60 * SEC });
   }
 
-  public clickTermsAndCondition() {
-    cy.get('.mat-checkbox-inner-container').first().click({ force: true });
+  // SINGLE FIELD
+  public fillEmail(email: string) {
+    cy.get('input[test-id="email"]').type(email);
   }
 
-  public clickPrivacyPolicy() {
-    cy.get('.mat-checkbox-inner-container').last().click({ force: true });
+  public fillFirstname(firstname: string) {
+    cy.get('input[formControlName="firstName"]').type(firstname);
   }
 
-  public fillUserInformations(user: Partial<User>) {
-    const name = user.email.split('@')[0];
-    cy.get('input[test-id="email"]').type('cmandonnet+e2etest1-2@cascade8.com');
-    cy.get('input[formControlName="firstName"]').type(name);
-    cy.get('input[formControlName="lastName"]').type(name);
+  public fillLastname(lastname: string) {
+    cy.get('input[formControlName="lastName"]').type(lastname);
   }
 
   public fillInvitationCode() {
     cy.get('input[formControlName="generatedPassword"]').type('blockframes');
   }
 
-  public fillPassword() {
-    cy.get('input[formControlName="password"]').type('blockframes');
-    cy.get('input[formControlName="confirm"]').type('blockframes');
+  public fillPassword(password: string) {
+    cy.get('input[formControlName="password"]').type(password);
+  }
+
+  public fillConfirmedPassword(password: string) {
+    cy.get('input[formControlName="confirm"]').type(password);
+  }
+
+  // ENTIRE USER FORM
+  public fillUserInformations(user: Partial<User>) {
+    cy.get('input[test-id="email"]').type(user.email);
+    cy.get('input[formControlName="firstName"]').type(user.firstName);
+    cy.get('input[formControlName="lastName"]').type(user.lastName);
+    cy.get('input[formControlName="password"]').type(user.password);
+    cy.get('input[formControlName="confirm"]').type(user.password);
+  }
+
+  // TERMS, CONDITION AND SUBMIT
+  public clickTermsAndCondition() {
+    cy.get('.mat-checkbox-inner-container').first().click({ force: true });
+  }
+
+  public clickPrivacyPolicy() {
+    cy.get('.mat-checkbox-inner-container').last().click({ force: true });
   }
 
   public submitCreationOrg() {
