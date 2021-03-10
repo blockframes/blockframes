@@ -1,6 +1,7 @@
 import { Media, Territory } from '@blockframes/utils/static-model';
 
 export interface Bucket {
+  id: string;
   currency: 'euro' | 'dollar';
   /** One contract per orgId / titleId / parent terms Id */
   contracts: {
