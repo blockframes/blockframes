@@ -12,7 +12,7 @@ import {
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription } from "rxjs";
 import { map, startWith, shareReplay } from "rxjs/operators";
-import { Scope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+import { Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
@@ -166,13 +166,13 @@ export class GetModePipe implements PipeTransform {
 
 @Pipe({ name: 'triggerDisplay' })
 export class TriggerDisplayValue implements PipeTransform {
-  transform(value: string[], groups: StaticGroup[], all?: string) {
+  transform(value: string[], groups: StaticGroup[], scope: Scope, all?: string) {
     const allItems = groups.reduce((items, group) => items.concat(group.items), []);
     if (allItems.length === value.length) return all;
     return groups.map(group => {
       const items = [];
       for (const item of group.items) {
-        if (value.includes(item)) items.push(item);
+        if (value.includes(item)) items.push(staticModel[scope][item]);
       }
       return items.length === group.items.length
         ? group.label
