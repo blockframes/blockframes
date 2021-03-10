@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Intercom } from 'ng-intercom';
-import { BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-selection',
@@ -11,10 +12,11 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent implements OnDestroy {
-  private sub: Subscription;
+export class MarketplaceSelectionComponent {
+
   form = new FormGroup({}); // Todo : transform into a BucketForm
 
+  bucket$: Observable<Bucket>;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -22,14 +24,9 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     private bucketService: BucketService,
     private dynTitle: DynamicTitleService
   ) {
-    this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
-      this.form.reset(bucket);
-      this.setTitle(bucket?.contracts.length);
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.bucket$ = this.bucketQuery.selectActive().pipe(
+      tap(bucket => this.setTitle(bucket?.contracts.length)),
+    );
   }
 
   private setTitle(amount: number) {

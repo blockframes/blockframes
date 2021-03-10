@@ -23,23 +23,19 @@ export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
   criteria: any[];
 }
 
-interface Bucket {
-  currency: 'euro' | 'dollar';
-  /** One contract per orgId / titleId / parent terms Id */
-  contracts: {
-    titleId: string;
-    /** The orgId that own the contract (mandate in this case) that  */
-    orgId: string;
-    /** Price used to create the income */
-    price: number;
-    /** Parent term on which the contract is create */
-    parentTermId: string;
-    /** List of sub terms derived from the parent terms that the buyer want to buy */
-    terms: {
-      territories: string[];
-      media: string[];
-      exclusive: boolean;
-      duration: { from: Date, to: Date };
-    }[];
-  }[];
+export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
+  return {
+    id: '',
+    titleId: '',
+    orgId: '',
+    contractId: '',
+    territories: [],
+    medias: [],
+    exclusive: false,
+    duration: { from: new Date(), to: new Date() },
+    licensedOriginal: null,
+    languages: {},
+    criteria: [],
+    ...params
+  }
 }
