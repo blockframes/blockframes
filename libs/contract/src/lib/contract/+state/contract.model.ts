@@ -67,6 +67,7 @@ export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
   return {
     id: '',
     titleId: '',
+    contractId: '',
     orgId: '',
     territories: [],
     medias: [],

@@ -13,6 +13,7 @@ export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
   id: string;
   titleId: string;
   orgId: string;
+  contractId: string;
   territories: Territory[];
   medias: Media[];
   licensedOriginal: boolean;
