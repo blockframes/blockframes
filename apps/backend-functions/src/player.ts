@@ -186,3 +186,23 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
     return { success: true, key: result.video.key }
   }
 }
+
+
+export const getPlayerUrl = async (
+  data: unknown,
+  context: CallableContext
+): Promise<string> => {
+  if (!context.auth) {
+    throw new Error(`Unauthorized call !`);
+  }
+
+  const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
+
+  const toSign = `libraries/lpkRdflk.js:${expires}:${jwplayerSecret}`;
+  const md5 = createHash('md5');
+
+  const signature = md5.update(toSign).digest('hex');
+
+  const signedUrl = `https://cdn.jwplayer.com/libraries/lpkRdflk.js?exp=${expires}&sig=${signature}`;
+  return signedUrl;
+};
