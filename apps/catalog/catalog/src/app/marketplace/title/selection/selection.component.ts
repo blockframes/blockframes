@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { MarketplaceQuery, MarketplaceStore } from '../../+state';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Intercom } from 'ng-intercom';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'catalog-selection',
@@ -12,38 +11,35 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent {
+export class MarketplaceSelectionComponent implements OnDestroy {
+  private sub: Subscription;
+  form = new FormGroup({}); // Todo : transform into a BucketForm
 
-  count$ = this.query.selectCount();
-  titles$ = this.query.selectAll();
-  isInWishist$: Observable<Record<string, Observable<boolean>>>;
 
   constructor(
-    public store: MarketplaceStore,
-    private query: MarketplaceQuery,
-    private movieQuery: MovieQuery,
-    private orgQuery: OrganizationQuery,
     @Optional() private intercom: Intercom,
+    private bucketQuery: BucketQuery,
+    private bucketService: BucketService,
     private dynTitle: DynamicTitleService
   ) {
-    this.query.getCount()
-      ? this.dynTitle.setPageTitle('My Selection')
-      : this.dynTitle.setPageTitle('No selections yet')
+    this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
+      this.form.reset(bucket);
+      this.setTitle(bucket?.contracts.length);
+    });
   }
 
-  /** Select a movie for a specific movie Id */
-  selectMovie(movieId: string) {
-    return this.movieQuery.selectEntity(movieId);
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
-  removeTitle(movieId: string) {
-    this.store.remove(movieId);
+  private setTitle(amount: number) {
+    const title = amount ? 'My Selection' : 'No selections yet';
+    this.dynTitle.setPageTitle(title);
   }
-  /**
-   * Creates rights and contract and move to tunnel
-   */
-  create() {
-    this.store.reset();
+
+  createOffer() {
+    const bucket = this.form.value;
+    this.bucketService.createOffer(bucket);
   }
 
   openIntercom() {
