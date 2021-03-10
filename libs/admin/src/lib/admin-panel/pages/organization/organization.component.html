@@ -1,4 +1,4 @@
-<ng-container *ngIf="org$ | async as org">
+<ng-container *ngIf="org">
   <main fxLayout="column" fxFlex fxLayoutGap="40px">
     <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
     <section *ngIf="org" fxLayout="column" fxLayoutGap="40px">
@@ -12,17 +12,17 @@
         <button mat-flat-button color="warn" (click)="deleteOrg()">Delete this org</button>
       </article>
 
-        <mat-card *ngIf="orgForm" fxFlex fxLayoutGap="40px">
-          <admin-organization-form [form]="orgForm" [orgId]="org.id"></admin-organization-form>
+      <mat-card *ngIf="orgForm" fxFlex fxLayoutGap="40px">
+        <admin-organization-form [form]="orgForm" [orgId]="org.id"></admin-organization-form>
 
-          <form [formGroup]="orgForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
-            <mat-checkbox [formControl]="notifyCheckbox">
-              Notify admin(s) of app access changes ?
-            </mat-checkbox>
+        <form [formGroup]="orgForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+          <mat-checkbox [formControl]="notifyCheckbox">
+            Notify admin(s) of app access changes ?
+          </mat-checkbox>
 
-            <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
-          </form>
-        </mat-card>
+          <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+        </form>
+      </mat-card>
     </section>
 
     <member-repertory
