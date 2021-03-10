@@ -1,5 +1,3 @@
-import { Term } from '@blockframes/contract/term/+state/term.model';
-
 export interface Contract {
   id: string;
   type: 'mandate' | 'sale';
@@ -59,23 +57,6 @@ export function createSale(params: Partial<Sale> = {}): Sale {
     type: 'sale',
     status: 'pending',
     stakeholders: [],
-    ...params
-  }
-}
-
-export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
-  return {
-    id: '',
-    titleId: '',
-    contractId: '',
-    orgId: '',
-    territories: [],
-    medias: [],
-    exclusive: false,
-    duration: { from: new Date(), to: new Date() },
-    licensedOriginal: null,
-    languages: {},
-    criteria: [],
     ...params
   }
 }
