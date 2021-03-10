@@ -23,7 +23,7 @@ export class AcceptConditionsComponent {
 
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
   public openTermsOfUse(conditions: TemplateRef<any>) {
-    this.dialog.open(conditions, { maxHeight: '80vh' })
+    this.dialog.open(conditions, { maxHeight: '80vh', autoFocus: false })
   }
 
   public toggleCondition() {
