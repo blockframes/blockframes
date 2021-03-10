@@ -38,8 +38,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
   createOffer() {
-    const bucket = this.form.value;
-    this.bucketService.createOffer(bucket);
+    this.bucketService.createOffer();
   }
 
   openIntercom() {
