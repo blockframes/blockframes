@@ -131,17 +131,17 @@
       <campaign-summary-fundings [form]="campaignForm" [link]="'fundings' | getPath"></campaign-summary-fundings>
       <campaign-summary-profits [form]="campaignForm" [link]="'profits' | getPath"></campaign-summary-profits>
     </section>
-    
+
     <mat-divider></mat-divider>
-  
+
     <!-- CAMPAIGN -->
     <section id="campaign">
       <h3>Investment conditions</h3>
       <campaign-summary-proposal [form]="campaignForm" [link]="'proposal' | getPath"></campaign-summary-proposal>
-            
+
       <campaign-summary-perks [form]="campaignForm" [link]="'perks' | getPath"></campaign-summary-perks>
     </section>
-  
+
     <!-- Submit -->
     <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
       [disabled]="isPublished$ | async">
