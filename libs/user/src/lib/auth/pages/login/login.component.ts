@@ -58,7 +58,10 @@ export class LoginComponent implements OnInit {
       }
     } catch (err) {
       console.error(err); // let the devs see what happened
-      this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+      if (err === 'FIRESTORE (8.2.5) INTERNAL ASSERTION FAILED: Unexpected state') {
+        this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: this.snackbarDuration });
+      }
+      else this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
     }
   }
 
