@@ -6,19 +6,22 @@ import {
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
 
-// Blockframes
-import { Movie } from '@blockframes/movie/+state';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
-// Others
+// Blockframes
+import { Movie } from '@blockframes/movie/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { getMandateTerm } from '@blockframes/contract/avails/avails';
+import { ContractService } from '@blockframes/contract/contract/+state';
+import { Term } from '@blockframes/contract/term/+state/term.model';
+import { TermService } from '@blockframes/contract/term/+state/term.service';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -40,20 +43,23 @@ export class ListComponent implements OnInit, OnDestroy {
   public hitsViewed = 0;
 
   private sub: Subscription;
-  private loadMoreToggle: boolean;
-  private lastPage: boolean;
+
+  private mandateTerms: Term<Date>[]
+  private salesTerms: Term<Date>[]
 
   constructor(
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private contractService: ContractService,
+    private termService: TermService
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
-
+    this.searchForm.hitsPerPage.setValue(1000)
     const params = this.route.snapshot.queryParams;
     for (const key in params) {
       try {
@@ -63,6 +69,12 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
+    const mandates = await this.contractService.getValue(ref => ref.where('type', '==', 'mandate'));
+    const sales = await this.contractService.getValue(ref => ref.where('type', '==', 'sale'));
+
+    this.mandateTerms = await (await Promise.all(mandates.map(mandate => this.termService.getValue(mandate.termIds)))).flat() as Term<Date>[];
+    this.salesTerms = await (await Promise.all(sales.map(sale => this.termService.getValue(sale.termIds)))).flat() as Term<Date>[];
+    console.log(this.salesTerms)
     this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
@@ -70,35 +82,15 @@ export class ListComponent implements OnInit, OnDestroy {
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
     ).subscribe(movies => {
-      if (this.loadMoreToggle) {
-        this.movieResultsState.next(this.movieResultsState.value.concat(movies))
-        this.loadMoreToggle = false;
-      } else {
+      if (getMandateTerm(this.availsForm.value, this.mandateTerms))
         this.movieResultsState.next(movies);
-      }
-      /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
-      the overall possible results which is represented by nbHits.
-      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
-      So when the next valueChange is happening we need to reset everything and start from beginning  */
-      this.hitsViewed = this.movieResultsState.value.length
-      if (this.lastPage && this.searchForm.page.value !== 0) {
-        this.hitsViewed = 0;
-        this.searchForm.page.setValue(0);
-      }
-      this.lastPage = this.hitsViewed === this.nbHits;
-    });;
+    });
   }
 
   clear() {
     const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
     this.cdr.markForCheck();
-  }
-
-  async loadMore() {
-    this.loadMoreToggle = true;
-    this.searchForm.page.setValue(this.searchForm.page.value + 1);
-    await this.searchForm.search();
   }
 
   ngOnDestroy() {

@@ -1,6 +1,6 @@
 
 import { GetKeys } from '@blockframes/utils/static-model/static-model';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
@@ -75,6 +75,8 @@ function createMovieSearchControl(search: MovieSearch) {
     minBudget: new FormControl(search.minBudget),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
+    // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
+    hitsPerPage: new FormControl(50, Validators.max(1000))
   };
 }
 
@@ -104,7 +106,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
   get socialGoals() { return this.get('socialGoals'); }
-
+  get hitsPerPage() { return this.get('hitsPerPage') }
 
   isEmpty() {
     return (
@@ -124,7 +126,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
 
   search() {
     const search = {
-      hitsPerPage: 50,
+      hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
       page: this.page.value,
       facetFilters: [
