@@ -251,7 +251,7 @@ export const deleteMedia = async (file: StorageFile): Promise<void> => {
 }
 
 function needsToBeCleaned(before: StorageFile | undefined, after: StorageFile | undefined) {
-  return !!before.storagePath && before.storagePath !== after.storagePath && !after.storagePath;
+  return !!before?.storagePath && before.storagePath !== after?.storagePath;
 };
 
 function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] | undefined) {
