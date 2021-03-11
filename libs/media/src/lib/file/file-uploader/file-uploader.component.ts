@@ -76,7 +76,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   @Input() queueIndex: number;
   @Input() formIndex: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
-    const [ collection, label, docId ] = value;
+    const [collection, label, docId] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
     this.metadata = { ...getFileMetadata(collection, label, docId), ...this.getExtra() };
   }
@@ -121,6 +121,10 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (!!media) {
+          if (!media.description) { media.description = '' }
+          if (!media.title) { media.title = '' }
+          if (!media.type) { media.type = '' }
+          if (!media.jwPlayerId) { media.jwPlayerId = '' }
           this.form.setValue(media);
         }
       })
@@ -167,14 +171,14 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       this.file = files.item(0);
 
     } else if (!files) { // No files
-        this.snackBar.open('No file found', 'close', { duration: 1000 });
-        if (!!this.file) {
-          this.state = 'file';
-        } else {
-          this.state = 'waiting';
-          this.fileExplorer.nativeElement.value = null;
-        }
-        return;
+      this.snackBar.open('No file found', 'close', { duration: 1000 });
+      if (!!this.file) {
+        this.state = 'file';
+      } else {
+        this.state = 'waiting';
+        this.fileExplorer.nativeElement.value = null;
+      }
+      return;
     } else { // Single file
       this.file = files;
     }

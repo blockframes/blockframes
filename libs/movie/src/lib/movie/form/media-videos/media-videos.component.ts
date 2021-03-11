@@ -1,10 +1,7 @@
 
 import { ActivatedRoute } from '@angular/router';
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-
-import { hostedVideoTypes } from '@blockframes/utils/static-model/static-model';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { MovieService } from '../../+state';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
@@ -29,7 +26,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     private shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -54,15 +50,5 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   get videoList() {
     return this.form.promotional.videos.otherVideos;
-  }
-
-  get hasScreener() {
-    return !!this.screenerForm.storagePath.value;
-  }
-
-  deleteScreener() {
-    this.screenerForm.patchValue({ storagePath: '' })
-    this.screenerForm.markAsDirty();
-    this.cdr.markForCheck();
   }
 }

@@ -1032,7 +1032,7 @@ function createMovieVideosControl(videos: Partial<MovieVideos> = {}) {
   const { screener, otherVideos } = createMovieVideos(videos);
   return {
     screener: new MovieVideoForm(screener),
-    otherVideos: FormList.factory(otherVideos, (otherVideo, i) => new MovieVideoForm(otherVideo)),
+    otherVideos: FormList.factory(otherVideos, otherVideo => new MovieVideoForm(otherVideo)),
   }
 }
 
