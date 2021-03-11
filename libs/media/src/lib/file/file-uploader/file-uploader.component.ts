@@ -1,4 +1,3 @@
-
 import {
   Component,
   Input,
@@ -27,9 +26,9 @@ import { Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { MovieVideoForm } from '@blockframes/movie/form/movie.form';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
-
 
 function computeSize(fileSize: number) {
   const size = fileSize / 1000;
@@ -71,7 +70,6 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       }
     })
   }
-
 
   @Input() queueIndex: number;
   @Input() formIndex: number;
@@ -121,10 +119,12 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (!!media) {
-          if (!media.description) { media.description = '' }
-          if (!media.title) { media.title = '' }
-          if (!media.type) { media.type = '' }
-          if (!media.jwPlayerId) { media.jwPlayerId = '' }
+          if (this.form instanceof MovieVideoForm) {
+            if (!media.description) { media.description = '' }
+            if (!media.title) { media.title = '' }
+            if (!media.type) { media.type = '' }
+            if (!media.jwPlayerId) { media.jwPlayerId = '' }
+          }
           this.form.setValue(media);
         }
       })
