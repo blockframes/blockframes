@@ -5,23 +5,24 @@ import {
   OnInit,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-
+import { ActivatedRoute } from '@angular/router';
 
 // RxJs
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { debounceTime, switchMap, startWith, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ActivatedRoute } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { getMandateTerm } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, getMandateTerm, isSold } from '@blockframes/contract/avails/avails';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
+
+import { SearchResponse } from '@algolia/client-search';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -72,19 +73,39 @@ export class ListComponent implements OnInit, OnDestroy {
     const mandates = await this.contractService.getValue(ref => ref.where('type', '==', 'mandate'));
     const sales = await this.contractService.getValue(ref => ref.where('type', '==', 'sale'));
 
-    this.mandateTerms = await (await Promise.all(mandates.map(mandate => this.termService.getValue(mandate.termIds)))).flat() as Term<Date>[];
-    this.salesTerms = await (await Promise.all(sales.map(sale => this.termService.getValue(sale.termIds)))).flat() as Term<Date>[];
-    console.log(this.salesTerms)
-    this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
+    this.mandateTerms = await (await Promise.all(mandates.map(mandate =>
+      this.termService.getValue(mandate.termIds)))).flat() as Term<Date>[];
+    this.salesTerms = await (await Promise.all(sales.map(sale =>
+      this.termService.getValue(sale.termIds)))).flat() as Term<Date>[];
+
+    this.sub = combineLatest([
+      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
+      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value))
+    ]).pipe(
       distinctUntilChanged(),
-      debounceTime(500),
-      switchMap(() => this.searchForm.search()),
-      tap(res => this.nbHits = res.nbHits),
-      pluck('hits'),
-    ).subscribe(movies => {
-      if (getMandateTerm(this.availsForm.value, this.mandateTerms))
-        this.movieResultsState.next(movies);
-    });
+      debounceTime(300),
+      switchMap(async ([_, availsValue]) => [await this.searchForm.search(), availsValue]),
+    ).subscribe(([movies, availsValue]: [SearchResponse<Movie>, AvailsFilter]) => {
+      if (this.availsForm.valid) {
+        this.movieResultsState.next([])
+        movies.hits.forEach(movie => {
+          const movieMandate = getMandateTerm(availsValue, this.mandateTerms.filter(
+            mandate => mandate.titleId === movie.objectID));
+          if (movieMandate) {
+            const movieSales = this.salesTerms.filter(sale => sale.titleId === movie.objectID);
+            const ongoingSales = isSold(availsValue, movieSales);
+            if (!ongoingSales) {
+              // Implement bucket func @TODO #5002
+              const state = this.movieResultsState.getValue();
+              state.push(movie)
+              this.movieResultsState.next(state);
+            }
+          }
+        })
+      } else { // if availsForm is invalid, put all the movies from algolia
+        this.movieResultsState.next(movies.hits)
+      }
+    })
   }
 
   clear() {

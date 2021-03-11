@@ -53,19 +53,19 @@ export function isSold(
       continue;
     } else if (term.exclusive) {
 
-      if (duration.from.getTime() > term.duration.to.getTime()) {
+      if (duration.from.getTime() < term.duration.to.getTime()) {
         continue;
       }
 
-      if (duration.to.getTime() < term.duration.from.getTime()) {
+      if (duration.to.getTime() > term.duration.from.getTime()) {
         continue;
       }
 
-      if (territories.every(territory => !term.territories.includes(territory))) {
+      if (territories.every(territory => term.territories.includes(territory))) {
         continue;
       }
 
-      if (medias.every(medium => !term.medias.includes(medium))) {
+      if (medias.every(medium => term.medias.includes(medium))) {
         continue;
       }
     } else {
