@@ -11,8 +11,8 @@ import { sleep } from '../util';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 
-const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
-const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
+export const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
+export const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
 
 /**
  * This function will get the filename of the Firestore export metadata json file.
