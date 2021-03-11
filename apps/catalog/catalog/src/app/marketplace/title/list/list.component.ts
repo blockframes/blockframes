@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
@@ -22,7 +23,8 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { BucketService } from '@blockframes/contract/bucket/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -48,7 +50,13 @@ export class ListComponent implements OnInit, OnDestroy {
   private terms: {
     mandate: Term<Date>[],
     sales: Term<Date>[]
-  }
+  } = {
+      mandate: [],
+      sales: []
+    }
+
+
+  private mandateMemo: Record<string, Term<Date>> = {};
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -56,7 +64,9 @@ export class ListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private contractService: ContractService,
     private termService: TermService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private bucketService: BucketService,
+    private orgQuery: OrganizationQuery
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -87,9 +97,9 @@ export class ListComponent implements OnInit, OnDestroy {
       if (this.availsForm.valid) {
         this.movieResultsState.next([])
         movies.hits.forEach(movie => {
-          const movieMandate = getMandateTerm(availsValue, this.terms.mandate.filter(
+          this.mandateMemo[movie.objectID] = getMandateTerm(availsValue, this.terms.mandate.filter(
             mandate => mandate.titleId === movie.objectID));
-          if (movieMandate) {
+          if (this.mandateMemo[movie.objectID]) {
             const movieSales = this.terms.sales.filter(sale => sale.titleId === movie.objectID);
             const ongoingSales = isSold(availsValue, movieSales);
             if (!ongoingSales) {
@@ -124,24 +134,22 @@ export class ListComponent implements OnInit, OnDestroy {
       this.snackbar.open('Specify the avails before adding to selection', 'close', { duration: 3000 })
       return;
     }
-    /*    // Get the parent term
-       const parentTermId = this. .getValue()[titleId];
-       if (!parentTermsId) throw new Error('no available term for this title');
-       const term = this.form.value;
-   
-       this.bucket.update(orgId, (bucket) => {
-         const contracts = bucket.contracts || [];
-         // Check if there is already a contract that apply on the same parentTermId
-         const index = contracts.findIndex(contract => contract.parentTermId === parentTermId);
-   
-         if (index !== -1) { // If yes, append its's terms with the new one.
-           contracts[index].terms.push(term);
-           return { contracts };
-         } else {  // Else create a new contract
-           const contract = { titleId, parentTermsId, terms: [term] };
-           return { contracts: [...contracts, contract] };
-         }
-       }); */
+    // Get the parent term
+    const mandate = await this.contractService.getValue(this.mandateMemo[titleId].contractId);
+    if (!mandate) throw new Error('no available term for this title');
+    const term = this.availsForm.value;
+    this.bucketService.update(this.orgQuery.getActiveId(), (bucket) => {
+      const contracts = bucket.contracts || [];
+      // Check if there is already a contract that apply on the same parentTermId
+      const index = contracts.findIndex(contract => contract.parentTermId === mandate.parentTermId);
+      if (index !== -1) { // If yes, append its's terms with the new one.
+        contracts[index].terms.push(term);
+        return { ...bucket, contracts };
+      } else {  // Else create a new contract
+        const contract = { titleId, parentTermId: mandate.parentTermId, terms: [term], price: 0, orgId: this.orgQuery.getActiveId() };
+        return { contracts: [...contracts, contract] };
+      }
+    });
   }
 
   ngOnDestroy() {
