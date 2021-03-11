@@ -45,8 +45,10 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
-  private mandateTerms: Term<Date>[]
-  private salesTerms: Term<Date>[]
+  private terms: {
+    mandateTerms: Term<Date>[]
+    salesTerms: Term<Date>[]
+  }
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -73,10 +75,8 @@ export class ListComponent implements OnInit, OnDestroy {
     const mandates = await this.contractService.getValue(ref => ref.where('type', '==', 'mandate'));
     const sales = await this.contractService.getValue(ref => ref.where('type', '==', 'sale'));
 
-    this.mandateTerms = await (await Promise.all(mandates.map(mandate =>
-      this.termService.getValue(mandate.termIds)))).flat() as Term<Date>[];
-    this.salesTerms = await (await Promise.all(sales.map(sale =>
-      this.termService.getValue(sale.termIds)))).flat() as Term<Date>[];
+    this.terms.mandateTerms = await this.getAllTerms('mandate');
+    this.terms.salesTerms = await this.getAllTerms('sale')
 
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -89,10 +89,10 @@ export class ListComponent implements OnInit, OnDestroy {
       if (this.availsForm.valid) {
         this.movieResultsState.next([])
         movies.hits.forEach(movie => {
-          const movieMandate = getMandateTerm(availsValue, this.mandateTerms.filter(
+          const movieMandate = getMandateTerm(availsValue, this.terms.mandateTerms.filter(
             mandate => mandate.titleId === movie.objectID));
           if (movieMandate) {
-            const movieSales = this.salesTerms.filter(sale => sale.titleId === movie.objectID);
+            const movieSales = this.terms.salesTerms.filter(sale => sale.titleId === movie.objectID);
             const ongoingSales = isSold(availsValue, movieSales);
             if (!ongoingSales) {
               // Implement bucket func @TODO #5002
@@ -112,6 +112,13 @@ export class ListComponent implements OnInit, OnDestroy {
     const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
     this.cdr.markForCheck();
+  }
+
+  async getAllTerms(contractType: 'mandate' | 'sale'): Promise<Term<Date>[]> {
+    const contracts = await this.contractService.getValue(ref => ref.where('type', '==', contractType));
+    const promises = contracts.map(c => this.termService.getValue(c.termIds));
+    const terms = await Promise.all(promises);
+    return terms.flat() as Term<Date>[];
   }
 
   ngOnDestroy() {
