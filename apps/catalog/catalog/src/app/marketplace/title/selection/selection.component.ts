@@ -1,10 +1,10 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { MarketplaceQuery, MarketplaceStore } from '../../+state';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Observable } from 'rxjs';
+import { FormGroup } from '@angular/forms';
 import { Intercom } from 'ng-intercom';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-selection',
@@ -14,36 +14,28 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class MarketplaceSelectionComponent {
 
-  count$ = this.query.selectCount();
-  titles$ = this.query.selectAll();
-  isInWishist$: Observable<Record<string, Observable<boolean>>>;
+  form = new FormGroup({}); // Todo : transform into a BucketForm
+
+  bucket$: Observable<Bucket>;
 
   constructor(
-    public store: MarketplaceStore,
-    private query: MarketplaceQuery,
-    private movieQuery: MovieQuery,
-    private orgQuery: OrganizationQuery,
     @Optional() private intercom: Intercom,
+    private bucketQuery: BucketQuery,
+    private bucketService: BucketService,
     private dynTitle: DynamicTitleService
   ) {
-    this.query.getCount()
-      ? this.dynTitle.setPageTitle('My Selection')
-      : this.dynTitle.setPageTitle('No selections yet')
+    this.bucket$ = this.bucketQuery.selectActive().pipe(
+      tap(bucket => this.setTitle(bucket?.contracts.length)),
+    );
   }
 
-  /** Select a movie for a specific movie Id */
-  selectMovie(movieId: string) {
-    return this.movieQuery.selectEntity(movieId);
+  private setTitle(amount: number) {
+    const title = amount ? 'My Selection' : 'No selections yet';
+    this.dynTitle.setPageTitle(title);
   }
 
-  removeTitle(movieId: string) {
-    this.store.remove(movieId);
-  }
-  /**
-   * Creates rights and contract and move to tunnel
-   */
-  create() {
-    this.store.reset();
+  createOffer() {
+    this.bucketService.createOffer();
   }
 
   openIntercom() {

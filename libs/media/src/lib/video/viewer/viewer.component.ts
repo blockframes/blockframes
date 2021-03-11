@@ -138,7 +138,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit() {
     this.resetPlayerState();
-    await loadJWPlayerScript(this.document);
+    const playerUrl = this.functions.httpsCallable('playerUrl');
+    const url = await playerUrl({}).toPromise<string>();
+    await loadJWPlayerScript(this.document, url);
   }
 
   resetPlayerState() {

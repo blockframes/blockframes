@@ -324,13 +324,14 @@ service cloud.firestore {
         && isNotUpdatingField(['_meta', 'createdAt'])
         && isNotUpdatingField(['_type'])
         && ( isNotUpdatingField(['storeConfig','status'])
-          || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'accepted', 'draft'] )
+          || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'draft', 'accepted'] )
           || ( existingData().storeConfig.appAccess.catalog == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
-          || ( existingData().storeConfig.appAccess.financiers == true && incomingData().storeConfig.status in ['submitted','accepted', 'draft'] )
+          || ( existingData().storeConfig.appAccess.financiers == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
         )
         && isNotUpdatingField(['storeConfig','storeType'])
         && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
         && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
+        && isNotUpdatingField(['storeConfig','appAccess', 'financiers'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
     }
 
@@ -362,6 +363,11 @@ service cloud.firestore {
     match /publicContracts/{publicContractId} {
       allow read: if userHasValidOrg() && notInMaintenance();
       allow write: if false;
+    }
+
+    match /buckets/{bucketId} {
+      allow read: if (userOrgId() == bucketId) && notInMaintenance();
+      allow read: if (userOrgId() == bucketId) && notInMaintenance();
     }
 
     ////////////////////////////////

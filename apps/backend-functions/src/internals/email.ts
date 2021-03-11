@@ -12,7 +12,8 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 
 const substitutions = {
   groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
-  preferenceUnsubscribe: "<%asm_preferences_raw_url%>"
+  preferenceUnsubscribe: "<%asm_preferences_raw_url%>",
+  notificationPage: "/c/o/account/profile/view/notifications"
 };
 
 const criticalsEmailsGroupId = unsubscribeGroupIds.criticalsEmails;
@@ -28,7 +29,6 @@ const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-// TODO #4710 Define which template is critical and pass the id to the function when it's called
 export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId): Promise<any> {
   const msg: MailDataRequired = {
     from,
@@ -42,7 +42,6 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-// TODO #4710 Define which template is critical and pass the id to the function when it's called
 export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<any> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
@@ -50,6 +49,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   const appLogoLink = appLogo[app];
   const appLink = applicationUrl[app];
   const appMailSettings: AppMailSetting = { description: appText, logo: appLogoLink, name: label, url: appLink }
+
   const msg: MailDataRequired = {
     from,
     to,

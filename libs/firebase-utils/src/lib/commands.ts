@@ -29,7 +29,7 @@ export function runShellCommandUntil(cmd: string, until: string) {
   process.on('SIGBREAK', () => proc.kill('SIGBREAK'));
   process.on('SIGHUP', () => proc.kill('SIGHUP'));
   const reg = new RegExp(until, 'i')
-  const procPromise = new Promise((res, rej) => {
+  const procPromise = new Promise<void>((res, rej) => {
     proc.on('error', rej);
     proc.on('exit', (code) => (code === 0 ? res : rej));
     proc.stdout.on('close', res);
@@ -50,7 +50,7 @@ export function runShellCommandUntil(cmd: string, until: string) {
  * @param output string to search for to resolve promise upon detection
  */
 export function awaitProcOutput(proc: ChildProcess, output: string) {
-  return new Promise(res => {
+  return new Promise<void>(res => {
     const reg = new RegExp(output, 'i')
     proc.stdout.on('data', (out: Buffer) => {
       const lines = out.toString().split('\n');
