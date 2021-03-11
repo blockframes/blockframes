@@ -3,7 +3,7 @@
     <h1>{{ pageTitle }} </h1>
 
     <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
-      <button mat-stroked-button color="primary" (click)="downloadTemplate('movie')">
+      <button mat-stroked-button color="primary" (click)="downloadTemplate('title')">
         <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our template to import in bulk</span>
       </button>
       <ng-container *ngIf="isUserBlockframesAdmin">
