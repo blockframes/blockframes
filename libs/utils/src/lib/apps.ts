@@ -44,9 +44,8 @@ export const appLogo = {
 };
 type AppLogoValue = typeof appLogo[App];
 
-// TODO #4510 add text description
 export const appDescription = {
-  catalog: 'Archipel Content is the only marketplace offering package deals for TV, VOD and ancillary rights.',
+  catalog: 'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple : One massive library, One package offer, One negotiation, One contract.',
   festival: 'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
   financiers: 'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
 };
