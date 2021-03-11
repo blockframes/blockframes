@@ -10,7 +10,7 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from "@angular/forms";
-import { BehaviorSubject, combineLatest, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, combineLatest, Observable, Subscription, defer } from "rxjs";
 import { map, startWith, shareReplay } from "rxjs/operators";
 import { Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -73,10 +73,11 @@ export class StaticGroupComponent implements ControlValueAccessor {
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
 
   form = new FormControl([]);
-  value$ = this.form.valueChanges.pipe(
+  // defer the startWith value with subscription happens to get first value
+  value$ = defer(() => this.form.valueChanges.pipe(
     startWith(this.form.value),
     shareReplay(1)
-  );
+  ));
   hidden: Record<string, boolean> = {}
   
   @Input() displayAll = '';

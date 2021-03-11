@@ -19,6 +19,7 @@ export class MarketplaceSelectionComponent {
     territories: 'Territories',
     medias: 'Rights',
     exlusivity: 'Exclusivity',
+    action: 'Actions'
   };
   initialColumns = ['duration', 'territories', 'medias', 'exlusivity'];
   bucket$: Observable<Bucket>;
@@ -51,6 +52,13 @@ export class MarketplaceSelectionComponent {
       contracts[index].price = price;
       return { contracts };
     });
+  }
+
+  removeContract(index: number) {
+    const id = this.bucketQuery.getActiveId();
+    this.bucketService.update(id, bucket => ({
+      contracts: bucket.contracts.filter((_, i) => i !== index)
+    }));
   }
 
   removeTerm(contractIndex: number, termIndex: number) {

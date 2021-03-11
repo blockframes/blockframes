@@ -4,6 +4,7 @@
     <h1>My Selection</h1>
     <p>There are {{ bucket.contracts.length }} titles in my selection</p>
     <p>Total price: {{ '300' | currency:bucket.currency }}</p>
+    <!-- TODO: add list of titles here -->
     <button mat-flat-button color="primary" (click)="createOffer()">Create Offer</button>
   </header>
 
@@ -20,7 +21,7 @@
   </section>
 
   <ng-container *ngFor="let contract of bucket.contracts; let i = index">
-    <section>
+    <section class="contract surface">
       <header fxLayout fxLayoutAlign="space-between start">
         <ng-container *ngIf="contract.titleId | getTitle | async as title">
           <article fxLayout="column">
@@ -35,8 +36,7 @@
           </mat-form-field>
         </ng-container>
       </header>
-      <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter
-        showPaginator>
+      <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
         <ng-template colRef="duration" let-duration>
           {{ duration.from | date }} - {{ duration.to | date }}
         </ng-template>
@@ -49,7 +49,17 @@
         <ng-template colRef="exclusivity" let-exclusivity>
           {{ exclusivity ? 'Yes' : 'No' }}
         </ng-template>
+        <ng-template colAction="action" let-termIndex="index">
+          <button mat-icon-button (click)="removeTerm(i, termIndex)">
+            <mat-icon svgIcon="bin"></mat-icon>
+          </button>
+        </ng-template>
       </bf-table-filter>
+      <footer>
+        <button mat-button (click)="removeContract(i)">
+          Delete all the rights for the title
+        </button>
+      </footer>
     </section>
   </ng-container>
 </ng-container>

@@ -9,4 +9,10 @@ export class TermService extends CollectionService<Term<Date>> {
   constructor(store: TermStore) {
     super(store)
   }
+
+  formatFromFirestore(term): Term<Date> {
+    term.duration.from = term.duration.from.toDate();
+    term.duration.to = term.duration.to.toDate();
+    return term;
+  }
 }
