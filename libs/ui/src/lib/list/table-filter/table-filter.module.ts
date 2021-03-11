@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { TableFilterComponent } from './table-filter.component';
+import { TableFilterComponent, ColAction } from './table-filter.component';
 import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module';
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 import { QueryListFindModule } from '@blockframes/utils/pipes/find.pipe';
@@ -22,8 +22,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [TableFilterComponent],
-  exports: [TableFilterComponent, ColRefModule],
+  declarations: [TableFilterComponent, ColAction],
+  exports: [TableFilterComponent, ColAction, ColRefModule],
   imports: [
     CommonModule,
     ReactiveFormsModule,
