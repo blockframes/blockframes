@@ -21,8 +21,8 @@ import { AvailsFilter, getMandateTerm, isSold } from '@blockframes/contract/avai
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
-
 import { SearchResponse } from '@algolia/client-search';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -55,7 +55,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
     private contractService: ContractService,
-    private termService: TermService
+    private termService: TermService,
+    private snackbar: MatSnackBar
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -116,6 +117,31 @@ export class ListComponent implements OnInit, OnDestroy {
     const promises = contracts.map(c => this.termService.getValue(c.termIds));
     const terms = await Promise.all(promises);
     return terms.flat() as Term<Date>[];
+  }
+
+  async addAvail(titleId: string) {
+    if (this.availsForm.invalid) {
+      this.snackbar.open('Specify the avails before adding to selection', 'close', { duration: 3000 })
+      return;
+    }
+    /*    // Get the parent term
+       const parentTermId = this. .getValue()[titleId];
+       if (!parentTermsId) throw new Error('no available term for this title');
+       const term = this.form.value;
+   
+       this.bucket.update(orgId, (bucket) => {
+         const contracts = bucket.contracts || [];
+         // Check if there is already a contract that apply on the same parentTermId
+         const index = contracts.findIndex(contract => contract.parentTermId === parentTermId);
+   
+         if (index !== -1) { // If yes, append its's terms with the new one.
+           contracts[index].terms.push(term);
+           return { contracts };
+         } else {  // Else create a new contract
+           const contract = { titleId, parentTermsId, terms: [term] };
+           return { contracts: [...contracts, contract] };
+         }
+       }); */
   }
 
   ngOnDestroy() {
