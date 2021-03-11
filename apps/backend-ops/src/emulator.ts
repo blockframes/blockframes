@@ -11,7 +11,8 @@ import {
   loadAdminServices,
   restoreStorageFromCi,
   startMaintenance,
-  latestAnonDbDir
+  latestAnonDbDir,
+  getFirestoreExportPath
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join } from 'path';
@@ -141,7 +142,7 @@ export async function anonymizeLatestProdDb() {
   } finally {
     await shutdownEmulator(proc);
   }
-  await uploadBackup({ localRelPath: defaultEmulatorBackupPath, remoteDir: latestAnonDbDir });
+  await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
 }
 
 /**
