@@ -1,10 +1,10 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-selection',
@@ -13,9 +13,14 @@ import { map, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSelectionComponent {
-
-  form = new FormGroup({}); // Todo : transform into a BucketForm
-
+  currencies = movieCurrencies;
+  columns = {
+    duration: 'Terms',
+    territories: 'Territories',
+    medias: 'Rights',
+    exlusivity: 'Exclusivity',
+  };
+  initialColumns = ['duration', 'territories', 'medias', 'exlusivity'];
   bucket$: Observable<Bucket>;
 
   constructor(
@@ -32,6 +37,33 @@ export class MarketplaceSelectionComponent {
   private setTitle(amount: number) {
     const title = amount ? 'My Selection' : 'No selections yet';
     this.dynTitle.setPageTitle(title);
+  }
+
+  updateCurrency(currency: MovieCurrency) {
+    const id = this.bucketQuery.getActiveId();
+    this.bucketService.update(id, { currency });
+  }
+
+  updatePrice(index: number, price: number) {
+    const id = this.bucketQuery.getActiveId();
+    this.bucketService.update(id, bucket => {
+      const contracts = [ ...bucket.contracts ];
+      contracts[index].price = price;
+      return { contracts };
+    });
+  }
+
+  removeTerm(contractIndex: number, termIndex: number) {
+    const id = this.bucketQuery.getActiveId();
+    this.bucketService.update(id, bucket => {
+      const contracts = [ ...bucket.contracts ];
+      const terms = contracts[contractIndex].terms.filter((_, i) => i !== termIndex);
+      // If there are no terms anymore, remove contract
+      if (!terms.length) return { contracts: contracts.filter((_, i) => i !== contractIndex) };
+      // Else update the terms
+      contracts[contractIndex].terms = terms;
+      return { contracts };
+    });
   }
 
   createOffer() {
