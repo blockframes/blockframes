@@ -10,21 +10,30 @@
     <h2>Please choose currency</h2>
     <mat-form-field appearance="fill">
       <mat-label>Select</mat-label>
-      <mat-select>
+      <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)">
         <mat-option value="eur">EUR</mat-option>
         <mat-option value="usd">USD</mat-option>
       </mat-select>
     </mat-form-field>
   </section>
 
-  <ng-container *ngFor="let contract of bucket.contracts">
-    <section fxLayout>
-      <ng-container *ngIf="contract.titleId | getTitle | async as title">
-        <article fxLayout="column">
-          <h2>{{ title.title.international }}</h2>
-          <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp" alt="Movie Illustration" [delay]="0">
-        </article>
-      </ng-container>
+  <ng-container *ngFor="let contract of bucket.contracts; let i = index">
+    <section>
+      <header fxLayout fxLayoutAlign="space-between start">
+        <ng-container *ngIf="contract.titleId | getTitle | async as title">
+          <article fxLayout="column">
+            <h2>{{ title.title.international }}</h2>
+            <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
+              alt="Movie Illustration" [delay]="0">
+          </article>
+          <mat-form-field>
+            <mat-label>Price</mat-label>
+            <input matInput type="number" [value]="contract.price" (blur)="updatePrice(i, $event.target.value)" />
+            <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
+          </mat-form-field>
+        </ng-container>
+      </header>
+
     </section>
   </ng-container>
 </ng-container>
