@@ -3,7 +3,7 @@ import { Organization } from '@blockframes/e2e/utils/type';
 
 export const ORGANIZATION: Organization = {
   id: 'Cy1234',
-  name: `Org-${Date.now()}-Cypress`,
+  name: `Org-${Date.now()}-Cypress`, //? Why is there name and denomination in organization ? there is only denomination in the DB
   email: `dev+${Date.now()}@cascade8.com`,
   address: {
     street: '42 test road',
@@ -68,6 +68,18 @@ export default class OrganizationLiteFormPage {
   public verifyInformation() {
     cy.get('organization-lite-form mat-select[test-id="activity"]').contains('Actor');
     // cy.get('form-country input[test-id="address-country"]').contains();
+  }
+
+  public createNewDashboardOrg(org: Organization = ORGANIZATION) {
+    this.createNewOrg(org);
+    this.fillOrganizationInformation(org);
+    this.chooseDashboardAccess();
+  }
+
+  public createNewMarketplaceOrg(org: Organization = ORGANIZATION) {
+    this.createNewOrg(org);
+    this.fillOrganizationInformation(org);
+    this.chooseMarketplaceAccess();
   }
 
 }

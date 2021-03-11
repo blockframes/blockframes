@@ -23,24 +23,77 @@ export default class AuthIdentityPage {
   }
 
   public fillInvitationCode() {
-    cy.get('input[formControlName="generatedPassword"]').type('blockframes');
+    cy.get('input[test-id="invitation-code"]').type('blockframes');
   }
 
   public fillPassword(password: string) {
-    cy.get('input[formControlName="password"]').type(password);
+    cy.get('input[test-id="password"]').type(password);
   }
 
   public fillConfirmedPassword(password: string) {
-    cy.get('input[formControlName="confirm"]').type(password);
+    cy.get('input[test-id="password-confirm"]').type(password);
   }
 
-  // ENTIRE USER FORM
+  // PARTIAL OR ENTIRE USER FORM
+  public fillFirstAndLastName(user: Partial<User>) {
+    this.fillFirstname(user.firstName);
+    this.fillLastname(user.lastName);
+  }
+
+  public fillPasswordAndConfirmPassword(password: string) {
+    this.fillPassword(password);
+    this.fillConfirmedPassword(password);
+  }
+
   public fillUserInformations(user: Partial<User>) {
     cy.get('input[test-id="email"]').type(user.email);
     cy.get('input[formControlName="firstName"]').type(user.firstName);
     cy.get('input[formControlName="lastName"]').type(user.lastName);
-    cy.get('input[formControlName="password"]').type(user.password);
-    cy.get('input[formControlName="confirm"]').type(user.password);
+    cy.get('input[test-id="password"]').type(user.password);
+    cy.get('input[test-id="password-confirm"]').type(user.password);
+  }
+
+  public fillSignupExceptOne(user: Partial<User>, key, newEmail?) {
+    const originalEmail = user.email;
+    if (newEmail){
+      user.email = newEmail;
+    }
+    switch (key) {
+      case 'email' :
+          cy.get('input[formControlName="firstName"]').type(user.firstName);
+          cy.get('input[formControlName="lastName"]').type(user.lastName);
+          cy.get('input[test-id="password"]').type(user.password);
+          cy.get('input[test-id="password-confirm"]').type(user.password);
+        break;
+      case 'name' :
+          cy.get('input[test-id="email"]').type(user.email);
+          cy.get('input[formControlName="lastName"]').type(user.lastName);
+          cy.get('input[test-id="password"]').type(user.password);
+          cy.get('input[test-id="password-confirm"]').type(user.password);
+          user.email = originalEmail;
+        break;
+      case 'surname' :
+          cy.get('input[test-id="email"]').type(user.email);
+          cy.get('input[formControlName="firstName"]').type(user.firstName);
+          cy.get('input[test-id="password"]').type(user.password);
+          cy.get('input[test-id="password-confirm"]').type(user.password);
+          user.email = originalEmail;
+        break;
+      case 'password' :
+          cy.get('input[test-id="email"]').type(user.email);
+          cy.get('input[formControlName="firstName"]').type(user.firstName);
+          cy.get('input[formControlName="lastName"]').type(user.lastName);
+          cy.get('input[test-id="password-confirm"]').type(user.password);
+          user.email = originalEmail;
+        break;
+      case 'passwordConfirm' :
+          cy.get('input[test-id="email"]').type(user.email);
+          cy.get('input[formControlName="firstName"]').type(user.firstName);
+          cy.get('input[formControlName="lastName"]').type(user.lastName);
+          cy.get('input[test-id="password"]').type(user.password);
+          user.email = originalEmail;
+        break
+    }
   }
 
   // TERMS, CONDITION AND SUBMIT
@@ -52,15 +105,19 @@ export default class AuthIdentityPage {
     cy.get('.mat-checkbox-inner-container').last().click({ force: true });
   }
 
-  public submitCreationOrg() {
+  public submitForm() {
     cy.get('button[type="submit"]').click();
     cy.wait(5000);
-    return new OrganizationCreatePendingPage;
   }
 
-  public submitJoinOrg() {
-    cy.get('button[type="submit"]').click();
-    cy.wait(5000);
-    return new OrganizationJoinPendingPage;
+  // VERIFICATION
+  public assertStayInIdentityView() {
+    cy.location().should((loc) => {
+      expect(loc.pathname).to.eq('/auth/identity')
+    })
+  }
+
+  public signUpButtonDisabled() {
+    cy.get('button[type="submit"]').should('be.disabled');
   }
 }
