@@ -31,13 +31,13 @@ export async function upgrade(db: Firestore) {
 
     // documents.notes
     if (!!data.documents) {
-      data.documents.notes = data.documents.notes.map((note, i) => {
+      data.documents.notes = data.documents.notes.map(note => {
         return createStorageFile({
           storagePath: note.ref,
           privacy: 'protected',
           collection: 'orgs',
           docId: data.id,
-          field: `documents.notes[${i}]`,
+          field: `documents.notes`,
           ...note
         });
       })
@@ -82,12 +82,12 @@ export async function upgrade(db: Firestore) {
     })
 
     // promotional.still_photo
-    data.promotional.still_photo = data.promotional.still_photo.map((still, i) => createStorageFile({
+    data.promotional.still_photo = data.promotional.still_photo.map(still => createStorageFile({
       storagePath: still,
       privacy: 'public',
       collection: 'movies',
       docId: data.id,
-      field: `promotional.still_photo[${i}]`
+      field: `promotional.still_photo`
     }));
 
     // promotional.salesPitch
@@ -117,12 +117,12 @@ export async function upgrade(db: Firestore) {
 
       // promotional.videos.otherVideos
       if (!!data.promotional.videos.otherVideos) {
-        data.promotional.videos.otherVideos = data.promotional.videos.otherVideos.map((video, i) => createStorageFile({
+        data.promotional.videos.otherVideos = data.promotional.videos.otherVideos.map(video => createStorageFile({
           storagePath: video.ref,
           privacy: 'public',
           collection: 'movies',
           docId: data.id,
-          field: `promotional.videos.otherVideos[${i}]`,
+          field: `promotional.videos.otherVideos`,
           ...video
         }));
       }
@@ -130,12 +130,12 @@ export async function upgrade(db: Firestore) {
 
     // promotional.notes
     if (!!data.promotional.notes) {
-      data.promotional.notes = data.promotional.notes.map((note, i) => createStorageFile({
+      data.promotional.notes = data.promotional.notes.map(note => createStorageFile({
         storagePath: note.ref,
         privacy: 'public',
         collection: 'movies',
         docId: data.id,
-        field: `promotional.notes[${i}]`,
+        field: `promotional.notes`,
         ...note
       }))
     }
