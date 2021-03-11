@@ -25,6 +25,7 @@ import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: '[colAction]' })
+// tslint:disable-next-line: directive-class-suffix
 export class ColAction {
   @Input() label: string;
   @Input('colAction') ref: string;
