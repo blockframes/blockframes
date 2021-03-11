@@ -385,9 +385,9 @@ export function formatAvailableLanguages(versions: { language: string, dubbed: s
   versions.filter(v => !!v.language).forEach(v => {
     const language = getKeyIfExists('languages', v.language);
     if (language) {
-      populateMovieLanguageSpecification(movie.languages, language, 'dubbed', v.dubbed === 'yes' ? true : false);
-      populateMovieLanguageSpecification(movie.languages, language, 'subtitle', v.subtitle === 'yes' ? true : false);
-      populateMovieLanguageSpecification(movie.languages, language, 'caption', v.caption === 'yes' ? true : false);
+      populateMovieLanguageSpecification(movie.languages, language, 'dubbed', v.dubbed.toLowerCase() === 'yes' ? true : false);
+      populateMovieLanguageSpecification(movie.languages, language, 'subtitle', v.subtitle.toLowerCase() === 'yes' ? true : false);
+      populateMovieLanguageSpecification(movie.languages, language, 'caption', v.caption.toLowerCase() === 'yes' ? true : false);
     } else {
       state.errors.push({
         type: 'warning',

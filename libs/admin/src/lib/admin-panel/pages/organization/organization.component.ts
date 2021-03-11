@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
@@ -8,7 +8,7 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
@@ -17,7 +17,6 @@ import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'admin-organization',
@@ -25,9 +24,9 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationComponent implements OnInit, OnDestroy {
+export class OrganizationComponent implements OnInit {
   public orgId = '';
-  public org$: Observable<Organization>;
+  public org: Organization;
   public orgForm: OrganizationAdminForm;
   public movies: Movie[];
   public members: any[];
@@ -70,11 +69,8 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   public memberColumnsIndex = ['firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
 
-  public sub: Subscription;
-
   constructor(
     private organizationService: OrganizationService,
-    private organizationQuery: OrganizationQuery,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -90,10 +86,10 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
-    this.org$ = this.organizationQuery.select(this.orgId);
+    this.org = await this.organizationService.getValue(this.orgId);
 
     this.orgForm = new OrganizationAdminForm();
-    this.sub = this.org$.subscribe(org => this.orgForm.reset(org));
+    this.orgForm.reset(this.org);
 
     const movies = await this.movieService.getValue(fromOrg(this.orgId))
     this.movies = movies.filter(m => !!m);
@@ -107,10 +103,6 @@ export class OrganizationComponent implements OnInit, OnDestroy {
     this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
     this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
 
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   public acceptInvitation(invitation: Invitation) {
