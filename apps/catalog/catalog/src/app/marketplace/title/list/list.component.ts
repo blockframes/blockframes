@@ -46,8 +46,8 @@ export class ListComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   private terms: {
-    mandateTerms: Term<Date>[]
-    salesTerms: Term<Date>[]
+    mandate: Term<Date>[],
+    sales: Term<Date>[]
   }
 
   constructor(
@@ -72,8 +72,8 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.terms.mandateTerms = await this.getAllTerms('mandate');
-    this.terms.salesTerms = await this.getAllTerms('sale')
+    this.terms.mandate = await this.getAllTerms('mandate');
+    this.terms.sales = await this.getAllTerms('sale')
 
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -86,10 +86,10 @@ export class ListComponent implements OnInit, OnDestroy {
       if (this.availsForm.valid) {
         this.movieResultsState.next([])
         movies.hits.forEach(movie => {
-          const movieMandate = getMandateTerm(availsValue, this.terms.mandateTerms.filter(
+          const movieMandate = getMandateTerm(availsValue, this.terms.mandate.filter(
             mandate => mandate.titleId === movie.objectID));
           if (movieMandate) {
-            const movieSales = this.terms.salesTerms.filter(sale => sale.titleId === movie.objectID);
+            const movieSales = this.terms.sales.filter(sale => sale.titleId === movie.objectID);
             const ongoingSales = isSold(availsValue, movieSales);
             if (!ongoingSales) {
               // Implement bucket func @TODO #5002
