@@ -72,9 +72,6 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    const mandates = await this.contractService.getValue(ref => ref.where('type', '==', 'mandate'));
-    const sales = await this.contractService.getValue(ref => ref.where('type', '==', 'sale'));
-
     this.terms.mandateTerms = await this.getAllTerms('mandate');
     this.terms.salesTerms = await this.getAllTerms('sale')
 
