@@ -7,6 +7,7 @@ import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, r
 import { join, resolve, sep } from 'path';
 import { runShellCommand, runShellCommandUntil, awaitProcOutput, runInBackground } from '../commands';
 import { getFirestoreExportDirname } from './export';
+import { sleep } from '../util';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 
@@ -107,10 +108,14 @@ function createEmulatorMetadataJson(emuPath: string) {
  * This function returns a promise that will resolve when the emulator has
  * successfully shut down.
  * @param proc the `ChildPRocess` object for the running emulator process.
+ * @param timeLimit number of seconds to await gracefull shutdown before SIGKILL
  */
-export function shutdownEmulator(proc: ChildProcess) {
-  proc.kill('SIGINT');
-  return awaitProcOutput(proc, 'Stopping Logging Emulator');
+export async function shutdownEmulator(proc: ChildProcess, timeLimit: number = 60 * 2) {
+  proc.kill('SIGTERM');
+  const emuP = awaitProcOutput(proc, 'Stopping Logging Emulator').then(() => true);
+  const timeP = sleep(1000 * timeLimit).then(() => false);
+  const emuTerminated = await Promise.race([emuP, timeP]);
+  return emuTerminated || proc.kill('SIGKILL');
 }
 
 export interface FirestoreEmulator extends FirebaseFirestore.Firestore {
