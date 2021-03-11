@@ -1,8 +1,8 @@
-import { Media, Territory } from '@blockframes/utils/static-model';
+import { Media, Territory, MovieCurrency } from '@blockframes/utils/static-model';
 
 export interface Bucket {
   id: string;
-  currency: 'euro' | 'dollar';
+  currency: MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: BucketContract[];
 }
@@ -49,7 +49,7 @@ function createBucketContract(params: Partial<BucketContract> = {}): BucketContr
 export function createBucket(params: Partial<Bucket> = {}): Bucket {
   return {
     id: '',
-    currency: 'euro',
+    currency: 'EUR',
     ...params,
     contracts: params.contracts?.map(createBucketContract) ?? []
   }

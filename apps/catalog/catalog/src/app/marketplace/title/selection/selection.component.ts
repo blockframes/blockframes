@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -12,7 +13,14 @@ import { tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSelectionComponent {
-
+  currencies = movieCurrencies;
+  columns = {
+    duration: 'Terms',
+    territories: 'Territories',
+    medias: 'Rights',
+    exlusivity: 'Exclusivity',
+  };
+  initialColumns = ['duration', 'territories', 'medias', 'exlusivity'];
   bucket$: Observable<Bucket>;
 
   constructor(
@@ -31,7 +39,7 @@ export class MarketplaceSelectionComponent {
     this.dynTitle.setPageTitle(title);
   }
 
-  updateCurrency(currency: Bucket['currency']) {
+  updateCurrency(currency: MovieCurrency) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, { currency });
   }

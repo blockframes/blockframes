@@ -1,18 +1,20 @@
 <ng-container *ngIf="bucket$ | async as bucket">
-  <section fxLayout="column" fxLayoutAlign="start center">
+  <header fxLayout="column" fxLayoutAlign="start center">
     <!-- TODO add background to section -->
     <h1>My Selection</h1>
     <p>There are {{ bucket.contracts.length }} titles in my selection</p>
     <p>Total price: {{ '300' | currency:bucket.currency }}</p>
-  </section>
+    <button mat-flat-button color="primary" (click)="createOffer()">Create Offer</button>
+  </header>
 
   <section>
     <h2>Please choose currency</h2>
     <mat-form-field appearance="fill">
       <mat-label>Select</mat-label>
       <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)">
-        <mat-option value="eur">EUR</mat-option>
-        <mat-option value="usd">USD</mat-option>
+        <ng-container *ngFor="let currency of currencies | keyvalue">
+          <mat-option [value]="currency.key">{{ currency.value }}</mat-option>
+        </ng-container>
       </mat-select>
     </mat-form-field>
   </section>
@@ -33,7 +35,21 @@
           </mat-form-field>
         </ng-container>
       </header>
-
+      <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter
+        showPaginator>
+        <ng-template colRef="duration" let-duration>
+          {{ duration.from | date }} - {{ duration.to | date }}
+        </ng-template>
+        <ng-template colRef="territories" let-territories>
+          {{ territories.join(', ') }}
+        </ng-template>
+        <ng-template colRef="medias" let-medias>
+          {{ medias.join(', ') }}
+        </ng-template>
+        <ng-template colRef="exclusivity" let-exclusivity>
+          {{ exclusivity ? 'Yes' : 'No' }}
+        </ng-template>
+      </bf-table-filter>
     </section>
   </ng-container>
 </ng-container>
