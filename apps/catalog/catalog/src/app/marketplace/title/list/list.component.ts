@@ -141,7 +141,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.bucketService.update(this.orgQuery.getActiveId(), (bucket) => {
       const contracts = bucket.contracts || [];
       // Check if there is already a contract that apply on the same parentTermId
-      const index = contracts.findIndex(contract => contract.parentTermId === );
+      const index = contracts.findIndex(contract => contract.parentTermId === parentTermId );
       if (index !== -1) { // If yes, append its's terms with the new one.
         contracts[index].terms.push(term);
         return { ...bucket, contracts };
