@@ -9,7 +9,7 @@ import { UploadWidgetComponent } from './upload-widget.component';
 
 // Blockframes
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ImageModule } from '../../image/directives/image.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
 // Material

@@ -1,24 +1,5 @@
+<!-- TITLE & PRICE -->
+<header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px">
 
-<ng-container *ngIf="versionView$ | async as version">
-  <!-- TITLE & PRICE -->
-  <header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" >
-    <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="25px">
-      <img class="logo" asset="empty_organization.webp" alt="Organization logo">
-      <div *ngIf="licensees[0] as licensee">
-        <h1>{{ licensee.displayName }} - {{ (moviesCount$ | async) }} film{ moviesCount$| async, plural, =1 {} other {s} }</h1>
-        <span *ngIf="licensee.address">
-          {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
-          {{ licensee.address.zipCode }} {{ licensee.address.country }}
-        </span>
-      </div>
-    </article>
-    <section fxLayout="column" fxLayoutAlign="center end" *ngIf="version.price as price">
-      <span class="mat-caption"> {{ version.date | date }} </span>
-      <h2>{{ price.amount | currency: price.currency }}</h2>
-      <mat-chip-list>
-        <mat-chip>{{ version.status | toLabel: 'contractStatus' }}</mat-chip>
-      </mat-chip-list>
-    </section>
-  </header>
-</ng-container>
+</header>
 <router-outlet></router-outlet>

@@ -18,7 +18,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
 // Libraries
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { TermDateModule } from '@blockframes/utils/pipes/term-date.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
@@ -58,7 +57,6 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
 
     // Librairies
     ImageModule,
-    TermDateModule,
     ToLabelModule,
   ],
   exports: [

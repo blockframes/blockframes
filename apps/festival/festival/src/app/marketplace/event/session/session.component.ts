@@ -17,6 +17,12 @@ import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
+
+
+const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
+  return meetingEvent.type === 'meeting';
+};
 
 @Component({
   selector: 'festival-session',
@@ -30,7 +36,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
-  public screeningFileRef: string;
+  public screeningFileRef: StorageVideo;
 
   public creatingControl$ = new BehaviorSubject(false);
 
@@ -70,11 +76,12 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
-          this.screeningFileRef = movie.promotional.videos?.screener?.ref ?? '';
+          this.screeningFileRef = movie.promotional.videos?.screener;
         }
 
       // MEETING
-      } else if (event.type === 'meeting') {
+      } else if (isMeeting(event)) {
+
         this.dynTitle.setPageTitle(event.title, 'Meeting');
 
         const fileSelected = !!event?.meta?.selectedFile;
@@ -117,7 +124,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         // Manage redirect depending on attendees status & presence of meeting owners
         const uid = this.authQuery.userId;
         if (event.isOwner) {
-          const attendees = (event.meta as Meeting).attendees;
+          const attendees = event.meta.attendees;
           if (attendees[uid] !== 'owner') {
             const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'owner' }};
             this.service.update(event.id, { meta });
@@ -129,7 +136,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
           }
         } else {
-          const userStatus = (event.meta as Meeting).attendees[uid];
+          const userStatus = event.meta.attendees[uid];
 
           if (!userStatus || userStatus === 'ended') { // meeting session is over
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/ended`);
@@ -137,7 +144,7 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(`/c/o/marketplace/event/${event.id}/lobby`);
           } else {
 
-            const hasOwner = Object.values((event.meta as Meeting).attendees).some(status => status === 'owner');
+            const hasOwner = Object.values(event.meta.attendees).some(status => status === 'owner');
             if (!hasOwner) {
               this.createCountDown();
             } else if (!!hasOwner && !!this.countdownId) {
@@ -148,14 +155,20 @@ export class SessionComponent implements OnInit, OnDestroy {
         }
 
         // If the current selected file hasn't any controls yet we should create them
-        if (!!(event as Event<Meeting>).meta.selectedFile) {
-          const file = (event as Event<Meeting>).meta.selectedFile;
-          if (!(event as Event<Meeting>).meta.controls[file]) {
-            const fileType = extensionToType(getFileExtension(file));
+        if (!!event.meta.selectedFile) {
+          const selectedFile = event.meta.files.find(file =>
+            file.storagePath === event.meta.selectedFile
+          );
+          if (!selectedFile) {
+            console.warn('Selected file doesn\'t exists in this Meeting!');
+            this.select('');
+          }
+          if (!event.meta.controls[selectedFile.storagePath]) {
+            const fileType = extensionToType(getFileExtension(selectedFile.storagePath));
             switch (fileType) {
               case 'pdf': {
                 this.creatingControl$.next(true);
-                const control = await this.createPdfControl(file, event.id);
+                const control = await this.createPdfControl(selectedFile, event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
@@ -163,7 +176,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                 break;
               } case 'video': {
                 this.creatingControl$.next(true);
-                const control = await this.createVideoControl(file, event.id);
+                const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
                 const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
                 const meta  = { ...event.meta, controls };
                 await this.service.update(event.id, { meta });
@@ -220,9 +233,9 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.service.update(event.id, { meta })
   }
 
-  async createPdfControl(ref: string, eventId: string): Promise<MeetingPdfControl> {
+  async createPdfControl(file: StorageFile, eventId: string): Promise<MeetingPdfControl> {
     // locally download the pdf file to count it's number of pages
-    const url = await this.mediaService.generateImgIxUrl(ref, {}, eventId);
+    const url = await this.mediaService.generateImgIxUrl(file, {}, eventId);
     const response = await fetch(url);
     const textResult = await response.text();
     // this actually count the number of pages, the regex comes from stack overflow
@@ -231,10 +244,10 @@ export class SessionComponent implements OnInit, OnDestroy {
     return { type: 'pdf', currentPage: 1, totalPages };
   }
 
-  async createVideoControl(ref: string, eventId: string): Promise<MeetingVideoControl> {
+  async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
     const getVideoInfo = this.functions.httpsCallable('privateVideo');
 
-    const { error, result} = await getVideoInfo({ ref, eventId }).toPromise();
+    const { error, result} = await getVideoInfo({ video, eventId }).toPromise();
     if (!!error) {
       // if error is set, result will contain the error message
       throw new Error(result);

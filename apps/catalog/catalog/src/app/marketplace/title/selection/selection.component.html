@@ -1,58 +1,65 @@
-<ng-container *ngIf="titles$ | async as titles">
-  <ng-container *ngIf="titles.length else noTitles">
-    <header fxLayout="row" fxLayoutAlign="space-between center">
-      <h1 i18n *ngIf="count$ | async as count">{{count}} title{count, plural, =0 {} =1 {} other {s}} in the cart</h1>
-      <a mat-button color="primary" routerLink="../deals">
-        <mat-icon svgIcon="account_balance_wallet"></mat-icon>
-        <span>Consult your Current Offers and Deals</span>
-      </a>
-    </header>
+<ng-container *ngIf="bucket$ | async as bucket">
+  <header fxLayout="column" fxLayoutAlign="start center">
+    <!-- TODO add background to section -->
+    <h1>My Selection</h1>
+    <p>There are {{ bucket.contracts.length }} titles in my selection</p>
+    <p>Total price: {{ '300' | currency:bucket.currency }}</p>
+    <!-- TODO: add list of titles here -->
+    <button mat-flat-button color="primary" (click)="createOffer()">Create Offer</button>
+  </header>
 
-    <!-- Movies documents here are filled with the distribution deals from the cart -->
-    <article *ngFor="let title of titles">
-      <movie-banner [movie]="selectMovie(title.movieId) | async">
-        <movie-banner-actions fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="16px">
-          <wishlist-button [movieId]="title.movieId" (added)="removeTitle($event)"></wishlist-button>
-          <button mat-button color="warn" (click)="removeTitle(title.movieId)">
-            <mat-icon svgIcon="delete"></mat-icon>
-            <span>Remove Title</span>
+  <section>
+    <h2>Please choose currency</h2>
+    <mat-form-field appearance="fill">
+      <mat-label>Select</mat-label>
+      <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)">
+        <ng-container *ngFor="let currency of currencies | keyvalue">
+          <mat-option [value]="currency.key">{{ currency.value }}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <ng-container *ngFor="let contract of bucket.contracts; let i = index">
+    <section class="contract surface">
+      <header fxLayout fxLayoutAlign="space-between start">
+        <ng-container *ngIf="contract.titleId | getTitle | async as title">
+          <article fxLayout="column">
+            <h2>{{ title.title.international }}</h2>
+            <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
+              alt="Movie Illustration" [delay]="0">
+          </article>
+          <mat-form-field>
+            <mat-label>Price</mat-label>
+            <input matInput type="number" [value]="contract.price" (blur)="updatePrice(i, $event.target.value)" />
+            <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
+          </mat-form-field>
+        </ng-container>
+      </header>
+      <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
+        <ng-template colRef="duration" let-duration>
+          {{ duration.from | date }} - {{ duration.to | date }}
+        </ng-template>
+        <ng-template colRef="territories" let-territories>
+          {{ territories.join(', ') }}
+        </ng-template>
+        <ng-template colRef="medias" let-medias>
+          {{ medias.join(', ') }}
+        </ng-template>
+        <ng-template colRef="exclusivity" let-exclusivity>
+          {{ exclusivity ? 'Yes' : 'No' }}
+        </ng-template>
+        <ng-template colAction="action" let-termIndex="index">
+          <button mat-icon-button (click)="removeTerm(i, termIndex)">
+            <mat-icon svgIcon="bin"></mat-icon>
           </button>
-          <a mat-button color="primary" [routerLink]="['../title', title.movieId, 'avails']">
-            <mat-icon svgIcon="add"></mat-icon>
-            <span>Add Exploitation Rights</span>
-          </a>
-        </movie-banner-actions>
-      </movie-banner>
-
-      <ng-container *ngIf="title.rights.length">
-        <h3>Exploitation Rights</h3>
-        <mat-card>
-          <mat-card-content>
-            <catalog-right-list [rights]="title.rights"></catalog-right-list>
-          </mat-card-content>
-        </mat-card>
-      </ng-container>
-    </article>
-
-    <footer fxLayout="column" fxLayoutAlign="center center">
-      <button mat-flat-button color="accent" (click)="create()">Create an Offer</button>
-      <p class="mat-body-2">
-        Pay attention, if you create an offer, you’ll <b>find your current offer</b> on your “<b>Offers & Deals</b>”
-        page
-      </p>
-      <a mat-button color="primary" routerLink="../title">Continue Browsing the Library</a>
-    </footer>
+        </ng-template>
+      </bf-table-filter>
+      <footer>
+        <button mat-button (click)="removeContract(i)">
+          Delete all the rights for the title
+        </button>
+      </footer>
+    </section>
   </ng-container>
 </ng-container>
-
-<ng-template #noTitles>
-  <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="40px">
-    <h1>You have no title in your selection.</h1>
-    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
-      <a mat-flat-button color="accent" routerLink="../title">Continue browsing the Library</a>
-      <span>Or</span>
-      <a mat-stroked-button color="primary" routerLink="../deals">Consult your current Offers and Deals</a>
-    </div>
-    <p>Do you need help ? <button mat-button (click)="openIntercom()">Chat with us</button></p>
-  </article>
-</ng-template>

@@ -4,26 +4,11 @@
     <h3>Screener</h3>
     <section>
       <p>The screener is the full video of this title, it will be used for virtual screenings.</p>
-
-      <ng-container *ngIf="hasScreener; else noScreener">
-        <mat-list>
-          <mat-list-item>
-            <mat-icon mat-list-icon [svgIcon]="screenerForm.get('fileName').value | fileTypeImage: 'icon'"></mat-icon>
-            <div mat-line>{{screenerForm.get('fileName').value}}</div>
-            <button mat-icon-button (click)="deleteScreener()">
-              <mat-icon svgIcon="delete"></mat-icon>
-            </button>
-          </mat-list-item>
-        </mat-list>
-      </ng-container>
-      <ng-template #noScreener>
-        <file-uploader [form]="screenerForm" [storagePath]="getPath('screener')" allowedFileType="video"
-          filePrivacy="protected">
-          <h3 title>Upload Screener</h3>
-        </file-uploader>
-        <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
-          outside your organization unless you explicitly invite them to a virtual screening.</p>
-      </ng-template>
+      <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
+        <h3 title>Upload Screener</h3>
+      </file-uploader>
+      <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
+        outside your organization unless you explicitly invite them to a virtual screening.</p>
     </section>
 
     <mat-divider class="thick"></mat-divider>
@@ -34,26 +19,20 @@
 
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
-          {{ video.type | titlecase }} - {{ video.title }} - {{ !!video.ref.fileName ? video.ref.fileName :
-          (video.ref.ref | fileName) }}
+          {{ video.type | titlecase }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
         </ng-template>
-        <ng-template formView let-activeForm>
+        <ng-template formView let-activeForm let-index="index">
           <article fxLayout="column">
             <span fxFlex fxLayout="row" fxLayoutGap="16px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Title</mat-label>
                 <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
               </mat-form-field>
-              <mat-form-field appearance="outline" fxFlex>
+              <static-select scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
                 <mat-label>Video Type</mat-label>
-                <mat-select test-id="video-type" [formControl]="activeForm.get('type')">
-                  <mat-option *ngFor="let type of videoTypes" [value]="type">
-                    {{ type | titlecase }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+              </static-select>
             </span>
-            <file-uploader [form]="activeForm.get('ref')" [storagePath]="getPath('otherVideos')" allowedFileType="video">
+            <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
               <h3 title>Upload Video</h3>
             </file-uploader>
 

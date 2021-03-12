@@ -92,6 +92,12 @@ export function getStoragePath(path: string, privacy: Privacy = 'public'): strin
  * @param fileName
  */
 export function getFileExtension(fileName: string) {
+
+  if (!fileName || typeof fileName !== 'string') {
+    console.warn('fileName is mandatory and must be a string!', fileName)
+    return '';
+  }
+
   // get the part after the last slash and remove url parameters like "#" and "?"
   const lastSlash = fileName.split('/').pop();
   const filePart = lastSlash !== undefined ? lastSlash.split(/\#|\?/) : [];

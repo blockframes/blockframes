@@ -1,13 +1,13 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Intercom } from 'ng-intercom';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { allowedFiles } from '@blockframes/utils/utils';
+import { getMimeType } from '@blockframes/utils/file-sanitizer';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -26,20 +26,26 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   public fileType = new FormControl();
   public isUserBlockframesAdmin = false;
   public pageTitle = 'Import multiple titles at once';
-
-  public excelForm = new HostedMediaForm(); // TODO issue#4002
+  public allowedTypes: string[] = [];
+  public mimeTypes: string[] = [];
 
   private sub: Subscription;
-  private fileTypeSub: Subscription;
+  private file: File;
 
   constructor(
     @Optional() private intercom: Intercom,
     private http: HttpClient,
     private authQuery: AuthQuery,
     private cdRef: ChangeDetectorRef,
-    private routerQuery: RouterQuery,
+    private snackBar: MatSnackBar,
   ) {
     this.fileType.setValue('movies');
+
+    const allowedTypes = ['xls', 'csv'];
+    allowedTypes.forEach(type => {
+      this.allowedTypes = this.allowedTypes.concat(allowedFiles[type].extension)
+      this.mimeTypes = this.mimeTypes.concat(allowedFiles[type].mime)
+    });
   }
 
   ngOnInit() {
@@ -49,27 +55,40 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     }
     this.cdRef.markForCheck();
 
-    this.sub = this.excelForm.valueChanges.subscribe(excelFormValue => {
-      if (!!excelFormValue.blobOrFile && !!excelFormValue.blobOrFile.name) {
-        this.importSpreadsheet(excelFormValue.blobOrFile);
-      } else {
-        this.sheets = [];
+    this.sub = this.fileType.valueChanges.subscribe(() => {  
+      if (!!this.sheets.length) {
+        this.importSpreadsheet(this.file);
       }
     });
-
-    this.fileTypeSub = this.fileType.valueChanges.subscribe(_ => {
-      if (!!this.excelForm.value.blobOrFile && !!this.excelForm.value.blobOrFile.name) {
-        this.importSpreadsheet(this.excelForm.value.blobOrFile);
-      }
-    })
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-    this.fileTypeSub.unsubscribe();
   }
 
-  importSpreadsheet(blob: Blob) {
+  importSpreadsheet(files: FileList | File) {
+
+    if ('item' in files) { // FileList
+      if (!files.item(0)) {
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        return;
+      }
+      this.file = files.item(0);
+    } else if (!files) { // No files
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        return;
+    } else { // Single file
+      this.file = files;
+    }
+
+    const fileType = getMimeType(this.file);
+    const isFileTypeValid = this.mimeTypes && this.mimeTypes.includes(fileType);
+    if (!isFileTypeValid) {
+      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
+      this.file = undefined;
+      return;
+    }
+
     let sheetRange: string;
     if (this.fileType.value === 'movies') {
       sheetRange = 'A14:BZ100';
@@ -87,7 +106,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
       this.sheets = importSpreadsheet(buffer, sheetRange);
       this.cdRef.markForCheck();
     })
-    reader.readAsArrayBuffer(blob);
+    reader.readAsArrayBuffer(this.file);
   }
 
   next(): void {
@@ -97,7 +116,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
 
   removeFile() {
     this.sheets = [];
-    this.excelForm.reset();
+    this.file = undefined;
   }
 
   public openIntercom(): void {
@@ -120,11 +139,10 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   }
 
   getTemplateName(templateType: string) {
-    const appName = getCurrentApp(this.routerQuery);
     if (this.isUserBlockframesAdmin) {
       return `import-${templateType}-template-admin.xlsx`;
     } else {
-      return `import-${templateType}-template-customer-${appName}.xlsx`;
+      return `import-${templateType}-template-customer.xlsx`;
     }
   }
 

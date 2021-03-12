@@ -4,6 +4,7 @@ import { ScreeningEvent } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: 'event-screening-item',
@@ -12,7 +13,7 @@ import { Movie } from '@blockframes/movie/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreeningItemComponent {
-  public poster: string;
+  public poster: StorageFile;
   public movie: Movie;
   public screening: ScreeningEvent;
   public invitation$: Observable<Invitation>;

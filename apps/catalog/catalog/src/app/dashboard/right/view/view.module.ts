@@ -8,13 +8,7 @@ import { ViewComponent } from './view.component';
 // Module components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { RightListModule } from '@blockframes/distribution-rights/components/right-list/right-list.module';
-import { VersionTableModule } from '@blockframes/contract/version/components';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-
-// Guard
-import { MovieContractGuard } from '@blockframes/movie/guards/movie-contract.guard';
-import { CatalogContractGuard } from '../../../guards/catalog-contract.guard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -28,8 +22,6 @@ import { MatChipsModule } from '@angular/material/chips';
 const routes = [
   {
     path: '',
-    canActivate: [MovieContractGuard, CatalogContractGuard],
-    canDeactivate: [MovieContractGuard],
     component: ViewComponent,
     children: [
       {
@@ -48,8 +40,6 @@ const routes = [
     FlexLayoutModule,
     TableFilterModule,
     ImageModule,
-    RightListModule,
-    VersionTableModule,
     ToLabelModule,
 
     // Material

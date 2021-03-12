@@ -14,7 +14,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 // RxJs
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { startWith, distinctUntilChanged, map } from 'rxjs/operators';
+import { startWith, distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
@@ -64,7 +64,10 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.list$ = combineLatest([
-      this.form.valueChanges.pipe(startWith(this.form.value), distinctUntilChanged()),
+      this.form.valueChanges.pipe(
+        startWith(this.form.value),
+        distinctUntilChanged()
+      ),
       this.reverseList$
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
@@ -104,8 +107,8 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   edit(index: number) {
-    this.activeIndex = index
-    this.formItem = this.form.at(index);
+    this.activeIndex = this.reverseList$.value ? this.form.controls.length - index - 1 : index;
+    this.formItem = this.form.at(this.activeIndex);
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
   }
@@ -120,12 +123,19 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   remove(index: number) {
-    this.form.removeAt(index);
-    if (this.activeIndex > index) {
+    const i = this.reverseList$.value ? this.form.controls.length - index - 1 : index;
+    this.form.removeAt(i);
+    if (this.activeIndex > i) {
       this.activeIndex--;
     }
     if (this.isFormEmpty) {
       this.formItem = this.form.createControl({});
     }
+  }
+
+  computeIndex() {
+    // angular template parser doesn't understand the new '??' operator
+    // so we extract it in a typescript function
+    return this.activeIndex ?? this.form.value.length;
   }
 }

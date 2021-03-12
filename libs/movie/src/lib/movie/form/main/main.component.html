@@ -33,9 +33,9 @@
 
         <static-select test-id="content-type" scope="contentType" [control]="form.contentType" fxFlex
           [withoutValues]="['volume', 'episode', 'collection']">
-          <mat-label>Content Type</mat-label>
+          <mat-label>Format</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
-            Please specify your project's content type.
+            Please specify your project’s format.
           </mat-error>
         </static-select>
       </article>
@@ -46,28 +46,31 @@
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Number of episodes</mat-label>
             <input test-id="episode-count" matInput type="number" name="episodeCount"
-              [formControl]="form.runningTime.get('episodeCount')" min="0" />
+              [formControl]="form.runningTime.get('episodeCount')" min="0" max="1000" />
             <mat-hint>Total number of episodes in a season.</mat-hint>
+            <mat-error>Please fill in a valid number of episodes.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Seasons Number</mat-label>
             <input test-id="episode-count" matInput type="number" name="seriesName"
-              [formControl]="form.title.get('series')" />
-            <mat-hint>Please specify the seasons number.</mat-hint>
+              [formControl]="form.title.get('series')" min="1" max="100" />
+            <mat-hint>Please fill in a valid season number.</mat-hint>
           </mat-form-field>
 
         </article>
       </ng-container>
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
-        <mat-form-field appearance="outline" fxFlex>
-          <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
-          <input test-id="run-time" matInput type="number" name="runningTime"
-            [formControl]="form.runningTime.get('time')" min="0" required />
-          <mat-hint>In minutes</mat-hint>
-          <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
-        </mat-form-field>
+        <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined'">
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
+            <input test-id="run-time" matInput type="number" name="runningTime"
+              [formControl]="form.runningTime.get('time')" min="0" required />
+            <mat-hint>In minutes.</mat-hint>
+            <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
+          </mat-form-field>
+        </ng-container>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
           <static-select test-id="screening-status" scope="screeningStatus" [control]="form.runningTime.get('status')"
@@ -96,7 +99,7 @@
           The poster image will be used as the main image to represent your film on the marketplace, and, more
           generally, for all film components requiring vertical formats on the marketplace.
         </p>
-        <image-uploader [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
+        <image-uploader [meta]="['movies', 'poster', movieId]" ratio="poster" [form]="form.poster" listenToChanges>
           <h3 title>Film Poster</h3>
         </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the
@@ -109,7 +112,7 @@
           The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
           for all film components requiring horizontal formats on the marketplace.
         </p>
-        <image-uploader [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
+        <image-uploader [meta]="['movies', 'banner', movieId]" ratio="banner" [form]="form.banner" listenToChanges>
           <h3 title>Film Banner Image</h3>
         </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the

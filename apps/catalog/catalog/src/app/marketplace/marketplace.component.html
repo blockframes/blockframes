@@ -3,25 +3,29 @@
     <mat-nav-list>
       <a mat-list-item routerLink="home" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="home"></mat-icon>
-        <span mat-line>Home</span>
+        <span mat-line><b>Home</b></span>
       </a>
       <a test-id="library" mat-list-item routerLink="title" routerLinkActives="active">
         <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
-        <span mat-line>Library</span>
+        <span mat-line><b>Library</b></span>
+      </a>
+      <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActives="active">
+        <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
+        <span mat-line><b>Partners</b></span>
       </a>
       <a mat-list-item routerLink="selection" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="shopping_basket"></mat-icon>
-        <span mat-line>My Selection</span>
+        <span mat-line><b>My Selection</b></span>
       </a>
       <a mat-list-item routerLink="wishlist" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
-        <span mat-line>Wishlist</span>
+        <span mat-line><b>Wishlist</b></span>
       </a>
       <a mat-list-item routerLink="deals" routerLinkActive="active" *ngIf="canAccessDeals">
         <mat-icon mat-list-icon svgIcon="account_balance_wallet"></mat-icon>
-        <span mat-line>Offers & Deals</span>
+        <span mat-line><b>Offers & Deals</b></span>
       </a>
-      <ng-container *ngIf="org$ | async | canAccess: 'dashboard'">
+      <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'catalog'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active">
           <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
@@ -33,8 +37,11 @@
   ​
   <header fxFlex fxLayout fxLayoutAlign="end center">
     <a mat-icon-button routerLink="selection">
-      <mat-icon svgIcon="shopping_basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)"
-        matBadgeColor="accent" matBadgeSize="small">
+      <mat-icon svgIcon="shopping_basket"
+        [matBadge]="contractCount$ | async"
+        [matBadgeHidden]="!(contractCount$ | async)"
+        matBadgeColor="accent"
+        matBadgeSize="small">
       </mat-icon>
     </a>
   </header>

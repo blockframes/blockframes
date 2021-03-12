@@ -30,7 +30,7 @@ export class ListComponent implements OnInit {
     const query = ref => ref.where('isSecret', '==', false).orderBy('end').startAt(new Date());
     const events$ = this.service.queryByType(['screening'], query);
 
-    this.events$ = combineLatest(events$, orgIds$).pipe(
+    this.events$ = combineLatest([events$, orgIds$]).pipe(
       map(([ events, orgs ]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
      // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
       map(events => events.filter(event => !!event.meta.titleId)),

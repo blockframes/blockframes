@@ -28,6 +28,10 @@
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
+    <ng-template filter label="Avails" [form]="availsForm">
+      <avails-filter [form]="availsForm"></avails-filter>
+    </ng-template>
+
     <ng-template filter label="Genres" [form]="searchForm.genres">
       <chips-autocomplete [form]="searchForm.genres" scope="genres">
         <mat-label>Genres</mat-label>
@@ -53,11 +57,10 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
+      <button mat-icon-button (click)="addAvail(title.id)" [disabled]="availsForm.invalid">
+        <mat-icon svgIcon="shopping_basket"></mat-icon>
+      </button>
     </movie-card>
   </ng-template>
-
-  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
-    You've viewed {{ hitsViewed }} of {{ nbHits }} titles
-  </list-page-progress>
 
 </list-page>

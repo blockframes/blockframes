@@ -9,16 +9,18 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { FileNameModule } from '@blockframes/utils/pipes';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
+import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDividerModule } from '@angular/material/divider';
-import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [MovieFormMediaVideosComponent],
@@ -31,6 +33,8 @@ import { MatSelectModule } from '@angular/material/select';
     MaxLengthModule,
     FileUploaderModule,
     FileNameModule,
+    FileListPipeModule,
+    StaticSelectModule,
 
     // Material
     MatFormFieldModule,

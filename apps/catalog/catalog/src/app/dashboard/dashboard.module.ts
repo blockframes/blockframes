@@ -18,7 +18,6 @@ import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { OrgAccessModule } from '@blockframes/organization/pipes'
 
 // Guards
-import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -42,7 +41,7 @@ const routes: Routes = [
       },
       {
         path: 'home',   // Home (dashboard if film, welcome if not)
-        loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+        loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule)
       },
       {
         path: 'notifications',
@@ -60,8 +59,6 @@ const routes: Routes = [
       },
       {
         path: 'title',
-        canActivate: [OrganizationContractListGuard],
-        canDeactivate: [OrganizationContractListGuard],
         children: [{
           path: '',
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)

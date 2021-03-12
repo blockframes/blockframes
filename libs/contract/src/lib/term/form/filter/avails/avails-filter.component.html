@@ -1,0 +1,42 @@
+<form [formGroup]="form">
+  <hr />
+  <h3>Territories*</h3>
+  <static-group formControlName="territories" scope="territories" displayAll="World" required>
+    <mat-label>Select territories</mat-label>
+  </static-group>
+
+  <h3>Terms*</h3>
+  <div formGroupName="duration" fxLayout fxLayoutAlign="space-between" fxLayoutGap="16px">
+    <mat-form-field appearance="outline">
+      <mat-label>Licence Start Date</mat-label>
+      <input matInput [matDatepicker]="datepickerFrom" formControlName="from">
+      <mat-datepicker-toggle matSuffix [for]="datepickerFrom"></mat-datepicker-toggle>
+      <mat-datepicker #datepickerFrom> </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Licence End Date</mat-label>
+      <input matInput [matDatepicker]="datepickerTo" formControlName="to">
+      <mat-datepicker-toggle matSuffix [for]="datepickerTo"></mat-datepicker-toggle>
+      <mat-datepicker #datepickerTo> </mat-datepicker>
+    </mat-form-field>
+  </div>
+  
+  <!-- TODO# 5065 implement media checkboxes reusable component -->
+  
+  <hr />
+  
+  <h3>Rights*</h3>
+  <static-group formControlName="medias" scope="medias" displayAll="All Rights" required>
+    <mat-label>Select rights</mat-label>
+  </static-group>
+  
+  <hr />
+  
+  <h3>Exclusivity*</h3>
+  <mat-form-field appearance="outline">
+    <mat-select formControlName="exclusive">
+      <mat-option [value]="true">Exclusive</mat-option>
+      <mat-option [value]="false">Non exclusive</mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>

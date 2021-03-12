@@ -11,13 +11,12 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { MediaService } from '@blockframes/media/+state/media.service';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 
 @Component({
   selector: 'admin-organization',
@@ -79,7 +78,7 @@ export class OrganizationComponent implements OnInit {
     private permissionService: PermissionsService,
     private invitationService: InvitationService,
     private eventService: EventService,
-    private mediaService: MediaService,
+    private uploaderService: FileUploaderService,
     private contractService: ContractService,
     private dialog: MatDialog,
     private router: Router
@@ -88,9 +87,11 @@ export class OrganizationComponent implements OnInit {
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
     this.org = await this.organizationService.getValue(this.orgId);
-    this.orgForm = new OrganizationAdminForm(this.org);
 
-    const movies = await this.movieService.getValue(fromOrg(this.org.id))
+    this.orgForm = new OrganizationAdminForm();
+    this.orgForm.reset(this.org);
+
+    const movies = await this.movieService.getValue(fromOrg(this.orgId))
     this.movies = movies.filter(m => !!m);
 
     this.members = await this.getMembers();
@@ -134,9 +135,8 @@ export class OrganizationComponent implements OnInit {
       return;
     }
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.orgForm);
-    await this.organizationService.update(this.orgId, documentToUpdate);
-    this.mediaService.uploadMedias(mediasToUpload);
+    this.uploaderService.upload();
+    await this.organizationService.update(this.orgId, this.orgForm.value);
 
     if (this.notifyCheckbox.value) {
       this.organizationService.notifyAppAccessChange(this.orgId);
@@ -186,7 +186,7 @@ export class OrganizationComponent implements OnInit {
   }
 
   public async deleteOrg() {
-    const simulation = await this.simulateDeletion(this.org);
+    const simulation = await this.simulateDeletion(this.orgId);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         title: 'You are currently deleting this organization from Archipel, are you sure ?',
@@ -201,18 +201,19 @@ export class OrganizationComponent implements OnInit {
           this.router.navigate(['c/o/admin/panel/organizations']);
         }
       }
-    })
+    });
   }
 
   /**
    * Simulate how many others documents will be deleted if we delete this organization
    * @param organization The organization that will be deleted
    */
-  private async simulateDeletion(organization: Organization) {
+  private async simulateDeletion(orgId: string) {
+    const organization = await this.organizationService.getValue(orgId);
     const output: string[] = [];
 
     // Calculate how many users will be remove from the org
-    const users = this.org.userIds;
+    const users = organization.userIds;
     if (users.length) {
       output.push(`${users.length} user(s) will be erased from the organization.`);
     }

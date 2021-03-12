@@ -13,9 +13,8 @@ import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, acces
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
-import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
-import { getPrivateVideoUrl } from './player';
+import { getPrivateVideoUrl, getPlayerUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
@@ -77,6 +76,7 @@ export const getAnalyticsActiveUsers = functions.https.onCall(skipInMaintenance(
 //--------------------------------
 
 export const privateVideo = functions.https.onCall(skipInMaintenance(logErrors(getPrivateVideoUrl)));
+export const playerUrl = functions.https.onCall(skipInMaintenance(logErrors(getPlayerUrl)));
 
 //--------------------------------
 //   Permissions  Management    //
@@ -150,15 +150,6 @@ export const onMovieUpdateEvent = functions
  * Trigger: when a movie is deleted
  */
 export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors(onMovieDelete))
-
-//------------------------------------------------
-//   Contracts & Contracts Version Management   //
-//------------------------------------------------
-
-/**
- * Trigger: when a contract is created/updated/deleted
- */
-export const onContractWriteEvent = onDocumentWrite('contracts/{contractId}', onContractWrite);
 
 //--------------------------------
 //     Consents Management      //

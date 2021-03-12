@@ -10,10 +10,7 @@ import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 // Guards
 import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
-import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
-import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -72,13 +69,10 @@ const routes: Routes = [{
       path: 'deals',
       children: [{
         path: '',
-        canActivate: [CatalogDealsGuard, OrganizationContractListGuard, ContractsRightListGuard],
-        canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard],
+        canActivate: [CatalogDealsGuard],
         loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
       }, {
         path: ':contractId',
-        canActivate: [ActiveContractGuard],
-        canDeactivate: [ActiveContractGuard],
         loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
       }]
     },
@@ -94,7 +88,21 @@ const routes: Routes = [{
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
         data: { redirect: '/c/o/marketplace/home' }
       }]
-    }]
+    },
+    {
+      path: 'organization',
+      children: [{
+        path: '',
+        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
+        data: { animation: 'list' }
+      },
+      {
+        path: ':orgId',
+        loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule),
+        data: { animation: 'view' },
+      }]
+    },
+  ]
 }];
 
 @NgModule({

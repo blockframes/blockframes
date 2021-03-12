@@ -4,9 +4,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationForm } from '../../forms/organization.form';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
+import { FileUploaderService } from '@blockframes/media/+state';
 
 @Component({
   selector: 'organization-create',
@@ -21,6 +21,7 @@ export class OrganizationCreateComponent {
 
   constructor(
     private service: OrganizationService,
+    private uploaderService: FileUploaderService,
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
@@ -38,9 +39,8 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(this.form);
-
-    await this.service.addOrganization(documentToUpdate, getCurrentApp(this.routerQuery));
+    this.uploaderService.upload();
+    await this.service.addOrganization(this.form.value, getCurrentApp(this.routerQuery));
     this.router.navigate(['../app-access'], { relativeTo: this.route });
   }
 }

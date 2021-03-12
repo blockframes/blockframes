@@ -1,17 +1,17 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { isEqual, set } from 'lodash';
+import { get, isEqual, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
 import { getDocument } from '@blockframes/firebase-utils';
-import { Meeting } from '@blockframes/event/+state/event.firestore';
-import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
-import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.firestore';
-import { privacies, Privacy, tempUploadDir } from '@blockframes/utils/file-sanitizer';
+import { PublicUser, User } from '@blockframes/user/types';
+import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
+import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
+import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
 
@@ -20,7 +20,7 @@ import { uploadToJWPlayer } from './player';
 import { MovieDocument } from './data/types';
 import { imgixToken } from './environments/environment';
 import { db, getStorageBucketName } from './internals/firebase';
-import { isUserInvitedToEvent } from './internals/invitations/events';
+import { isAllowedToAccessMedia } from './internals/media';
 
 
 /**
@@ -56,6 +56,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
+    // because of possible nested map and arrays, we need to retrieve the whole document
+    // modify it, then update the whole doc with the new (modified) version
     const docRef = db.collection(metadata.collection).doc(metadata.docId);
     const docSnap = await docRef.get();
     await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
@@ -63,36 +65,40 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // (1) Security checks
 
-    const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
+    const blockframesAdmin = await db.doc(`blockframesAdmin/${metadata.uid}`).get();
+    if (!blockframesAdmin.exists) {
 
-    // Is the user allowed to upload this file ?
-    switch (metadata.collection) {
-      case 'users': {
-        // only the user is allowed to upload files about himself
-        await assertFile(metadata.docId === metadata.uid, notAllowedError);
-        break;
+      const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
 
-      } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
-        // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-        const user = await getDocument<User>(`users/${metadata.uid}`);
-        await assertFile(!!user, notAllowedError);
+      // Is the user allowed to upload this file ?
+      switch (metadata.collection) {
+        case 'users': {
+          // only the user is allowed to upload files about himself
+          await assertFile(metadata.docId === metadata.uid, notAllowedError);
+          break;
 
-        const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
-        await assertFile(!!movie, notAllowedError);
+        } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
+          // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
+          const user = await getDocument<User>(`users/${metadata.uid}`);
+          await assertFile(!!user, notAllowedError);
 
-        const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
-        await assertFile(isAllowed, notAllowedError);
-        break;
+          const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
+          await assertFile(!!movie, notAllowedError);
 
-      } case 'orgs': {
-        // only member of an org can upload to this org
-        const user = await getDocument<User>(`users/${metadata.uid}`);
-        await assertFile(!!user, notAllowedError);
-        await assertFile(user.orgId === metadata.docId, notAllowedError);
-        break;
+          const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
+          await assertFile(isAllowed, notAllowedError);
+          break;
 
-      } default: {
-        await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+        } case 'orgs': {
+          // only member of an org can upload to this org
+          const user = await getDocument<User>(`users/${metadata.uid}`);
+          await assertFile(!!user, notAllowedError);
+          await assertFile(user.orgId === metadata.docId, notAllowedError);
+          break;
+
+        } default: {
+          await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+        }
       }
     }
 
@@ -101,16 +107,36 @@ export async function linkFile(data: storage.ObjectMetadata) {
     const segments = data.name.split('/');
     segments.shift(); // remove tmp/
     const finalPath = segments.join('/');
-    const to = bucket.file(finalPath);
+    const to = bucket.file(`${metadata.privacy}/${finalPath}`);
 
     await file.copy(to);
 
     // (3) update db
-    // because of possible nested map and arrays, we need to retrieve the whole document
-    // modify it, then update the whole doc with the new (modified) version
 
-    // TODO issue#4002 refactor as set(doc, metadata.field, { ref: finalPath});
-    set(doc, metadata.field, finalPath); // update the whole doc with only the new ref
+    // separate extraData from metadata
+    const keysToDelete = [
+      'uid',
+      'firebaseStorageDownloadTokens',
+    ];
+    for (const key of keysToDelete) {
+      delete metadata[key];
+    }
+
+    const uploadData: StorageFile = {
+      ...metadata,
+      storagePath: finalPath,
+    }
+
+
+    let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
+
+    if (Array.isArray(fieldValue)) {
+      fieldValue.push(uploadData);
+    } else {
+      fieldValue = uploadData;
+    }
+
+    set(doc, metadata.field, fieldValue);
 
     await docRef.update(doc);
 
@@ -137,18 +163,32 @@ export async function linkFile(data: storage.ObjectMetadata) {
         return false;
       }
 
-      // TODO issue#4002 use field and stop computing the videoField
       // upload success: we should add jwPlayerId to the db document
-      const segmentedField = metadata.field.split('.');
-      segmentedField.pop(); // remove `.ref` to get the whole video object instead of the ref/path
-      segmentedField.push('jwPlayerId');
-      const videoField = segmentedField.join('.');
-
       const docRef = db.collection(metadata.collection).doc(metadata.docId);
       const docSnap = await docRef.get();
       if (!docSnap.exists) return false;
       const doc = docSnap.data()!;
-      set(doc, videoField, uploadResult.key); // update the whole doc with only the new ref
+
+      const fieldValue: StorageVideo | StorageVideo[] = get(doc, metadata.field);
+      if (Array.isArray(fieldValue)) {
+
+        const parts = data.name.split('/');
+        parts.shift(); // remove public/ or protected/
+        const storagePath = parts.join('/');
+        const index = fieldValue.findIndex(video => video.storagePath === storagePath);
+
+        if (index < 0) {
+          console.error(`UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`, JSON.stringify(data.name), JSON.stringify(data.metadata));
+          return false;
+        }
+
+        fieldValue[index].jwPlayerId = uploadResult.key;
+
+      } else {
+        fieldValue.jwPlayerId = uploadResult.key;
+      }
+
+      set(doc, metadata.field, fieldValue); // update the whole doc with only the new jwPlayerId
       await docRef.update(doc);
 
       return true;
@@ -167,19 +207,24 @@ export async function linkFile(data: storage.ObjectMetadata) {
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
  * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
  */
-export const getMediaToken = async (data: { ref: string, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
+export const getMediaToken = async (data: { file: StorageFile, parametersSet: ImageParameters[], eventId?: string }, context: CallableContext): Promise<string[]> => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  const canAccess = await isAllowedToAccessMedia(data.ref, context.auth.uid, data.eventId);
+  const canAccess = await isAllowedToAccessMedia(data.file, context.auth.uid, data.eventId);
   if (!canAccess) {
     throw new Error('Permission denied. User is not allowed');
   }
 
   return data.parametersSet.map((p: ImageParameters) => {
-    const params = formatParameters(p);
-    let toSign = `${imgixToken}${encodeURI(data.ref)}`;
 
+    // ImgIx secured URLs doc : https://github.com/imgix/imgix-blueprint#securing-urls
+
+    // add a leading '/' to the path if it doesn't exists
+    const storagePath = data.file.storagePath.startsWith('/') ? data.file.storagePath : `/${data.file.storagePath}`;
+    let toSign = `${imgixToken}${encodeURI(storagePath)}`;
+
+    const params = formatParameters(p);
     if (!!params) {
       toSign = `${toSign}?${params}`;
     }
@@ -189,115 +234,40 @@ export const getMediaToken = async (data: { ref: string, parametersSet: ImagePar
 
 }
 
-export const deleteMedia = async (ref: string): Promise<void> => {
+// TODO issue#4813 refactor
+// TODO - check if parent object has a `jwPlayerId`, if so delete video from JWPlayer API
+export const deleteMedia = async (file: StorageFile): Promise<void> => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
-  const file = bucket.file(ref);
+  const filePath = `${file.privacy}/${file.storagePath}`;
+  const fileObject = bucket.file(filePath);
 
-  const [exists] = await file.exists();
+  const [exists] = await fileObject.exists();
   if (!exists) {
-    console.log(`Upload Error : File "${ref}" does not exists in the storage`);
+    console.log(`Delete Error : File "${filePath}" does not exists in the storage`);
   } else {
-    await file.delete();
+    await fileObject.delete();
   }
 }
 
-async function isAllowedToAccessMedia(ref: string, uid: string, eventId?: string): Promise<boolean> {
-  const pathInfo = getPathInfo(ref);
+function needsToBeCleaned(before: StorageFile | undefined, after: StorageFile | undefined) {
+  return !!before?.storagePath && before.storagePath !== after?.storagePath;
+};
 
-  const user = await db.collection('users').doc(uid).get();
-  if (!user.exists) { return false; }
-  const userDoc = createPublicUser(user.data());
-
-  const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
-  if (blockframesAdmin.exists) { return true; }
-
-  let canAccess = false;
-  switch (pathInfo.collection) {
-    case 'users':
-      canAccess = pathInfo.docId === uid;
-      break;
-    case 'orgs':
-      if (!userDoc.orgId) { return false; }
-      canAccess = pathInfo.docId === userDoc.orgId;
-      break;
-    case 'movies':
-      if (!userDoc.orgId) { return false; }
-      const moviesCol = await db.collection('movies').where('orgIds', 'array-contains', userDoc.orgId).get();
-      const movies = moviesCol.docs.map(doc => doc.data());
-      const orgIds = movies.map(m => m.orgIds)
-      canAccess = orgIds.some(id => pathInfo.docId === id);
-      break;
-    default:
-      canAccess = false;
-      break;
-  }
-
-  // use is not currently authorized,
-  // but he might be invited to an event where the file is shared
-  if (!canAccess && !!eventId) {
-    const eventRef = db.collection('events').doc(eventId);
-    const eventSnap = await eventRef.get();
-
-    if (eventSnap.exists) {
-
-      const eventData = eventSnap.data()!;
-
-      // if event is a Meeting and has the file
-      if (eventData.type === 'meeting') {
-
-        // event.meta.files store the raw refs, but the ref in the function params
-        // has been transformed by the front, so we must apply the same transformations
-        // if we want to be able to match ref & files
-        const match = (eventData.meta as Meeting).files.some(file => {
-
-          if (file.startsWith('/')) file = file.substr(1); // remove leading '/' if exists
-          const fileParts = file.split('/');
-          fileParts.shift(); // remove privacy
-          let normalizedFile = fileParts.join('/');
-          if (!normalizedFile.startsWith('/')) normalizedFile = `/${normalizedFile}`; // put back a leading '/'
-
-          return normalizedFile === ref;
-        })
-
-        if (match) {
-          // check if user is invited
-          canAccess = await isUserInvitedToEvent(uid, eventId);
-        }
-      }
-    }
-  }
-
-  return canAccess;
-}
-
-interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
-
-function getPathInfo(ref: string) {
-  const refParts = ref.split('/').filter(v => !!v);
-
-  const pathInfo: PathInfo = {
-    securityLevel: 'protected', // protected by default
-    collection: '',
-    docId: '',
-  };
-
-  if (privacies.includes(refParts[0] as any)) {
-    pathInfo.securityLevel = refParts.shift()! as Privacy;
-  }
-
-  pathInfo.collection = refParts.shift()!;
-  pathInfo.docId = refParts.shift()!;
-
-  return pathInfo;
-}
-
+function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] | undefined) {
+  const filesToClean: StorageFile[] = [];
+  before?.forEach(beforeFile => {
+    const existsInAfter = after?.some(afterFile => afterFile.storagePath === beforeFile.storagePath);
+    if (!existsInAfter) filesToClean.push(beforeFile);
+  });
+  return filesToClean;
+};
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
-  const mediaToDelete: string[] = [];
+  const mediaToDelete: StorageFile[] = [];
   if (!!after) { // Updating
     // Check if avatar have been changed/removed
-    if (!!before.avatar && (before.avatar !== after.avatar || after.avatar === '')) { // Avatar was previously setted and was updated or removed
+    if (needsToBeCleaned(before.avatar, after.avatar)) {
       mediaToDelete.push(before.avatar);
     }
   } else { // Deleting
@@ -314,19 +284,17 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
 }
 
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
-  const mediaToDelete: string[] = [];
+  const mediaToDelete: StorageFile[] = [];
   if (!!after) { // Updating
-    if (!!before.logo && (before.logo !== after.logo || after.logo === '')) {
+    if (needsToBeCleaned(before.logo, after.logo)) {
       mediaToDelete.push(before.logo);
     }
 
-    if (before.documents?.notes.length) {
-      before.documents.notes.forEach(nb => {
-        if (!after.documents?.notes.length || !after.documents.notes.some(na => na.ref === nb.ref)) {
-          mediaToDelete.push(nb.ref);
-        }
-      });
-    }
+    const notesToDelete = checkFileList(
+      before.documents.notes,
+      after.documents.notes
+    );
+    mediaToDelete.push(...notesToDelete);
 
   } else { // Deleting
     if (!!before.logo) {
@@ -334,7 +302,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
     }
 
     if (before.documents?.notes.length) {
-      before.documents.notes.forEach(n => mediaToDelete.push(n.ref));
+      before.documents.notes.forEach(n => mediaToDelete.push(n));
     }
   }
 
@@ -342,60 +310,56 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 }
 
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
-  const mediaToDelete: string[] = [];
+
+  const mediaToDelete: StorageFile[] = [];
   if (!!after) { // Updating
-    if (!!before.banner && (before.banner !== after.banner || after.banner === '')) {
+
+    // SINGLE FILE
+
+    if (needsToBeCleaned(before.banner, after.banner)) {
       mediaToDelete.push(before.banner);
     }
 
-    if (!!before.poster && (before.poster !== after.poster || after.poster === '')) {
+    if (needsToBeCleaned(before.poster, after.poster)) {
       mediaToDelete.push(before.poster);
     }
 
-    if (!!before.promotional.presentation_deck && (before.promotional.presentation_deck !== after.promotional.presentation_deck || after.promotional.presentation_deck === '')) {
+    if (needsToBeCleaned(before.promotional.presentation_deck, after.promotional.presentation_deck)) {
       mediaToDelete.push(before.promotional.presentation_deck);
     }
 
-    if (!!before.promotional.scenario && (before.promotional.scenario !== after.promotional.scenario || after.promotional.scenario === '')) {
+    if (needsToBeCleaned(before.promotional.scenario, after.promotional.scenario)) {
       mediaToDelete.push(before.promotional.scenario);
     }
 
-    if (!!before.promotional.moodboard && (before.promotional.moodboard !== after.promotional.moodboard || after.promotional.moodboard === '')) {
+    if (needsToBeCleaned(before.promotional.moodboard, after.promotional.moodboard)) {
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (!!before.promotional.videos?.screener?.ref &&
-      (before.promotional.videos.screener?.ref !== after.promotional.videos?.screener?.ref || after.promotional.videos?.screener?.ref === '')) {
-      mediaToDelete.push(before.promotional.videos.screener.ref);
+    if (needsToBeCleaned(before.promotional.videos?.screener, after.promotional.videos?.screener)) {
+      mediaToDelete.push(before.promotional.videos.screener);
     }
 
-    if (before.promotional.videos?.otherVideos?.length) {
-      before.promotional.videos.otherVideos.forEach(vb => {
-        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.ref === vb.ref)) {
-          mediaToDelete.push(vb.ref);
-        }
-      });
-    }
+    // FILES LIST
 
-    if (before.promotional.still_photo?.length) {
-      before.promotional.still_photo.forEach((photo, index) => {
-        const stillBefore = photo
-        const stillAfter = after.promotional.still_photo[index];
-        if ((stillBefore !== stillAfter || stillAfter === '')) {
-          mediaToDelete.push(stillBefore);
-        }
-      });
-    }
+    const otherVideosToDelete = checkFileList(
+      before.promotional.videos.otherVideos,
+      after.promotional.videos.otherVideos
+    );
+    mediaToDelete.push(...otherVideosToDelete);
 
-    if (before.promotional.notes?.length) {
-      before.promotional.notes.forEach((note, index) => {
-        const noteBefore = note;
-        const noteAfter = after.promotional.notes[index];
-        if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
-          mediaToDelete.push(noteBefore.ref);
-        }
-      });
-    }
+    const stillToDelete = checkFileList(
+      before.promotional.still_photo,
+      after.promotional.still_photo
+    );
+    mediaToDelete.push(...stillToDelete);
+
+    const notesToDelete = checkFileList(
+      before.promotional.notes,
+      after.promotional.notes
+    );
+    mediaToDelete.push(...notesToDelete);
+
 
   } else { // Deleting
 
@@ -419,12 +383,12 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (!!before.promotional.videos?.screener?.ref) {
-      mediaToDelete.push(before.promotional.videos.screener.ref);
+    if (!!before.promotional.videos?.screener?.storagePath) {
+      mediaToDelete.push(before.promotional.videos.screener);
     }
 
     if (before.promotional.videos?.otherVideos?.length) {
-      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.ref));
+      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n));
     }
 
     if (before.promotional.still_photo?.length) {
@@ -432,7 +396,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (before.promotional.notes?.length) {
-      before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
+      before.promotional.notes.forEach(note => mediaToDelete.push(note));
     }
   }
 

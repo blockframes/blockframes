@@ -4,7 +4,6 @@ import { MovieService, createMovie } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
-// import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
   formatAvailableLanguages,
@@ -12,7 +11,6 @@ import {
   formatCertifications,
   formatContentType,
   formatCredits,
-  formatDistributionRights,
   formatGenres,
   formatOriginalLanguages,
   formatOriginalRelease,
@@ -222,40 +220,9 @@ const fields = {
       caption: index++,
     }
   },
-  screenerLink: {
-    multiLine: false,
-    index: index++
-  },
-  promoReelLink: {
-    multiLine: false,
-    index: index++
-  },
-  trailerLink: {
-    multiLine: false,
-    index: index++
-  },
-  pitchTeaserLink: {
-    multiLine: false,
-    index: index++
-  },
-  //////////////////
-  // FESTIVAL FIELDS
-  //////////////////
-  territoriesSold: {
-    multiLine: false,
-    index: index++
-  },
-  territoriesExcluded: {
-    multiLine: false,
-    index: index++
-  },
   //////////////////
   // ADMIN FIELDS
   //////////////////
-  scoring: {
-    multiLine: false,
-    index: index++
-  },
   storeType: {
     multiLine: false,
     index: index++
@@ -322,8 +289,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // Fetch movie from internalRef if set or create a new movie
       let movie = createMovie();
       if (this.mapping.internalRef) {
-        const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef);
-        if (_movie) { movie = _movie };
+        try {
+          const _movie = await this.movieService.getFromInternalRef(this.mapping.internalRef, !this.isUserBlockframesAdmin ? this.authQuery.user.orgId : undefined);
+          if (_movie) { movie = _movie };
+        } catch (e) { console.log(e) }
       }
       const importErrors = { movie, errors: [] } as MovieImportState;
 
@@ -341,17 +310,17 @@ export class ViewExtractedMoviesComponent implements OnInit {
       }
 
       if (this.mapping.series) {
-        movie.title.series = parseInt(this.mapping.series, 10)
+        movie.title.series = parseInt(this.mapping.series, 10);
       }
 
       if (this.mapping.episodeCount) {
-        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10)
+        movie.runningTime.episodeCount = parseInt(this.mapping.episodeCount, 10);
       }
 
       // WORK TYPE
       formatContentType(this.mapping.contentType, movie, importErrors);
 
-      // DIRECTORS 
+      // DIRECTORS
       movie.directors = formatCredits(this.mapping.directors);
 
       // ORIGIN COUNTRIES (Countries of Origin)
@@ -393,10 +362,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // KEYWORDS
       movie.keywords = this.mapping.keywords;
 
-      // PRODUCERS 
+      // PRODUCERS
       movie.producers = formatCredits(this.mapping.producers, 'producerRoles') as Producer[];
 
-      // CREW 
+      // CREW
       movie.crew = formatCredits(this.mapping.crew, 'crewRoles') as Crew[];
 
       // BUDGET RANGE
@@ -427,44 +396,16 @@ export class ViewExtractedMoviesComponent implements OnInit {
       formatSingleValue(this.mapping.soundFormat, 'soundFormat', 'soundFormat', movie);
 
       // ORIGINAL VERSION
-      movie.isOriginalVersionAvailable = this.mapping.isOriginalVersionAvailable === 'yes' ? true : false;
+      movie.isOriginalVersionAvailable = this.mapping.isOriginalVersionAvailable.toLowerCase() === 'yes' ? true : false;
 
       // LANGUAGES (Available versions(s))
       formatAvailableLanguages(this.mapping.languages, movie, importErrors);
-
-      // SCREENER LINK
-      if (this.mapping.screenerLink) {
-        movie.promotional.screener_link = this.mapping.screenerLink;
-      }
-
-      // PROMO REEL LINK
-      if (this.mapping.promoReelLink) {
-        movie.promotional.promo_reel_link = this.mapping.promoReelLink;
-      }
-
-      // TRAILER LINK
-      if (this.mapping.trailerLink) {
-        movie.promotional.trailer_link = this.mapping.trailerLink;
-      }
-
-      // PITCH TEASER LINK
-      if (this.mapping.pitchTeaserLink) {
-        movie.promotional.teaser_link = this.mapping.pitchTeaserLink;
-      }
-
-      //////////////////
-      // FESTIVAL FIELDS
-      //////////////////
-
-      formatDistributionRights(this.mapping.territoriesSold, this.mapping.territoriesExcluded, importErrors);
 
       //////////////////
       // ADMIN FIELDS
       //////////////////
 
       if (this.isUserBlockframesAdmin) {
-        // SCORING (Scoring)
-        formatSingleValue(this.mapping.scoring, 'scoring', 'scoring', movie);
 
         // STORE TYPE
         formatSingleValue(this.mapping.storeType, 'storeType', 'storeConfig.storeType', movie);
@@ -715,22 +656,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
-    }
-
-    //////////////////
-    // ADMIN FIELDS
-    //////////////////
-
-    if (this.isUserBlockframesAdmin) {
-      if (!movie.scoring) {
-        errors.push({
-          type: 'warning',
-          field: 'movie.scoring',
-          name: 'Scoring',
-          reason: 'Optional field is missing',
-          hint: 'Edit corresponding sheet field.'
-        });
-      }
     }
 
     return importErrors;

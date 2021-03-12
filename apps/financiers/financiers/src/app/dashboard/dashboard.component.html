@@ -9,7 +9,7 @@
         <mat-icon matListIcon svgIcon="video_library"></mat-icon>
         <span matLine><b>My Projects</b></span>
       </a>
-      <ng-container *ngIf="org$ | async | canAccess: 'marketplace'">
+      <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'financiers'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
           <mat-icon matListIcon svgIcon="search_table"></mat-icon>
