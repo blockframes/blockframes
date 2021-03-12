@@ -7,7 +7,7 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate, migrateBeta } from './migrations';
 import { importFirestore, restore } from './admin';
-import { copyFirestoreExportFromCiBucket, getBackupBucket, latestAnonDbDir, latestAnonDbFilename, loadAdminServices, runShellCommand } from "@blockframes/firebase-utils";
+import { copyFirestoreExportFromCiBucket, getBackupBucket, latestAnonDbDir, latestAnonDbFilename, loadAdminServices, restoreAnonStorageFromCI, runShellCommand } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
@@ -65,7 +65,7 @@ export async function prepareForTesting() {
 }
 
 export async function prepareForTestingBeta() {
-  const { storage, getCI, db, auth } = loadAdminServices();
+  const { storage, db, auth } = loadAdminServices();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.log('Copying AnonDb from CI...');
@@ -80,17 +80,13 @@ export async function prepareForTestingBeta() {
   await syncUsers(null, db, auth);
   console.info('Users synced!');
 
-  console.info('Syncing storage with production backup stored in blockframes-ci...');
-  await restoreStorageFromCi(getCI());
+  console.info('Syncing storage with blockframes-ci...');
+  restoreAnonStorageFromCI();
   console.info('Storage synced!');
 
   console.info('Preparing database & storage by running migrations...');
   await migrateBeta({ db, storage, withBackup: false });
   console.info('Migrations complete!');
-
-  console.info('Cleaning unused storage data...');
-  await cleanStorage(await getBackupBucket(storage));
-  console.info('Storage data clean and fresh!');
 
   console.info('Generating fixtures...');
   await generateFixtures();
@@ -101,10 +97,6 @@ export async function prepareForTestingBeta() {
   await upgradeAlgoliaMovies();
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
-
-  console.info('Generating watermarks...');
-  await generateWatermarks();
-  console.info('Watermarks generated!');
 
   insurance(); // Switch off maintenance insurance
 }

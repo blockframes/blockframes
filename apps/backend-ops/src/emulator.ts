@@ -11,16 +11,21 @@ import {
   loadAdminServices,
   restoreStorageFromCi,
   startMaintenance,
-  latestAnonDbDir
+  latestAnonDbDir,
+  getFirestoreExportPath,
+  getBackupBucket,
+  CI_STORAGE_BACKUP,
+  latestAnonStorageDir
 } from '@blockframes/firebase-utils';
-import { ChildProcess } from 'child_process';
+import { ChildProcess, execSync } from 'child_process';
 import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
-import { backupBucket } from '@env'
+import { backupBucket, firebase } from '@env'
 import { migrate, migrateBeta } from './migrations';
-import { syncUsers } from './users';
+import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
+import { cleanStorage } from './storage-cleaning';
 
 /**
  * This function will download the Firestore backup from specified bucket, import it into
@@ -98,16 +103,16 @@ export async function downloadProdDbBackup(localPath?: string) {
  */
 export async function anonDbProcess() {
   const db = connectEmulator();
+  const { getCI, storage, auth } = loadAdminServices();
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
   console.log(o.map((snap) => snap.id));
-
-  const { getCI, storage, auth } = loadAdminServices();
 
   console.info('Preparing database & storage by running migrations...');
   await migrateBeta({ withBackup: false, db, storage }); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Migrations complete!');
 
+  console.log('Running anonymization...');
   await runAnonymization(db);
   console.log('Anonymization complete!')
 
@@ -121,10 +126,17 @@ export async function anonDbProcess() {
   console.info('Storage synced!');
   console.info('Users synced!');
 
-
   console.info('Cleaning unused DB data...');
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
+
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(await getBackupBucket(storage));
+  console.info('Storage data clean and fresh!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks({db, storage});
+  console.info('Watermarks generated!');
 }
 
 /**
@@ -140,9 +152,10 @@ export async function anonymizeLatestProdDb() {
   } catch (e) {
     throw e;
   } finally {
-    await shutdownEmulator(proc);
+    await shutdownEmulator(proc, defaultEmulatorBackupPath);
   }
-  await uploadBackup({ localRelPath: defaultEmulatorBackupPath, remoteDir: latestAnonDbDir });
+  await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
+  storeAnonStorageBackup(firebase().storageBucket);
 }
 
 /**
@@ -172,4 +185,26 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
   } finally {
     await shutdownEmulator(proc);
   }
+}
+
+function storeAnonStorageBackup(sourceBucketName: string) {
+  const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
+
+  let cmd: string;
+  let output: string;
+
+  try {
+    cmd = `gsutil -m -q rm -r "${anonBucketBackupDirURL}"`;
+    console.log('Running command:', cmd);
+    output = execSync(cmd).toString();
+    console.log(output);
+  } catch (e) {
+    console.warn(e.toString());
+  }
+
+  cmd = `gsutil -m -q cp -r "gs://${sourceBucketName}/*" "${anonBucketBackupDirURL}"`
+  console.log('Running command:', cmd);
+  output = execSync(cmd).toString();
+  console.log(output);
+
 }

@@ -69,6 +69,7 @@ commands:
             - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - dependencies-{{ .Environment.CACHE_VERSION }}
+            - dependencies-
       - restore_cache:
           keys:
             - build-v1-{{ .Branch }}-{{ .Revision }}
