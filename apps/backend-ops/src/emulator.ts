@@ -21,7 +21,7 @@ import { ChildProcess, execSync } from 'child_process';
 import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
-import { backupBucket } from '@env'
+import { backupBucket, firebase } from '@env'
 import { migrate, migrateBeta } from './migrations';
 import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
@@ -155,7 +155,7 @@ export async function anonymizeLatestProdDb() {
     await shutdownEmulator(proc, defaultEmulatorBackupPath);
   }
   await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
-  storeAnonStorageBackup(backupBucket);
+  storeAnonStorageBackup(firebase().storageBucket);
 }
 
 /**
