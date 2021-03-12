@@ -75,7 +75,7 @@ export class StaticGroupComponent implements ControlValueAccessor {
   form = new FormControl([]);
   // defer the startWith value with subscription happens to get first value
   value$ = defer(() => this.form.valueChanges.pipe(
-    startWith(this.form.value),
+    startWith(this.form.value || []),
     shareReplay(1)
   ));
   hidden: Record<string, boolean> = {}

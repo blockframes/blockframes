@@ -1,3 +1,15 @@
+.main-header {
+  padding: 48px;
+  .main-title {
+    margin-bottom: 32px;
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+section {
+  margin: 24px;
+}
 .contract {
   padding: 24px;
   margin-bottom: 72px;
