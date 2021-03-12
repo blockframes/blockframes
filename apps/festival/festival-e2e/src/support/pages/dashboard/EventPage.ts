@@ -41,6 +41,12 @@ export default class EventPage {
     event.uncheckPrivate(isPublic);
 
     event.selectMovie(screeningName);
+    cy.wait(2000);
+
+    event.inputDescription(`Screening: ${screeningName}`);
+    cy.wait(2000);
+
+    cy.log('Save event and navigate to calendar');
     event.saveEvent();
     cy.get('[svgicon="arrow_back"]').click();
   }
