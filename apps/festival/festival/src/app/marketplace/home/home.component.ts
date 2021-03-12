@@ -2,6 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 // RxJs
 import { Observable } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -34,7 +35,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.page$ = this.db.doc<CmsPage>('cms/festival/home/live').valueChanges();
+    this.page$ = this.db.doc<CmsPage>('cms/festival/home/live').valueChanges().pipe(
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+    );
   }
 
   ngAfterViewInit() {
