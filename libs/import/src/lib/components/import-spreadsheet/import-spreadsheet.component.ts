@@ -3,9 +3,7 @@ import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Intercom } from 'ng-intercom';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { allowedFiles } from '@blockframes/utils/utils';
@@ -39,7 +37,6 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private authQuery: AuthQuery,
     private cdRef: ChangeDetectorRef,
-    private routerQuery: RouterQuery,
     private snackBar: MatSnackBar,
   ) {
     this.fileType.setValue('movies');
@@ -142,11 +139,10 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   }
 
   getTemplateName(templateType: string) {
-    const appName = getCurrentApp(this.routerQuery);
     if (this.isUserBlockframesAdmin) {
       return `import-${templateType}-template-admin.xlsx`;
     } else {
-      return `import-${templateType}-template-customer-${appName}.xlsx`;
+      return `import-${templateType}-template-customer.xlsx`;
     }
   }
 

@@ -115,8 +115,10 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
         this.timeout = window.setTimeout(() => window.location.reload(), refreshCountdown);
 
-
         this.player = jwplayer(this.playerContainerId);
+
+        // Hotfix for issue #5160 - Component is created twice and the firs ttime its destroyed before it could load the script causing an error.
+        if (!this.player.setup) return;
 
         this.player.setup({
           controls: !this.control,

@@ -220,40 +220,9 @@ const fields = {
       caption: index++,
     }
   },
-  screenerLink: {
-    multiLine: false,
-    index: index++
-  },
-  promoReelLink: {
-    multiLine: false,
-    index: index++
-  },
-  trailerLink: {
-    multiLine: false,
-    index: index++
-  },
-  pitchTeaserLink: {
-    multiLine: false,
-    index: index++
-  },
-  //////////////////
-  // FESTIVAL FIELDS
-  //////////////////
-  territoriesSold: {
-    multiLine: false,
-    index: index++
-  },
-  territoriesExcluded: {
-    multiLine: false,
-    index: index++
-  },
   //////////////////
   // ADMIN FIELDS
   //////////////////
-  scoring: {
-    multiLine: false,
-    index: index++
-  },
   storeType: {
     multiLine: false,
     index: index++
@@ -427,38 +396,16 @@ export class ViewExtractedMoviesComponent implements OnInit {
       formatSingleValue(this.mapping.soundFormat, 'soundFormat', 'soundFormat', movie);
 
       // ORIGINAL VERSION
-      movie.isOriginalVersionAvailable = this.mapping.isOriginalVersionAvailable === 'yes' ? true : false;
+      movie.isOriginalVersionAvailable = this.mapping.isOriginalVersionAvailable.toLowerCase() === 'yes' ? true : false;
 
       // LANGUAGES (Available versions(s))
       formatAvailableLanguages(this.mapping.languages, movie, importErrors);
-
-      // SCREENER LINK
-      if (this.mapping.screenerLink) {
-        movie.promotional.screener_link = this.mapping.screenerLink;
-      }
-
-      // PROMO REEL LINK
-      if (this.mapping.promoReelLink) {
-        movie.promotional.promo_reel_link = this.mapping.promoReelLink;
-      }
-
-      // TRAILER LINK
-      if (this.mapping.trailerLink) {
-        movie.promotional.trailer_link = this.mapping.trailerLink;
-      }
-
-      // PITCH TEASER LINK
-      if (this.mapping.pitchTeaserLink) {
-        movie.promotional.teaser_link = this.mapping.pitchTeaserLink;
-      }
 
       //////////////////
       // ADMIN FIELDS
       //////////////////
 
       if (this.isUserBlockframesAdmin) {
-        // SCORING (Scoring)
-        formatSingleValue(this.mapping.scoring, 'scoring', 'scoring', movie);
 
         // STORE TYPE
         formatSingleValue(this.mapping.storeType, 'storeType', 'storeConfig.storeType', movie);
@@ -709,22 +656,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
-    }
-
-    //////////////////
-    // ADMIN FIELDS
-    //////////////////
-
-    if (this.isUserBlockframesAdmin) {
-      if (!movie.scoring) {
-        errors.push({
-          type: 'warning',
-          field: 'movie.scoring',
-          name: 'Scoring',
-          reason: 'Optional field is missing',
-          hint: 'Edit corresponding sheet field.'
-        });
-      }
     }
 
     return importErrors;

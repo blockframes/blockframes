@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { MediaService } from '@blockframes/media/+state/media.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { promotionalElementTypes } from '@blockframes/utils/static-model/static-model';
 
@@ -8,15 +9,18 @@ import { promotionalElementTypes } from '@blockframes/utils/static-model/static-
 })
 export class PromotionalLinksPipe implements PipeTransform {
 
+  constructor(private mediaService: MediaService) { }
+
   async transform(links: string[], movie: Movie): Promise<any[]> {
     const _links = await Promise.all(links.map(async link => {
-      const url = (movie.promotional[link] as string);
-
-      if (!!url) {
-        const linkLabel = promotionalElementTypes[link];
-        const icon = 'play_arrow';
-        const label = `Watch ${linkLabel}`;
-        return { url, icon, label };
+      if (!!movie.promotional[link].storagePath) {
+        const url = await this.mediaService.generateImgIxUrl(movie.promotional[link]);
+        if (!!url) {
+          const linkLabel = promotionalElementTypes[link];
+          const icon = 'play_arrow';
+          const label = `Watch ${linkLabel}`;
+          return { url, icon, label };
+        }
       }
     }));
 
