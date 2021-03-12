@@ -26,7 +26,7 @@
 
   </mat-option>
 
-  <mat-option *ngIf="showAddNew && !!(control.valueChanges | async)" [value]="(control.valueChanges | async)" (onSelectionChange)="createNew()">
+  <mat-option test-id="createNewOrgOption" *ngIf="showAddNew && !!(control.valueChanges | async)" [value]="(control.valueChanges | async)" (onSelectionChange)="createNew()">
     <mat-icon svgIcon="add"></mat-icon> <span class="create-new"> CREATE {{ (control.valueChanges | async) }} {{ createLabel }}</span>
   </mat-option>
 </mat-autocomplete>
