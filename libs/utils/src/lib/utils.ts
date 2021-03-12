@@ -85,7 +85,7 @@ export function extensionToType(extension: string): AllowedFileType | 'unknown' 
   return 'unknown';
 }
 
-export async function loadJWPlayerScript(document: Document) {
+export async function loadJWPlayerScript(document: Document, playerUrl: string) {
   return new Promise(res => {
     const id = 'jwplayer-script';
 
@@ -94,7 +94,7 @@ export async function loadJWPlayerScript(document: Document) {
       const script = document.createElement('script');
       script.setAttribute('id', id);
       script.setAttribute('type', 'text/javascript');
-      script.setAttribute('src', 'https://cdn.jwplayer.com/libraries/lpkRdflk.js');
+      script.setAttribute('src', playerUrl);
       document.head.appendChild(script);
       script.onload = () => {
         res();
