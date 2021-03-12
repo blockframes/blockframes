@@ -110,14 +110,16 @@ function createEmulatorMetadataJson(emuPath: string) {
  * @param proc the `ChildPRocess` object for the running emulator process.
  * @param timeLimit number of seconds to await gracefull shutdown before SIGKILL
  */
-export async function shutdownEmulator(proc: ChildProcess, timeLimit: number = 60 * 2) {
+export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit: number = 60 * 2) {
   proc.kill('SIGTERM');
   const emuP = awaitProcOutput(proc, 'Stopping Logging Emulator').then(() => true);
   const timeP = sleep(1000 * timeLimit).then(() => false);
   const emuTerminated = await Promise.race([emuP, timeP]);
   if (!emuTerminated) {
+    console.error('Unable to shut down emulator process, forcing export and killing emulator...');
+    const cmd = `firebase emulators:export ${exportDir} --force`
+    await runShellCommand(cmd);
     proc.kill('SIGKILL');
-    throw Error('Unable to shut down emulator process');
   }
 }
 

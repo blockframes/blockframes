@@ -140,7 +140,7 @@ export async function anonymizeLatestProdDb() {
   } catch (e) {
     throw e;
   } finally {
-    await shutdownEmulator(proc);
+    await shutdownEmulator(proc, defaultEmulatorBackupPath);
   }
   await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
 }
