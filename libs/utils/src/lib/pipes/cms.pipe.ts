@@ -2,6 +2,7 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { Query, QueryFn } from '@angular/fire/firestore';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 function getQueryFn(section): QueryFn {
   return (ref: Query) => section.query.reduce((query: Query, params) => {
@@ -25,9 +26,13 @@ export class HomeQueryTitlesPipe implements PipeTransform {
   constructor(private service: MovieService) {}
   transform(section: any) {
     if (section.query?.length) {
-      return this.service.valueChanges(getQueryFn(section));
+      return this.service.valueChanges(getQueryFn(section)).pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      );
     } else {
-      return this.service.valueChanges(section.titleIds);
+      return this.service.valueChanges(section.titleIds).pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      );
     }
   }
 }
@@ -37,9 +42,13 @@ export class HomeQueryOrgsPipe implements PipeTransform {
   constructor(private service: OrganizationService) {}
   transform(section: any) {
     if (section.query?.length) {
-      return this.service.valueChanges(getQueryFn(section));
+      return this.service.valueChanges(getQueryFn(section)).pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      );
     } else {
-      return this.service.valueChanges(section.orgIds);
+      return this.service.valueChanges(section.orgIds).pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      );
     }
   }
 }

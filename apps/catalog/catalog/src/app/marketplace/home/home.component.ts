@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, HostBinding, OnInit,
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-home',
@@ -30,7 +31,9 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.page$ = this.db.doc<CmsPage>('cms/catalog/home/live').valueChanges();
+    this.page$ = this.db.doc<CmsPage>('cms/catalog/home/live').valueChanges().pipe(
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+    );
   }
 
   ngAfterViewInit() {
