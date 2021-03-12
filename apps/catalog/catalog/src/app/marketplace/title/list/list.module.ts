@@ -29,6 +29,7 @@ import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ListComponent],
@@ -49,6 +50,7 @@ import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avail
 
     // Material
     MatIconModule,
+    MatSnackBarModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
