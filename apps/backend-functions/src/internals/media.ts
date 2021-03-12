@@ -17,8 +17,6 @@ import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string): Promise<boolean> {
 
-  console.log('IS ALLOWED ?', JSON.stringify(file), uid, '**' + eventId + '**');
-
   const user = await db.collection('users').doc(uid).get();
   if (!user.exists) { return false; }
   const userDoc = createPublicUser(user.data());
