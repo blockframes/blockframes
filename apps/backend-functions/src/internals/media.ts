@@ -13,6 +13,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { db } from './firebase';
 import { isUserInvitedToEvent } from './invitations/events';
 import { MovieDocument } from '../data/types';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string): Promise<boolean> {
 
@@ -28,9 +29,26 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   // We should not trust `privacy` & `storagePath` that comes from the parameters
   // instead we use `collection`, `docId` & `field` to retrieve the trusted values form the db
   const docData = await getDocument(`${file.collection}/${file.docId}`);
-  const storageFile: StorageFile | undefined = get(docData, file.field);
-  if (!storageFile) { return false; }
-  const { privacy, storagePath } = storageFile;
+  const storageFile: StorageFile | StorageFile[] | undefined = get(docData, file.field);
+
+  let privacy: Privacy = 'protected';
+  let storagePath = 'unknown';
+
+  if (Array.isArray(storageFile)) {
+
+    if (storageFile.length === 0) { return false; }
+
+    const retrievedFile = storageFile.find(storage => storage.storagePath === file.storagePath);
+    if (!retrievedFile) { return false; }
+
+    privacy = retrievedFile.privacy;
+    storagePath = retrievedFile.storagePath;
+
+  } else {
+    if (!storageFile) { return false; }
+    privacy = storageFile.privacy;
+    storagePath = storageFile.storagePath;
+  }
 
   if (privacy === 'public') { return true; }
 
