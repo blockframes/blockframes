@@ -195,11 +195,17 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   emulatorMetaData.firestore.metadata_file = join(firestoreFolderName, newFirestoreMetaFilename);
   writeFileSync(emulatorMetadataJsonPath, JSON.stringify(emulatorMetaData, null, 4), 'utf-8');
 
-  let cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
-  console.log('Running command:', cmd);
+  let cmd: string;
+  let output: string;
   if (!remoteDir) throw Error('remoteDir is empty... this will clear the entire bucket!');
-  let output = execSync(cmd).toString()
-  console.log(output);
+  try {
+    cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
+    console.log('Running command:', cmd);
+    output = execSync(cmd).toString();
+    console.log(output);
+  } catch (e) {
+    console.warn(e.toString());
+  }
 
   cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${remoteDir}"`;
   console.log('Running command:', cmd);
