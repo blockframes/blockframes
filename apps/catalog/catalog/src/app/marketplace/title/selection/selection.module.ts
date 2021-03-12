@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MarketplaceSelectionComponent } from './selection.component';
-import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
+import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
 
     GetTitlePipeModule,
     BucketPipesModule,
+    DeepKeyPipeModule,
     ImageModule,
     StorageFileModule,
     TableFilterModule,

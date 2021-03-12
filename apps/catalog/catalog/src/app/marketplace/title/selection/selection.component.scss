@@ -1,6 +1,10 @@
 .main-header {
-  p {
-    margin-bottom: 0;
+  padding: 48px;
+  .main-title {
+    margin-bottom: 32px;
+    p {
+      margin-bottom: 0;
+    }
   }
 }
 section {

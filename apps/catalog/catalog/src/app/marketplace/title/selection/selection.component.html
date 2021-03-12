@@ -1,12 +1,14 @@
 <ng-container *ngIf="bucket$ | async as bucket">
-  <header class="main-header" fxLayout="column" fxLayoutGap="36px">
-    <div fxLayout="column" fxLayoutAlign="center center">
+  <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.webp">
+    <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
       <h1>My Selection</h1>
       <p>There are {{ bucket.contracts.length }} titles in my selection</p>
       <p>Total price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
-      <p></p>
+      <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
+        {{ (titles | deepKey:'title.international').join(', ') }}
+      </p>
       <button mat-flat-button color="primary" (click)="createOffer()">Create Offer</button>
     </div>
   </header>
