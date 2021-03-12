@@ -69,8 +69,8 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
   let eventStart = '';
   let eventEnd = '';
   if (!!event) {
-    const eventStartDate = event.start.toDate();
-    const eventEndDate = event.end.toDate();
+    const eventStartDate = new Date(event.start.toDate());
+    const eventEndDate = new Date(event.end.toDate());
 
     /**
      * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
@@ -86,7 +86,7 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: `/c/o/marketplace/event/${event.id}` || '',
-    sessionUrl: `/c/o/marketplace/event/${event.id}/session` || ''
+    viewUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}` : '',
+    sessionUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
   }
 }

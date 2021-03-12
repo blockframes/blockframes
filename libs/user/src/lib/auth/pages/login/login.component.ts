@@ -44,13 +44,13 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['c']);
       }
     } catch (err) {
-      switch (err.code) {
-        case 'auth/user-not-found':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration });
-          break;
-        default:
-          this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
-          break;
+      console.error(err); // let the devs see what happened
+      if (err.message.includes('INTERNAL ASSERTION FAILED')) {
+        this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: this.snackbarDuration });
+      } else if (err.code === 'auth/user-not-found') {
+        this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration });
+      } else {
+        this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
       }
     }
   }

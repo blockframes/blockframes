@@ -9,8 +9,6 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../../import-utils';
 import { MovieService } from '@blockframes/movie/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 
@@ -47,8 +45,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private movieService: MovieService,
-    private contractService: ContractService,
-    private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery
   ) { }
 

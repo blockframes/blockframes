@@ -81,9 +81,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const orgQueryFn = (movieId: string, ref: CollectionReference) => ref
-      .where('movieIds', 'array-contains', movieId)
-      .where('appAccess.financiers.dashboard', '==', true);
 
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.movieQuery.selectActive().pipe(
