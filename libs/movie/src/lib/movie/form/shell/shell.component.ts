@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 // Blockframes
