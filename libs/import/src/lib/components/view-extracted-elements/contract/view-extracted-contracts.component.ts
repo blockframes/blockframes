@@ -249,10 +249,9 @@ export class ViewExtractedContractsComponent implements OnInit {
               })
             }
 
-            if (trimmedRow[SpreadSheetContract.exclusive]) {
-              term.exclusive =
-                trimmedRow[SpreadSheetContract.exclusive].toLowerCase() === 'yes' ? true : false;
-            }
+            term.exclusive = trimmedRow[SpreadSheetContract.exclusive]?.toLowerCase() === 'yes' ? true : false;
+
+            term.contractId = contract.id;
 
             if (trimmedRow[SpreadSheetContract.startOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
