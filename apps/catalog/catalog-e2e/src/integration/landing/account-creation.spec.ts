@@ -3,9 +3,9 @@
 import { LandingPage } from '../../support/pages/landing';
 import { User } from "@blockframes/e2e/utils/type";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
-import { AuthIdentityPage, AuthLoginPage } from "@blockframes/e2e/pages/auth";
+import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage, OrganizationCreatePendingPage } from "@blockframes/e2e/pages/organization";
-import { ORGANIZATION } from './organization-creation.spec';
+import { ORGANIZATION } from '@blockframes/e2e/pages/organization/OrganizationLiteFormPage';
 
 const USER: Partial<User> = {
   email: `dev+user-${Date.now()}@cascade8.com`,
@@ -28,13 +28,15 @@ beforeEach(() => {
   p1.clickSignup();
 })
 
-describe('User can create new account and create a new organization', () => {
-  it('Fill all the fields appropriately', () => {
+// USER TEST
+describe.only('User can create new account and create a new organization', () => {
+  it('Fill all the fields', () => {
     const p1 = new AuthIdentityPage();
     p1.fillUserInformations(USER);
 
     const p2 = new OrganizationLiteFormPage();
     p2.createNewDashboardOrg();
+    p2.verifyInformation(ORGANIZATION, 'seller');
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -42,6 +44,25 @@ describe('User can create new account and create a new organization', () => {
     const p3 = new OrganizationCreatePendingPage();
     p3.assertMoveToOrgCreatePage();
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
+  });
+});
+
+describe('User can create new account and join an organization', () => {
+  it('Fill all the fields', () => {
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+
+    const p2 = new OrganizationLiteFormPage();
+    p2.joinExistingOrg(ORGANIZATION);
+    //! try here to intercept Algolia ?
+    p2.verifyInformation(ORGANIZATION, 'seller');
+
+    // p1.clickTermsAndCondition();
+    // p1.clickPrivacyPolicy();
+    // p1.submitForm();
+    // const p3 = new OrganizationCreatePendingPage();
+    // p3.assertMoveToOrgCreatePage();
+    // cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
 });
 
@@ -186,6 +207,62 @@ describe('Try password', () => {
 
     const p2 = new OrganizationLiteFormPage();
     p2.createNewDashboardOrg();
+
+    p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
+    p1.signUpButtonDisabled();
+    p1.assertStayInIdentityView();
+  })
+
+})
+
+// ORGANIZATION TEST
+describe('Create a new account and org, but doesn\'t fill one field of the org', () => {
+  it('Try without the company name field', () => {
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+
+    const p2 = new OrganizationLiteFormPage();
+    p2.fillAllExceptOne(ORGANIZATION, 'denomination');
+
+    p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
+    p1.signUpButtonDisabled();
+    p1.assertStayInIdentityView();
+  })
+  it('Try without the role field', () => {
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+
+    const p2 = new OrganizationLiteFormPage();
+    p2.createNewOrg();
+    p2.fillAllExceptOne(ORGANIZATION, 'role');
+
+    p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
+    p1.signUpButtonDisabled();
+    p1.assertStayInIdentityView();
+  })
+  it('Try without the activity field', () => {
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+
+    const p2 = new OrganizationLiteFormPage();
+    p2.createNewOrg();
+    p2.fillAllExceptOne(ORGANIZATION, 'activity');
+
+    p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
+    p1.signUpButtonDisabled();
+    p1.assertStayInIdentityView();
+  })
+  it('Try without the nationality field', () => {
+    const p1 = new AuthIdentityPage();
+    p1.fillUserInformations(USER);
+
+    const p2 = new OrganizationLiteFormPage();
+    p2.createNewOrg();
+    p2.fillAllExceptOne(ORGANIZATION, 'nationality');
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();

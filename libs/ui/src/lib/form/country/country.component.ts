@@ -15,6 +15,7 @@ export class FormCountryComponent implements OnInit {
   @Input() form: FormStaticValue<'territories'>;
   @Input() @boolean noWorld = false
   @Input() label = 'Country';
+  @Input() required = false;
 
   territories = territories;
   countries: Territory[];

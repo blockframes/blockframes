@@ -29,7 +29,7 @@ export const ORGANIZATION: Organization = {
   },
 
   denomination: {
-    full: `Cypress & Party - ${Date.now()}`,
+    full: `Cypress & Party`,
     public: 'Cypress & Party'
   }
 };
@@ -38,17 +38,17 @@ export default class OrganizationLiteFormPage {
   constructor() {
   }
 
-  public createNewOrg(org: Organization = ORGANIZATION) {
+  public createNewOrg(org: Partial<Organization> = ORGANIZATION) {
     cy.get('algolia-autocomplete').type(org.denomination.full);
     cy.get('mat-option[test-id="createNewOrgOption"]').click();
   }
 
-  public joinExistingOrg() {
-    cy.get('algolia-autocomplete').type('newOrganization1');
-    cy.get('mat-option').wait(3 * SEC).first().click({force: true});
+  public joinExistingOrg(org: Partial<Organization> = ORGANIZATION) {
+    cy.get('algolia-autocomplete').type(org.denomination.full);
+    cy.get('mat-option').wait(3 * SEC).contains(org.denomination.full).click({force: true});
   }
 
-  public fillOrganizationInformation(org: Organization = ORGANIZATION) {
+  public fillOrganizationInformation(org: Partial<Organization> = ORGANIZATION) {
     cy.get('organization-lite-form mat-select[test-id="activity"]').click();
     cy.get('mat-option').contains(org.activity).click({force: true});
     cy.get('form-country input[test-id="address-country"]').click();
@@ -65,9 +65,17 @@ export default class OrganizationLiteFormPage {
     cy.get('mat-button-toggle[value="marketplace"]').click();
   }
 
-  public verifyInformation() {
-    cy.get('organization-lite-form mat-select[test-id="activity"]').contains('Actor');
-    // cy.get('form-country input[test-id="address-country"]').contains();
+  public verifyInformation(org: Partial<Organization>, role: string) {
+    cy.get('organization-lite-form mat-select[test-id="activity"]').find.should('contain.value', org.activity);
+    cy.get('form-country input[test-id="address-country"]').should('contain.value', org.address.country);
+    if (role === "seller") {
+      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').find;
+      cy.get('mat-button-toggle[value="dashboard"]').should('be.selected');
+    }
+    else {
+      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').find;
+      cy.get('mat-button-toggle[value="marketplace"]').should('be.selected');
+    }
   }
 
   public createNewDashboardOrg(org: Organization = ORGANIZATION) {
@@ -82,4 +90,32 @@ export default class OrganizationLiteFormPage {
     this.chooseMarketplaceAccess();
   }
 
+  public fillAllExceptOne(org: Partial<Organization>, key) {
+    switch (key) {
+      case 'denomination' :
+        cy.get('form-country input[test-id="address-country"]').should('not.be.visible');
+        cy.get('organization-lite-form mat-select[test-id="activity"]').should('not.be.visible');
+        cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').should('not.be.visible');
+        break;
+      case 'activity' :
+        this.createNewOrg(org);
+        cy.get('form-country input[test-id="address-country"]').click();
+        cy.get('mat-option').contains(org.address.country).click({force: true});
+        this.chooseDashboardAccess();
+        break;
+      case 'nationality' :
+        this.createNewOrg(org);
+        cy.get('organization-lite-form mat-select[test-id="activity"]').click();
+        cy.get('mat-option').contains(org.activity).click({force: true});
+        this.chooseDashboardAccess();
+        break;
+      case 'role' :
+        this.createNewOrg(org);
+        cy.get('organization-lite-form mat-select[test-id="activity"]').click();
+        cy.get('mat-option').contains(org.activity).click({force: true});
+        cy.get('form-country input[test-id="address-country"]').click();
+        cy.get('mat-option').contains(org.address.country).click({force: true});
+        break;
+    }
+  }
 }

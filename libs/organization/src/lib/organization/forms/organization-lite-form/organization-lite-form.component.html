@@ -2,14 +2,14 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Company's activity</mat-label>
-    <mat-select test-id="activity"  [formControl]="form.get('activity')" aria-label="Company's activity">
+    <mat-select test-id="activity"  [formControl]="form.get('activity')" aria-label="Company's activity" required>
       <mat-option *ngFor="let activity of activities | keyvalue" [value]="activity.key">
         {{ activity.value }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
-  <form-country label="Company's nationality" noWorld [form]="form.get('addresses').get('main').get('country')"></form-country>
+  <form-country label="Company's nationality" noWorld [form]="form.get('addresses').get('main').get('country')" required></form-country>
 
   <article fxLayout="row" fxLayoutAlign="space-between center">
     <div fxLayout="row">
