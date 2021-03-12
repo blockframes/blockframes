@@ -116,7 +116,7 @@ export default class AuthIdentityPage {
     })
   }
 
-  public signUpButtonDisabled() {
+  public checkSignUpButtonIsDisabled() {
     cy.get('button[type="submit"]').should('be.disabled');
   }
 }
