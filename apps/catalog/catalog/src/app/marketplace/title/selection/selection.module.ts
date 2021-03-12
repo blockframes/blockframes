@@ -6,6 +6,7 @@ import { MarketplaceSelectionComponent } from './selection.component';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
+import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
     FlexLayoutModule,
 
     GetTitlePipeModule,
+    BucketPipesModule,
     ImageModule,
     StorageFileModule,
     TableFilterModule,

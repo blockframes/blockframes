@@ -1,16 +1,19 @@
 <ng-container *ngIf="bucket$ | async as bucket">
-  <header fxLayout="column" fxLayoutAlign="start center">
-    <!-- TODO add background to section -->
-    <h1>My Selection</h1>
-    <p>There are {{ bucket.contracts.length }} titles in my selection</p>
-    <p>Total price: {{ '300' | currency:bucket.currency }}</p>
-    <!-- TODO: add list of titles here -->
-    <button mat-flat-button color="primary" (click)="createOffer()">Create Offer</button>
+  <header class="main-header" fxLayout="column" fxLayoutGap="36px">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <h1>My Selection</h1>
+      <p>There are {{ bucket.contracts.length }} titles in my selection</p>
+      <p>Total price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <p></p>
+      <button mat-flat-button color="primary" (click)="createOffer()">Create Offer</button>
+    </div>
   </header>
 
   <section>
     <h2>Please choose currency</h2>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline">
       <mat-label>Select</mat-label>
       <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)">
         <ng-container *ngFor="let currency of currencies | keyvalue">
@@ -29,7 +32,7 @@
             <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
               alt="Movie Illustration" [delay]="0">
           </article>
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Price</mat-label>
             <input matInput type="number" [value]="contract.price" (blur)="updatePrice(i, $event.target.value)" />
             <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
