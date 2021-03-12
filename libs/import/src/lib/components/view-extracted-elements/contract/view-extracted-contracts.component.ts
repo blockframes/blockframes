@@ -16,6 +16,7 @@ import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframe
 import { TermService } from '@blockframes/contract/term/+state/term.service'
 import { centralOrgID } from '@env';
 import { Term } from '@blockframes/contract/term/+state/term.model';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 enum SpreadSheetContract {
   titleId,
@@ -62,7 +63,8 @@ export class ViewExtractedContractsComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
-    private termService: TermService
+    private termService: TermService,
+    private fire: AngularFirestore
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -84,8 +86,9 @@ export class ViewExtractedContractsComponent implements OnInit {
       let newContract = true;
       if (trimmedRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
+        const id = this.fire.createId();
         if (!!existingContract) {
-          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale(existingContract as any)
+          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale({ id, ...existingContract } as any)
           newContract = false;
           const terms = await this.termService.getValue(contract.termIds);
           const parsedTerms = terms.map(createTerm)
