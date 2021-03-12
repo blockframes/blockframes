@@ -49,13 +49,13 @@ export default class OrganizationLiteFormPage {
   }
 
   public chooseDashboardAccess() {
-    cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').find;
-    cy.get('mat-button-toggle[value="dashboard"]').click();
+    cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+      .get('mat-button-toggle[value="dashboard"]').click();
   }
 
   public chooseMarketplaceAccess() {
-    cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').find;
-    cy.get('mat-button-toggle[value="marketplace"]').click();
+    cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+      .get('mat-button-toggle[value="marketplace"]').click();
   }
 
   // PARTIAL OR ENTIRE ORG FORM
@@ -117,13 +117,13 @@ export default class OrganizationLiteFormPage {
     cy.get('form-country input[test-id="address-country"]').should('contain.value', org.address.country);
     cy.get('form-country input[test-id="address-country"]').should('be.disabled');
     if (role === "seller") {
-      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').find;
-      cy.get('mat-button-toggle[value="dashboard"]').should('be.selected');
+      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+        .get('mat-button-toggle[value="dashboard"]').should('be.selected');
       cy.get('mat-button-toggle[value="dashboard"]').should('be.disabled');
     }
     else {
-      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').find;
-      cy.get('mat-button-toggle[value="marketplace"]').should('be.selected');
+      cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]')
+        .get('mat-button-toggle[value="marketplace"]').should('be.selected');
       cy.get('mat-button-toggle[value="marketplace"]').should('be.disabled');
     }
   }
