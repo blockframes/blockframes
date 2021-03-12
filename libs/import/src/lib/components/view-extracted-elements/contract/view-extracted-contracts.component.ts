@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -149,7 +148,7 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.parentTermId]) {
-            const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Timestamp>[]
+            const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
             if (term?.length) {
               contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
             } else {
