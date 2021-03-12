@@ -7,7 +7,7 @@ import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, r
 import { join, resolve, sep } from 'path';
 import { runShellCommand, runShellCommandUntil, awaitProcOutput, runInBackground } from '../commands';
 import { getFirestoreExportDirname } from './export';
-import { sleep } from '../util';
+import { catchErrors, sleep } from '../util';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 
@@ -198,12 +198,12 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   let cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
   console.log('Running command:', cmd);
   if (!remoteDir) throw Error('remoteDir is empty... this will clear the entire bucket!');
-  let output = await runInBackground(cmd).procPromise;
+  let output = execSync(cmd).toString()
   console.log(output);
 
   cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${remoteDir}"`;
   console.log('Running command:', cmd);
-  output = await runInBackground(cmd).procPromise;
+  output = execSync(cmd).toString()
   console.log(output);
 }
 
