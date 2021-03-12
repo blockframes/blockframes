@@ -7,11 +7,12 @@ import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, r
 import { join, resolve, sep } from 'path';
 import { runShellCommand, runShellCommandUntil, awaitProcOutput, runInBackground } from '../commands';
 import { getFirestoreExportDirname } from './export';
+import { catchErrors, sleep } from '../util';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 
-const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
-const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
+export const getFirestoreExportPath = (emulatorPath: string) => join(emulatorPath, firestoreExportFolder);
+export const getEmulatorMetadataJsonPath = (emulatorPath: string) => join(emulatorPath, 'firebase-export-metadata.json');
 
 /**
  * This function will get the filename of the Firestore export metadata json file.
@@ -107,10 +108,19 @@ function createEmulatorMetadataJson(emuPath: string) {
  * This function returns a promise that will resolve when the emulator has
  * successfully shut down.
  * @param proc the `ChildPRocess` object for the running emulator process.
+ * @param timeLimit number of seconds to await gracefull shutdown before SIGKILL
  */
-export function shutdownEmulator(proc: ChildProcess) {
-  proc.kill('SIGINT');
-  return awaitProcOutput(proc, 'Stopping Logging Emulator');
+export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit: number = 60 * 2) {
+  proc.kill('SIGTERM');
+  const emuP = awaitProcOutput(proc, 'Stopping Logging Emulator').then(() => true);
+  const timeP = sleep(1000 * timeLimit).then(() => false);
+  const emuTerminated = await Promise.race([emuP, timeP]);
+  if (!emuTerminated) {
+    console.error('Unable to shut down emulator process, forcing export and killing emulator...');
+    const cmd = `firebase emulators:export ${exportDir} --force`
+    await runShellCommand(cmd);
+    proc.kill('SIGKILL');
+  }
 }
 
 export interface FirestoreEmulator extends FirebaseFirestore.Firestore {
@@ -185,15 +195,21 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   emulatorMetaData.firestore.metadata_file = join(firestoreFolderName, newFirestoreMetaFilename);
   writeFileSync(emulatorMetadataJsonPath, JSON.stringify(emulatorMetaData, null, 4), 'utf-8');
 
-  let cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
-  console.log('Running command:', cmd);
+  let cmd: string;
+  let output: string;
   if (!remoteDir) throw Error('remoteDir is empty... this will clear the entire bucket!');
-  let output = await runInBackground(cmd).procPromise;
-  console.log(output);
+  try {
+    cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
+    console.log('Running command:', cmd);
+    output = execSync(cmd).toString();
+    console.log(output);
+  } catch (e) {
+    console.warn(e.toString());
+  }
 
   cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${remoteDir}"`;
   console.log('Running command:', cmd);
-  output = await runInBackground(cmd).procPromise;
+  output = execSync(cmd).toString()
   console.log(output);
 }
 
