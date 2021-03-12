@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 import { User } from '../../utils/type';
-import { OrganizationCreatePendingPage, OrganizationJoinPendingPage } from '../organization';
 import { SEC } from '../../utils/env';
 
 export default class AuthIdentityPage {
@@ -60,38 +59,38 @@ export default class AuthIdentityPage {
     }
     switch (key) {
       case 'email' :
-          cy.get('input[formControlName="firstName"]').type(user.firstName);
-          cy.get('input[formControlName="lastName"]').type(user.lastName);
-          cy.get('input[test-id="password"]').type(user.password);
-          cy.get('input[test-id="password-confirm"]').type(user.password);
+        cy.get('input[formControlName="firstName"]').type(user.firstName);
+        cy.get('input[formControlName="lastName"]').type(user.lastName);
+        cy.get('input[test-id="password"]').type(user.password);
+        cy.get('input[test-id="password-confirm"]').type(user.password);
         break;
       case 'name' :
-          cy.get('input[test-id="email"]').type(user.email);
-          cy.get('input[formControlName="lastName"]').type(user.lastName);
-          cy.get('input[test-id="password"]').type(user.password);
-          cy.get('input[test-id="password-confirm"]').type(user.password);
-          user.email = originalEmail;
+        cy.get('input[test-id="email"]').type(user.email);
+        cy.get('input[formControlName="lastName"]').type(user.lastName);
+        cy.get('input[test-id="password"]').type(user.password);
+        cy.get('input[test-id="password-confirm"]').type(user.password);
+        user.email = originalEmail;
         break;
       case 'surname' :
-          cy.get('input[test-id="email"]').type(user.email);
-          cy.get('input[formControlName="firstName"]').type(user.firstName);
-          cy.get('input[test-id="password"]').type(user.password);
-          cy.get('input[test-id="password-confirm"]').type(user.password);
-          user.email = originalEmail;
+        cy.get('input[test-id="email"]').type(user.email);
+        cy.get('input[formControlName="firstName"]').type(user.firstName);
+        cy.get('input[test-id="password"]').type(user.password);
+        cy.get('input[test-id="password-confirm"]').type(user.password);
+        user.email = originalEmail;
         break;
       case 'password' :
-          cy.get('input[test-id="email"]').type(user.email);
-          cy.get('input[formControlName="firstName"]').type(user.firstName);
-          cy.get('input[formControlName="lastName"]').type(user.lastName);
-          cy.get('input[test-id="password-confirm"]').type(user.password);
-          user.email = originalEmail;
+        cy.get('input[test-id="email"]').type(user.email);
+        cy.get('input[formControlName="firstName"]').type(user.firstName);
+        cy.get('input[formControlName="lastName"]').type(user.lastName);
+        cy.get('input[test-id="password-confirm"]').type(user.password);
+        user.email = originalEmail;
         break;
       case 'passwordConfirm' :
-          cy.get('input[test-id="email"]').type(user.email);
-          cy.get('input[formControlName="firstName"]').type(user.firstName);
-          cy.get('input[formControlName="lastName"]').type(user.lastName);
-          cy.get('input[test-id="password"]').type(user.password);
-          user.email = originalEmail;
+        cy.get('input[test-id="email"]').type(user.email);
+        cy.get('input[formControlName="firstName"]').type(user.firstName);
+        cy.get('input[formControlName="lastName"]').type(user.lastName);
+        cy.get('input[test-id="password"]').type(user.password);
+        user.email = originalEmail;
         break
     }
   }

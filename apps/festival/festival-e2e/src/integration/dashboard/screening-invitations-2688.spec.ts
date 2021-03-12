@@ -9,7 +9,7 @@ import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 
 // Pages
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
-import { FestivalDashboardHomePage, EventPage, EventEditPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
+import { FestivalDashboardHomePage, EventPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
 
 const TestEVENT = EVENTS[0];

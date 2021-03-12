@@ -1,6 +1,6 @@
-import { User } from '../../utils/type';
 import { AuthIdentityPage } from '../auth';
 import { SEC } from '../../utils/env';
+import { User } from '@blockframes/e2e/utils/type';
 
 export default class AuthLoginPage {
 
@@ -14,7 +14,7 @@ export default class AuthLoginPage {
     })
   }
 
-  public fillSignin(user) {
+  public fillSignin(user: Partial<User>) {
     cy.get('auth-signin-form input[type="email"]').type(user.email);
     cy.get('auth-signin-form input[type="password"]').type(user.password);
   }

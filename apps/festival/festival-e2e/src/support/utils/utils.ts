@@ -6,8 +6,6 @@ export function signInAndNavigateToMain(user: Partial<User>, debugMovieId: strin
   cy.log('Reach LandingPage and accept cookies');
   const p1 = new LandingPage();
 
-  //Note: Here we click sign-up because inside signIn
-  //we switchmode to Login.
   cy.log(`Sign-in user: ${user.email}`);
   p1.clickLogin();
   signIn(user);
