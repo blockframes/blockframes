@@ -77,7 +77,7 @@ describe('Try with each fields except one', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   });
 
@@ -91,7 +91,7 @@ describe('Try with each fields except one', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   });
 
@@ -105,7 +105,7 @@ describe('Try with each fields except one', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   });
 
@@ -119,7 +119,7 @@ describe('Try with each fields except one', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   });
 
@@ -133,7 +133,7 @@ describe('Try with each fields except one', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   });
 });
@@ -162,7 +162,7 @@ describe('Try email address', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
 });
@@ -181,7 +181,7 @@ describe('Try password', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
   it('Try with less than 6 characters', () => {
@@ -196,7 +196,7 @@ describe('Try password', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
   it('Try with more than 24 characters', () => {
@@ -211,7 +211,7 @@ describe('Try password', () => {
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
 
@@ -228,7 +228,7 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
   it('Try without the role field', () => {
@@ -240,7 +240,7 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
   it('Try without the activity field', () => {
@@ -252,7 +252,7 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
   it('Try without the nationality field', () => {
@@ -264,7 +264,7 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
-    p1.signUpButtonDisabled();
+    p1.checkSignUpButtonIsDisabled();
     p1.assertStayInIdentityView();
   })
 })
