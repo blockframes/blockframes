@@ -135,7 +135,7 @@ export class ListComponent implements OnInit, OnDestroy {
       return;
     }
     // Get the parent term
-    const parentTermId = this.mandateMemo[titleId].id
+    const parentTermId = this.mandateMemo[titleId]?.id
     if (!parentTermId) throw new Error('no available term for this title');
     const term = this.availsForm.value;
     this.bucketService.update(this.orgQuery.getActiveId(), (bucket) => {
