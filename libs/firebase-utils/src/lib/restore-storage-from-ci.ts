@@ -5,6 +5,7 @@ import { execSync } from 'child_process';
 import { catchErrors } from './util';
 
 export const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
+export const latestAnonStorageDir = 'LATEST-ANON-STORAGE';
 
 export async function restoreStorageFromCi(ciApp: admin.app.App) {
   if (

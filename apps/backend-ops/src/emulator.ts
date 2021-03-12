@@ -12,16 +12,20 @@ import {
   restoreStorageFromCi,
   startMaintenance,
   latestAnonDbDir,
-  getFirestoreExportPath
+  getFirestoreExportPath,
+  getBackupBucket,
+  CI_STORAGE_BACKUP,
+  latestAnonStorageDir
 } from '@blockframes/firebase-utils';
-import { ChildProcess } from 'child_process';
+import { ChildProcess, execSync } from 'child_process';
 import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket } from '@env'
 import { migrate, migrateBeta } from './migrations';
-import { syncUsers } from './users';
+import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
+import { cleanStorage } from './storage-cleaning';
 
 /**
  * This function will download the Firestore backup from specified bucket, import it into
@@ -125,6 +129,14 @@ export async function anonDbProcess() {
   console.info('Cleaning unused DB data...');
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
+
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(await getBackupBucket(storage));
+  console.info('Storage data clean and fresh!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks({db, storage});
+  console.info('Watermarks generated!');
 }
 
 /**
@@ -143,6 +155,7 @@ export async function anonymizeLatestProdDb() {
     await shutdownEmulator(proc, defaultEmulatorBackupPath);
   }
   await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
+  storeAnonStorageBackup(backupBucket);
 }
 
 /**
@@ -172,4 +185,26 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
   } finally {
     await shutdownEmulator(proc);
   }
+}
+
+function storeAnonStorageBackup(sourceBucketName: string) {
+  const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
+
+  let cmd: string;
+  let output: string;
+
+  try {
+    cmd = `gsutil -m rm -r "${anonBucketBackupDirURL}"`;
+    console.log('Running command:', cmd);
+    output = execSync(cmd).toString();
+    console.log(output);
+  } catch (e) {
+    console.warn(e.toString());
+  }
+
+  cmd = `gsutil -m cp -r "gs://${sourceBucketName}/*" "${anonBucketBackupDirURL}"`
+  console.log('Running command:', cmd);
+  output = execSync(cmd).toString();
+  console.log(output);
+
 }
