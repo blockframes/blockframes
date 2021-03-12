@@ -194,7 +194,7 @@ function storeAnonStorageBackup(sourceBucketName: string) {
   let output: string;
 
   try {
-    cmd = `gsutil -m rm -r "${anonBucketBackupDirURL}"`;
+    cmd = `gsutil -m -q rm -r "${anonBucketBackupDirURL}"`;
     console.log('Running command:', cmd);
     output = execSync(cmd).toString();
     console.log(output);
@@ -202,7 +202,7 @@ function storeAnonStorageBackup(sourceBucketName: string) {
     console.warn(e.toString());
   }
 
-  cmd = `gsutil -m cp -r "gs://${sourceBucketName}/*" "${anonBucketBackupDirURL}"`
+  cmd = `gsutil -m -q cp -r "gs://${sourceBucketName}/*" "${anonBucketBackupDirURL}"`
   console.log('Running command:', cmd);
   output = execSync(cmd).toString();
   console.log(output);
