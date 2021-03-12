@@ -19,14 +19,14 @@ export async function upgrade(db: Firestore) {
 
     if (!!meeting.meta.files) {
 
-      const filesPromises = meeting?.meta?.files?.map(async ref => {
+      const filesPromises = meeting.meta.files.map(async ref => {
 
         const segments = ref.split('/').filter(part => !!part);
         const privacy = segments.shift();
         const collection = segments.shift();
         const docId = segments.shift();
-        const field = segments.shift();
-        const fileName = segments.shift();
+        const fileName = segments.pop();
+        const field = segments.join('.');
 
         if (!privacy || !collection || !docId || !field || !fileName) return;
 
