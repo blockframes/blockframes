@@ -115,7 +115,10 @@ export async function shutdownEmulator(proc: ChildProcess, timeLimit: number = 6
   const emuP = awaitProcOutput(proc, 'Stopping Logging Emulator').then(() => true);
   const timeP = sleep(1000 * timeLimit).then(() => false);
   const emuTerminated = await Promise.race([emuP, timeP]);
-  return emuTerminated || proc.kill('SIGKILL');
+  if (!emuTerminated) {
+    proc.kill('SIGKILL');
+    throw Error('Unable to shut down emulator process');
+  }
 }
 
 export interface FirestoreEmulator extends FirebaseFirestore.Firestore {
