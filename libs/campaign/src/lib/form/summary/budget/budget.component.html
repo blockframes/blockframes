@@ -51,8 +51,8 @@
       </missing-control>
     </li>
     <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-      <strong>Detailed budget:</strong>
-      <missing-control [control]="form.get('files').get('budget.ref')">
+      <strong>Detailed budget </strong>
+      <missing-control [control]="form.get('files').get('budget.storagePath')">
         <ng-template let-ref>{{ ref | fileName | maxLength:30 }}</ng-template>
       </missing-control>
     </li>

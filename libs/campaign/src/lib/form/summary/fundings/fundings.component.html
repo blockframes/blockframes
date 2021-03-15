@@ -31,8 +31,8 @@
       </ng-template>
     </li>
     <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-      <strong>Detailed financing plan:</strong>
-      <missing-control [control]="form.get('files').get('financingPlan.ref')" [link]="link">
+      <strong>Detailed financing plan </strong>
+      <missing-control [control]="form.get('files').get('financingPlan.storagePath')" [link]="link">
         <ng-template let-ref>{{ ref | fileName | maxLength:30 }}</ng-template>
       </missing-control>
     </li>
