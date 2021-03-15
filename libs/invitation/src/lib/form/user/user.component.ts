@@ -4,7 +4,7 @@ import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { Invitation, InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, SEMICOLON } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 
@@ -40,7 +40,7 @@ export class UserComponent implements OnInit {
    */
   @Input() limit = Infinity;
 
-  separators = [ENTER, COMMA, SEMICOLON, SPACE];
+  separators = [ENTER, COMMA, SEMICOLON];
   form = createAlgoliaUserForm(Validators.maxLength(50));
   currentLimit$: Observable<{ canSend: boolean, total: number }>;
   sending = new BehaviorSubject(false);
