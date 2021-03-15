@@ -17,8 +17,8 @@
       <mat-icon svgIcon="info"></mat-icon>
     </div>
     <mat-button-toggle-group test-id="appAccessToggleGroup" [ngClass]="{ disabled: false }" name="appAccess" [formControl]="form.get('appAccess')">
-      <mat-button-toggle value="marketplace">Buyer</mat-button-toggle>
-      <mat-button-toggle value="dashboard">Seller</mat-button-toggle>
+      <mat-button-toggle value="marketplace">{{ roles[app].marketplace }}</mat-button-toggle>
+      <mat-button-toggle value="dashboard">{{ roles[app].dashboard }}</mat-button-toggle>
     </mat-button-toggle-group>
   </article>
 </form>
