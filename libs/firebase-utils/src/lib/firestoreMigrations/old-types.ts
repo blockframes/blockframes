@@ -1,5 +1,6 @@
 import { HostedVideoType, Language, Territory } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
+import { AttendeeStatus, MeetingMediaControl } from "@blockframes/event/+state/event.firestore";
 
 export interface OldPromotionalElement {
   label: string,
@@ -176,4 +177,13 @@ export function createOldHostedVideo(params: Partial<OldHostedVideo>): OldHosted
     jwPlayerId: '',
     ...params,
   }
+}
+
+export interface OldMeeting {
+  organizerUid: string;
+  description: string;
+  attendees: Record<string, AttendeeStatus>;
+  files: string[];
+  selectedFile: string;
+  controls: Record<string, MeetingMediaControl>
 }
