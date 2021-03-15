@@ -19,10 +19,9 @@ export class MarketplaceSelectionComponent {
     duration: 'Terms',
     territories: 'Territories',
     medias: 'Rights',
-    exlusivity: 'Exclusivity',
-    action: 'Actions'
+    exclusive: 'Exclusivity'
   };
-  initialColumns = ['duration', 'territories', 'medias', 'exlusivity'];
+  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
 
   constructor(
@@ -48,11 +47,11 @@ export class MarketplaceSelectionComponent {
     this.bucketService.update(id, { currency });
   }
 
-  updatePrice(index: number, price: number) {
+  updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => {
       const contracts = [ ...bucket.contracts ];
-      contracts[index].price = price;
+      contracts[index].price = +price;
       return { contracts };
     });
   }
