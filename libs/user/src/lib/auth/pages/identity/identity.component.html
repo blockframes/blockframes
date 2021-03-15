@@ -39,6 +39,7 @@
           (selectionChange)="setOrg($event)"
           (createFromSelection)="createOrg($event)"
           required
+          error="orgForm.get('denomination').get('full').hasError('required')"
           errorText="You have to select a choice from the list.">
           <ng-template let-result>
             <article flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">

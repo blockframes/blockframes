@@ -17,7 +17,7 @@
   <mat-icon matSuffix svgIcon="close" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
   <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()" class="pointer"></mat-icon>
   <mat-hint *ngIf="!!hint">{{ hint }}</mat-hint>
-  <mat-error>{{ errorText }}</mat-error>
+  <mat-error *ngIf="error">{{ errorText }}</mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete">
   <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (onSelectionChange)="selected(result) ">
