@@ -39,7 +39,10 @@
           (selectionChange)="setOrg($event)"
           (createFromSelection)="createOrg($event)">
           <ng-template let-result>
-            <span>{{ result.name }}</span>
+            <article flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
+              <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp" type="logo" alt="Organization Logo">
+              <span>{{ result.name }}</span>
+            </article>
           </ng-template>
         </algolia-autocomplete>
       </ng-container>
@@ -60,6 +63,8 @@
           <mat-label>Invitation Code</mat-label>
           <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
             test-id="invitation-code" required />
+            <mat-hint align="start">Check up your invitation mail to get the invitation code.</mat-hint>
+            <mat-hint align="end">Cant find your invitation code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
         </mat-form-field>
       </ng-container>
 
