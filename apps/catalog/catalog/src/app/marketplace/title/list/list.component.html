@@ -57,11 +57,10 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
+      <button mat-icon-button (click)="addAvail(title.id)">
+        <mat-icon svgIcon="shopping_basket"></mat-icon>
+      </button>
     </movie-card>
   </ng-template>
-
-  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
-    You've viewed {{ hitsViewed }} of {{ nbHits }} titles
-  </list-page-progress>
 
 </list-page>

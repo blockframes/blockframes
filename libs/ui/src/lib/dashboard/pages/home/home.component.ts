@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Optional } from '@angular/core';
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state';
@@ -10,6 +10,9 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
+
+// Intercom
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'dashboard-home',
@@ -29,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private orgQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService,
+    @Optional() private intercom: Intercom
   ) { }
 
   ngOnInit() {
@@ -59,5 +63,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 }

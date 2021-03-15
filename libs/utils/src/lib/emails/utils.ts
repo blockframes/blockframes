@@ -1,7 +1,7 @@
 import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { App } from "../apps";
 import { format } from "date-fns";
-import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
+import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
 
 export interface EmailRequest {
   to: string;
@@ -29,7 +29,10 @@ export interface EventEmailData {
   id: string,
   title: string,
   start: string,
-  end: string
+  end: string,
+  type: EventTypes,
+  viewUrl: string,
+  sessionUrl: string
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -66,8 +69,8 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
   let eventStart = '';
   let eventEnd = '';
   if (!!event) {
-    const eventStartDate = event.start.toDate();
-    const eventEndDate = event.end.toDate();
+    const eventStartDate = new Date(event.start.toDate());
+    const eventEndDate = new Date(event.end.toDate());
 
     /**
      * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
@@ -81,6 +84,9 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     id: event?.id || '',
     title: event?.title || '',
     start: eventStart,
-    end: eventEnd
+    end: eventEnd,
+    type: event?.type,
+    viewUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}` : '',
+    sessionUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
   }
 }

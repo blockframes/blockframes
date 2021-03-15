@@ -5,20 +5,26 @@ import {
   OnInit,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+// RxJs
+import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { debounceTime, switchMap, startWith, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
-
-// RxJs
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
-
-// Others
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ActivatedRoute } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { AvailsFilter, getMandateTerm, isSold } from '@blockframes/contract/avails/avails';
+import { ContractService } from '@blockframes/contract/contract/+state';
+import { Term } from '@blockframes/contract/term/+state/term.model';
+import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { SearchResponse } from '@algolia/client-search';
+import { BucketService } from '@blockframes/contract/bucket/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -40,20 +46,34 @@ export class ListComponent implements OnInit, OnDestroy {
   public hitsViewed = 0;
 
   private sub: Subscription;
-  private loadMoreToggle: boolean;
-  private lastPage: boolean;
+
+  private terms: {
+    mandate: Term<Date>[],
+    sales: Term<Date>[]
+  } = {
+      mandate: [],
+      sales: []
+    }
+
+
+  private mandateMemo: Record<string, Term<Date>> = {};
 
   constructor(
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private contractService: ContractService,
+    private termService: TermService,
+    private snackbar: MatSnackBar,
+    private bucketService: BucketService,
+    private orgQuery: OrganizationQuery
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
-
+    this.searchForm.hitsPerPage.setValue(1000)
     const params = this.route.snapshot.queryParams;
     for (const key in params) {
       try {
@@ -63,30 +83,37 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
+    this.terms.mandate = await this.getAllTerms('mandate');
+    this.terms.sales = await this.getAllTerms('sale')
+
+    this.sub = combineLatest([
+      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
+      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value))
+    ]).pipe(
       distinctUntilChanged(),
-      debounceTime(500),
-      switchMap(() => this.searchForm.search()),
-      tap(res => this.nbHits = res.nbHits),
-      pluck('hits'),
-    ).subscribe(movies => {
-      if (this.loadMoreToggle) {
-        this.movieResultsState.next(this.movieResultsState.value.concat(movies))
-        this.loadMoreToggle = false;
-      } else {
-        this.movieResultsState.next(movies);
+      debounceTime(300),
+      switchMap(async ([_, availsValue]) => [await this.searchForm.search(), availsValue]),
+    ).subscribe(([movies, availsValue]: [SearchResponse<Movie>, AvailsFilter]) => {
+      if (this.availsForm.valid) {
+        this.movieResultsState.next([])
+        movies.hits.forEach(movie => {
+          this.mandateMemo[movie.objectID] = getMandateTerm(availsValue, this.terms.mandate.filter(
+            mandate => mandate.titleId === movie.objectID));
+          if (this.mandateMemo[movie.objectID]) {
+            const movieSales = this.terms.sales.filter(sale => sale.titleId === movie.objectID);
+            const ongoingSales = isSold(availsValue, movieSales);
+            if (!ongoingSales) {
+              // Implement bucket func @TODO #5002
+              const state = this.movieResultsState.getValue();
+              state.push(movie)
+              this.movieResultsState.next(state);
+            }
+          }
+        })
+      } else { // if availsForm is invalid, put all the movies from algolia
+        this.movieResultsState.next(movies.hits)
       }
-      /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
-      the overall possible results which is represented by nbHits.
-      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
-      So when the next valueChange is happening we need to reset everything and start from beginning  */
-      this.hitsViewed = this.movieResultsState.value.length
-      if (this.lastPage && this.searchForm.page.value !== 0) {
-        this.hitsViewed = 0;
-        this.searchForm.page.setValue(0);
-      }
-      this.lastPage = this.hitsViewed === this.nbHits;
-    });;
+    })
   }
 
   clear() {
@@ -95,10 +122,34 @@ export class ListComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  async loadMore() {
-    this.loadMoreToggle = true;
-    this.searchForm.page.setValue(this.searchForm.page.value + 1);
-    await this.searchForm.search();
+  async getAllTerms(contractType: 'mandate' | 'sale'): Promise<Term<Date>[]> {
+    const contracts = await this.contractService.getValue(ref => ref.where('type', '==', contractType));
+    const promises = contracts.map(c => this.termService.getValue(c.termIds));
+    const terms = await Promise.all(promises);
+    return terms.flat() as Term<Date>[];
+  }
+
+  async addAvail(titleId: string) {
+    if (this.availsForm.invalid) {
+      this.snackbar.open('Specify the avails before adding to selection', 'close', { duration: 3000 })
+      return;
+    }
+    // Get the parent term
+    const parentTermId = this.mandateMemo[titleId]?.id
+    if (!parentTermId) throw new Error('no available term for this title');
+    const term = this.availsForm.value;
+    this.bucketService.update(this.orgQuery.getActiveId(), (bucket) => {
+      const contracts = bucket.contracts || [];
+      // Check if there is already a contract that apply on the same parentTermId
+      const index = contracts.findIndex(contract => contract.parentTermId === parentTermId );
+      if (index !== -1) { // If yes, append its's terms with the new one.
+        contracts[index].terms.push(term);
+        return { ...bucket, contracts };
+      } else {  // Else create a new contract
+        const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId: this.orgQuery.getActiveId() };
+        return { contracts: [...contracts, contract] };
+      }
+    });
   }
 
   ngOnDestroy() {

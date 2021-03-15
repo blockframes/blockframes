@@ -172,7 +172,7 @@ export const genres = {
 export const hostedVideoTypes = {
   trailer: 'Trailer',
   teaser: 'Teaser',
-  reel: 'Reel',
+  reel: 'Promo Reel',
   clip: 'Clip',
   pitch: 'Pitch',
 } as const
@@ -284,6 +284,9 @@ export const medias = {
   planes: 'Planes',
   boats: 'Boats',
   hotels: 'Hotels',
+  educational: 'Educational',
+  rental: 'Rental',
+  through: 'Sell Through'
 } as const
 
 export const memberStatus = {
@@ -555,7 +558,7 @@ export const territories = {
   chad: "Chad",
   chile: "Chile",
   china: "China",
-  "christmas- island": "Christmas Island",
+  "christmas-island": "Christmas Island",
   "cocos-islands": "Cocos Islands",
   colombia: "Colombia",
   comoros: "Comoros",
@@ -781,7 +784,7 @@ export const territoriesISOA2 = {
   aruba: 'AW',
   australia: 'AU',
   austria: 'AT',
-  azerbaidjan: 'AZ',
+  azerbaijan: 'AZ',
   bahamas: 'BS',
   bahrain: 'BH',
   bangladesh: 'BD',
@@ -1038,7 +1041,7 @@ export const territoriesISOA3 = {
   aruba: 'ABW',
   australia: 'AUS',
   austria: 'AUT',
-  azerbaidjan: 'AZE',
+  azerbaijan: 'AZE',
   bahamas: 'BHS',
   bahrain: 'BHR',
   bangladesh: 'BGD',
@@ -1295,7 +1298,7 @@ export const territoriesNUMCODE = {
   aruba: 533,
   australia: 36,
   austria: 40,
-  azerbaidjan: 31,
+  azerbaijan: 31,
   bahamas: 44,
   bahrain: 48,
   bangladesh: 50,
@@ -1552,7 +1555,7 @@ export const territoriesFR = {
   aruba: 'Aruba',
   australia: 'Australie (l\')',
   austria: 'Autriche (l\')',
-  azerbaidjan: 'Azerbaïdjan (l\')',
+  azerbaijan: 'Azerbaïdjan (l\')',
   bahamas: 'Bahamas (les)',
   bahrain: 'Bahreïn',
   bangladesh: 'Bangladesh (le)',

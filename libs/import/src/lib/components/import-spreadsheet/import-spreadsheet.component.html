@@ -3,7 +3,7 @@
     <h1>{{ pageTitle }} </h1>
 
     <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
-      <button mat-stroked-button color="primary" (click)="downloadTemplate('movie')">
+      <button mat-stroked-button color="primary" (click)="downloadTemplate('title')">
         <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our template to import in bulk</span>
       </button>
       <ng-container *ngIf="isUserBlockframesAdmin">
@@ -33,7 +33,7 @@
     <a [routerLink]="['./']" (click)="openIntercom()"><strong>Need help ?</strong></a>
   </section>
 
-  <section fxLayout="column" fxLayoutAlign="center center">
+  <section class="file-section" fxLayout="column" fxLayoutAlign="center center">
 
     <ng-container *ngIf="sheets.length; else fileUpload">
       <p>
@@ -43,7 +43,7 @@
     </ng-container>
 
     <ng-template #fileUpload>
-      <input #filePicker [accept]="['xls', 'csv']" type="file" (change)="importSpreadsheet($event.target.files)" />
+      <input #filePicker id="filePicker" [accept]="allowedTypes" type="file" (change)="importSpreadsheet($event.target.files)" />
       <a mat-flat-button (click)="filePicker.click()">Import File</a>
       <p class="mat-caption">Accepted Formats: .xls, .csv</p>
     </ng-template>
@@ -51,7 +51,7 @@
 
   <section fxLayout="column" fxLayoutAlign="center center">
 
-    <section fxLayout="row" fxLayoutAlign="end center">
+    <section fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
       <ng-container *ngIf="sheets.length">
         <button mat-flat-button color="warn" (click)="removeFile()">
           <mat-icon svgIcon="delete"></mat-icon>

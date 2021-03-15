@@ -115,8 +115,10 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
         this.timeout = window.setTimeout(() => window.location.reload(), refreshCountdown);
 
-
         this.player = jwplayer(this.playerContainerId);
+
+        // Hotfix for issue #5160 - Component is created twice and the firs ttime its destroyed before it could load the script causing an error.
+        if (!this.player.setup) return;
 
         this.player.setup({
           controls: !this.control,
@@ -138,7 +140,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit() {
     this.resetPlayerState();
-    await loadJWPlayerScript(this.document);
+    const playerUrl = this.functions.httpsCallable('playerUrl');
+    const url = await playerUrl({}).toPromise<string>();
+    await loadJWPlayerScript(this.document, url);
   }
 
   resetPlayerState() {

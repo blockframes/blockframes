@@ -1011,6 +1011,7 @@ function createMovieVideoControl(movieVideo: Partial<MovieVideo> = {}) {
     title: new FormControl(movieVideo?.title ?? ''),
     description: new FormControl(movieVideo?.description ?? ''),
     type: new FormControl(movieVideo?.type ?? ''),
+    jwPlayerId: new FormControl(movieVideo?.jwPlayerId ?? ''),
   }
 }
 
@@ -1031,7 +1032,7 @@ function createMovieVideosControl(videos: Partial<MovieVideos> = {}) {
   const { screener, otherVideos } = createMovieVideos(videos);
   return {
     screener: new MovieVideoForm(screener),
-    otherVideos: FormList.factory(otherVideos, (otherVideo, i) => new MovieVideoForm(otherVideo)),
+    otherVideos: FormList.factory(otherVideos, otherVideo => new MovieVideoForm(otherVideo)),
   }
 }
 

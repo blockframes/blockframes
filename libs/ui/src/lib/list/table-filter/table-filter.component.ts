@@ -11,6 +11,7 @@ import {
   QueryList,
   EventEmitter,
   Output,
+  ContentChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,6 +23,15 @@ import { getValue } from '@blockframes/utils/helpers';
 import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+
+@Directive({ selector: '[colAction]' })
+// tslint:disable-next-line: directive-class-suffix
+export class ColAction {
+  @Input() label: string;
+  @Input('colAction') ref: string;
+
+  constructor(public template: TemplateRef<any>) {}
+}
 
 @Component({
   selector: 'bf-table-filter',
@@ -68,6 +78,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
 
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
+  @ContentChild(ColAction) colAction?: ColAction;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 

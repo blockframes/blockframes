@@ -6,7 +6,7 @@
     <section id="sales-pitch" *ngIf="movie.promotional.salesPitch as salesPitch">
       <h2>Sales Pitch</h2>
       <article *ngIf="salesPitch.description" fxLayout="row" fxLayoutGap="16px">
-        <video-viewer [ref]="salesPitch.ref" *ngIf="salesPitch.jwPlayerId"></video-viewer>
+        <video-viewer [ref]="salesPitch" *ngIf="salesPitch.jwPlayerId"></video-viewer>
         <p>{{ salesPitch.description }}</p>
       </article>
       <mat-divider></mat-divider>
@@ -47,7 +47,7 @@
       <h5>Release Year</h5>
       <p>
         <span>{{ movie.release.year }}</span>
-        <span *ngIf="movie.release.status"> ({{ movie.release.status | toLabel: 'screeningStatus' }})</span>
+        <span *ngIf="movie.release.status && movie.release.status !== 'confirmed'"> ({{ movie.release.status | toLabel: 'screeningStatus' }})</span>
       </p>
     </article>
 
@@ -104,7 +104,7 @@
 
 
   <h1 *ngIf="(movie | hasKeys: keys.prizes) && (movie | hasStatus: status.afterProd)">
-    Selection & reviews
+    Selection & Reviews
   </h1>
 
 

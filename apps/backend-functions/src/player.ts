@@ -60,19 +60,24 @@ export const getPrivateVideoUrl = async (
   }
 
   // extract trusted values
-  const { collection, docId, field } = data.video;
+  const { collection, docId, field, jwPlayerId } = data.video;
 
   // retrieve not-trusted values
   const docData = await getDocument(`${collection}/${docId}`);
-  const storageVideo: StorageVideo | undefined = get(docData, field);
-  if (!storageVideo || !storageVideo.jwPlayerId) {
+  const storageVideo: StorageVideo | StorageVideo[] | undefined = get(docData, field);
+  if (Array.isArray(storageVideo)) {
+    if (!storageVideo.some(video => video.jwPlayerId === jwPlayerId)) {
+      return {
+        error: 'DOCUMENT_VIDEO_NOT_FOUND',
+        result: `The files in ${field} of document (${collection}/${docId}) have no matching jwPlayerId!`
+      }
+    }
+  } else if (!storageVideo || !storageVideo.jwPlayerId) {
     return {
       error: 'DOCUMENT_VIDEO_NOT_FOUND',
       result: `The file ${field} of document (${collection}/${docId}) has no jwPlayerId!`
     }
   }
-  const { jwPlayerId } = storageVideo;
-
 
   // watermark fallback : in case the user's watermark doesn't exist we generate it
   const userRef = db.collection('users').doc(context.auth.uid);
@@ -186,3 +191,23 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
     return { success: true, key: result.video.key }
   }
 }
+
+
+export const getPlayerUrl = async (
+  data: unknown,
+  context: CallableContext
+): Promise<string> => {
+  if (!context.auth) {
+    throw new Error(`Unauthorized call !`);
+  }
+
+  const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
+
+  const toSign = `libraries/lpkRdflk.js:${expires}:${jwplayerSecret}`;
+  const md5 = createHash('md5');
+
+  const signature = md5.update(toSign).digest('hex');
+
+  const signedUrl = `https://cdn.jwplayer.com/libraries/lpkRdflk.js?exp=${expires}&sig=${signature}`;
+  return signedUrl;
+};

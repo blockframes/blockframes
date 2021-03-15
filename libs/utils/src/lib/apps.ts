@@ -44,11 +44,10 @@ export const appLogo = {
 };
 type AppLogoValue = typeof appLogo[App];
 
-// TODO #4510 add text description
 export const appDescription = {
-  catalog: '',
-  festival: '',
-  financiers: '',
+  catalog: 'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple : One massive library, One package offer, One negotiation, One contract.',
+  festival: 'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
+  financiers: 'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
 };
 
 export type ModuleAccess = Record<Module, boolean>;
@@ -166,7 +165,7 @@ export function getOrgModuleAccess(org: OrganizationDocument | Organization, _a?
  * For app Festival, publish status is "accepted", "submitted" for other apps
  */
 export function getMoviePublishStatus(a: App): StoreStatus {
-  return a === 'festival' || a === 'catalog' ? 'accepted' : 'submitted';
+  return a === 'festival' ? 'accepted' : 'submitted';
 }
 
 /**

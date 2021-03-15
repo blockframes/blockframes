@@ -1,4 +1,3 @@
-
 import {
   Component,
   Input,
@@ -23,13 +22,13 @@ import { FileMetaData } from '../../+state/media.model';
 import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { MovieVideoForm } from '@blockframes/movie/form/movie.form';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
-
 
 function computeSize(fileSize: number) {
   const size = fileSize / 1000;
@@ -64,19 +63,19 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       const extra = this.getExtra();
       if (!!extra) {
         this.metadata = { ...this.metadata, ...extra }
-        const task = this.uploaderService.retrieveFromQueue(this.storagePath);
+        const task = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
         if (!!task) {
           task.metadata = this.metadata;
+          this.computeState();
         }
       }
     })
   }
 
-
   @Input() queueIndex: number;
   @Input() formIndex: number;
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
-    const [ collection, label, docId ] = value;
+    const [collection, label, docId] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
     this.metadata = { ...getFileMetadata(collection, label, docId), ...this.getExtra() };
   }
@@ -101,7 +100,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   @ViewChild('fileExplorer') fileExplorer: ElementRef<HTMLInputElement>;
 
   public localSize: string;
-  public state: UploadState = 'waiting';
+  public state$ = new BehaviorSubject<UploadState>('waiting');
   public file: File;
   public fileName: string;
 
@@ -117,19 +116,19 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.listenToChanges) {
       this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
-        const media = this.formIndex !== undefined 
+        const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (!!media) {
-          this.form.setValue(media);
+          this.form.patchValue(media);
         }
       })
     }
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
-    if (!!this.docSub) this.docSub.unsubscribe();
+    this.sub?.unsubscribe();
+    this.docSub?.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])
@@ -141,7 +140,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   @HostListener('dragover', ['$event'])
   onDragOver($event: DragEvent) {
     $event.preventDefault();
-    this.state = 'hovering';
+    this.state$.next('hovering');
   }
 
   @HostListener('dragleave', ['$event'])
@@ -157,9 +156,9 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       if (!files.item(0)) {
         this.snackBar.open('No file found', 'close', { duration: 1000 });
         if (!!this.file) {
-          this.state = 'file';
+          this.state$.next('file');
         } else {
-          this.state = 'waiting';
+          this.state$.next('waiting');
           this.fileExplorer.nativeElement.value = null;
         }
         return;
@@ -169,9 +168,9 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     } else if (!files) { // No files
         this.snackBar.open('No file found', 'close', { duration: 1000 });
         if (!!this.file) {
-          this.state = 'file';
+          this.state$.next('file');
         } else {
-          this.state = 'waiting';
+          this.state$.next('waiting');
           this.fileExplorer.nativeElement.value = null;
         }
         return;
@@ -191,12 +190,12 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     const isFileTypeValid = this.types && this.types.includes(fileType);
     if (!isFileTypeValid) {
       this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 1000 });
-      this.state = 'waiting';
+      this.state$.next('waiting');
       this.fileExplorer.nativeElement.value = null;
       return;
     }
 
-    this.state = 'ready';
+    this.state$.next('ready');
     this.fileName = sanitizeFileName(this.file.name);
     this.localSize = computeSize(this.file.size);
 
@@ -205,7 +204,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   }
 
   public delete() {
-    this.state = 'waiting';
+    this.state$.next('waiting');
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.form.reset();
@@ -214,16 +213,16 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
 
   private computeState() {
     if (!!this.form.get('storagePath').value) {
-      this.state = 'file';
+      this.state$.next('file');
       this.fileName = this.form.get('storagePath').value;
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
       if (!!retrieved) {
-        this.state = 'ready';
+        this.state$.next('ready');
         this.fileName = retrieved.fileName;
         this.localSize = computeSize(retrieved.file.size);
       } else {
-        this.state = 'waiting';
+        this.state$.next('waiting');
       }
     }
   }
