@@ -40,6 +40,10 @@ import { MatSelectModule } from '@angular/material/select';
       {
         path: '',
         component: MarketplaceSelectionComponent
+      },
+      {
+        path: 'congratulations',
+        loadChildren: () => import('./congratulations/congratulations.module').then(m => m.CongratulationsModule)
       }
     ])
   ]
