@@ -34,10 +34,12 @@
       <!-- ORGANIZATION -->
 
       <ng-container *ngIf="useAlgolia else orgInput">
-        <algolia-autocomplete [index]="orgIndex" [indexGroup]="indexGroup" showAddNew keyToDisplay="name" label="Company Name*"
+        <algolia-autocomplete [index]="orgIndex" [indexGroup]="indexGroup" showAddNew keyToDisplay="name" label="Company Name"
           hint='Please join an existing company account or create a new one.'
           (selectionChange)="setOrg($event)"
-          (createFromSelection)="createOrg($event)">
+          (createFromSelection)="createOrg($event)"
+          required
+          errorText="You have to select a choice from the list.">
           <ng-template let-result>
             <article flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
               <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp" type="logo" alt="Organization Logo">

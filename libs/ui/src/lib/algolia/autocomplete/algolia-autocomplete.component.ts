@@ -67,6 +67,15 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Set your own hint */
   @Input() hint = '';
 
+  /** Set your own error */
+  @Input() error;
+
+  /** Set your own error message */
+  @Input() errorText = '';
+
+  /** Set if it's required */
+  @Input() required = false;
+
   /** If true, will display a mat-option to create value */
   @Input() @boolean showAddNew = false;
 
