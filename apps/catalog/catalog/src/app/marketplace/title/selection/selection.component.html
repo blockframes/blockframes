@@ -29,17 +29,17 @@
     <section class="contract surface">
       <header fxLayout fxLayoutAlign="space-between start">
         <ng-container *ngIf="contract.titleId | getTitle | async as title">
-          <article fxLayout="column">
+          <section fxLayout="column">
             <h2>{{ title.title.international }}</h2>
-            <div fxLayout fxLayoutGap="12px">
+            <article fxLayout fxLayoutGap="12px">
               <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
                 alt="Movie Illustration" [delay]="0">
-              <div>
+              <div fxLayout="column">
                 <h3>{{ title.directors | displayName }}</h3>
                 <p>{{ title | movieFeature}}</p>
               </div>
-            </div>
-          </article>
+            </article>
+          </section>
           <mat-form-field appearance="outline">
             <mat-label>Price</mat-label>
             <input matInput type="number" [value]="contract.price" (blur)="updatePrice(i, $event.target.value)" />
