@@ -9,6 +9,9 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
+import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
+
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,6 +31,8 @@ import { MatSelectModule } from '@angular/material/select';
     ImageModule,
     StorageFileModule,
     TableFilterModule,
+    DisplayNameModule,
+    MovieFeatureModule,
 
     // Material
     MatButtonModule,
