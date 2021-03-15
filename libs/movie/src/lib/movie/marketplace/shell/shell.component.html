@@ -39,7 +39,8 @@
   <!-- Footer -->
   <footer>
     <article
-      *ngIf="movie | hasKeys: ['promotional.scenario', 'promotional.moodboard', 'promotional.presentation_deck']">
+      *ngIf="movie | hasKeys: ['promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']"
+    >
       <h2>Files</h2>
       <div grid>
         <mat-card [col]="3" *ngIf="!!movie.promotional.presentation_deck.storagePath">
