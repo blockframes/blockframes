@@ -9,7 +9,7 @@ import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { AlgoliaIndex, AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
-import { IdentityForm } from '@blockframes/auth/forms/identity.form';
+import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
@@ -53,20 +53,22 @@ export class IdentityComponent implements OnInit {
 
 
   async ngOnInit() {
-    const params = this.route.snapshot.queryParams;
-
     this.app = getCurrentApp(this.routerQuery);
     this.appName = getAppName(this.app).label;
 
-    if (!!params.code) {
-      this.form.get('generatedPassword').setValue(params.code);
-    }
+    const existingUserWithDisplayName = !!this.query.user && !!hasDisplayName(this.query.user);
+    const existingUserWithoutDisplayName = !!this.query.user && !hasDisplayName(this.query.user);
 
-    if (!!params.email || (!!this.query.user && !hasDisplayName(this.query.user))) {
-      // Updating user (invited)
-      this.form.get('email').setValue(params.email || this.query.user.email);
-    } else if (!!this.query.user && !!hasDisplayName(this.query.user)) {
-      // Updating user (already logged in)
+    // Try to set update form from query params or from existing user query (already logged in but without display name setted)
+    const { code, email } = this.route.snapshot.queryParams;
+    const identity = {} as IdentityFormControl;
+    if (code) identity.generatedPassword = code;
+    if (email || existingUserWithoutDisplayName) identity.email = email || this.query.user.email;
+
+    this.form.patchValue(identity);
+
+    if (existingUserWithDisplayName) {
+      // Updating user (already logged in and with display name setted) : user will only choose or create an org
       this.updateFormForExistingIdentity(this.query.user);
     } else {
       // Creating user
