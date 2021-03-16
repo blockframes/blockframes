@@ -11,7 +11,7 @@
 
   <form-country label="Company's nationality" noWorld [form]="form.get('addresses').get('main').get('country')" required></form-country>
 
-  <article fxLayout="row" fxLayoutAlign="space-between center">
+  <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
     <div fxLayout="row">
       <p>Choose your role*:</p>
       <mat-icon svgIcon="info"></mat-icon>

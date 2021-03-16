@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   min-height: 100vh;
   display: flex;
@@ -61,5 +63,32 @@ section {
   a {
     font-weight: bold;
     cursor: pointer;
+  }
+}
+
+@include layout-bp(lt-md) {
+  app-logo {
+    position: inherit;
+    margin-bottom: 24px;
+  }
+  mat-card {
+    width: 75%;
+  }
+}
+
+@include layout-bp(lt-sm) {
+  :host main {
+    display: block;
+    background-image: none;
+    padding: 16px 0;
+    justify-content: center;
+    text-align: center;
+  }
+  app-logo {
+    position: inherit;
+    margin-bottom: 24px;
+  }
+  mat-card {
+    width: 100%;
   }
 }
