@@ -13,7 +13,7 @@ describe('isTermSold', () => {
         bucket = [];
     })
 
-    it(`Mandate test (territory)
+    it.only(`Mandate test (territory)
     Terms: 01/01/2022 - 06/30/2023 
     Territory: South Korea
     Rights: Free TV
@@ -201,6 +201,9 @@ describe('isTermSold', () => {
             toDateSales);
         expect(isTermSold).toBe(true);
     });
+
+    // MULTI AVAILS TEST
+
     it(`Mandate test (territory)
     Terms: 01/01/2022 - 06/30/2023
     Territory: South Korea
@@ -210,7 +213,16 @@ describe('isTermSold', () => {
     Not licensed: Resurrected, 512 Hours With Marina Abramovic (mandate without territory)
     Not available: Gaza mon amour (sale)
     Available: Mother Schmuckers, Bigfoot Family`, () => {
-        
+        const acMandateTerms = mandateTerms.map(toDate);
+        const ACRights = getMandateTerm(
+            { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
+            acMandateTerms)
+        expect(!!ACRights).toBe(true);
+        const toDateSales = saleTerms.map(toDate);
+        const isTermSold = isSold(
+            { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
+            toDateSales);
+        expect(isTermSold).toBe(true);
     })
 })
 
