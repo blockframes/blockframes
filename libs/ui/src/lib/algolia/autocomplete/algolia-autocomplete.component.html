@@ -28,12 +28,11 @@
   <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (onSelectionChange)="selected(result) ">
 
     <!-- INJECTED CONTENT -->
-    <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
+    <ng-template [ngTemplateOutlet]="optionRef || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
     <ng-template #default> {{ result | json }}</ng-template>
 
   </mat-option>
 
-  <mat-option test-id="createNewOrgOption" *ngIf="showAddNew && !!(control.valueChanges | async)" [value]="(control.valueChanges | async)" (click)="createNew()">
-    <mat-icon svgIcon="add"></mat-icon> <span class="create-new"> CREATE {{ (control.valueChanges | async) }} {{ createLabel }}</span>
-  </mat-option>
+  <ng-template *ngIf="lastOptionRef" [ngTemplateOutlet]="lastOptionRef" [ngTemplateOutletContext]="{ $implicit: (control.valueChanges | async) }"></ng-template>
+
 </mat-autocomplete>
