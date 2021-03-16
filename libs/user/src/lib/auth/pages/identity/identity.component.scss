@@ -9,17 +9,14 @@
   padding: 24px;
   background-image: url('/assets/images/rocket_bottom_right.png');
   background-position: right bottom;
-  background-size: auto 95%;
+  background-size: cover;
   background-repeat: no-repeat;
 }
 
 app-logo {
   position: absolute;
-  // display: block;
   top: 24px;
   left: 24px;
-  // height: 48px;
-  // width: auto;
 }
 
 section {
