@@ -35,7 +35,7 @@ export class OrgRequestAccessComponent implements OnInit {
 
   async requestAccess() {
     this.disabledRequest = true;
-    await this.orgService.requestToAccessToApp(this.app, this.orgId);
+    await this.orgService.requestAppAccess(this.app, this.orgId);
     this.snackBar.open('Your request to access to this platform has been sent.', 'close', { duration: 5000 });
   }
 
