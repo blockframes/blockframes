@@ -5,7 +5,6 @@ import { createRoutes } from '@blockframes/utils/routes/create-routes';
 // Guards
 import { AppGuard } from '@blockframes/utils/routes/app.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
-import { RequestAccessGuard } from '@blockframes/organization/guard/request-access.guard';
 
 const routes: Routes = createRoutes({
   appName: 'catalog',
@@ -28,11 +27,6 @@ const routes: Routes = createRoutes({
     path: 'dashboard',
     canActivate: [AppGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
-  },
-  {
-    path: 'request-access',
-    canActivate: [RequestAccessGuard],
-    loadChildren: () => import('@blockframes/organization/pages/request-access/request-access.module').then(m => m.OrgRequestAccessModule)
   }
 ]
 });
