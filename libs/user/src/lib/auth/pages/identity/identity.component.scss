@@ -30,7 +30,6 @@ section {
       margin-bottom: 24px;
     }
     a {
-      cursor: pointer;
       font-weight: 600;
     }
   }
@@ -51,6 +50,7 @@ section {
 .org-logo {
   img {
     width: 40px;
+    height: 40px;
     border-radius: 50%;
   }
 }

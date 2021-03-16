@@ -1,42 +1,42 @@
 <section fxLayout="column">
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="profil_user.webp"/>
-      <p>Profile Data</p>
+      <span>Profile Data</span>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Your identity information. First and Last Name"></mat-icon>
     </div>
     <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary"></mat-icon>
     <mat-icon *ngIf="!profileData" svgIcon="update"></mat-icon>
   </article>
 
-  <mat-divider inset="true"></mat-divider>
+  <mat-divider inset></mat-divider>
 
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="image.webp"/>
-      <p>Organization Data</p>
+      <span>Organization Data</span>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Information related to your company"></mat-icon>
     </div>
     <mat-icon [svgIcon]="orgData ? 'check_circle' : 'update'" [color]="orgData ? 'primary' : '' "></mat-icon>
   </article>
 
-  <mat-divider inset="true"></mat-divider>
+  <mat-divider inset></mat-divider>
 
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="image.webp"/>
-      <p>Email Validation</p>
+      <span>Email Validation</span>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Verification if your email is valid"></mat-icon>
     </div>
     <mat-icon [svgIcon]="(emailValidate$ | async) ? 'check_circle' : 'update'" [color]="(emailValidate$ | async) ? 'primary' : '' "></mat-icon>
   </article>
 
-  <mat-divider inset="true"></mat-divider>
+  <mat-divider inset></mat-divider>
 
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="image.webp"/>
-      <p>Organization Approval</p>
+      <span>Organization Approval</span>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Verification of your membership in the company"></mat-icon>
     </div>
     <mat-icon [svgIcon]="orgApproval ? 'check_circle' : 'update'" [color]="orgApproval ? 'primary' : '' "></mat-icon>
