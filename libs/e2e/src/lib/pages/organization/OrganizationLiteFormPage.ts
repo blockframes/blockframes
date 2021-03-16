@@ -13,20 +13,6 @@ export const ORGANIZATION: Organization = {
   },
   activity: 'Distribution',
   fiscalNumber: '95 14 958 641 215 C',
-
-  bankAccount: {
-    address: {
-      street: '21 gold street',
-      zipCode: '69001',
-      city: 'Moneytown',
-      country: 'Germany'
-    },
-    IBAN: 'FR1420041010050500013M02606',
-    BIC: 'CCBPFRPPVER',
-    bankName: 'Cypress Bank',
-    holderName: 'Cypress'
-  },
-
   denomination: {
     full: `Cypress & Party - ${Date.now()}`,
     public: 'Cypress & Party'
