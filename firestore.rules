@@ -372,7 +372,9 @@ service cloud.firestore {
 
     match /offers/{offerId} {
       allow read: if (userOrgId() == existingData()) && notInMaintenance();
-      allow write: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
+      allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
+      allow update: if false;
+      allow delete: if false;
     }
 
     match /contracts/{contractId} {
@@ -384,15 +386,19 @@ service cloud.firestore {
 
     match /terms/{termId} {
       allow read: if isSignedIn() && notInMaintenance();
-      allow write: if (userOrgId() == getContract(existingData().contractId).buyerId)
+      allow create: if (userOrgId() == getContract(existingData().contractId).buyerId)
         && notInMaintenance();
+      allow update: if false;
+      allow delete: if false;
     }
 
     match /incomes/{incomeId} {
       allow read: if userOrgId() in getContract(existingData().contractId).stakeholders
         && notInMaintenance();
-      allow write: if (userOrgId() == getContract(existingData().contractId).buyerId)
+      allow create: if (userOrgId() == getContract(existingData().contractId).buyerId)
         && notInMaintenance();
+      allow update: if false;
+      allow delete: if false;
     }
 
 
