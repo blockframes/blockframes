@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import { staticModel, Scope } from './static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { User } from '@blockframes/user/types';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 
 /**
  * This method is used before pushing data on db
@@ -215,6 +216,11 @@ export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
 }
 
 // Verify if the user exists and has a name and surname.
-export function hasDisplayName(user: User) {
+export function hasDisplayName(user: User): boolean {
   return !!user && !!user.firstName && !!user.lastName;
+}
+
+// Verify if the org exists and has denomination.full.
+export function hasDenomination(organization: Organization): boolean {
+  return !!organization && !!organization.denomination.full;
 }

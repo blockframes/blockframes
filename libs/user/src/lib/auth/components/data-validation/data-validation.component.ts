@@ -1,10 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Organization } from '@blockframes/organization/+state';
-import { getCurrentApp, appName } from '@blockframes/utils/apps';
+import { getCurrentApp, appName, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
+import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'auth-data-validation',
@@ -26,19 +27,27 @@ export class AuthDataValidationComponent implements OnInit {
   constructor(
     private query: AuthQuery,
     private routerQuery: RouterQuery,
-    @Optional() private intercom: Intercom) {}
+    @Optional() private intercom: Intercom) { }
 
   ngOnInit() {
     // Filled checkbox
-    if (!!this.user.firstName && !!this.user.lastName && !!this.user.email) this.profileData = true;
-    if (!!this.organization && !!this.organization.denomination.full) this.orgData = true;
-    if(
-      this.organization.status === "accepted"
-      && (this.organization.appAccess[this.app].dashboard || this.organization.appAccess[this.app].marketplace)
-      && this.organization.userIds.includes(this.user.uid)
-      ) {
+
+    if (hasDisplayName(this.user) && !!this.user.email) {
+      this.profileData = true;
+    }
+
+    if (hasDenomination(this.organization)) {
+      this.orgData = true;
+    }
+
+    const isUserInOrg = this.organization.userIds.includes(this.user.uid);
+    const isOrgAccepted = this.organization.status === "accepted";
+    const orgHaveAccesToAtLeastOneModule = getOrgModuleAccess(this.organization, this.app).length ? true : false;
+
+    if (isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg) {
       this.orgApproval = true;
     }
+
     this.emailValidate$ = this.query.hasVerifiedEmail$;
   }
 
