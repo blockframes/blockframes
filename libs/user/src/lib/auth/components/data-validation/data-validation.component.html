@@ -5,7 +5,8 @@
       <p>Profile Data</p>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Your identity information. First and Last Name"></mat-icon>
     </div>
-    <mat-icon [svgIcon]="profileData ? 'check_circle' : 'update'" [color]="profileData ? 'primary' : '' "></mat-icon>
+    <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary">
+    <mat-icon *ngIf="!profileData" svgIcon="update">
   </article>
 
   <mat-divider inset="true"></mat-divider>
