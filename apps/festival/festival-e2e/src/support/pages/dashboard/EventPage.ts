@@ -37,8 +37,13 @@ export default class EventPage {
       cy.wait(8000);
     }
 
+    event.inputDescription(`Screening: ${screeningName}`);
+    cy.wait(1000);
+
     event.checkAllDay();
+    cy.wait(1000);
     event.uncheckPrivate(isPublic);
+    cy.wait(1000);
 
     event.selectMovie(screeningName);
     cy.wait(2000);
@@ -46,6 +51,7 @@ export default class EventPage {
     event.inputDescription(`Screening: ${screeningName}`);
     cy.wait(2000);
 
+    //cy.pause();
     cy.log('Save event and navigate to calendar');
     event.saveEvent();
     cy.get('[svgicon="arrow_back"]').click();
