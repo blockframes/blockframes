@@ -1,25 +1,22 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 24px;
-  background-image: url('/assets/images/rocket_bottom_right.png'),
-                    url('/assets/images/cloud_bottom_down.png'),
-                    url('/assets/images/star_middle_left.png');
-  background-size: auto 75%, auto auto, auto auto;
-  background-repeat: no-repeat;
-  background-position: right bottom, left 50px bottom 100px, top 150px right 65px;
   background-color: var(--background-card);
+  padding: 24px;
+  background-image: url('/assets/images/rocket_bottom_right.png');
+  background-position: right bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 app-logo {
   position: absolute;
-  display: block;
   top: 24px;
   left: 24px;
-  height: 48px;
-  width: auto;
 }
 
 section {
@@ -63,5 +60,32 @@ section {
   a {
     font-weight: bold;
     cursor: pointer;
+  }
+}
+
+@include layout-bp(lt-md) {
+  app-logo {
+    position: inherit;
+    margin-bottom: 24px;
+  }
+  mat-card {
+    width: 75%;
+  }
+}
+
+@include layout-bp(lt-sm) {
+  :host {
+    display: block;
+    background-image: none;
+    padding: 16px 0;
+    justify-content: center;
+    text-align: center;
+  }
+  app-logo {
+    position: inherit;
+    margin-bottom: 24px;
+  }
+  mat-card {
+    width: 100%;
   }
 }

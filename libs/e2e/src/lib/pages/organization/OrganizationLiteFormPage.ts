@@ -1,23 +1,6 @@
 import { SEC } from '../../utils/env';
 import { Organization } from '@blockframes/e2e/utils/type';
-
-export const ORGANIZATION: Organization = {
-  id: 'Cy1234',
-  email: `dev+${Date.now()}@cascade8.com`,
-  address: {
-    street: '42 test road',
-    zipCode: '69001',
-    city: 'Testville',
-    country: 'France',
-    phoneNumber: '+334 857 953'
-  },
-  activity: 'Distribution',
-  fiscalNumber: '95 14 958 641 215 C',
-  denomination: {
-    full: `Cypress & Party - ${Date.now()}`,
-    public: 'Cypress & Party'
-  }
-};
+import { ORGANIZATION } from '../../fixtures/orgs';
 
 export default class OrganizationLiteFormPage {
   constructor() {
