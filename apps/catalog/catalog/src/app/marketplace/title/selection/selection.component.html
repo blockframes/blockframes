@@ -29,11 +29,17 @@
     <section class="contract surface">
       <header fxLayout fxLayoutAlign="space-between start">
         <ng-container *ngIf="contract.titleId | getTitle | async as title">
-          <article fxLayout="column">
+          <section fxLayout="column">
             <h2>{{ title.title.international }}</h2>
-            <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
-              alt="Movie Illustration" [delay]="0">
-          </article>
+            <article fxLayout fxLayoutGap="12px">
+              <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
+                alt="Movie Illustration" [delay]="0">
+              <div fxLayout="column">
+                <h3>{{ title.directors | displayName }}</h3>
+                <p>{{ title | movieFeature}}</p>
+              </div>
+            </article>
+          </section>
           <mat-form-field appearance="outline">
             <mat-label>Price</mat-label>
             <input matInput type="number" [value]="contract.price" (blur)="updatePrice(i, $event.target.value)" />
@@ -51,12 +57,12 @@
         <ng-template colRef="medias" let-medias>
           {{ medias.join(', ') }}
         </ng-template>
-        <ng-template colRef="exclusivity" let-exclusivity>
-          {{ exclusivity ? 'Yes' : 'No' }}
+        <ng-template colRef="exclusive" let-exclusive>
+          {{ exclusive ? 'Yes' : 'No' }}
         </ng-template>
-        <ng-template colAction="action" let-termIndex="index">
+        <ng-template colAction="action" label="Actions" let-termIndex="index">
           <button mat-icon-button (click)="removeTerm(i, termIndex)">
-            <mat-icon svgIcon="bin"></mat-icon>
+            <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </ng-template>
       </bf-table-filter>
@@ -67,4 +73,9 @@
       </footer>
     </section>
   </ng-container>
+
+  <footer fxLayout="column" fxLayoutAlign="center center" class="summary">
+    <p>Total Bucket Price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
+    <button mat-flat-button color="accent" (click)="createOffer()">Create Offer</button>
+  </footer>
 </ng-container>
