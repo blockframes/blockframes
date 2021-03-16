@@ -23,7 +23,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
-import { BucketService } from '@blockframes/contract/bucket/+state';
+import { BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
@@ -47,16 +47,10 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
-  private terms: {
-    mandate: Term<Date>[],
-    sales: Term<Date>[]
-  } = {
-      mandate: [],
-      sales: []
-    }
+  private terms: {[movieId: string]: { mandateTerms: Term<Date>[], saleTerms: Term<Date>[] }} = {}
 
 
-  private mandateMemo: Record<string, Term<Date>> = {};
+  private parentTerms: Record<string, Term<Date>> = {};
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -66,6 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
     private termService: TermService,
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
+    private bucketQuery: BucketQuery,
     private orgQuery: OrganizationQuery
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
@@ -83,8 +78,7 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.terms.mandate = await this.getAllTerms('mandate');
-    this.terms.sales = await this.getAllTerms('sale')
+    await this.getAllTerms();
 
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -95,21 +89,18 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(async ([_, availsValue]) => [await this.searchForm.search(), availsValue]),
     ).subscribe(([movies, availsValue]: [SearchResponse<Movie>, AvailsFilter]) => {
       if (this.availsForm.valid) {
-        this.movieResultsState.next([])
-        movies.hits.forEach(movie => {
-          this.mandateMemo[movie.objectID] = getMandateTerm(availsValue, this.terms.mandate.filter(
-            mandate => mandate.titleId === movie.objectID));
-          if (this.mandateMemo[movie.objectID]) {
-            const movieSales = this.terms.sales.filter(sale => sale.titleId === movie.objectID);
-            const ongoingSales = isSold(availsValue, movieSales);
-            if (!ongoingSales) {
-              // Implement bucket func @TODO #5002
-              const state = this.movieResultsState.getValue();
-              state.push(movie)
-              this.movieResultsState.next(state);
+        const hits = movies.hits.filter(movie => {
+          const titleId = movie.objectID;
+          if (!!this.terms[titleId]) {
+            this.parentTerms[titleId] = getMandateTerm(availsValue, this.terms[titleId].mandateTerms);
+            if (this.parentTerms[titleId]) {
+              const movieSales = this.terms[titleId].saleTerms.filter(sale => sale.titleId === titleId);
+              return !isSold(availsValue, movieSales);
             }
           }
         })
+        this.movieResultsState.next(hits);
+
       } else { // if availsForm is invalid, put all the movies from algolia
         this.movieResultsState.next(movies.hits)
       }
@@ -122,11 +113,20 @@ export class ListComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  async getAllTerms(contractType: 'mandate' | 'sale'): Promise<Term<Date>[]> {
-    const contracts = await this.contractService.getValue(ref => ref.where('type', '==', contractType));
+  async getAllTerms() {
+    // TODO issue #5241 query only the mandate of Archipel Content && only sales which match the contract of Archipel Content
+    const contracts = await this.contractService.getValue();
     const promises = contracts.map(c => this.termService.getValue(c.termIds));
-    const terms = await Promise.all(promises);
-    return terms.flat() as Term<Date>[];
+    // we use promise.all to speed up the search
+    const termsByContract = await Promise.all(promises);
+    const allTerms = termsByContract.flat();
+
+    for (const contract of contracts) {
+      const terms = allTerms.filter(term => contract.termIds.includes(term.id));
+      if (!this.terms[contract.titleId]) this.terms[contract.titleId] = { mandateTerms: [], saleTerms: [] };
+      const key = contract.type === 'mandate' ? 'mandateTerms' : 'saleTerms';
+      this.terms[contract.titleId][key] = this.terms[contract.titleId][key].concat(terms);
+    }
   }
 
   async addAvail(titleId: string) {
@@ -135,21 +135,38 @@ export class ListComponent implements OnInit, OnDestroy {
       return;
     }
     // Get the parent term
-    const parentTermId = this.mandateMemo[titleId]?.id
+    const parentTermId = this.parentTerms[titleId]?.id
     if (!parentTermId) throw new Error('no available term for this title');
     const term = this.availsForm.value;
-    this.bucketService.update(this.orgQuery.getActiveId(), (bucket) => {
-      const contracts = bucket.contracts || [];
-      // Check if there is already a contract that apply on the same parentTermId
-      const index = contracts.findIndex(contract => contract.parentTermId === parentTermId );
-      if (index !== -1) { // If yes, append its's terms with the new one.
-        contracts[index].terms.push(term);
-        return { ...bucket, contracts };
-      } else {  // Else create a new contract
-        const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId: this.orgQuery.getActiveId() };
-        return { contracts: [...contracts, contract] };
-      }
-    });
+
+    console.log('this.bucketQuery.getActive(): ', this.bucketQuery.getActive())
+    console.log('titleId: ', titleId);
+
+    if (!!this.bucketQuery.getActive()) {
+      console.log('updating')
+      this.bucketService.update(this.orgQuery.getActiveId(), (bucket) => {
+        const contracts = bucket.contracts || [];
+        // Check if there is already a contract that apply on the same parentTermId
+        const index = contracts.findIndex(contract => contract.parentTermId === parentTermId );
+        if (index !== -1) { // If yes, append its's terms with the new one.
+          contracts[index].terms.push(term);
+          return { ...bucket, contracts };
+        } else {  // Else create a new contract
+          const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId: this.orgQuery.getActiveId() };
+          return { contracts: [...contracts, contract] };
+        }
+      });
+    } else {
+      console.log('creating')
+      const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId: this.orgQuery.getActiveId() };
+      console.log('contract: ', contract);
+      const bucket = createBucket({
+        id: this.orgQuery.getActiveId(),
+        contracts: [contract]
+      })
+      console.log('bucket: ', bucket);
+      this.bucketService.add(bucket);
+    }
   }
 
   ngOnDestroy() {
