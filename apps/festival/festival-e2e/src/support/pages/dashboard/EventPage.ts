@@ -51,7 +51,6 @@ export default class EventPage {
     event.inputDescription(`Screening: ${screeningName}`);
     cy.wait(2000);
 
-    //cy.pause();
     cy.log('Save event and navigate to calendar');
     event.saveEvent();
     cy.get('[svgicon="arrow_back"]').click();
