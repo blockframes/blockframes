@@ -14,7 +14,7 @@ import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
-
+import { createLocation } from '@blockframes/utils/common-interfaces/utility';
 
 @Component({
   selector: 'auth-identity',
@@ -82,9 +82,7 @@ export class IdentityComponent implements OnInit {
 
   private updateFormForExistingIdentity(user: Partial<PublicUser>) {
     // Fill fields
-    this.form.get('email').setValue(user.email);
-    this.form.get('firstName').setValue(user.firstName);
-    this.form.get('lastName').setValue(user.lastName);
+    this.form.patchValue(user);
 
     // Disable/hide what is not needed
     this.form.get('email').disable();
@@ -112,11 +110,14 @@ export class IdentityComponent implements OnInit {
   }
 
   public setOrg(result: AlgoliaOrganization) {
-    this.orgForm.reset();
+    const orgFromAlgolia = createOrganization({
+      denomination: { full: result.name },
+      addresses: { main: createLocation({ country: result.country }) },
+      activity: result.activity
+    });
+
+    this.orgForm.reset(orgFromAlgolia);
     this.orgForm.disable();
-    this.orgForm.get('denomination').get('full').setValue(result.name);
-    this.orgForm.get('activity').setValue(result.activity);
-    this.orgForm.get('addresses').get('main').get('country').setValue(result.country);
     this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
     this.existingOrgId = result.objectID;
   }
