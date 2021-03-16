@@ -33,7 +33,7 @@ export class OrganizationCreateComponent {
     private orgService: OrganizationService,
     private userService: UserService,
     private router: Router,
-  ) {}
+  ) { }
 
   async emailValidator(control: AbstractControl): Promise<{ [key: string]: any } | null> {
     const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', control.value));
@@ -55,15 +55,14 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    let superAdmin = createPublicUser(existingSuperAdmin);
-    if (!existingSuperAdmin) {
-      const newUser = await this.authService.createUser(
+    const baseUser = !!existingSuperAdmin
+      ? existingSuperAdmin
+      : await this.authService.createUser(
         superAdminEmail,
         this.form.get('denomination').get('full').value,
         this.fromApp.value
       );
-      superAdmin = createPublicUser(newUser);
-    }
+    const superAdmin = createPublicUser(baseUser);
 
     const [firstApp] = getOrgAppAccess(this.form.value);
     const orgId = await this.orgService.addOrganization(this.form.value, firstApp, superAdmin);

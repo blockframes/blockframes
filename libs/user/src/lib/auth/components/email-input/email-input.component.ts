@@ -27,7 +27,7 @@ export class EmailInputComponent implements OnInit {
   }
 
   async searchForInvitation() {
-    const output = await this.invitationService.getInvitationLinkedToAnEmail(this.emailForm.value);
+    const output = await this.invitationService.getInvitationLinkedToEmail(this.emailForm.value).toPromise<AlgoliaOrganization | boolean>();
     this.hasInvitation.emit(output);
   }
 }

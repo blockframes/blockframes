@@ -11,13 +11,20 @@ import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
-  private hasUserAnOrgOrIsAlreadyInvited = this.functions.httpsCallable('hasUserAnOrgOrIsAlreadyInvited');
-  private getInvitationLinkedToEmail = this.functions.httpsCallable('getInvitationLinkedToEmail');
+  /** 
+   * Return true if there is already a pending invitation for a list of users 
+   */
+  public hasUserAnOrgOrIsAlreadyInvited = this.functions.httpsCallable('hasUserAnOrgOrIsAlreadyInvited');
+
+  /**
+   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
+   * Return false if there is no invitation at all.
+   */
+  public getInvitationLinkedToEmail = this.functions.httpsCallable('getInvitationLinkedToEmail');
 
   constructor(
     store: InvitationStore,
@@ -55,19 +62,6 @@ export class InvitationService extends CollectionService<InvitationState> {
   public declineInvitation(invitation: Invitation) {
     // @TODO (#2500) should be handled by a backend function to prevent ugly rules
     return this.update({ ...invitation, status: 'declined' });
-  }
-
-  /** Return true if there is already a pending invitation for a list of users */
-  public async orgInvitationOrUserOrgIdExists(userEmails: string[]): Promise<boolean> {
-    return await this.hasUserAnOrgOrIsAlreadyInvited(userEmails).toPromise();
-  }
-
-  /**
-   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
-   * Return false if there is no invitation at all.
-   */
-  public async getInvitationLinkedToAnEmail(email: string): Promise<AlgoliaOrganization | boolean> {
-    return await this.getInvitationLinkedToEmail(email).toPromise();
   }
 
   public isInvitationForMe(invitation: Invitation): boolean {
