@@ -123,9 +123,8 @@ export class IdentityComponent implements OnInit {
   }
 
   public createOrg(orgName: string) {
-    this.orgForm.reset();
+    this.orgForm.reset({ denomination: { full: orgName } });
     this.orgForm.enable();
-    this.orgForm.get('denomination').get('full').setValue(orgName);
     this.existingOrgId = '';
   }
 
