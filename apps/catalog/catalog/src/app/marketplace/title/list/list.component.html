@@ -57,7 +57,7 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
-      <button mat-icon-button (click)="addAvail(title.id)" [disabled]="availsForm.invalid">
+      <button mat-icon-button (click)="addAvail(title.id)">
         <mat-icon svgIcon="shopping_basket"></mat-icon>
       </button>
     </movie-card>

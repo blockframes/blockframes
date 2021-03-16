@@ -20,6 +20,19 @@ export async function deleteAllUsers(auth: admin.auth.Auth) {
 export async function importAllUsers(auth: admin.auth.Auth, users: admin.auth.UserImportRecord[]) {
   const timeMsg = `Creating ${users.length} users took`;
   console.time(timeMsg);
-  await runChunks(users, userRecord => auth.createUser(userRecord), (env?.['chunkSize'] || 10) * 10);
+  const uniqUsers = removeDuplicateUsers(users);
+  await runChunks(uniqUsers, userRecord => auth.createUser(userRecord), (env?.['chunkSize'] || 10) * 10);
   console.timeEnd(timeMsg);
+}
+
+function removeDuplicateUsers(users: admin.auth.UserImportRecord[]) {
+  const output : admin.auth.UserImportRecord[] = []
+  for (const curUser of users) {
+    if (output.some(user => user.email === curUser.email)) {
+      console.log('Duplicate user email found:', curUser.email);
+    } else {
+      output.push(curUser)
+    }
+  }
+  return output;
 }

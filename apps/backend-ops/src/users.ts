@@ -198,6 +198,6 @@ export async function generateWatermarks({ db = loadAdminServices().db, storage 
       users,
       (user: User) => upsertWatermark(user, storageBucket, storage),
       env?.['heavyChunkSize'] ?? 10
-    );
+    ).catch(err => console.error(err));
   }
 }
