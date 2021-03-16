@@ -3,9 +3,6 @@ import { SEC } from '@blockframes/e2e/utils';
 
 export default class EventEditPage {
   constructor() {
-    // cy.scrollTo(0, 500, { ensureScrollable: false });
-    // cy.wait(1 * SEC);
-    // cy.scrollTo(0, 100, { ensureScrollable: false });
     cy.get('event-edit', { timeout: 90 * SEC });
     cy.wait(10 * SEC);
   }
