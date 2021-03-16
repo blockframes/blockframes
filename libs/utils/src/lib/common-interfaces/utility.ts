@@ -8,14 +8,6 @@ export interface Location {
   phoneNumber: string;
 }
 
-export interface BankAccount {
-  address: Location;
-  IBAN: string;
-  BIC: string;
-  name: string;
-  holderName: string;
-}
-
 export interface DocsIndex {
   /** @dev doc author'id. Setted by a backend function */
   authorOrgId: string;
@@ -28,18 +20,6 @@ export function createLocation(params: Partial<Location> = {}): Location {
     city: '',
     phoneNumber: '',
     region: '',
-    ...params
-  };
-}
-
-/** A factory function that creates a BankAccount */
-export function createBankAccount(params: Partial<BankAccount> = {}): BankAccount {
-  return {
-    address: createLocation(params && params.address),
-    IBAN: '',
-    BIC: '',
-    name: '',
-    holderName: '',
     ...params
   };
 }
