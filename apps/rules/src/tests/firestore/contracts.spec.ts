@@ -7,9 +7,9 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
 
-describe.skip('Contracts Rules Tests', () => {
+describe('Contracts Rules Tests', () => {
   const projectId = `ctrules-spec-${Date.now()}`;
-  const orgId = 'O001';
+  const buyerId = 'O001';
   let db: Firestore;
 
   beforeAll(async () => {
@@ -28,25 +28,25 @@ describe.skip('Contracts Rules Tests', () => {
     ]);
   });
 
-  it('[CREATE] succeed if orgId === contract.orgId', async () => {
+  it('[CREATE] succeed if orgId === contract.buyerId', async () => {
     const ref = db.doc('contracts/C003');
-    await assertSucceeds(ref.set({ orgId }));
+    await assertSucceeds(ref.set({ buyerId }));
   });
 
-  it('[CREATE] failed if orgId !== contract.orgId', async () => {
+  it('[CREATE] failed if orgId !== contract.buyerId', async () => {
     const ref = db.doc('contracts/C004');
-    await assertFails(ref.set({ orgId: 'O002' }));
+    await assertFails(ref.set({ buyerId: 'O002' }));
   });
 
   it('[UPDATE] always fails', async () => {
     const ref = db.doc('contracts/C005');
-    await ref.set({ orgId });
+    await ref.set({ buyerId });
     await assertFails(ref.update({ stakeholders: null }));
   });
 
   it('[DELETE] always fails', async () => {
     const ref = db.doc('contracts/C006');
-    await ref.set({ orgId });
+    await ref.set({ buyerId });
     await assertFails(ref.delete());
   });
 });
