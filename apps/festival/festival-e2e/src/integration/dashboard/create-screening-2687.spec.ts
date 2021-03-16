@@ -32,7 +32,7 @@ const users  =  [
   (userFixture.getByUID(USER.Vincent))
 ];
 
-describe('User create a screening', () => {
+describe.skip('User create a screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     tomorrow = new Date(new Date().setDate(NOW.getDate() + 1));
