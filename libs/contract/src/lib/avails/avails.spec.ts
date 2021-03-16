@@ -1,11 +1,17 @@
 import { Term } from '../term/+state/term.model';
-import { getMandateTerm as getMandateTerm, isSold } from './avails';
+import { AvailsFilter, getMandateTerm as getMandateTerm, isSold } from './avails';
 import { mandateTerms as acTerms } from './fixtures/mandateTerms'
 import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
 
 describe('isTermSold', () => {
     const mandateTerms: Term<Date>[] = (acTerms as unknown[]).map(toDate)
     const saleTerms: Term<Date>[] = (acSaleTerms as unknown[]).map(toDate)
+    let bucket: AvailsFilter[] = []
+
+    beforeEach(() => {
+        // We are starting with a new bucket for every test
+        bucket = [];
+    })
 
     it(`Mandate test (territory)
     Terms: 01/01/2022 - 06/30/2023 
@@ -195,6 +201,17 @@ describe('isTermSold', () => {
             toDateSales);
         expect(isTermSold).toBe(true);
     });
+    it(`Mandate test (territory)
+    Terms: 01/01/2022 - 06/30/2023
+    Territory: South Korea
+    Rights: Free TV
+    Exclusive: No
+    Expected results:
+    Not licensed: Resurrected, 512 Hours With Marina Abramovic (mandate without territory)
+    Not available: Gaza mon amour (sale)
+    Available: Mother Schmuckers, Bigfoot Family`, () => {
+        
+    })
 })
 
 function toDate(term: Term<Date>): Term<Date> {
