@@ -11,7 +11,8 @@ import {
   TemplateRef,
   ViewChild,
   ElementRef,
-  OnDestroy
+  OnDestroy,
+  Directive
 } from '@angular/core';
 import { SearchIndex } from 'algoliasearch';
 
@@ -23,8 +24,14 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
+@Directive({ selector: '[optionRef]' })
+export class OptionRefDirective { }
+
+@Directive({ selector: '[lastOptionRef]' })
+export class LastOptionRefDirective { }
+
 @Component({
-  selector: '[index] [keyToDisplay] algolia-autocomplete',
+  selector: '[keyToDisplay] algolia-autocomplete',
   templateUrl: 'algolia-autocomplete.component.html',
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,7 +43,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * Set index
    */
-  @Input() index: AlgoliaIndex;
+  @Input() index: AlgoliaIndex = 'org';
 
   @Input() indexGroup: string;
 
@@ -61,26 +68,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
 
-  /** Set your own label */
-  @Input() label = 'Search...'
-
-  /** Set your own hint */
-  @Input() hint = '';
-
-  /** Set your own error */
-  @Input() error;
-
-  /** Set your own error message */
-  @Input() errorText = '';
-
   /** Set if it's required */
   @Input() required = false;
-
-  /** If true, will display a mat-option to create value */
-  @Input() @boolean showAddNew = false;
-
-  /** Label displayed into "create new option" if showAddNew is true */
-  @Input() createLabel = 'COMPANY';
 
   /** Set your own placeholder */
   @Input() placeholder = 'Search...'
@@ -103,9 +92,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Output emitted on every select, it return the whole record object */
   @Output() selectionChange = new EventEmitter();
 
-  /** Will emit if user clicks on "create new" option */
-  @Output() createFromSelection = new EventEmitter();
-
   // PRIVATE --------------------------
   private sub: Subscription;
 
@@ -118,8 +104,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Holds the last snapshot from algolia results */
   private lastValue$ = new BehaviorSubject(null);
 
-  /** Renders the template coming from the parent component */
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  /** Renders the templates coming from the parent component */
+  @ContentChild(OptionRefDirective, { read: TemplateRef }) optionRef: OptionRefDirective;
+  @ContentChild(LastOptionRefDirective, { read: TemplateRef }) lastOptionRef: LastOptionRefDirective;
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
@@ -159,10 +146,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     if (this.resetInput) {
       this.control.reset();
     }
-  }
-
-  public createNew() {
-    this.createFromSelection.emit(this.control.value);
   }
 
   ngOnDestroy() {

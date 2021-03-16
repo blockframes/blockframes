@@ -25,6 +25,8 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
+import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -49,6 +51,8 @@ import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/pas
     MatCardModule,
     MatButtonModule,
     MatInputModule,
+    MatIconModule,
+    MatOptionModule,
     MatFormFieldModule,
 
     RouterModule.forChild([{ path: '', component: IdentityComponent }]),

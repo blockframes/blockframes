@@ -1,14 +1,15 @@
 
 <!-- MATERIAL VERSION -->
 <mat-form-field [appearance]="mode">
-  <mat-label>{{ label }}</mat-label>
+  <mat-label>
+    <ng-content select="mat-label"></ng-content>
+  </mat-label>
   <input
     matInput
     type="text"
     [formControl]="control"
     [matAutocomplete]="auto"
     [placeholder]="placeholder"
-
     autocapitalize="off"
     autocorrect="off"
     spellcheck="false"
@@ -16,19 +17,22 @@
   />
   <mat-icon matSuffix svgIcon="close" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
   <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()" class="pointer"></mat-icon>
-  <mat-hint *ngIf="!!hint">{{ hint }}</mat-hint>
-  <mat-error *ngIf="error">{{ errorText }}</mat-error>
+  <mat-hint>
+    <ng-content select="mat-hint"></ng-content>
+  </mat-hint>
+  <mat-error>
+    <ng-content select="mat-error"></ng-content>
+  </mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete">
   <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result | deepKey: keyToDisplay" (onSelectionChange)="selected(result) ">
 
     <!-- INJECTED CONTENT -->
-    <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
+    <ng-template [ngTemplateOutlet]="optionRef || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>
     <ng-template #default> {{ result | json }}</ng-template>
 
   </mat-option>
 
-  <mat-option test-id="createNewOrgOption" *ngIf="showAddNew && !!(control.valueChanges | async)" [value]="(control.valueChanges | async)" (onSelectionChange)="createNew()">
-    <mat-icon svgIcon="add"></mat-icon> <span class="create-new"> CREATE {{ (control.valueChanges | async) }} {{ createLabel }}</span>
-  </mat-option>
+  <ng-template *ngIf="lastOptionRef" [ngTemplateOutlet]="lastOptionRef" [ngTemplateOutletContext]="{ $implicit: (control.valueChanges | async) }"></ng-template>
+
 </mat-autocomplete>

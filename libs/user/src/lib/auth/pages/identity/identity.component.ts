@@ -7,14 +7,14 @@ import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AlgoliaIndex, AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
-import { IdentityForm } from '@blockframes/auth/forms/identity.form';
+import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
-
+import { createLocation } from '@blockframes/utils/common-interfaces/utility';
 
 @Component({
   selector: 'auth-identity',
@@ -29,7 +29,6 @@ export class IdentityComponent implements OnInit {
   public creating = false;
   public app: App;
   public appName: string;
-  public orgIndex: AlgoliaIndex = 'org';
   public indexGroup = 'indexNameOrganizations';
   private snackbarDuration = 8000;
   public form = new IdentityForm();
@@ -53,20 +52,22 @@ export class IdentityComponent implements OnInit {
 
 
   async ngOnInit() {
-    const params = this.route.snapshot.queryParams;
-
     this.app = getCurrentApp(this.routerQuery);
     this.appName = getAppName(this.app).label;
 
-    if (!!params.code) {
-      this.form.get('generatedPassword').setValue(params.code);
-    }
+    const existingUserWithDisplayName = !!this.query.user && !!hasDisplayName(this.query.user);
+    const existingUserWithoutDisplayName = !!this.query.user && !hasDisplayName(this.query.user);
 
-    if (!!params.email || (!!this.query.user && !hasDisplayName(this.query.user))) {
-      // Updating user (invited)
-      this.form.get('email').setValue(params.email || this.query.user.email);
-    } else if (!!this.query.user && !!hasDisplayName(this.query.user)) {
-      // Updating user (already logged in)
+    // Try to set update form from query params or from existing user query (already logged in but without display name setted)
+    const { code, email } = this.route.snapshot.queryParams;
+    const identity = {} as IdentityFormControl;
+    if (code) identity.generatedPassword = code;
+    if (email || existingUserWithoutDisplayName) identity.email = email || this.query.user.email;
+
+    this.form.patchValue(identity);
+
+    if (existingUserWithDisplayName) {
+      // Updating user (already logged in and with display name setted) : user will only choose or create an org
       this.updateFormForExistingIdentity(this.query.user);
     } else {
       // Creating user
@@ -80,9 +81,7 @@ export class IdentityComponent implements OnInit {
 
   private updateFormForExistingIdentity(user: Partial<PublicUser>) {
     // Fill fields
-    this.form.get('email').setValue(user.email);
-    this.form.get('firstName').setValue(user.firstName);
-    this.form.get('lastName').setValue(user.lastName);
+    this.form.patchValue(user);
 
     // Disable/hide what is not needed
     this.form.get('email').disable();
@@ -110,19 +109,21 @@ export class IdentityComponent implements OnInit {
   }
 
   public setOrg(result: AlgoliaOrganization) {
-    this.orgForm.reset();
+    const orgFromAlgolia = createOrganization({
+      denomination: { full: result.name },
+      addresses: { main: createLocation({ country: result.country }) },
+      activity: result.activity
+    });
+
+    this.orgForm.reset(orgFromAlgolia);
     this.orgForm.disable();
-    this.orgForm.get('denomination').get('full').setValue(result.name);
-    this.orgForm.get('activity').setValue(result.activity);
-    this.orgForm.get('addresses').get('main').get('country').setValue(result.country);
     this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
     this.existingOrgId = result.objectID;
   }
 
   public createOrg(orgName: string) {
-    this.orgForm.reset();
+    this.orgForm.reset({ denomination: { full: orgName } });
     this.orgForm.enable();
-    this.orgForm.get('denomination').get('full').setValue(orgName);
     this.existingOrgId = '';
   }
 

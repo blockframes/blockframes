@@ -34,19 +34,27 @@
       <!-- ORGANIZATION -->
 
       <ng-container *ngIf="useAlgolia else orgInput">
-        <algolia-autocomplete [index]="orgIndex" [indexGroup]="indexGroup" showAddNew keyToDisplay="name" label="Company Name"
-          hint='Please join an existing company account or create a new one.'
-          (selectionChange)="setOrg($event)"
-          (createFromSelection)="createOrg($event)"
-          required
-          error="orgForm.get('denomination').get('full').hasError('required')"
-          errorText="You have to select a choice from the list.">
-          <ng-template let-result>
+        <algolia-autocomplete [indexGroup]="indexGroup" keyToDisplay="name" (selectionChange)="setOrg($event)" required>
+          <ng-template optionRef let-result>
             <article flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
               <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp" type="logo" alt="Organization Logo">
               <span>{{ result.name }}</span>
             </article>
           </ng-template>
+
+          <ng-template lastOptionRef let-value>
+            <mat-option test-id="createNewOrgOption" [value]="value" (click)="createOrg(value)">
+              <mat-icon svgIcon="add"></mat-icon> <span class="create-new"> CREATE {{ value }} COMPANY</span>
+            </mat-option>
+          </ng-template>
+
+          <mat-label>Company Name</mat-label>
+          <mat-hint>
+            Please join an existing company account or create a new one
+          </mat-hint>
+          <mat-error>
+            You have to select a choice from the list.
+          </mat-error>
         </algolia-autocomplete>
       </ng-container>
 
