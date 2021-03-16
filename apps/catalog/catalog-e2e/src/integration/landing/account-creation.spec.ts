@@ -5,7 +5,7 @@ import { User } from "@blockframes/e2e/utils/type";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage, OrganizationCreatePendingPage } from "@blockframes/e2e/pages/organization";
-import { ORGANIZATION } from '@blockframes/e2e/pages/organization/OrganizationLiteFormPage';
+import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
 
 const USER: Partial<User> = {
   email: `dev+user-${Date.now()}@cascade8.com`,
