@@ -1,118 +1,116 @@
-<main bgAsset="rocket_bottom_right.png">
-  <app-logo></app-logo>
-  <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>Create your account</h1><!-- @TODO #4932 "finnish registration" if user just need to choose or create org  ?-->
-    <p>Please fill in the form below to join the {{ appName }} platform</p>
-    <p *ngIf="!(user$ | async)" class="mat-body-2 text-primary">Already have an account ? <a routerLink="/auth/connexion">Log in here</a></p>
-    <mat-card fxLayout="column" fxLayoutAlign="center center">
-      <form [formGroup]="form" fxLayout="column">
+<app-logo></app-logo>
+<section fxLayout="column" fxLayoutAlign="center center">
+  <h1>Create your account</h1><!-- @TODO #4932 "finnish registration" if user just need to choose or create org  ?-->
+  <p>Please fill in the form below to join the {{ appName }} platform</p>
+  <p *ngIf="!(user$ | async)" class="mat-body-2 text-primary">Already have an account ? <a routerLink="/auth/connexion">Log in here</a></p>
+  <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <form [formGroup]="form" fxLayout="column">
 
-        <!-- IDENTITY -->
+      <!-- IDENTITY -->
 
-        <auth-email-input
-        (hasInvitation)="hasInvitation($event)"
-        [emailForm]="form.get('email')"
-        ></auth-email-input>
+      <auth-email-input
+      (hasInvitation)="hasInvitation($event)"
+      [emailForm]="form.get('email')"
+      ></auth-email-input>
 
-        <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
-          <mat-form-field appearance="outline">
-            <mat-label>First name</mat-label>
-            <input matInput type="text" placeholder="First name" formControlName="firstName" required />
-            <mat-error *ngIf="form.get('firstName').hasError('required')">
-              First name is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
+      <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput type="text" placeholder="First name" formControlName="firstName" required />
+          <mat-error *ngIf="form.get('firstName').hasError('required')">
+            First name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Last name</mat-label>
-            <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
-            <mat-error *ngIf="form.get('lastName').hasError('required')">
-              Last name is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </article>
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
+          <mat-error *ngIf="form.get('lastName').hasError('required')">
+            Last name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </article>
 
-        <!-- ORGANIZATION -->
+      <!-- ORGANIZATION -->
 
-        <ng-container *ngIf="useAlgolia else orgInput">
-          <algolia-autocomplete [index]="orgIndex" [indexGroup]="indexGroup" showAddNew keyToDisplay="name" label="Company Name"
-            hint='Please join an existing company account or create a new one.'
-            (selectionChange)="setOrg($event)"
-            (createFromSelection)="createOrg($event)"
-            required
-            error="orgForm.get('denomination').get('full').hasError('required')"
-            errorText="You have to select a choice from the list.">
-            <ng-template let-result>
-              <article flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
-                <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp" type="logo" alt="Organization Logo">
-                <span>{{ result.name }}</span>
-              </article>
-            </ng-template>
-          </algolia-autocomplete>
-        </ng-container>
-
-        <ng-template #orgInput>
-          <mat-form-field appearance="outline">
-            <mat-label>Company Name*</mat-label>
-            <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
-          </mat-form-field>
-        </ng-template>
-
-      <organization-lite-form *ngIf="!!orgForm.get('denomination').get('full').value" [form]="orgForm"></organization-lite-form>
-
-        <!-- PASSWORD FIELDS -->
-
-        <ng-container *ngIf="form.get('generatedPassword').enabled">
-          <mat-form-field appearance="outline">
-            <mat-label>Invitation Code</mat-label>
-            <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
-              test-id="invitation-code" required />
-              <mat-hint align="start">Check up your invitation mail to get the invitation code.</mat-hint>
-              <mat-hint align="end">Cant find your invitation code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
-          </mat-form-field>
-        </ng-container>
-
-        <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
-
-        <!-- TERMS OF USE & PRIVACY POLICY -->
-
-        <div>
-          <auth-accept-conditions [control]="form.get('termsOfUse')">
-            <span conditionText>I hereby accept {{ appName }}</span>
-            <span conditionLink>Terms and Conditions</span>
-            <ng-template authConditions>
-              <auth-terms-conditions></auth-terms-conditions>
-            </ng-template>
-          </auth-accept-conditions>
-        </div>
-        <div>
-          <auth-accept-conditions [control]="form.get('privacyPolicy')">
-            <span conditionText>I hereby accept the process of my personal data and declare to know</span>
-            <span conditionLink>conditions of such processing and my rights under GDPR regulation</span>
-            <ng-template authConditions>
-              <auth-privacy-policy></auth-privacy-policy>
-            </ng-template>
-          </auth-accept-conditions>
-        </div>
-      </form>
-
-      <ng-container *ngIf="!creating else creatingAccount">
-        <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid || orgForm.invalid">
-          Sign up
-        </button>
+      <ng-container *ngIf="useAlgolia else orgInput">
+        <algolia-autocomplete [index]="orgIndex" [indexGroup]="indexGroup" showAddNew keyToDisplay="name" label="Company Name"
+          hint='Please join an existing company account or create a new one.'
+          (selectionChange)="setOrg($event)"
+          (createFromSelection)="createOrg($event)"
+          required
+          error="orgForm.get('denomination').get('full').hasError('required')"
+          errorText="You have to select a choice from the list.">
+          <ng-template let-result>
+            <article flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
+              <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp" type="logo" alt="Organization Logo">
+              <span>{{ result.name }}</span>
+            </article>
+          </ng-template>
+        </algolia-autocomplete>
       </ng-container>
-      <ng-template #creatingAccount>
-        <button @slideUp mat-flat-button disabled>
-          Creating the account please wait a few seconds
-        </button>
+
+      <ng-template #orgInput>
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name*</mat-label>
+          <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
+        </mat-form-field>
       </ng-template>
 
-    </mat-card>
-  </section>
+    <organization-lite-form *ngIf="!!orgForm.get('denomination').get('full').value" [form]="orgForm"></organization-lite-form>
 
-  <ng-template #customSnackBarTemplate>
-    <div class="custom-snackbar-message">
-      This email already exists.  <a routerLink="/auth/connexion">LOG IN</a>
-    </div>
-  </ng-template>
-</main>
+      <!-- PASSWORD FIELDS -->
+
+      <ng-container *ngIf="form.get('generatedPassword').enabled">
+        <mat-form-field appearance="outline">
+          <mat-label>Invitation Code</mat-label>
+          <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
+            test-id="invitation-code" required />
+            <mat-hint align="start">Check up your invitation mail to get the invitation code.</mat-hint>
+            <mat-hint align="end">Cant find your invitation code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
+        </mat-form-field>
+      </ng-container>
+
+      <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
+
+      <!-- TERMS OF USE & PRIVACY POLICY -->
+
+      <div>
+        <auth-accept-conditions [control]="form.get('termsOfUse')">
+          <span conditionText>I hereby accept {{ appName }}</span>
+          <span conditionLink>Terms and Conditions</span>
+          <ng-template authConditions>
+            <auth-terms-conditions></auth-terms-conditions>
+          </ng-template>
+        </auth-accept-conditions>
+      </div>
+      <div>
+        <auth-accept-conditions [control]="form.get('privacyPolicy')">
+          <span conditionText>I hereby accept the process of my personal data and declare to know</span>
+          <span conditionLink>conditions of such processing and my rights under GDPR regulation</span>
+          <ng-template authConditions>
+            <auth-privacy-policy></auth-privacy-policy>
+          </ng-template>
+        </auth-accept-conditions>
+      </div>
+    </form>
+
+    <ng-container *ngIf="!creating else creatingAccount">
+      <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid || orgForm.invalid">
+        Sign up
+      </button>
+    </ng-container>
+    <ng-template #creatingAccount>
+      <button @slideUp mat-flat-button disabled>
+        Creating the account please wait a few seconds
+      </button>
+    </ng-template>
+
+  </mat-card>
+</section>
+
+<ng-template #customSnackBarTemplate>
+  <div class="custom-snackbar-message">
+    This email already exists.  <a routerLink="/auth/connexion">LOG IN</a>
+  </div>
+</ng-template>

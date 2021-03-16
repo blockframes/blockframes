@@ -6,11 +6,11 @@
   flex-direction: column;
   justify-content: center;
   background-color: var(--background-card);
-  main {
-    min-height: 100vh;
-    padding: 24px;
-    background-repeat: no-repeat;
-  }
+  padding: 24px;
+  background-image: url('/assets/images/rocket_bottom_right.png');
+  background-position: right bottom;
+  background-size: auto 95%;
+  background-repeat: no-repeat;
 }
 
 app-logo {
@@ -77,7 +77,7 @@ section {
 }
 
 @include layout-bp(lt-sm) {
-  :host main {
+  :host {
     display: block;
     background-image: none;
     padding: 16px 0;

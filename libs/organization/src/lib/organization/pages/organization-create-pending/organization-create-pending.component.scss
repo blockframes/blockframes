@@ -2,14 +2,15 @@
 
 :host {
   min-height: 100vh;
-  main {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  background-image: url('/assets/images/rocket_bottom_right.png');
+  background-position: right bottom;
+  background-size: auto 95%;
   background-repeat: no-repeat;
-  }
 }
 
 app-logo {
@@ -41,7 +42,7 @@ mat-card {
 }
 
 @include layout-bp(lt-sm) {
-  :host main {
+  :host {
     display: block;
     background-image: none;
     padding: 16px 0;

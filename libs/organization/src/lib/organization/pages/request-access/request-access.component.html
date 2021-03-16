@@ -1,15 +1,13 @@
-<main bgAsset="rocket_bottom_right.png">
-  <app-logo></app-logo>
+<app-logo></app-logo>
 
-  <mat-card fxLayout="column" fxLayoutAlign="center center">
-    <img asset="wait.svg"/>
-    <h3>Looks like you already have an account on Blockframes</h3>
-    <p class="mat-body-1">
-      We saw that you’re already using one of our applications.<br/>
-      Please confirm your email to get access.
-    </p>
-    <p class="mat-body-2">PS : All your company members will also have an access to {{ appName }}.</p>
-    <button mat-flat-button color="primary" (click)="requestAccess()" [disabled]="disabledRequest">Request Access</button>
-    <button mat-button color="primary" (click)="refresh()">Refresh the page</button>
-  </mat-card>
-</main>
+<mat-card fxLayout="column" fxLayoutAlign="center center">
+  <img asset="wait.svg"/>
+  <h3>Looks like you already have an account on Blockframes</h3>
+  <p class="mat-body-1">
+    We saw that you’re already using one of our applications.<br/>
+    Please confirm your email to get access.
+  </p>
+  <p class="mat-body-2">PS : All your company members will also have an access to {{ appName }}.</p>
+  <button mat-flat-button color="primary" (click)="requestAccess()" [disabled]="disabledRequest">Request Access</button>
+  <button mat-button color="primary" (click)="refresh()">Refresh the page</button>
+</mat-card>
