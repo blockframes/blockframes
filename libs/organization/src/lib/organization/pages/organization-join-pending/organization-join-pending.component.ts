@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { map, switchMap } from 'rxjs/operators';
+
+const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
+  .where('type', '==', 'joinOrganization')
+  .where('fromUser.uid', '==', uid);
 
 @Component({
   selector: 'organization-join-pending',
@@ -14,9 +17,12 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./organization-join-pending.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationJoinPendingComponent implements OnInit {
+export class OrganizationJoinPendingComponent {
   public invitations: Invitation[];
-  public org$: Observable<Organization>;
+  public org$ = this.invitationService.valueChanges(queryFn(this.authQuery.userId)).pipe(
+    map(invitations => invitations[0].toOrg.id),
+    switchMap(orgId => this.service.valueChanges(orgId))
+  );
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public user = this.authQuery.user;
@@ -27,14 +33,4 @@ export class OrganizationJoinPendingComponent implements OnInit {
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
   ) { }
-
-  async ngOnInit() {
-    const uid = this.authQuery.userId;
-    this.org$ = this.invitationService.valueChanges(ref => ref.where('mode', '==', 'request')
-      .where('type', '==', 'joinOrganization')
-      .where('fromUser.uid', '==', uid)).pipe(
-        switchMap(invitations => this.service.valueChanges(invitations[0].toOrg.id))
-      )
-  }
-
 }
