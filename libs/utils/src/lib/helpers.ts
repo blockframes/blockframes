@@ -215,6 +215,6 @@ export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
 }
 
 // Verify if the user exists and has a name and surname.
-export function hasIdentity(user: User) {
+export function hasDisplayName(user: User) {
   return !!user && !!user.firstName && !!user.lastName;
 }

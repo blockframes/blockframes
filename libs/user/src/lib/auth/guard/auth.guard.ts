@@ -4,8 +4,7 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { hasIdentity } from '@blockframes/utils/helpers';
-
+import { hasDisplayName } from '@blockframes/utils/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +26,7 @@ export class AuthGuard extends CollectionGuard<AuthState> {
         return this.service.sync().pipe(
           catchError(() => this.router.navigate(['/'])),
           map(_ => this.query.user),
-          map(user => (hasIdentity(user)) ? true : 'auth/identity'),
+          map(user => (hasDisplayName(user)) ? true : 'auth/identity'),
         );
       })
     );

@@ -4,7 +4,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { of } from 'rxjs';
-import { hasIdentity } from '@blockframes/utils/helpers';
+import { hasDisplayName } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 
@@ -33,7 +33,7 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
           catchError(() => Promise.resolve(true)),
           map(_ => this.query.user),
           map(async user => {
-            if (!hasIdentity(user)) { return true; }
+            if (!hasDisplayName(user)) { return true; }
             if (!!user.orgId) {
               const org = await this.orgService.getValue(user.orgId);
               if (!org) {

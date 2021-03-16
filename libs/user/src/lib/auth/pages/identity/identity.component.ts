@@ -12,7 +12,7 @@ import { OrganizationLiteForm } from '@blockframes/organization/forms/organizati
 import { IdentityForm } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
-import { hasIdentity } from '@blockframes/utils/helpers';
+import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 
 
@@ -62,10 +62,10 @@ export class IdentityComponent implements OnInit {
       this.form.get('generatedPassword').setValue(params.code);
     }
 
-    if (!!params.email || (!!this.query.user && !hasIdentity(this.query.user))) {
+    if (!!params.email || (!!this.query.user && !hasDisplayName(this.query.user))) {
       // Updating user (invited)
       this.form.get('email').setValue(params.email || this.query.user.email);
-    } else if (!!this.query.user && !!hasIdentity(this.query.user)) {
+    } else if (!!this.query.user && !!hasDisplayName(this.query.user)) {
       // Updating user (already logged in)
       this.updateFormForExistingIdentity(this.query.user);
     } else {
