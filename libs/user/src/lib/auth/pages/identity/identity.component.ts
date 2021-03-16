@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,8 @@ import { IdentityForm } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { hasIdentity } from '@blockframes/utils/helpers';
+import { Intercom } from 'ng-intercom';
+
 
 @Component({
   selector: 'auth-identity',
@@ -46,6 +48,7 @@ export class IdentityComponent implements OnInit {
     private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
+    @Optional() private intercom: Intercom
   ) { }
 
 
@@ -69,6 +72,10 @@ export class IdentityComponent implements OnInit {
       // Creating user
       this.form.get('generatedPassword').disable();
     }
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 
   private updateFormForExistingIdentity(user: Partial<PublicUser>) {

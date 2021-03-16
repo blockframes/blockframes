@@ -23,7 +23,6 @@ import { MatCardModule } from '@angular/material/card';
 
 // Component
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { IdentityComponent } from './pages/identity/identity.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
@@ -48,7 +47,7 @@ export const AuthRoutes: Routes = [
   {
     path: 'identity',
     canActivate: [IdentityGuard],
-    component: IdentityComponent
+    loadChildren: () => import('./pages/identity/identity.module').then(m => m.IdentityModule)
   },
   // @TODO (#2875) rename to password-reset
   { path: 'email-verification', component: EmailVerificationComponent },
@@ -89,7 +88,6 @@ export const AuthRoutes: Routes = [
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [
-    IdentityComponent,
     EmailVerificationComponent,
     PasswordResetComponent
   ],

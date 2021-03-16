@@ -1,7 +1,14 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { OrganizationService } from './../../+state/organization.service';
+import { getCurrentApp } from '@blockframes/utils/apps';
 import { orgActivity } from '@blockframes/utils/static-model/static-model';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationLiteForm } from '../organization-lite.form';
+
+const roles = {
+  catalog: { dashboard: 'Seller', marketplace: 'Buyer'},
+  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer'},
+  financiers: { dashboard: 'Partners', marketplace: 'Investor'}
+};
 
 @Component({
   selector: '[form] organization-lite-form',
@@ -10,10 +17,12 @@ import { OrganizationLiteForm } from '../organization-lite.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationLiteFormComponent {
+  public app = getCurrentApp(this.routerQuery)
+  public roles = roles;
   public activities = orgActivity;
 
   @Input() form: OrganizationLiteForm;
 
-  constructor(private service: OrganizationService) { }
+  constructor(private routerQuery: RouterQuery) { }
 
 }
