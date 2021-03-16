@@ -7,7 +7,7 @@ import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AlgoliaIndex, AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
@@ -29,7 +29,6 @@ export class IdentityComponent implements OnInit {
   public creating = false;
   public app: App;
   public appName: string;
-  public orgIndex: AlgoliaIndex = 'org';
   public indexGroup = 'indexNameOrganizations';
   private snackbarDuration = 8000;
   public form = new IdentityForm();

@@ -24,7 +24,7 @@ import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
-  selector: '[index] [keyToDisplay] algolia-autocomplete',
+  selector: '[keyToDisplay] algolia-autocomplete',
   templateUrl: 'algolia-autocomplete.component.html',
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,7 +36,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * Set index
    */
-  @Input() index: AlgoliaIndex;
+  @Input() index: AlgoliaIndex = 'org';
 
   @Input() indexGroup: string;
 
@@ -60,18 +60,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
-
-  /** Set your own label */
-  @Input() label = 'Search...'
-
-  /** Set your own hint */
-  @Input() hint = '';
-
-  /** Set your own error */
-  @Input() error;
-
-  /** Set your own error message */
-  @Input() errorText = '';
 
   /** Set if it's required */
   @Input() required = false;
