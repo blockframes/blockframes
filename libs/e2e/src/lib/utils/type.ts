@@ -16,7 +16,6 @@ export interface Organization {
   }
   activity: string;
   fiscalNumber: string;
-  bankAccount: BankAccount;
 }
 
 export interface Location {
@@ -25,14 +24,6 @@ export interface Location {
   city: string;
   country: string;
   phoneNumber?: string;
-}
-
-export interface BankAccount {
-  address: Location;
-  IBAN: string;
-  BIC: string;
-  bankName: string;
-  holderName: string;
 }
 
 export interface Availabilities {
