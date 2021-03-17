@@ -1,3 +1,4 @@
+<!-- In case bucket doesn't exist yet, empty is shown -->
 <ng-container *ngIf="bucket$ | async as bucket; else empty">
   <ng-container *ngIf="!!bucket.contracts.length else empty">
     <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.webp">
@@ -53,10 +54,10 @@
             {{ duration.from | date }} - {{ duration.to | date }}
           </ng-template>
           <ng-template colRef="territories" let-territories>
-            {{ territories.join(', ') }}
+            {{ territories | toLabel:'territories' }}
           </ng-template>
           <ng-template colRef="medias" let-medias>
-            {{ medias.join(', ') }}
+            {{ medias | toLabel:'medias' }}
           </ng-template>
           <ng-template colRef="exclusive" let-exclusive>
             {{ exclusive ? 'Yes' : 'No' }}
