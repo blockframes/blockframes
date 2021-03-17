@@ -6,7 +6,7 @@
 #    docker build -t blockframes/ci:latest .
 #    docker push blockframes/ci:latest
 #
-FROM circleci/node:12
+FROM circleci/node:12-browsers
 
 # Required cypress packages
 RUN sudo apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
