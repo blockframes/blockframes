@@ -41,6 +41,12 @@ section {
       width: 100%;
     }
 
+    .email-input {
+      mat-icon {
+        margin-right: 8px;
+      }      
+    }
+
     button {
       margin-top: 40px;
     }
