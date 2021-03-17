@@ -7,8 +7,12 @@ import { Contract, ContractService } from '../../contract/+state';
 import { OfferService } from '../../offer/+state';
 import { IncomeService } from '../../income/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { centralOrgID } from '@env';
+import { centralOrgID, supportEmails } from '@env';
 import type firebase from 'firebase';
+import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
+import { MovieService } from '@blockframes/movie/+state';
+import { toDate } from '@blockframes/utils/helpers';
+import { App } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -21,6 +25,8 @@ export class BucketService extends CollectionService<BucketState> {
     private offerService: OfferService,
     private contractService: ContractService,
     private incomeService: IncomeService,
+    private sendgrid: SendgridService,
+    private movieService: MovieService,
   ) {
     super(store);
   }
@@ -35,14 +41,17 @@ export class BucketService extends CollectionService<BucketState> {
     return bucket;
   }
 
-  createOffer() {
+  async createOffer() {
     const orgId = this.orgQuery.getActiveId();
+    let offer: Bucket;
+
     const get = <T>(tx: firebase.firestore.Transaction, path: string): Promise<T> => {
       const ref = this.db.doc(path).ref;
       return tx.get(ref).then(snap => snap.data() as T);
     }
      // Run tx
-     return this.update(orgId, async (bucket: Bucket, tx) => {
+    await this.update(orgId, async (bucket: Bucket, tx) => {
+       offer = bucket;
       /* -------------------- */
       /*         GETTER       */
       /* -------------------- */
@@ -97,5 +106,25 @@ export class BucketService extends CollectionService<BucketState> {
       // We empty the selection but leave the currency
       return { contracts: [] };
     })
+
+    const org = this.orgQuery.getActive()
+    const movieIds = offer.contracts.map(c => c.titleId);
+    const titles = await this.movieService.getValue(movieIds);
+    for (const contract of offer.contracts) {
+      const title = titles.find(t => t.id === contract.titleId);
+      contract['title'] = title.title.international;
+      contract['orgName'] = org.denomination.full;
+      for (const term of contract.terms) {
+        term.duration.from = toDate(term.duration.from).toDateString() as any
+        term.duration.to = toDate(term.duration.to).toDateString() as any
+      }
+    }
+    const app: App = 'catalog';
+    const request = {
+      to: supportEmails[app],
+      templateId: 'd-94a20b20085842f68fb2d64fe325638a',
+      data: { ...offer }
+    };
+    return this.sendgrid.sendWithTemplate({ request, app });
   }
 }
