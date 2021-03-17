@@ -341,33 +341,46 @@ service cloud.firestore {
 
     /// RULES ///
 
-    match /contracts/{contractId} {
-    	allow read: if isParty() || orgCan('canRead', userOrgId(), existingData().id) && notInMaintenance();
-      allow create: if canCreateNewPermissions(userOrgId(), contractId)
-        && isRequestFieldValueEqualTo(['lastVersion', 'status'], 'draft')
-        && isRequestFieldValueEqualToOrNotSetted(['id'], contractId)
-        && notInMaintenance();
-      allow update: if orgCan('canUpdate', userOrgId(), existingData().id)
-        && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['type'])
-        && (isNotUpdatingField(['lastVersion', 'status']) || incomingData().lastVersion.status in ['submitted', 'draft', 'aborted'])
-        && notInMaintenance();
-      allow delete: if orgCan('canDelete', userOrgId(), existingData().id) && notInMaintenance();
-
-      match /versions/{versionId} {
-        allow read: if (isContractParty(contractId) || orgCan('canRead', userOrgId(), contractId)) && notInMaintenance();
-        allow write: if false;
-      }
-    }
-
-    match /publicContracts/{publicContractId} {
-      allow read: if userHasValidOrg() && notInMaintenance();
-      allow write: if false;
-    }
-
     match /buckets/{bucketId} {
       allow read: if (userOrgId() == bucketId) && notInMaintenance();
-      allow read: if (userOrgId() == bucketId) && notInMaintenance();
+      allow write: if (userOrgId() == bucketId) && notInMaintenance();
+    }
+
+    match /offers/{offerId} {
+      allow read: if (userOrgId() == existingData()) && notInMaintenance();
+      allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /contracts/{contractId} {
+      allow read: if isSignedIn() && notInMaintenance();
+      allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /terms/{termId} {
+      allow read: if isSignedIn() && notInMaintenance();
+      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
+        && notInMaintenance();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /incomes/{incomeId} {
+      allow read: if userOrgId() in getContract(existingData().contractId).stakeholders
+        && notInMaintenance();
+      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
+        && notInMaintenance();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+
+    // Get the data of an existing contract
+    function getContract(contractId) {
+      return get(/databases/$(database)/documents/contracts/$(contractId)).data;
     }
 
     ////////////////////////////////
@@ -518,14 +531,6 @@ service cloud.firestore {
       	|| (isOrgAdmin(orgId));
     }
 
-    function isParty() {
-    	return userOrgId() in existingData().partyIds;
-    }
-
-    function isContractParty(contractId) {
-    	return userOrgId() in get(/databases/$(database)/documents/contracts/$(contractId)).data.partyIds;
-    }
-
     function getDocumentPermissions(orgId, docId) {
     	return getAfter(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data;
     }
@@ -554,6 +559,7 @@ service cloud.firestore {
         || (getDocumentPermissions(orgId, docId)[action] == true)
         || (isOrgAdmin(orgId) && orgId == docId);
     }
+
 
     // We check that the field is not sent or if field sent is equal to actual
     function isNotUpdatingField(fieldArray) {

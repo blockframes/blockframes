@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { BucketStore, BucketState } from './bucket.store';
+import { Bucket } from './bucket.model';
 import { Term, TermService } from '../../term/+state';
 import { Contract, ContractService } from '../../contract/+state';
 import { OfferService } from '../../offer/+state';
@@ -22,6 +23,16 @@ export class BucketService extends CollectionService<BucketState> {
     private incomeService: IncomeService,
   ) {
     super(store);
+  }
+
+  formatFromFirestore(bucket): Bucket {
+    for (const contract of bucket.contracts) {
+      for (const term of contract.terms) {
+        term.duration.from = term.duration.from.toDate();
+        term.duration.to = term.duration.to.toDate();        
+      }
+    }
+    return bucket;
   }
 
   createOffer() {
