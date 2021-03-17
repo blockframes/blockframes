@@ -1,4 +1,4 @@
-# Our ci container:
+﻿# Our ci container:
 #   - use the regular, simple, circleci node image
 #   - add libraries required by cypress
 #
