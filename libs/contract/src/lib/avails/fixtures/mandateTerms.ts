@@ -215,7 +215,7 @@ export const mandateTerms = [
             "hotels",
             "planes"
         ],
-        "exclusive": false,
+        "exclusive": true,
         "licensedOriginal": true,
         "duration": {
             "to": "2040-01-30T23:00:00.000Z",
@@ -454,7 +454,7 @@ export const mandateTerms = [
             "hotels"
         ],
         "id": "b1AVD5niwtMECPy25vpJ",
-        "exclusive": false,
+        "exclusive": true,
         "licensedOriginal": true,
         "languages": {
             "all": {
@@ -477,7 +477,7 @@ export const mandateTerms = [
         "criteria": [],
         "licensedOriginal": true,
         "id": "36SZ5uSKiqY26nDV6GeX",
-        "exclusive": false,
+        "exclusive": true,
         "duration": {
             "to": "2040-01-30T23:00:00.000Z",
             "from": "2021-01-01T00:00:00.000Z"
@@ -929,7 +929,7 @@ export const mandateTerms = [
             "from": "2021-01-01T00:00:00.000Z",
             "to": "2035-01-30T23:00:00.000Z"
         },
-        "exclusive": false,
+        "exclusive": true,
         "id": "qKhn3Qk4LGXFLllo7zoV"
     },
     {
@@ -1163,7 +1163,7 @@ export const mandateTerms = [
             "zambia",
             "zimbabwe"
         ],
-        "exclusive": false,
+        "exclusive": true,
         "criteria": []
     }
 ]
