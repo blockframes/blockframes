@@ -35,20 +35,6 @@ const ORGANIZATION: Organization = {
   },
   activity: 'Distribution',
   fiscalNumber: '95 14 958 641 215 C',
-
-  bankAccount: {
-    address: {
-      street: '21 gold street',
-      zipCode: '69001',
-      city: 'Moneytown',
-      country: 'Germany'
-    },
-    IBAN: 'FR1420041010050500013M02606',
-    BIC: 'CCBPFRPPVER',
-    bankName: 'Cypress Bank',
-    holderName: 'Cypress'
-  },
-
   denomination: {
     full: 'Cypress & Party',
     public: 'Cypress & Party'
@@ -99,10 +85,9 @@ describe('Try with all fields except name', () => {
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
     // Fill all fields except name
-    const ORG_WITHOUT_NAME_AND_BANK_ACCOUNT = { ...ORGANIZATION };
-    delete ORG_WITHOUT_NAME_AND_BANK_ACCOUNT.name;
-    delete ORG_WITHOUT_NAME_AND_BANK_ACCOUNT.bankAccount;
-    p2.testOrgForm(ORG_WITHOUT_NAME_AND_BANK_ACCOUNT);
+    const ORG_WITHOUT_NAME = { ...ORGANIZATION };
+    delete ORG_WITHOUT_NAME.name;
+    p2.testOrgForm(ORG_WITHOUT_NAME);
     // Since we expect an error, use false in parameter to not navigate to a new page
     p2.clickCreate(false);
     p2.assertMoveToOrgCreatePage();

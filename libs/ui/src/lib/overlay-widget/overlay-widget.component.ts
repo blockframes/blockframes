@@ -24,6 +24,10 @@ const fade = trigger('fade', [
   </ng-template>
   `,
   styles: [`
+    .bf-widget {
+      overflow: auto;
+    }
+  `, `
     .bf-widget:focus {
       outline: none;
     }
