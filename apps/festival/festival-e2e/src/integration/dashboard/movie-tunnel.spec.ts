@@ -248,9 +248,9 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
   //Summary - Verification
   it('Fill all fields & navigate to Summary Page', () => {
-    cy.wait(0.5 * SEC);
-    cy.get('h1', {timeout: 150 * SEC})
-      .contains('Production Status');
+    cy.wait(2 * SEC);
+    cy.get('h1', {timeout: 180 * SEC})
+      .contains('Production');
 
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
