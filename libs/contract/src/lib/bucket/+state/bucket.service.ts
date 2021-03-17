@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { BucketStore, BucketState } from './bucket.store';
+import { Bucket } from './bucket.model';
 import { Term, TermService } from '../../term/+state';
 import { Contract, ContractService } from '../../contract/+state';
 import { OfferService } from '../../offer/+state';
@@ -24,14 +25,24 @@ export class BucketService extends CollectionService<BucketState> {
     super(store);
   }
 
+  formatFromFirestore(bucket): Bucket {
+    for (const contract of bucket.contracts) {
+      for (const term of contract.terms) {
+        term.duration.from = term.duration.from.toDate();
+        term.duration.to = term.duration.to.toDate();        
+      }
+    }
+    return bucket;
+  }
+
   createOffer() {
     const orgId = this.orgQuery.getActiveId();
     const get = <T>(tx: firebase.firestore.Transaction, path: string): Promise<T> => {
-      const ref = this.getRef(path);
+      const ref = this.db.doc(path).ref;
       return tx.get(ref).then(snap => snap.data() as T);
     }
      // Run tx
-     this.update(orgId, async (bucket, tx) => {
+     return this.update(orgId, async (bucket: Bucket, tx) => {
       /* -------------------- */
       /*         GETTER       */
       /* -------------------- */
@@ -42,7 +53,7 @@ export class BucketService extends CollectionService<BucketState> {
       for (const contract of bucket.contracts) {
         const parentTerms = await get<Term>(tx, `terms/${contract.parentTermId}`);
         const parentContract = await get<Contract>(tx, `contracts/${parentTerms.contractId}`);
-        parentContract[contract.parentTermId] = parentContracts;
+        parentContracts[contract.parentTermId] = parentContract;
       }
   
       /* -------------------- */
@@ -60,9 +71,9 @@ export class BucketService extends CollectionService<BucketState> {
         const contractId = this.db.createId();
         const terms = contract.terms.map(t => ({ ...t, contractId }));
         // Create the terms
-        const termsIds = await this.termService.add(terms, { write: tx });
+        const termIds = await this.termService.add(terms, { write: tx });
         // Create the contract
-        await this.contractService.upsert({
+        await this.contractService.add({
           id: contractId,
           type: 'sale',
           status: 'pending',
@@ -71,7 +82,7 @@ export class BucketService extends CollectionService<BucketState> {
           buyerId: orgId,
           sellerId: centralOrgID, // @todo(#5156) Use centralOrgId.catalog instead
           stakeholders: [ ...parentContracts[contract.parentTermId].stakeholders, orgId ],
-          termsIds,
+          termIds,
           offerId,
         }, { write: tx });
         // Create the income

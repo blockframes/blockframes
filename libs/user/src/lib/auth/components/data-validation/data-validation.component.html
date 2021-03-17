@@ -1,6 +1,6 @@
 <section fxLayout="column">
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="user.svg"/>
       <p>Profile Data</p>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Your identity information. First and Last Name"></mat-icon>
@@ -9,10 +9,10 @@
     <mat-icon *ngIf="!profileData" svgIcon="update"></mat-icon>
   </article>
 
-  <mat-divider inset="true"></mat-divider>
+  <mat-divider inset></mat-divider>
 
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="org.svg"/>
       <p>Organization Data</p>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Information related to your company"></mat-icon>
@@ -20,10 +20,10 @@
     <mat-icon [svgIcon]="orgData ? 'check_circle' : 'update'" [color]="orgData ? 'primary' : '' "></mat-icon>
   </article>
 
-  <mat-divider inset="true"></mat-divider>
+  <mat-divider inset></mat-divider>
 
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="mail.svg"/>
       <p>Email Validation</p>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Verification if your email is valid"></mat-icon>
@@ -31,10 +31,10 @@
     <mat-icon [svgIcon]="(emailValidate$ | async) ? 'check_circle' : 'update'" [color]="(emailValidate$ | async) ? 'primary' : '' "></mat-icon>
   </article>
 
-  <mat-divider inset="true"></mat-divider>
+  <mat-divider inset></mat-divider>
 
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <div fxLayout="row">
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
       <img class="illustration" asset="org.svg"/>
       <p>Organization Approval</p>
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Verification of your membership in the company"></mat-icon>

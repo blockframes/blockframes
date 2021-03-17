@@ -29,7 +29,6 @@ section {
       margin-bottom: 24px;
     }
     a {
-      cursor: pointer;
       font-weight: 600;
     }
   }
@@ -41,6 +40,12 @@ section {
       width: 100%;
     }
 
+    .email-input {
+      mat-icon {
+        margin-right: 8px;
+      }      
+    }
+
     button {
       margin-top: 40px;
     }
@@ -50,6 +55,7 @@ section {
 .org-logo {
   img {
     width: 40px;
+    height: 40px;
     border-radius: 50%;
   }
 }
