@@ -11,6 +11,7 @@ import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
     TableFilterModule,
     DisplayNameModule,
     MovieFeatureModule,
+    ToLabelModule,
 
     // Material
     MatButtonModule,
