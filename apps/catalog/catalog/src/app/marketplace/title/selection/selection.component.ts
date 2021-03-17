@@ -76,8 +76,8 @@ export class MarketplaceSelectionComponent {
     });
   }
 
-  createOffer() {
-    this.bucketService.createOffer();
+  async createOffer() {
+    await this.bucketService.createOffer();
     this.router.navigate(['congratulations'], { relativeTo: this.route });
   }
 
