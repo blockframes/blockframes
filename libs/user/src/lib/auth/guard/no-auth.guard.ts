@@ -31,7 +31,7 @@ export class NoAuthGuard extends CollectionGuard<AuthState> {
           map(_ => this.query.orgId),
           switchMap(orgId => orgId ? this.orgService.getValue(orgId) : new Promise<false>(r => r(false))),
           map(org => {
-            if (!org) { return '/c/organization'; }
+            if (!org) { return '/auth/identity'; }
             const app = getCurrentApp(this.routerQuery) as App | 'crm';
             if (app === 'crm') {
               return '/c/o/admin/panel';

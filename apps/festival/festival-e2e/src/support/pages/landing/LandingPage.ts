@@ -1,4 +1,4 @@
-﻿import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
+﻿import { AuthIdentityPage, AuthLoginPage } from "@blockframes/e2e/pages/auth";
 import { SEC } from '@blockframes/e2e/utils';
 
 export default class LandingPage {
@@ -13,6 +13,6 @@ export default class LandingPage {
 
   public clickSignup() {
     cy.get('mat-toolbar a[test-id=signup]').click();
-    return new AuthLoginPage();
+    return new AuthIdentityPage();
   }
 }
