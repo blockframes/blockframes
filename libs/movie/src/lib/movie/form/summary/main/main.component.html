@@ -100,7 +100,12 @@
     </li>
     <li test-id="info-runtime">
       <strong>Running Time </strong>
-      <missing-control [control]="movie.runningTime.get('time')" [link]="link" fragment="general-information">
+      <missing-control
+        *ngIf="movie.runningTime.get('status').value != 'tobedetermined'"
+        [control]="movie.runningTime.get('time')"
+        [link]="link"
+        fragment="general-information"
+      >
         <ng-template let-time>{{ time }} min </ng-template>
       </missing-control>
       <missing-control [control]="movie.runningTime.get('status')" [link]="link" fragment="general-information">

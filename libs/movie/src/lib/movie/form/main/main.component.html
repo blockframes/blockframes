@@ -62,11 +62,11 @@
       </ng-container>
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
-        <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined'">
+        <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined' as timeRequired">
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
             <input test-id="run-time" matInput type="number" name="runningTime"
-              [formControl]="form.runningTime.get('time')" min="0" required />
+              [formControl]="form.runningTime.get('time')" [required]="timeRequired" />
             <mat-hint>In minutes.</mat-hint>
             <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
           </mat-form-field>
