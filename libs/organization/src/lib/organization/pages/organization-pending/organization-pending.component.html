@@ -3,9 +3,9 @@
 <section fxLayout="column" fxLayoutAlign="space-around center">
   <h1>Thank you for joining us!</h1>
 
-  <ng-container *ngIf="orgActive">
-    <mat-card>
-      <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
+  <mat-card>
+    <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
+      <ng-container *ngIf="orgActive">
         <p class="mat-body-1">
         We care a lot about security on our applications.
         Before you get full access to {{ appName }} please validate your email and {{ appName }}
@@ -13,13 +13,9 @@
         </p>
         <p class="mat-body-2">Feel free to <span class="text-primary">contact us</span> if you have any questions.</p>
         <auth-data-validation [organization]="orgActive"></auth-data-validation>
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
+      </ng-container>
 
-  <ng-container *ngIf="(org$ | async)">
-    <mat-card *ngIf="(org$ | async) as org">
-      <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
+      <ng-container *ngIf="(org$ | async) as org">
         <p class="mat-body-1">
         We care a lot about security on our applications.
         Before you get full access to {{ appName }} please validate your email and {{ org.denomination.full }}
@@ -27,9 +23,9 @@
         </p>
         <p class="mat-body-2">Feel free to <span class="text-primary">contact us</span> if you have any questions.</p>
         <auth-data-validation [organization]="org"></auth-data-validation>
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
+      </ng-container>
 
+    </mat-card-content>
+  </mat-card>
 </section>
 
