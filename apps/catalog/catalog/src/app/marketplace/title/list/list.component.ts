@@ -78,7 +78,7 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    await this.getAllTerms();
+    this.getAllTerms();
 
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -91,16 +91,13 @@ export class ListComponent implements OnInit, OnDestroy {
       if (this.availsForm.valid) {
         const hits = movies.hits.filter(movie => {
           const titleId = movie.objectID;
-          if (!!this.terms[titleId]) {
-            this.parentTerms[titleId] = getMandateTerm(availsValue, this.terms[titleId].mandateTerms);
-            if (this.parentTerms[titleId]) {
-              const movieSales = this.terms[titleId].saleTerms.filter(sale => sale.titleId === titleId);
-              return !isSold(availsValue, movieSales);
-            }
-          }
+          if (!this.terms[titleId]) return false;
+          const parentTerm = getMandateTerm(availsValue, this.terms[titleId].mandateTerms);
+          if (!parentTerm) return false;
+          this.parentTerms[titleId] = parentTerm;
+          return !isSold(availsValue, this.terms[titleId].saleTerms);
         })
         this.movieResultsState.next(hits);
-
       } else { // if availsForm is invalid, put all the movies from algolia
         this.movieResultsState.next(movies.hits)
       }
@@ -138,33 +135,26 @@ export class ListComponent implements OnInit, OnDestroy {
     const parentTermId = this.parentTerms[titleId]?.id
     if (!parentTermId) throw new Error('no available term for this title');
     const term = this.availsForm.value;
-
-    console.log('this.bucketQuery.getActive(): ', this.bucketQuery.getActive())
-    console.log('titleId: ', titleId);
+    const orgId = this.orgQuery.getActiveId();
+    const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId };
 
     if (!!this.bucketQuery.getActive()) {
-      console.log('updating')
-      this.bucketService.update(this.orgQuery.getActiveId(), (bucket) => {
+      this.bucketService.update(orgId, (bucket) => {
         const contracts = bucket.contracts || [];
         // Check if there is already a contract that apply on the same parentTermId
-        const index = contracts.findIndex(contract => contract.parentTermId === parentTermId );
+        const index = contracts.findIndex(c => c.parentTermId === parentTermId );
         if (index !== -1) { // If yes, append its's terms with the new one.
           contracts[index].terms.push(term);
           return { ...bucket, contracts };
         } else {  // Else create a new contract
-          const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId: this.orgQuery.getActiveId() };
           return { contracts: [...contracts, contract] };
         }
       });
     } else {
-      console.log('creating')
-      const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId: this.orgQuery.getActiveId() };
-      console.log('contract: ', contract);
       const bucket = createBucket({
-        id: this.orgQuery.getActiveId(),
+        id: orgId,
         contracts: [contract]
       })
-      console.log('bucket: ', bucket);
       this.bucketService.add(bucket);
     }
   }
