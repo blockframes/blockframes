@@ -26,7 +26,9 @@ async function getProdJsonlBackup() {
   console.log('Current backup bucket name: ', backupBucket);
   try {
     // Get latest backup DB
-    const [files] = await storage.bucket(backupBucket).getFiles();
+    const [files] = await storage
+      .bucket(backupBucket)
+      .getFiles({ prefix: new Date().getFullYear().toString() });
     const last = getLatestFile(files)
     console.log('Latest backup:', last.metadata.timeCreated);
     console.log('File name: ', last.name);
