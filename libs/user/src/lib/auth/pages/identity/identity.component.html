@@ -36,15 +36,15 @@
       <ng-container *ngIf="useAlgolia else orgInput">
         <algolia-autocomplete [indexGroup]="indexGroup" keyToDisplay="name" (selectionChange)="setOrg($event)" required>
           <ng-template optionRef let-result>
-            <article flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
+            <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
               <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp" type="logo" alt="Organization Logo">
               <span>{{ result.name }}</span>
-            </article>
+            </div>
           </ng-template>
 
           <ng-template lastOptionRef let-value>
             <mat-option test-id="createNewOrgOption" [value]="value" (click)="createOrg(value)">
-              <mat-icon svgIcon="add"></mat-icon> <span class="create-new"> CREATE {{ value }} COMPANY</span>
+              <mat-icon svgIcon="add"></mat-icon> <span> CREATE {{ value }} COMPANY</span>
             </mat-option>
           </ng-template>
 
