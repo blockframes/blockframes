@@ -71,12 +71,13 @@ export default class EventEditPage {
       while (index < email.length) {
         cy.get('event-edit algolia-chips-autocomplete input').type(email[index]).type('{enter}');
         index++;
+        cy.wait(10 * SEC);
       }
     } else {
       cy.get('event-edit algolia-chips-autocomplete input').type(email).type('{enter}');
     }
     cy.get('event-edit button[test-id=event-invite]').click({ timeout: 0.5 * SEC });
-    cy.wait(2 * SEC);
+    cy.wait(5 * SEC);
   }
 
   copyGuests() {
