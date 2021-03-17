@@ -76,7 +76,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   }
 
   private validateRunningTime({ status, time }: { status: string, time: number }) {
-    if ((status === 'confirmed' || status === 'estimated') && (!time || time <= 0)) {
+    if ([ 'confirmed','estimated' ].includes(status) && (!time || time <= 0)) {
       this.form.runningTime.get('time').markAsTouched()
       this.form.runningTime.get('time').setErrors({ required: true });
     } else {

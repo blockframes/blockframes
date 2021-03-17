@@ -101,7 +101,7 @@
     <li test-id="info-runtime">
       <strong>Running Time </strong>
       <missing-control
-        *ngIf="movie.runningTime.get('status').value != 'tobedetermined'"
+        *ngIf="movie.runningTime.get('status').value !== 'tobedetermined'"
         [control]="movie.runningTime.get('time')"
         [link]="link"
         fragment="general-information"
