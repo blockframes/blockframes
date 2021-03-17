@@ -29,7 +29,9 @@ export default class EventPage {
               inviteeList:string[] = []) {
     cy.log(`createEvent : {${eventTitle}}`);
     const event: EventEditPage = this.createDetailedEvent(eventDate, 'Screening', eventTitle);
-
+    event.inputDescription(`Screening: ${screeningName}`);
+    cy.wait(1000);
+    
     if (inviteeList.length !== 0) {
       event.inviteUser(inviteeList);
       // We need to wait to fetch the invited user

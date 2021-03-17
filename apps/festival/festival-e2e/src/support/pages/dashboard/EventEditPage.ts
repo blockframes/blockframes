@@ -70,13 +70,14 @@ export default class EventEditPage {
       let index = 0;
       while (index < email.length) {
         cy.get('event-edit algolia-chips-autocomplete input').type(email[index]).type('{enter}');
+        cy.wait(5 * SEC);
         index++;
       }
     } else {
       cy.get('event-edit algolia-chips-autocomplete input').type(email).type('{enter}');
     }
     cy.get('event-edit button[test-id=event-invite]').click({ timeout: 0.5 * SEC });
-    cy.wait(2 * SEC);
+    cy.wait(5 * SEC);
   }
 
   copyGuests() {
