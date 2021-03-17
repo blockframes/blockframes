@@ -47,17 +47,13 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Main Information')
     this.valuesCustomGenres$ = this.form.customGenres.valueChanges.pipe(startWith(this.form.customGenres.value));
 
-    this.sub = this.form.runningTime.valueChanges.pipe(distinctUntilChanged()).subscribe(runningTime => {
-      const status = runningTime.status;
-      const time = runningTime.time;
-      if (status === "confirmed" && !time) {
-        return this.form.runningTime.get('time').setErrors({ required: true });
-      }
-    });
+    this.validateRunningTime(this.form.runningTime.value);
+    this.sub = this.form.runningTime.valueChanges.pipe(distinctUntilChanged())
+      .subscribe(runningTime => this.validateRunningTime(runningTime));
   }
 
   ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 
   public addCustomGenre(event: MatChipInputEvent): void {
@@ -77,5 +73,14 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
 
   get original() {
     return this.form.title.get('original');
+  }
+
+  private validateRunningTime({ status, time }: { status: string, time: number }) {
+    if ([ 'confirmed','estimated' ].includes(status) && (!time || time <= 0)) {
+      this.form.runningTime.get('time').markAsTouched()
+      this.form.runningTime.get('time').setErrors({ required: true });
+    } else {
+      this.form.runningTime.get('time').setErrors(null);
+    }
   }
 }
