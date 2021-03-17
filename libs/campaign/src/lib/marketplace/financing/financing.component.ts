@@ -107,8 +107,8 @@ export class MarketplaceFinancingComponent implements OnInit {
             // file.files.budget.toString();
               // if(file.files.budget){
                 await this.consentsService.createConsent('access', orgId, file);
-                window.location.href = file;
-                // window.open(file, '_blank');
+                // window.location.href = file;
+                window.open(file, '_blank');
               // }
               // if(file.files.financingPlan){
               //   await this.consentsService.createConsent('access', orgId, file.files.financingPlan);

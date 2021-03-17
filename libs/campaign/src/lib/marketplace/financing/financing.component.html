@@ -63,7 +63,7 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Financing Plan</h2>
         <ng-container *ngIf="campaign.files.financingPlan | getUrl | async as file">
-          <a mat-button [href]="file" target="_blank">
+          <a mat-button target="_blank" (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download Financing Plan</span>
           </a>
@@ -120,7 +120,7 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Return on Investment</h2>
         <ng-container *ngIf="campaign.files.waterfall | getUrl | async as file">
-          <a mat-button [href]="file" target="_blank">
+          <a mat-button target="_blank" (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download distributed Waterfall</span>
           </a>
