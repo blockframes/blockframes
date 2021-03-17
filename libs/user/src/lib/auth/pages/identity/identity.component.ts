@@ -15,6 +15,7 @@ import { createOrganization, OrganizationService } from '@blockframes/organizati
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/utils/common-interfaces/utility';
+import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 
 @Component({
   selector: 'auth-identity',
@@ -73,6 +74,13 @@ export class IdentityComponent implements OnInit {
       // Creating user
       this.form.get('generatedPassword').disable();
     }
+
+    // Listen to changes on input email to check if there is an existing invitation
+    if (!!this.form.get('email').value) this.searchForInvitation();
+
+    this.form.get('email').valueChanges.pipe(debounceTime(500)).subscribe(_ => {
+      if (this.form.get('email').valid) this.searchForInvitation();
+    });
   }
 
   public openIntercom(): void {
@@ -89,23 +97,6 @@ export class IdentityComponent implements OnInit {
     this.form.get('lastName').disable();
     this.form.get('password').disable();
     this.form.get('generatedPassword').disable();
-  }
-
-  public hasInvitation(event: boolean | AlgoliaOrganization) {
-    if (!!event) {
-      this.existingUser = true;
-      this.form.get('generatedPassword').enable();
-      this.form.get('email').disable();
-    }
-
-    if (typeof event === 'object') { // User have an invitation to joinOrg
-      this.useAlgolia = false;
-      this.setOrg(event);
-    } else if (!event) { // User does not have invitation
-      this.form.get('generatedPassword').disable();
-    }
-
-    this.cdr.markForCheck();
   }
 
   public setOrg(result: AlgoliaOrganization) {
@@ -226,7 +217,7 @@ export class IdentityComponent implements OnInit {
     if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
       const privacyPolicy = await this.authService.getPrivacyPolicy();
       await this.authService.update({
-        _meta: createDocumentMeta({ createdFrom: this.app }),// @TODO #4932 update to updatedFrom ?
+        _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName,
         lastName,
         privacyPolicy: privacyPolicy,
@@ -271,5 +262,23 @@ export class IdentityComponent implements OnInit {
       this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
+  }
+
+  public async searchForInvitation() {
+    const event = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value).toPromise<AlgoliaOrganization | boolean>();
+    if (!!event) {
+      this.existingUser = true;
+      this.form.get('generatedPassword').enable();
+      this.form.get('email').disable();
+    }
+
+    if (typeof event === 'object') { // User have an invitation to joinOrg
+      this.useAlgolia = false;
+      this.setOrg(event);
+    } else if (!event) { // User does not have invitation
+      this.form.get('generatedPassword').disable();
+    }
+
+    this.cdr.markForCheck();
   }
 }
