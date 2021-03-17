@@ -32,7 +32,7 @@
     <ng-template #default> {{ result | json }}</ng-template>
 
   </mat-option>
-
+  <mat-option style="display:none;"></mat-option> <!--If this line is removed, lastOptionRef is not displayed if there is no results-->
   <ng-template *ngIf="lastOptionRef" [ngTemplateOutlet]="lastOptionRef" [ngTemplateOutletContext]="{ $implicit: (control.valueChanges | async) }"></ng-template>
 
 </mat-autocomplete>

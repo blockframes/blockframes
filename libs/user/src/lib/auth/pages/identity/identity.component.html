@@ -43,7 +43,7 @@
           </ng-template>
 
           <ng-template lastOptionRef let-value>
-            <mat-option test-id="createNewOrgOption" [value]="value" (click)="createOrg(value)">
+            <mat-option *ngIf="value && value.length >= 2" test-id="createNewOrgOption" [value]="value" (click)="createOrg(value)">
               <mat-icon svgIcon="add"></mat-icon> <span> CREATE {{ value }} COMPANY</span>
             </mat-option>
           </ng-template>
