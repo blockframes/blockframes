@@ -667,7 +667,9 @@
             "aot": true,
             "sourceMap": true,
             "stylePreprocessorOptions": {
-              "includePaths": ["styles"]
+              "includePaths": [
+                "styles"
+              ]
             },
             "assets": [
               "apps/festival/festival/src/favicon.ico",
