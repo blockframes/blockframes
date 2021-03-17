@@ -13,12 +13,12 @@ const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   .where('fromUser.uid', '==', uid);
 
 @Component({
-  selector: 'organization-join-pending',
-  templateUrl: './organization-join-pending.component.html',
-  styleUrls: ['./organization-join-pending.component.scss'],
+  selector: 'organization-pending',
+  templateUrl: './organization-pending.component.html',
+  styleUrls: ['./organization-pending.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationJoinPendingComponent implements OnInit {
+export class OrganizationPendingComponent implements OnInit {
   public invitations: Invitation[];
   public org$: Observable<Organization>;
   public app = getCurrentApp(this.routerQuery);
