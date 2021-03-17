@@ -3,10 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MarketplaceSelectionComponent } from './selection.component';
-import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
+import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
+import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
+import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes';
+
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,9 +27,14 @@ import { MatSelectModule } from '@angular/material/select';
     FlexLayoutModule,
 
     GetTitlePipeModule,
+    BucketPipesModule,
+    DeepKeyPipeModule,
     ImageModule,
     StorageFileModule,
     TableFilterModule,
+    DisplayNameModule,
+    MovieFeatureModule,
+    ToLabelModule,
 
     // Material
     MatButtonModule,
@@ -36,6 +47,10 @@ import { MatSelectModule } from '@angular/material/select';
       {
         path: '',
         component: MarketplaceSelectionComponent
+      },
+      {
+        path: 'congratulations',
+        loadChildren: () => import('./congratulations/congratulations.module').then(m => m.CongratulationsModule)
       }
     ])
   ]

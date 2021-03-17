@@ -4,7 +4,6 @@ import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { User } from '@blockframes/auth/+state';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 export { EventsAnalytics } from './event.firestore';
 
 // Event
@@ -92,4 +91,3 @@ export function createCalendarEvent<M>(event: Partial<EventBase<any, M>>, isOwne
     resizable: { beforeStart: isOwner, afterEnd: isOwner },
   }
 }
-

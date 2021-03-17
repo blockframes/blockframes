@@ -36,6 +36,7 @@ function createBucketContract(params: Partial<BucketContract> = {}): BucketContr
     orgId: '',
     price: 0,
     parentTermId: '',
+    ...params,
     terms: params.terms?.map(createBucketTerm) ?? []
   }
 }

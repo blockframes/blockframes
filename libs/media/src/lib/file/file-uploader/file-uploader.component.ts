@@ -120,21 +120,15 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (!!media) {
-          if (this.form instanceof MovieVideoForm) {
-            if (!media.description) { media.description = '' }
-            if (!media.title) { media.title = '' }
-            if (!media.type) { media.type = '' }
-            if (!media.jwPlayerId) { media.jwPlayerId = '' }
-          }
-          this.form.setValue(media);
+          this.form.patchValue(media);
         }
       })
     }
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
-    if (!!this.docSub) this.docSub.unsubscribe();
+    this.sub?.unsubscribe();
+    this.docSub?.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])

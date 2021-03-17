@@ -1,4 +1,33 @@
+.main-header {
+  padding: 48px;
+  .main-title {
+    margin-bottom: 32px;
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+section {
+  margin: 24px;
+}
 .contract {
   padding: 24px;
   margin-bottom: 72px;
+
+  img {
+    width: 150px;
+  } 
+}
+
+.summary {
+  padding-bottom: 72px;
+}
+
+.empty {
+  margin-top: 72px;
+
+  img {
+    width: 380px;
+    margin: 24px 0;
+  }
 }

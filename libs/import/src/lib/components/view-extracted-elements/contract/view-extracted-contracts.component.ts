@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { Timestamp } from '@blockframes/utils/common-interfaces/timestamp';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -17,6 +16,7 @@ import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframe
 import { TermService } from '@blockframes/contract/term/+state/term.service'
 import { centralOrgID } from '@env';
 import { Term } from '@blockframes/contract/term/+state/term.model';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 enum SpreadSheetContract {
   titleId,
@@ -63,7 +63,8 @@ export class ViewExtractedContractsComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
-    private termService: TermService
+    private termService: TermService,
+    private fire: AngularFirestore
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -85,8 +86,9 @@ export class ViewExtractedContractsComponent implements OnInit {
       let newContract = true;
       if (trimmedRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
+        const id = this.fire.createId();
         if (!!existingContract) {
-          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale(existingContract as any)
+          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale({ id, ...existingContract } as any)
           newContract = false;
           const terms = await this.termService.getValue(contract.termIds);
           const parsedTerms = terms.map(createTerm)
@@ -149,7 +151,7 @@ export class ViewExtractedContractsComponent implements OnInit {
           }
 
           if (trimmedRow[SpreadSheetContract.parentTermId]) {
-            const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Timestamp>[]
+            const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
             if (term?.length) {
               contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
             } else {
@@ -249,10 +251,9 @@ export class ViewExtractedContractsComponent implements OnInit {
               })
             }
 
-            if (trimmedRow[SpreadSheetContract.exclusive]) {
-              term.exclusive =
-                trimmedRow[SpreadSheetContract.exclusive].toLowerCase() === 'yes' ? true : false;
-            }
+            term.exclusive = trimmedRow[SpreadSheetContract.exclusive]?.toLowerCase() === 'yes' ? true : false;
+
+            term.contractId = contract.id;
 
             if (trimmedRow[SpreadSheetContract.startOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {

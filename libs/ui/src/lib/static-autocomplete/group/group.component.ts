@@ -75,11 +75,11 @@ export class StaticGroupComponent implements ControlValueAccessor {
   form = new FormControl([]);
   // defer the startWith value with subscription happens to get first value
   value$ = defer(() => this.form.valueChanges.pipe(
-    startWith(this.form.value),
+    startWith(this.form.value || []),
     shareReplay(1)
   ));
   hidden: Record<string, boolean> = {}
-  
+
   @Input() displayAll = '';
   @Input() @boolean required = false;
   @Input() @boolean disabled = false;
@@ -179,9 +179,9 @@ export class TriggerDisplayValue implements PipeTransform {
         ? group.label
         : items;
     })
-    .sort((a, b) => typeof a === 'string' ? -1 : 1)
-    .map(item => typeof item === 'string' ? item : item.join(', '))
-    .filter(v => !!v)
-    .join(', ');
+      .sort((a, b) => typeof a === 'string' ? -1 : 1)
+      .map(item => typeof item === 'string' ? item : item.join(', '))
+      .filter(v => !!v)
+      .join(', ');
   }
 }
