@@ -17,14 +17,10 @@ import { Term } from '@blockframes/contract/term/+state/term.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 enum SpreadSheetContract {
-  titleId,
   internationalTitle,
   contractType,
-  parentTermId,
   licensorName,
   licenseeName,
-  stakeholders,
-  contractId,
   territories,
   medias,
   exclusive,
@@ -33,7 +29,11 @@ enum SpreadSheetContract {
   originalLanguageLicensed,
   dubbed,
   subtitled,
-  closedCaptioning
+  closedCaptioning,
+  contractId,
+  parentTermId,
+  titleId,
+  stakeholders,
 }
 
 @Component({
@@ -84,7 +84,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (trimmedRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
         if (!!existingContract) {
-          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale(existingContract as any)
+          contract = existingContract.type === 'mandate' ? createMandate(existingContract as Mandate) : createSale(existingContract as Sale)
           newContract = false;
           const terms = await this.termService.getValue(contract.termIds);
           const parsedTerms = terms.map(createTerm)
@@ -109,9 +109,15 @@ export class ViewExtractedContractsComponent implements OnInit {
         if (newContract) {
 
           if (trimmedRow[SpreadSheetContract.parentTermId]) {
-            const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
-            if (term?.length) {
-              contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
+            if (typeof trimmedRow[SpreadSheetContract.parentTermId] === 'string') {
+              const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
+              if (term?.length) {
+                contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
+              } else {
+                // it is a number so it refs a column in the excel sheet
+                const row = sheetTab.rows[trimmedRow[SpreadSheetContract.parentTermId + 1]]
+                console.log(row)
+              }
             } else {
               contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
               importErrors.errors.push({
@@ -316,7 +322,8 @@ export class ViewExtractedContractsComponent implements OnInit {
             importErrors.contract = contract
             this.contractsToCreate.data.push(importErrors);
             // Forcing change detection
-            this.contractsToCreate.data = [...this.contractsToCreate.data]
+            console.log(this.contractsToCreate.data)
+     /*        this.contractsToCreate.data = [...this.contractsToCreate.data] */
           } // End of parsing new contract
 
           this.cdRef.markForCheck();
