@@ -33,6 +33,11 @@
 
   </mat-option>
 
-  <ng-template *ngIf="lastOptionRef" [ngTemplateOutlet]="lastOptionRef" [ngTemplateOutletContext]="{ $implicit: (control.valueChanges | async) }"></ng-template>
+  <ng-container *ngIf="(control.valueChanges | async) as lastOptionValue">
+    <mat-option *ngIf="lastOptionRef && lastOptionValue.length >= 2" test-id="createNewOrgOption" [value]="lastOptionValue" >
+      <ng-template [ngTemplateOutlet]="lastOptionRef" [ngTemplateOutletContext]="{ $implicit: lastOptionValue }"></ng-template>
+    </mat-option>
+  </ng-container>
+
 
 </mat-autocomplete>

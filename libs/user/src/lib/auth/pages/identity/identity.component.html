@@ -43,9 +43,9 @@
           </ng-template>
 
           <ng-template lastOptionRef let-value>
-            <mat-option test-id="createNewOrgOption" [value]="value" (click)="createOrg(value)">
-              <mat-icon svgIcon="add"></mat-icon> <span> CREATE {{ value }} COMPANY</span>
-            </mat-option>
+            <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center" (click)="createOrg(value)">
+              <mat-icon svgIcon="add"></mat-icon> <span> CREATE "{{ value }}" COMPANY</span>
+            </div>
           </ng-template>
 
           <mat-label>Company Name</mat-label>
