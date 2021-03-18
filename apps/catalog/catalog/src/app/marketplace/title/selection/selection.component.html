@@ -11,7 +11,7 @@
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
           {{ (titles | deepKey:'title.international').join(', ') }}
         </p>
-        <button mat-flat-button color="primary" (click)="createOffer()">Create Offer</button>
+        <button mat-flat-button color="primary" (click)="createOffer(bucket)">Create Offer</button>
       </div>
     </header>
 
@@ -78,7 +78,7 @@
 
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary">
       <p>Total Bucket Price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
-      <button mat-flat-button color="accent" (click)="createOffer()">Create Offer</button>
+      <button mat-flat-button color="accent" (click)="createOffer(bucket)">Create Offer</button>
     </footer>
   </ng-container>
 </ng-container>
