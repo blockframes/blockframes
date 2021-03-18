@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, map } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -23,7 +23,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
-import { BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
@@ -82,13 +82,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
-      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value))
+      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
+      this.bucketQuery.selectActive().pipe(startWith(undefined), map(this.allBucketTerms))
     ]).pipe(
       distinctUntilChanged(),
       debounceTime(300),
-      switchMap(async ([_, availsValue]) => [await this.searchForm.search(), availsValue]),
-    ).subscribe(([movies, availsValue]: [SearchResponse<Movie>, AvailsFilter]) => {
-      const bucketQuery = this.bucketQuery.getActive()?.contracts?.map(contract => contract.terms).flat() || [];
+      switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(), availsValue, bucketValue]),
+    ).subscribe(([movies, availsValue, bucketValue]: [SearchResponse<Movie>, AvailsFilter, AvailsFilter[]]) => {
       if (this.availsForm.valid) {
         const hits = movies.hits.filter(movie => {
           const titleId = movie.objectID;
@@ -96,7 +96,7 @@ export class ListComponent implements OnInit, OnDestroy {
           const parentTerm = getMandateTerm(availsValue, this.terms[titleId].mandateTerms);
           if (!parentTerm) return false;
           this.parentTerms[titleId] = parentTerm;
-          return !isSold(availsValue, this.terms[titleId].saleTerms) && !isInBucket(availsValue, bucketQuery);
+          return !isSold(availsValue, this.terms[titleId].saleTerms) && !isInBucket(availsValue, bucketValue);
         })
         this.movieResultsState.next(hits);
       } else { // if availsForm is invalid, put all the movies from algolia
@@ -158,6 +158,11 @@ export class ListComponent implements OnInit, OnDestroy {
       })
       this.bucketService.add(bucket);
     }
+  }
+
+  private allBucketTerms(bucket?: Bucket) {
+    if (!bucket?.contracts) return [];
+    return bucket.contracts.map(contract => contract.terms).flat();
   }
 
   ngOnDestroy() {
