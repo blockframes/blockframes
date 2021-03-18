@@ -322,8 +322,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             importErrors.contract = contract
             this.contractsToCreate.data.push(importErrors);
             // Forcing change detection
-            console.log(this.contractsToCreate.data)
-     /*        this.contractsToCreate.data = [...this.contractsToCreate.data] */
+            this.contractsToCreate.data = [...this.contractsToCreate.data]
           } // End of parsing new contract
 
           this.cdRef.markForCheck();
