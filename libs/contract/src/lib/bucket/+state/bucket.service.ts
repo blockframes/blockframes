@@ -53,7 +53,7 @@ export class BucketService extends CollectionService<BucketState> {
       /* -------------------- */
       /*         GETTER       */
       /* -------------------- */
-      
+
       // Get the parent contract for setting the stakeholders
       // We need to do all the queries before the changes:
       const parentContracts: Record<string, Contract> = {};
@@ -100,7 +100,7 @@ export class BucketService extends CollectionService<BucketState> {
           currency: bucket.currency,
           contractId,
         }, { write: tx });
-    }
-  });
+      }
+    });
   }
 }
