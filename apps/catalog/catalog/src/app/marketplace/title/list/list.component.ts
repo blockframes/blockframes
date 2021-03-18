@@ -88,7 +88,7 @@ export class ListComponent implements OnInit, OnDestroy {
       debounceTime(300),
       switchMap(async ([_, availsValue]) => [await this.searchForm.search(), availsValue]),
     ).subscribe(([movies, availsValue]: [SearchResponse<Movie>, AvailsFilter]) => {
-      const bucketQuery = this.bucketQuery.getActive().contracts.map(contract => contract.terms).flat();
+      const bucketQuery = this.bucketQuery.getActive()?.contracts?.map(contract => contract.terms).flat() || [];
       if (this.availsForm.valid) {
         const hits = movies.hits.filter(movie => {
           const titleId = movie.objectID;
