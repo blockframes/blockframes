@@ -79,7 +79,7 @@ export class MarketplaceSelectionComponent {
   }
 
   async createOffer(bucket: Bucket) {
-    if (bucket.contracts.some(contract => contract.price === 0)) {
+    if (bucket.contracts.some(contract => !contract.price || contract.price < 0)) {
       this.snackBar.open('Please add price on every item', '', { duration: 2000 });
     } else {
       await this.bucketService.createOffer();
