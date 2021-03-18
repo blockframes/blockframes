@@ -1,34 +1,88 @@
+<app-logo></app-logo>
 <section fxLayout="column" fxLayoutAlign="center center">
-  <h1>Join {{ appName }}</h1>
-  <img asset="join_orga.webp" alt="Join Organization Illustration">
-  <mat-card>
-    <form [formGroup]="form">
-      <mat-form-field appearance="outline">
-        <mat-label>First name</mat-label>
-        <input matInput type="text" placeholder="First name" formControlName="firstName" required />
-        <mat-error *ngIf="form.get('firstName').hasError('required')">
-          First name is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Last name</mat-label>
-        <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
-        <mat-error *ngIf="form.get('lastName').hasError('required')">
-          Last name is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
+  <h1>Create your account</h1>
+  <p>Please fill in the form below to join the {{ appName }} platform</p>
+  <p *ngIf="!(user$ | async)" class="mat-body-2 text-primary">Already have an account ? <a routerLink="/auth/connexion">Log in here</a></p>
+  <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <form [formGroup]="form" fxLayout="column">
+
+      <!-- IDENTITY -->
+      <mat-form-field class="email-input" appearance="outline" fxFlex>
+        <mat-icon matPrefix svgIcon="mail"></mat-icon>
         <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" required />
+        <input matInput type="email" aria-label="email" test-id="email" formControlName="email" required email>
       </mat-form-field>
-      <ng-container>
+
+      <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
         <mat-form-field appearance="outline">
-          <mat-label>Pre generated password</mat-label>
-          <input matInput type="password" placeholder="Your pre generated password" formControlName="generatedPassword"
-            required />
+          <mat-label>First name</mat-label>
+          <input matInput type="text" placeholder="First name" formControlName="firstName" required />
+          <mat-error *ngIf="form.get('firstName').hasError('required')">
+            First name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
+          <mat-error *ngIf="form.get('lastName').hasError('required')">
+            Last name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </article>
+
+      <!-- ORGANIZATION -->
+
+      <ng-container *ngIf="useAlgolia else orgInput">
+        <algolia-autocomplete [indexGroup]="indexGroup" keyToDisplay="name" (selectionChange)="setOrg($event)" required>
+          <ng-template optionRef let-result>
+            <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
+              <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp" type="logo" alt="Organization Logo">
+              <span>{{ result.name }}</span>
+            </div>
+          </ng-template>
+
+          <ng-template lastOptionRef let-value>
+            <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center" (click)="createOrg(value)">
+              <mat-icon svgIcon="add"></mat-icon> <span> CREATE "{{ value }}" COMPANY</span>
+            </div>
+          </ng-template>
+
+          <mat-label>Company Name</mat-label>
+          <mat-hint>
+            Please join an existing company account or create a new one
+          </mat-hint>
+          <mat-error>
+            You have to select a choice from the list.
+          </mat-error>
+        </algolia-autocomplete>
+      </ng-container>
+
+      <ng-template #orgInput>
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name*</mat-label>
+          <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
+        </mat-form-field>
+      </ng-template>
+
+    <organization-lite-form *ngIf="!!orgForm.get('denomination').get('full').value" [form]="orgForm"></organization-lite-form>
+
+      <!-- PASSWORD FIELDS -->
+
+      <ng-container *ngIf="form.get('generatedPassword').enabled">
+        <mat-form-field appearance="outline">
+          <mat-label>Invitation Code</mat-label>
+          <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
+            test-id="invitation-code" required />
+            <mat-hint align="start">Check up your invitation mail to get the invitation code.</mat-hint>
+            <mat-hint align="end">Cant find your invitation code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
         </mat-form-field>
       </ng-container>
-      <password-confirm formControlName="newPassword"></password-confirm>
+
+      <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
+
+      <!-- TERMS OF USE & PRIVACY POLICY -->
+
       <div>
         <auth-accept-conditions [control]="form.get('termsOfUse')">
           <span conditionText>I hereby accept {{ appName }}</span>
@@ -48,16 +102,23 @@
         </auth-accept-conditions>
       </div>
     </form>
-  </mat-card>
 
-  <ng-container *ngIf="!creating else creatingAccount">
-    <button @slideDown (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid">
-      Sign up
-    </button>
-  </ng-container>
-  <ng-template #creatingAccount>
-    <button @slideUp mat-flat-button disabled>
-      Creating the account please wait a few seconds
-    </button>
-  </ng-template>
+    <ng-container *ngIf="!creating else creatingAccount">
+      <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid || orgForm.invalid">
+        Sign up
+      </button>
+    </ng-container>
+    <ng-template #creatingAccount>
+      <button @slideUp mat-flat-button disabled>
+        Creating the account please wait a few seconds
+      </button>
+    </ng-template>
+
+  </mat-card>
 </section>
+
+<ng-template #customSnackBarTemplate>
+  <div class="custom-snackbar-message">
+    This email already exists.  <a routerLink="/auth/connexion">LOG IN</a>
+  </div>
+</ng-template>

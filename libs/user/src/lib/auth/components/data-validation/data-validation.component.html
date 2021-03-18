@@ -1,0 +1,50 @@
+<section>
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
+      <img class="illustration" asset="user.svg" alt="user profile ilustration"/>
+      <p>Profile Data</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Your identity information. First and Last Name"></mat-icon>
+    </div>
+    <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary"></mat-icon>
+    <mat-icon *ngIf="!profileData" svgIcon="update"></mat-icon>
+  </article>
+
+  <mat-divider inset></mat-divider>
+
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
+      <img class="illustration" asset="org.svg" alt="organization illustration"/>
+      <p>Organization Data</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Information related to your company"></mat-icon>
+    </div>
+    <mat-icon [svgIcon]="orgData ? 'check_circle' : 'update'" [color]="orgData ? 'primary' : '' "></mat-icon>
+  </article>
+
+  <mat-divider inset></mat-divider>
+
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
+      <img class="illustration" asset="mail.svg" alt="enveloppe illustration"/>
+      <p>Email Validation</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Verification if your email is valid"></mat-icon>
+    </div>
+    <mat-icon [svgIcon]="(emailValidate$ | async) ? 'check_circle' : 'update'" [color]="(emailValidate$ | async) ? 'primary' : '' "></mat-icon>
+  </article>
+
+  <mat-divider inset></mat-divider>
+
+  <article fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout>
+      <img class="illustration" asset="org.svg" alt="organization illustration"/>
+      <p>Organization Approval</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Verification of your membership in the company"></mat-icon>
+    </div>
+    <mat-icon [svgIcon]="orgApproval ? 'check_circle' : 'update'" [color]="orgApproval ? 'primary' : '' "></mat-icon>
+  </article>
+</section>
+
+<article fxLayout="column">
+  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.lt-sm="true">Contact {{ appName }} Team</button>
+  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.gt-xs="true">Contact Us</button>
+  <button mat-button color="primary" (click)="refresh()">Refresh your page</button>
+</article>
