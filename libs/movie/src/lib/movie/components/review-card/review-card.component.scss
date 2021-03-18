@@ -10,12 +10,15 @@ p {
   margin-right: 16px;
 }
 
-mat-card p {
-  height: 120px;
-  width: 100%;
-  text-overflow: ellipsis;
-  overflow-wrap: break-word;
-  overflow: hidden;
+mat-card {
+  text-align: center;
+  .reviewCritic {
+    height: 120px;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    overflow: hidden;
+  }
 }
 
 

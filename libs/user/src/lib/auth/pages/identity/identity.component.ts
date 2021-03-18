@@ -35,7 +35,7 @@ export class IdentityComponent implements OnInit {
   public form = new IdentityForm();
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
-  private existingUser = false;
+  public existingUser = false;
   private existingOrgId: string;
 
   constructor(
@@ -108,7 +108,7 @@ export class IdentityComponent implements OnInit {
 
     this.orgForm.reset(orgFromAlgolia);
     this.orgForm.disable();
-    this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
+    this.orgForm.get('appAccess').setValue(result.appModule.includes('dashboard') ? 'dashboard' : 'marketplace');
     this.existingOrgId = result.objectID;
   }
 
@@ -169,7 +169,7 @@ export class IdentityComponent implements OnInit {
 
     if (!!this.existingOrgId) {
       await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
-      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
@@ -190,7 +190,7 @@ export class IdentityComponent implements OnInit {
 
       await this.orgService.addOrganization(org, this.app, user);
 
-      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
+      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
@@ -238,7 +238,7 @@ export class IdentityComponent implements OnInit {
     } else if (!!this.existingOrgId) {
       // User selected an existing org, make a request to be accepted and is redirected to waiting room
       await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
-      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 2000 });
+      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       // User decided to create his own org and is redirected to waiting room
@@ -259,7 +259,7 @@ export class IdentityComponent implements OnInit {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.query.user);
 
-      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: 2000 });
+      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
