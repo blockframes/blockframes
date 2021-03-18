@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Optional } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
@@ -7,6 +7,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Intercom } from 'ng-intercom';
 
 const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   .where('type', '==', 'joinOrganization')
@@ -32,6 +33,7 @@ export class OrganizationPendingComponent implements OnInit {
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
     private query: OrganizationQuery,
+    @Optional() private intercom: Intercom
   ) { }
 
   ngOnInit() {
@@ -41,5 +43,9 @@ export class OrganizationPendingComponent implements OnInit {
         switchMap(orgId => this.service.valueChanges(orgId))
       )
     }
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 }
