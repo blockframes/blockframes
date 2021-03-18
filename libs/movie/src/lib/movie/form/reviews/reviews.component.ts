@@ -25,7 +25,6 @@ export class MovieFormReviewsComponent {
   }
 
   onClick(group: MatButtonToggleGroup, form: FormControl) {
-    console.log(group.value);
     if (!this.toggleChanged) group.value = '';
     form.setValue(group.value);
     this.toggleChanged = false;
