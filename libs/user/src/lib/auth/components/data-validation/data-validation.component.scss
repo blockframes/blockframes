@@ -15,8 +15,17 @@ section {
   top: 8px;
   width: 12px;
   height: 12px;
+  margin-left: 4px;
 }
 
 p {
   margin: 0;
+}
+
+button {
+  margin-bottom: 16px;
+}
+
+.refresh-icon {
+  cursor: pointer;
 }
