@@ -11,6 +11,7 @@
         <mat-icon matPrefix svgIcon="mail"></mat-icon>
         <mat-label>Email</mat-label>
         <input matInput type="email" aria-label="email" test-id="email" formControlName="email" required email>
+        
       </mat-form-field>
 
       <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
@@ -60,6 +61,7 @@
 
       <ng-template #orgInput>
         <mat-form-field appearance="outline">
+          <mat-hint *ngIf="existingUser">Your Company Information is pre-filled as we found an invitation matching your email address, associating you with an existing company.</mat-hint>
           <mat-label>Company Name*</mat-label>
           <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
         </mat-form-field>

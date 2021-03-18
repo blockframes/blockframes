@@ -35,7 +35,7 @@ export class IdentityComponent implements OnInit {
   public form = new IdentityForm();
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
-  private existingUser = false;
+  public existingUser = false;
   private existingOrgId: string;
 
   constructor(
