@@ -12,15 +12,18 @@
         <li *ngFor="let festivalPrize of movie.prizes.controls">
           <strong>
             <missing-control [control]="festivalPrize.get('name')" [link]="link" fragment="festival">
-              <ng-template>{{ festivalPrize.get('name').value | toLabel: 'festival' }} </ng-template>
+              <ng-template>{{ festivalPrize.get('name').value | toLabel: 'festival' }}</ng-template>
             </missing-control>
           </strong>
+          <span>&nbsp;</span>
           <missing-control [control]="festivalPrize.get('prize')" [link]="link" fragment="festival">
-            <ng-template>{{ festivalPrize.get('prize').value }} </ng-template>
+            <ng-template>{{ festivalPrize.get('prize').value }}</ng-template>
           </missing-control>
+          <span>&nbsp;</span>
           <missing-control [control]="festivalPrize.get('year')" [link]="link" fragment="festival">
-            <ng-template>{{ festivalPrize.get('year').value }} </ng-template>
+            <ng-template>{{ festivalPrize.get('year').value }}</ng-template>
           </missing-control>
+          <span>&nbsp;</span>
           <missing-control [control]="festivalPrize.get('premiere')" [link]="link" fragment="festival">
             <ng-template let-premiere>
               <ng-container *ngIf="premiere">

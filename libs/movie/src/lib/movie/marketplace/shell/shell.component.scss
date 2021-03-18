@@ -23,6 +23,11 @@ footer {
   }
 
   .video-container {
+    margin: 0 24px;
+    video-viewer {
+      display: block;
+      height: 90%;
+    }
     p {
       padding-top: 8px;
       text-align: center;
