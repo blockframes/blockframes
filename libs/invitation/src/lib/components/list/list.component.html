@@ -1,7 +1,7 @@
 <mat-list>
   <ng-container *ngFor="let timeFrame of timeFrames">
     <!-- For a time frame -->
-    <ng-container *ngIf="(invitations | filterByDate: timeFrame) as invitationList">
+    <ng-container *ngIf="(invitations | filterByDate: timeFrame: 'desc') as invitationList">
 
       <p class="mat-body-2" *ngIf="invitationList.length">
         {{ timeFrame | labelByDate }}

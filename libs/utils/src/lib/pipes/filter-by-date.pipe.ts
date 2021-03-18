@@ -43,7 +43,7 @@ export const ascTimeFrames: TimeFrame[] = [
   { type: 'months', from: 3, to: 4 },
 ];
 
-function filterByDate(value: any[], timeFrame: TimeFrame, key: string = 'date', keyFinish?: string) {
+function filterByDate(value: any[], timeFrame: TimeFrame, way: 'asc' | 'desc', key: string = 'date', keyFinish?: string) {
   if (!Array.isArray(value)) {
     return value;
   }
@@ -56,7 +56,7 @@ function filterByDate(value: any[], timeFrame: TimeFrame, key: string = 'date', 
       return getValue(v, key) < toDate && getValue(v, keyFinish) >= fromDate;
     }
     return getValue(v, key) >= fromDate && getValue(v, key) < toDate;
-  });
+  }).sort((a, b) => way === 'asc' ? getValue(a, key) - getValue(b, key) : getValue(b, key) - getValue(a, key))
 }
 
 @Pipe({ name: 'filterByDate', pure: true })
@@ -68,8 +68,8 @@ export class FilterByDatePipe implements PipeTransform {
    * @param key The key where to find the date value
    * @param keyFinish The key where to find the end date value. If used, date found at key is used as starting date.
    */
-  transform(value: any[], timeFrame: TimeFrame, key: string = 'date', keyFinish?: string) {
-    return filterByDate(value, timeFrame, key, keyFinish);
+  transform(value: any[], timeFrame: TimeFrame, way: 'asc' | 'desc', key: string = 'date', keyFinish?: string) {
+    return filterByDate(value, timeFrame, way, key, keyFinish);
   }
 }
 
@@ -97,7 +97,7 @@ export class EventsToTimeFramePipe implements PipeTransform {
     if (!events) return;
     const timeFrames = order === 'asc' ? ascTimeFrames : descTimeFrames;
     return timeFrames.map(timeFrame => {
-      timeFrame['events'] = filterByDate(events, timeFrame, 'start', 'end');
+      timeFrame['events'] = filterByDate(events, timeFrame, order, 'start', 'end');
       return timeFrame;
     }).filter(timeFrame => !!timeFrame['events']?.length);
   }
