@@ -1,7 +1,7 @@
 <mat-list>
   <ng-container *ngFor="let timeFrame of timeFrames">
     <!-- For a time frame -->
-    <ng-container *ngIf="(notifications | filterByDate: timeFrame: 'desc' : '_meta.createdAt') as notificationList">
+    <ng-container *ngIf="(notifications | filterByDate: timeFrame: '_meta.createdAt') as notificationList">
 
       <ng-container *ngIf="notificationList.length">
         <h2>{{ timeFrame | labelByDate }}</h2>
