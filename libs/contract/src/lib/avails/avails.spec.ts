@@ -178,7 +178,7 @@ describe('isTermSold', () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
             mandateTerms.filter(m => m.titleId === Resurrected))
-            expect(!!ACRights).toBe(true);
+        expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
             saleTerms.filter(m => m.titleId === Resurrected));
@@ -187,7 +187,7 @@ describe('isTermSold', () => {
 
     // MULTI AVAILS TEST
 
-    it(`Mandate test (territory)
+    it.only(`Mandate test (territory)
     Terms: 01/01/2022 - 06/30/2023
     Territory: South Korea
     Rights: Free TV
@@ -198,7 +198,7 @@ describe('isTermSold', () => {
     Available: Mother Schmuckers, Bigfoot Family`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] },
-            mandateTerms.filter(term => term.titleId === GazaMonAmour));
+            mandateTerms);
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] },

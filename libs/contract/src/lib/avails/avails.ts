@@ -47,13 +47,13 @@ export function isSold(
       const endDuringDuration = duration.to.getTime() <= term.duration.from.getTime() && duration.to.getTime() >= duration.to.getTime();
       const inDuration = startDuringDuration || endDuringDuration;
       const intersectsMediaAndTerritory = territories.some(territory => term.territories.includes(territory)) && medias.some(medium => term.medias.includes(medium));
-
       if (intersectsMediaAndTerritory && inDuration) {
         return true
       }
       continue;
     } else if (term.exclusive) {
-
+      
+      
       if (duration.from.getTime() < term.duration.to.getTime()) {
         continue;
       }

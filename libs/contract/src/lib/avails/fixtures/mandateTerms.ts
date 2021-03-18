@@ -928,7 +928,7 @@ export const mandateTerms = [
         "licensedOriginal": true,
         "duration": {
             "from": "2021-01-01T00:00:00.000Z",
-            "to": "2035-01-30T23:00:00.000Z"
+            "to": "2035-01-30T00:00:00.000Z"
         },
         "exclusive": true,
         "id": "qKhn3Qk4LGXFLllo7zoV"
@@ -952,7 +952,7 @@ export const mandateTerms = [
         ],
         "id": "6Zz4yicgN5k6Nz9FEAac",
         "duration": {
-            "to": "2040-01-30T23:00:00.000Z",
+            "to": "2040-01-30T00:00:00.000Z",
             "from": "2021-01-01T00:00:00.000Z"
         },
         "languages": {
