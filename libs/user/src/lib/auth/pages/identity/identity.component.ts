@@ -35,7 +35,7 @@ export class IdentityComponent implements OnInit {
   public form = new IdentityForm();
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
-  private existingUser = false;
+  public existingUser = false;
   private existingOrgId: string;
 
   constructor(
@@ -108,7 +108,7 @@ export class IdentityComponent implements OnInit {
 
     this.orgForm.reset(orgFromAlgolia);
     this.orgForm.disable();
-    this.orgForm.get('appAccess').setValue(result.appModule.includes('marketplace') ? 'marketplace' : 'dashboard');
+    this.orgForm.get('appAccess').setValue(result.appModule.includes('dashboard') ? 'dashboard' : 'marketplace');
     this.existingOrgId = result.objectID;
   }
 

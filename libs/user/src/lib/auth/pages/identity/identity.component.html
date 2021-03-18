@@ -11,20 +11,21 @@
         <mat-icon matPrefix svgIcon="mail"></mat-icon>
         <mat-label>Email</mat-label>
         <input matInput type="email" aria-label="email" test-id="email" formControlName="email" required email>
+        
       </mat-form-field>
 
       <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
         <mat-form-field appearance="outline">
-          <mat-label>First name</mat-label>
-          <input matInput type="text" placeholder="First name" formControlName="firstName" required />
+          <mat-label>First Name</mat-label>
+          <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
           <mat-error *ngIf="form.get('firstName').hasError('required')">
             First name is <strong>required</strong>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-label>Last name</mat-label>
-          <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
+          <mat-label>Last Name</mat-label>
+          <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
           <mat-error *ngIf="form.get('lastName').hasError('required')">
             Last name is <strong>required</strong>
           </mat-error>
@@ -50,7 +51,7 @@
 
           <mat-label>Company Name</mat-label>
           <mat-hint>
-            Please join an existing company account or create a new one
+            Join an existing company account or create a new one.
           </mat-hint>
           <mat-error>
             You have to select a choice from the list.
@@ -60,6 +61,7 @@
 
       <ng-template #orgInput>
         <mat-form-field appearance="outline">
+          <mat-hint *ngIf="existingUser">Your Company Information is pre-filled as we found an invitation matching your email address, associating you with an existing company.</mat-hint>
           <mat-label>Company Name*</mat-label>
           <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled/>
         </mat-form-field>
@@ -71,11 +73,11 @@
 
       <ng-container *ngIf="form.get('generatedPassword').enabled">
         <mat-form-field appearance="outline">
-          <mat-label>Invitation Code</mat-label>
-          <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
+          <mat-label>Invitation Pass</mat-label>
+          <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
             test-id="invitation-code" required />
-            <mat-hint align="start">Check up your invitation mail to get the invitation code.</mat-hint>
-            <mat-hint align="end">Cant find your invitation code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
+            <mat-hint align="start">Your Invitation Pass is the code you received in your invitation email.</mat-hint>
+            <mat-hint align="end">Can't find your Invitation Pass code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
         </mat-form-field>
       </ng-container>
 
@@ -94,8 +96,8 @@
       </div>
       <div>
         <auth-accept-conditions [control]="form.get('privacyPolicy')">
-          <span conditionText>I hereby accept the process of my personal data and declare to know</span>
-          <span conditionLink>conditions of such processing and my rights under GDPR regulation</span>
+          <span conditionText>I hereby accept the Processing of my Personal Data and declare to know</span>
+          <span conditionLink>the Conditions of such Processing and my rights under GDPR Regulation.</span>
           <ng-template authConditions>
             <auth-privacy-policy></auth-privacy-policy>
           </ng-template>

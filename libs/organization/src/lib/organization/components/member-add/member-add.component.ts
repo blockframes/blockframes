@@ -37,7 +37,7 @@ export class MemberAddComponent {
       const emails: string[] = this.emailForm.value.split(',');
       const invalid = emails.filter(value => Validators.email({ value } as any));
       if (invalid.length) {
-        this.error = `These mails are not valid email: ${invalid.join(', ')}.`;
+        this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
       } else {
         for (const email of emails) {
           if (!this.form.value.includes(email)) {
