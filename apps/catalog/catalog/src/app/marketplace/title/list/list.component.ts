@@ -83,7 +83,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
       this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
-      this.bucketQuery.selectActive().pipe(startWith(undefined), map(this.allBucketTerms))
+      this.bucketQuery.selectActive().pipe(startWith(undefined), map(allBucketTerms))
     ]).pipe(
       distinctUntilChanged(),
       debounceTime(300),
@@ -160,12 +160,12 @@ export class ListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private allBucketTerms(bucket?: Bucket) {
-    if (!bucket?.contracts) return [];
-    return bucket.contracts.map(contract => contract.terms).flat();
-  }
-
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+}
+
+function allBucketTerms(bucket?: Bucket) {
+  if (!bucket?.contracts) return [];
+  return bucket.contracts.map(contract => contract.terms).flat();
 }
