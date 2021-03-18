@@ -690,7 +690,7 @@ function createMovieReviewControl(review: Partial<MovieReview> = {}) {
   const { criticName, journalName, criticQuote, revueLink } = createMovieReview(review);
   return {
     criticName: new FormControl(criticName),
-    journalName: new FormControl(journalName),
+    journalName: new FormControl(journalName, [Validators.required]),
     criticQuote: new FormControl(criticQuote),
     revueLink: new FormControl(revueLink, urlValidators),
   }
