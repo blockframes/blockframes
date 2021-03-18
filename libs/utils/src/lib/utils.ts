@@ -86,7 +86,7 @@ export function extensionToType(extension: string): AllowedFileType | 'unknown' 
 }
 
 export async function loadJWPlayerScript(document: Document, playerUrl: string) {
-  return new Promise(res => {
+  return new Promise<void>(res => {
     const id = 'jwplayer-script';
 
     // check if the script tag already exists
@@ -95,12 +95,35 @@ export async function loadJWPlayerScript(document: Document, playerUrl: string) 
       script.setAttribute('id', id);
       script.setAttribute('type', 'text/javascript');
       script.setAttribute('src', playerUrl);
+      script.setAttribute('data-loaded', 'false');
       document.head.appendChild(script);
       script.onload = () => {
+        script.setAttribute('data-loaded', 'true');
         res();
       }
-    } else {
-      res(); // already loaded
+    } else { // script tag exists
+      const script = document.getElementById(id)! as HTMLScriptElement;
+      const loaded = script.getAttribute('data-loaded');
+
+      if (loaded === 'true') { // already loaded
+        res();
+      } else { // script tag exist but hasn't finished to load yet: check every 0,1s if it has finished
+        let ttl = 50; // 50 x 0,1s = 5s
+        const intervalId = window.setInterval(() => {
+          if (ttl <= 0) { // abort after 5s
+            window.clearInterval(intervalId);
+            res();
+          }
+
+          const newLoaded = script.getAttribute('data-loaded');
+          if (newLoaded === 'true') {
+            window.clearInterval(intervalId);
+            res();
+          } else {
+            ttl--;
+          }
+        }, 100); // 0,1s
+      }
     }
   });
 }
