@@ -72,7 +72,6 @@ export class ViewExtractedContractsComponent implements OnInit {
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
-    console.log(sheetTab.rows)
     for (const spreadSheetRow of sheetTab.rows) {
       const trimmedRow = spreadSheetRow.map(cell => {
         if (typeof cell === 'string') cell.trim()
@@ -116,7 +115,8 @@ export class ViewExtractedContractsComponent implements OnInit {
               } else {
                 // it is a number so it refs a column in the excel sheet
                 const row = sheetTab.rows[trimmedRow[SpreadSheetContract.parentTermId + 1]]
-                console.log(row)
+
+
               }
             } else {
               contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
