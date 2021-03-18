@@ -23,7 +23,7 @@ describe('isTermSold', () => {
     Expected result: Not licensed`, () => {
         const acHasRights = getMandateTerm({
             duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, territories: ['south-korea'], medias: ['freeTv'], exclusive: false
-        }, mandateTerms);
+        }, mandateTerms.filter(m => m.titleId === Resurrected));
         expect(!!acHasRights).toBe(false);
     })
 
@@ -35,7 +35,7 @@ describe('isTermSold', () => {
     Expected result: Not licensed`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan'], medias: ['freeTv'] },
-            mandateTerms);
+            mandateTerms.filter(m => m.titleId === Resurrected));
         expect(!!ACRights).toBe(false)
     });
 
@@ -46,7 +46,7 @@ describe('isTermSold', () => {
     Expected result: Not licensed`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['france'], medias: ['planes'] },
-            mandateTerms);
+            mandateTerms.filter(m => m.titleId === Resurrected));
         expect(!!ACRights).toBe(false)
     });
 
@@ -58,11 +58,11 @@ describe('isTermSold', () => {
     Expected result: Available`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            mandateTerms);
+            mandateTerms.filter(m => m.titleId === Resurrected));
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(false);
     });
 
@@ -77,14 +77,14 @@ describe('isTermSold', () => {
                 duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true,
                 territories: ['germany', 'russia', 'czech'], medias: ['freeTv']
             },
-            mandateTerms)
+            mandateTerms.filter(m => m.titleId === Resurrected))
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             {
                 duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true,
                 territories: ['germany', 'russia', 'czech'], medias: ['freeTv']
             },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
     });
 
@@ -96,11 +96,11 @@ describe('isTermSold', () => {
         Expected result: Available`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            mandateTerms)
+            mandateTerms.filter(m => m.titleId === Resurrected))
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(false);
     });
 
@@ -112,11 +112,11 @@ describe('isTermSold', () => {
         Expected result: Not available`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            mandateTerms)
+            mandateTerms.filter(m => m.titleId === Resurrected))
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
     });
 
@@ -128,11 +128,11 @@ describe('isTermSold', () => {
       Expected result: Available`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['sVod'] },
-            mandateTerms)
+            mandateTerms.filter(m => m.titleId === Resurrected))
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['sVod'] },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(false);
     });
 
@@ -145,11 +145,11 @@ describe('isTermSold', () => {
     Expected result: Not available`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] },
-            mandateTerms)
+            mandateTerms.filter(m => m.titleId === Resurrected))
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
     });
 
@@ -161,11 +161,11 @@ describe('isTermSold', () => {
       Expected result: Available`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany'], medias: ['freeTv'] },
-            mandateTerms)
+            mandateTerms.filter(m => m.titleId === Resurrected))
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany'], medias: ['freeTv'] },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(false);
     });
 
@@ -177,17 +177,17 @@ describe('isTermSold', () => {
       Expected result: Not available`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
-            mandateTerms)
-        expect(!!ACRights).toBe(true);
+            mandateTerms.filter(m => m.titleId === Resurrected))
+            expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
-            saleTerms);
+            saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
     });
 
     // MULTI AVAILS TEST
 
-    it.only(`Mandate test (territory)
+    it(`Mandate test (territory)
     Terms: 01/01/2022 - 06/30/2023
     Territory: South Korea
     Rights: Free TV

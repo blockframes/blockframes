@@ -14,7 +14,8 @@ export function getMandateTerm(
 ): Term<Date> | undefined {
   for (const term of terms) {
     // If starts before term: not available
-    if (duration.from.getTime() < term.duration.from.getTime()) {
+    if (duration.from.getTime() < term.duration.from.setHours(0)) {
+      console.log(duration.from.getTime(), term.duration.from.setHours(0))
       continue;
     }
     // If ends after term: not available

@@ -288,6 +288,7 @@ export const mandateTerms = [
             "cuba",
             "curacao",
             "cyprus",
+            "czech",
             "denmark",
             "djibouti",
             "dominica",
