@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
 import { OrganizationLiteFormComponent } from './organization-lite-form.component';
@@ -29,6 +30,7 @@ import { OrganizationLiteFormComponent } from './organization-lite-form.componen
     MatSelectModule,
     MatIconModule,
     MatButtonToggleModule,
+    MatTooltipModule,
   ],
   declarations: [
     OrganizationLiteFormComponent,
