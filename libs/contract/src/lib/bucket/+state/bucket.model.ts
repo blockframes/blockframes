@@ -6,6 +6,8 @@ export interface Bucket {
   currency: MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: BucketContract[];
+  /** Needed to show user in email to business team */
+  uid?: string;
 }
 
 interface BucketContract {
