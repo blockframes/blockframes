@@ -34,7 +34,7 @@
             <h6 class="mat-caption">Premiere</h6>
             <div fxLayout="column" class="toggle-btn">
               <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere"
-                #group="matButtonToggleGroup" (change)="onChange()" (click)="onClick(group)">
+                #group="matButtonToggleGroup" (change)="onChange()" (click)="onClick(group, prizesForm.get('premiere'))">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere">
                     {{ premiere | toLabel: 'premiereType' }}

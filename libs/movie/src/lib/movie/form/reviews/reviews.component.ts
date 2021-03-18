@@ -3,6 +3,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { premiereType } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'movie-form-reviews',
@@ -10,7 +11,7 @@ import { MatButtonToggleGroup } from '@angular/material/button-toggle';
   styleUrls: ['./reviews.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovieFormReviewscComponent {
+export class MovieFormReviewsComponent {
   form = this.shell.getForm('movie');
   toggleChanged: boolean;
   public premieres = Object.keys(premiereType);
@@ -23,8 +24,10 @@ export class MovieFormReviewscComponent {
     this.toggleChanged = true;
   }
 
-  onClick(group: MatButtonToggleGroup) {
-    if (!this.toggleChanged) group.value = null;
+  onClick(group: MatButtonToggleGroup, form: FormControl) {
+    console.log(group.value);
+    if (!this.toggleChanged) group.value = '';
+    form.setValue(group.value);
     this.toggleChanged = false;
   }
 }
