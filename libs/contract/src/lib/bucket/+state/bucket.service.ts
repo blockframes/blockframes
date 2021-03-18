@@ -9,8 +9,7 @@ import { IncomeService } from '../../income/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgID } from '@env';
 import type firebase from 'firebase';
-import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
-import { MovieService } from '@blockframes/movie/+state';
+import { AuthQuery } from "@blockframes/auth/+state";
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -23,8 +22,7 @@ export class BucketService extends CollectionService<BucketState> {
     private offerService: OfferService,
     private contractService: ContractService,
     private incomeService: IncomeService,
-    private sendgrid: SendgridService,
-    private movieService: MovieService,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }
@@ -41,15 +39,14 @@ export class BucketService extends CollectionService<BucketState> {
 
   async createOffer() {
     const orgId = this.orgQuery.getActiveId();
-    const value = this.store.getValue();
-    const bucket = value.entities[value.active];
+    const uid = this.authQuery.userId;
 
     const get = <T>(tx: firebase.firestore.Transaction, path: string): Promise<T> => {
       const ref = this.db.doc(path).ref;
       return tx.get(ref).then(snap => snap.data() as T);
     }
      // Run tx
-    await this.runTransaction(async (tx) => {
+    return this.update(orgId, async (bucket: Bucket, tx) => {
       /* -------------------- */
       /*         GETTER       */
       /* -------------------- */
@@ -101,6 +98,9 @@ export class BucketService extends CollectionService<BucketState> {
           contractId,
         }, { write: tx });
       }
+
+      // Adding uid to add user data to email sent to business team
+      return { uid: this.authQuery.userId }
     });
   }
 }

@@ -194,7 +194,7 @@ export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}'
 //        Offer Management       //
 //--------------------------------
 
-export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', logErrors(onOfferCreate));
+export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCreate);
 
 //--------------------------------
 //       Orgs Management        //
