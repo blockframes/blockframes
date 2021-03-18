@@ -29,7 +29,7 @@ _remove this section once everything is checked_
 - [ ] **Form**: _Get data from the user (ex: MovieFormBudget)._
 
 ### Input
-_can be data (movie, distribution right, ...), or UI related (dense, appearance)_
+_can be data (movie, ...), or UI related (dense, appearance)_
 - [ ] ...
 
 ### Data view

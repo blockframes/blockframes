@@ -269,7 +269,7 @@ describe('DB cleaning script', () => {
   });
 
   it('should clean movies from unwanted attributes', async () => {
-    const testMovies = [{ id: 'mov-A' }, { id: 'mov-B', distributionRights: [] }, { id: 'mov-C' }];
+    const testMovies = [{ id: 'mov-A' }, { id: 'mov-B' }, { id: 'mov-C' }];
 
     // Load our test set
     await populate('movies', testMovies);
@@ -280,7 +280,7 @@ describe('DB cleaning script', () => {
 
     await cleanMovies(moviesBefore);
     const moviesAfter: Snapshot = await getCollectionRef('movies');
-    const cleanedMovies = moviesAfter.docs.filter(m => isMovieClean(m)).length;
+    const cleanedMovies = moviesAfter.docs.length;
     expect(cleanedMovies).toEqual(testMovies.length);
   });
 
@@ -723,9 +723,6 @@ describe('DB cleaning script', () => {
 
 });
 
-function isMovieClean(d: any) {
-  return d.data().distributionRights === undefined;
-}
 
 function isOrgClean(
   doc: any,
