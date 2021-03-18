@@ -71,11 +71,11 @@
 
       <ng-container *ngIf="form.get('generatedPassword').enabled">
         <mat-form-field appearance="outline">
-          <mat-label>Invitation Code</mat-label>
-          <input matInput type="password" placeholder="Your invitation code" formControlName="generatedPassword"
+          <mat-label>Invitation Pass</mat-label>
+          <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
             test-id="invitation-code" required />
-            <mat-hint align="start">You can find your invitation code in your invitation email.</mat-hint>
-            <mat-hint align="end">Cant find your invitation code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
+            <mat-hint align="start">Your Invitation Pass is the code you received in your invitation email.</mat-hint>
+            <mat-hint align="end">Can't find your Invitation Pass code ? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.</mat-hint>
         </mat-form-field>
       </ng-container>
 
