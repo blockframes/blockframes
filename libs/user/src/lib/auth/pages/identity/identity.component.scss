@@ -5,9 +5,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-content: center;
+  text-align: center;
   background-color: var(--background-card);
   padding: 24px;
   background-image: url('/assets/images/rocket_background.svg');
+  background-position: right;
   background-size: 100%;
   background-repeat: no-repeat;
 }
@@ -19,6 +22,9 @@ app-logo {
 }
 
 section {
+  padding-top: 48px;
+  margin: auto;
+  width: 56%;
   h1 {
     margin-bottom: 8px;
   }
@@ -43,7 +49,7 @@ section {
     .email-input {
       mat-icon {
         margin-right: 8px;
-      }      
+      }
     }
 
     button {
@@ -73,7 +79,7 @@ section {
     position: inherit;
     margin-bottom: 24px;
   }
-  mat-card {
+  section {
     width: 75%;
   }
 }
@@ -84,13 +90,12 @@ section {
     background-image: none;
     padding: 16px 0;
     justify-content: center;
-    text-align: center;
+  }
+  section {
+    width: 100%;
   }
   app-logo {
     position: inherit;
     margin-bottom: 24px;
-  }
-  mat-card {
-    width: 100%;
   }
 }
