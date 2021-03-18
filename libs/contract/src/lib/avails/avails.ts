@@ -80,7 +80,7 @@ export function isSold(
 
 export function isInBucket(
   { medias, duration, territories, exclusive }: AvailsFilter,
-  terms: Term<Date>[]  // terms in the bucket for the parentTermId given by "getMandateTerm"
+  terms: AvailsFilter[]  // terms in the bucket for the parentTermId given by "getMandateTerm"
 ) {
   for (const term of terms) {
     // If exclusivity is different from term: not same term

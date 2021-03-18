@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, map } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -18,12 +18,12 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { AvailsFilter, getMandateTerm, isSold } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, getMandateTerm, isInBucket, isSold } from '@blockframes/contract/avails/avails';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
-import { BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
@@ -47,7 +47,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
-  private terms: {[movieId: string]: { mandateTerms: Term<Date>[], saleTerms: Term<Date>[] }} = {}
+  private terms: { [movieId: string]: { mandateTerms: Term<Date>[], saleTerms: Term<Date>[] } } = {}
 
 
   private parentTerms: Record<string, Term<Date>> = {};
@@ -82,12 +82,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
-      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value))
+      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
+      this.bucketQuery.selectActive().pipe(startWith(undefined), map(allBucketTerms))
     ]).pipe(
       distinctUntilChanged(),
       debounceTime(300),
-      switchMap(async ([_, availsValue]) => [await this.searchForm.search(), availsValue]),
-    ).subscribe(([movies, availsValue]: [SearchResponse<Movie>, AvailsFilter]) => {
+      switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(), availsValue, bucketValue]),
+    ).subscribe(([movies, availsValue, bucketValue]: [SearchResponse<Movie>, AvailsFilter, AvailsFilter[]]) => {
       if (this.availsForm.valid) {
         const hits = movies.hits.filter(movie => {
           const titleId = movie.objectID;
@@ -95,7 +96,7 @@ export class ListComponent implements OnInit, OnDestroy {
           const parentTerm = getMandateTerm(availsValue, this.terms[titleId].mandateTerms);
           if (!parentTerm) return false;
           this.parentTerms[titleId] = parentTerm;
-          return !isSold(availsValue, this.terms[titleId].saleTerms);
+          return !isSold(availsValue, this.terms[titleId].saleTerms) && !isInBucket(availsValue, bucketValue);
         })
         this.movieResultsState.next(hits);
       } else { // if availsForm is invalid, put all the movies from algolia
@@ -142,7 +143,7 @@ export class ListComponent implements OnInit, OnDestroy {
       this.bucketService.update(orgId, (bucket) => {
         const contracts = bucket.contracts || [];
         // Check if there is already a contract that apply on the same parentTermId
-        const index = contracts.findIndex(c => c.parentTermId === parentTermId );
+        const index = contracts.findIndex(c => c.parentTermId === parentTermId);
         if (index !== -1) { // If yes, append its's terms with the new one.
           contracts[index].terms.push(term);
           return { ...bucket, contracts };
@@ -162,4 +163,9 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+}
+
+function allBucketTerms(bucket?: Bucket) {
+  if (!bucket?.contracts) return [];
+  return bucket.contracts.map(contract => contract.terms).flat();
 }
