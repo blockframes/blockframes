@@ -70,12 +70,8 @@ section {
   }
 }
 
-.custom-snackbar-message {
-  text-align: center;
-  a {
-    font-weight: bold;
-    cursor: pointer;
-  }
+.custom-snackbar-message a {
+  font-weight: bold;
 }
 
 @include layout-bp(lt-md) {
