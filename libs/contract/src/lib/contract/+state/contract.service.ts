@@ -12,7 +12,6 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   getContractsOfOrg(orgId = centralOrgID) {
-    // Only the mandate of Archipel Content && only sales which match the contract of Archipel Content
     return Promise.all([
       this.getValue(ref => ref.where('type', '==', 'mandata').where('buyerId', '==', orgId)),
       this.getValue(ref => ref.where('type', '==', 'sale').where('sellerId', '==', orgId))
