@@ -134,7 +134,7 @@ export class ListComponent implements OnInit, OnDestroy {
     return Promise.all(promises);
   }
 
-  async addAvail(titleId: string) {
+  addAvail(titleId: string) {
     if (this.availsForm.invalid) {
       this.snackbar.open('Specify the avails before adding to selection', 'close', { duration: 3000 })
       return;

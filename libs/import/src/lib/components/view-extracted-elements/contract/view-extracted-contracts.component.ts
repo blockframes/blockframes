@@ -222,8 +222,12 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.startOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
                 term.duration.from = new Date(Math.round((spreadSheetRow[SpreadSheetContract.startOfContract] - 25569) * 86400 * 1000));
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.from.setHours(0)
               } else {
                 term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract])
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.from.setHours(0)
               }
             } else {
               importErrors.errors.push({
@@ -238,8 +242,12 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.endOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
                 term.duration.to = new Date(Math.round((spreadSheetRow[SpreadSheetContract.endOfContract] - 25569) * 86400 * 1000));
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.to.setHours(0)
               } else {
                 term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.to.setHours(0)
               }
             } else {
               importErrors.errors.push({
