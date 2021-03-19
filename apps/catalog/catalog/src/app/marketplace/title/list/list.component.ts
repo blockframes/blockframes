@@ -113,8 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async getAllTerms() {
-    // TODO issue #5241 query only the mandate of Archipel Content && only sales which match the contract of Archipel Content
-    const contracts = await this.contractService.getValue();
+    const contracts = await this.contractService.getContractsOfOrg();
     const promises = contracts.map(c => this.termService.getValue(c.termIds));
     // we use promise.all to speed up the search
     const termsByContract = await Promise.all(promises);
