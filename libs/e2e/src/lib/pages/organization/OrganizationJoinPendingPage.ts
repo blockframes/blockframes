@@ -2,9 +2,9 @@ import { SEC } from '../../utils/env';
 
 const PATH = '/c/organization/join-congratulations';
 
-export default class OrganizationJoinPendingPage {
+export default class OrganizationPendingPage {
   constructor() {
-    cy.get('organization-join-pending', {timeout: 150 * SEC});
+    cy.get('organization-pending', {timeout: 150 * SEC});
   }
 
   public assertMoveToOrgJoinPage() {
