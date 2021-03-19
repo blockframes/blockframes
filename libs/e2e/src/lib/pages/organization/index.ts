@@ -1,5 +1,3 @@
 import OrganizationLiteFormPage from './OrganizationLiteFormPage';
 
-export {
-  OrganizationLiteFormPage,
-};
+export { OrganizationLiteFormPage };
