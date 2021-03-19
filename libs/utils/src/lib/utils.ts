@@ -39,7 +39,7 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
   },
   image: {
     mime: ['image/jpeg', 'image/png', 'image/webp'],
-    extension: ['.jpg', 'jpeg', '.png', '.webp'],
+    extension: ['.jpg', '.jpeg', '.png', '.webp'],
   },
   video: {
     mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4', 'video/3gpp', 'video/quicktime', 'video/x-ms-wmv'],

@@ -11,7 +11,6 @@ import { StorageFileForm } from "@blockframes/media/form/media.form";
 import { FormList } from "@blockframes/utils/form";
 import { StorageFile } from "@blockframes/media/+state/media.firestore";
 
-
 interface DirectoryBase {
   type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';
   /** Display Name use in the UI */
@@ -43,28 +42,29 @@ export interface FileDirectoryBase extends DirectoryBase {
   // hasFile: boolean | number;
 }
 
-export interface ImgDirectory extends FileDirectoryBase {
+interface ImgDirectory extends FileDirectoryBase {
   type: 'image';
   ratio: MediaRatioType;
   form: StorageFileForm | FormList<StorageFile>;
 }
 
-export interface FileDirectory extends FileDirectoryBase {
+interface FileDirectory extends FileDirectoryBase {
   type: 'file';
   accept: AllowedFileType;
   form: StorageFileForm | FormList<StorageFile>;
 }
 
-export interface FileListDirectory extends FileDirectoryBase {
+interface FileListDirectory extends FileDirectoryBase {
   type: 'fileList',
   form: FormList<StorageFile>;
   accept: AllowedFileType;
 }
 
-export interface ImgListDirectory extends FileDirectoryBase {
+interface ImgListDirectory extends FileDirectoryBase {
   type: 'imageList',
   form: FormList<StorageFile>;
   ratio: MediaRatioType;
+  accept: AllowedFileType;
 }
 
 export function getFormList(form: OrganizationForm | MovieForm, field: string) {
@@ -162,6 +162,7 @@ function titleDirectory(title: Movie): Directory {
       'still_photo': {
         name: 'Images',
         type: 'imageList',
+        accept: 'image',
         ratio: 'still',
         meta: ['movies', 'still_photo', title.id],
         form: getFormListStorage(title, 'movies', 'still_photo'),
