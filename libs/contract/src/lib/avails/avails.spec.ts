@@ -175,8 +175,9 @@ describe('isTermSold', () => {
       Rights: Free TV
       Exclusive: Yes
       Expected result: Not available`, () => {
+        // need to put in unix timestamp
         const ACRights = getMandateTerm(
-            { duration: { to: new Date('06/30/2021'), from: new Date('01/01/2021') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
+            { duration: { to: new Date('06/30/2021'), from: new Date('1609513293') }, exclusive: true, territories: ['canada'], medias: ['freeTv'] },
             mandateTerms.filter(m => m.titleId === Resurrected))
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
@@ -198,14 +199,14 @@ describe('isTermSold', () => {
     Available: Mother Schmuckers, Bigfoot Family`, () => {
         const ACRights = getMandateTerm(
             { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] },
-            mandateTerms);
+            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
         expect(!!ACRights).toBe(true);
         const isTermSold = isSold(
             { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] },
             saleTerms.filter(sale => sale.titleId === GazaMonAmour));
         expect(isTermSold).toBe(true);
         bucket.push(ACRights);
-        expect(isInBucket({ duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] }, bucket))
+        expect(isInBucket({ duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] }, bucket)).toBe(true)
     })
 })
 

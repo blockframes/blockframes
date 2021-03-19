@@ -239,7 +239,7 @@ export const mandateTerms = [
         "contractId": "",
         "duration": {
             "from": "2021-01-01T00:00:00.000Z",
-            "to": "2035-01-30T23:00:00.000Z"
+            "to": "2035-01-30T00:00:00.000Z"
         },
         "territories": [
             "afghanistan",
