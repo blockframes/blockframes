@@ -102,7 +102,7 @@ export async function loadJWPlayerScript(document: Document, playerUrl: string) 
         res();
       }
     } else { // script tag exists
-      const script = document.getElementById(id)! as HTMLScriptElement;
+      const script = document.getElementById(id) as HTMLScriptElement;
       const loaded = script.getAttribute('data-loaded');
 
       if (loaded === 'true') { // already loaded
