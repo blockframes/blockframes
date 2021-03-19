@@ -2,7 +2,7 @@
 
 const PATH = '/c/organization/create-congratulations';
 
-export default class OrganizationPendingPage {
+export default class OrganizationCreatePendingPage {
   constructor() {
     cy.get('organization-pending', {timeout: 150 * SEC});
   }
