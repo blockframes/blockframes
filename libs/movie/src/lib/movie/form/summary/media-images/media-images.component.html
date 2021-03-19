@@ -7,8 +7,10 @@
 <missing-control [control]="stillPhoto" [link]="link">
   <ng-template let-images="control">
     <article fxLayout fxLayoutAlign="start center" *ngFor="let image of images.controls">
-      <bf-preview-modal *ngIf="image.storagePath.value" [ref]="image.value"></bf-preview-modal>
-      <span>{{ image.storagePath.value | fileName | maxLength: 30 }}</span>
+      <div *ngIf="image.storagePath.value">
+        <bf-preview-modal [ref]="image.value"></bf-preview-modal>
+        <span>{{ image.storagePath.value | fileName | maxLength: 30 }}</span>
+      </div>
     </article>
   </ng-template>
 </missing-control>
