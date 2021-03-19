@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -19,12 +19,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { AvailsFilter, getMandateTerm, isInBucket, isSold } from '@blockframes/contract/avails/avails';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
 import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { centralOrgID } from '@env';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -47,7 +48,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
-  private terms: { [movieId: string]: { mandateTerms: Term<Date>[], saleTerms: Term<Date>[] } } = {}
+  private terms: { [movieId: string]: { mandate: Term<Date>[], sale: Term<Date>[] } } = {};
 
 
   private parentTerms: Record<string, Term<Date>> = {};
@@ -78,7 +79,11 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.getAllTerms();
+    // No need to await for the results
+    Promise.all([
+      this.getContract('mandate'),
+      this.getContract('sale')
+    ])
 
     this.sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -93,11 +98,11 @@ export class ListComponent implements OnInit, OnDestroy {
         const hits = movies.hits.filter(movie => {
           const titleId = movie.objectID;
           if (!this.terms[titleId]) return false;
-          const parentTerm = getMandateTerm(availsValue, this.terms[titleId].mandateTerms);
+          const parentTerm = getMandateTerm(availsValue, this.terms[titleId].mandate);
           if (!parentTerm) return false;
           this.parentTerms[titleId] = parentTerm;
           const terms = bucketValue.contracts.find(c => c.titleId === titleId)?.terms ?? [];
-          return !isSold(availsValue, this.terms[titleId].saleTerms) && !isInBucket(availsValue, terms);
+          return !isSold(availsValue, this.terms[titleId].sale) && !isInBucket(availsValue, terms);
         })
         this.movieResultsState.next(hits);
       } else { // if availsForm is invalid, put all the movies from algolia
@@ -112,20 +117,21 @@ export class ListComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  async getAllTerms() {
-    // TODO issue #5241 query only the mandate of Archipel Content && only sales which match the contract of Archipel Content
-    const contracts = await this.contractService.getValue();
-    const promises = contracts.map(c => this.termService.getValue(c.termIds));
-    // we use promise.all to speed up the search
-    const termsByContract = await Promise.all(promises);
-    const allTerms = termsByContract.flat();
+  private async getContract(type: Contract['type']) {
+    const org = type === 'mandate' ? 'buyerId' : 'sellerId';
+    const contracts = await this.contractService.getValue(ref => ref.where('type', '==', type).where(org, '==', centralOrgID));
+    const termIdsByTitle = {};
 
     for (const contract of contracts) {
-      const terms = allTerms.filter(term => contract.termIds.includes(term.id));
-      if (!this.terms[contract.titleId]) this.terms[contract.titleId] = { mandateTerms: [], saleTerms: [] };
-      const key = contract.type === 'mandate' ? 'mandateTerms' : 'saleTerms';
-      this.terms[contract.titleId][key] = this.terms[contract.titleId][key].concat(terms);
+      if (!termIdsByTitle[contract.titleId]) termIdsByTitle[contract.titleId] = [];
+      termIdsByTitle[contract.titleId] = termIdsByTitle[contract.titleId].concat(contract.termIds);
     }
+
+    const promises = Object.entries(termIdsByTitle).map(([titleId, termIds]) => {
+      if (!this.terms[titleId]) this.terms[titleId] = { mandate: [], sale: [] };
+      return this.termService.getValue(termIds).then(terms => this.terms[titleId][type] = terms);
+    });
+    return Promise.all(promises);
   }
 
   async addAvail(titleId: string) {
