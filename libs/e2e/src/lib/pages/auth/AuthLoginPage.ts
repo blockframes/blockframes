@@ -8,12 +8,6 @@ export default class AuthLoginPage {
     cy.get('auth-login-view', {timeout: 60 * SEC});
   }
 
-  public assertStayInLoginView() {
-    cy.location().should((loc) => {
-      expect(loc.pathname).to.eq('/auth/connexion')
-    })
-  }
-
   public fillSignin(user: Partial<User>) {
     cy.get('auth-signin-form input[type="email"]').type(user.email);
     cy.get('auth-signin-form input[type="password"]').type(user.password);

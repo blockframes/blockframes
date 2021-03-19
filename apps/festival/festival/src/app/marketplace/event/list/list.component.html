@@ -16,9 +16,9 @@
       {{ timeFrame | labelByDate }}
     </h2>
 
-    <ng-container *ngFor="let event of timeFrame.events">
+    <ng-container *ngFor="let event of timeFrame.events; let last = last">
       <event-screening-item [event]="event"></event-screening-item>
-      <mat-divider></mat-divider>
+      <mat-divider *ngIf="!last"></mat-divider>
     </ng-container>
   </ng-template>
 

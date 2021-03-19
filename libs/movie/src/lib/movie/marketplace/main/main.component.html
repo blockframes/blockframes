@@ -5,7 +5,7 @@
   <ng-container *ngIf="movie.promotional.salesPitch?.jwPlayerId || movie.promotional.salesPitch?.description">
     <section id="sales-pitch" *ngIf="movie.promotional.salesPitch as salesPitch">
       <h2>Sales Pitch</h2>
-      <article *ngIf="salesPitch.description" fxLayout="row" fxLayoutGap="40px">
+      <article fxLayout="row" fxLayoutGap="40px">
         <video-viewer [ref]="salesPitch" *ngIf="salesPitch.jwPlayerId"></video-viewer>
         <p>{{ salesPitch.description }}</p>
       </article>

@@ -118,7 +118,8 @@
 </section>
 
 <ng-template #customSnackBarTemplate>
-  <div class="custom-snackbar-message">
-    This email already exists.  <a routerLink="/auth/connexion">LOG IN</a>
+  <div class="custom-snackbar-message" fxLayoutGap="50px">
+    <span>This email already exists.</span>
+    <a routerLink="/auth/connexion">LOG IN</a>
   </div>
 </ng-template>
