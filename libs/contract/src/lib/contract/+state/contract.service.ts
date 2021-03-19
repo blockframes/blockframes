@@ -10,11 +10,4 @@ export class ContractService extends CollectionService<ContractState> {
   constructor(store: ContractStore) {
     super(store);
   }
-
-  getContractsOfOrg(orgId = centralOrgID) {
-    return Promise.all([
-      this.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', orgId)),
-      this.getValue(ref => ref.where('type', '==', 'sale').where('sellerId', '==', orgId))
-    ]).then(([mandates, sales]) => [...mandates, ...sales]);
-  }
 }
