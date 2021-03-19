@@ -216,6 +216,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.twilioService.disconnect();
     this.deleteCountDown();
     this.sub.unsubscribe();
     this.dialogSub?.unsubscribe();
