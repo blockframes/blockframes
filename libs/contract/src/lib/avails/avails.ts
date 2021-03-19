@@ -70,18 +70,20 @@ export function isSold(
   return false;
 }
 
-export function  isInBucket(
+export function isInBucket(
   { medias, duration, territories, exclusive }: AvailsFilter,
   terms: AvailsFilter[]  // terms in the bucket for the parentTermId given by "getMandateTerm"
 ) {
   for (const term of terms) {
-    console.log(term)
+    if (exclusive !== term.exclusive) {
+      continue;
+    }
     // If any territory is not included in the terms: not same term
-    if (territories.some(territory => !term.territories.includes(territory))) {
+    if (!territories.every(territory => term.territories.includes(territory))) {
       continue;
     }
     // If any medium is not included in the terms: not same term
-    if (medias.some(medium => !term.medias.includes(medium))) {
+    if (!medias.every(medium => term.medias.includes(medium))) {
       continue;
     }
     // If start before or end after term: not same term

@@ -188,7 +188,7 @@ describe('isTermSold', () => {
 
     // MULTI AVAILS TEST
 
-    it.only(`Mandate test (territory)
+    it(`Mandate test (territory)
     Terms: 01/01/2022 - 06/30/2023
     Territory: South Korea
     Rights: Free TV
@@ -205,7 +205,7 @@ describe('isTermSold', () => {
             { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] },
             saleTerms.filter(sale => sale.titleId === GazaMonAmour));
         expect(isTermSold).toBe(true);
-        bucket.push(ACRights);
+        bucket.push({ duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] });
         expect(isInBucket({ duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] }, bucket)).toBe(true)
     })
 })
