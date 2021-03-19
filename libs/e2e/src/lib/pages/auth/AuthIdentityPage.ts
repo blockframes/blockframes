@@ -110,11 +110,6 @@ export default class AuthIdentityPage {
   }
 
   // VERIFICATION
-  public assertStayInIdentityView() {
-    cy.location().should((loc) => {
-      expect(loc.pathname).to.eq('/auth/identity')
-    })
-  }
 
   public checkSignUpButtonIsDisabled() {
     cy.get('button[type="submit"]').should('be.disabled');

@@ -224,3 +224,9 @@ export function setForm(selector: string, formOpt: FormOptions) {
   .then(_ => console.table(formData));
 }
 
+/** Used to test the path we should go */
+export function assertMoveTo(path: string) {
+  cy.location().should(loc => {
+    expect(loc.pathname).to.eq(path);
+  });
+}

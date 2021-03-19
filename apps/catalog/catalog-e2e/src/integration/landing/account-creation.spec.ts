@@ -2,9 +2,9 @@
 
 import { LandingPage } from '../../support/pages/landing';
 import { User } from "@blockframes/e2e/utils/type";
-import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
+import { clearDataAndPrepareTest, assertMoveTo } from "@blockframes/e2e/utils/functions";
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
-import { OrganizationLiteFormPage, OrganizationPendingPage } from "@blockframes/e2e/pages/organization";
+import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
 import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
 
 const USER: Partial<User> = {
@@ -18,6 +18,10 @@ const WRONG_EMAIL_FORM = 'wrongform*email!com';
 const WRONG_PASSWORD = 'wrongpassword';
 const SHORT_PASSWORD = '123';
 const LONG_PASSWORD = '123456789123456789123456789';
+
+const CREATEPATH = '/c/organization/create-congratulations';
+const JOINPATH = '/c/organization/join-congratulations';
+const IDENTITYPATH = '/auth/identity';
 
 // TEST
 
@@ -40,8 +44,7 @@ describe('User can create new account and create a new organization', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.submitForm();
-    const p3 = new OrganizationPendingPage();
-    p3.assertMoveToOrgCreatePage();
+    assertMoveTo(CREATEPATH);
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
 });
@@ -61,8 +64,7 @@ describe.skip('User can create new account and join an organization', () => {
     // p1.clickTermsAndCondition();
     // p1.clickPrivacyPolicy();
     // p1.submitForm();
-    // const p3 = new OrganizationPendingPage();
-    // p3.assertMoveToOrgJoinPage();
+    // assertMoveTo(JOINPATH)
     // cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
 });
@@ -78,7 +80,7 @@ describe('Try with each fields except one', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   });
 
   it('Fill all the fields except name', () => {
@@ -92,7 +94,7 @@ describe('Try with each fields except one', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   });
 
   it('Fill all the fields except surname', () => {
@@ -106,7 +108,7 @@ describe('Try with each fields except one', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   });
 
   it('Fill all the fields except password', () => {
@@ -120,7 +122,7 @@ describe('Try with each fields except one', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   });
 
   it('Fill all the fields except password confirm', () => {
@@ -134,7 +136,7 @@ describe('Try with each fields except one', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   });
 });
 
@@ -149,7 +151,7 @@ describe('Try email address', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.submitForm();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
   it('use wrong format email address', () => {
     const p1 = new AuthIdentityPage();
@@ -163,7 +165,7 @@ describe('Try email address', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
 });
 
@@ -182,7 +184,7 @@ describe('Try password', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
   it('Try with less than 6 characters', () => {
     const p1 = new AuthIdentityPage();
@@ -197,7 +199,7 @@ describe('Try password', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
   it('Try with more than 24 characters', () => {
     const p1 = new AuthIdentityPage();
@@ -212,7 +214,7 @@ describe('Try password', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
 
 })
@@ -229,7 +231,7 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
   it('Try without the role field', () => {
     const p1 = new AuthIdentityPage();
@@ -241,7 +243,7 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
   it('Try without the activity field', () => {
     const p1 = new AuthIdentityPage();
@@ -253,7 +255,7 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
   it('Try without the nationality field', () => {
     const p1 = new AuthIdentityPage();
@@ -265,6 +267,6 @@ describe('Create a new account and org, but doesn\'t fill one field of the org',
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.checkSignUpButtonIsDisabled();
-    p1.assertStayInIdentityView();
+    assertMoveTo(IDENTITYPATH);
   })
 })
