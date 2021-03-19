@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
