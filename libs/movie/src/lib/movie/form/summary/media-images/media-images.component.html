@@ -6,11 +6,17 @@
 </h6>
 <missing-control [control]="stillPhoto" [link]="link">
   <ng-template let-images="control">
-    <article *ngFor="let image of images.controls">
-      <div *ngIf="image.storagePath.value" fxLayoutAlign="start center">
-        <bf-preview-modal [ref]="image.value"></bf-preview-modal>
-        <span>{{ image.storagePath.value | fileName | maxLength: 30 }}</span>
-      </div>
+    <article fxLayout fxLayoutAlign="start center" *ngFor="let image of images.value">
+      <ng-container *ngIf="!!image.storagePath; else empty">
+        <bf-preview-modal [ref]="image"></bf-preview-modal>
+        <span>{{ image.storagePath | fileName | maxLength: 30 }}</span>
+      </ng-container>
+      <ng-template #empty>
+        <span fxLayout matTooltip="Save and close to finalize">
+          <mat-icon svgIcon="visibility" color="disabled"></mat-icon>
+          <p>Still Photo</p>
+        </span>
+      </ng-template>
     </article>
   </ng-template>
 </missing-control>
