@@ -4,7 +4,7 @@ import { LandingPage } from '../../support/pages/landing';
 import { User } from "@blockframes/e2e/utils/type";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
-import { OrganizationLiteFormPage, OrganizationCreatePendingPage } from "@blockframes/e2e/pages/organization";
+import { OrganizationLiteFormPage, OrganizationPendingPage } from "@blockframes/e2e/pages/organization";
 import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
 
 const USER: Partial<User> = {
@@ -40,7 +40,7 @@ describe('User can create new account and create a new organization', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.submitForm();
-    const p3 = new OrganizationCreatePendingPage();
+    const p3 = new OrganizationPendingPage();
     p3.assertMoveToOrgCreatePage();
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
@@ -61,8 +61,8 @@ describe.skip('User can create new account and join an organization', () => {
     // p1.clickTermsAndCondition();
     // p1.clickPrivacyPolicy();
     // p1.submitForm();
-    // const p3 = new OrganizationCreatePendingPage();
-    // p3.assertMoveToOrgCreatePage();
+    // const p3 = new OrganizationPendingPage();
+    // p3.assertMoveToOrgJoinPage();
     // cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
 });

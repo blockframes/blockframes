@@ -1,9 +1,7 @@
 import OrganizationLiteFormPage from './OrganizationLiteFormPage';
-import OrganizationCreatePendingPage from './OrganizationCreatePendingPage';
-import OrganizationJoinPendingPage from './OrganizationJoinPendingPage';
+import OrganizationPendingPage from './OrganizationPendingPage';
 
 export {
   OrganizationLiteFormPage,
-  OrganizationCreatePendingPage,
-  OrganizationJoinPendingPage,
+  OrganizationPendingPage,
 };
