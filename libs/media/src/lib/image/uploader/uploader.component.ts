@@ -14,6 +14,7 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { allowedFiles } from '@blockframes/utils/utils';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -139,8 +140,8 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
 
-  @Input() types: string[] = ['image/jpeg', 'image/png'];
-  @Input() accept: string[] = ['.jpg', '.png'];
+  @Input() types: string[] = allowedFiles.image.mime;
+  @Input() accept: string[] = allowedFiles.image.extension;
 
   // listen to db changes to keep form up-to-date after an upload
   @Input() @boolean listenToChanges: boolean;
