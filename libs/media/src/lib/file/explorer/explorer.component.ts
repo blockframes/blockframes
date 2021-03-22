@@ -10,7 +10,7 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 
 // RxJs
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AngularFirestore, QueryFn } from '@angular/fire/firestore';
 import { Organization } from '@blockframes/organization/+state';
@@ -85,9 +85,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       this.org$.asObservable(),
       this.movieService.valueChanges(query)
     ]).pipe(
-      tap(([org, titles]) => console.log(org)),
       map(([org, titles]) => getDirectories(org, titles)),
-      tap(d => console.log(d)),
     );
   }
 
