@@ -22,7 +22,7 @@ function createLoactionControls(location: Partial<Location> = {}) {
     street: new FormControl(entity.street),
     zipCode: new FormControl(entity.zipCode),
     city: new FormControl(entity.city),
-    country: new FormStaticValue<'territories'>(entity.country, 'territories'),
+    country: new FormStaticValue<'territories'>(entity.country, 'territories', [Validators.required]),
     phoneNumber: new FormControl(entity.phoneNumber),
     region: new FormControl(entity.phoneNumber),
   }
