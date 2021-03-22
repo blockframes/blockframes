@@ -290,11 +290,13 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(before.logo);
     }
 
-    const notesToDelete = checkFileList(
-      before.documents?.notes,
-      after.documents?.notes
-    );
-    mediaToDelete.push(...notesToDelete);
+    if(!!before.documents && !!before.documents?.notes) {
+      const notesToDelete = checkFileList(
+        before.documents?.notes,
+        after.documents?.notes
+      );
+      mediaToDelete.push(...notesToDelete);
+    }
 
   } else { // Deleting
     if (!!before.logo) {
