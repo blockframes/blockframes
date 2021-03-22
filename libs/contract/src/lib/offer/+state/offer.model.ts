@@ -3,4 +3,5 @@ export interface Offer {
   buyerId: string;
   status: 'pending';
   date: Date;
+  delivery: string;
 }

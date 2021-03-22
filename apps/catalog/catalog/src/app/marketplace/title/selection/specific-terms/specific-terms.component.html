@@ -1,0 +1,39 @@
+<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+  <h1>Add Specific Terms To Your Offer</h1>
+  <p>Please specify specific terms to your offer if any.<br/>
+  These terms will be applied to the whole contract</p>
+  <form [formGroup]="form" fxLayout="column">
+    <mat-form-field appearance="outline">
+      <mat-label>Specific Terms</mat-label>
+      <textarea 
+        matInput
+        placeholder="eg: Licensee shall have t
+        he exclusive option to acquire additional Episodes of the Program(s) or additional Rights during the Licence Period for an additional fee equal or superior to the actual fee per Episode."
+        formControlName="specificity"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="4"
+        maxlength="500">
+      </textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Delivery List</mat-label>
+      <textarea 
+        matInput
+        placeholder="Delivery list"
+        formControlName="delivery"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="4"
+        maxlength="500">
+      </textarea>
+    </mat-form-field>
+  </form>
+
+  <button mat-flat-button color="primary" (click)="createOffer()">
+    Send Your Offer
+  </button>
+  <button mat-button>
+    Cancel
+  </button>
+</section>
