@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 img {
   width: 120px;
   border-radius: 50%;
@@ -21,7 +23,18 @@ mat-card {
   }
 }
 
-
 a, button {
   margin-top: 24px;
+}
+
+@include layout-bp(lt-lg) {
+  mat-card .reviewCritic {
+    height: 200px;
+  }
+}
+
+@include layout-bp(lt-md) {
+  mat-card .reviewCritic {
+    height: 150px;
+  }
 }
