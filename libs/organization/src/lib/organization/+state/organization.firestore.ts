@@ -73,6 +73,7 @@ export function createOrganizationBase(
     denomination: createDenomination(params.denomination),
     logo: createStorageFile(params?.logo),
     appAccess: createOrgAppAccess(params.appAccess),
+    documents: createOrgMedias(params?.documents),
   };
 }
 
