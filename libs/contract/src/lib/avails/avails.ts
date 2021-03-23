@@ -58,6 +58,8 @@ export function isSold(
       if (inDuration || wrappedDuration) {
         if (!medias.every(medium => term.medias.includes(medium)) || !territories.every(territory => term.territories.includes(territory))) {
           continue;
+        } else {
+          return true;
         }
       }
     } else {
