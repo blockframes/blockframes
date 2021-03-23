@@ -11,9 +11,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
-import { TermService } from '@blockframes/contract/term/+state/term.service'
-import { Term } from '@blockframes/contract/term/+state/term.model';
+import { Language } from '@blockframes/utils/static-model';
+import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 enum SpreadSheetContract {
@@ -138,13 +137,13 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
 
             if (trimmedRow[SpreadSheetContract.stakeholders]) {
-              let orgs: Organization[];
-              /* if (Array.isArray(trimmedRow[SpreadSheetContract.stakeholders])) {
-                 orgs = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
-               //} else {*/
-              orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.stakeholders]))
-              //}
+              const orgs: Organization[] = [];
+              const stakeholders = trimmedRow[SpreadSheetContract.stakeholders].split(this.separator);
+              const promises = stakeholders.map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName)));
+              const result = await Promise.all(promises);
+              result.forEach(organizations => organizations.forEach(org => orgs.push(org)));
               contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
+              console.log('stakeholders: ', contract.stakeholders)
             } else {
               importErrors.errors.push({
                 type: 'warning',
