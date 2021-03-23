@@ -1,9 +1,18 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   display: flex;
   height: 100vh;
   background-image: url('/assets/images/rocket_background.svg');
+  background-position: right bottom;
   background-size: 100%;
   background-repeat: no-repeat;
+}
+
+app-logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
 }
 
 auth-signin-form {
@@ -14,4 +23,29 @@ auth-signin-form {
 
 a {
   font-weight: bold;
+}
+
+@include layout-bp(lt-md) {
+  auth-signin-form {
+    width: 70%;
+  }
+}
+
+@include layout-bp(lt-sm) {
+  :host {
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    background-image: none;
+    text-align: center;
+    padding: 16px 0;
+  }
+  app-logo {
+    display: block;
+    position: inherit;
+    margin-bottom: 24px;
+  }
+  auth-signin-form {
+    width: 100%;
+  }
 }
