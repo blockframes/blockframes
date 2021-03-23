@@ -10,8 +10,8 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { Language } from '@blockframes/utils/static-model';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Language, parseToAll } from '@blockframes/utils/static-model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -137,12 +137,10 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
 
             if (trimmedRow[SpreadSheetContract.stakeholders]) {
-              const orgs: Organization[] = [];
               const stakeholders = trimmedRow[SpreadSheetContract.stakeholders].split(this.separator);
-              const promises = stakeholders.map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName)));
-              const result = await Promise.all(promises);
-              result.forEach(organizations => organizations.forEach(org => orgs.push(org)));
-              contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
+              const promises = stakeholders.map(orgName => this.orgService.getValue(ref => ref.where('denomination.full', '==', orgName.trim())));
+              const orgs = await Promise.all(promises);
+              contract.stakeholders = orgs.flat().filter(org => !!org).map(org => org.id);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -188,7 +186,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.territories]) {
               const territoryValues = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
               const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
-              term.territories = territories;
+              term.territories = (territories.length === 1 && territories[0] === 'world') ? parseToAll('territories', 'world') : territories;
             } else {
               importErrors.errors.push({
                 type: 'error',
@@ -273,7 +271,8 @@ export class ViewExtractedContractsComponent implements OnInit {
 
             if (trimmedRow[SpreadSheetContract.dubbed]) {
               const languageValues = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
+              let languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
+              if (languages.length === 1 && languages[0] == 'all') languages = parseToAll('languages', 'all');
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], dubbed: true }
@@ -291,7 +290,8 @@ export class ViewExtractedContractsComponent implements OnInit {
 
             if (trimmedRow[SpreadSheetContract.subtitled]) {
               const languageValues = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
+              let languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()));
+              if (languages.length === 1 && languages[0] == 'all') languages = parseToAll('languages', 'all');
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], subtitle: true }
@@ -309,7 +309,8 @@ export class ViewExtractedContractsComponent implements OnInit {
 
             if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
               const languageValues = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
+              let languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()));
+              if (languages.length === 1 && languages[0] == 'all') languages = parseToAll('languages', 'all');
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], caption: true }

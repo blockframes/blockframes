@@ -1,4 +1,5 @@
 import {
+  Language,
   Territory,
   TerritoryISOA2,
   TerritoryISOA2Value,
@@ -1935,4 +1936,8 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
     numCode: territoriesNUMCODE[territory],
     fr: territoriesFR[territory],
   }
+}
+
+export function parseToAll(scope: Scope, allKey: string): any[] {
+  return Object.keys(staticModel[scope]).filter(key => key !== allKey)
 }
