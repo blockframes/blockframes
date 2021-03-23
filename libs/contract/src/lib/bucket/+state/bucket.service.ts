@@ -9,6 +9,7 @@ import { IncomeService } from '../../income/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgID } from '@env';
 import type firebase from 'firebase';
+import { AuthQuery } from "@blockframes/auth/+state";
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -21,6 +22,7 @@ export class BucketService extends CollectionService<BucketState> {
     private offerService: OfferService,
     private contractService: ContractService,
     private incomeService: IncomeService,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }
@@ -35,18 +37,20 @@ export class BucketService extends CollectionService<BucketState> {
     return bucket;
   }
 
-  createOffer() {
+  async createOffer() {
     const orgId = this.orgQuery.getActiveId();
+    const uid = this.authQuery.userId;
+
     const get = <T>(tx: firebase.firestore.Transaction, path: string): Promise<T> => {
       const ref = this.db.doc(path).ref;
       return tx.get(ref).then(snap => snap.data() as T);
     }
      // Run tx
-     return this.update(orgId, async (bucket: Bucket, tx) => {
+    return this.update(orgId, async (bucket: Bucket, tx) => {
       /* -------------------- */
       /*         GETTER       */
       /* -------------------- */
-      
+
       // Get the parent contract for setting the stakeholders
       // We need to do all the queries before the changes:
       const parentContracts: Record<string, Contract> = {};
@@ -94,8 +98,9 @@ export class BucketService extends CollectionService<BucketState> {
           contractId,
         }, { write: tx });
       }
-      // We empty the selection but leave the currency
-      return { contracts: [] };
-    })
+
+      // Adding uid to add user data to email sent to business team
+      return { uid: this.authQuery.userId }
+    });
   }
 }

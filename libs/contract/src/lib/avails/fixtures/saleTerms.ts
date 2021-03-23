@@ -1,68 +1,9 @@
-export const saleTerms = [
+export const saleTerms =[
     {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "english": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "french": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
+        "id": "od83cWyUQRUQCEeSmqP0",
         "territories": [
-            "canada"
+            "united-kingdom"
         ],
-        "exclusive": false,
-        "id": "kKT3mnHMEoJ1lUUGFm1m"
-    },
-    {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "english": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": false,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
         "medias": [
             "payTv",
             "payPerView",
@@ -73,60 +14,190 @@ export const saleTerms = [
             "sVod",
             "theatrical",
             "video"
-        ],
-        "territories": [],
-        "exclusive": false,
-        "id": "BwZXm2I4GdlapLZZoXm4"
-    },
-    {
-        "languages": {
-            "german": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "italian": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "french": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "switzerland"
         ],
         "exclusive": true,
-        "id": "cY4PPQxqFCV526L7Rbr8"
+        "criteria": [],
+        "contractId": "",
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "languages": {
+            "korean": {
+                "dubbed": true,
+                "subtitle": true,
+                "caption": true
+            },
+            "english": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
+            }
+        },
+        "licensedOriginal": true,
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "titleId": "Cr3NYe9RXaMwP98LQMyD"
     },
     {
+        "exclusive": true,
+        "medias": [
+            "freeTv"
+        ],
+        "contractId": "",
+        "id": "bmRso5IYL2EmdahMwClU",
+        "duration": {
+            "from": "2021-01-06T00:00:00.000Z",
+            "to": "2023-01-01T00:00:00.000Z"
+        },
+        "licensedOriginal": true,
+        "titleId": "HgU5WygrYoon1QnFqEpe",
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "languages": {},
+        "territories": [
+            "germany"
+        ],
+        "criteria": []
+    },
+    {
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "id": "HBi7i8YQ3bQzByq4wgTO",
+        "languages": {
+            "korean": {
+                "subtitle": true,
+                "dubbed": true,
+                "caption": true
+            },
+            "german": {
+                "dubbed": true,
+                "caption": true,
+                "subtitle": true
+            }
+        },
+        "licensedOriginal": true,
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "criteria": [],
+        "territories": [
+            "germany"
+        ],
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "contractId": "",
+        "exclusive": false
+    },
+    {
+        "id": "Q0VItsb3A6i9JLC6dFbv",
+        "contractId": "",
+        "licensedOriginal": true,
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "criteria": [],
+        "territories": [
+            "spain"
+        ],
+        "languages": {
+            "korean": {
+                "subtitle": true,
+                "dubbed": true,
+                "caption": true
+            },
+            "spanish": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
+            }
+        },
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "exclusive": true
+    },
+    {
+        "contractId": "",
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "licensedOriginal": true,
+        "territories": [
+            "russia"
+        ],
+        "id": "3ohLx5WSvLvgf8wpzuQ8",
+        "exclusive": false,
+        "languages": {},
+        "medias": [
+            "freeTv"
+        ],
+        "titleId": "cXHN9C9GftkMhYmu7CV1",
+        "duration": {
+            "from": "2033-01-06T00:00:00.000Z",
+            "to": "2035-01-01T00:00:00.000Z"
+        },
+        "criteria": []
+    },
+    {
+        "languages": {},
+        "criteria": [],
+        "titleId": "cXHN9C9GftkMhYmu7CV1",
+        "exclusive": false,
+        "contractId": "",
+        "duration": {
+            "to": "2023-01-01T00:00:00.000Z",
+            "from": "2021-01-06T00:00:00.000Z"
+        },
+        "medias": [
+            "freeTv"
+        ],
+        "licensedOriginal": true,
+        "id": "WNMEXvDi7WIoTUYzgVWy",
+        "territories": [
+            "germany"
+        ],
+        "orgId": "035zZAYcEXjSkcf8BmSi"
+    },
+    {
+        "medias": [
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "contractId": "",
+        "licensedOriginal": true,
+        "duration": {
+            "from": "2019-01-06T00:00:00.000Z",
+            "to": "2030-12-30T23:00:00.000Z"
+        },
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "criteria": [],
+        "exclusive": true,
+        "id": "GfIqWs5LkCRaSXuFymGa",
         "languages": {
             "korean": {
                 "caption": true,
@@ -135,48 +206,19 @@ export const saleTerms = [
             },
             "mandarin-chinese": {
                 "caption": true,
-                "dubbed": true,
-                "subtitle": true
+                "subtitle": true,
+                "dubbed": true
             }
         },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv"
-        ],
         "territories": [
             "singapore"
-        ],
-        "exclusive": true,
-        "id": "B5844gS5xEclw7udMpCR"
+        ]
     },
     {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "english": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": false,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "exclusive": true,
         "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
+        "licensedOriginal": true,
+        "criteria": [],
         "medias": [
             "payTv",
             "payPerView",
@@ -188,13 +230,383 @@ export const saleTerms = [
             "theatrical",
             "video"
         ],
+        "languages": {
+            "korean": {
+                "caption": true,
+                "subtitle": true,
+                "dubbed": true
+            },
+            "vietnamese": {
+                "dubbed": true,
+                "caption": true,
+                "subtitle": true
+            }
+        },
+        "contractId": "",
+        "duration": {
+            "from": "2019-01-06T00:00:00.000Z",
+            "to": "2030-12-30T23:00:00.000Z"
+        },
+        "id": "OG7ERWvRd5QpM3FLiHif",
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "territories": [
-            "australia"
-        ],
-        "exclusive": true,
-        "id": "8ZxjDHjALXhzc3tGX5WR"
+            "south-korea",
+            "vietnam"
+        ]
     },
     {
+        "licensedOriginal": true,
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "id": "QiUzmnMAolsQFTNtDaJL",
+        "languages": {},
+        "titleId": "1eJm06mvagJDNJ2yAlDt",
+        "territories": [
+            "argentina"
+        ],
+        "medias": [
+            "sVod"
+        ],
+        "exclusive": false,
+        "contractId": "",
+        "duration": {
+            "to": "2023-01-01T00:00:00.000Z",
+            "from": "2021-01-06T00:00:00.000Z"
+        },
+        "criteria": []
+    },
+    {
+        "licensedOriginal": true,
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "criteria": [],
+        "languages": {
+            "polish": {
+                "caption": true,
+                "dubbed": true,
+                "subtitle": true
+            },
+            "korean": {
+                "subtitle": true,
+                "dubbed": true,
+                "caption": true
+            }
+        },
+        "duration": {
+            "from": "2019-01-06T00:00:00.000Z",
+            "to": "2030-12-30T23:00:00.000Z"
+        },
+        "id": "5g8KCvH2jqXs9reZ1bpg",
+        "contractId": "",
+        "territories": [
+            "poland"
+        ],
+        "exclusive": true,
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "orgId": "035zZAYcEXjSkcf8BmSi"
+    },
+    {
+        "languages": {
+            "english": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
+            },
+            "korean": {
+                "dubbed": true,
+                "subtitle": true,
+                "caption": true
+            },
+            "french": {
+                "caption": true,
+                "dubbed": true,
+                "subtitle": true
+            }
+        },
+        "criteria": [],
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "exclusive": false,
+        "contractId": "",
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "id": "qx7BgenTn05Acd6sEu3i",
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "territories": [
+            "canada"
+        ],
+        "licensedOriginal": true
+    },
+    {
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "criteria": [],
+        "territories": [
+            "switzerland"
+        ],
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "exclusive": true,
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "id": "mXKskAAbzqUzcnaeACM9",
+        "contractId": "",
+        "licensedOriginal": true,
+        "languages": {
+            "french": {
+                "subtitle": true,
+                "dubbed": true,
+                "caption": true
+            },
+            "italian": {
+                "dubbed": true,
+                "caption": true,
+                "subtitle": true
+            },
+            "korean": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
+            },
+            "german": {
+                "dubbed": true,
+                "caption": true,
+                "subtitle": true
+            }
+        }
+    },
+    {
+        "criteria": [],
+        "exclusive": true,
+        "titleId": "bR4fTHmDDuOSPrNaz39J",
+        "contractId": "",
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "languages": {},
+        "licensedOriginal": true,
+        "duration": {
+            "to": "2023-01-01T00:00:00.000Z",
+            "from": "2022-01-06T00:00:00.000Z"
+        },
+        "territories": [
+            "afghanistan"
+        ],
+        "medias": [
+            "freeTv"
+        ],
+        "id": "kae7eTKtm1T8viaNoSrU"
+    },
+    {
+        "medias": [
+            "freeTv"
+        ],
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "titleId": "bR4fTHmDDuOSPrNaz39J",
+        "contractId": "",
+        "duration": {
+            "from": "2033-01-06T00:00:00.000Z",
+            "to": "2035-01-01T00:00:00.000Z"
+        },
+        "licensedOriginal": true,
+        "id": "8dakvX4NqrKdO2RqkPCN",
+        "criteria": [],
+        "exclusive": false,
+        "territories": [
+            "germany"
+        ],
+        "languages": {}
+    },
+    {
+        "contractId": "",
+        "titleId": "cXHN9C9GftkMhYmu7CV1",
+        "criteria": [],
+        "id": "38SdgcYTsiqpAlDWWI4g",
+        "exclusive": true,
+        "territories": [
+            "south-korea"
+        ],
+        "medias": [
+            "freeTv"
+        ],
+        "languages": {
+            "korean": {
+                "dubbed": true,
+                "subtitle": true,
+                "caption": true
+            }
+        },
+        "duration": {
+            "to": "2023-01-01T00:00:00.000Z",
+            "from": "2022-01-06T00:00:00.000Z"
+        },
+        "licensedOriginal": true,
+        "orgId": "035zZAYcEXjSkcf8BmSi"
+    },
+    {
+        "contractId": "",
+        "languages": {
+            "spanish": {
+                "dubbed": true,
+                "caption": true,
+                "subtitle": true
+            },
+            "korean": {
+                "caption": true,
+                "subtitle": true,
+                "dubbed": true
+            }
+        },
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "criteria": [],
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "licensedOriginal": true,
+        "territories": [
+            "argentina"
+        ],
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "theatrical",
+            "video"
+        ],
+        "id": "XGFfGwCLmVRPhp0WFwWk",
+        "exclusive": true
+    },
+    {
+        "duration": {
+            "to": "2023-01-01T00:00:00.000Z",
+            "from": "2021-01-06T00:00:00.000Z"
+        },
+        "exclusive": true,
+        "id": "BPvBNI4kuE8ewJtmF4Qs",
+        "titleId": "1eJm06mvagJDNJ2yAlDt",
+        "languages": {},
+        "criteria": [],
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "contractId": "",
+        "medias": [
+            "freeTv"
+        ],
+        "licensedOriginal": true,
+        "territories": [
+            "germany"
+        ]
+    },
+    {
+        "duration": {
+            "from": "2019-01-06T00:00:00.000Z",
+            "to": "2030-12-30T23:00:00.000Z"
+        },
+        "exclusive": true,
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "id": "8BcxyCBozVHGImMZdjHP",
+        "territories": [
+            "singapore"
+        ],
+        "languages": {
+            "mandarin-chinese": {
+                "caption": true,
+                "dubbed": true,
+                "subtitle": true
+            },
+            "korean": {
+                "caption": true,
+                "dubbed": true,
+                "subtitle": true
+            }
+        },
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "medias": [
+            "payTv"
+        ],
+        "contractId": "",
+        "licensedOriginal": true,
+        "criteria": []
+    },
+    {
+        "territories": [
+            "china"
+        ],
+        "licensedOriginal": false,
+        "exclusive": true,
+        "id": "M8jkVyVysmGLRyQx7FDV",
+        "contractId": "",
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "criteria": [],
+        "languages": {
+            "korean": {
+                "dubbed": true,
+                "subtitle": true,
+                "caption": true
+            },
+            "mandarin-chinese": {
+                "subtitle": true,
+                "dubbed": true,
+                "caption": true
+            }
+        }
+    },
+    {
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "id": "G9sDDs56vdWwEnRBdlwG",
+        "duration": {
+            "from": "2019-01-06T00:00:00.000Z",
+            "to": "2030-12-30T23:00:00.000Z"
+        },
         "languages": {
             "korean": {
                 "caption": true,
@@ -202,95 +614,131 @@ export const saleTerms = [
                 "subtitle": true
             },
             "filipino": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
+            }
+        },
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "criteria": [],
+        "licensedOriginal": false,
+        "contractId": "",
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "exclusive": false,
+        "territories": [
+            "philippines"
+        ]
+    },
+    {
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "licensedOriginal": false,
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "languages": {
+            "french": {
+                "caption": true,
+                "subtitle": true,
+                "dubbed": true
+            },
+            "korean": {
                 "caption": true,
                 "dubbed": true,
                 "subtitle": true
+            }
+        },
+        "contractId": "",
+        "exclusive": true,
+        "territories": [
+            "france"
+        ],
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "duration": {
+            "from": "2019-01-06T00:00:00.000Z",
+            "to": "2030-12-30T23:00:00.000Z"
+        },
+        "criteria": [],
+        "id": "Y3Zyx9awhTt2TzEcQ4vh"
+    },
+    {
+        "contractId": "",
+        "licensedOriginal": true,
+        "territories": [
+            "malaysia"
+        ],
+        "duration": {
+            "from": "2019-01-06T00:00:00.000Z",
+            "to": "2030-12-30T23:00:00.000Z"
+        },
+        "id": "Eamvj79Zk1e2RqaZ8xOK",
+        "criteria": [],
+        "medias": [
+            "payTv",
+            "payPerView",
+            "freeTv",
+            "nVod",
+            "aVod",
+            "fVod",
+            "sVod",
+            "theatrical",
+            "video"
+        ],
+        "languages": {
+            "korean": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
+            }
+        },
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "exclusive": true
+    },
+    {
+        "id": "kyqQCE8JIJkpbZRTg1N6",
+        "languages": {
+            "korean": {
+                "dubbed": true,
+                "subtitle": true,
+                "caption": true
+            },
+            "english": {
+                "subtitle": true,
+                "dubbed": true,
+                "caption": true
             }
         },
         "licensedOriginal": false,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "territories": [],
         "orgId": "035zZAYcEXjSkcf8BmSi",
+        "criteria": [],
         "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
         },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "philippines"
-        ],
+        "contractId": "",
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "exclusive": false,
-        "id": "vvBlBLcnrOUQmWikZOQT"
-    },
-    {
-        "languages": {
-            "spanish": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
         "medias": [
             "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "argentina"
-        ],
-        "exclusive": true,
-        "id": "s5tMziXPB1g6tgwo0c5y"
-    },
-    {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "mandarin-chinese": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
             "payPerView",
             "freeTv",
             "nVod",
@@ -299,33 +747,12 @@ export const saleTerms = [
             "sVod",
             "theatrical",
             "video"
-        ],
-        "territories": [
-            "singapore"
-        ],
-        "exclusive": true,
-        "id": "cblK2dZ3s1Iv3VxSO2Kv"
+        ]
     },
     {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "polish": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
         "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
         },
         "medias": [
             "payTv",
@@ -338,294 +765,70 @@ export const saleTerms = [
             "theatrical",
             "video"
         ],
-        "territories": [
-            "poland"
-        ],
-        "exclusive": true,
-        "id": "TQKR2ornbCOsDu8CKSN4"
-    },
-    {
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "orgId": "035zZAYcEXjSkcf8BmSi",
         "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
             "dutch": {
                 "caption": true,
                 "dubbed": true,
                 "subtitle": true
+            },
+            "korean": {
+                "caption": true,
+                "dubbed": true,
+                "subtitle": true
             }
         },
         "licensedOriginal": true,
         "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
+        "id": "q5w1kD2Nna2nF1b7Rx1z",
         "territories": [
             "netherlands"
         ],
         "exclusive": false,
-        "id": "SXjmM0jle8StY7qsn0mk"
+        "contractId": ""
     },
     {
-        "languages": {
-            "german": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
+        "id": "6b1vfwoxWpYfdPyCZbvh",
+        "criteria": [],
+        "languages": {},
+        "duration": {
+            "from": "2023-01-06T00:00:00.000Z",
+            "to": "2024-01-01T00:00:00.000Z"
         },
+        "titleId": "HgU5WygrYoon1QnFqEpe",
         "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
+        "contractId": "",
         "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "germany"
-        ],
-        "exclusive": false,
-        "id": "2EnNFxK2LgnMZxvteQb4"
-    },
-    {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "french": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": false,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "france"
+            "freeTv"
         ],
         "exclusive": true,
-        "id": "hK2Dk23Y13W6f3mVrV8l"
+        "territories": [
+            "afghanistan"
+        ]
     },
     {
-        "languages": {
-            "vietnamese": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
+        "exclusive": true,
+        "contractId": "",
+        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
         },
+        "id": "9RnUlzMl9edoSvdhOf3l",
         "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "south-korea",
-            "vietnam"
-        ],
-        "exclusive": true,
-        "id": "9HcuVc1FgN5EcS7TBxVq"
-    },
-    {
         "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "malaysia"
-        ],
-        "exclusive": true,
-        "id": "5oLaZXIi3aQEcLsTRBWh"
-    },
-    {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "mandarin-chinese": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": false,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "china"
-        ],
-        "exclusive": true,
-        "id": "NFo9jtVJR16PlOwLXXbL"
-    },
-    {
-        "languages": {
-            "spanish": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
-        "medias": [
-            "payTv",
-            "payPerView",
-            "freeTv",
-            "nVod",
-            "aVod",
-            "fVod",
-            "sVod",
-            "theatrical",
-            "video"
-        ],
-        "territories": [
-            "spain"
-        ],
-        "exclusive": true,
-        "id": "017m9SGMP3fAQVqa29Du"
-    },
-    {
-        "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
             "japanese": {
                 "caption": true,
                 "dubbed": true,
                 "subtitle": true
+            },
+            "korean": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
             }
-        },
-        "licensedOriginal": true,
-        "criteria": [],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
         },
         "medias": [
             "payTv",
@@ -638,33 +841,52 @@ export const saleTerms = [
             "theatrical",
             "video"
         ],
+        "criteria": [],
+        "orgId": "035zZAYcEXjSkcf8BmSi",
         "territories": [
             "japan"
+        ]
+    },
+    {
+        "id": "NUMGGT6UlS8p51jIYGKY",
+        "criteria": [],
+        "contractId": "",
+        "medias": [
+            "planes"
         ],
+        "languages": {
+            "english": {
+                "subtitle": true,
+                "caption": true,
+                "dubbed": true
+            }
+        },
+        "territories": [
+            "world"
+        ],
+        "duration": {
+            "from": "2022-01-06T00:00:00.000Z",
+            "to": "2023-01-01T00:00:00.000Z"
+        },
+        "titleId": "bR4fTHmDDuOSPrNaz39J",
         "exclusive": true,
-        "id": "GzTuaBI6d6uqSOOVZDmH"
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "licensedOriginal": true
     },
     {
         "languages": {
-            "korean": {
-                "caption": true,
-                "dubbed": true,
-                "subtitle": true
-            },
             "english": {
                 "caption": true,
                 "dubbed": true,
                 "subtitle": true
+            },
+            "korean": {
+                "caption": true,
+                "dubbed": true,
+                "subtitle": true
             }
         },
-        "licensedOriginal": true,
-        "criteria": [],
         "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "duration": {
-            "from": "2019-01-05T23:00:00.000Z",
-            "to": "2030-12-30T23:00:00.000Z"
-        },
         "medias": [
             "payTv",
             "payPerView",
@@ -676,10 +898,18 @@ export const saleTerms = [
             "theatrical",
             "video"
         ],
-        "territories": [
-            "united-kingdom"
-        ],
         "exclusive": true,
-        "id": "CLQrEZU4zM1qLYN3KvNo"
+        "licensedOriginal": false,
+        "territories": [
+            "australia"
+        ],
+        "duration": {
+            "to": "2030-12-30T23:00:00.000Z",
+            "from": "2019-01-06T00:00:00.000Z"
+        },
+        "orgId": "035zZAYcEXjSkcf8BmSi",
+        "criteria": [],
+        "contractId": "",
+        "id": "sDQLi08p1SpA1orT6ZcO"
     }
 ]

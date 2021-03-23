@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
@@ -14,20 +13,14 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 import { TermService } from '@blockframes/contract/term/+state/term.service'
-import { centralOrgID } from '@env';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 enum SpreadSheetContract {
-  titleId,
-  titleInternalRef,
   internationalTitle,
   contractType,
-  parentTermId,
   licensorName,
   licenseeName,
-  stakeholders,
-  contractId,
   territories,
   medias,
   exclusive,
@@ -36,7 +29,11 @@ enum SpreadSheetContract {
   originalLanguageLicensed,
   dubbed,
   subtitled,
-  closedCaptioning
+  closedCaptioning,
+  contractId,
+  parentTermId,
+  titleId,
+  stakeholders,
 }
 
 @Component({
@@ -50,13 +47,11 @@ export class ViewExtractedContractsComponent implements OnInit {
   public contractsToUpdate = new MatTableDataSource<ContractsImportState>();
   public contractsToCreate = new MatTableDataSource<ContractsImportState>();
   private separator = ';';
-  private subSeparator = ',';
   public isUserBlockframesAdmin = false;
 
   constructor(
     @Optional() private intercom: Intercom,
     private snackBar: MatSnackBar,
-    private movieService: MovieService,
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
@@ -84,20 +79,22 @@ export class ViewExtractedContractsComponent implements OnInit {
       })
       let contract: Mandate | Sale;
       let newContract = true;
+      const id = this.fire.createId();
       if (trimmedRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
-        const id = this.fire.createId();
         if (!!existingContract) {
-          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale({ id, ...existingContract } as any)
+          contract = existingContract.type === 'mandate' ? createMandate(existingContract as Mandate) : createSale(existingContract as Sale)
           newContract = false;
           const terms = await this.termService.getValue(contract.termIds);
           const parsedTerms = terms.map(createTerm)
           this.contractsToUpdate.data.push({ contract, newContract: false, errors: [], terms: parsedTerms })
           // Forcing change detection
           this.contractsToUpdate.data = [...this.contractsToUpdate.data]
+        } else {
+          throw new Error(`Couldn't find provided contract id: ${trimmedRow[SpreadSheetContract.contractId]}`)
         }
       } else {
-        contract = trimmedRow[SpreadSheetContract.contractType] === 'mandate' ? createMandate() : createSale()
+        contract = trimmedRow[SpreadSheetContract.contractType] === 'mandate' ? createMandate({ id }) : createSale({ id })
       }
 
       if (trimmedRow.length) {
@@ -108,52 +105,19 @@ export class ViewExtractedContractsComponent implements OnInit {
           errors: [],
           terms: []
         } as ContractsImportState;
-
         if (newContract) {
-          if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'mandate') {
-            contract = createMandate({
-              sellerId: this.orgQuery.getActiveId(),
-              buyerId: centralOrgID
-            });
-          } else if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'sale') {
-            contract = createSale({
-              sellerId: this.orgQuery.getActiveId()
-            })
-          }
-          else {
-            importErrors.errors.push({
-              type: 'error',
-              field: 'contract.type',
-              name: 'Mandate',
-              reason: 'Contract type is mandatory',
-              hint: 'Edit corresponding sheet field.'
-            })
-          }
-
-          /* If title id is provided, add it to the contract, otherwise try to fetch the title id */
-          if (trimmedRow[SpreadSheetContract.titleId]) {
-            contract.titleId = trimmedRow[SpreadSheetContract.titleId];
-          } else if (trimmedRow[SpreadSheetContract.titleInternalRef]) {
-            const movie = await this.movieService.getFromInternalRef(trimmedRow[SpreadSheetContract.titleInternalRef])
-            if (movie) contract.titleId = movie.id
-          } else if (trimmedRow[SpreadSheetContract.internationalTitle]) {
-            const movie = await this.movieService.getValue(ref =>
-              ref.where('title.international', '==', trimmedRow[SpreadSheetContract.internationalTitle]))
-            if (movie.length) contract.titleId = movie[0].id
-          } else {
-            importErrors.errors.push({
-              type: 'error',
-              field: 'contract.titleId',
-              name: 'Title Id',
-              reason: 'We need to know the title otherwise we can\'t map the contract to the a movie',
-              hint: 'Edit corresponding sheet field.'
-            })
-          }
 
           if (trimmedRow[SpreadSheetContract.parentTermId]) {
-            const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
-            if (term?.length) {
-              contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
+            if (typeof trimmedRow[SpreadSheetContract.parentTermId] === 'string') {
+              const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
+              if (term?.length) {
+                contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
+              } else {
+                // it is a number so it refs a column in the excel sheet
+                const row = sheetTab.rows[trimmedRow[SpreadSheetContract.parentTermId + 1]]
+
+
+              }
             } else {
               contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
               importErrors.errors.push({
@@ -222,7 +186,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             /* Create term */
-            const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
+            const term = createTerm({ contractId: contract.id, orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
             if (trimmedRow[SpreadSheetContract.territories]?.length) {
               const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
               const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
@@ -258,8 +222,12 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.startOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
                 term.duration.from = new Date(Math.round((spreadSheetRow[SpreadSheetContract.startOfContract] - 25569) * 86400 * 1000));
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.from.setHours(0)
               } else {
                 term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract])
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.from.setHours(0)
               }
             } else {
               importErrors.errors.push({
@@ -274,8 +242,12 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.endOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
                 term.duration.to = new Date(Math.round((spreadSheetRow[SpreadSheetContract.endOfContract] - 25569) * 86400 * 1000));
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.to.setHours(0)
               } else {
                 term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.to.setHours(0)
               }
             } else {
               importErrors.errors.push({
