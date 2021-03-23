@@ -34,6 +34,12 @@ export function getMandateTerm(
   }
   return;
 }
+/* 
+ const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
+    const GazaMonAmour = 'cXHN9C9GftkMhYmu7CV1';
+    const MarinaAbramovic = 'HgU5WygrYoon1QnFqEpe';
+    const MotherSchmuckers = 'bR4fTHmDDuOSPrNaz39J';
+    const BigFootFamily = '1eJm06mvagJDNJ2yAlDt'; */
 
 export function isSold(
   { medias, duration, territories, exclusive }: AvailsFilter,
@@ -44,16 +50,17 @@ export function isSold(
     const endDuringDuration = duration.to.getTime() <= term.duration.to.getTime() && duration.to.getTime() >= duration.from.getTime();
     const inDuration = startDuringDuration || endDuringDuration;
     const wrappedDuration = duration.from.getTime() <= term.duration.from.getTime() && duration.to.getTime() >= term.duration.to.getTime();
-
+    
     if (exclusive) {
-
+      
       const intersectsMediaAndTerritory = territories.some(territory => term.territories.includes(territory)) && medias.some(medium => term.medias.includes(medium));
-
+      
       if (intersectsMediaAndTerritory && inDuration) {
         return true
       }
       continue;
     } else if (term.exclusive) {
+      // if('HgU5WygrYoon1QnFqEpe' === term.titleId) console.log(inDuration || wrappedDuration)
       // If the buyer wants a non exclusive rights, we need to check if there is already an very much the same sale ongoing
       if (inDuration || wrappedDuration) {
         if (!medias.every(medium => term.medias.includes(medium)) || !territories.every(territory => term.territories.includes(territory))) {
@@ -61,13 +68,13 @@ export function isSold(
         } else {
           return true;
         }
+      } else {
+        continue;
       }
     } else {
       // If buyer wants a non exclusive rights and the sales term that we are currently checking is not exclusive, we skip the iteration
       continue;
     }
-
-    return true;
   }
   return false;
 }
