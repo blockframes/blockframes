@@ -73,9 +73,9 @@ export class ViewExtractedContractsComponent implements OnInit {
     this.clearDataSources();
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
     for (const spreadSheetRow of sheetTab.rows) {
-      const trimmedRow = spreadSheetRow.map(cell => {
-        if (typeof cell === 'string') cell.trim()
-        return cell
+      const trimmedRow: string[] = spreadSheetRow.map(cell => {
+        if (typeof cell === 'string') return cell.trim()
+        return cell.toString()
       })
       let contract: Mandate | Sale;
       let newContract = true;
@@ -109,8 +109,8 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           if (trimmedRow[SpreadSheetContract.parentTermId]) {
             if (typeof trimmedRow[SpreadSheetContract.parentTermId] === 'string') {
-              const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
-              if (term?.length) {
+              const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId])
+              if (term) {
                 contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
               } else {
                 // it is a number so it refs a column in the excel sheet
@@ -137,13 +137,13 @@ export class ViewExtractedContractsComponent implements OnInit {
               hint: 'Edit corresponding sheet field.'
             })
 
-            if (trimmedRow[SpreadSheetContract.stakeholders]?.length) {
+            if (trimmedRow[SpreadSheetContract.stakeholders]) {
               let orgs: Organization[];
-              if (Array.isArray(trimmedRow[SpreadSheetContract.stakeholders])) {
-                orgs = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
-              } else {
-                orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.stakeholders]))
-              }
+              /* if (Array.isArray(trimmedRow[SpreadSheetContract.stakeholders])) {
+                 orgs = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
+               //} else {*/
+              orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.stakeholders]))
+              //}
               contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
             } else {
               importErrors.errors.push({
@@ -187,8 +187,8 @@ export class ViewExtractedContractsComponent implements OnInit {
 
             /* Create term */
             const term = createTerm({ contractId: contract.id, orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
-            if (trimmedRow[SpreadSheetContract.territories]?.length) {
-              const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
+            if (trimmedRow[SpreadSheetContract.territories]) {
+              const territoryValues = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
               const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
               term.territories = territories;
             } else {
@@ -201,8 +201,8 @@ export class ViewExtractedContractsComponent implements OnInit {
               })
             }
 
-            if (trimmedRow[SpreadSheetContract.medias]?.length) {
-              const mediaValues: MediaValue[] = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
+            if (trimmedRow[SpreadSheetContract.medias]) {
+              const mediaValues = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
               const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim())).filter(media => !!media)
               term.medias = medias;
             } else {
@@ -222,8 +222,12 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.startOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
                 term.duration.from = new Date(Math.round((spreadSheetRow[SpreadSheetContract.startOfContract] - 25569) * 86400 * 1000));
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.from.setHours(0)
               } else {
                 term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract])
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.from.setHours(0)
               }
             } else {
               importErrors.errors.push({
@@ -238,8 +242,12 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.endOfContract]) {
               if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
                 term.duration.to = new Date(Math.round((spreadSheetRow[SpreadSheetContract.endOfContract] - 25569) * 86400 * 1000));
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.to.setHours(0)
               } else {
                 term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
+                // We don't want the current hours when the term got imported, we want midnight
+                term.duration.to.setHours(0)
               }
             } else {
               importErrors.errors.push({
@@ -266,7 +274,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
 
             if (trimmedRow[SpreadSheetContract.dubbed]) {
-              const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
+              const languageValues = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
               const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
               for (const language of languages) {
                 if (language) {
@@ -284,7 +292,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.subtitled]) {
-              const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
+              const languageValues = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
               const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
               for (const language of languages) {
                 if (language) {
@@ -302,7 +310,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
-              const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
+              const languageValues = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
               const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
               for (const language of languages) {
                 if (language) {

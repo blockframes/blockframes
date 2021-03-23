@@ -6,7 +6,8 @@ import {
   StoreType,
   StoreStatus,
   ProductionStatus,
-  OrgActivity
+  OrgActivity,
+  ContentType
 } from '../static-model';
 import { MovieRunningTime, MovieRelease, MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Module, ModuleAccess } from '../apps';
@@ -121,6 +122,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   runningTime: MovieRunningTime,
   release: MovieRelease
   storeType: StoreType | string,
+  contentType: ContentType
 }
 
 /* ORGANIZATION */

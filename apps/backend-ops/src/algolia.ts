@@ -178,7 +178,8 @@ const baseConfig: AlgoliaConfig = {
     'originCountries',
     'status',
     'storeConfig',
-    'storeType'
+    'storeType',
+    'contentType'
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)']
 };
