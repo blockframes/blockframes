@@ -131,4 +131,8 @@ export class MovieAnalyticsChartComponent {
       return 0;
     }
   }
+
+  displayPlaceholder(eventName: MovieAnalyticsEventName) {
+    return !(typeof this.totalHitsOnCurrentMonth(eventName) === 'number');
+  }
 }

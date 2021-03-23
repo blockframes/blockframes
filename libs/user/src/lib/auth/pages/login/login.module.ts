@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
 import { SigninFormModule } from '../../components/signin-form/signin-form.module';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -17,6 +18,7 @@ import { LoginComponent } from './login.component';
     CommonModule,
     FlexLayoutModule,
     SigninFormModule,
+    AppLogoModule,
 
     // Material
     MatSnackBarModule,
