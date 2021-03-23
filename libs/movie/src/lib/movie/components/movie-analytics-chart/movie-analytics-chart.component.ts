@@ -133,10 +133,6 @@ export class MovieAnalyticsChartComponent {
   }
 
   displayPlaceholder(eventName: MovieAnalyticsEventName) {
-    const totalHits = this.totalHitsOnCurrentMonth(eventName);
-    if (!!totalHits || totalHits === 0) {
-      return false;
-    }
-    return true;
+    return !(typeof this.totalHitsOnCurrentMonth(eventName) === 'number');
   }
 }
