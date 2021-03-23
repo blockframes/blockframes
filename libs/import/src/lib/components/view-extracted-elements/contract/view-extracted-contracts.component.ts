@@ -143,7 +143,6 @@ export class ViewExtractedContractsComponent implements OnInit {
               const result = await Promise.all(promises);
               result.forEach(organizations => organizations.forEach(org => orgs.push(org)));
               contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
-              console.log('stakeholders: ', contract.stakeholders)
             } else {
               importErrors.errors.push({
                 type: 'warning',
