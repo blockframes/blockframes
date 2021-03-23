@@ -56,89 +56,97 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
-    // because of possible nested map and arrays, we need to retrieve the whole document
-    // modify it, then update the whole doc with the new (modified) version
-    const docRef = db.collection(metadata.collection).doc(metadata.docId);
-    const docSnap = await docRef.get();
-    await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
-    const doc = docSnap.data()!;
+    await db.runTransaction(async transaction => {
+      // because of possible nested map and arrays, we need to retrieve the whole document
+      // modify it, then update the whole doc with the new (modified) version
+      const docRef = db.collection(metadata.collection).doc(metadata.docId);
+      const docSnap = await transaction.get(docRef);
+      await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
+      const doc = docSnap.data()!;
 
-    // (1) Security checks
+      // (1) Security checks
 
-    const blockframesAdmin = await db.doc(`blockframesAdmin/${metadata.uid}`).get();
-    if (!blockframesAdmin.exists) {
+      const blockframesAdminRef = db.doc(`blockframesAdmin/${metadata.uid}`);
+      const blockframesAdminSnap = await transaction.get(blockframesAdminRef);
+      if (!blockframesAdminSnap.exists) {
 
-      const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
+        const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
 
-      // Is the user allowed to upload this file ?
-      switch (metadata.collection) {
-        case 'users': {
-          // only the user is allowed to upload files about himself
-          await assertFile(metadata.docId === metadata.uid, notAllowedError);
-          break;
+        // Is the user allowed to upload this file ?
+        switch (metadata.collection) {
+          case 'users': {
+            // only the user is allowed to upload files about himself
+            await assertFile(metadata.docId === metadata.uid, notAllowedError);
+            break;
 
-        } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
-          // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-          const user = await getDocument<User>(`users/${metadata.uid}`);
-          await assertFile(!!user, notAllowedError);
+          } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
+            // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
+            const userRef = db.collection('users').doc(metadata.uid);
+            const userSnap = await transaction.get(userRef);
+            await assertFile(userSnap.exists, notAllowedError);
 
-          const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
-          await assertFile(!!movie, notAllowedError);
+            const movieRef = db.collection('movies').doc(metadata.docId);
+            const movieSnap = await transaction.get(movieRef);
+            await assertFile(movieSnap.exists, notAllowedError);
 
-          const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
-          await assertFile(isAllowed, notAllowedError);
-          break;
+            const user = userSnap.data() as User;
+            const movie = movieSnap.data() as MovieDocument;
+            const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
+            await assertFile(isAllowed, notAllowedError);
+            break;
 
-        } case 'orgs': {
-          // only member of an org can upload to this org
-          const user = await getDocument<User>(`users/${metadata.uid}`);
-          await assertFile(!!user, notAllowedError);
-          await assertFile(user.orgId === metadata.docId, notAllowedError);
-          break;
+          } case 'orgs': {
+            // only member of an org can upload to this org
+            const userRef = db.collection('users').doc(metadata.uid);
+            const userSnap = await transaction.get(userRef);
+            await assertFile(userSnap.exists, notAllowedError);
+            const user = userSnap.data() as User;
+            await assertFile(user.orgId === metadata.docId, notAllowedError);
+            break;
 
-        } default: {
-          await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+          } default: {
+            await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+          }
         }
       }
-    }
 
-    // (2) copy file to final destination
+      // (2) copy file to final destination
 
-    const segments = data.name.split('/');
-    segments.shift(); // remove tmp/
-    const finalPath = segments.join('/');
-    const to = bucket.file(`${metadata.privacy}/${finalPath}`);
+      const segments = data.name.split('/');
+      segments.shift(); // remove tmp/
+      const finalPath = segments.join('/');
+      const to = bucket.file(`${metadata.privacy}/${finalPath}`);
 
-    await file.copy(to);
+      await file.copy(to);
 
-    // (3) update db
+      // (3) update db
 
-    // separate extraData from metadata
-    const keysToDelete = [
-      'uid',
-      'firebaseStorageDownloadTokens',
-    ];
-    for (const key of keysToDelete) {
-      delete metadata[key];
-    }
+      // separate extraData from metadata
+      const keysToDelete = [
+        'uid',
+        'firebaseStorageDownloadTokens',
+      ];
+      for (const key of keysToDelete) {
+        delete metadata[key];
+      }
 
-    const uploadData: StorageFile = {
-      ...metadata,
-      storagePath: finalPath,
-    }
+      const uploadData: StorageFile = {
+        ...metadata,
+        storagePath: finalPath,
+      }
 
+      let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
 
-    let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
+      if (Array.isArray(fieldValue)) {
+        fieldValue.push(uploadData);
+      } else {
+        fieldValue = uploadData;
+      }
 
-    if (Array.isArray(fieldValue)) {
-      fieldValue.push(uploadData);
-    } else {
-      fieldValue = uploadData;
-    }
+      set(doc, metadata.field, fieldValue);
 
-    set(doc, metadata.field, fieldValue);
-
-    await docRef.update(doc);
+      await transaction.update(docRef, doc);
+    }).catch(err => console.error('Transaction Failed:', err));
 
     // (4) delete tmp/file
     return file.delete();
