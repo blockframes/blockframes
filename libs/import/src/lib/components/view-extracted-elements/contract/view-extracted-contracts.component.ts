@@ -10,10 +10,9 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
-import { TermService } from '@blockframes/contract/term/+state/term.service'
-import { Term } from '@blockframes/contract/term/+state/term.model';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { Language, parseToAll } from '@blockframes/utils/static-model';
+import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 enum SpreadSheetContract {
@@ -138,13 +137,10 @@ export class ViewExtractedContractsComponent implements OnInit {
             })
 
             if (trimmedRow[SpreadSheetContract.stakeholders]) {
-              let orgs: Organization[];
-              /* if (Array.isArray(trimmedRow[SpreadSheetContract.stakeholders])) {
-                 orgs = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
-               //} else {*/
-              orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.stakeholders]))
-              //}
-              contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
+              const stakeholders = trimmedRow[SpreadSheetContract.stakeholders].split(this.separator);
+              const promises = stakeholders.map(orgName => this.orgService.getValue(ref => ref.where('denomination.full', '==', orgName.trim())));
+              const orgs = await Promise.all(promises);
+              contract.stakeholders = orgs.flat().filter(org => !!org).map(org => org.id);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -190,7 +186,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.territories]) {
               const territoryValues = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
               const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
-              term.territories = territories;
+              term.territories = territories.every(territory => territory === 'world') ? parseToAll('territories', 'world') : territories;
             } else {
               importErrors.errors.push({
                 type: 'error',
@@ -274,8 +270,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
 
             if (trimmedRow[SpreadSheetContract.dubbed]) {
-              const languageValues = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
+              const languages = this.getLanguages(trimmedRow[SpreadSheetContract.dubbed]);
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], dubbed: true }
@@ -292,8 +287,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.subtitled]) {
-              const languageValues = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
+              const languages = this.getLanguages(trimmedRow[SpreadSheetContract.subtitled]);
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], subtitle: true }
@@ -310,8 +304,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
-              const languageValues = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
+              const languages = this.getLanguages(trimmedRow[SpreadSheetContract.closedCaptioning]);
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], caption: true }
@@ -347,5 +340,11 @@ export class ViewExtractedContractsComponent implements OnInit {
   private clearDataSources() {
     this.contractsToCreate.data = [];
     this.contractsToUpdate.data = [];
+  }
+
+  private getLanguages(rawValue: string) {
+    return rawValue === 'world'
+      ? parseToAll('languages', 'all')
+      : rawValue.split(this.separator).map(language => getKeyIfExists('languages', language.trim()));
   }
 }

@@ -1936,3 +1936,7 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
     fr: territoriesFR[territory],
   }
 }
+
+export function parseToAll(scope: Scope, allKey: string): any[] {
+  return Object.keys(staticModel[scope]).filter(key => key !== allKey)
+}
