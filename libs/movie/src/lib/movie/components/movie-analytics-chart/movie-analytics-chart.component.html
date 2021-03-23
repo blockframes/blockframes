@@ -17,8 +17,9 @@
         </div>
       </div>
       <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
-      <div fxLayoutAlign="center center">
-      <img *ngIf="!analyticsData" asset="wait.svg" alt="no statistics yet"/></div>
+      <div *ngIf="displayPlaceholder(info.eventName)" fxLayoutAlign="center center">
+        <img asset="wait.svg" alt="no statistics yet"/>
+      </div>
       <mat-card-content fxLayout="column" fxLayoutAlign="center center">
         <apx-chart
           [series]="getLineChartSeries(info.eventName, info.title)"

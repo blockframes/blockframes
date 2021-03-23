@@ -131,4 +131,12 @@ export class MovieAnalyticsChartComponent {
       return 0;
     }
   }
+
+  displayPlaceholder(eventName: MovieAnalyticsEventName) {
+    const totalHits = this.totalHitsOnCurrentMonth(eventName);
+    if (!!totalHits || totalHits === 0) {
+      return false;
+    }
+    return true;
+  }
 }

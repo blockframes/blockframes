@@ -15,6 +15,7 @@ mat-card {
 
 img {
   height: 120px;
+  margin-bottom: 16px;
 }
 
 @include layout-bp(lt-lg) {
