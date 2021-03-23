@@ -71,9 +71,9 @@ export class FileUploaderService {
 
     const uploads = this.queue[storagePath];
 
-    if (!uploads) return;
+    if (!uploads || !uploads.length) return;
 
-    const index = uploads.findIndex(upload => upload.fileName === fileName);
+    const index = uploads.findIndex(upload => upload?.fileName === fileName);
 
     // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
     if (index !== -1) uploads[index] = null;
