@@ -198,7 +198,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     // firestore document only supports 1 write per seconds
     const randomDurationSeconds = Math.floor(Math.random() * 10);
 
-    this.snackbar.open(`The meeting owner has leaved, you will be disconnected in ${durationMinutes}m.`, 'dismiss', { duration: 5000 });
+    this.snackbar.open(`The organizer just left the meeting room. You will be disconnected in ${durationMinutes} minute.`, 'dismiss', { duration: 5000 });
     this.countdownId = window.setTimeout(
       () => this.autoLeave(),
       ((1000 * 60) * durationMinutes) + (1000 * randomDurationSeconds)
