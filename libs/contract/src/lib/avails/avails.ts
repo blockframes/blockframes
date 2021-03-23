@@ -12,7 +12,6 @@ export function getMandateTerm(
   { medias, duration, territories }: AvailsFilter,
   terms: Term<Date>[] // Terms of all mandates of the title
 ): Term<Date> | undefined {
-
   for (const term of terms) {
     // If starts before term: not available
     if (duration.from.getTime() <= term.duration.from.getTime()) {
@@ -34,12 +33,6 @@ export function getMandateTerm(
   }
   return;
 }
-/* 
- const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
-    const GazaMonAmour = 'cXHN9C9GftkMhYmu7CV1';
-    const MarinaAbramovic = 'HgU5WygrYoon1QnFqEpe';
-    const MotherSchmuckers = 'bR4fTHmDDuOSPrNaz39J';
-    const BigFootFamily = '1eJm06mvagJDNJ2yAlDt'; */
 
 export function isSold(
   { medias, duration, territories, exclusive }: AvailsFilter,
@@ -47,23 +40,23 @@ export function isSold(
 ) {
   for (const term of terms) {
     const startDuringDuration = duration.from.getTime() >= term.duration.from.getTime() && duration.from.getTime() <= term.duration.to.getTime();
-    const endDuringDuration = duration.to.getTime() <= term.duration.to.getTime() && duration.to.getTime() >= duration.from.getTime();
+    const endDuringDuration = duration.to.getTime() <= term.duration.to.getTime() && duration.to.getTime() >= term.duration.from.getTime();
     const inDuration = startDuringDuration || endDuringDuration;
     const wrappedDuration = duration.from.getTime() <= term.duration.from.getTime() && duration.to.getTime() >= term.duration.to.getTime();
-    
+
     if (exclusive) {
-      
-      const intersectsMediaAndTerritory = territories.some(territory => term.territories.includes(territory)) && medias.some(medium => term.medias.includes(medium));
-      
+
+      const intersectsMediaAndTerritory = territories.some(territory => term.territories.includes(territory)) &&
+        medias.some(medium => term.medias.includes(medium));
+
       if (intersectsMediaAndTerritory && inDuration) {
         return true
       }
       continue;
     } else if (term.exclusive) {
-      // if('HgU5WygrYoon1QnFqEpe' === term.titleId) console.log(inDuration || wrappedDuration)
-      // If the buyer wants a non exclusive rights, we need to check if there is already an very much the same sale ongoing
       if (inDuration || wrappedDuration) {
-        if (!medias.every(medium => term.medias.includes(medium)) || !territories.every(territory => term.territories.includes(territory))) {
+        // if('HgU5WygrYoon1QnFqEpe' === term.titleId) console.log(inDuration, wrappedDuration)
+        if (!medias.some(medium => term.medias.includes(medium)) || !territories.some(territory => term.territories.includes(territory))) {
           continue;
         } else {
           return true;
