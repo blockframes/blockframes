@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Optional } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
@@ -7,6 +7,9 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
+import { Intercom } from 'ng-intercom';
+import { appName, getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved';
 
@@ -34,6 +37,8 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
+  public app = getCurrentApp(this.routerQuery);
+  public appName = appName[this.app];
   columns = columns;
   initialColumns = ['title', 'productionStatus', 'campaign.cap', 'campaign.received', 'campaignStarted'];
   titles$: Observable<MovieCampaign[]>;
@@ -46,7 +51,9 @@ export class ListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private routerQuery: RouterQuery,
+    @Optional() private intercom: Intercom
   ) { }
 
   ngOnInit() {
@@ -70,5 +77,9 @@ export class ListComponent implements OnInit {
 
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 }

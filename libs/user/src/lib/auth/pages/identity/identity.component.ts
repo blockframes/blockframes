@@ -169,7 +169,7 @@ export class IdentityComponent implements OnInit {
 
     if (!!this.existingOrgId) {
       await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
-      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;

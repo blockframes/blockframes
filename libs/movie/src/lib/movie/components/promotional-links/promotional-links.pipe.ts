@@ -18,7 +18,7 @@ export class PromotionalLinksPipe implements PipeTransform {
         if (!!url) {
           const linkLabel = promotionalElementTypes[link];
           const icon = 'play_arrow';
-          const label = `Watch ${linkLabel}`;
+          const label = `View ${linkLabel}`;
           return { url, icon, label };
         }
       }
