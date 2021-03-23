@@ -6,6 +6,8 @@ export interface Bucket {
   currency: MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: BucketContract[];
+  specificity: string;
+  delivery: string;
   /** Needed to show user in email to business team */
   uid?: string;
 }
@@ -20,6 +22,7 @@ interface BucketContract {
   parentTermId: string;
   /** List of sub terms derived from the parent terms that the buyer want to buy */
   terms: AvailsFilter[];
+  specificity: string;
 }
 
 function createBucketTerm(params: Partial<AvailsFilter> = {}): AvailsFilter {
@@ -32,12 +35,13 @@ function createBucketTerm(params: Partial<AvailsFilter> = {}): AvailsFilter {
   }
 }
 
-function createBucketContract(params: Partial<BucketContract> = {}): BucketContract {
+export function createBucketContract(params: Partial<BucketContract> = {}): BucketContract {
   return {
     titleId: '',
     orgId: '',
     price: 0,
     parentTermId: '',
+    specificity: '',
     ...params,
     terms: params.terms?.map(createBucketTerm) ?? []
   }
@@ -47,6 +51,8 @@ export function createBucket(params: Partial<Bucket> = {}): Bucket {
   return {
     id: '',
     currency: 'EUR',
+    specificity: '',
+    delivery: '',
     ...params,
     contracts: params.contracts?.map(createBucketContract) ?? []
   }
