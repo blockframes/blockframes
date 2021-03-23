@@ -15,7 +15,6 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
 /** Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app. */
 export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
   const p1: AuthLoginPage = new AuthLoginPage();
-  p1.switchMode();
   p1.fillSignin(user);
   p1.clickSignIn();
   cy.wait(10000);
@@ -225,3 +224,9 @@ export function setForm(selector: string, formOpt: FormOptions) {
   .then(_ => console.table(formData));
 }
 
+/** Used to test the path we should go */
+export function assertMoveTo(path: string) {
+  cy.location().should(loc => {
+    expect(loc.pathname).to.eq(path);
+  });
+}

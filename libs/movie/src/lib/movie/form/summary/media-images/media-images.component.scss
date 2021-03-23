@@ -17,3 +17,9 @@ a.mat-icon-button {
   height: 32px;
   width: 32px;
 }
+
+span {
+  mat-icon {
+    margin: 0 8px;
+  }
+}

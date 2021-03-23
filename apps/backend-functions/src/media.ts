@@ -41,8 +41,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
   const metadata = data.metadata as FileMetaData;
   const isValid = isValidMetadata(metadata, { uidRequired: true });
 
-  const [ tmp ] = data.name.split('/');
-  if ( tmp === tempUploadDir ) {
+  const [tmp] = data.name.split('/');
+  if (tmp === tempUploadDir) {
 
     // (1) Security checks, (2) copy file to final destination, (3) update db, (4) delete tmp/file
 
@@ -290,11 +290,13 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(before.logo);
     }
 
-    const notesToDelete = checkFileList(
-      before.documents.notes,
-      after.documents.notes
-    );
-    mediaToDelete.push(...notesToDelete);
+    if(!!before.documents && !!before.documents?.notes) {
+      const notesToDelete = checkFileList(
+        before.documents?.notes,
+        after.documents?.notes
+      );
+      mediaToDelete.push(...notesToDelete);
+    }
 
   } else { // Deleting
     if (!!before.logo) {

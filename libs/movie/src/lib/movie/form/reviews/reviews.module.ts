@@ -20,10 +20,10 @@ import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { PrizePipeModule } from '../../pipes/display-prize.pipe';
-import { MovieFormReviewscComponent } from './reviews.component';
+import { MovieFormReviewsComponent } from './reviews.component';
 
 @NgModule({
-  declarations: [MovieFormReviewscComponent],
+  declarations: [MovieFormReviewsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -47,7 +47,7 @@ import { MovieFormReviewscComponent } from './reviews.component';
     MatTooltipModule,
 
     // Routes
-    RouterModule.forChild([{ path: '', component: MovieFormReviewscComponent }]),
+    RouterModule.forChild([{ path: '', component: MovieFormReviewsComponent }]),
   ],
 })
 export class MovieFormReviewsModule { }

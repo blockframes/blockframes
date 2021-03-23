@@ -1,3 +1,4 @@
+import { appName } from '@blockframes/utils/apps';
 import {
   Territory,
   TerritoryISOA2,
@@ -494,19 +495,19 @@ export const organizationStatus = {
 } as const
 
 export const festival = {
-  cannes: 'Cannes International Film Festival',
-  venice: 'Venice International Film Festival',
   berlinale: 'Berlin International Film Festival (The Berlinale)',
-  toronto: 'Toronto International Film Festival (TIFF)',
-  sundace: 'Sundance Film Festival',
-  locarno: 'Locarno International Film Festival',
-  rotterdam: 'International Film Festival Rotterdam',
-  triBeCa: 'TriBeCa Film Festival',
-  sxsw: 'SXSW Film Festival',
-  sanSebastian: 'San Sebastian International Film Festival',
-  oscar: 'Oscar Academy Awards',
+  bfta: 'BAFTA Film Awards',
+  cannes: 'Cannes International Film Festival',
   goldenGlobe: 'Golden Globe Awards',
-  bfta: 'BAFTA Film Awards'
+  locarno: 'Locarno International Film Festival',
+  oscar: 'Oscar Academy Awards',
+  rotterdam: 'International Film Festival Rotterdam',
+  sanSebastian: 'San Sebastian International Film Festival',
+  sundace: 'Sundance Film Festival',
+  sxsw: 'SXSW Film Festival',
+  toronto: 'Toronto International Film Festival (TIFF)',
+  triBeCa: 'TriBeCa Film Festival',
+  venice: 'Venice International Film Festival',
 } as const
 
 export const territories = {
@@ -1866,7 +1867,8 @@ export const staticModel = {
   territoriesISOA2,
   territoriesISOA3,
   territoriesNUMCODE,
-  territoriesFR
+  territoriesFR,
+  appName
 };
 
 export type StaticModel = typeof staticModel;

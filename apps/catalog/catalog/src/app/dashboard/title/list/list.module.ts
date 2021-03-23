@@ -13,6 +13,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
+import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -33,6 +34,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FilterByModule,
     AnalyticsPipeModule,
     DisplayNameModule,
+    NoTitleModule,
     // Material
     MatButtonModule,
     MatTabsModule,

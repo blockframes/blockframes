@@ -47,6 +47,7 @@ import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 import { InvitationsComponent } from './pages/invitations/invitations.component';
 import { OrganizationCreateComponent } from './components/organization/create-organization/create.component';
 import { CrmFormDialogModule } from './components/crm-form-dialog/crm-form-dialog.module';
+import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -96,7 +97,8 @@ export const panelRoutes: Routes = [
     MovieVideoUploadModule,
     CrmFormDialogModule,
     AppPipeModule,
-    MoviePictureUploadModule
+    MoviePictureUploadModule,
+    StaticSelectModule
   ],
   declarations: [
     MoviesComponent,

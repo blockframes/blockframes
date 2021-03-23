@@ -17,13 +17,6 @@
         <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-        <!--TODO#2728: improve component with filters-->
-        <!-- <algolia-autocomplete
-          index="movie" mode="standard" resetInput native prefixIcon="search" clearable keyToDisplay="title.international">
-          <ng-template let-result>
-            <a [routerLink]="['title', result.objectID]" class="algolia-result">{{ result.title.international }}</a>
-          </ng-template>
-        </algolia-autocomplete> -->
         <div fxLayout="row" fxLayoutGap="24px">
           <mat-divider vertical></mat-divider>
           <!-- Invitations -->

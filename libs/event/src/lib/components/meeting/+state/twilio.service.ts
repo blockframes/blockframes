@@ -60,16 +60,19 @@ export class TwilioService {
   }
 
   cleanLocal() {
+    const local = this.twilioQuery.localAttendee;
+
+    if (!local) return;
+
     const cleanTrack = (track: LocalVideoTrack | LocalAudioTrack) => {
       track?.stop();
       track?.removeAllListeners();
     }
 
-    const local = this.twilioQuery.localAttendee;
-    cleanTrack(local.tracks.video);
-    cleanTrack(local.tracks.audio);
+    cleanTrack(local?.tracks?.video);
+    cleanTrack(local?.tracks?.audio);
 
-    this.twilioStore.remove(local.id);
+    this.twilioStore.remove(local?.id);
   }
 
   toggleTrack(kind: TrackKind) {
@@ -94,7 +97,10 @@ export class TwilioService {
     }
     const token = response.result;
 
-
+    if (!this.twilioQuery.localAttendee) {
+      console.warn('CANNOT CONNECT WITHOUT A LOCAL ATTENDEE: call `initLocal()` first!');
+      return;
+    }
     const localTracks = this.twilioQuery.localAttendee.tracks;
 
     const tracks: (LocalVideoTrack | LocalAudioTrack)[] = [];
@@ -130,13 +136,13 @@ export class TwilioService {
   }
 
   disconnect() {
+    this.cleanLocal();
+
     if (!this.room) return;
 
     this.room.disconnect();
     this.room.removeAllListeners();
     this.room = null;
-
-    this.cleanLocal();
 
     this.twilioStore.remove(); // delete all entities from the store
   }

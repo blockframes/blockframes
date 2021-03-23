@@ -1,5 +1,5 @@
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
@@ -24,16 +24,16 @@ export class OrganizationCreateComponent {
   }, {
     updateOn: 'blur'
   });
+  public fromApp = new FormControl('');
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) data: {event: Event, types: string[] },
     public dialogRef: MatDialogRef<OrganizationCreateComponent>,
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private orgService: OrganizationService,
     private userService: UserService,
     private router: Router,
-  ) {}
+  ) { }
 
   async emailValidator(control: AbstractControl): Promise<{ [key: string]: any } | null> {
     const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', control.value));
@@ -55,15 +55,14 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    const superAdmin = createPublicUser(existingSuperAdmin);
-    if (!existingSuperAdmin) {
-      const newUser = await this.authService.createUser(
+    const baseUser = !!existingSuperAdmin
+      ? existingSuperAdmin
+      : await this.authService.createUser(
         superAdminEmail,
         this.form.get('denomination').get('full').value,
-        "festival"
+        this.fromApp.value
       );
-      superAdmin.uid = newUser.uid;
-    }
+    const superAdmin = createPublicUser(baseUser);
 
     const [firstApp] = getOrgAppAccess(this.form.value);
     const orgId = await this.orgService.addOrganization(this.form.value, firstApp, superAdmin);

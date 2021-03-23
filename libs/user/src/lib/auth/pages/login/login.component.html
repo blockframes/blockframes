@@ -1,22 +1,10 @@
-<mat-sidenav-container>
-  <mat-sidenav #signinSidenav [opened]="!isSignin" mode="side" position="end">
-    <auth-signin-form (opened)="isSignin=true" (submited)="signin($event)"></auth-signin-form>
-  </mat-sidenav>
-  <mat-sidenav-content bgAsset="login_signin.webp" test-id="switch-mode" [fxLayoutAlign]="align">
-    <button class="mat-elevation-z0" mat-icon-button mat-fab (click)="refreshState()">
-      <mat-icon [svgIcon]="isSignin ? 'arrow_forward' : 'arrow_back'"></mat-icon>
-    </button>
-  </mat-sidenav-content>
-  <mat-sidenav #signupSidenav [opened]="isSignin" mode="side">
-    <auth-signup-form (opened)="isSignin=false" (submited)="signup($event)"></auth-signup-form>
-  </mat-sidenav>
-</mat-sidenav-container>
+<a [routerLink]="['/']"><app-logo></app-logo></a>
 
+<auth-signin-form (submited)="signin($event)"></auth-signin-form>
 
 <ng-template #customSnackBarTemplate>
-  <div class="custom-snackbar-message">
-    An account already exists for this email address.<br />
-    If you don’t remember your password, <a routerLink="../email-verification">please reset it</a> or try searching in
-    your past emails. You might have received an invitation containing credentials.
+  <div class="custom-snackbar-message" fxLayoutGap="50px">
+    <span>This email does not exists.</span>
+    <a routerLink="/auth/identity">CREATE AN ACCOUNT</a>
   </div>
 </ng-template>

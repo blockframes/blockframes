@@ -20,4 +20,8 @@
   .mat-button-toggle-group-appearance-standard {
     border: solid 1px mat-color($primary, 500);
   }
+
+  .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+    background-color: mat-color($primary, 800);
+  }
 }

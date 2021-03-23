@@ -8,7 +8,7 @@ import { Router, NavigationEnd } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, persistenceSettings, emulators, firebaseRegion } from '@env';
+import { firebase, persistenceSettings, firebaseRegion } from '@env';
 
 // Components
 import { AppComponent } from './app.component';

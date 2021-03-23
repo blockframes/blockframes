@@ -43,20 +43,20 @@
   </h6>
   <ul>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [ref]="movie.banner.value"><strong> Film Page Banner Image </strong></bf-preview-modal>
-      <!-- test-id="banner-image" -->
-      <missing-control [control]="movie.banner.storagePath" [link]="link" fragments="images">
-        <ng-template let-banner>
-          {{ banner | fileName | maxLength: 30 }}
-        </ng-template>
-      </missing-control>
-    </li>
-    <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [ref]="movie.poster.value"><strong> Poster Image </strong></bf-preview-modal>
       <!-- test-id="poster-image" -->
       <missing-control [control]="movie.poster.storagePath" [link]="link">
         <ng-template let-poster>
           {{poster | fileName | maxLength: 30 }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <bf-preview-modal [ref]="movie.banner.value"><strong> Film Page Banner Image </strong></bf-preview-modal>
+      <!-- test-id="banner-image" -->
+      <missing-control [control]="movie.banner.storagePath" [link]="link" fragments="images">
+        <ng-template let-banner>
+          {{ banner | fileName | maxLength: 30 }}
         </ng-template>
       </missing-control>
     </li>
@@ -100,7 +100,12 @@
     </li>
     <li test-id="info-runtime">
       <strong>Running Time </strong>
-      <missing-control [control]="movie.runningTime.get('time')" [link]="link" fragment="general-information">
+      <missing-control
+        *ngIf="movie.runningTime.get('status').value !== 'tobedetermined'"
+        [control]="movie.runningTime.get('time')"
+        [link]="link"
+        fragment="general-information"
+      >
         <ng-template let-time>{{ time }} min </ng-template>
       </missing-control>
       <missing-control [control]="movie.runningTime.get('status')" [link]="link" fragment="general-information">
@@ -129,16 +134,16 @@
       <ng-template let-directors="control">
         <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]="'dir-info' + (i + 1)">
           <strong>
-            <missing-control [control]="director.get('firstName')"></missing-control>
+            <missing-control [control]="director.get('firstName')" [link]="link" fragment="directors"></missing-control>
             <span>&nbsp;</span>
-            <missing-control [control]="director.get('lastName')"></missing-control>
-            (<missing-control [control]="director.get('category')" scope="directorCategory">
+            <missing-control [control]="director.get('lastName')" [link]="link" fragment="directors"></missing-control>
+            (<missing-control [control]="director.get('category')" scope="directorCategory" [link]="link" fragment="directors">
             </missing-control>)
           </strong>
           <ng-container *ngFor="let film of director.filmography.controls">
             <span>{{ film | filmography }}</span>
           </ng-container>
-          <missing-control [control]="director.get('description')"></missing-control>
+          <missing-control [control]="director.get('description')" [link]="link" fragment="directors"></missing-control>
         </li>
       </ng-template>
     </missing-control>
