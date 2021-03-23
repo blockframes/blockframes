@@ -163,7 +163,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (this.listenToChanges) {
       this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
-        const media = this.formIndex !== undefined 
+        const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (!!media) {
@@ -200,12 +200,22 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   }
 
   private resetState() {
-    const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
-    if (!!retrieved) {
-      this.nextStep('show');
+    if (!!this.form.storagePath.value) {
+      this.mediaService.generateImgIxUrl({
+        ...this.metadata,
+        storagePath: this.form.storagePath.value,
+      }).then(previewUrl => {
+        this.previewUrl$.next(previewUrl);
+        this.nextStep('show');
+      });
     } else {
-      this.nextStep('drop');
-    };
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
+      if (!!retrieved) {
+        this.nextStep('show');
+      } else {
+        this.nextStep('drop');
+      };
+    }
   }
 
   ///////////
@@ -242,8 +252,6 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       this.delete();
     } else {
       this.nextStep('crop');
-      // TODO keep track of crop state
-      // this.form.patchValue({ cropped: false });
       this.fileUploader.nativeElement.value = null;
     }
 
@@ -277,8 +285,6 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       this.selectionChange.emit('added');
 
       this.form?.markAsDirty();
-      // TODO keep track of crop state
-      // cropped state = true
 
     } catch (err) {
       console.error(err);
@@ -290,7 +296,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       this.croppedImage = '';
     }
 
-    this.uploaderService.removeFromQueue(this.storagePath, this.fileName)
+    this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.form.reset();
 
     this.fileUploader.nativeElement.value = null;
