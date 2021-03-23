@@ -13,7 +13,7 @@ import { firebase } from '@env'
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
-import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
+import { MovieSalesPitch, MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -24,6 +24,10 @@ export function fakeEmail(name: string) {
   return `dev+${suffix}-${random}@blockframes.io`;
 }
 
+function fakeIp() {
+  return (Math.floor(Math.random() * 255) + 1) + "." + (Math.floor(Math.random() * 255)) + "." + (Math.floor(Math.random() * 255)) + "." + (Math.floor(Math.random() * 255));
+}
+
 function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T {
   return keys.every((key) => key in doc);
 }
@@ -32,7 +36,8 @@ function processUser<T extends User | PublicUser>(u: T): T {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = fakeEmail(firstName);
-  return { ...u, firstName, lastName, email };
+  const privacyPolicy = { date: new Date(), ip: fakeIp() }
+  return { ...u, firstName, lastName, email, privacyPolicy };
 }
 
 function processOrg<T extends Organization | PublicOrganization>(o: T): T {
@@ -91,7 +96,7 @@ function updateOrg(org: Organization | PublicOrganization) {
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
-function updateHostedVideo(screener: MovieVideo): MovieVideo {
+function updateHostedVideo(screener: MovieVideo): MovieVideo | MovieSalesPitch {
   const jwPlayerId = 'sduHGGRk';
   return {
     ...screener,
@@ -105,6 +110,9 @@ function processMovie(movie: Movie): Movie {
   }
   if (movie.promotional?.videos?.otherVideos) {
     movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
+  }
+  if (movie.promotional?.salesPitch) {
+    movie.promotional.salesPitch = updateHostedVideo(movie.promotional.salesPitch);
   }
   return movie;
 }
