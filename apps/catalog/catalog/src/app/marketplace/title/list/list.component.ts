@@ -26,6 +26,7 @@ import { SearchResponse } from '@algolia/client-search';
 import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgID } from '@env';
+import { createBucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -101,7 +102,7 @@ export class ListComponent implements OnInit, OnDestroy {
           const parentTerm = getMandateTerm(availsValue, this.terms[titleId].mandate);
           if (!parentTerm) return false;
           this.parentTerms[titleId] = parentTerm;
-          const terms = bucketValue.contracts.find(c => c.titleId === titleId)?.terms ?? [];
+          const terms = bucketValue?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
           return !isSold(availsValue, this.terms[titleId].sale) && !isInBucket(availsValue, terms);
         })
         this.movieResultsState.next(hits);
@@ -144,7 +145,7 @@ export class ListComponent implements OnInit, OnDestroy {
     if (!parentTermId) throw new Error('no available term for this title');
     const term = this.availsForm.value;
     const orgId = this.orgQuery.getActiveId();
-    const contract = { titleId, parentTermId: parentTermId, terms: [term], price: 0, orgId };
+    const contract = createBucketContract({ titleId, parentTermId, terms: [term] }); 
 
     if (!!this.bucketQuery.getActive()) {
       this.bucketService.update(orgId, (bucket) => {
