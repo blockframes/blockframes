@@ -6,6 +6,8 @@ import { MovieService, fromOrg } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
 // RxJs
 import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
@@ -24,6 +26,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
+  public app = getCurrentApp(this.routerQuery);
+  public appName = appName[this.app];
   public allMoviesFromOrg$: Observable<Movie[]>
   public hasAcceptedMovies$: Observable<boolean>;
   public hasMovies$: Observable<boolean>;
@@ -32,6 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private orgQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService,
+    private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
 

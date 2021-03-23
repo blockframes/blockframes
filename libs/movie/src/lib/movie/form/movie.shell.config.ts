@@ -54,7 +54,7 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 @Injectable({ providedIn: 'root' })
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   form = new MovieForm(this.query.getActive());
-  name = 'Movie'
+  name = 'Title'
   constructor(
     private query: MovieQuery,
     private route: RouterQuery,
