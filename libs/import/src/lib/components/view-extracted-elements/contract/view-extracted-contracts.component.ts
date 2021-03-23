@@ -186,7 +186,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (trimmedRow[SpreadSheetContract.territories]) {
               const territoryValues = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
               const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
-              term.territories = (territories.length === 1 && territories[0] === 'world') ? parseToAll('territories', 'world') : territories;
+              term.territories = territories.every(territory => territory === 'world') ? parseToAll('territories', 'world') : territories;
             } else {
               importErrors.errors.push({
                 type: 'error',
@@ -270,9 +270,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
 
             if (trimmedRow[SpreadSheetContract.dubbed]) {
-              const languageValues = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
-              let languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
-              if (languages.length === 1 && languages[0] == 'all') languages = parseToAll('languages', 'all');
+              const languages = this.getLanguages(trimmedRow[SpreadSheetContract.dubbed]);
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], dubbed: true }
@@ -289,9 +287,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.subtitled]) {
-              const languageValues = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
-              let languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()));
-              if (languages.length === 1 && languages[0] == 'all') languages = parseToAll('languages', 'all');
+              const languages = this.getLanguages(trimmedRow[SpreadSheetContract.subtitled]);
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], subtitle: true }
@@ -308,9 +304,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
-              const languageValues = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
-              let languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()));
-              if (languages.length === 1 && languages[0] == 'all') languages = parseToAll('languages', 'all');
+              const languages = this.getLanguages(trimmedRow[SpreadSheetContract.closedCaptioning]);
               for (const language of languages) {
                 if (language) {
                   term.languages[language] = { ...term.languages[language], caption: true }
@@ -346,5 +340,11 @@ export class ViewExtractedContractsComponent implements OnInit {
   private clearDataSources() {
     this.contractsToCreate.data = [];
     this.contractsToUpdate.data = [];
+  }
+
+  private getLanguages(rawValue: string) {
+    return rawValue === 'world'
+      ? parseToAll('languages', 'all')
+      : rawValue.split(this.separator).map(language => getKeyIfExists('languages', language.trim()));
   }
 }
