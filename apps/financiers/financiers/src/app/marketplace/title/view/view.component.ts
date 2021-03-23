@@ -58,7 +58,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     }
   ];
 
-  // @TODO #2586 Now we can upload video, is there any reason to get video links here ?
+  // @TODO #5350 Now we can upload video, clean old links
   promoLinks = [
     'promo_reel_link',
     'scenario',
