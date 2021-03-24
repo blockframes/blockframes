@@ -73,9 +73,9 @@ export class BucketService extends CollectionService<BucketState> {
       // For each contract
       for (const contract of bucket.contracts) {
         const contractId = this.db.createId();
-        const terms = contract.terms.map(t => ({ ...t, contractId }));
-        // Create the terms
-        const termIds = await this.termService.add(terms, { write: tx });
+        const terms = contract.terms.map(t => ({ ...t, contractId, id: this.db.createId() }));
+        const termIds = terms.map(t => t.id);
+
         // Create the contract
         await this.contractService.add({
           id: contractId,
@@ -90,6 +90,10 @@ export class BucketService extends CollectionService<BucketState> {
           offerId,
           specificity
         }, { write: tx });
+
+        // @dev: Create income & terms after contract because rules require contract to be created first
+        // Create the terms
+        await this.termService.add(terms, { write: tx });
         // Create the income
         await this.incomeService.add({
           status: 'pending',
