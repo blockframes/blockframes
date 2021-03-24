@@ -11,7 +11,6 @@ import type firebase from 'firebase'
  */
 export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
   id: string;
-  titleId: string;
   orgId: string;
   contractId: string;
   territories: Territory[];
@@ -26,7 +25,6 @@ export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
 export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
   return {
     id: '',
-    titleId: '',
     orgId: '',
     contractId: '',
     territories: [],

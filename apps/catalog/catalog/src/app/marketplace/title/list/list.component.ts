@@ -119,8 +119,9 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private async getContract(type: Contract['type']) {
-    const org = type === 'mandate' ? 'buyerId' : 'sellerId';
-    const contracts = await this.contractService.getValue(ref => ref.where('type', '==', type).where(org, '==', centralOrgID));
+    const contracts = type === 'mandate'
+      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgID))
+      : await this.contractService.getValue(ref => ref.where('type', '==', 'sale'))
     const termIdsByTitle = {};
 
     for (const contract of contracts) {
