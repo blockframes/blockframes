@@ -1,9 +1,9 @@
-<section class="container" bgAsset="rocket_background.svg">
+<main bgAsset="rocket_background.svg">
   <a routerLink="/"><app-logo></app-logo></a>
 
   <auth-signin-form (submited)="signin($event)"></auth-signin-form>
 
-</section>
+</main>
 <ng-template #customSnackBarTemplate>
   <div class="custom-snackbar-message" fxLayoutGap="50px">
     <span>This email does not exists.</span>
