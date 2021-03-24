@@ -14,6 +14,7 @@ import { OrganizationQuery, OrganizationService } from '@blockframes/organizatio
 import { Language, parseToAll } from '@blockframes/utils/static-model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { centralOrgID } from '@env';
 
 enum SpreadSheetContract {
   internationalTitle,
@@ -156,9 +157,13 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.licensorName]) {
-              const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licensorName]))
-              if (orgs.length === 1) {
-                contract.sellerId = orgs[0].id
+              if(trimmedRow[SpreadSheetContract.licenseeName] === 'Archipel Content') {
+                contract.sellerId = centralOrgID;
+              } else {
+                const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licensorName]))
+                if (orgs.length === 1) {
+                  contract.sellerId = orgs[0].id
+                }
               }
             } else {
               importErrors.errors.push({
@@ -171,9 +176,13 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             if (trimmedRow[SpreadSheetContract.licenseeName]) {
-              const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licenseeName]))
-              if (orgs.length === 1) {
-                contract.buyerId = orgs[0].id
+              if(trimmedRow[SpreadSheetContract.licenseeName] === 'Archipel Content') {
+                contract.buyerId = centralOrgID;
+              } else {
+                const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licenseeName]))
+                if (orgs.length === 1) {
+                  contract.buyerId = orgs[0].id
+                }
               }
             } else {
               importErrors.errors.push({
