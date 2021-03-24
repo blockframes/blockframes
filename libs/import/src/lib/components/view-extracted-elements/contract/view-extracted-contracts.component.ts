@@ -78,7 +78,10 @@ export class ViewExtractedContractsComponent implements OnInit {
       })
       let contract: Mandate | Sale;
       let newContract = true;
-      const id = this.fire.createId();
+
+      // TODO check if titleId is not defined => then use internationalTitle
+      const titleId = trimmedRow[SpreadSheetContract.titleId];
+
       if (trimmedRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
         if (!!existingContract) {
@@ -93,7 +96,8 @@ export class ViewExtractedContractsComponent implements OnInit {
           throw new Error(`Couldn't find provided contract id: ${trimmedRow[SpreadSheetContract.contractId]}`)
         }
       } else {
-        contract = trimmedRow[SpreadSheetContract.contractType] === 'mandate' ? createMandate({ id }) : createSale({ id })
+        const id = this.fire.createId();
+        contract = trimmedRow[SpreadSheetContract.contractType] === 'mandate' ? createMandate({ id, titleId }) : createSale({ id, titleId })
       }
 
       if (trimmedRow.length) {
@@ -182,7 +186,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             }
 
             /* Create term */
-            const term = createTerm({ contractId: contract.id, orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
+            const term = createTerm({ contractId: contract.id, orgId: this.orgQuery.getActiveId() })
             if (trimmedRow[SpreadSheetContract.territories]) {
               const territoryValues = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
               const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
