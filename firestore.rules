@@ -298,21 +298,6 @@ service cloud.firestore {
         && notInMaintenance();
       allow update: if isAllowedToUpdateMovie() && notInMaintenance();
       allow delete: if false; // @TODO (#4301) Allowed only to blockframesAdmin via CRM for now
-
-      match /distributionRights/{rightId} {
-        // @TODO (#2606 #2049) We allow all distributionRights reads as we need it to search avails
-        allow read: if userHasValidOrg() && notInMaintenance();
-        allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
-          && isRequestFieldValueEqualTo(['status'], 'draft')
-          && notInMaintenance();
-        allow update: if isNotUpdatingId('id', existingData().id)
-          && (isNotUpdatingField(['status']) || incomingData().status in ['draft', 'cart', 'undernegotiation'])
-          && isNotUpdatingField(['contractId'])
-          && notInMaintenance();
-        allow delete: if orgCan('canDelete', userOrgId(), movieId)
-          && isOrgAdmin(userOrgId())
-          && notInMaintenance();
-      }
     }
 
     /// FUNCTIONS ///

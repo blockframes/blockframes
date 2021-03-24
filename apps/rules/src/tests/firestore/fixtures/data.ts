@@ -87,9 +87,6 @@ export const testFixture = {
     title: {
       original: 'UnitTest',
     },
-    'distributionRights/DR001': {
-      id: 'DR001',
-    },
     storeConfig: {
       appAccess: { festival: true },
       status: 'accepted'

@@ -39,11 +39,6 @@ describe('Movies Rules Tests', () => {
         const movieRef = db.doc(`movies/${existMovieAccepted}`);
         await assertSucceeds(movieRef.get());
       })
-
-      test('should be able to read movie distribution rights', async () => {
-        const movieDRRef = db.doc('movies/M001/distributionRights/DR001');
-        await assertSucceeds(movieDRRef.get());
-      });
     });
 
     describe('Create Movie', () => {
