@@ -61,7 +61,7 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
-      <button mat-icon-button (click)="addAvail(title.objectID)">
+      <button mat-icon-button (click)="addAvail(title.objectID)" test-id="add-to-bucket">
         <mat-icon svgIcon="shopping_basket"></mat-icon>
       </button>
     </movie-card>

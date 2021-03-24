@@ -7,9 +7,9 @@
 			<mat-select multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen()">
 				<header>
 					<mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
-						[checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)">
+						[checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)" test-id="checked-all">
 					</mat-checkbox>
-					<input matInput placeholder="Tap to filter" [formControl]="search" />
+					<input matInput placeholder="Tap to filter" [formControl]="search" test-id="search-input"/>
 					<mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
 					<button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset()">
             <mat-icon svgIcon="refresh"></mat-icon>

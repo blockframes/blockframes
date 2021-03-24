@@ -19,4 +19,9 @@ export default class HomePage extends NavbarPage {
     cy.get('catalog-home bf-slider').first().find('button[test-id=heart-button]').first().click();
     cy.wait(2 * SEC);
   }
+
+  public openSidenavMenuAndNavigate(button: string = '') {
+    cy.get('button[test-id="menu"]').click();
+    if(button) cy.get(`a[test-id="${button}"]`).click();
+  }
 }
