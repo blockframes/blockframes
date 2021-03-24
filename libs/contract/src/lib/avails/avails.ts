@@ -55,7 +55,6 @@ export function isSold(
       continue;
     } else if (term.exclusive) {
       if (inDuration || wrappedDuration) {
-        // if('HgU5WygrYoon1QnFqEpe' === term.titleId) console.log(inDuration, wrappedDuration)
         if (!medias.some(medium => term.medias.includes(medium)) || !territories.some(territory => term.territories.includes(territory))) {
           continue;
         } else {
