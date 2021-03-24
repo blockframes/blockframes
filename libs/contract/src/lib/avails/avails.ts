@@ -12,7 +12,6 @@ export function getMandateTerm(
   { medias, duration, territories }: AvailsFilter,
   terms: Term<Date>[] // Terms of all mandates of the title
 ): Term<Date> | undefined {
-
   for (const term of terms) {
     // If starts before term: not available
     if (duration.from.getTime() <= term.duration.from.getTime()) {
@@ -41,31 +40,33 @@ export function isSold(
 ) {
   for (const term of terms) {
     const startDuringDuration = duration.from.getTime() >= term.duration.from.getTime() && duration.from.getTime() <= term.duration.to.getTime();
-    const endDuringDuration = duration.to.getTime() <= term.duration.to.getTime() && duration.to.getTime() >= duration.from.getTime();
+    const endDuringDuration = duration.to.getTime() <= term.duration.to.getTime() && duration.to.getTime() >= term.duration.from.getTime();
     const inDuration = startDuringDuration || endDuringDuration;
     const wrappedDuration = duration.from.getTime() <= term.duration.from.getTime() && duration.to.getTime() >= term.duration.to.getTime();
 
     if (exclusive) {
 
-      const intersectsMediaAndTerritory = territories.some(territory => term.territories.includes(territory)) && medias.some(medium => term.medias.includes(medium));
+      const intersectsMediaAndTerritory = territories.some(territory => term.territories.includes(territory)) &&
+        medias.some(medium => term.medias.includes(medium));
 
       if (intersectsMediaAndTerritory && inDuration) {
         return true
       }
       continue;
     } else if (term.exclusive) {
-      // If the buyer wants a non exclusive rights, we need to check if there is already an very much the same sale ongoing
       if (inDuration || wrappedDuration) {
-        if (!medias.every(medium => term.medias.includes(medium)) || !territories.every(territory => term.territories.includes(territory))) {
+        if (!medias.some(medium => term.medias.includes(medium)) || !territories.some(territory => term.territories.includes(territory))) {
           continue;
+        } else {
+          return true;
         }
+      } else {
+        continue;
       }
     } else {
       // If buyer wants a non exclusive rights and the sales term that we are currently checking is not exclusive, we skip the iteration
       continue;
     }
-
-    return true;
   }
   return false;
 }
