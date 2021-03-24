@@ -37,9 +37,8 @@ export class BucketService extends CollectionService<BucketState> {
     return bucket;
   }
 
-  async createOffer() {
+  async createOffer(specificity: string, delivery: string) {
     const orgId = this.orgQuery.getActiveId();
-    const uid = this.authQuery.userId;
 
     const get = <T>(tx: firebase.firestore.Transaction, path: string): Promise<T> => {
       const ref = this.db.doc(path).ref;
@@ -68,7 +67,8 @@ export class BucketService extends CollectionService<BucketState> {
       const offerId = await this.offerService.add({
         buyerId: orgId,
         status: 'pending',
-        date: new Date()
+        date: new Date(),
+        delivery
       }, { write: tx });
       // For each contract
       for (const contract of bucket.contracts) {
@@ -88,6 +88,7 @@ export class BucketService extends CollectionService<BucketState> {
           stakeholders: [ ...parentContracts[contract.parentTermId].stakeholders, orgId ],
           termIds,
           offerId,
+          specificity
         }, { write: tx });
         // Create the income
         await this.incomeService.add({
@@ -100,7 +101,7 @@ export class BucketService extends CollectionService<BucketState> {
       }
 
       // Adding uid to add user data to email sent to business team
-      return { uid: this.authQuery.userId }
+      return { specificity, delivery, uid: this.authQuery.userId }
     });
   }
 }
