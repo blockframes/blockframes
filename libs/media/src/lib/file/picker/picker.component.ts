@@ -37,13 +37,13 @@ export class FilePickerComponent implements OnInit, OnDestroy {
     this.selectedFiles = this.data.selectedFiles ?? [];
 
     const org = this.orgQuery.getActive();
-    this.orgFiles = recursivelyListFiles(org).map(file => ({ file, isSelected: this.selectedFiles.includes(file) }));
+    this.orgFiles = recursivelyListFiles(org).map(file => ({ file, isSelected: this.selectedFiles.some(selectedFile => selectedFile.storagePath === file.storagePath) }));
     this.movies = await this.movieService.getValue(fromOrg(org.id))
     this.moviesFiles = {};
     this.movies.forEach(movie =>
       this.moviesFiles[movie.id] = recursivelyListFiles(movie)
         .filter(file => !!file.storagePath)
-        .map(file => ({ file, isSelected: this.selectedFiles.includes(file) })));
+        .map(file => ({ file, isSelected: this.selectedFiles.some(selectedFile => selectedFile.storagePath === file.storagePath) })));
 
     this.cdr.markForCheck();
 
