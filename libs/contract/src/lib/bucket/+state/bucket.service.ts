@@ -9,6 +9,7 @@ import { IncomeService } from '../../income/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgID } from '@env';
 import type firebase from 'firebase';
+import { AuthQuery } from "@blockframes/auth/+state";
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -21,6 +22,7 @@ export class BucketService extends CollectionService<BucketState> {
     private offerService: OfferService,
     private contractService: ContractService,
     private incomeService: IncomeService,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }
@@ -35,18 +37,19 @@ export class BucketService extends CollectionService<BucketState> {
     return bucket;
   }
 
-  createOffer() {
+  async createOffer(specificity: string, delivery: string) {
     const orgId = this.orgQuery.getActiveId();
+
     const get = <T>(tx: firebase.firestore.Transaction, path: string): Promise<T> => {
       const ref = this.db.doc(path).ref;
       return tx.get(ref).then(snap => snap.data() as T);
     }
      // Run tx
-     return this.update(orgId, async (bucket: Bucket, tx) => {
+    return this.update(orgId, async (bucket: Bucket, tx) => {
       /* -------------------- */
       /*         GETTER       */
       /* -------------------- */
-      
+
       // Get the parent contract for setting the stakeholders
       // We need to do all the queries before the changes:
       const parentContracts: Record<string, Contract> = {};
@@ -64,14 +67,15 @@ export class BucketService extends CollectionService<BucketState> {
       const offerId = await this.offerService.add({
         buyerId: orgId,
         status: 'pending',
-        date: new Date()
+        date: new Date(),
+        delivery
       }, { write: tx });
       // For each contract
       for (const contract of bucket.contracts) {
         const contractId = this.db.createId();
-        const terms = contract.terms.map(t => ({ ...t, contractId }));
-        // Create the terms
-        const termIds = await this.termService.add(terms, { write: tx });
+        const terms = contract.terms.map(t => ({ ...t, contractId, id: this.db.createId() }));
+        const termIds = terms.map(t => t.id);
+
         // Create the contract
         await this.contractService.add({
           id: contractId,
@@ -84,7 +88,12 @@ export class BucketService extends CollectionService<BucketState> {
           stakeholders: [ ...parentContracts[contract.parentTermId].stakeholders, orgId ],
           termIds,
           offerId,
+          specificity
         }, { write: tx });
+
+        // @dev: Create income & terms after contract because rules require contract to be created first
+        // Create the terms
+        await this.termService.add(terms, { write: tx });
         // Create the income
         await this.incomeService.add({
           status: 'pending',
@@ -94,8 +103,9 @@ export class BucketService extends CollectionService<BucketState> {
           contractId,
         }, { write: tx });
       }
-      // We empty the selection but leave the currency
-      return { contracts: [] };
-    })
+
+      // Adding uid to add user data to email sent to business team
+      return { specificity, delivery, uid: this.authQuery.userId }
+    });
   }
 }

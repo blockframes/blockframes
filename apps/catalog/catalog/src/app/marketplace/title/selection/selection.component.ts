@@ -1,11 +1,13 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 
 @Component({
   selector: 'catalog-selection',
@@ -28,9 +30,9 @@ export class MarketplaceSelectionComponent {
     @Optional() private intercom: Intercom,
     private bucketQuery: BucketQuery,
     private bucketService: BucketService,
+    private dialog: MatDialog,
     private dynTitle: DynamicTitleService,
-    private router: Router,
-    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
       tap(bucket => this.setTitle(bucket?.contracts.length)),
@@ -76,9 +78,12 @@ export class MarketplaceSelectionComponent {
     });
   }
 
-  async createOffer() {
-    await this.bucketService.createOffer();
-    this.router.navigate(['congratulations'], { relativeTo: this.route });
+  createOffer(bucket: Bucket) {
+    if (bucket.contracts.some(contract => !contract.price || contract.price < 0)) {
+      this.snackBar.open('Please add price on every item', '', { duration: 2000 });
+    } else {
+      this.dialog.open(SpecificTermsComponent);
+    }
   }
 
   openIntercom() {
