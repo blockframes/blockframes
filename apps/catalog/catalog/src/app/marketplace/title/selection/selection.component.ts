@@ -16,7 +16,6 @@ import { SpecificTermsComponent } from './specific-terms/specific-terms.componen
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSelectionComponent {
-  trackById = (i: number, doc: { id: string }) => doc.id;
   currencies = movieCurrencies;
   columns = {
     duration: 'Terms',
@@ -26,6 +25,7 @@ export class MarketplaceSelectionComponent {
   };
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
+  trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
     @Optional() private intercom: Intercom,
