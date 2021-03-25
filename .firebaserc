@@ -311,7 +311,16 @@
         ],
         "festival": [
           "blockframes-mano-festival"
-        ]
+        ],
+        "financiers": [
+          "blockframes-mano-financiers"
+        ],
+        "cms": [
+          "blockframes-mano-cms"
+        ],
+        "crm": [
+          "blockframes-mano-crm"
+        ]        
       }
     }
   }
