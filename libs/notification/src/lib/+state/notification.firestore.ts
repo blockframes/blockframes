@@ -33,12 +33,6 @@ export const notificationTypesPlus = [
   'organizationAcceptedByArchipelContent',
   'orgAppAccessChanged',
   'invitationToJoinOrgDeclined',
-
-  // @TODO #4859 remove once all notification of theses types are read or deleted (since we cannot make a migration script)
-  'invitationToAttendEventAccepted',
-  'invitationToAttendEventDeclined',
-  'memberAddedToOrg',
-  'memberRemovedFromOrg'
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
