@@ -16,6 +16,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { centralOrgID } from '@env';
 import { Scope } from '@blockframes/utils/static-model/static-model';
+import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 
 const separator = ';'
 type errorCodes = 'no-title-id' | 'no-seller-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
@@ -93,6 +94,7 @@ function getDate(time: string) {
 }
 
 function getStatic(scope: Scope, value: string) {
+  if (!value) return []
   if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
   return split(value).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
 }
@@ -174,7 +176,7 @@ export class ViewExtractedContractsComponent implements OnInit {
         durationTo,     // Ok
         originalLanguageLicensed,
         dubbed,
-        subtitled,
+        subtitle,
         closedCaptioning,
         _contractId,      // Ok
         _parentTermId,
@@ -241,11 +243,17 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (!territories.length) errors.push(errorsMap['no-territories']);
       if (!medias.length) errors.push(errorsMap['no-medias']);
 
-      // Languages
-      // TODO add languages
-
       const termId = this.fire.createId();
       const term = createTerm({ id: termId, contractId, orgId, duration, territories, medias, exclusive });
+
+      // Languages
+      Object.entries({ dubbed, subtitle, closedCaptioning }).forEach(([key, value]) => {
+        const languages = getStatic('languages', value);
+        for (const language of languages) {
+          if (!term.languages[language]) term.languages[language] = createMovieLanguageSpecification();
+          term.languages[language][key] = true;
+        }
+      })
       
       contract.termIds.push(termId);
 

@@ -10,6 +10,7 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -44,7 +45,8 @@ export class TableExtractedContractsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private contractService: ContractService,
-    private termService: TermService
+    private termService: TermService,
+    private movieService: MovieService
   ) { }
 
   ngOnInit() {
@@ -109,6 +111,13 @@ export class TableExtractedContractsComponent implements OnInit {
     const termIds = await this.termService.add(importState.terms);
     importState.contract.termIds = termIds;
     await this.contractService.add(importState.contract);
+    const titleId = importState.contract.titleId;
+    if (!!titleId) {
+      const title = await this.movieService.getValue(titleId);
+      title.storeConfig.appAccess.catalog = true;
+      this.movieService.update(title);
+    }
+    
     importState.errors.push({
       type: 'error',
       field: 'contract',
