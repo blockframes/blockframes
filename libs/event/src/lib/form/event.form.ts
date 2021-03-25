@@ -1,16 +1,8 @@
-import { FormEntity, FormList } from '@blockframes/utils/form';
+import { compareDates, FormEntity, FormList } from '@blockframes/utils/form';
 import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Meeting, Screening } from '../+state/event.firestore';
 
-function compareDates(form: FormControl) {
-  const eventForm = form?.parent as EventForm;
-  if (eventForm) {
-    const { start, end } = eventForm.value;
-    if (start && end && start > end) return { startOverEnd: true };
-  }
-  return null;
-}
 
 // Event
 export function createEventControl(params?: Partial<Event>) {
@@ -22,8 +14,8 @@ export function createEventControl(params?: Partial<Event>) {
     ownerOrgId: new FormControl(event.ownerOrgId),
     type: new FormControl(event.type, Validators.required),
     title: new FormControl(event.title),
-    start: new FormControl(event.start, compareDates),
-    end: new FormControl(event.end, compareDates),
+    start: new FormControl(event.start, compareDates('start', 'end')),
+    end: new FormControl(event.end, compareDates('start', 'end')),
     allDay: new FormControl(event.allDay),
     meta: createMetaControl(event)
   };

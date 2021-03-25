@@ -150,3 +150,33 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
     return control.value?.every(value => isInKeys(scope, value)) ? null : { invalidValue: true }
   };
 }
+
+/**
+ * Check if from date is after to date
+ * @param fromKey name of key of from date
+ * @param toKey name of key of to date
+ * @returns 
+ */
+export function compareDates(fromKey: string, toKey: string): ValidatorFn {
+  return (form: FormControl): ValidationErrors => {
+    const eventForm = form?.parent as FormGroup;
+    if (eventForm) {
+      const from = eventForm.value[fromKey];
+      const to = eventForm.value[toKey]
+
+      if (from && to && from > to) {
+        return { startOverEnd: true }
+      }
+    }
+    return null;
+  }
+}
+
+/**
+ * Check if date is not before today
+ */
+export function isDateInFuture(form: FormControl) {
+  const now = new Date();
+  now.setHours(0, 0, 0);
+  return form.value < now ? { inPast: true } : null;
+}
