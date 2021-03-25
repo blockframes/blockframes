@@ -11,9 +11,9 @@ export function formatRunningTime(runningTime?: MovieRunningTime, isStatusNeeded
   const { time, status } = runningTime;
 
   if (isStatusNeeded) {
+    if (status === 'tobedetermined' || (!time && status)) return screeningStatus[status];
     if (time && status && status !=="confirmed") return `${time} min (${screeningStatus[runningTime.status]})`;
     if (time && !status) return `${time} min`;
-    if (!time && status) return screeningStatus[status];
   }
 
   if (time) return status === "estimated" ? `≈ ${time} min` : `${time} min`;

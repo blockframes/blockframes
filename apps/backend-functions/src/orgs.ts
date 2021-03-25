@@ -11,12 +11,13 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
+import { app, App, modules, getSendgridFrom } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail, getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -68,24 +69,6 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-/** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
-function newAppAccessGranted(before: OrganizationDocument, after: OrganizationDocument): boolean {
-  if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    return app.some(a => modules.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
-  }
-  return false;
-}
-
-/** Sends a mail to admin to inform that an org is waiting approval */
-async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
-  if (newAppAccessGranted(before, after)) {
-    // Send a mail to c8 admin to accept the organization given it's choosen app access
-    const mailRequest = await organizationRequestedAccessToApp(after);
-    const from = await getFromEmail(after);
-    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
-  }
-}
-
 export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const org = snap.data() as OrganizationDocument;
 
@@ -133,9 +116,6 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 
   // Send notifications when a member is added or removed
   await notifyOnOrgMemberChanges(before, after);
-
-  // check if appAccess have changed
-  await sendMailIfOrgAppAccessChanged(before, after);
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
@@ -274,4 +254,15 @@ export const accessToAppChanged = async (
     error: '',
     result: 'OK'
   };
+}
+
+/** Send an email to C8 Admins when an organization requests to access to a new platform */
+export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string}, context?: CallableContext) => {
+  if (!!context.auth.uid && !!data.app && !!data.orgId) {
+    const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
+    const mailRequest = await organizationRequestedAccessToApp(organization);
+    const from = await getSendgridFrom(data.app);
+    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
+  }
+  return;
 }

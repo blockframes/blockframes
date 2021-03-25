@@ -13,10 +13,6 @@ header[mat-tab-nav-bar] button {
   background-color: transparent;
 }
 
-mat-card {
-  margin-bottom: 80px;
-}
-
 .no-title-card {
   width: 330px;
   height: 220px;
@@ -24,6 +20,10 @@ mat-card {
     width: 100px;
     align-self: center;
   }
+}
+
+h3 {
+  margin-top: 24px;
 }
 
 p {

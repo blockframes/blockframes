@@ -124,8 +124,7 @@ export interface MoviePromotionalElements {
   still_photo: StorageFile[],
   videos?: MovieVideos,
 
-  // @TODO #2586 remove this when we can upload
-  // videos through movie tunnel and remove the component for external links
+  // @TODO #5350 remove the component for external links
   // + migration for cleaning
   clip_link: string,
   promo_reel_link: string,

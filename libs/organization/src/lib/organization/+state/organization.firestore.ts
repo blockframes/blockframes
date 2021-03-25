@@ -18,6 +18,7 @@ export interface PublicOrganization {
   id: string;
   denomination: Denomination;
   logo: StorageFile;
+  activity?: OrgActivity
 }
 
 export interface OrgMedias {
@@ -27,7 +28,6 @@ export interface OrgMedias {
 /** Document model of an Organization */
 export interface OrganizationBase<D> extends PublicOrganization {
   _meta?: DocumentMeta<D>;
-  activity?: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
   cart: CatalogCart[];
@@ -73,6 +73,7 @@ export function createOrganizationBase(
     denomination: createDenomination(params.denomination),
     logo: createStorageFile(params?.logo),
     appAccess: createOrgAppAccess(params.appAccess),
+    documents: createOrgMedias(params?.documents),
   };
 }
 

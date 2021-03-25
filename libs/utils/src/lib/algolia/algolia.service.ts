@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { algolia } from '@env';
-import algoliasearch, { SearchIndex, } from 'algoliasearch';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { App, getCurrentApp } from "../apps";
 import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from "./algolia.interfaces";
 import { parseFilters, parseFacets } from './helper.utils';
@@ -36,5 +36,26 @@ export class AlgoliaService {
       facetFilters: parseFacets(config.facets),
       filters: parseFilters(config.filters)
     }).then(e => e);
+  }
+
+  multipleQuery(indexGroup: string, text: string) {
+    const queries = this.createMultipleQueries(indexGroup, text);
+    return algoliasearch(algolia.appId, algolia.searchKey).multipleQueries(queries).then(output => {
+      const hits = [];
+      output.results.forEach(r => { r.hits.forEach(hit => { if (!hits.some(h => h.objectID === hit.objectID)) hits.push(hit) }) });
+      return hits;
+    });
+  }
+
+  private createMultipleQueries(indexGroup: string, text: string) {
+    const queries = [];
+    Object.values(algolia[indexGroup]).forEach(indexName => {
+      queries.push({
+        indexName,
+        query: text
+      })
+    });
+
+    return queries;
   }
 }

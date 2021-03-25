@@ -1,13 +1,12 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { get, isEqual, set } from 'lodash';
+import { get, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
-import { getDocument } from '@blockframes/firebase-utils';
 import { PublicUser, User } from '@blockframes/user/types';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
@@ -25,7 +24,7 @@ import { isAllowedToAccessMedia } from './internals/media';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
- * It check if a new file in tmp directory is already referenced on DB and movie it to correct folder
+ * It check if a new file in tmp directory is already referenced on DB and move it to correct folder
  */
 export async function linkFile(data: storage.ObjectMetadata) {
 
@@ -41,8 +40,12 @@ export async function linkFile(data: storage.ObjectMetadata) {
   const metadata = data.metadata as FileMetaData;
   const isValid = isValidMetadata(metadata, { uidRequired: true });
 
-  const [ tmp ] = data.name.split('/');
-  if ( tmp === tempUploadDir ) {
+  // metadata.uid is copied into uploaderUid for context consistency during transaction execution.
+  // If transaction is locked by another process, it will fail to update the doc, and will try with a new attempt 
+  // but metadata.uid as already been removed (delete metadata[key];)
+  const uploaderUid = metadata.uid;
+  const [tmp] = data.name.split('/');
+  if (tmp === tempUploadDir) {
 
     // (1) Security checks, (2) copy file to final destination, (3) update db, (4) delete tmp/file
 
@@ -54,91 +57,99 @@ export async function linkFile(data: storage.ObjectMetadata) {
       }
     };
 
-    assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
+    await assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
-    // because of possible nested map and arrays, we need to retrieve the whole document
-    // modify it, then update the whole doc with the new (modified) version
-    const docRef = db.collection(metadata.collection).doc(metadata.docId);
-    const docSnap = await docRef.get();
-    await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
-    const doc = docSnap.data()!;
+    await db.runTransaction(async transaction => {
+      // because of possible nested map and arrays, we need to retrieve the whole document
+      // modify it, then update the whole doc with the new (modified) version
+      const docRef = db.collection(metadata.collection).doc(metadata.docId);
+      const docSnap = await transaction.get(docRef);
+      await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
+      const doc = docSnap.data()!;
 
-    // (1) Security checks
+      // (1) Security checks
 
-    const blockframesAdmin = await db.doc(`blockframesAdmin/${metadata.uid}`).get();
-    if (!blockframesAdmin.exists) {
+      const blockframesAdminRef = db.doc(`blockframesAdmin/${uploaderUid}`);
+      const blockframesAdminSnap = await transaction.get(blockframesAdminRef);
+      if (!blockframesAdminSnap.exists) {
 
-      const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
+        const notAllowedError = `User ${uploaderUid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
 
-      // Is the user allowed to upload this file ?
-      switch (metadata.collection) {
-        case 'users': {
-          // only the user is allowed to upload files about himself
-          await assertFile(metadata.docId === metadata.uid, notAllowedError);
-          break;
+        // Is the user allowed to upload this file ?
+        switch (metadata.collection) {
+          case 'users': {
+            // only the user is allowed to upload files about himself
+            await assertFile(metadata.docId === uploaderUid, notAllowedError);
+            break;
 
-        } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
-          // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-          const user = await getDocument<User>(`users/${metadata.uid}`);
-          await assertFile(!!user, notAllowedError);
+          } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
+            // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
+            const userRef = db.collection('users').doc(uploaderUid);
+            const userSnap = await transaction.get(userRef);
+            await assertFile(userSnap.exists, notAllowedError);
 
-          const movie = await getDocument<MovieDocument>(`movies/${metadata.docId}`);
-          await assertFile(!!movie, notAllowedError);
+            const movieRef = db.collection('movies').doc(metadata.docId);
+            const movieSnap = await transaction.get(movieRef);
+            await assertFile(movieSnap.exists, notAllowedError);
 
-          const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
-          await assertFile(isAllowed, notAllowedError);
-          break;
+            const user = userSnap.data() as User;
+            const movie = movieSnap.data() as MovieDocument;
+            const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
+            await assertFile(isAllowed, notAllowedError);
+            break;
 
-        } case 'orgs': {
-          // only member of an org can upload to this org
-          const user = await getDocument<User>(`users/${metadata.uid}`);
-          await assertFile(!!user, notAllowedError);
-          await assertFile(user.orgId === metadata.docId, notAllowedError);
-          break;
+          } case 'orgs': {
+            // only member of an org can upload to this org
+            const userRef = db.collection('users').doc(uploaderUid);
+            const userSnap = await transaction.get(userRef);
+            await assertFile(userSnap.exists, notAllowedError);
+            const user = userSnap.data() as User;
+            await assertFile(user.orgId === metadata.docId, notAllowedError);
+            break;
 
-        } default: {
-          await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+          } default: {
+            await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
+          }
         }
       }
-    }
 
-    // (2) copy file to final destination
+      // (2) copy file to final destination
 
-    const segments = data.name.split('/');
-    segments.shift(); // remove tmp/
-    const finalPath = segments.join('/');
-    const to = bucket.file(`${metadata.privacy}/${finalPath}`);
+      const segments = data.name.split('/');
+      segments.shift(); // remove tmp/
+      const finalPath = segments.join('/');
+      const to = bucket.file(`${metadata.privacy}/${finalPath}`);
 
-    await file.copy(to);
+      await file.copy(to);
 
-    // (3) update db
+      // (3) update db
 
-    // separate extraData from metadata
-    const keysToDelete = [
-      'uid',
-      'firebaseStorageDownloadTokens',
-    ];
-    for (const key of keysToDelete) {
-      delete metadata[key];
-    }
+      // separate extraData from metadata
+      const keysToDelete = [
+        'uid',
+        'firebaseStorageDownloadTokens',
+      ];
+      for (const key of keysToDelete) {
+        delete metadata[key];
+      }
 
-    const uploadData: StorageFile = {
-      ...metadata,
-      storagePath: finalPath,
-    }
+      const uploadData: StorageFile = {
+        ...metadata,
+        storagePath: finalPath,
+      }
 
+      let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
 
-    let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
+      if (Array.isArray(fieldValue)) {
+        fieldValue.push(uploadData);
+      } else {
+        fieldValue = uploadData;
+      }
 
-    if (Array.isArray(fieldValue)) {
-      fieldValue.push(uploadData);
-    } else {
-      fieldValue = uploadData;
-    }
+      set(doc, metadata.field, fieldValue);
 
-    set(doc, metadata.field, fieldValue);
-
-    await docRef.update(doc);
+      await transaction.update(docRef, doc);
+    }).catch(err => console.error('Transaction Failed:', err));
 
     // (4) delete tmp/file
     return file.delete();
@@ -163,34 +174,35 @@ export async function linkFile(data: storage.ObjectMetadata) {
         return false;
       }
 
-      // upload success: we should add jwPlayerId to the db document
-      const docRef = db.collection(metadata.collection).doc(metadata.docId);
-      const docSnap = await docRef.get();
-      if (!docSnap.exists) return false;
-      const doc = docSnap.data()!;
+      await db.runTransaction(async transaction => {
+        // upload success: we should add jwPlayerId to the db document
+        const docRef = db.collection(metadata.collection).doc(metadata.docId);
+        const docSnap = await transaction.get(docRef);
+        if (!docSnap.exists) return false;
+        const doc = docSnap.data()!;
 
-      const fieldValue: StorageVideo | StorageVideo[] = get(doc, metadata.field);
-      if (Array.isArray(fieldValue)) {
+        const fieldValue: StorageVideo | StorageVideo[] = get(doc, metadata.field);
+        if (Array.isArray(fieldValue)) {
 
-        const parts = data.name.split('/');
-        parts.shift(); // remove public/ or protected/
-        const storagePath = parts.join('/');
-        const index = fieldValue.findIndex(video => video.storagePath === storagePath);
+          const parts = data.name.split('/');
+          parts.shift(); // remove public/ or protected/
+          const storagePath = parts.join('/');
+          const index = fieldValue.findIndex(video => video.storagePath === storagePath);
 
-        if (index < 0) {
-          console.error(`UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`, JSON.stringify(data.name), JSON.stringify(data.metadata));
-          return false;
+          if (index < 0) {
+            console.error(`UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`, JSON.stringify(data.name), JSON.stringify(data.metadata));
+            return false;
+          }
+
+          fieldValue[index].jwPlayerId = uploadResult.key;
+
+        } else {
+          fieldValue.jwPlayerId = uploadResult.key;
         }
 
-        fieldValue[index].jwPlayerId = uploadResult.key;
-
-      } else {
-        fieldValue.jwPlayerId = uploadResult.key;
-      }
-
-      set(doc, metadata.field, fieldValue); // update the whole doc with only the new jwPlayerId
-      await docRef.update(doc);
-
+        set(doc, metadata.field, fieldValue); // update the whole doc with only the new jwPlayerId
+        await transaction.update(docRef, doc);
+      });
       return true;
     }
   }
@@ -290,11 +302,13 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(before.logo);
     }
 
-    const notesToDelete = checkFileList(
-      before.documents.notes,
-      after.documents.notes
-    );
-    mediaToDelete.push(...notesToDelete);
+    if (!!before.documents && !!before.documents?.notes) {
+      const notesToDelete = checkFileList(
+        before.documents?.notes,
+        after.documents?.notes
+      );
+      mediaToDelete.push(...notesToDelete);
+    }
 
   } else { // Deleting
     if (!!before.logo) {
@@ -343,14 +357,14 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     // FILES LIST
 
     const otherVideosToDelete = checkFileList(
-      before.promotional.videos.otherVideos,
-      after.promotional.videos.otherVideos
+      before.promotional.videos?.otherVideos,
+      after.promotional.videos?.otherVideos
     );
     mediaToDelete.push(...otherVideosToDelete);
 
     const stillToDelete = checkFileList(
-      before.promotional.still_photo,
-      after.promotional.still_photo
+      before.promotional?.still_photo,
+      after.promotional?.still_photo
     );
     mediaToDelete.push(...stillToDelete);
 

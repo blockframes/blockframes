@@ -135,6 +135,39 @@ export class SessionComponent implements OnInit, OnDestroy {
           if (!!requests.length) {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
           }
+
+          // If the current selected file hasn't any controls yet we should create them
+          if (!!event.meta.selectedFile) {
+            const selectedFile = event.meta.files.find(file =>
+              file.storagePath === event.meta.selectedFile
+            );
+            if (!selectedFile) {
+              console.warn('Selected file doesn\'t exists in this Meeting!');
+              this.select('');
+            }
+            if (!event.meta.controls[selectedFile.storagePath]) {
+              const fileType = extensionToType(getFileExtension(selectedFile.storagePath));
+              switch (fileType) {
+                case 'pdf': {
+                  this.creatingControl$.next(true);
+                  const control = await this.createPdfControl(selectedFile, event.id);
+                  const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                  const meta  = { ...event.meta, controls };
+                  await this.service.update(event.id, { meta });
+                  this.creatingControl$.next(false);
+                  break;
+                } case 'video': {
+                  this.creatingControl$.next(true);
+                  const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
+                  const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                  const meta  = { ...event.meta, controls };
+                  await this.service.update(event.id, { meta });
+                  this.creatingControl$.next(false);
+                  break;
+                } default: break;
+              }
+            }
+          }
         } else {
           const userStatus = event.meta.attendees[uid];
 
@@ -153,40 +186,6 @@ export class SessionComponent implements OnInit, OnDestroy {
             }
           }
         }
-
-        // If the current selected file hasn't any controls yet we should create them
-        if (!!event.meta.selectedFile) {
-          const selectedFile = event.meta.files.find(file =>
-            file.storagePath === event.meta.selectedFile
-          );
-          if (!selectedFile) {
-            console.warn('Selected file doesn\'t exists in this Meeting!');
-            this.select('');
-          }
-          if (!event.meta.controls[selectedFile.storagePath]) {
-            const fileType = extensionToType(getFileExtension(selectedFile.storagePath));
-            switch (fileType) {
-              case 'pdf': {
-                this.creatingControl$.next(true);
-                const control = await this.createPdfControl(selectedFile, event.id);
-                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                const meta  = { ...event.meta, controls };
-                await this.service.update(event.id, { meta });
-                this.creatingControl$.next(false);
-                break;
-              } case 'video': {
-                this.creatingControl$.next(true);
-                const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
-                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                const meta  = { ...event.meta, controls };
-                await this.service.update(event.id, { meta });
-                this.creatingControl$.next(false);
-                break;
-              } default: break;
-            }
-          }
-        }
-
       }
     })
   }
@@ -198,7 +197,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     // firestore document only supports 1 write per seconds
     const randomDurationSeconds = Math.floor(Math.random() * 10);
 
-    this.snackbar.open(`The meeting owner has leaved, you will be disconnected in ${durationMinutes}m.`, 'dismiss', { duration: 5000 });
+    this.snackbar.open(`The organizer just left the meeting room. You will be disconnected in ${durationMinutes} minute.`, 'dismiss', { duration: 5000 });
     this.countdownId = window.setTimeout(
       () => this.autoLeave(),
       ((1000 * 60) * durationMinutes) + (1000 * randomDurationSeconds)
@@ -216,6 +215,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.twilioService.disconnect();
     this.deleteCountDown();
     this.sub.unsubscribe();
     this.dialogSub?.unsubscribe();

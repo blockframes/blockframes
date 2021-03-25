@@ -21,7 +21,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
-  )
+  );
 
   constructor(
     private shell: MovieFormShellComponent,

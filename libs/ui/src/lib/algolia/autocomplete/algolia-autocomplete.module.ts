@@ -1,7 +1,7 @@
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AlgoliaAutocompleteComponent } from './algolia-autocomplete.component';
+import { AlgoliaAutocompleteComponent, LastOptionRefDirective, OptionRefDirective } from './algolia-autocomplete.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
@@ -12,6 +12,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -24,9 +25,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatIconModule
+    MatIconModule,
+    MatDividerModule,
   ],
-  declarations: [AlgoliaAutocompleteComponent],
-  exports: [AlgoliaAutocompleteComponent]
+  declarations: [AlgoliaAutocompleteComponent, OptionRefDirective, LastOptionRefDirective],
+  exports: [AlgoliaAutocompleteComponent, OptionRefDirective, LastOptionRefDirective]
 })
 export class AlgoliaAutocompleteModule { }
