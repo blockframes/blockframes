@@ -16,6 +16,7 @@ import { SpecificTermsComponent } from './specific-terms/specific-terms.componen
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSelectionComponent {
+  trackById = (i: number, doc: { id: string }) => doc.id;
   currencies = movieCurrencies;
   columns = {
     duration: 'Terms',
