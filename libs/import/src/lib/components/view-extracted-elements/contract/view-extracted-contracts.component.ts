@@ -18,7 +18,8 @@ import { centralOrgID } from '@env';
 import { Scope } from '@blockframes/utils/static-model/static-model';
 
 const separator = ';'
-const errorsMap: {[key: string]: SpreadsheetImportError} = {
+type errorCodes = 'no-title-id' | 'no-seller-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
+const errorsMap: {[key in errorCodes]: SpreadsheetImportError} = {
   'no-title-id': {
     type: 'warning',
     field: 'contract.titleId',
@@ -84,14 +85,15 @@ function split(cell: string) {
 // Time is MM/DD/YYYY
 function getDate(time: string) {
   if (isNaN(+time)) {
-    return new Date(new Date(time).setHours(0));
+    const [month, day, year] = time.split(/[/.]+/).map(t => parseInt(t, 10));
+    return new Date(year, month - 1, day, 0, 0, 0);
   } else {
     return new Date(Math.round(+time - 25569) * 86400 * 1000);
   }
 }
 
 function getStatic(scope: Scope, value: string) {
-  if (value === 'all' || (scope === 'territories' && value === 'world')) return parseToAll(scope, value);
+  if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
   return split(value).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
 }
 
