@@ -262,7 +262,7 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: strin
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
     const mailRequest = await organizationRequestedAccessToApp(organization);
     const from = await getSendgridFrom(data.app);
-    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
+    return sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
   return;
 }

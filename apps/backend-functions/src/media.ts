@@ -82,7 +82,9 @@ export async function linkFile(data: storage.ObjectMetadata) {
             await assertFile(metadata.docId === uploaderUid, notAllowedError);
             break;
 
-          } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
+          }
+          case 'movies':
+          case 'campaigns': {
             // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
             const userRef = db.collection('users').doc(uploaderUid);
             const userSnap = await transaction.get(userRef);
@@ -98,7 +100,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
             await assertFile(isAllowed, notAllowedError);
             break;
 
-          } case 'orgs': {
+          }
+          case 'orgs': {
             // only member of an org can upload to this org
             const userRef = db.collection('users').doc(uploaderUid);
             const userSnap = await transaction.get(userRef);
@@ -107,7 +110,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
             await assertFile(user.orgId === metadata.docId, notAllowedError);
             break;
 
-          } default: {
+          }
+          default: {
             await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
           }
         }
