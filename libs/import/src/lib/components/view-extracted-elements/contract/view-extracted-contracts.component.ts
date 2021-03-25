@@ -247,13 +247,13 @@ export class ViewExtractedContractsComponent implements OnInit {
       const term = createTerm({ id: termId, contractId, orgId, duration, territories, medias, exclusive });
 
       // Languages
-      Object.entries({ dubbed, subtitle, closedCaptioning }).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries({ dubbed, subtitle, closedCaptioning })) {
         const languages = getStatic('languages', value);
         for (const language of languages) {
           if (!term.languages[language]) term.languages[language] = createMovieLanguageSpecification();
           term.languages[language][key] = true;
         }
-      })
+      }
       
       contract.termIds.push(termId);
 
