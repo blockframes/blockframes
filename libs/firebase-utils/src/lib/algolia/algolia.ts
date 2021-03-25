@@ -141,7 +141,8 @@ export function storeSearchableMovie(
         year: movie.release.year
       },
       banner: movie.banner.storagePath,
-      poster: movie.poster.storagePath
+      poster: movie.poster.storagePath,
+      contentType: movie.contentType
     };
 
     /* App specific properties */

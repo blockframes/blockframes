@@ -22,6 +22,7 @@ import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio'
 import { heavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
+import { onOfferCreate } from './offer';
 
 
 //--------------------------------
@@ -189,6 +190,11 @@ export const sendMailWithTemplate = functions.https.onCall(skipInMaintenance(_se
 /** Trigger: when an notification is created to send email if requested */
 export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}', onNotificationCreate);
 
+//--------------------------------
+//        Offer Management       //
+//--------------------------------
+
+export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCreate);
 
 //--------------------------------
 //       Orgs Management        //

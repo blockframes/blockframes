@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { centralOrgID } from '@env';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
