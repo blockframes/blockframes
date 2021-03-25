@@ -62,7 +62,7 @@ type MeetingControl = ReturnType<typeof createMeetingControl>;
 
 export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
   constructor(meeting?: Partial<Meeting>) {
-    super(createMeetingControl(meeting), compareDates)
+    super(createMeetingControl(meeting), compareDates('start', 'end'))
   }
 
   get files() {
@@ -83,6 +83,6 @@ type ScreeningControl = ReturnType<typeof createScreeningControl>;
 
 export class ScreeningForm extends FormEntity<ScreeningControl, Screening> {
   constructor(screening?: Partial<Screening>) {
-    super(createScreeningControl(screening), compareDates)
+    super(createScreeningControl(screening), compareDates('start', 'end'))
   }
 }
