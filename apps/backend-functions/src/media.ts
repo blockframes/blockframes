@@ -1,13 +1,12 @@
 
 // External dependencies
 import { createHash } from 'crypto';
-import { get, isEqual, set } from 'lodash';
+import { get, set } from 'lodash';
 import * as admin from 'firebase-admin';
 import { storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
-import { getDocument } from '@blockframes/firebase-utils';
 import { PublicUser, User } from '@blockframes/user/types';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { FileMetaData, isValidMetadata } from '@blockframes/media/+state/media.model';
@@ -25,7 +24,7 @@ import { isAllowedToAccessMedia } from './internals/media';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
- * It check if a new file in tmp directory is already referenced on DB and movie it to correct folder
+ * It check if a new file in tmp directory is already referenced on DB and move it to correct folder
  */
 export async function linkFile(data: storage.ObjectMetadata) {
 
@@ -41,6 +40,10 @@ export async function linkFile(data: storage.ObjectMetadata) {
   const metadata = data.metadata as FileMetaData;
   const isValid = isValidMetadata(metadata, { uidRequired: true });
 
+  // metadata.uid is copied into uploaderUid for context consistency during transaction execution.
+  // If transaction is locked by another process, it will fail to update the doc, and will try with a new attempt 
+  // but metadata.uid as already been removed (delete metadata[key];)
+  const uploaderUid = metadata.uid;
   const [tmp] = data.name.split('/');
   if (tmp === tempUploadDir) {
 
@@ -54,7 +57,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
       }
     };
 
-    assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
+    await assertFile(isValid, `Invalid meta data for file ${data.name} : '${JSON.stringify(metadata)}'`);
 
     await db.runTransaction(async transaction => {
       // because of possible nested map and arrays, we need to retrieve the whole document
@@ -66,22 +69,22 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
       // (1) Security checks
 
-      const blockframesAdminRef = db.doc(`blockframesAdmin/${metadata.uid}`);
+      const blockframesAdminRef = db.doc(`blockframesAdmin/${uploaderUid}`);
       const blockframesAdminSnap = await transaction.get(blockframesAdminRef);
       if (!blockframesAdminSnap.exists) {
 
-        const notAllowedError = `User ${metadata.uid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
+        const notAllowedError = `User ${uploaderUid} not allowed to upload to ${metadata.collection}/${metadata.docId}`;
 
         // Is the user allowed to upload this file ?
         switch (metadata.collection) {
           case 'users': {
             // only the user is allowed to upload files about himself
-            await assertFile(metadata.docId === metadata.uid, notAllowedError);
+            await assertFile(metadata.docId === uploaderUid, notAllowedError);
             break;
 
           } case 'movies': case 'campaigns': { // campaigns have the same ids as movies and business upload rules are the same
             // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-            const userRef = db.collection('users').doc(metadata.uid);
+            const userRef = db.collection('users').doc(uploaderUid);
             const userSnap = await transaction.get(userRef);
             await assertFile(userSnap.exists, notAllowedError);
 
@@ -97,7 +100,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
           } case 'orgs': {
             // only member of an org can upload to this org
-            const userRef = db.collection('users').doc(metadata.uid);
+            const userRef = db.collection('users').doc(uploaderUid);
             const userSnap = await transaction.get(userRef);
             await assertFile(userSnap.exists, notAllowedError);
             const user = userSnap.data() as User;
@@ -299,7 +302,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(before.logo);
     }
 
-    if(!!before.documents && !!before.documents?.notes) {
+    if (!!before.documents && !!before.documents?.notes) {
       const notesToDelete = checkFileList(
         before.documents?.notes,
         after.documents?.notes
@@ -354,14 +357,14 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     // FILES LIST
 
     const otherVideosToDelete = checkFileList(
-      before.promotional.videos.otherVideos,
-      after.promotional.videos.otherVideos
+      before.promotional.videos?.otherVideos,
+      after.promotional.videos?.otherVideos
     );
     mediaToDelete.push(...otherVideosToDelete);
 
     const stillToDelete = checkFileList(
-      before.promotional.still_photo,
-      after.promotional.still_photo
+      before.promotional?.still_photo,
+      after.promotional?.still_photo
     );
     mediaToDelete.push(...stillToDelete);
 

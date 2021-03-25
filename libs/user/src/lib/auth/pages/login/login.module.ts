@@ -11,6 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Component
 import { LoginComponent } from './login.component';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -22,6 +23,7 @@ import { LoginComponent } from './login.component';
 
     // Material
     MatSnackBarModule,
+    ImageModule,
 
     RouterModule.forChild([{ path: '', component: LoginComponent }]),
   ],
