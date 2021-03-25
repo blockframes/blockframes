@@ -8,11 +8,23 @@ describe('Permission Rules Tests', () => {
   const projectId = `permrules-spec-${Date.now()}`;
   let db: Firestore;
 
-  beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+  describe('With User as Org Member', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test('test', async () => {});
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  describe('With User as Org Admin', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+    });
 
-  test('test', async () => {});
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    test('test', async () => {});
+  });
 });
