@@ -8,6 +8,7 @@ export const testFixture = {
       'uid-user2': 'member',
       'uid-sAdmin': 'superAdmin',
     },
+    id: 'O001',
   },
 
   'permissions/O001/documentPermissions/D001': {

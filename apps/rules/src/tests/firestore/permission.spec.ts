@@ -44,5 +44,5 @@ describe('Permission Rules Tests', () => {
       const permissionDocRef = db.doc('permissions/O001');
       await assertSucceeds(permissionDocRef.get());
     });
-  });  
+  });
 });
