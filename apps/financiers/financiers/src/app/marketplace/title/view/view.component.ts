@@ -58,6 +58,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     }
   ];
 
+  // @TODO #5350 Now we can upload video, clean old links
   promoLinks = [
     'promo_reel_link',
     'scenario',

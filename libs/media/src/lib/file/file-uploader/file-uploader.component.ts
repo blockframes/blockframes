@@ -26,7 +26,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { MovieVideoForm } from '@blockframes/movie/form/movie.form';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 

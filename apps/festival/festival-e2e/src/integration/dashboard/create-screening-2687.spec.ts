@@ -27,7 +27,7 @@ import { SEC } from '@blockframes/e2e/utils';
 let tomorrow, twodayslater;
 const userFixture = new User();
 const orgsFixture = new Orgs();
-const users  =  [ 
+const users  =  [
   (userFixture.getByUID(EVENTS[0].by.uid)),
   (userFixture.getByUID(USER.Vincent))
 ];
@@ -38,11 +38,11 @@ describe('User create a screening', () => {
     tomorrow = new Date(new Date().setDate(NOW.getDate() + 1));
     twodayslater = new Date(new Date().setDate(NOW.getDate() + 2));
     const p1 = new LandingPage();
-    p1.clickSignup();      
+    p1.clickLogin();
   });
 
   it('Organiser logs in, creates 4 screening events', () => {
-  
+
     signIn(users[0], true);
     acceptCookie();
 
@@ -51,9 +51,9 @@ describe('User create a screening', () => {
     const homePage = new FestivalDashboardHomePage();
     const eventPage: EventPage = homePage.goToCalendar();
     const eventInfo = [
-        [0, tomorrow, false], 
-        [1, tomorrow, true], 
-        [0, twodayslater, true], 
+        [0, tomorrow, false],
+        [1, tomorrow, true],
+        [0, twodayslater, true],
         [1, twodayslater, false]
     ];
     eventInfo.forEach((x: any, index:number) => {
@@ -128,6 +128,6 @@ describe('User create a screening', () => {
     // Wait notifications
     cy.wait(3 * SEC);
     cy.log(`=>Test Notification from {${OrgName}} exists`);
-    pn.verifyNotification(OrgName, true); 
+    pn.verifyNotification(OrgName, true);
   });
 });

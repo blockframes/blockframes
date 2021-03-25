@@ -4,6 +4,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MovieAnalyticsChartComponent } from './movie-analytics-chart.component';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     NgApexchartsModule,
     FlexLayoutModule,
+    ImageModule,
     // Material
     MatCardModule,
     MatIconModule,

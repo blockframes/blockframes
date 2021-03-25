@@ -8,7 +8,6 @@
 
 export interface Organization {
   id: string;
-  name: string;
   email: string;
   address: Location;
   denomination: {

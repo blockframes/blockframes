@@ -27,12 +27,14 @@ import { MatDividerModule } from '@angular/material/divider';
     GetPathModule,
     FromCamelCasePipeModule,
     HasStatusModule,
+
     // Materials
     MatCardModule,
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
     MatDividerModule,
+
     RouterModule.forChild([{ path: '', component: TunnelSummaryComponent }])
   ],
 })

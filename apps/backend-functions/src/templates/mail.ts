@@ -10,7 +10,7 @@ import { EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
-const USER_CREDENTIAL_INVITATION = '/auth/connexion#login';
+const USER_CREDENTIAL_INVITATION = '/auth/identity';
 export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
 
@@ -74,8 +74,8 @@ export function userInvite(
     userEmail: email,
     userPassword: password,
     orgName,
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`,
     event: event,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
   };
   return { to: email, templateId, data };
 }
