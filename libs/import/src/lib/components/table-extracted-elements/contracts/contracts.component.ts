@@ -112,7 +112,7 @@ export class TableExtractedContractsComponent implements OnInit {
     importState.contract.termIds = termIds;
     await this.contractService.add(importState.contract);
     const titleId = importState.contract.titleId;
-    if (!!titleId) {
+    if (!!titleId && importState.contract.type === 'mandate') {
       const title = await this.movieService.getValue(titleId);
       title.storeConfig.appAccess.catalog = true;
       this.movieService.update(title);
