@@ -50,9 +50,9 @@ export default class OrganizationLiteFormPage {
   public fillAllExceptOne(org: Partial<Organization>, key) {
     switch (key) {
       case 'denomination' :
-        cy.get('form-country input[test-id="address-country"]').should('not.be.visible');
-        cy.get('organization-lite-form mat-select[test-id="activity"]').should('not.be.visible');
-        cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').should('not.be.visible');
+        cy.get('form-country input[test-id="address-country"]').should('not.exist');
+        cy.get('organization-lite-form mat-select[test-id="activity"]').should('not.exist');
+        cy.get('organization-lite-form mat-button-toggle-group[test-id="appAccessToggleGroup"]').should('not.exist');
         break;
       case 'activity' :
         this.createNewOrg(org);
