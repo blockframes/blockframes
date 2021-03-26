@@ -177,6 +177,6 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
  */
 export function isDateInFuture(form: FormControl) {
   const now = new Date();
-  now.setHours(0, -1, 0);
+  now.setHours(0, 0, 0, 0);
   return form.value < now ? { inPast: true } : null;
 }
