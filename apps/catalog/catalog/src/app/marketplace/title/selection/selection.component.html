@@ -19,7 +19,7 @@
       <h2>Please choose currency</h2>
       <mat-form-field appearance="outline">
         <mat-label>Select</mat-label>
-        <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)">
+        <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)" test-id="selection-currency">
           <ng-container *ngFor="let currency of currencies | keyvalue">
             <mat-option [value]="currency.key">{{ currency.value }}</mat-option>
           </ng-container>
@@ -29,7 +29,7 @@
 
     <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
       <ng-container *ngIf="contract.titleId | getTitle | async as title">
-        <section class="contract surface">
+        <section class="contract surface" test-id="avails-section">
           <header fxLayout fxLayoutAlign="space-between start">
             <section fxLayout="column">
               <h2>{{ title.title.international }}</h2>
@@ -45,7 +45,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Price</mat-label>
               <input matInput type="number" min="0" [value]="contract.price"
-                (input)="debouncedUpdatePriceControl(i, $event.target.value)" />
+                (input)="debouncedUpdatePriceControl(i, $event.target.value)" test-id="price"/>
               <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
             </mat-form-field>
           </header>
