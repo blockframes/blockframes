@@ -11,8 +11,8 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}) {
     medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required]),
     exclusive: new FormControl(avail.exclusive ?? true, Validators.required),
     duration: new FormGroup({
-      from: new FormControl(avail.duration?.from, [Validators.required, compareDates('from', 'to'), isDateInFuture]),
-      to: new FormControl(avail.duration?.to, [Validators.required, compareDates('from', 'to'), isDateInFuture])
+      from: new FormControl(avail.duration?.from, [Validators.required, compareDates('from', 'to', 'from'), isDateInFuture]),
+      to: new FormControl(avail.duration?.to, [Validators.required, compareDates('from', 'to', 'to'), isDateInFuture])
     })
   }
 }

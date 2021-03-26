@@ -157,12 +157,12 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * @param toKey name of key of to date
  * @returns 
  */
-export function compareDates(fromKey: string, toKey: string): ValidatorFn {
+export function compareDates(fromKey: string, toKey: string, keyOnControl?: string): ValidatorFn {
   return (form: FormControl): ValidationErrors => {
     const eventForm = form?.parent as FormGroup;
     if (eventForm) {
-      const from = eventForm.value[fromKey];
-      const to = eventForm.value[toKey]
+      const from = keyOnControl === fromKey ? form.value : eventForm.value[fromKey];
+      const to = keyOnControl === toKey ? form.value : eventForm.value[toKey]
 
       if (from && to && from > to) {
         return { startOverEnd: true }
@@ -177,6 +177,6 @@ export function compareDates(fromKey: string, toKey: string): ValidatorFn {
  */
 export function isDateInFuture(form: FormControl) {
   const now = new Date();
-  now.setHours(0, 0, 0);
+  now.setHours(0, -1, 0);
   return form.value < now ? { inPast: true } : null;
 }

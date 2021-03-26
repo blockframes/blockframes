@@ -14,8 +14,8 @@ export function createEventControl(params?: Partial<Event>) {
     ownerOrgId: new FormControl(event.ownerOrgId),
     type: new FormControl(event.type, Validators.required),
     title: new FormControl(event.title),
-    start: new FormControl(event.start, compareDates('start', 'end')),
-    end: new FormControl(event.end, compareDates('start', 'end')),
+    start: new FormControl(event.start, compareDates('start', 'end', 'start')),
+    end: new FormControl(event.end, compareDates('start', 'end', 'end')),
     allDay: new FormControl(event.allDay),
     meta: createMetaControl(event)
   };
