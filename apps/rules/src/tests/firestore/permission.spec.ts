@@ -1,4 +1,4 @@
-﻿import { apps, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
@@ -14,10 +14,16 @@ describe('Permission Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('user with member role should be able to read document', async () => {
+    test('should be able to read document', async () => {
       const permissionDocRef = db.doc('permissions/O001');
       await assertSucceeds(permissionDocRef.get());
     });
+
+    test('should not be able to update document', async () => {
+      const permissionDocRef = db.doc('permissions/O001');
+      await assertFails(permissionDocRef.update({note: 'This is a test'}));
+    });
+
   });
 
   describe('With User as Org Admin', () => {
@@ -27,9 +33,19 @@ describe('Permission Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('user with admin role should be able to read document', async () => {
+    test('should be able to read document', async () => {
       const permissionDocRef = db.doc('permissions/O001');
       await assertSucceeds(permissionDocRef.get());
+    });
+
+    test('should be able to update document', async () => {
+      const permissionDocRef = db.doc('permissions/O001');
+      await assertSucceeds(permissionDocRef.update({note: 'This is a test'}));
+    });
+
+    test('when updating id, should not be able to update document', async () => {
+      const permissionDocRef = db.doc('permissions/O001');
+      await assertFails(permissionDocRef.update({id: 'O002', note: 'This is a test'}));
     });
   });
 
@@ -40,9 +56,19 @@ describe('Permission Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('user with superadmin role should be able to read document', async () => {
+    test('should be able to read document', async () => {
       const permissionDocRef = db.doc('permissions/O001');
       await assertSucceeds(permissionDocRef.get());
+    });
+
+    test('should be able to update document', async () => {
+      const permissionDocRef = db.doc('permissions/O001');
+      await assertSucceeds(permissionDocRef.update({note: 'This is a test'}));
+    });
+
+    test('when updating id, should not be able to update document', async () => {
+      const permissionDocRef = db.doc('permissions/O001');
+      await assertFails(permissionDocRef.update({id: 'O002', note: 'This is a test'}));
     });
   });
 });
