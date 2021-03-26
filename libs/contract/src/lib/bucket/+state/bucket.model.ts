@@ -12,7 +12,7 @@ export interface Bucket {
   uid?: string;
 }
 
-interface BucketContract {
+export interface BucketContract {
   titleId: string;
   /** The orgId that own the contract (mandate in this case) that  */
   orgId: string;
