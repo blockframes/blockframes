@@ -12,6 +12,6 @@ export const avails: Avails = {
     month: 'DEC',
     day: 31
   },
-  medias: ['A-VOD'],
+  medias: ['S-VOD'],
   exclusive: true
 };
