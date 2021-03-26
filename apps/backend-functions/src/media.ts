@@ -3,7 +3,7 @@
 import { createHash } from 'crypto';
 import { get, set } from 'lodash';
 import * as admin from 'firebase-admin';
-import { storage } from 'firebase-functions';
+import { logger, storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
@@ -250,7 +250,7 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 
 }
 
-export const deleteMedia = async (file: StorageFile): Promise<void> => {
+export const deleteMedia = async (file: StorageFile): Promise<any> => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
   const filePath = `${file.privacy}/${file.storagePath}`;
@@ -266,11 +266,11 @@ export const deleteMedia = async (file: StorageFile): Promise<void> => {
     if (!!file.jwPlayerId) {
       const deleted = await deleteFromJWPlayer(file.jwPlayerId);
       if (!deleted.success) {
-        console.log(`WARNING: file was delete from our system, but we failed to also delete it from JWPlayer! ${file}`);
+        logger.warn(`WARNING: file was delete from our system, but we failed to also delete it from JWPlayer! ${file}`);
       }
     }
 
-    await fileObject.delete();
+    return fileObject.delete();
   }
 }
 
