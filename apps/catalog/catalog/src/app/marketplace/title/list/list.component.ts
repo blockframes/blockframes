@@ -144,19 +144,18 @@ export class ListComponent implements OnInit, OnDestroy {
     // Get the parent term
     if (!this.parentTerms[titleId]) throw new Error('no available term for this title');
     const newTerm = this.availsForm.value;
-    const orgId = this.orgQuery.getActiveId();
     const newContracts: BucketContract[] = [];
     for (const parentTerm of this.parentTerms[titleId]) {
       // contract should only contain media and territories which are on the parentTerm
-      const medias = parentTerm.medias.filter(media => newTerm.medias.includes(media));
-      const territories = parentTerm.territories.filter(territory => newTerm.territories.includes(territory));
-      const termsPerMandate = createTerm({ ...newTerm, medias, territories });
-      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [termsPerMandate]});
+      newTerm.medias = parentTerm.medias.filter(media => newTerm.medias.includes(media));
+      newTerm.territories = parentTerm.territories.filter(territory => newTerm.territories.includes(territory));
+      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [newTerm]});
       newContracts.push(contract);
     }
 
+    const orgId = this.orgQuery.getActiveId();
     if (!!this.bucketQuery.getActive()) {
-      this.bucketService.update(orgId, (bucket) => {
+      this.bucketService.update(orgId, bucket => {
         const contracts = bucket.contracts || [];
         for (const newContract of newContracts) {
           // Check if there is already a contract that apply on the same parentTermId
@@ -185,9 +184,13 @@ export class ListComponent implements OnInit, OnDestroy {
               const territoryRecord: {[territories: string]: Media[]} = {};
               for (const term of conflictingTerms) {
                 for (const territory of term.territories) {
-                  territoryRecord[territory] = !!territoryRecord[territory] 
-                    ? territoryRecord[territory].concat(term.medias.filter(media => territoryRecord[territory].every(m => m !== media))) 
-                    : term.medias;
+                  if (!!territoryRecord[territory]) {
+                    // only add medias that are not in the array yet
+                    const medias = term.medias.filter(media => territoryRecord[territory].every(m => m !== media))
+                    territoryRecord[territory] = territoryRecord[territory].concat(medias);
+                  } else {
+                    territoryRecord[territory] = term.medias;
+                  }
                 }
               }
 
@@ -198,7 +201,7 @@ export class ListComponent implements OnInit, OnDestroy {
                 !!mediaRecord[key] ? mediaRecord[key].push(territory as Territory) : mediaRecord[key] = [territory as Territory];
               }
 
-              // Create new contracts for reorganized terms
+              // Create new terms
               for (const [key, territories] of Object.entries(mediaRecord)) {
                 const medias = key.split(';') as Media[];
                 const recreatedTerm: AvailsFilter = { duration: newTerm.duration, exclusive: newTerm.exclusive, medias, territories }
