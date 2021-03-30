@@ -526,11 +526,7 @@ service cloud.firestore {
 
     function isCreatingOrganization(orgId) {
 			return userId() in getAfter(/databases/$(database)/documents/orgs/$(orgId)).data.userIds
-      	&& (
-          exists(/databases/$(database)/documents/orgs/$(orgId)) == false
-          // Needed if org creation and permissions doc associated are not made in the same batch write
-          || get(/databases/$(database)/documents/orgs/$(orgId)).data.status == 'pending'
-        );
+      	&& exists(/databases/$(database)/documents/orgs/$(orgId)) == false;
     }
 
     function getOrgPermissions(orgId) {
