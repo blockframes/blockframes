@@ -124,9 +124,9 @@ describe('Document Permission Sub Collection Rules Tests', () => {
       await assertSucceeds(permissionDocRef.get());
     });
 
-    test('id not set, should be able to create document', async () => {
+    test('should be able to create document', async () => {
       const permissionDocRef = db.doc('permissions/O001/documentPermissions/DP01');
-      await assertSucceeds(permissionDocRef.set({note: 'This is a create test'}));
+      await assertSucceeds(permissionDocRef.set({id: 'DP01', note: 'This is a create test'}));
     });
 
     test('id not same as docID, should not be able to create document', async () => {
@@ -157,9 +157,9 @@ describe('Document Permission Sub Collection Rules Tests', () => {
       await assertSucceeds(permissionDocRef.get());
     });
 
-    test('id not set, should be able to create document', async () => {
+    test('should be able to create document', async () => {
       const permissionDocRef = db.doc('permissions/O001/documentPermissions/DP01');
-      await assertSucceeds(permissionDocRef.set({note: 'This is a create test'}));
+      await assertSucceeds(permissionDocRef.set({id: 'DP01', note: 'This is a create test'}));
     });
 
     test('id not same as docID, should not be able to create document', async () => {
