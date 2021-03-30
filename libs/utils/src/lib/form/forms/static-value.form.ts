@@ -17,4 +17,8 @@ export class FormStaticValueArray<S extends Scope> extends FormControl {
   constructor(value: GetKeys<S>[], scope: S, validators: ValidatorFn[] = []) {
     super(value, [isKeyArrayValidator(scope), ...validators]);
   }
+
+  reset(value: S[] = []) {
+    super.reset(value);
+  }
 }

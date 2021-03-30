@@ -2,6 +2,8 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { AvailsFilter } from '../avails';
 import { FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
+
 
 function createAvailControl(avail: Partial<AvailsFilter> = {}) {
   return {
@@ -9,8 +11,8 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}) {
     medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required]),
     exclusive: new FormControl(avail.exclusive ?? true, Validators.required),
     duration: new FormGroup({
-      from: new FormControl(avail.duration?.from, Validators.required),
-      to: new FormControl(avail.duration?.to, Validators.required)
+      from: new FormControl(avail.duration?.from, [Validators.required, compareDates('from', 'to', 'from'), isDateInFuture]),
+      to: new FormControl(avail.duration?.to, [Validators.required, compareDates('from', 'to', 'to'), isDateInFuture])
     })
   }
 }

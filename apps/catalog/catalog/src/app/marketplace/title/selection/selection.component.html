@@ -27,7 +27,7 @@
       </mat-form-field>
     </section>
 
-    <ng-container *ngFor="let contract of bucket.contracts; let i = index">
+    <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
       <section class="contract surface">
         <header fxLayout fxLayoutAlign="space-between start">
           <ng-container *ngIf="contract.titleId | getTitle | async as title">

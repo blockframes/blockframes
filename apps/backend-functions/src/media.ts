@@ -3,7 +3,7 @@
 import { createHash } from 'crypto';
 import { get, set } from 'lodash';
 import * as admin from 'firebase-admin';
-import { storage } from 'firebase-functions';
+import { logger, storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 // Blockframes dependencies
@@ -15,7 +15,7 @@ import { OrganizationDocument } from '@blockframes/organization/+state/organizat
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
 
 // Internal dependencies
-import { uploadToJWPlayer } from './player';
+import { deleteFromJWPlayer, uploadToJWPlayer } from './player';
 import { MovieDocument } from './data/types';
 import { imgixToken } from './environments/environment';
 import { db, getStorageBucketName } from './internals/firebase';
@@ -41,7 +41,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
   const isValid = isValidMetadata(metadata, { uidRequired: true });
 
   // metadata.uid is copied into uploaderUid for context consistency during transaction execution.
-  // If transaction is locked by another process, it will fail to update the doc, and will try with a new attempt 
+  // If transaction is locked by another process, it will fail to update the doc, and will try with a new attempt
   // but metadata.uid as already been removed (delete metadata[key];)
   const uploaderUid = metadata.uid;
   const [tmp] = data.name.split('/');
@@ -250,9 +250,7 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 
 }
 
-// TODO issue#4813 refactor
-// TODO - check if parent object has a `jwPlayerId`, if so delete video from JWPlayer API
-export const deleteMedia = async (file: StorageFile): Promise<void> => {
+export const deleteMedia = async (file: StorageFile): Promise<any> => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
   const filePath = `${file.privacy}/${file.storagePath}`;
@@ -262,7 +260,17 @@ export const deleteMedia = async (file: StorageFile): Promise<void> => {
   if (!exists) {
     console.log(`Delete Error : File "${filePath}" does not exists in the storage`);
   } else {
-    await fileObject.delete();
+
+    // if the file has a jwPlayerId, we need to delete the video from JWPlayer's CDN
+    // to avoid orphaned videos taking storage space
+    if (!!file.jwPlayerId) {
+      const deleted = await deleteFromJWPlayer(file.jwPlayerId);
+      if (!deleted.success) {
+        logger.warn(`WARNING: file was delete from our system, but we failed to also delete it from JWPlayer! ${file}`);
+      }
+    }
+
+    return fileObject.delete();
   }
 }
 
