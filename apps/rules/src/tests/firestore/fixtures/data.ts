@@ -1,6 +1,11 @@
 ﻿import { metaDoc } from '@blockframes/utils/maintenance';
 
 export const testFixture = {
+  //Docs Index
+  'docsIndex/DP03': {
+
+  },
+
   //Permissions
   'permissions/O001': {
     roles: {
@@ -47,6 +52,9 @@ export const testFixture = {
   'orgs/O003': {
     userIds: ['uid-user2'],
     status: 'pending'
+  },
+  'orgs/O004': {
+    userIds: ['uid-c8'],
   },
 
   //Users Collection
