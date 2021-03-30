@@ -44,6 +44,10 @@ export const testFixture = {
   'orgs/O002': {
     status: 'accepted'
   },
+  'orgs/O003': {
+    userIds: ['uid-user3'],
+    status: 'pending'
+  },
 
   //Users Collection
   'users/uid-bfAdmin': {
