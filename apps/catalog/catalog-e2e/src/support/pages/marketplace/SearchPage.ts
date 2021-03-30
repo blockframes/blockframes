@@ -21,6 +21,10 @@ export default class SearchPage extends NavbarPage {
     })
   }
 
+  public checkMovieCardDisappears(title: string) {
+    cy.get(`movie-card article h6[value="${title}"]`).should('not.exist');
+  }
+
   /////////////
   // FILTERS //
   /////////////
@@ -95,7 +99,6 @@ export default class SearchPage extends NavbarPage {
     cy.wait(1 * SEC);
 
     cy.get('button[test-id="save-filter"]').click();
-    cy.wait(1 * SEC);
   }
 
   ////////////////////////////////////////////////////
