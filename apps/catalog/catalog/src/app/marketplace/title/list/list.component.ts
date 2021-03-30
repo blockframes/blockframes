@@ -120,8 +120,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private async getContract(type: Contract['type']) {
     const contracts = type === 'mandate'
-      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgID))
-      : await this.contractService.getValue(ref => ref.where('type', '==', 'sale'))
+      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgID).where('status', '==', 'accepted'))
+      : await this.contractService.getValue(ref => ref.where('type', '==', 'sale').where('status', '==', 'accepted'))
     const termIdsByTitle = {};
 
     for (const contract of contracts) {
@@ -149,7 +149,7 @@ export class ListComponent implements OnInit, OnDestroy {
       // contract should only contain media and territories which are on the parentTerm
       newTerm.medias = parentTerm.medias.filter(media => newTerm.medias.includes(media));
       newTerm.territories = parentTerm.territories.filter(territory => newTerm.territories.includes(territory));
-      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [newTerm]});
+      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [newTerm] });
       newContracts.push(contract);
     }
 
@@ -171,7 +171,7 @@ export class ListComponent implements OnInit, OnDestroy {
               if (toDate(existingTerm.duration.from).getTime() === newTerm.duration.from.getTime()
                 && toDate(existingTerm.duration.to).getTime() === newTerm.duration.to.getTime()
                 && existingTerm.exclusive === newTerm.exclusive) {
-                  conflictingTerms.push(existingTerm);
+                conflictingTerms.push(existingTerm);
               } else {
                 terms.push(existingTerm);
               }
@@ -181,7 +181,7 @@ export class ListComponent implements OnInit, OnDestroy {
               conflictingTerms.push(newTerm);
 
               // Countries with media
-              const territoryRecord: {[territories: string]: Media[]} = {};
+              const territoryRecord: { [territories: string]: Media[] } = {};
               for (const term of conflictingTerms) {
                 for (const territory of term.territories) {
                   if (!!territoryRecord[territory]) {
@@ -195,7 +195,7 @@ export class ListComponent implements OnInit, OnDestroy {
               }
 
               // Combining unique media arrays with countries
-              const mediaRecord: {[medias: string]: Territory[]} = {};
+              const mediaRecord: { [medias: string]: Territory[] } = {};
               for (const [territory, medias] of Object.entries(territoryRecord)) {
                 const key = medias.sort().join(';');
                 !!mediaRecord[key] ? mediaRecord[key].push(territory as Territory) : mediaRecord[key] = [territory as Territory];
