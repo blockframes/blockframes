@@ -33,7 +33,7 @@ describe('Permission Rules Tests', () => {
 
     test('id not set; org status pending, should be able to create document', async () => {
       const docName = 'permissions/O003';
-      const docData = {note: 'id is different from orgId'};
+      const docData = {note: 'id is not set'};
       const permissionDocRef = db.doc(docName);
       await assertSucceeds(permissionDocRef.set(docData));
     });
@@ -130,6 +130,16 @@ describe('Document Permission Sub Collection Rules Tests', () => {
     test('should be able to read document', async () => {
       const permissionDocRef = db.doc('permissions/O001/documentPermissions/D001');
       await assertSucceeds(permissionDocRef.get());
+    });
+
+    test('id not set, should be able to create document', async () => {
+      const permissionDocRef = db.doc('permissions/O001/documentPermissions/DP01');
+      await assertSucceeds(permissionDocRef.set({note: 'This is a create test'}));
+    });
+
+    test('id not same as docID, should not be able to create document', async () => {
+      const permissionDocRef = db.doc('permissions/O001/documentPermissions/DP02');
+      await assertFails(permissionDocRef.set({id: 'DP00', note: 'This is a create test'}));
     });
 
     test('changing doc Id, should not be able to update document', async () => {
