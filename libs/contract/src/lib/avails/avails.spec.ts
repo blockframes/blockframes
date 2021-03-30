@@ -1,5 +1,5 @@
 import { Term } from '../term/+state/term.model';
-import { AvailsFilter, getMandateTerm as getMandateTerm, isInBucket, isSold } from './avails';
+import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './avails';
 import { mandateTerms as acTerms } from './fixtures/mandateTerms'
 import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
 
@@ -25,10 +25,10 @@ describe('isTermSold', () => {
     Rights: Free TV
     Exclusive: No
     Expected result: Not licensed`, () => {
-        const acHasRights = getMandateTerm({
+        const acHasRights = getMandateTerms({
             duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, territories: ['south-korea'], medias: ['freeTv'], exclusive: false
         }, mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!acHasRights).toBe(false);
+        expect(!!acHasRights.length).toBe(false);
     })
 
     it(`Mandate test (terms)
@@ -37,10 +37,10 @@ describe('isTermSold', () => {
     Rights: Free TV
     Exclusive: No
     Expected result: Not licensed`, () => {
-        const ACRights = getMandateTerm(
+        const ACRights = getMandateTerms(
             { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan'], medias: ['freeTv'] },
             mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!ACRights).toBe(false)
+        expect(!!ACRights.length).toBe(false)
     });
 
     it(`Terms: 01/01/2028 - 06/30/2036
@@ -48,10 +48,10 @@ describe('isTermSold', () => {
     Rights: Planes
     Exclusive: No
     Expected result: Not licensed`, () => {
-        const ACRights = getMandateTerm(
+        const ACRights = getMandateTerms(
             { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['france'], medias: ['planes'] },
             mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!ACRights).toBe(false)
+        expect(!!ACRights.length).toBe(false)
     });
 
     it(`Terms check (existing ended sale)
@@ -61,10 +61,10 @@ describe('isTermSold', () => {
     Exclusive: Yes
     Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerm(
+        const ACRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!ACRights).toBe(true);
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(
             availDetails,
             saleTerms.filter(m => m.titleId === Resurrected));
@@ -78,9 +78,9 @@ describe('isTermSold', () => {
     Exclusive: Yes
     Expected result: Not available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerm(availDetails,
+        const ACRights = getMandateTerms(availDetails,
             mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights).toBe(true);
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(availDetails,
             saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
@@ -93,8 +93,8 @@ describe('isTermSold', () => {
         Exclusive: No
         Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerm(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights).toBe(true);
+        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(false);
     });
@@ -106,8 +106,8 @@ describe('isTermSold', () => {
         Exclusive: Yes
         Expected result: Not available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerm(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights).toBe(true);
+        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
     });
@@ -119,8 +119,8 @@ describe('isTermSold', () => {
       Exclusive: Yes
       Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['sVod'] }
-        const ACRights = getMandateTerm(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights).toBe(true);
+        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(false);
     });
@@ -133,8 +133,8 @@ describe('isTermSold', () => {
     Exclusive: Yes
     Expected result: Not available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] }
-        const ACRights = getMandateTerm(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights).toBe(true);
+        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
     });
@@ -146,8 +146,8 @@ describe('isTermSold', () => {
       Exclusive: No
       Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany'], medias: ['freeTv'] }
-        const ACRights = getMandateTerm(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights).toBe(true);
+        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(false);
     });
@@ -160,8 +160,8 @@ describe('isTermSold', () => {
       Expected result: Not available`, () => {
         // need to put in unix timestamp
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2021'), from: new Date(1609513293 * 1000) }, exclusive: true, territories: ['canada'], medias: ['freeTv'] };
-        const ACRights = getMandateTerm(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights).toBe(true);
+        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        expect(!!ACRights.length).toBe(true);
         const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
         expect(isTermSold).toBe(true);
     });
@@ -178,20 +178,20 @@ describe('isTermSold', () => {
     Not available: Gaza mon amour (sale)
     Available: Mother Schmuckers, Bigfoot Family`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] };
-        const gazaRights = getMandateTerm(availDetails, mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const gazaRights = getMandateTerms(availDetails, mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
+        const resurrectedRights = getMandateTerms(
             availDetails, mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails, mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails, mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails, mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(false);
-        expect(!!hoursRights).toBe(false);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(false);
+        expect(!!hoursRights.length).toBe(false);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isGazaSold = isSold(
             availDetails, saleTerms.filter(sale => sale.titleId === GazaMonAmour));
         const isMotherSold = isSold(
@@ -218,26 +218,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/2036'), from: new Date('01/01/2022') }, exclusive: false,
             territories: ['afghanistan'], medias: ['freeTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(false);
-        expect(!!resurrectedRights).toBe(false);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(false);
+        expect(!!resurrectedRights.length).toBe(false);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -267,26 +267,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/2030'), from: new Date('01/01/2028') }, exclusive: false,
             territories: ['france'], medias: ['planes']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(false);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(false);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -319,26 +319,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true,
             territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -375,26 +375,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true,
             territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -431,26 +431,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false,
             territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -488,26 +488,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true,
             territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -544,26 +544,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('01/01/2022'), from: new Date('06/30/2022') }, exclusive: true,
             territories: ['argentina'], medias: ['sVod']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -600,26 +600,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive:true,
             territories: ['argentina'], medias: ['payTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -656,26 +656,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true,
             territories: ['argentina'], medias: ['payTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -712,26 +712,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive: false,
             territories: ['germany'], medias: ['freeTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
@@ -769,26 +769,26 @@ describe('isTermSold', () => {
             duration: { to: new Date('01/01/2021'), from: new Date('06/30/2021') }, exclusive: true,
             territories: ['canada'], medias: ['freeTv']
         }
-        const gazaRights = getMandateTerm(
+        const gazaRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerm(
+        const resurrectedRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerm(
+        const hoursRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerm(
+        const motherSchmuckersRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerm(
+        const bigFootFamilyRights = getMandateTerms(
             availDetails,
             mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights).toBe(true);
-        expect(!!resurrectedRights).toBe(true);
-        expect(!!hoursRights).toBe(true);
-        expect(!!motherSchmuckersRights).toBe(true);
-        expect(!!bigFootFamilyRights).toBe(true);
+        expect(!!gazaRights.length).toBe(true);
+        expect(!!resurrectedRights.length).toBe(true);
+        expect(!!hoursRights.length).toBe(true);
+        expect(!!motherSchmuckersRights.length).toBe(true);
+        expect(!!bigFootFamilyRights.length).toBe(true);
         const isMotherSold = isSold(
             availDetails,
             saleTerms.filter(sale => sale.titleId === MotherSchmuckers));

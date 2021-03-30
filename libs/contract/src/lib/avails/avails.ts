@@ -8,10 +8,11 @@ export interface AvailsFilter {
   exclusive: boolean
 }
 
-export function getMandateTerm(
+export function getMandateTerms(
   { medias, duration, territories }: AvailsFilter,
   terms: Term<Date>[] // Terms of all mandates of the title
-): Term<Date> | undefined {
+): Term<Date>[] | undefined {
+  const result: Term<Date>[] = []
   for (const term of terms) {
     // If starts before term: not available
     if (duration.from.getTime() <= term.duration.from.getTime()) {
@@ -21,17 +22,29 @@ export function getMandateTerm(
     if (duration.to.getTime() >= term.duration.to.getTime()) {
       continue;
     }
-    // If some media are not in the term: not available
-    if (medias.some(media => !term.medias.includes(media))) {
+
+    // If terms has some media of avails: available
+    if (term.medias.every(media => !medias.includes(media)) ) {
       continue;
     }
-    // If some territories are not in the term: not available
-    if (territories.some(territory => !term.territories.includes(territory))) {
+
+    // If terms has some territories of avails: available
+    if (term.territories.every(territory => !territories.includes(territory))) {
       continue;
     }
-    return term;
+
+    result.push(term);
   }
-  return;
+
+  // If more medias are selected than there are in the mandates: not available
+  const resultMedias = result.map(term => term.medias).flat();
+  if (medias.some(media => !resultMedias.includes(media))) return [];
+
+  // If more territories are selected than there are in the mandates: not available
+  const resultTerritories = result.map(term => term.territories).flat();
+  if (territories.some(territory => !resultTerritories.includes(territory))) return [];
+  
+  return result;
 }
 
 export function isSold(

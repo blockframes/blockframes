@@ -25,6 +25,7 @@ export class MarketplaceSelectionComponent {
   };
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
+  trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
     @Optional() private intercom: Intercom,

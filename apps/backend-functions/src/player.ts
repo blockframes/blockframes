@@ -193,6 +193,19 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
 }
 
 
+export const deleteFromJWPlayer = async (jwPlayerId: string) => {
+
+  const jw = new JWPlayerApi({ apiKey: jwplayerKey, apiSecret: jwplayerSecret });
+  const result = await jw.videos.delete({ video_key: jwPlayerId }).catch(e => ({ status: 'error', message: e.message }));
+
+  if (result.status === 'error' || !result.videos) {
+    return { success: false, message: result.message || '' }
+  } else {
+    return { success: true, keys: result.videos }
+  }
+};
+
+
 export const getPlayerUrl = async (
   data: unknown,
   context: CallableContext
