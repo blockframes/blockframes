@@ -20,7 +20,7 @@ describe('Permission Rules Tests', () => {
     });
 
     test('not in org, should not be able to read document', async () => {
-      const permissionDocRef = db.doc('permissions/O004');
+      const permissionDocRef = db.doc('permissions/O003');
       await assertFails(permissionDocRef.get());
     });
 
@@ -36,14 +36,27 @@ describe('Permission Rules Tests', () => {
       await assertFails(permissionDocRef.set(docData));
     });
 
-    test('id not set; org status pending, should be able to create document', async () => {
-      const docName = 'permissions/O003';
-      const docData = {note: 'id is not set'};
+    //test the scenario when org and permission is created at the same time..
+    test('org not yet created, should be able to create document', async () => {
+      const docName = 'permissions/O004';
+      const docData = {id: 'O004', roles: { 'uid-user2': 'member' }, note: 'Creating org and permission doc'};
       const permissionDocRef = db.doc(docName);
-      await assertSucceeds(permissionDocRef.set(docData));
+      const orgDoc = 'orgs/O004';
+      const orgUserIds = ['uid-user2'];
+
+      await db.runTransaction(async tx => {
+        // create org
+        const orgRef = db.doc(orgDoc);
+        //orgRef.set({status: 'pending', userIds: orgUserIds});
+        tx.set(orgRef, {status: 'pending', userIds: orgUserIds});
+
+        // create permissionDoc
+        tx.set(permissionDocRef, docData);
+      });
+
+      await assertSucceeds(permissionDocRef.get());
     });
 
-    //test the scenario when org and permission is created at the same time..
   });
 
   describe('With User as Org Admin', () => {
