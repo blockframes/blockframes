@@ -45,12 +45,8 @@ describe('Permission Rules Tests', () => {
       const orgUserIds = ['uid-user2'];
 
       await db.runTransaction(async tx => {
-        // create org
         const orgRef = db.doc(orgDoc);
-        //orgRef.set({status: 'pending', userIds: orgUserIds});
         tx.set(orgRef, {status: 'pending', userIds: orgUserIds});
-
-        // create permissionDoc
         tx.set(permissionDocRef, docData);
       });
 
