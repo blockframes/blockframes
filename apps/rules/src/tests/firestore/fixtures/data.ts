@@ -45,7 +45,7 @@ export const testFixture = {
     status: 'accepted'
   },
   'orgs/O003': {
-    userIds: ['uid-user3'],
+    userIds: ['uid-user2'],
     status: 'pending'
   },
 
