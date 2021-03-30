@@ -19,6 +19,11 @@ describe('Permission Rules Tests', () => {
       await assertSucceeds(permissionDocRef.get());
     });
 
+    test('not in org, should not be able to read document', async () => {
+      const permissionDocRef = db.doc('permissions/O004');
+      await assertFails(permissionDocRef.get());
+    });
+
     test('should not be able to update document', async () => {
       const permissionDocRef = db.doc('permissions/O001');
       await assertFails(permissionDocRef.update({note: 'This is a test'}));
@@ -37,6 +42,8 @@ describe('Permission Rules Tests', () => {
       const permissionDocRef = db.doc(docName);
       await assertSucceeds(permissionDocRef.set(docData));
     });
+
+    //test the scenario when org and permission is created at the same time..
   });
 
   describe('With User as Org Admin', () => {
@@ -112,6 +119,11 @@ describe('Document Permission Sub Collection Rules Tests', () => {
     test('id not same as docID, should not be able to create document', async () => {
       const permissionDocRef = db.doc('permissions/O001/documentPermissions/DP02');
       await assertFails(permissionDocRef.set({id: 'DP00', note: 'This is a create test'}));
+    });
+
+    test('docIndex exists, should not be able to create document', async () => {
+      const permissionDocRef = db.doc('permissions/O001/documentPermissions/DP03');
+      await assertFails(permissionDocRef.set({note: 'This is a create test for existing docIndex'}));
     });
 
     test('should not be able to update document', async () => {
