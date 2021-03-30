@@ -8,6 +8,8 @@ import { tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
+import { BucketForm } from '@blockframes/contract/bucket/form/bucket.form';
+import { debounceFactory } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'catalog-selection',
@@ -27,6 +29,8 @@ export class MarketplaceSelectionComponent {
   bucket$: Observable<Bucket>;
   trackById = (i: number, doc: { id: string }) => doc.id;
 
+  form = new BucketForm();
+
   constructor(
     @Optional() private intercom: Intercom,
     private bucketQuery: BucketQuery,
@@ -36,7 +40,13 @@ export class MarketplaceSelectionComponent {
     private snackBar: MatSnackBar
   ) {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
-      tap(bucket => this.setTitle(bucket?.contracts.length)),
+      tap(bucket => {
+        if (!!bucket) {
+          this.setTitle(bucket.contracts.length);
+          this.form.reset()
+          this.form.setAllValue(bucket);
+        }
+      }),
     );
   }
 
@@ -49,6 +59,8 @@ export class MarketplaceSelectionComponent {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, { currency });
   }
+
+  debouncedUpdatePriceControl = debounceFactory((index, price) => this.updatePrice(index, price), 1000);
 
   updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();

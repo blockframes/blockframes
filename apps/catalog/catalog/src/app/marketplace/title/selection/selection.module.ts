@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MarketplaceSelectionComponent } from './selection.component';
@@ -26,6 +27,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    ReactiveFormsModule,
 
     GetTitlePipeModule,
     BucketPipesModule,

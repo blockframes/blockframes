@@ -1,11 +1,11 @@
 <!-- In case bucket doesn't exist yet, empty is shown -->
 <ng-container *ngIf="bucket$ | async as bucket; else empty">
-  <ng-container *ngIf="!!bucket.contracts.length else empty">
+  <ng-container *ngIf="!!form.contracts.length else empty">
     <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.webp">
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
         <p>There are {{ bucket.contracts.length }} titles in my selection</p>
-        <p>Total price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
+        <p>Total price: {{ form.totalPrice | currency:bucket.currency }}</p>
       </div>
       <div fxLayout="column" fxLayoutAlign="center center">
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
@@ -15,69 +15,71 @@
       </div>
     </header>
 
-    <section>
-      <h2>Please choose currency</h2>
-      <mat-form-field appearance="outline">
-        <mat-label>Select</mat-label>
-        <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)">
-          <ng-container *ngFor="let currency of currencies | keyvalue">
-            <mat-option [value]="currency.key">{{ currency.value }}</mat-option>
-          </ng-container>
-        </mat-select>
-      </mat-form-field>
-    </section>
-
-    <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
-      <section class="contract surface">
-        <header fxLayout fxLayoutAlign="space-between start">
-          <ng-container *ngIf="contract.titleId | getTitle | async as title">
-            <section fxLayout="column">
-              <h2>{{ title.title.international }}</h2>
-              <article fxLayout fxLayoutGap="12px">
-                <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
-                  alt="Movie Illustration" [delay]="0">
-                <div fxLayout="column">
-                  <h3>{{ title.directors | displayName }}</h3>
-                  <p>{{ title | movieFeature}}</p>
-                </div>
-              </article>
-            </section>
-            <mat-form-field appearance="outline">
-              <mat-label>Price</mat-label>
-              <input matInput type="number" min="0" [value]="contract.price" (blur)="updatePrice(i, $event.target.value)" />
-              <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
-            </mat-form-field>
-          </ng-container>
-        </header>
-        <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
-          <ng-template colRef="duration" let-duration>
-            {{ duration.from | date }} - {{ duration.to | date }}
-          </ng-template>
-          <ng-template colRef="territories" let-territories>
-            {{ territories | toLabel:'territories' }}
-          </ng-template>
-          <ng-template colRef="medias" let-medias>
-            {{ medias | toLabel:'medias' }}
-          </ng-template>
-          <ng-template colRef="exclusive" let-exclusive>
-            {{ exclusive ? 'Yes' : 'No' }}
-          </ng-template>
-          <ng-template colAction="action" label="Actions" let-termIndex="index">
-            <button mat-icon-button (click)="removeTerm(i, termIndex)">
-              <mat-icon svgIcon="delete"></mat-icon>
-            </button>
-          </ng-template>
-        </bf-table-filter>
-        <footer>
-          <button mat-button (click)="removeContract(i)">
-            Delete all the rights for the title
-          </button>
-        </footer>
+    <form [formGroup]="form">
+      <section>
+        <h2>Please choose currency</h2>
+        <mat-form-field appearance="outline">
+          <mat-label>Select</mat-label>
+          <mat-select [formControl]="form.currency" (selectionChange)="updateCurrency($event.value)">
+            <ng-container *ngFor="let currency of currencies | keyvalue">
+              <mat-option [value]="currency.key">{{ currency.value }}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
       </section>
-    </ng-container>
+
+      <ng-container *ngFor="let contract of form?.contracts?.controls; trackBy: trackById; let i = index">
+        <section class="contract surface">
+          <header fxLayout fxLayoutAlign="space-between start">
+            <ng-container *ngIf="contract.titleId.value | getTitle | async as title">
+              <section fxLayout="column">
+                <h2>{{ title.title.international }}</h2>
+                <article fxLayout fxLayoutGap="12px">
+                  <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
+                    alt="Movie Illustration" [delay]="0">
+                  <div fxLayout="column">
+                    <h3>{{ title.directors | displayName }}</h3>
+                    <p>{{ title | movieFeature}}</p>
+                  </div>
+                </article>
+              </section>
+              <mat-form-field appearance="outline">
+                <mat-label>Price</mat-label>
+                <input matInput type="number" min="0" [formControl]="contract.price" (input)="debouncedUpdatePriceControl(i, $event.target.value)"/>
+                <mat-icon matPrefix [svgIcon]="form.currency.value"></mat-icon>
+              </mat-form-field>
+            </ng-container>
+          </header>
+          <bf-table-filter [source]="contract.terms.value" [columns]="columns" [initialColumns]="initialColumns" showFilter>
+            <ng-template colRef="duration" let-duration>
+              {{ duration.from | date }} - {{ duration.to | date }}
+            </ng-template>
+            <ng-template colRef="territories" let-territories>
+              {{ territories | toLabel:'territories' }}
+            </ng-template>
+            <ng-template colRef="medias" let-medias>
+              {{ medias | toLabel:'medias' }}
+            </ng-template>
+            <ng-template colRef="exclusive" let-exclusive>
+              {{ exclusive ? 'Yes' : 'No' }}
+            </ng-template>
+            <ng-template colAction="action" label="Actions" let-termIndex="index">
+              <button mat-icon-button (click)="removeTerm(i, termIndex)">
+                <mat-icon svgIcon="delete"></mat-icon>
+              </button>
+            </ng-template>
+          </bf-table-filter>
+          <footer>
+            <button mat-button (click)="removeContract(i)">
+              Delete all the rights for the title
+            </button>
+          </footer>
+        </section>
+      </ng-container>
+    </form>
 
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary">
-      <p>Total Bucket Price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
+      <p>Total Bucket Price: {{ form.totalPrice | currency:bucket.currency }}</p>
       <button mat-flat-button color="accent" (click)="createOffer(bucket)">Create Offer</button>
     </footer>
   </ng-container>
