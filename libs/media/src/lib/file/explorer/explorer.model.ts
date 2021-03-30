@@ -1,5 +1,5 @@
 import { MediaRatioType } from '../../image/uploader/uploader.component';
-import { MovieForm } from "@blockframes/movie/form/movie.form";
+import { MovieForm, MovieVideoForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
 import { AllowedFileType } from "@blockframes/utils/utils";
 import { Movie } from "@blockframes/movie/+state";
@@ -9,7 +9,7 @@ import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
 import { StorageFileForm } from "@blockframes/media/form/media.form";
 import { FormList } from "@blockframes/utils/form";
-import { StorageFile } from "@blockframes/media/+state/media.firestore";
+import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
 
 interface DirectoryBase {
   type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';
@@ -74,7 +74,7 @@ export function getFormList(form: OrganizationForm | MovieForm, field: string) {
 function titlesDirectory(titles: Movie[]) {
   const documents = {};
   for (const title of titles) {
-    documents[title.id] = titleDirectory(title);
+    documents[title.title.international + title.id] = titleDirectory(title);
   }
   return documents;
 }
@@ -87,6 +87,16 @@ function getFormStorage(object: { id: string }, collection: CollectionHoldingFil
 function getFormListStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
   const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return FormList.factory<StorageFile>(value, file => new StorageFileForm(file));
+}
+
+function getFormStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return new MovieVideoForm(value);
+}
+
+function getFormListStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return FormList.factory<StorageVideo>(value, file => new MovieVideoForm(file));
 }
 
 function titleDirectory(title: Movie): Directory {
@@ -142,21 +152,21 @@ function titleDirectory(title: Movie): Directory {
         type: 'file',
         accept: 'video',
         meta: ['movies', 'screener', title.id],
-        form: getFormStorage(title, 'movies', 'screener'),
+        form: getFormStorageVideo(title, 'movies', 'screener'),
       },
       otherVideos: {
         name: 'Other Videos',
         type: 'fileList',
         accept: 'video',
         meta: ['movies', 'otherVideos', title.id],
-        form: getFormListStorage(title, 'movies', 'otherVideos'),
+        form: getFormListStorageVideo(title, 'movies', 'otherVideos'),
       },
       salesPitch: {
         name: 'Sales Pitch',
         type: 'file',
         accept: 'video',
         meta: ['movies', 'salesPitch', title.id],
-        form: getFormStorage(title, 'movies', 'salesPitch'),
+        form: getFormStorageVideo(title, 'movies', 'salesPitch'),
       },
       notes: {
         name: 'Notes & Statements',
