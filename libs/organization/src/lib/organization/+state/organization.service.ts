@@ -73,7 +73,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     });
 
     return Promise.all([
-      this.userService.update(org.userIds[0], { orgId }),
+      this.userService.update(org.userIds[0], { orgId }, { write }),
       this.permissionsService.add(permissions, { write }),
     ]);
   }
