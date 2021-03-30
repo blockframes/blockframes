@@ -48,6 +48,7 @@ export class ListComponent implements OnInit {
     this.titles$ = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
+      map(movies => movies.sort((movieA, movieB) => movieA.title.international > movieB.title.international ? 1 : -1)),
       tap(movies => {
         movies.length ?
           this.dynTitle.setPageTitle('My titles') :
