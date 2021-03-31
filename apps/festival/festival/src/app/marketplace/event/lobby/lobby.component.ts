@@ -67,6 +67,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   toggleLocalTrack(kind: TrackKind) {
     this.twilioService.toggleTrack(kind);
+    this.twilioService.togglePreference(kind); // save the user choice for the session page
   }
 
   requestAccess() {
