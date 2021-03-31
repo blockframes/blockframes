@@ -8,7 +8,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
+import { appName, applicationUrl, getCurrentApp, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
@@ -25,6 +25,7 @@ const initialState = {
 export class NotificationStore extends EntityStore<NotificationState, Notification> {
 
   private appName;
+  private app = getCurrentApp(this.routerQuery);
 
   constructor(
     private auth: AuthService,
@@ -34,7 +35,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     private orgService: OrganizationService
   ) {
     super(initialState);
-    this.appName = appName[getCurrentApp(this.routerQuery)];
+    this.appName = appName[this.app];
     this.auth.signedOut.subscribe(() => this.remove());
   }
 
@@ -48,7 +49,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
           placeholderUrl: 'empty_organization.webp',
-          url: `/c/o/organization/${notification.organization.id}/view/org`,
+          url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'requestFromUserToJoinOrgDeclined':
         return {
@@ -56,7 +57,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/organization/${notification.organization.id}/view/members`,
+          url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'invitationToJoinOrgDeclined':
         return {
@@ -64,7 +65,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/organization/${notification.organization.id}/view/members`,
+          url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'orgMemberUpdated':
         this.getDocument<Organization>(`orgs/${notification.organization.id}`).then(org => {
@@ -84,23 +85,36 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Members of your organization have been updated`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/organization/${notification.organization.id}/view/members`,
+          url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'movieSubmitted':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          const movieAppAccess = getMovieAppAccess(movie);
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              imgRef: createStorageFile(movie?.poster),
+              message: `${movie.title.international} was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
+              url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
+            };
+          })
+        })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `A new movie has been submitted`,
+          message: `A new movie was successfully submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}`,
+          url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
         this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          const movieAppAccess = getMovieAppAccess(movie);
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
               message: `${movie.title.international} was successfully published on the marketplace.`,
+              url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
         })
@@ -118,7 +132,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: 'Your organization\'s app access have changed.',
           imgRef: notification.organization?.logo,
           placeholderUrl: 'empty_organization.webp',
-          url: `/c/o/organization/${notification.organization.id}/view/org`,
+          url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'eventIsAboutToStart':
 
@@ -137,7 +151,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/marketplace/event/${notification.docId}`,
+          url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'oneDayReminder':
 
@@ -156,7 +170,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/marketplace/event/${notification.docId}`,
+          url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'invitationToAttendEventUpdated':
       case 'requestToAttendEventUpdated':
@@ -177,7 +191,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/${module}/event/${notification.docId}`
+          url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       case 'requestToAttendEventSent':
 
@@ -196,7 +210,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/${module}/event/${notification.docId}`
+          url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       default:
         return {
