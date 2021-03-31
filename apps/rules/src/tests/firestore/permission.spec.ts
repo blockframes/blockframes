@@ -29,9 +29,9 @@ describe('Permission Rules Tests', () => {
       await assertFails(permissionDocRef.update({note: 'This is a test'}));
     });
 
-    test('id different from orgId, should not be able to create document', async () => {
+    test('id different from docID, should not be able to create document', async () => {
       const docName = 'permissions/O123';
-      const docData = {id: 'O111', note: 'id is different from orgId'};
+      const docData = {id: 'O111', note: 'id is different from docID'};
       const permissionDocRef = db.doc(docName);
       await assertFails(permissionDocRef.set(docData));
     });
