@@ -136,8 +136,7 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
 export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
   const apps: App[] = [];
   for(const a of app) {
-    const hasAccess = app.some(a => !!movie.storeConfig.appAccess[a]);
-    if(hasAccess) {
+    if(!!movie.storeConfig.appAccess[a]) {
       apps.push(a);
     }
   }
