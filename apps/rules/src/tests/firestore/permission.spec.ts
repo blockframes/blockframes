@@ -36,6 +36,13 @@ describe('Permission Rules Tests', () => {
       await assertFails(permissionDocRef.set(docData));
     });
 
+    test('Org not created alongside, should not be able to create document', async () => {
+      const docName = 'permissions/O123';
+      const docData = {id: 'O123', note: 'id is good, but Org is not created'};
+      const permissionDocRef = db.doc(docName);
+      await assertFails(permissionDocRef.set(docData));
+    });
+
     //test the scenario when org and permission is created at the same time..
     test('org not yet created, should be able to create document', async () => {
       const docName = 'permissions/O004';
