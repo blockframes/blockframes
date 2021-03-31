@@ -116,8 +116,13 @@ describe('Document Permission Sub Collection Rules Tests', () => {
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
     test('should be able to read document', async () => {
-      const permissionDocRef = db.doc('permissions/O001/documentPermissions/D001');
+      const permissionDocRef = db.doc('permissions/O001/documentPermissions/C001');
       await assertSucceeds(permissionDocRef.get());
+    });
+
+    test('not in org, should not be able to read document', async () => {
+      const permissionDocRef = db.doc('permissions/O003/documentPermissions/C003');
+      await assertFails(permissionDocRef.get());
     });
 
     test('should be able to create document', async () => {

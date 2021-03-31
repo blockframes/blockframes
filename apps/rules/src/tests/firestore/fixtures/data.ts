@@ -47,6 +47,10 @@ export const testFixture = {
     id: 'C001',
     canCreate: true,
   },
+  'permissions/O003/documentPermissions/C003': {
+    id: 'C003',
+    canCreate: true,
+  },
 
   //Orgs
   'orgs/O001': {
