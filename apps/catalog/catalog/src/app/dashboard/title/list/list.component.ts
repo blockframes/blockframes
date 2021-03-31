@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { startWith, tap } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -27,7 +27,6 @@ export class TitleListComponent {
     release: 'RELEASE YEAR',
     directors: 'DIRECTOR(S)',
     views: '# VIEWS',
-    // sales: 'SALES (Total Gross Receipts)', // TODO Commented it due to the #5060 issue
     storeConfig: 'STATUS'
   };
   initialColumns = ['title', 'release', 'directors', 'views', 'storeConfig']; // 'sales' should be added here but removed due to the #5060 issue
@@ -35,6 +34,7 @@ export class TitleListComponent {
   filter = new FormControl();
   filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
+    map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
 
   constructor(
