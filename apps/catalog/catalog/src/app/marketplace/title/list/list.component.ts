@@ -68,7 +68,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000)
     const params = this.route.snapshot.queryParams;
