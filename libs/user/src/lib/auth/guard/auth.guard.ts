@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AuthQuery, User, AuthService, AuthState } from '../+state';
+import { AuthQuery, AuthService, AuthState } from '../+state';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-
-// Verify if the user exists and has a name and surname.
-function hasIdentity(user: User) {
-  return !!user && !!user.firstName && !!user.lastName;
-}
+import { hasDisplayName } from '@blockframes/utils/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +26,7 @@ export class AuthGuard extends CollectionGuard<AuthState> {
         return this.service.sync().pipe(
           catchError(() => this.router.navigate(['/'])),
           map(_ => this.query.user),
-          map(user => (hasIdentity(user)) ? true : 'auth/identity'),
+          map(user => (hasDisplayName(user)) ? true : 'auth/identity'),
         );
       })
     );

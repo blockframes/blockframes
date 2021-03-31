@@ -13,6 +13,11 @@ mat-card {
   width: 30%;
 }
 
+img {
+  height: 120px;
+  margin-bottom: 16px;
+}
+
 @include layout-bp(lt-lg) {
   mat-card {
     width: 45%;

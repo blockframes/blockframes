@@ -86,22 +86,6 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
-      case 'memberAddedToOrg': // @TODO #4859 remove
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `${displayUserName} is now part of your organization.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
-          url: `/c/o/organization/${notification.organization.id}/view/members`,
-        };
-      case 'memberRemovedFromOrg': // @TODO #4859 remove
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `${displayUserName} has been removed from your organization.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
-          url: `/c/o/organization/${notification.organization.id}/view/members`,
-        };
       case 'movieSubmitted':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -191,46 +175,6 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
-          imgRef: notification.user?.avatar || notification.organization?.logo,
-          placeholderUrl: 'profil_user.webp',
-          url: `/c/o/${module}/event/${notification.docId}`
-        };
-      case 'invitationToAttendEventAccepted': // @TODO #4859 remove
-
-        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
-          const subject = await this.notificationSubject(notification, event)
-          await this.update(notification.id, newNotification => {
-            return {
-              ...newNotification,
-              message: `${subject} has accepted your invitation to ${event.type} "${event.title}".`
-            };
-          });
-        });
-
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Someone has accepted your invitation to event "${notification.docId}".`,
-          imgRef: notification.user?.avatar || notification.organization?.logo,
-          placeholderUrl: 'profil_user.webp',
-          url: `/c/o/${module}/event/${notification.docId}`
-        };
-      case 'invitationToAttendEventDeclined': // @TODO #4859 remove
-
-        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
-          const subject = await this.notificationSubject(notification, event)
-          this.update(notification.id, newNotification => {
-            return {
-              ...newNotification,
-              message: `${subject} has declined your invitation to ${event.type} "${event.title}".`
-            };
-          });
-        });
-
-        return {
-          _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Someone has declined your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/${module}/event/${notification.docId}`
