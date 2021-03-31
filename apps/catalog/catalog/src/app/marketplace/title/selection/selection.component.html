@@ -44,7 +44,7 @@
             </section>
             <mat-form-field appearance="outline">
               <mat-label>Price</mat-label>
-              <input matInput type="number" min="0" [value]="contract.price" (blur)="updatePrice(i, $event.target.value)" />
+              <input matInput type="number" min="0" [value]="contract.price" (input)="debouncedUpdatePriceControl(i, $event.target.value)" />
               <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
             </mat-form-field>
           </ng-container>
@@ -54,7 +54,9 @@
             {{ duration.from | date }} - {{ duration.to | date }}
           </ng-template>
           <ng-template colRef="territories" let-territories>
-            {{ territories | toLabel:'territories' }}
+            <section (click)="openDetails(territories, 'territories')">
+              {{ territories | toLabel:'territories':3 }}
+            </section>
           </ng-template>
           <ng-template colRef="medias" let-medias>
             {{ medias | toLabel:'medias' }}

@@ -75,8 +75,8 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     try {
       const creations = this.selection.selected.filter(importState => importState.newOrg && !hasImportErrors(importState));
       for (const org of creations) {
-        this.processedOrgs++;
         await this.addOrganization(org);
+        this.processedOrgs++;
       }
       this.snackBar.open(`${this.processedOrgs} organizations created!`, 'close', { duration: 3000 });
       this.processedOrgs = 0;
