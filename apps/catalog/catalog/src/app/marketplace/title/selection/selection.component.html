@@ -54,7 +54,9 @@
             {{ duration.from | date }} - {{ duration.to | date }}
           </ng-template>
           <ng-template colRef="territories" let-territories>
-            {{ territories | toLabel:'territories' }}
+            <section (click)="openDetails(territories, 'territories')">
+              {{ territories | toLabel:'territories':3 }}
+            </section>
           </ng-template>
           <ng-template colRef="medias" let-medias>
             {{ medias | toLabel:'medias' }}
