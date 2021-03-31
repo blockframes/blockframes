@@ -17,7 +17,7 @@
         </ng-container>
       </div>
     </div>
-    <img *ngIf="section.image" asset="" [ref]="section.image"/>
+    <img *ngIf="section.image?.storagePath" asset="" [ref]="section.image"/>
   </header>
 </ng-template>
 
