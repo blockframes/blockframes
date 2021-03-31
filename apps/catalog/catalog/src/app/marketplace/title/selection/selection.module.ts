@@ -12,6 +12,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -36,6 +37,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     DisplayNameModule,
     MovieFeatureModule,
     ToLabelModule,
+    DetailedTermsModule,
 
     // Material
     MatButtonModule,
