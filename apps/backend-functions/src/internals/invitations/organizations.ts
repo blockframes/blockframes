@@ -93,7 +93,8 @@ async function onInvitationToOrgDecline(invitation: InvitationDocument) {
   return triggerNotifications(notifications);
 }
 
-/** Sends an email when an organization invites a user to join. */
+/** create a notification/email to sender and org member(s) when 
+ * a request from user to join org is created. */
 async function onRequestFromUserToJoinOrgCreate({
   toOrg,
   fromUser
@@ -110,10 +111,10 @@ async function onRequestFromUserToJoinOrgCreate({
   }
 
   const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
-  const app = await getOrgAppKey(org);
+  const adminIds = await getAdminIds(org.id);
 
-  // create notifications
-  const notifications = org.userIds.map(toUserId =>
+  // create notifications to org admin/superAdmin letting them know that an user is waiting for approval
+  const notifications = adminIds.map(toUserId =>
     createNotification({
       toUserId,
       user: createPublicUserDocument(userData),
@@ -121,6 +122,15 @@ async function onRequestFromUserToJoinOrgCreate({
       type: 'requestFromUserToJoinOrgCreate'
     })
   );
+
+  // create a notification to user who want to join org letting him know that his request was sent and is beeing processed
+  notifications.push(
+    createNotification({
+      toUserId: userData.uid,
+      user: createPublicUserDocument(userData),
+      organization: createPublicOrganizationDocument(org),
+      type: 'requestFromUserToJoinOrgPending',
+    }))
 
   return triggerNotifications(notifications);
 }
