@@ -6,6 +6,8 @@ import { Organization } from "@blockframes/organization/+state/organization.mode
 import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
+import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
+import { Movie } from "@blockframes/movie/+state/movie.model";
 
 export interface AppMailSetting {
   description: string,
@@ -128,6 +130,18 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
   } else {
     return apps;
   }
+}
+
+/** Return an array of the app access of the movie */
+export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
+  const apps: App[] = [];
+  for(const a of app) {
+    const hasAccess = app.some(a => !!movie.storeConfig.appAccess[a]);
+    if(hasAccess) {
+      apps.push(a);
+    }
+  }
+  return apps;
 }
 
 /**

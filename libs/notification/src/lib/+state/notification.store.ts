@@ -8,7 +8,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, applicationUrl, getCurrentApp, getCurrentModule } from '@blockframes/utils/apps';
+import { appName, applicationUrl, getCurrentApp, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
@@ -88,20 +88,33 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'movieSubmitted':
+        this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          const movieAppAccess = getMovieAppAccess(movie);
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              imgRef: createStorageFile(movie?.poster),
+              message: `${movie.title.international} was successfully submitted to the ${appName[movieAppAccess[0]]} Team.`,
+              url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
+            };
+          })
+        })
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `A new movie has been submitted`,
+          message: `A new movie was successfully submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
           url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
         this.getDocument<Movie>(`movies/${notification.docId}`).then(movie => {
+          const movieAppAccess = getMovieAppAccess(movie);
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
               imgRef: createStorageFile(movie?.poster),
               message: `${movie.title.international} was successfully published on the marketplace.`,
+              url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId}/main`,
             };
           })
         })
@@ -110,7 +123,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}/main`,
+          url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
         // @TODO #4046 Update text if needed
