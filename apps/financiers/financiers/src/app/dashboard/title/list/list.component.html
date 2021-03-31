@@ -1,11 +1,11 @@
 <ng-container *ngIf="(titles$ | async) as titles; else loading">
   <ng-container *ngIf="(filter.value !== 'all' || titles.length); else empty">
-    <header fxLayout="row" fxLayoutAlign="space-between center" class="import">
+    <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>My Titles</h1>
       <div fxLayoutGap="24px">
         <a mat-stroked-button color="primary" routerLink="../import">
           <mat-icon svgIcon="excel"></mat-icon>
-          <span>Import Movies</span>
+          <span>Import Titles</span>
         </a>
         <a mat-mini-fab color="primary" routerLink="lobby" matTooltip="Add a new title">
           <mat-icon svgIcon="add"></mat-icon>
