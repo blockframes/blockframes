@@ -217,8 +217,8 @@ export class ViewExtractedContractsComponent implements OnInit {
         baseContract.id = this.fire.createId();
       }
       const contract = contractType === 'mandate'
-        ? createMandate({ ...baseContract as Mandate, titleId, buyerId, sellerId, stakeholders })
-        : createSale({ ...baseContract as Sale, titleId, buyerId, sellerId, stakeholders });
+        ? createMandate({ ...baseContract as Mandate, titleId, buyerId, sellerId, stakeholders, status: 'accepted' })
+        : createSale({ ...baseContract as Sale, titleId, buyerId, sellerId, stakeholders, status: 'accepted' });
 
 
       ///////////
