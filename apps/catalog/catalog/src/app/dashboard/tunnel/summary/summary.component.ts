@@ -46,7 +46,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   public async submit() {
     if (this.form.valid) {
       await this.shell.layout.update({ publishing: true });
-      const ref = this.snackBar.open(`${this.form.get('title').get('international')} was successfully submitted.`, '', { duration: 1000 });
+      const ref = this.snackBar.open(`${this.form.get('title').get('international').value || 'Title'} was successfully submitted.`, '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         this.router.navigate(['../', 'end'], { relativeTo: this.route })
       })
