@@ -4,14 +4,14 @@
 			<mat-label>
 				<ng-content select="mat-label"></ng-content>{{ required ? ' *' : '' }}
 			</mat-label>
-			<mat-select multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen()">
+			<mat-select multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen($event)">
 				<header>
 					<mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
 						[checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)">
 					</mat-checkbox>
 					<input matInput placeholder="Tap to filter" [formControl]="search" />
 					<mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
-					<button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset()">
+					<button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset()" matTooltip="Clear text">
             <mat-icon svgIcon="refresh"></mat-icon>
           </button>
 				</header>
