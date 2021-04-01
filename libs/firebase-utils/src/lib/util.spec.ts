@@ -1,7 +1,6 @@
 import * as util from './util'
 
-//TODO: 4838. Fix failing test
-describe.skip('Test util.ts generator function getCollectionInBatches', () => {
+describe('Test util.ts generator function getCollectionInBatches', () => {
   const { db } = util.loadAdminServices()
   it('should return batches of the correct size', async () => {
     const usersRef = db.collection('users')
