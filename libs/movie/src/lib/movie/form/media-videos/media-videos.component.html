@@ -15,11 +15,11 @@
 
     <h3>Other Videos</h3>
     <section>
-      <p>Upload other videos such as trailer, teaser, promotional clip, etc...</p>
+      <p>Upload other videos such as a trailer, teaser, promo reel, etc.</p>
 
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
-          {{ video.type | titlecase }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
+          {{ video.type | toLabel: 'hostedVideoTypes' }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
         </ng-template>
         <ng-template formView let-activeForm let-index="index">
           <article fxLayout="column">
