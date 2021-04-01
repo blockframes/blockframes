@@ -4,7 +4,7 @@
 			<mat-label>
 				<ng-content select="mat-label"></ng-content>{{ required ? ' *' : '' }}
 			</mat-label>
-			<mat-select multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen()">
+			<mat-select multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen($event)">
 				<header>
 					<mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
 						[checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)">
