@@ -1,7 +1,7 @@
 import { db } from './internals/firebase';
 import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { getDocument, getOrganizationsOfMovie } from './data/internals';
+import { createDocumentMeta, getDocument, getOrganizationsOfMovie } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
 import { centralOrgID } from './environments/environment';
@@ -9,6 +9,7 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
+import { app as apps } from '@blockframes/utils/apps';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -117,6 +118,7 @@ export async function onMovieUpdate(
 
   if (isMovieAccepted) { // When Archipel Content accept the movie
     const organizations = await getOrganizationsOfMovie(after.id);
+    const appAccess = apps.filter(a => !!after.storeConfig.appAccess[a]);
     const notifications = organizations
       .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
       .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
@@ -124,7 +126,8 @@ export async function onMovieUpdate(
         return createNotification({
           toUserId,
           type: 'movieAccepted',
-          docId: after.id
+          docId: after.id,
+          _meta: createDocumentMeta({ createdFrom: appAccess[0] })
         });
       });
 

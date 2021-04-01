@@ -377,7 +377,7 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
   const movieUrl = `c/o/dashboard/title/${movie.id}`;
   const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
 
-  const app = await getOrgAppKey(org);
+  const app = notification._meta.createdFrom ?? await getOrgAppKey(org);
   const template = movieAcceptedEmail(recipient, movie.title.international, movieUrl);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
