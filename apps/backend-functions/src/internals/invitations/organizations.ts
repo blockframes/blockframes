@@ -8,9 +8,10 @@ import {
 import { triggerNotifications, createNotification } from './../../notification';
 import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
-import { getAdminIds, getDocument, getAppUrl, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument, createDocumentMeta } from '../../data/internals';
+import { getAdminIds, getDocument, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument, createDocumentMeta } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { unsubscribeGroupIds } from '../../templates/ids';
+import { applicationUrl } from '@blockframes/utils/apps';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -150,8 +151,8 @@ async function onRequestFromUserToJoinOrgAccept({
     return;
   }
   await addUserToOrg(fromUser.uid, toOrg.id);
-  const urlToUse = await getAppUrl(toOrg.id);
   const app = await getOrgAppKey(toOrg.id);
+  const urlToUse = applicationUrl[app];
   const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
   return sendMailFromTemplate(template, app, unsubscribeGroupIds.allExceptCriticals);
 }

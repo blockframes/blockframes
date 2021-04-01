@@ -97,12 +97,3 @@ export async function getOrgAppKey(_org: OrganizationDocument | string): Promise
     return getOrgAppAccess(_org)[0];
   };
 }
-
-/**
- *  This guess the app from the org app access and returns the url of the app to use
- * @param _org
- */
-export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
-  const key = await getOrgAppKey(_org);
-  return applicationUrl[key];
-}
