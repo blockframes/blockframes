@@ -111,7 +111,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     // Specific update if publishing
     if (options.publishing) {
       const currentApp: App = this.route.getData('app');
-      movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.storeConfig.status = getMoviePublishStatus(currentApp);
       movie.storeConfig.appAccess[currentApp] = true;
     }
 
