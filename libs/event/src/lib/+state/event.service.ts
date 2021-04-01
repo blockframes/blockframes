@@ -9,7 +9,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -106,9 +106,10 @@ export class EventService extends CollectionService<EventState> {
   /** Query events based on types */
   queryByType(types: EventTypes[], queryFn?: QueryFn): Observable<Event[]> {
     const queries = types.map(type => eventQueries[type](queryFn));
-    const queries$ = queries.map(query => queryChanges.call(this, query))
+    const queries$ = queries.map(query => queryChanges.call(this, query));
     return combineLatest(queries$).pipe(
-      map((results) => results.flat())
+      map((results) => results.flat()),
+      debounceTime(500)
     );
   }
 
