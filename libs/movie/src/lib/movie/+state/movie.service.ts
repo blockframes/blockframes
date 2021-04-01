@@ -41,11 +41,11 @@ export class MovieService extends CollectionService<MovieState> {
     return createMovie(movie);
   }
 
-  async create(movieImported?: Movie): Promise<Movie> {
+  async create(movieImported?: Partial<Movie>): Promise<Movie> {
     const createdBy = this.authQuery.userId;
     const appName = getCurrentApp(this.routerQuery);
     let orgIds = [];
-    if (!!movieImported?.orgIds.length) {
+    if (!!movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
     } else {
       const orgId = this.orgQuery.getActiveId();
