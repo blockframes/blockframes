@@ -19,7 +19,7 @@
 
       <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
         <ng-template itemRef let-video>
-          {{ video.type | titlecase }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
+          {{ video.type | toLabel: 'hostedVideoTypes' }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
         </ng-template>
         <ng-template formView let-activeForm let-index="index">
           <article fxLayout="column">
