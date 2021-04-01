@@ -9,6 +9,10 @@ list-filter {
   }
 }
 
+button {
+  margin-bottom: 24px;
+}
+
 mat-icon[matPrefix] {
   margin-right: 12px;
 }
@@ -32,9 +36,4 @@ list-filter {
   justify-content: center;
 }
 
-button {
-  margin-bottom: 0px;
-  &.mat-icon-button mat-icon{
-    margin-top: 16px;
-  }
-}
+
