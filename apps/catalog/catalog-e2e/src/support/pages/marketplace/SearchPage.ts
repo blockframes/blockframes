@@ -34,21 +34,6 @@ export default class SearchPage extends NavbarPage {
     cy.wait(3 * SEC);
   }
 
-  //! Need to be reworked
-  public selectGenres(genres: string[]) {
-    cy.get('catalog-marketplace-title-list [test-id=genres-panel]').click();
-    genres.forEach(genre => cy.get('catalog-marketplace-title-list mat-checkbox').contains(genre).click());
-  }
-
-  //! Need to be reworked
-  public selectLanguages(language: string) {
-    cy.get('catalog-marketplace-title-list [test-id=languages-panel]').click();
-    cy.get('catalog-marketplace-title-list input[test-id=languages-panel-input]').type(language);
-    cy.get('mat-option').contains(language).click();
-    cy.get('catalog-marketplace-title-list mat-checkbox').contains('Original').click();
-    cy.get('catalog-marketplace-title-list button[test-id=languages]').click();
-  }
-
   /** Fill all fields of the avails filter. Mandatory to be able to add movie to the bucket (selection page) */
   public fillAvailFilter(avail: Avails) {
     cy.get('catalog-marketplace-title-list button').contains('Avails').click();
@@ -101,9 +86,9 @@ export default class SearchPage extends NavbarPage {
     cy.get('button[test-id="save-filter"]').click();
   }
 
-  ////////////////////////////////////////////////////
-  // NAVIGATE TO OTHER PAGE OR ACTION ON MOVIE CARD //
-  ////////////////////////////////////////////////////
+  ///////////////////////////
+  // ACTIONS ON MOVIE CARD //
+  ///////////////////////////
   public clickWishlistButton(movieName: string) {
     cy.get('movie-card', {timeout: 30 * SEC})
       .contains(movieName).parent().parent()

@@ -4,10 +4,6 @@ export default class SelectionPage {
     cy.get('catalog-selection');
   }
 
-  // public fillOffer() {
-  //   cy.get('[page-id=catalog-selection] [test-id=selection-offer]').type('200');
-  // }
-
   public selectCurrency(currency: string = 'Euro') {
     cy.get('mat-select[test-id=selection-currency]').click();
     cy.get('mat-option').contains(currency).click();
