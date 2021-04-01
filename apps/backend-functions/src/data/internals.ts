@@ -107,12 +107,3 @@ export async function getAppUrl(_org: OrganizationDocument | string): Promise<st
   const key = await getOrgAppKey(_org);
   return applicationUrl[key];
 }
-
-/**
- * This guess the app from the org app access and returns the "from" email address to use
- * @param _org
- */
-export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailJSON> {
-  const key = await getOrgAppKey(_org);
-  return getSendgridFrom(key);
-}
