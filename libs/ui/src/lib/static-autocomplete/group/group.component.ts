@@ -11,7 +11,7 @@ import {
   NG_VALUE_ACCESSOR
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer } from "rxjs";
-import { map, startWith, shareReplay } from "rxjs/operators";
+import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
 import { Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -49,6 +49,9 @@ function getRootMode(groups: StaticGroup[], value: string[]): GroupMode {
   return 'indeterminate';
 }
 
+function getItems(groups: StaticGroup[]): string[] {
+  return groups.reduce((items, group) => items.concat(group.items), []);
+}
 
 @Component({
   selector: 'static-group',
@@ -65,9 +68,8 @@ function getRootMode(groups: StaticGroup[], value: string[]): GroupMode {
 })
 export class StaticGroupComponent implements ControlValueAccessor {
   private _scope: Scope;
-  private sub?: Subscription;
+  private subs: Subscription[] = [];
   trackByLabel = (i: number, group: StaticGroup) => group.label;
-  onOpen = () => null;
   modes: Record<string, Observable<GroupMode>> = {};
   filteredGroups$: Observable<StaticGroup[]>;
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
@@ -79,6 +81,8 @@ export class StaticGroupComponent implements ControlValueAccessor {
     shareReplay(1)
   ));
   hidden: Record<string, boolean> = {}
+  // all items includes the values of checked items which are not in the filter
+  allItems: string[] = [];
 
   @Input() displayAll = '';
   @Input() @boolean required = false;
@@ -101,6 +105,28 @@ export class StaticGroupComponent implements ControlValueAccessor {
       this.search.valueChanges.pipe(startWith(this.search.value))
     ]).pipe(map(filter));
 
+    const sub = combineLatest([
+      this.filteredGroups$.pipe(map(getItems)),
+      this.form.valueChanges.pipe(pairwise())
+    ]).subscribe(([filteredItems, [prev, next]]) => {
+      if (!!prev) {
+        // checked but filtered out values
+        const hiddenValues = prev.filter(value => !filteredItems.includes(value));
+        if (!!hiddenValues.length && !next.includes(hiddenValues[0])) {
+          // add back the values
+          this.form.setValue(next.concat(hiddenValues));
+        }
+      }
+      this.allItems = this.form.value;
+    })
+    this.subs.push(sub);
+  }
+
+  onOpen(opened: boolean) {
+    if (!opened) {
+      this.form.setValue(this.allItems);
+      this.search.setValue('');
+    }
   }
 
   // Control value accessor
@@ -109,17 +135,18 @@ export class StaticGroupComponent implements ControlValueAccessor {
     this.form.reset(value);
   }
   registerOnChange(fn: any): void {
-    this.sub = this.form.valueChanges.subscribe(fn);
+    const sub = this.form.valueChanges.subscribe(fn);
+    this.subs.push(sub);
   }
-  registerOnTouched(fn: any): void {
-    this.onOpen = () => fn(true);
-  }
+  registerOnTouched() {}
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    for (const sub of this.subs) {
+      sub.unsubscribe();
+    }
   }
 
   // all check
@@ -128,7 +155,7 @@ export class StaticGroupComponent implements ControlValueAccessor {
     if (!checked) {
       this.form.reset([]);
     } else {
-      const value = this.groups.reduce((items, group) => items.concat(group.items), []);
+      const value = getItems(this.groups);
       this.form.reset(value);
     }
   }

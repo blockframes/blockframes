@@ -65,6 +65,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
+    ToLabelModule,
 
     MissingControlModule,
     ToLabelModule,
