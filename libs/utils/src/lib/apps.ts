@@ -8,6 +8,7 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { Movie } from "@blockframes/movie/+state/movie.model";
+import type { RouterQuery } from '@datorama/akita-ng-router-store';
 
 export interface AppMailSetting {
   description: string,
@@ -62,7 +63,7 @@ export const applicationUrl: Record<App, string> = {
   financiers: appUrl.financiers
 }
 
-export function getCurrentApp(routerQuery: any): App {
+export function getCurrentApp(routerQuery: RouterQuery): App {
   return routerQuery.getValue().state?.root.data.app;
 }
 
