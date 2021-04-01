@@ -60,9 +60,10 @@ describe('Create a new bucket and finalize a new offer', () => {
           break;
       }
     });
+    cy.wait(1 * SEC);
     p3.checkTotalPrice('35,000');
     p3.createNewOffer(specificText, deliveryText);
     assertMoveTo('/c/o/marketplace/selection/congratulations');
-    cy.get('catalog-congratulations h1').should('contain', 'Your Contract Offer has been successfully sent');
+    cy.get('catalog-congratulations h1').should('contain', 'Your Offer was successfully sent.');
   });
 });
