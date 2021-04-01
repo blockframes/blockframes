@@ -2,6 +2,10 @@ section {
   margin: 0 24px;
 }
 
+section:last-of-type {
+  margin-bottom: 16px;
+}
+
 .mat-card {
   height: 95px;
   .mat-card-title {
