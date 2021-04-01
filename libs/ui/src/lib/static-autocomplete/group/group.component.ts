@@ -11,7 +11,7 @@ import {
   NG_VALUE_ACCESSOR
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer } from "rxjs";
-import { map, startWith, shareReplay } from "rxjs/operators";
+import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
 import { Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -66,6 +66,7 @@ function getRootMode(groups: StaticGroup[], value: string[]): GroupMode {
 export class StaticGroupComponent implements ControlValueAccessor {
   private _scope: Scope;
   private sub?: Subscription;
+  private formSub: Subscription;
   trackByLabel = (i: number, group: StaticGroup) => group.label;
   onOpen = () => null;
   modes: Record<string, Observable<GroupMode>> = {};
@@ -101,6 +102,19 @@ export class StaticGroupComponent implements ControlValueAccessor {
       this.search.valueChanges.pipe(startWith(this.search.value))
     ]).pipe(map(filter));
 
+    this.formSub = combineLatest([
+      this.filteredGroups$.pipe(map(value => value.map(group => group.items).flat())),
+      this.form.valueChanges.pipe(pairwise())
+    ]).subscribe(([filteredItems, [prev, next]]) => {
+      if (!!prev) {
+        // checked but filtered out values
+        const hiddenValues = prev.filter(value => !filteredItems.includes(value));
+        if (!!hiddenValues.length && !next.includes(hiddenValues[0])) {
+          // add back the values
+          this.form.setValue(next.concat(hiddenValues));
+        }
+      }
+    })
   }
 
   // Control value accessor
@@ -120,6 +134,7 @@ export class StaticGroupComponent implements ControlValueAccessor {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.formSub.unsubscribe();
   }
 
   // all check
