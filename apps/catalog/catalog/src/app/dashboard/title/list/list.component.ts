@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { startWith, tap } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,6 +13,14 @@ import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
+const columns = {
+  'title.international': 'TITLE',
+  'release.year': 'RELEASE YEAR',
+  directors: 'DIRECTOR(S)',
+  views: '# VIEWS',
+  'storeConfig.status': 'STATUS'
+};
+
 @Component({
   selector: 'catalog-title-list',
   templateUrl: './list.component.html',
@@ -22,19 +30,14 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  columns = {
-    title: 'TITLE',
-    release: 'RELEASE YEAR',
-    directors: 'DIRECTOR(S)',
-    views: '# VIEWS',
-    // sales: 'SALES (Total Gross Receipts)', // TODO Commented it due to the #5060 issue
-    storeConfig: 'STATUS'
-  };
-  initialColumns = ['title', 'release', 'directors', 'views', 'storeConfig']; // 'sales' should be added here but removed due to the #5060 issue
+  columns = columns;
+  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'storeConfig.status']; // 'sales' should be added here but removed due to the #5060 issue
   titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
+    map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
+    map(movies => movies.filter(m => m.storeConfig.appAccess.catalog)),
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
 
   constructor(

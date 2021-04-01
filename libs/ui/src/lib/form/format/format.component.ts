@@ -18,7 +18,8 @@ export class FormFormatComponent implements OnInit {
   filteredTypes$: Observable<ContentType[]>;
 
   ngOnInit() {
-    this.contentTypes = Object.keys(contentType) as ContentType[];
+    this.contentTypes = (Object.keys(contentType) as ContentType[])
+      .filter(c => !['volume', 'episode', 'collection'].includes(c));
 
     this.filteredTypes$ = this.form.valueChanges
       .pipe(

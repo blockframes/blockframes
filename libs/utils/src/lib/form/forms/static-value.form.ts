@@ -20,5 +20,6 @@ export class FormStaticValueArray<S extends Scope> extends FormControl {
 
   reset(value: S[] = []) {
     super.reset(value);
+    this.markAsPristine();
   }
 }

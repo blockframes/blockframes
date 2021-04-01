@@ -5,10 +5,10 @@
 }
 
 header {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
-header[mat-tab-nav-bar] button {
+nav[mat-tab-nav-bar] button {
   border: none;
   background-color: transparent;
 }
@@ -29,10 +29,6 @@ h3 {
 p {
   text-align: center;
   margin-bottom: 32px;
-}
-
-a {
-  margin-top: 24px;
 }
 
 mat-spinner {

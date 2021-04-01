@@ -43,6 +43,7 @@ export function isFile(object: any) {
     && 'docId' in object
     && 'field' in object
     && 'storagePath' in object
+    && !!object.storagePath
     ;
 }
 

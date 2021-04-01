@@ -1,21 +1,24 @@
-<a matRipple [routerLink]="['/c/o/marketplace/event/', screening.id]">
-  <img fxHide.lt-sm [ref]="poster" asset="empty_poster.webp" alt="Movie poster of the screening">
-</a>
-<article fxLayout="column" fxLayoutAlign="space-between start">
-  <div fxLayout="column" fxLayoutAlign="start start">
-    <h3><a [routerLink]="['/c/o/marketplace/event/', screening.id]">{{ screening.title }}</a></h3>
-    <h5>{{ screening.isPrivate ? 'Private' : 'Public' }} Screening </h5>
-    <pre class="mat-body-1">{{ screening | eventRange }}</pre>
-    <org-chip [org]="screening.org"></org-chip>
-  </div>
-  <footer fxLayout>
-    <ng-container *ngIf="event$ | async as event">
-      <ng-container *ngIf="event.isOwner; else notOwner">
-        <h3>You are the owner of this event</h3>
+<!-- The next line prevents events list from flickering often -->
+<ng-container *ngIf="screening.meta.titleId | getTitle | async as title">
+  <a matRipple [routerLink]="['/c/o/marketplace/event/', screening.id]">
+    <img fxHide.lt-sm [ref]="poster" asset="empty_poster.webp" alt="Movie poster of the screening">
+  </a>
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <div fxLayout="column" fxLayoutAlign="start start">
+      <h3><a [routerLink]="['/c/o/marketplace/event/', screening.id]">{{ screening.title }}</a></h3>
+      <h5>{{ screening.isPrivate ? 'Private' : 'Public' }} Screening </h5>
+      <pre class="mat-body-1">{{ screening | eventRange }}</pre>
+      <org-chip [org]="screening.org"></org-chip>
+    </div>
+    <footer fxLayout>
+      <ng-container *ngIf="event$ | async as event">
+        <ng-container *ngIf="event.isOwner; else notOwner">
+          <h3>You are the owner of this event</h3>
+        </ng-container>
+        <ng-template #notOwner>
+          <invitation-action [invitation]="invitation$ | async" [event]="screening"></invitation-action>
+        </ng-template>
       </ng-container>
-      <ng-template #notOwner>
-        <invitation-action [invitation]="invitation$ | async" [event]="screening"></invitation-action>
-      </ng-template>
-    </ng-container>
-  </footer>
-</article>
+    </footer>
+  </article>
+</ng-container>

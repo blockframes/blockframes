@@ -2,12 +2,14 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
+import { MovieCurrency, movieCurrencies, Scope } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
+import { debounceFactory } from '@blockframes/utils/helpers';
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 @Component({
   selector: 'catalog-selection',
@@ -25,6 +27,8 @@ export class MarketplaceSelectionComponent {
   };
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
+
+  debouncedUpdatePriceControl = debounceFactory((index, price) => this.updatePrice(index, price), 1000);
   trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
@@ -110,5 +114,9 @@ export class MarketplaceSelectionComponent {
 
   openIntercom() {
     this.intercom?.show();
+  }
+
+  openDetails(terms: string, scope: Scope) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
   }
 }
