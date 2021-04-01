@@ -102,6 +102,7 @@ export async function onMovieUpdate(
 
   const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);
   const isMovieAccepted = isAccepted(before.storeConfig, after.storeConfig);
+  const appAccess = apps.filter(a => !!after.storeConfig.appAccess[a]);
 
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content
     const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
@@ -109,7 +110,8 @@ export async function onMovieUpdate(
       toUserId => createNotification({
         toUserId,
         type: 'movieSubmitted',
-        docId: after.id
+        docId: after.id,
+        _meta: createDocumentMeta({ createdFrom: appAccess[0] })
       })
     );
 
@@ -118,7 +120,6 @@ export async function onMovieUpdate(
 
   if (isMovieAccepted) { // When Archipel Content accept the movie
     const organizations = await getOrganizationsOfMovie(after.id);
-    const appAccess = apps.filter(a => !!after.storeConfig.appAccess[a]);
     const notifications = organizations
       .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
       .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
