@@ -66,17 +66,3 @@ describe('Create a new bucket and finalize a new offer', () => {
     cy.get('catalog-congratulations h1').should('contain', 'Your Contract Offer has been successfully sent');
   });
 });
-
-describe.skip('Log in as Blockframes Admin and import contracts', () => {
-  it('Log in as Blockframes Admin and import contracts', () => {
-    const p1 = new HomePage();
-    p1.openSidenavMenuAndNavigate('dashboard');
-    assertMoveTo('/c/o/dashboard/home');
-    cy.get('dashboard-home');
-    cy.get('dashboard-home a[test-id="import"]').click();
-    assertMoveTo('/c/o/dashboard/import');
-    cy.get('import-spreadsheet mat-select[test-id="import-select"]').click()
-    cy.get('mat-option').contains('Contracts').click();
-    cy.get('import-spreadsheet a').contains('Import File').click();
-  })
-});
