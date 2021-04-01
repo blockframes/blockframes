@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { premiereType } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { FormControl } from '@angular/forms';
 
 @Component({
