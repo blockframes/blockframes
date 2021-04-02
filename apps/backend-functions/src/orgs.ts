@@ -11,8 +11,8 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, App, getSendgridFrom } from '@blockframes/utils/apps';
-import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
+import { app, App, getOrgAppAccess, getSendgridFrom } from '@blockframes/utils/apps';
+import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
@@ -20,14 +20,14 @@ import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAccepte
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 /** Create a notification with user and org. */
-async function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
-  const createdFrom = await getOrgAppKey(org);
+function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
+  const createdFrom = getOrgAppAccess(org);
   return createNotification({
     toUserId,
     type: notificationType,
     user: createPublicUserDocument(user),
     organization: createPublicOrganizationDocument(org),
-    _meta: createDocumentMeta({ createdFrom:createdFrom })
+    _meta: createDocumentMeta({ createdFrom:createdFrom[0] })
   });
 }
 
@@ -55,8 +55,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const promises = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
-    const notifications = await Promise.all(promises);
+    const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
     return triggerNotifications(notifications);
 
     // Member removed
@@ -67,8 +66,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
     await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const promises = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userRemoved));
-    const notifications = await Promise.all(promises);
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userRemoved));
     return triggerNotifications(notifications);
   }
 }
@@ -125,14 +123,14 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
 
   if (becomeAccepted) {
-    const appAccess = await getOrgAppKey(after)
+    const appAccess = getOrgAppAccess(after)
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
       toUserId: after.userIds[0],
       organization: createPublicOrganizationDocument(before),
       type: 'organizationAcceptedByArchipelContent',
-      _meta: createDocumentMeta({ createdFrom: appAccess })
+      _meta: createDocumentMeta({ createdFrom: appAccess[0] })
     });
     await triggerNotifications([notification]);
   }
