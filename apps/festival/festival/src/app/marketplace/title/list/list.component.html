@@ -27,7 +27,7 @@
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
-    <ng-template filter label="Sales Agents" [form]="searchForm.sellers">
+    <ng-template filter label="Sales Agent" [form]="searchForm.sellers">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
         [filters]="['appModule:dashboard']" [form]="searchForm.sellers"
         label="Search for a Sales Agent" placeholder="Organization name"></algolia-chips-autocomplete>
@@ -35,7 +35,7 @@
 
     <ng-template filter label="Genres" [form]="searchForm.genres">
       <chips-autocomplete [form]="searchForm.genres" scope="genres">
-        <mat-label>Genres</mat-label>
+        <mat-label>Genre</mat-label>
       </chips-autocomplete>
     </ng-template>
 
