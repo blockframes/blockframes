@@ -133,7 +133,7 @@ export async function hasAcceptedMovies(org: OrganizationDocument, app: App) {
   const moviesColRef = await admin.firestore().collection('movies')
     .where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
-  return movies.some(movie => movie?.storeConfig?.status === 'accepted' && movie?.storeConfig?.appAccess[app])
+  return movies.some(movie => movie?.storeConfig?.status === 'accepted' && movie?.storeConfig?.appAccess[app]);
 }
 
 export function throwOnProduction(): never | void {
