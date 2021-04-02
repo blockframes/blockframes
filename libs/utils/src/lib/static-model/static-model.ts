@@ -168,6 +168,12 @@ export const genres = {
   webSeries: 'Web Series', //web-series
   virtualReality: 'Virtual Reality', // virtual-reality
   family: 'Family',
+  wildlife: 'Wildlife',
+  natureEnvironment: 'Nature & Environment',
+  huntingFishing: 'Hunting & Fishing',
+  archeologyHistory: 'Archeology & History',
+  travelDiscovery: 'TRAVEL & DISCOVERY',
+  fashion: 'Fashion'
 } as const
 
 export const hostedVideoTypes = {
