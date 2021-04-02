@@ -88,6 +88,7 @@ export class StaticGroupComponent implements ControlValueAccessor {
   @Input() displayAll = '';
   @Input() @boolean required = false;
   @Input() @boolean disabled = false;
+  @Input() placeholder: string = 'Tap to filter'
   @Input() set scope(scope: Scope) {
     this._scope = scope;
     this.groups$.next(staticGroups[scope]);

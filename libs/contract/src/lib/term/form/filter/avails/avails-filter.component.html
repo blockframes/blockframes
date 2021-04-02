@@ -1,7 +1,7 @@
 <form [formGroup]="form">
   <hr />
   <h3>Territories*</h3>
-  <static-group formControlName="territories" scope="territories" displayAll="World" required>
+  <static-group formControlName="territories" scope="territories" displayAll="World" placeholder="Specify territory to filter" required>
     <mat-label>Select territories</mat-label>
   </static-group>
 
@@ -28,7 +28,7 @@
   <hr />
   
   <h3>Rights*</h3>
-  <static-group formControlName="medias" scope="medias" displayAll="All Rights" required>
+  <static-group formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter">
     <mat-label>Select rights</mat-label>
   </static-group>
   
