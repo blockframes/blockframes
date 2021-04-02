@@ -3,7 +3,7 @@ import {
   Component,
   Input,
   forwardRef,
-  Pipe, PipeTransform,
+  Pipe, PipeTransform, ElementRef, ViewChild
 } from "@angular/core";
 import {
   FormControl,
@@ -84,6 +84,7 @@ export class StaticGroupComponent implements ControlValueAccessor {
   // all items includes the values of checked items which are not in the filter
   allItems: string[] = [];
 
+  @ViewChild('inputEl') input: ElementRef<HTMLInputElement>;
   @Input() displayAll = '';
   @Input() @boolean required = false;
   @Input() @boolean disabled = false;
@@ -123,7 +124,9 @@ export class StaticGroupComponent implements ControlValueAccessor {
   }
 
   onOpen(opened: boolean) {
-    if (!opened) {
+    if (opened) {
+      this.input.nativeElement.focus();
+    } else {
       this.form.setValue(this.allItems);
       this.search.setValue('');
     }

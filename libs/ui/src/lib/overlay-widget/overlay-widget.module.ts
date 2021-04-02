@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { OverlayWidgetButtonDirective, OverlayWidgetInputDirective, OverlayWidgetTooltipDirective } from './overlay-widget.directive';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { OverlayWidgetComponent, WidgetHeaderDirective, WidgetCardDirective, WidgetFooterDirective } from './overlay-widget.component';
@@ -14,7 +15,7 @@ const components = [
 ]
 
 @NgModule({
-  imports: [OverlayModule],
+  imports: [CommonModule, OverlayModule],
   declarations: components,
   exports: components
 })
