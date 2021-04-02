@@ -68,7 +68,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
   // Update algolia's index
   const promises = orgAppAccess.map(async appName => {
-    org['hasAcceptedMovies'] = (await hasAcceptedMovies(org, appName));
+    org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName);
     const orgRecord = createAlgoliaOrganization(org);
     return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
   });
