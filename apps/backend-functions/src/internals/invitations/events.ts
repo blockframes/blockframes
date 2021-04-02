@@ -3,7 +3,7 @@ import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { getUser } from "../utils";
-import { createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
+import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import * as admin from 'firebase-admin';
 
@@ -60,7 +60,8 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
         organization: invitation.fromOrg,
         docId: invitation.eventId,
         invitation: createPublicInvitationDocument(invitation),
-        type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated'
+        type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated',
+        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
       }));
     });
 
@@ -74,7 +75,8 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
       user: invitation.fromUser,
       docId: invitation.eventId,
       invitation: createPublicInvitationDocument(invitation),
-      type: 'requestToAttendEventSent'
+      type: 'requestToAttendEventSent',
+      _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
     }));
 
     // Notification to request recipients
@@ -84,7 +86,8 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
         user: invitation.fromUser,
         docId: invitation.eventId,
         invitation: createPublicInvitationDocument(invitation),
-        type: 'requestToAttendEventCreated'
+        type: 'requestToAttendEventCreated',
+        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
       }));
     });
 
@@ -109,6 +112,7 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
       invitation: createPublicInvitationDocument(invitation),
       type: 'requestToAttendEventUpdated',
       organization: invitation.toOrg, // The subject that have accepted or rejected the request
+      _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
     });
     notifications.push(notification);
   } else if (!!invitation.fromOrg && invitation.mode === 'invitation') {
@@ -120,7 +124,8 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
         docId: invitation.eventId,
         invitation: createPublicInvitationDocument(invitation),
         type: 'invitationToAttendEventUpdated',
-        user: invitation.toUser // The subject that have accepted or rejected the invitation
+        user: invitation.toUser, // The subject that have accepted or rejected the invitation
+        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
       });
 
       notifications.push(notification);
@@ -216,7 +221,8 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
       notifications.push(createNotification({
         toUserId,
         docId: invitation.eventId,
-        type: notificationType
+        type: notificationType,
+        _meta: createDocumentMeta({ createdFrom: 'festival'}) // Events are only on festival
       }));
     }
   }
