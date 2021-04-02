@@ -139,7 +139,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     await Promise.all(promises)
   }
 
-  storeSearchableOrg(after)
+  await storeSearchableOrg(after);
 
   return Promise.resolve(true); // no-op by default
 }
