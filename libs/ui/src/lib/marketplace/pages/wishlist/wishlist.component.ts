@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { CartService } from '@blockframes/cart/+state/cart.service';
 import { switchMap } from 'rxjs/operators';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -39,7 +38,6 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private router: Router,
     private service: CartService,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
