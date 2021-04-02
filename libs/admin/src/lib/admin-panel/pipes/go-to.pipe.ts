@@ -10,7 +10,7 @@ export class GoToAppPipe implements PipeTransform {
         if (module === 'dashboard') {
           path = `/tunnel/movie/${id}/main`;
         } else {
-          path = app === 'festival' ? `/title/${id}/main` : `/${id}/view/main`;
+          path = `/title/${id}/main`;
         }
         break;
       case 'contract':
