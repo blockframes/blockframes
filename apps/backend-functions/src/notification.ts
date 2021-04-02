@@ -1,6 +1,6 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
 import * as admin from 'firebase-admin';
-import { getAppUrl, getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
+import { getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
@@ -204,7 +204,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
 
 async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification: NotificationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
-  const urlToUse = await getAppUrl(org);
+  const urlToUse = applicationUrl[notification._meta.createdFrom];
 
   // Send an email to org's admin to let them know they have a request to join their org
   const template = userRequestedToJoinYourOrg({
@@ -216,14 +216,14 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
     userLastname: notification.user!.lastName
   }, urlToUse);
 
-  const appKey = await getOrgAppKey(org);
+  const appKey = notification._meta.createdFrom;
 
   return sendMailFromTemplate(template, appKey, unsubscribeId)
 }
 
 async function sendPendingRequestToJoinOrgEmail(recipient: User, notification: NotificationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
-  const appKey = await getOrgAppKey(org);
+  const appKey = notification._meta.createdFrom;
 
   // Send an email to the user who did the request to let him know its request has been sent
   const templateRequest = userJoinOrgPendingRequest(
@@ -246,12 +246,12 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
       memberAdded
     );
 
-    const appKey = await getOrgAppKey(org);
+    const appKey = notification._meta.createdFrom;
     return sendMailFromTemplate(template, appKey, unsubscribeId);
   } else {
     // Member left/removed from org
     const userRemoved = createPublicUserDocument(notification.user);
-    const app = await getOrgAppKey(org);
+    const app = notification._meta.createdFrom;
     const publicOrg = createPublicOrganizationDocument(org);
     const template = userLeftYourOrganization(recipient, userRemoved, publicOrg);
     await sendMailFromTemplate(template, app, unsubscribeId);
@@ -328,7 +328,7 @@ async function sendMailToOrgAcceptedAdmin(recipient: User, notification: Notific
 async function sendOrgAppAccessChangedEmail(recipient: User, notification: NotificationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const app = await getOrgAppKey(org);
-  const url = await getAppUrl(org);
+  const url = applicationUrl[app];
   // @#4046 Change text to something more generic than `Your organization has now access to Archipel Market.` wich can be wrong
   const template = organizationAppAccessChanged(recipient, url);
   await sendMailFromTemplate(template, app, unsubscribeId);
@@ -375,9 +375,8 @@ function getEventLink(org: OrganizationDocument) {
 async function sendMovieAcceptedEmail(recipient: User, notification: NotificationDocument) {
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const movieUrl = `c/o/dashboard/title/${movie.id}`;
-  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
 
-  const app = await getOrgAppKey(org);
+  const app = notification._meta.createdFrom;
   const template = movieAcceptedEmail(recipient, movie.title.international, movieUrl);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
@@ -399,17 +398,16 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const organizerOrgName = orgName(org);
 
-  const app = await getOrgAppKey(org);
+  const app = notification._meta.createdFrom;
   const template = requestToAttendEventFromUserSent(recipient, eventEmailData, organizerOrgName);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
 /** Let admins knows their invitation to an user to join their org has been declined */
 async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const user = createPublicUserDocument(notification.user)
 
-  const app = await getOrgAppKey(org);
+  const app = notification._meta.createdFrom;
   const template = invitationToJoinOrgDeclined(recipient, user);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
@@ -418,7 +416,7 @@ async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notificatio
 async function sendRequestToJoinOrgDeclined(recipient: User, notification: NotificationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const user = createPublicUserDocument(notification.user);
-  const app = await getOrgAppKey(org);
+  const app = notification._meta.createdFrom;
   const template = requestToJoinOrgDeclined(user, orgName(org));
   await sendMailFromTemplate(template, app, unsubscribeId);
 }

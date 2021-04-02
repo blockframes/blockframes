@@ -168,6 +168,12 @@ export const genres = {
   webSeries: 'Web Series', //web-series
   virtualReality: 'Virtual Reality', // virtual-reality
   family: 'Family',
+  wildlife: 'Wildlife',
+  natureEnvironment: 'Nature & Environment',
+  huntingFishing: 'Hunting & Fishing',
+  archeologyHistory: 'Archeology & History',
+  travelDiscovery: 'Travel & Discovery',
+  fashion: 'Fashion'
 } as const
 
 export const hostedVideoTypes = {
@@ -751,9 +757,9 @@ export const territories = {
   uganda: "Uganda",
   ukraine: "Ukraine",
   "united-arab-emirates": "United Arab Emirates",
-  "united-kingdom": "United Kingdom",
+  "united-kingdom": "United Kingdom (UK)",
   "united-states-minor-outlying-islands": "United States Minor Outlying Islands",
-  "united-states-of-america": "United States of America",
+  "united-states-of-america": "United States of America (USA)",
   uruguay: "Uruguay",
   uzbekistan: "Uzbekistan",
   vanuatu: "Vanuatu",
