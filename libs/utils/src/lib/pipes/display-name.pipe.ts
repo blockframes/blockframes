@@ -11,15 +11,17 @@ import { displayName } from '../utils'
   name: 'displayName'
 })
 export class DisplayNamePipe implements PipeTransform {
-  transform(value: Person | Person[]): string {
+  /**
+   * 
+   * @param value value can be a Person, an array of Person or an
+   * array of string if data comes from Algolia
+   * @returns string
+   */
+  transform(value: Person | Person[] | string[]): string {
     if (Array.isArray(value)) {
-      return value.map(person => {
-        if (person?.firstName) {
-          return displayName(person);
-        } else {
-          return value;
-        }
-      }).join(', ');
+      return (value as any)
+        .map(person => typeof person === 'string' ? person : displayName(person))
+        .join(', ');
     } else {
       return displayName(value);
     }
