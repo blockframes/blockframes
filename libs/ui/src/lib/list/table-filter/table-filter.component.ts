@@ -18,7 +18,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { getValue } from '@blockframes/utils/helpers';
 import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
@@ -85,6 +85,10 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.columnFilter.patchValue(this.initialColumns);
     this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
+      map(filter => {
+        if (!!this.colAction) filter.push(this.colAction.ref)
+        return filter
+      }),
       startWith(this.columnFilter.value)
     );
 
