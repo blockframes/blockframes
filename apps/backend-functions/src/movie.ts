@@ -26,8 +26,7 @@ export async function onMovieCreate(
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
   if (movie.storeConfig.status === 'accepted') {
-    organization['hasAcceptedMovies'] = true;
-    storeSearchableOrg(organization)
+    await storeSearchableOrg(organization);
   }
 
   // Update algolia's index
@@ -145,10 +144,7 @@ export async function onMovieUpdate(
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
   if (creatorOrg.denomination?.full) {
-    if (after.storeConfig.status !== before.storeConfig.status && after.storeConfig.status === 'accepted') {
-      creatorOrg['hasAcceptedMovies'] = true;
-      storeSearchableOrg(creatorOrg)
-    }
+    await storeSearchableOrg(creatorOrg);
     await storeSearchableMovie(after, orgName(creatorOrg));
     for (const app in after.storeConfig.appAccess) {
       if (after.storeConfig.appAccess[app] === false && before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
