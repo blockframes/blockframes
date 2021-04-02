@@ -8,7 +8,8 @@
           <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="festival-name" [control]="prizesForm.get('name')" scope="festival" fxFlex required>
+              <static-select test-id="festival-name" [control]="prizesForm.get('name')" scope="festival" fxFlex
+                required>
                 <mat-label>Festival Name</mat-label>
                 <mat-hint>If you can't find the festival you're looking for, go to 'Custom Festival' section.</mat-hint>
               </static-select>
@@ -34,7 +35,8 @@
             <h6 class="mat-caption">Premiere</h6>
             <div fxLayout="column" class="toggle-btn">
               <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere"
-                #group="matButtonToggleGroup" (change)="onChange()" (click)="onClick(group, prizesForm.get('premiere'))">
+                #group="matButtonToggleGroup" (change)="onChange()"
+                (click)="onClick(group, prizesForm.get('premiere'))">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere">
                     {{ premiere | toLabel: 'premiereType' }}
@@ -87,8 +89,9 @@
 
             <h6 class="mat-caption">Premiere</h6>
             <div fxLayout="column" class="toggle-btn">
-              <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere" aria-label="Premiere"
-                #group="matButtonToggleGroup" (change)="onChange()" (click)="onClick(group, customPrizesForm.get('premiere'))">
+              <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere"
+                aria-label="Premiere" #group="matButtonToggleGroup" (change)="onChange()"
+                (click)="onClick(group, customPrizesForm.get('premiere'))">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere">
                     {{ premiere | toLabel: 'premiereType' }}
@@ -125,7 +128,7 @@
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Journal Name</mat-label>
-                <input test-id="journal-name" matInput formControlName="journalName" required/>
+                <input test-id="journal-name" matInput formControlName="journalName" required />
               </mat-form-field>
             </div>
 
