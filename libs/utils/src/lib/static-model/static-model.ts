@@ -172,7 +172,7 @@ export const genres = {
   natureEnvironment: 'Nature & Environment',
   huntingFishing: 'Hunting & Fishing',
   archeologyHistory: 'Archeology & History',
-  travelDiscovery: 'TRAVEL & DISCOVERY',
+  travelDiscovery: 'Travel & Discovery',
   fashion: 'Fashion'
 } as const
 
