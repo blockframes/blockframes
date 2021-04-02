@@ -35,7 +35,7 @@ export class MovieVideoUploadComponent implements OnInit {
 
   async ngOnInit() {
     this.form = new MovieVideosForm(this.movie.promotional.videos);
-    this.salesPitchForm = new MovieSalesPitchForm(this.movie.promotional.salesPitch)
+    this.salesPitchForm = new MovieSalesPitchForm(this.movie.promotional.salesPitch);
     // Add empty upload zone
     this.form.otherVideos.add({ ref: '' });
     this.cdr.markForCheck();
