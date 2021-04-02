@@ -32,6 +32,6 @@ const typeDictionary = {
   },
   default: {
     runningTime: 'Running Time',
-    runningTimeError: "Please specify your project's runtime."
+    runningTimeError: "Please specify your title's duration."
   }
 }

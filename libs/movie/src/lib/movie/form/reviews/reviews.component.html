@@ -1,6 +1,6 @@
 <tunnel-page>
   <ng-container tunnel-form>
-    <h3>Festival & Awards</h3>
+    <h3>Festivals & Awards</h3>
     <section id="festival">
       <bf-form-list [form]="form.prizes">
         <ng-template itemRef let-prizes>{{ prizes | festivalPrize | titlecase}}</ng-template>
@@ -11,7 +11,8 @@
               <static-select test-id="festival-name" [control]="prizesForm.get('name')" scope="festival" fxFlex
                 required>
                 <mat-label>Festival Name</mat-label>
-                <mat-hint>If you can't find the festival you're looking for, go to 'Custom Festival' section.</mat-hint>
+                <mat-hint>If you can't find the festival you're looking for, go to 'Other Festival & Awards' section.</mat-hint>
+                <mat-error>Required. If you can't find the festival you're looking for, go to 'Other Festival & Awards' section.</mat-error>
               </static-select>
             </div>
 
@@ -56,7 +57,7 @@
 
     <mat-divider></mat-divider>
 
-    <h3>Other Festival & Awards</h3>
+    <h3>Other Festivals & Awards</h3>
     <section id="custom-festival">
 
       <bf-form-list [form]="form.customPrizes">
