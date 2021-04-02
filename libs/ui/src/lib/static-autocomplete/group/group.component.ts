@@ -18,7 +18,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 
 type GroupMode = 'indeterminate' | 'checked' | 'unchecked';
 
-function filter([groups, text]: [StaticGroup[], string]) {
+function filter([groups, text]: [StaticGroup[], string], scope: Scope) {
   if (!text) return groups;
   const search = text.toLowerCase();
   const result: StaticGroup[] = [];
@@ -27,7 +27,7 @@ function filter([groups, text]: [StaticGroup[], string]) {
       result.push(group);
     } else {
       const items = group.items.filter(item => {
-        return item.toLowerCase().includes(search);
+        return staticModel[scope][item].toLowerCase().includes(search);
       });
       if (items.length) {
         result.push({ ...group, items });
@@ -105,7 +105,7 @@ export class StaticGroupComponent implements ControlValueAccessor {
     this.filteredGroups$ = combineLatest([
       this.groups$.asObservable(),
       this.search.valueChanges.pipe(startWith(this.search.value))
-    ]).pipe(map(filter));
+    ]).pipe(map(result => filter(result, this.scope)));
 
     const sub = combineLatest([
       this.filteredGroups$.pipe(map(getItems)),
