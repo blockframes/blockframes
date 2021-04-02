@@ -16,7 +16,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
-import { HasKeysModule } from '@blockframes/utils/pipes';
+import { HasKeysModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 
@@ -45,6 +45,7 @@ import { MatCardModule } from '@angular/material/card';
     HasKeysModule,
     DownloadPipeModule,
     VideoViewerModule,
+    ToLabelModule,
 
     // Material
     MatChipsModule,
