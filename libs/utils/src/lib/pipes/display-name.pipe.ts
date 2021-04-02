@@ -11,15 +11,19 @@ import { displayName } from '../utils'
   name: 'displayName'
 })
 export class DisplayNamePipe implements PipeTransform {
-  transform(value: Person | Person[]): string {
+
+  /**
+   * @param value value can be a Person, an array of Person or an
+   * array of string if data comes from Algolia
+   * @param max if value is an array, this can be used to tell how many items we want
+   * @returns string
+   */
+  transform(value: Person | Person[] | string[], max?: number): string {
     if (Array.isArray(value)) {
-      return value.map(person => {
-        if (person?.firstName) {
-          return displayName(person);
-        } else {
-          return value;
-        }
-      }).join(', ');
+      return (value as any)
+        .map(person => typeof person === 'string' ? person : displayName(person))
+        .slice(0, max)
+        .join(', ');
     } else {
       return displayName(value);
     }

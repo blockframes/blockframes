@@ -6,17 +6,20 @@ const chartInfo = [
   {
     eventName: 'movieViews',
     title: 'Page views',
-    icon: 'visibility'
+    icon: 'visibility',
+    image: 'no_views.svg'
   },
   {
     eventName: 'addedToWishlist',
     title: 'Adds to Wishlist',
-    icon: 'mouse_pointer'
+    icon: 'mouse_pointer',
+    image: 'no_wishlist.svg'
   },
   {
     eventName: 'promoReelOpened',
     title: 'Clicks on promo elements',
-    icon: 'specific_delivery_list'
+    icon: 'specific_delivery_list',
+    image: 'no_stats_promo.svg'
   }
 ] as const;
 
