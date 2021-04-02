@@ -6,7 +6,7 @@
 
       <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
-          <mat-label>International title</mat-label>
+          <mat-label>International Title</mat-label>
           <input test-id="international-title" matInput type="text" placeholder="International title"
             [formControl]="international" required />
           <mat-error *ngIf="international.hasError('required')">
@@ -15,7 +15,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
-          <mat-label>Original title</mat-label>
+          <mat-label>Original Title</mat-label>
           <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original" />
           <mat-hint>If different from International Title</mat-hint>
         </mat-form-field>

@@ -2,6 +2,7 @@
 <article>
   <h6>
     Festival{ movie.prizes.controls.length, plural, =0 {} =1 {} other {s}}
+    & Award{ movie.prizes.controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="festival">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
@@ -40,7 +41,8 @@
 <!-- CUSTOM FESTIVAL -->
 <article>
   <h6>
-    Other Festival & Award{ movie.customPrizes.controls.length, plural, =0 {} =1 {} other {s}}
+    Other Festival{ movie.customPrizes.controls.length, plural, =0 {} =1 {} other {s}}
+    & Award{ movie.customPrizes.controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="custom-festival">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>

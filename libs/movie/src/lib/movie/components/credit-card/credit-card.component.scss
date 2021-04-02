@@ -10,6 +10,10 @@ mat-tab-group {
   width: 100%;
 }
 
+header:first-child {
+  min-height: 70px;
+}
+
 article {
   padding: 24px 0;
   height: 200px;

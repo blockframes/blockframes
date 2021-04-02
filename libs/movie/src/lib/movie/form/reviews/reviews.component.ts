@@ -17,7 +17,7 @@ export class MovieFormReviewsComponent {
   public premieres = Object.keys(premiereType);
 
   constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Selection & Reviews');
+    this.dynTitle.setPageTitle('Selections & Reviews');
   }
 
   onChange() {
