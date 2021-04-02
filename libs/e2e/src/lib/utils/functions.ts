@@ -7,7 +7,7 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
   // Since Cypress doesn't provide method to clear indexedDB = > https://github.com/cypress-io/cypress/issues/1208
   //cy.clearCookies();
   //cy.clearLocalStorage();
-  indexedDB.deleteDatabase('firebaseLocalStorageDb');
+  //indexedDB.deleteDatabase('firebaseLocalStorageDb');
   if (path !== '') {
     cy.visit(path);
   }
