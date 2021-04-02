@@ -375,7 +375,6 @@ function getEventLink(org: OrganizationDocument) {
 async function sendMovieAcceptedEmail(recipient: User, notification: NotificationDocument) {
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const movieUrl = `c/o/dashboard/title/${movie.id}`;
-  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
 
   const app = notification._meta.createdFrom;
   const template = movieAcceptedEmail(recipient, movie.title.international, movieUrl);
@@ -406,7 +405,6 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
 
 /** Let admins knows their invitation to an user to join their org has been declined */
 async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const user = createPublicUserDocument(notification.user)
 
   const app = notification._meta.createdFrom;
