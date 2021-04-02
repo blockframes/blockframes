@@ -25,8 +25,10 @@ export class MovieFormReviewsComponent {
   }
 
   onClick(group: MatButtonToggleGroup, form: FormControl) {
-    if (!this.toggleChanged) group.value = '';
-    form.setValue(group.value);
+    let value = group.value
+    // We need to make sure not to set value to undefined in the form, firebase will throw an error
+    if (!this.toggleChanged || typeof group.value === 'undefined') value = '';
+    form.setValue(value);
     this.toggleChanged = false;
   }
 }
