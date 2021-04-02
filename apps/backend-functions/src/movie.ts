@@ -146,8 +146,7 @@ export async function onMovieUpdate(
 
   if (creatorOrg.denomination?.full) {
     if (after.storeConfig.status !== before.storeConfig.status && after.storeConfig.status === 'accepted') {
-      creatorOrg['hasAcceptedMovies'] = true;
-      storeSearchableOrg(creatorOrg)
+      await storeSearchableOrg(creatorOrg);
     }
     await storeSearchableMovie(after, orgName(creatorOrg));
     for (const app in after.storeConfig.appAccess) {

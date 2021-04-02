@@ -2,12 +2,13 @@ import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgID } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
-import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
+import { App, app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import * as admin from 'firebase-admin';
+import { hasAcceptedMovies } from '../util';
 
 export const algolia = {
   ...algoliaClient,
@@ -62,13 +63,15 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
   if (org.id === centralOrgID) return;
 
-  const orgRecord = createAlgoliaOrganization(org);
-
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-  const orgAppAccess = findOrgAppAccess(org)
+  const orgAppAccess = findOrgAppAccess(org);
 
   // Update algolia's index
-  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
+  const promises = orgAppAccess.map(async appName => {
+    org['hasAcceptedMovies'] = (await hasAcceptedMovies(org, appName));
+    const orgRecord = createAlgoliaOrganization(org);
+    return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
+  });
 
   return Promise.all(promises)
 }
@@ -204,6 +207,6 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
   }
 }
 
-export function findOrgAppAccess(org: OrganizationDocument) {
+export function findOrgAppAccess(org: OrganizationDocument): App[] {
   return app.filter(a => modules.some(m => org.appAccess[a]?.[m]));
 }

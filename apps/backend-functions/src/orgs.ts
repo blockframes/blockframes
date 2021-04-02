@@ -16,7 +16,7 @@ import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 /** Create a notification with user and org. */
@@ -81,10 +81,6 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   const emailRequest = await organizationCreated(org);
   const from = getSendgridFrom(org._meta.createdFrom);
 
-  if (await hasAcceptedMovies(org)) {
-    org['hasAcceptedMovies'] = true;
-  }
-
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from).catch(e => console.warn(e.message)),
@@ -141,10 +137,6 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   if (before.status === 'accepted' && after.status === 'pending') {
     const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>)
     await Promise.all(promises)
-  }
-
-  if (await hasAcceptedMovies(after)) {
-    after['hasAcceptedMovies'] = true;
   }
 
   storeSearchableOrg(after)
