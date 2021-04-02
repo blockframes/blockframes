@@ -11,11 +11,11 @@ import { displayName } from '../utils'
   name: 'displayName'
 })
 export class DisplayNamePipe implements PipeTransform {
+
   /**
-   * 
    * @param value value can be a Person, an array of Person or an
    * array of string if data comes from Algolia
-   * @param max if value is an array, this can be use to tell how many items we want
+   * @param max if value is an array, this can be used to tell how many items we want
    * @returns string
    */
   transform(value: Person | Person[] | string[], max?: number): string {
