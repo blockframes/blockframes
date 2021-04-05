@@ -1,6 +1,11 @@
 ﻿import { metaDoc } from '@blockframes/utils/maintenance';
 
 export const testFixture = {
+  //Docs Index
+  'docsIndex/DP03': {
+
+  },
+
   //Permissions
   'permissions/O001': {
     roles: {
@@ -8,31 +13,42 @@ export const testFixture = {
       'uid-user2': 'member',
       'uid-sAdmin': 'superAdmin',
     },
+    id: 'O001',
   },
 
   'permissions/O001/documentPermissions/D001': {
+    id: 'D001',
     ownerId: 'O001',
   },
   'permissions/O001/documentPermissions/MI-000': {
+    id: 'MI-000',
     canCreate: false,
   },
   'permissions/O001/documentPermissions/MI-007': {
+    id: 'MI-007',
     canCreate: true,
     canDelete: true,
     canUpdate: true,
     ownerId: 'O001',
   },
   'permissions/O001/documentPermissions/MI-0d7': {
+    id: 'MI-0d7',
     canDelete: true,
     canUpdate: true,
     ownerId: 'O001',
   },
   'permissions/O001/documentPermissions/MI-077': {
+    id: 'MI-077',
     canUpdate: true,
     canCreate: true,
     ownerId: 'O001',
   },
   'permissions/O001/documentPermissions/C001': {
+    id: 'C001',
+    canCreate: true,
+  },
+  'permissions/O003/documentPermissions/C003': {
+    id: 'C003',
     canCreate: true,
   },
 
@@ -42,6 +58,13 @@ export const testFixture = {
   },
   'orgs/O002': {
     status: 'accepted'
+  },
+  'orgs/O003': {
+    userIds: ['uid-c8'],
+  },
+
+  'orgs/O001/carts/C001': {
+    id: 'C001',
   },
 
   //Users Collection
