@@ -231,7 +231,7 @@ service cloud.firestore {
         && isNotUpdatingId('id', existingData().id);
     }
 
-    // Org members have less update possibilities than admis
+    // Org members have less update possibilities than admins
     // but need to be able to update movieIds
     function isMemberAllowedToUpdateOrg() {
       return isOrgMember(existingData().id)
