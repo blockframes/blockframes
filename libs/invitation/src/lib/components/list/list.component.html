@@ -9,7 +9,7 @@
       <mat-divider *ngIf="invitationList.length"></mat-divider>
 
       <!-- Display all invitations -->
-      <ng-container *ngFor="let invitation of invitationList">
+      <ng-container *ngFor="let invitation of invitationList; trackBy: trackById">
         <ng-template [ngTemplateOutlet]="itemTemplate || default" [ngTemplateOutletContext]="{ $implicit: invitation }">
         </ng-template>
       </ng-container>

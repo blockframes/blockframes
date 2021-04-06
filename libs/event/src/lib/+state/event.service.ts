@@ -9,7 +9,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -108,7 +108,8 @@ export class EventService extends CollectionService<EventState> {
     const queries = types.map(type => eventQueries[type](queryFn));
     const queries$ = queries.map(query => queryChanges.call(this, query));
     return combineLatest(queries$).pipe(
-      map((results) => results.flat())
+      map((results) => results.flat()),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
   }
 
