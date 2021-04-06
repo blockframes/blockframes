@@ -28,9 +28,9 @@
     </section>
 
     <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
-      <section class="contract surface">
-        <header fxLayout fxLayoutAlign="space-between start">
-          <ng-container *ngIf="contract.titleId | getTitle | async as title">
+      <ng-container *ngIf="contract.titleId | getTitle | async as title">
+        <section class="contract surface">
+          <header fxLayout fxLayoutAlign="space-between start">
             <section fxLayout="column">
               <h2>{{ title.title.international }}</h2>
               <article fxLayout fxLayoutGap="12px">
@@ -38,7 +38,7 @@
                   alt="Movie Illustration" [delay]="0">
                 <div fxLayout="column">
                   <h3>{{ title.directors | displayName }}</h3>
-                  <p>{{ title | movieFeature}}</p>
+                  <p>{{ title | movieFeature }}</p>
                 </div>
               </article>
             </section>
@@ -48,35 +48,35 @@
                 (input)="debouncedUpdatePriceControl(i, $event.target.value)" />
               <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
             </mat-form-field>
-          </ng-container>
-        </header>
-        <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
-          <ng-template colRef="duration" let-duration>
-            {{ duration.from | date }} - {{ duration.to | date }}
-          </ng-template>
-          <ng-template colRef="territories" let-territories>
-            <section (click)="openDetails(territories, 'territories')">
-              {{ territories | toLabel:'territories':3 }}
-            </section>
-          </ng-template>
-          <ng-template colRef="medias" let-medias>
-            {{ medias | toLabel:'medias' }}
-          </ng-template>
-          <ng-template colRef="exclusive" let-exclusive>
-            {{ exclusive ? 'Yes' : 'No' }}
-          </ng-template>
-          <ng-template colAction="action" label="Actions" let-termIndex="index">
-            <button mat-icon-button (click)="removeTerm(i, termIndex)">
-              <mat-icon svgIcon="delete"></mat-icon>
+          </header>
+          <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
+            <ng-template colRef="duration" let-duration>
+              {{ duration.from | date }} - {{ duration.to | date }}
+            </ng-template>
+            <ng-template colRef="territories" let-territories>
+              <section (click)="openDetails(territories, 'territories')">
+                {{ territories | toLabel:'territories':3 }}
+              </section>
+            </ng-template>
+            <ng-template colRef="medias" let-medias>
+              {{ medias | toLabel:'medias' }}
+            </ng-template>
+            <ng-template colRef="exclusive" let-exclusive>
+              {{ exclusive ? 'Yes' : 'No' }}
+            </ng-template>
+            <ng-template colAction="action" label="Actions" let-termIndex="index">
+              <button mat-icon-button (click)="removeTerm(i, termIndex)">
+                <mat-icon svgIcon="delete"></mat-icon>
+              </button>
+            </ng-template>
+          </bf-table-filter>
+          <footer>
+            <button mat-button (click)="removeContract(i, title)">
+              Delete all the rights for the title
             </button>
-          </ng-template>
-        </bf-table-filter>
-        <footer>
-          <button mat-button (click)="removeContract(i)">
-            Delete all the rights for the title
-          </button>
-        </footer>
-      </section>
+          </footer>
+        </section>
+      </ng-container>
     </ng-container>
 
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary">
