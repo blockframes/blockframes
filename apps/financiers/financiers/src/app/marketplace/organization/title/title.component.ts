@@ -14,6 +14,8 @@ import { Observable } from 'rxjs';
 export class TitleComponent implements OnInit {
   public titles$: Observable<Movie[]>;
 
+  trackById = (i: number, doc: { id: string }) => doc.id;
+
   constructor(
     private service: MovieService,
     private parent: ViewComponent,
