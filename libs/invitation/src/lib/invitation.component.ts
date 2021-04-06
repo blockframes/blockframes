@@ -13,7 +13,9 @@ import { distinctUntilChanged } from 'rxjs/operators';
 export class InvitationComponent implements OnInit, OnDestroy {
 
   // Invitation that require an action
-  invitations$ = this.query.toMe();
+  invitations$ = this.query.toMe().pipe(
+    distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+  );
 
   private sub: Subscription;
 
@@ -24,9 +26,7 @@ export class InvitationComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.invitations$.pipe(
-      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
-    ).subscribe(invitations => {
+    this.sub = this.invitations$.subscribe(invitations => {
       !!invitations.length ?
         this.dynTitle.setPageTitle('Invitations List') :
         this.dynTitle.setPageTitle('Invitations List', 'Empty');
