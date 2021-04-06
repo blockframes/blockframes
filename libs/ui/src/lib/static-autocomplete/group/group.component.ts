@@ -89,7 +89,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   @Input() @boolean disabled = false;
   @Input() placeholder: string = 'Tap to filter'
   @Input() withoutValues: string[] = [];
-  @Input() scope: Scope
+  @Input() scope: Scope;
 
   get groups() {
     return this.groups$.getValue();
@@ -123,7 +123,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
     const groups = staticGroups[this.scope];
     if (!!this.withoutValues.length) {
       for (const group of groups) {
-        group.items = group.items.filter(item => !this.withoutValues.includes(item))
+        group.items = group.items.filter(item => !this.withoutValues.includes(item));
       }
     }
     this.groups$.next(groups);
