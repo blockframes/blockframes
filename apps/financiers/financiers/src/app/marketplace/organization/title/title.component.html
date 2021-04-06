@@ -1,6 +1,6 @@
 <h1>Line-up</h1>
 <section fxLayout="row wrap" fxLayoutGap="24px grid">
-  <ng-container *ngFor="let title of titles$ | async">
+  <ng-container *ngFor="let title of titles$ | async; trackBy: trackById">
     <movie-card [movie]="title" [link]="['../../../title', title.id]" size="poster">
       <ng-container *ngIf="title.id | getCampaign | async as campaign">
         <span matTooltip="Minimum investment amount">
