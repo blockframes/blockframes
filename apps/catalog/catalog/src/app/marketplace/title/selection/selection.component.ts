@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { debounceFactory } from '@blockframes/utils/helpers';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { Movie } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'catalog-selection',
@@ -63,11 +64,12 @@ export class MarketplaceSelectionComponent {
     });
   }
 
-  removeContract(index: number) {
+  removeContract(index: number, title: Movie) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => ({
       contracts: bucket.contracts.filter((_, i) => i !== index)
     }));
+    this.snackBar.open(`${title.title.international} was removed from your Selection`, 'close', { duration: 5000 });
   }
 
   removeTerm(contractIndex: number, termIndex: number) {
@@ -81,6 +83,7 @@ export class MarketplaceSelectionComponent {
       contracts[contractIndex].terms = terms;
       return { contracts };
     });
+    this.snackBar.open(`Rights deleted`, 'close', { duration: 4000 })
   }
 
   createOffer(bucket: Bucket) {
@@ -104,9 +107,9 @@ export class MarketplaceSelectionComponent {
 
       })
     })) {
-      this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms', '', { duration: 2000 });
+      this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
     } else if (bucket.contracts.some(contract => !contract.price || contract.price < 0)) {
-      this.snackBar.open('Please add price on every item', '', { duration: 2000 });
+      this.snackBar.open('Missing price information.', '', { duration: 2000 });
     } else {
       this.dialog.open(SpecificTermsComponent);
     }
