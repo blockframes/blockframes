@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { InvitationQuery, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'invitation-view',
@@ -23,7 +24,9 @@ export class InvitationComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.invitations$.subscribe(invitations => {
+    this.sub = this.invitations$.pipe(
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+    ).subscribe(invitations => {
       !!invitations.length ?
         this.dynTitle.setPageTitle('Invitations List') :
         this.dynTitle.setPageTitle('Invitations List', 'Empty');
