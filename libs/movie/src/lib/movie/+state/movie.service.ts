@@ -58,7 +58,7 @@ export class MovieService extends CollectionService<MovieState> {
       orgIds
     });
     movie.storeConfig = {
-      ...createStoreConfig(),
+      ...createStoreConfig(movieImported?.storeConfig),
       appAccess: createMovieAppAccess({ [appName]: true })
     };
     await this.runTransaction(async (tx) => {
