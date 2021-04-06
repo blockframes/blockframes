@@ -19,6 +19,8 @@ export class ListComponent implements OnInit {
   public events$: Observable<Event[]>;
   public searchForm = FormList.factory<AlgoliaOrganization>([]);
 
+  trackById = (i: number, doc: { id: string }) => doc.id;
+
   constructor(
     private service: EventService,
     private location: Location,
