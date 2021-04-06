@@ -19,4 +19,6 @@ export class ListComponent {
 
   timeFrames = descTimeFrames;
 
+  trackById = (i: number, doc: { id: string }) => doc.id;
+
 }

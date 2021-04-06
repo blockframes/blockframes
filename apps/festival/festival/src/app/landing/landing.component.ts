@@ -13,12 +13,12 @@ export class LandingComponent {
   public tabTitle = [
     {
       title: 'For Sales Agents.',
-      imgAsset: 'lp_dashboard_market_sales_agents.webp',
+      imgAsset: 'lp_festival_seller_perspective.webp',
       description: 'Showcase your line-up, get in touch with Buyers and manage meetings and screenings.'
     },
     {
       title: 'For Buyers.',
-      imgAsset: 'lp_archipel_market_buyers.webp',
+      imgAsset: 'lp_festival_buyer_perspective.webp',
       description: 'Explore a large library of films, get in touch with sales agents, plan meetings and watch screenings.'
     }
   ]

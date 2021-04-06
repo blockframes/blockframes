@@ -68,7 +68,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
       switchMap((id: string) => this.service.getValue(id)),
       tap(movie => {
         /* We need to check if in the form the value for productionStatus is already set, because
-        initially, this value is null, but since we made a request with `this.service.getValue(id)` to 
+        initially, this value is null, but since we made a request with `this.service.getValue(id)` to
         firebase, this code will get pushed onto the async stack, which will be executed later. The result
         of this is that all the "sync" code that updates this form will be overwritten with the value
         from the db. For instance, in title-status component we set the movie status to released when
@@ -77,6 +77,15 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
         if (this.form.productionStatus.value) {
           movie.productionStatus = this.form.productionStatus.value
         }
+
+        if (this.form.release.get('status').value) {
+          movie.release.status = this.form.release.get('status').value
+        }
+
+        if (this.form.runningTime.get('status').value) {
+          movie.runningTime.status = this.form.runningTime.get('status').value
+        }
+
         this.form.reset();
         this.form.setAllValue(movie);
       })
