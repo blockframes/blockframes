@@ -12,9 +12,9 @@ export class CatalogLandingComponent {
 
   public tabTitle = [
     {
-      title: 'Valorize your back catalog. Get extra visibility on your back catalog and maximize revenues on library sales.',
+      title: 'Valorize your back catalog.',
       imgAsset: 'lp_catalog_seller_perspective.webp',
-      description: ''
+      description: 'Get extra visibility on your back catalog and maximize revenues on library sales.'
     },
     {
       title: 'Buy quality content from a multitude of rights holders in one single package.',
