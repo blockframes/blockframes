@@ -110,15 +110,13 @@ export const colors = {
 
 // @dev sort the value alphabetically, not the keys
 export const contentType = {
-  collection: 'Collection',
+  animation: 'Animation',
   documentary: 'Documentary',
-  episode: 'Episode',
   feature_film: 'Feature Film',
   flow: 'Flow',
   short: 'Short Film',
   tv_film: 'TV Film',
-  series: 'TV Series',
-  volume: 'Volume'
+  series: 'TV Series'
 }
 
 export const crewRoles = {
