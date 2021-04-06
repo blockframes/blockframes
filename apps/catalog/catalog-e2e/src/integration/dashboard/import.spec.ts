@@ -36,8 +36,10 @@ describe('User can fill and save contract tunnel form', () => {
     cy.wait(1 * SEC);
 
     cy.get('mat-form-field', {timeout: 30 * SEC})
-      .click()
-      .select("Contracts")
+      .click();
+    
+    cy.get('mat-option')
+      .contains("Contracts")
       .click();
   });
 });
