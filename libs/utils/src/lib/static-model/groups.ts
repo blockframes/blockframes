@@ -17,7 +17,7 @@ export const mediaGroup: StaticGroup<'medias'>[] = [{
   items: ['est', 'nVod', 'aVod', 'fVod', 'sVod']
 }, {
   label: 'Ancillary Rights',
-  items: ['video', 'planes', 'hotels', 'educational']
+  items: ['theatrical', 'video', 'planes', 'hotels', 'educational']
 }, {
   label: 'DVD',
   items: ['rental', 'through']

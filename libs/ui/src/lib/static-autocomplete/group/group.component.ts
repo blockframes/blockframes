@@ -3,7 +3,7 @@ import {
   Component,
   Input,
   forwardRef,
-  Pipe, PipeTransform, ElementRef, ViewChild
+  Pipe, PipeTransform, ElementRef, ViewChild, OnInit
 } from "@angular/core";
 import {
   FormControl,
@@ -66,8 +66,7 @@ function getItems(groups: StaticGroup[]): string[] {
     }
   ]
 })
-export class StaticGroupComponent implements ControlValueAccessor {
-  private _scope: Scope;
+export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   private subs: Subscription[] = [];
   trackByLabel = (i: number, group: StaticGroup) => group.label;
   modes: Record<string, Observable<GroupMode>> = {};
@@ -89,13 +88,9 @@ export class StaticGroupComponent implements ControlValueAccessor {
   @Input() @boolean required = false;
   @Input() @boolean disabled = false;
   @Input() placeholder: string = 'Tap to filter'
-  @Input() set scope(scope: Scope) {
-    this._scope = scope;
-    this.groups$.next(staticGroups[scope]);
-  }
-  get scope() {
-    return this._scope;
-  }
+  @Input() withoutValues: string[] = [];
+  @Input() scope: Scope
+
   get groups() {
     return this.groups$.getValue();
   }
@@ -122,6 +117,16 @@ export class StaticGroupComponent implements ControlValueAccessor {
       this.allItems = this.form.value;
     })
     this.subs.push(sub);
+  }
+
+  ngOnInit() {
+    const groups = staticGroups[this.scope];
+    if (!!this.withoutValues.length) {
+      for (const group of groups) {
+        group.items = group.items.filter(item => !this.withoutValues.includes(item))
+      }
+    }
+    this.groups$.next(groups);
   }
 
   onOpen(opened: boolean) {
