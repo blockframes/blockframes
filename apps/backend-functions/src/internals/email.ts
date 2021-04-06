@@ -11,7 +11,7 @@ import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo, applicationU
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
 
-const substitutions = {
+export const substitutions = {
   groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
   preferenceUnsubscribe: "<%asm_preferences_raw_url%>",
   notificationPage: "/c/o/account/profile/view/notifications"
