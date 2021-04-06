@@ -2,7 +2,7 @@ import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDo
 import * as admin from 'firebase-admin';
 import { getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
-import { sendMailFromTemplate, sendMail } from './internals/email';
+import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
@@ -387,7 +387,13 @@ async function sendMovieSubmittedEmail(recipient: User, notification: Notificati
   return sendMail({
     to: recipient.email,
     subject: 'A movie has been submitted.',
-    text: `The new movie ${movie.title.international} has been submitted, please check it on CRM.`
+    text: `
+    The new movie ${movie.title.international} has been submitted, please check it on CRM.
+
+    You received this email because you're a Blockframes Admin.
+
+    Unsubscribe here : ${substitutions.preferenceUnsubscribe}
+    `
   });
 }
 
