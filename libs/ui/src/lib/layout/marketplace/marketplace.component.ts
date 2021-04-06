@@ -6,7 +6,7 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -14,6 +14,9 @@ import { routeAnimation } from '@blockframes/utils/animations/router-animations'
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { MovieService } from '@blockframes/movie/+state'
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'layout-marketplace',
@@ -38,11 +41,21 @@ export class MarketplaceComponent implements OnInit {
     private invitationQuery: InvitationQuery,
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
+    private movieService: MovieService,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
     this.wishlistCount$ = this.orgQuery.selectActive().pipe(
-      map(org => org.wishlist?.length || 0)
+      map(org => org.wishlist),
+      switchMap(movieIds => this.movieService.getValue(movieIds)),
+      map(movies => movies.filter(movie => {
+        const currentApp = getCurrentApp(this.routerQuery)
+        for (const app in movie.storeConfig.appAccess) {
+          if (movie.storeConfig.appAccess[app] && currentApp === app) return true;
+          return false;
+        }
+      }).length)
     );
   }
 
