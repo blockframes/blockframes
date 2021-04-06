@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -30,7 +30,8 @@ export class TitleComponent implements OnInit {
           .where('storeConfig.appAccess.financiers', '==', true)
           .orderBy('_meta.createdAt', 'desc')
           )
-      })
+      }),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
   }
 
