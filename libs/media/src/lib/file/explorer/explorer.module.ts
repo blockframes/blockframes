@@ -12,7 +12,7 @@ import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
-
+import { PreviewModalModule } from '@blockframes/ui/preview-modal/preview.module'
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -43,6 +43,7 @@ import { FileListUploaderModule } from '../file-list-uploader/file-list-uploader
     FormListModule,
     FilePreviewModule,
     FileListUploaderModule,
+    PreviewModalModule,
 
     // Material
     MatListModule,
