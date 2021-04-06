@@ -14,9 +14,9 @@ import { routeAnimation } from '@blockframes/utils/animations/router-animations'
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { MovieService } from '@blockframes/movie/+state'
+import { MovieService, Movie } from '@blockframes/movie/+state'
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, App } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'layout-marketplace',
@@ -49,13 +49,7 @@ export class MarketplaceComponent implements OnInit {
     this.wishlistCount$ = this.orgQuery.selectActive().pipe(
       map(org => org.wishlist),
       switchMap(movieIds => this.movieService.getValue(movieIds)),
-      map(movies => movies.filter(movie => {
-        const currentApp = getCurrentApp(this.routerQuery)
-        for (const app in movie.storeConfig.appAccess) {
-          if (movie.storeConfig.appAccess[app] && currentApp === app) return true;
-          return false;
-        }
-      }).length)
+      map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(getCurrentApp(this.routerQuery))).length)
     );
   }
 
@@ -70,4 +64,11 @@ export class MarketplaceComponent implements OnInit {
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
   }
+}
+
+const filterMovieByAppAccess = (currentApp: App) => (movie: Movie) => {
+  for (const app in movie.storeConfig.appAccess) {
+    if (movie.storeConfig.appAccess[app] && currentApp === app) return true;
+  }
+  return false;
 }
