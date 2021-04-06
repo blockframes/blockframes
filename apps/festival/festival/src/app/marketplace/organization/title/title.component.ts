@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { scaleIn } from '@blockframes/utils/animations/fade';
@@ -15,6 +15,8 @@ import { Observable } from 'rxjs';
 })
 export class TitleComponent implements OnInit {
   public titles$: Observable<Movie[]>;
+
+  trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
     private service: MovieService,
@@ -32,7 +34,8 @@ export class TitleComponent implements OnInit {
           .where('storeConfig.appAccess.festival', '==', true)
           .orderBy('_meta.createdAt', 'desc')
           )
-      })
+      }),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
   }
 

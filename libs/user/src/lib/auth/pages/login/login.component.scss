@@ -2,7 +2,8 @@
 
 main {
   display: flex;
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
   background-color: var(--background-card);
   background-position: right bottom;
   background-size: 100%;
