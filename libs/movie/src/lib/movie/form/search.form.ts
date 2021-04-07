@@ -34,7 +34,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   return {
     query: '',
     page: 0,
-    hitsPerPage: 8,
+    hitsPerPage: 50,
     storeType: [],
     storeConfig: [],
     genres: [],
