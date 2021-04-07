@@ -1,8 +1,9 @@
-<ng-container *ngIf="screening.meta.titleId | getTitle | async as title">
-  <a matRipple [routerLink]="['/c/o/marketplace/event/', screening.id]">
-    <img fxHide.lt-sm [ref]="title.poster" asset="empty_poster.webp" alt="Movie poster of the screening">
-  </a>
-</ng-container>
+<a matRipple [routerLink]="['/c/o/marketplace/event/', screening.id]">
+  <img fxHide.lt-sm 
+    [ref]="(screening.meta.titleId | getTitle | async)?.poster" 
+    asset="empty_poster.webp"
+    alt="Movie poster of the screening">
+</a>
 <article fxLayout="column" fxLayoutAlign="space-between start">
   <div fxLayout="column" fxLayoutAlign="start start">
     <h3><a [routerLink]="['/c/o/marketplace/event/', screening.id]">{{ screening.title }}</a></h3>
