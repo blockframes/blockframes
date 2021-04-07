@@ -10,7 +10,7 @@ import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -107,7 +107,7 @@ export class InvitationService extends CollectionService<InvitationState> {
         let app = getCurrentApp(this.routerQuery);
         if (app === 'crm') {
           // Instead use first found app where org has access to
-          app = Object.keys(fromOrg.appAccess).find((app: App) => Object.keys(fromOrg.appAccess[app]).some(module => fromOrg.appAccess[app][module])) as App
+          app = getOrgAppAccess(fromOrg)[0];
         }
         return f({ emails: recipients, invitation, app }).toPromise();
       }
