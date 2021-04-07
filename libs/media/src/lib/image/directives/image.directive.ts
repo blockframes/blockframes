@@ -73,8 +73,6 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.asset$.next(asset);
   }
 
-  @Input() delay = 5000;
-
   constructor(
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
