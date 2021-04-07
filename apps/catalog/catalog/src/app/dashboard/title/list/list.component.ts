@@ -17,7 +17,7 @@ const columns = {
   'title.international': 'TITLE',
   'release.year': 'RELEASE YEAR',
   directors: 'DIRECTOR(S)',
-  views: '# VIEWS',
+  views: { value: '# VIEWS', disableSort: true },
   'storeConfig.status': 'STATUS'
 };
 
