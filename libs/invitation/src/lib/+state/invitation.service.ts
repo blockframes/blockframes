@@ -10,7 +10,7 @@ import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -104,9 +104,12 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        const app = getCurrentApp(this.routerQuery); // @TODO #5049 problem here if invite comes from CRM
+        let app = getCurrentApp(this.routerQuery);
+        if (app === 'crm') {
+          // Instead use first found app where org has access to
+          app = getOrgAppAccess(fromOrg)[0];
+        }
         return f({ emails: recipients, invitation, app }).toPromise();
-
       }
     }
   }
