@@ -53,16 +53,10 @@ export class HomeQueryOrgsPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'getOrg' })
-export class HomeGetOrgPipe implements PipeTransform {
-  constructor(private service: OrganizationService) {}
-  transform(orgId: string) {
-    return this.service.valueChanges(orgId);
-  }
-}
+
 
 @NgModule({
-  declarations: [HomeGetOrgPipe, HomeQueryOrgsPipe, HomeQueryTitlesPipe],
-  exports: [HomeGetOrgPipe, HomeQueryOrgsPipe, HomeQueryTitlesPipe]
+  declarations: [HomeQueryOrgsPipe, HomeQueryTitlesPipe],
+  exports: [HomeQueryOrgsPipe, HomeQueryTitlesPipe]
 })
 export class CMSPipeModule{}

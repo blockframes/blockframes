@@ -22,6 +22,7 @@ import { App } from '@blockframes/utils/apps';
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
+  readonly useMemorization = true;
 
   private app = getCurrentApp(this.routerQuery)
 

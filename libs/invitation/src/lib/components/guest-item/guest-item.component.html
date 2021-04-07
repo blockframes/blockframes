@@ -2,7 +2,7 @@
   <mat-list-item>
     <div matListAvatar class="avatar-status">
       <ng-container *ngIf="!!user.avatar.storagePath else noProfileUser">
-        <img [ref]="user.avatar" [delay]="0" asset="profil_user.webp">
+        <img [ref]="user.avatar" asset="profil_user.webp">
       </ng-container>
       <ng-template #noProfileUser>
         <img asset="profil_user.webp">
