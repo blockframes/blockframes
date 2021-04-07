@@ -21,11 +21,10 @@
         <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
         <span mat-line><b>My Wishlist</b></span>
       </a>
-      <!-- Commented out for Release 3.0 -->
-<!--  <a mat-list-item routerLink="deals" routerLinkActive="active" *ngIf="canAccessDeals">
+      <a mat-list-item routerLink="deals" routerLinkActive="active" *ngIf="canAccessDeals">
         <mat-icon mat-list-icon svgIcon="account_balance_wallet"></mat-icon>
         <span mat-line><b>Offers & Deals</b></span>
-      </a> -->
+      </a>
       <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'catalog'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active">
