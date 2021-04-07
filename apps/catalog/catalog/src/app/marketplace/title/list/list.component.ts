@@ -116,6 +116,7 @@ export class ListComponent implements OnInit, OnDestroy {
   clear() {
     const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
+    this.availsForm.reset();
     this.cdr.markForCheck();
   }
 
