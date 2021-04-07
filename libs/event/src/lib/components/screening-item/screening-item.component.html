@@ -12,7 +12,7 @@
     <h5>{{ screening.isPrivate ? 'Private' : 'Public' }} Screening </h5>
     <pre class="mat-body-1">{{ screening | eventRange }}</pre>
     <ng-container *ngIf="screening.ownerOrgId | getOrg | async as org">
-      <org-chip [org]="org"></org-chip>
+      <org-chip @fade [org]="org"></org-chip>
     </ng-container>
   </div>
   <footer fxLayout>

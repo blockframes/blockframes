@@ -4,11 +4,13 @@ import { ScreeningEvent } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { fade } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'event-screening-item',
   templateUrl: './screening-item.component.html',
   styleUrls: ['./screening-item.component.scss'],
+  animations: [fade],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreeningItemComponent {
