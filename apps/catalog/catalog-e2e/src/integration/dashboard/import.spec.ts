@@ -41,5 +41,8 @@ describe('User can fill and save contract tunnel form', () => {
     cy.get('mat-option')
       .contains("Contracts")
       .click();
+    
+    //Import the contract file here:
+    cy.get('a [test-id="import-file"]')
   });
 });
