@@ -6,10 +6,19 @@ import { staticModel, Scope } from '@blockframes/utils/static-model';
   name: 'toLabel'
 })
 export class ToLabelPipe implements PipeTransform {
-  transform(value: string | string[], scope: Scope): string | string[] {
+  transform(value: string | string[], scope: Scope, limit?: number): string | string[] {
     if (!value) return '';
     try {
-      return Array.isArray(value) ? value.map(val => staticModel[scope][val]).join(', ') : staticModel[scope][value];
+      if (Array.isArray(value)) {
+        if (!!limit && value.length > limit) {
+          const sliced = value.slice(0, limit).map(val => staticModel[scope][val]).join(', ')
+          return `${sliced} and ${value.length - limit} more`
+        } else {
+          return value.map(val => staticModel[scope][val]).join(', ')
+        }
+      } else {
+        return staticModel[scope][value];
+      }
     } catch (error) {
       console.error(`Could not find label for key "${value}" in scope "${scope}"`)
       return value;

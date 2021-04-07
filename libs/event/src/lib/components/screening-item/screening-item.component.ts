@@ -3,18 +3,18 @@ import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
 import { ScreeningEvent } from '../../+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Movie } from '@blockframes/movie/+state';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { fade } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'event-screening-item',
   templateUrl: './screening-item.component.html',
   styleUrls: ['./screening-item.component.scss'],
+  animations: [fade],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreeningItemComponent {
   public poster: StorageFile;
-  public movie: Movie;
   public screening: ScreeningEvent;
   public invitation$: Observable<Invitation>;
   private _event = new BehaviorSubject<ScreeningEvent>(null);
@@ -23,8 +23,6 @@ export class ScreeningItemComponent {
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
     this.screening = screening;
-    this.movie = screening.movie;
-    this.poster = screening.movie?.poster;
     this.invitation$ = this.invitationQuery.whereCurrentUserIsGuest().pipe(
       map(invits => invits.find(e => e.eventId === screening.id))
     );

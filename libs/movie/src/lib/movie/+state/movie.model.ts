@@ -336,7 +336,7 @@ export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
     ...params,
     screener: createMovieVideo(params?.screener),
-    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
+    otherVideos: params?.otherVideos?.map?.(video => createMovieVideo(video)) || [],
   }
 }
 

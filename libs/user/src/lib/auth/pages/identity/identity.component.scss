@@ -1,8 +1,11 @@
 @import "~@angular/flex-layout/mq";
 
-main {
+:host {
   min-height: 100vh;
   display: flex;
+}
+
+main {
   flex-direction: column;
   justify-content: center;
   align-content: center;
@@ -13,6 +16,7 @@ main {
   background-position: right bottom;
   background-size: 100%;
   background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 app-logo {
@@ -85,12 +89,6 @@ section {
 }
 
 @include layout-bp(lt-sm) {
-  :host {
-    display: block;
-    background-image: none;
-    padding: 16px 0;
-    justify-content: center;
-  }
   section {
     width: 100%;
   }

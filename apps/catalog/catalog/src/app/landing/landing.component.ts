@@ -12,13 +12,13 @@ export class CatalogLandingComponent {
 
   public tabTitle = [
     {
-      title: 'Maximize sales on library titles and access new buyers.',
-      imgAsset: 'seller_perspective.webp',
-      description: ''
+      title: 'Valorize your back catalog.',
+      imgAsset: 'lp_catalog_seller_perspective.webp',
+      description: 'Get extra visibility on your back catalog and maximize revenues on library sales.'
     },
     {
       title: 'Buy quality content from a multitude of rights holders in one single package.',
-      imgAsset: 'buyer_perspective.webp',
+      imgAsset: 'lp_catalog_buyer_perspective.webp',
       description: 'Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.'
     }
   ]
@@ -40,7 +40,7 @@ export class CatalogLandingComponent {
       description: 'Get detailed stats on your films’ activity on the marketplace, and get notified for any new activity.'
     },
     {
-      title: 'A Human Salesforce',
+      title: 'Benefit from a dedicated sales person',
       imgAsset: 'human_salesforce.webp',
       description: 'Make the most of your library thanks to the Archipel Content salesforce, who will editorialize the platform and push the right content to the right Buyers.'
     }

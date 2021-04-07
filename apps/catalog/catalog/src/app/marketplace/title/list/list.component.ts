@@ -20,7 +20,7 @@ import { Media, StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { AvailsFilter, getMandateTerms, isInBucket, isSold } from '@blockframes/contract/avails/avails';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { createTerm, Term } from '@blockframes/contract/term/+state/term.model';
+import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
 import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
@@ -29,6 +29,7 @@ import { centralOrgID } from '@env';
 import { BucketContract, createBucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
+import { AlgoliaMovie } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -68,7 +69,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000)
     const params = this.route.snapshot.queryParams;
@@ -113,15 +114,16 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
+    const initial = createMovieSearch({ storeConfig: [this.storeStatus], hitsPerPage: 1000 });
     this.searchForm.reset(initial);
+    this.availsForm.reset();
     this.cdr.markForCheck();
   }
 
   private async getContract(type: Contract['type']) {
     const contracts = type === 'mandate'
-      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgID))
-      : await this.contractService.getValue(ref => ref.where('type', '==', 'sale'))
+      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgID).where('status', '==', 'accepted'))
+      : await this.contractService.getValue(ref => ref.where('type', '==', 'sale').where('status', '==', 'accepted'))
     const termIdsByTitle = {};
 
     for (const contract of contracts) {
@@ -136,9 +138,10 @@ export class ListComponent implements OnInit, OnDestroy {
     return Promise.all(promises);
   }
 
-  addAvail(titleId: string) {
+  addAvail(title: AlgoliaMovie) {
+    const titleId = title.objectID;
     if (this.availsForm.invalid) {
-      this.snackbar.open('Specify the avails before adding to selection', 'close', { duration: 3000 })
+      this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
       return;
     }
     // Get the parent term
@@ -149,7 +152,7 @@ export class ListComponent implements OnInit, OnDestroy {
       // contract should only contain media and territories which are on the parentTerm
       newTerm.medias = parentTerm.medias.filter(media => newTerm.medias.includes(media));
       newTerm.territories = parentTerm.territories.filter(territory => newTerm.territories.includes(territory));
-      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [newTerm]});
+      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [newTerm] });
       newContracts.push(contract);
     }
 
@@ -171,7 +174,7 @@ export class ListComponent implements OnInit, OnDestroy {
               if (toDate(existingTerm.duration.from).getTime() === newTerm.duration.from.getTime()
                 && toDate(existingTerm.duration.to).getTime() === newTerm.duration.to.getTime()
                 && existingTerm.exclusive === newTerm.exclusive) {
-                  conflictingTerms.push(existingTerm);
+                conflictingTerms.push(existingTerm);
               } else {
                 terms.push(existingTerm);
               }
@@ -181,7 +184,7 @@ export class ListComponent implements OnInit, OnDestroy {
               conflictingTerms.push(newTerm);
 
               // Countries with media
-              const territoryRecord: {[territories: string]: Media[]} = {};
+              const territoryRecord: { [territories: string]: Media[] } = {};
               for (const term of conflictingTerms) {
                 for (const territory of term.territories) {
                   if (!!territoryRecord[territory]) {
@@ -195,7 +198,7 @@ export class ListComponent implements OnInit, OnDestroy {
               }
 
               // Combining unique media arrays with countries
-              const mediaRecord: {[medias: string]: Territory[]} = {};
+              const mediaRecord: { [medias: string]: Territory[] } = {};
               for (const [territory, medias] of Object.entries(territoryRecord)) {
                 const key = medias.sort().join(';');
                 !!mediaRecord[key] ? mediaRecord[key].push(territory as Territory) : mediaRecord[key] = [territory as Territory];
@@ -225,6 +228,7 @@ export class ListComponent implements OnInit, OnDestroy {
       })
       this.bucketService.add(bucket);
     }
+    this.snackbar.open(`${title.title.international} was added to your Selection`, 'close', { duration: 4000 });
   }
 
   ngOnDestroy() {

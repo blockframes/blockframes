@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Organization } from '@blockframes/organization/+state';
 
 @Component({
@@ -8,7 +8,5 @@ import { Organization } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChipComponent {
-
   @Input() org: Organization;
-
 }

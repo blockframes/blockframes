@@ -17,7 +17,8 @@
     "max": "blockframes-max",
     "mano": "blockframes-mano",
     "clelia": "blockframes-clelia",
-    "remco": "blockframes-remco"
+    "remco": "blockframes-remco",
+    "samir": "blockframes-samir"
   },
   "targets": {
     "blockframes": {
@@ -311,6 +312,34 @@
         ],
         "festival": [
           "blockframes-mano-festival"
+        ],
+        "financiers": [
+          "blockframes-mano-financiers"
+        ],
+        "cms": [
+          "blockframes-mano-cms"
+        ],
+        "crm": [
+          "blockframes-mano-crm"
+        ]
+      }
+    },
+    "blockframes-samir": {
+      "hosting": {
+        "catalog": [
+          "catalog-blockframes-samir"
+        ],
+        "festival": [
+          "festival-blockframes-samir"
+        ],
+        "crm": [
+          "crm-blockframes-samir"
+        ],
+        "financiers": [
+          "financiers-blockframes-samir"
+        ],
+        "cms": [
+          "cms-blockframes-samir"
         ]
       }
     }
