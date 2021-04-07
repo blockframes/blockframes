@@ -6,6 +6,7 @@ import { getUser } from "../utils";
 import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import * as admin from 'firebase-admin';
+import { hasUserAnOrgOrIsAlreadyInvited } from '../../invitation';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
@@ -36,10 +37,17 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
      * email inviting him along with his credentials.
     */
     const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
-    if (!user.orgId) {
+    const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([...invitation.toUser.email]);
+    console.log('!!!!!!!!!! hasOrgOrOrgInvitation', hasOrgOrOrgInvitation);
+    if (!user.orgId && !hasOrgOrOrgInvitation) {
       console.log('Invitation have already been sent along with user credentials');
       return;
     }
+
+    if (!user.orgId && !!hasOrgOrOrgInvitation) {
+      recipients.push(invitation.toUser.uid);
+    }
+
     recipients.push(invitation.toUser.uid);
   } else if (!!invitation.toOrg) {
     const adminIds = await getAdminIds(invitation.toOrg.id);

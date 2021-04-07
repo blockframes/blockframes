@@ -194,6 +194,10 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
   })
 }
 
+/**
+ * @param userEmails array of emails
+ * @returns boolean, true if the users have an org or there is an invitation to join organization for those emails
+ */
 export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
   const db = admin.firestore();
   const userPromises = userEmails.map(email => db.collection('users')
