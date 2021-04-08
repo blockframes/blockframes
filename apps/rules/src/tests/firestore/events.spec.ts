@@ -6,7 +6,7 @@
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
-describe('Events Rules Tests', () => {
+describe.skip('Events Rules Tests', () => {
   const projectId = `evrules-spec-${Date.now()}`;
   let db: Firestore;
 

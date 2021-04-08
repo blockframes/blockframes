@@ -9,7 +9,7 @@ import { Movie } from '@blockframes/movie/+state';
 import { MovieAppAccess } from '@blockframes/utils/apps';
 import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
 
-describe('Movies Rules Tests', () => {
+describe.skip('Movies Rules Tests', () => {
   const projectId = `movrules-spec-${Date.now()}`;
   let db: Firestore;
 

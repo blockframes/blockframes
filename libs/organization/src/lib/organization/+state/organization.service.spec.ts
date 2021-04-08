@@ -4,7 +4,7 @@
 // import { AngularFireModule } from '@angular/fire';
 // import { TestBed } from '@angular/core/testing';
 //
-describe('Organization Service', () => {
+describe.skip('Organization Service', () => {
   it('wip', () => {
     expect(true).toBeTruthy();
   });

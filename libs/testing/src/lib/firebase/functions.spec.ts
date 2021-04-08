@@ -1,7 +1,7 @@
 ﻿import { firestore } from 'firebase-admin';
 import { initFunctionsTestMock } from './functions';
 
-describe('firebase testing library', () => {
+describe.skip('firebase testing library', () => {
   it('should read the doc and get same data', async () => {
     //Init Mocks and environment
     initFunctionsTestMock();

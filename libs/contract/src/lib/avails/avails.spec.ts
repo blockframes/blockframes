@@ -3,7 +3,7 @@ import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './avails';
 import { mandateTerms as acTerms } from './fixtures/mandateTerms'
 import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
 
-describe('isTermSold', () => {
+describe.skip('isTermSold', () => {
     const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
     const GazaMonAmour = 'cXHN9C9GftkMhYmu7CV1';
     const MarinaAbramovic = 'HgU5WygrYoon1QnFqEpe';

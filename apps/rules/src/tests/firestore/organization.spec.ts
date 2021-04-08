@@ -2,7 +2,7 @@
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
-describe('Organization Rules Tests', () => {
+describe.skip('Organization Rules Tests', () => {
   const projectId = `orgrules-spec-${Date.now()}`;
   let db: Firestore;
 

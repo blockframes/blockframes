@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormList } from './list.form';
 import { PerkForm } from '@blockframes/campaign/form/form';
-describe('PatchAllValue should work for every possible abstract control', () => {
+describe.skip('PatchAllValue should work for every possible abstract control', () => {
     it('should work for form control', () => {
         const formList = FormList.factory(['block', 'frames'], value => new FormControl(value))
         formList.patchAllValue(['max', 'francois'])

@@ -8,7 +8,7 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
 
-describe('Blockframe In Maintenance', () => {
+describe.skip('Blockframe In Maintenance', () => {
   const projectId = `bfrules-spec-${Date.now()}`;
   let db: Firestore;
 

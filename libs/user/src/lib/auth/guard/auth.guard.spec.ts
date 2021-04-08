@@ -14,6 +14,6 @@
 //   }));
 // });
 
-test('smoke', () => {
+test.skip('smoke', () => {
   expect(true).toBeTruthy();
 });

@@ -22,7 +22,7 @@ type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 let db: FirebaseFirestore.Firestore;
 let adminAuth;
 
-describe('DB cleaning script', () => {
+describe.skip('DB cleaning script', () => {
   beforeAll(async () => {
     initFunctionsTestMock();
     const adminServices = loadAdminServices();

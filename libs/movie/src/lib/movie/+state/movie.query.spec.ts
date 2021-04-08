@@ -1,7 +1,7 @@
 import { MovieQuery } from './movie.query';
 import { MovieStore } from './movie.store';
 
-describe('MovieQuery', () => {
+describe.skip('MovieQuery', () => {
   let query: MovieQuery;
 
   beforeEach(() => {

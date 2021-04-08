@@ -111,7 +111,7 @@ describe('Permission Rules Tests', () => {
 
 
 //documentPermissions sub collection
-describe('Document Permission Sub Collection Rules Tests', () => {
+describe.skip('Document Permission Sub Collection Rules Tests', () => {
   const projectId = `doc-permrules-spec-${Date.now()}`;
   let db: Firestore;
 

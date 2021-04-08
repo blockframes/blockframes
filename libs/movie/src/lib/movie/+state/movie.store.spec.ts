@@ -1,6 +1,6 @@
 import { MovieStore } from './movie.store';
 
-describe('MovieStore', () => {
+describe.skip('MovieStore', () => {
   let store: MovieStore;
 
   beforeEach(() => {

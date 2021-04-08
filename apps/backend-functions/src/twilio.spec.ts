@@ -38,7 +38,7 @@ const testUsers = [{ uid: 'uidUserTest', email: 'A@fake.com' }, { uid: 'uidUserT
 const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com' }];
 const testRequestAccessToken: RequestAccessToken = { eventId: 'eventTest' };
 
-describe('Twilio test script', () => {
+describe.skip('Twilio test script', () => {
 
   beforeAll(async () => {
     initFunctionsTestMock();

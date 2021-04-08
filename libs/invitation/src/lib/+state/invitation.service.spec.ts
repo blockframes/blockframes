@@ -7,7 +7,7 @@ import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fir
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
 
-describe('Invitations Test Suite', () => {
+describe.skip('Invitations Test Suite', () => {
   let service: InvitationService;
   let db: AngularFirestore;
 

@@ -1,7 +1,7 @@
 // Timeout can be adjusted
 // jest.setTimeout(30000);
 
-describe('Unit testing examples', () => {
+describe.skip('Unit testing examples', () => {
   it('should instruct you how to test expected errors', async () => {
     try {
       throw Error('test error');

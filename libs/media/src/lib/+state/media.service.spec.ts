@@ -9,7 +9,7 @@ import { firebase } from '@env';
 import { UploadData } from './media.model';
 import { createStorageFile } from './media.firestore';
 
-describe('Media Service Test Suite', () => {
+describe.skip('Media Service Test Suite', () => {
   let service: MediaService;
   let db: AngularFirestore;
   let storage: AngularFireStorage;

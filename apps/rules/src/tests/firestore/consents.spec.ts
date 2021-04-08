@@ -3,7 +3,7 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 import { Consents } from '@blockframes/consents/+state/consents.firestore';
 
-describe('Consents Rules Tests', () => {
+describe.skip('Consents Rules Tests', () => {
   const projectId = `consentrules-spec-${Date.now()}`;
   let db: Firestore;
 

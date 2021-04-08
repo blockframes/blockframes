@@ -8,7 +8,7 @@ import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 let db: FirebaseFirestore.Firestore;
 let bucket;
-describe('Storage cleaning script', () => {
+describe.skip('Storage cleaning script', () => {
   beforeAll(async () => {
     initFunctionsTestMock();
     const adminServices = loadAdminServices();
