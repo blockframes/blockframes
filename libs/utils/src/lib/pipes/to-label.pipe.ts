@@ -6,6 +6,7 @@ import { staticModel, Scope } from '@blockframes/utils/static-model';
   name: 'toLabel'
 })
 export class ToLabelPipe implements PipeTransform {
+  //@TODO #5530 remove limit and use css instead
   transform(value: string | string[], scope: Scope, limit?: number): string | string[] {
     if (!value) return '';
     try {

@@ -17,6 +17,7 @@ export class DisplayNamePipe implements PipeTransform {
    * array of string if data comes from Algolia
    * @param max if value is an array, this can be used to tell how many items we want
    * @returns string
+   * @TODO #5530 remove max and use css instead
    */
   transform(value: Person | Person[] | string[], max?: number): string {
     if (Array.isArray(value)) {

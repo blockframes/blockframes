@@ -153,9 +153,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   ngOnDestroy() {
-    for (const sub of this.subs) {
-      sub.unsubscribe();
-    }
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   // all check

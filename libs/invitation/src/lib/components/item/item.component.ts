@@ -64,12 +64,8 @@ export class ItemComponent {
       if (this._invitation.mode === 'request') {
         return `${this.applicationUrl.festival}/c/o/dashboard/event/${this._invitation.eventId}/edit`;
       } else {
-        if (this.eventType === 'meeting') {
-          return `${this.applicationUrl.festival}/c/o/marketplace/event/${this._invitation.eventId}/lobby`;
-        }
-        else {
-          return `${this.applicationUrl.festival}/c/o/marketplace/event/${this._invitation.eventId}/session`;
-        }
+        const urlPart = this.eventType === 'meeting' ? 'lobby': 'session';
+        return `${this.applicationUrl.festival}/c/o/marketplace/event/${this._invitation.eventId}/${urlPart}`;
       }
     } else if (this._invitation.type === 'joinOrganization') {
       const orgId = this._invitation.fromOrg ? this._invitation.fromOrg.id : this._invitation.toOrg.id;

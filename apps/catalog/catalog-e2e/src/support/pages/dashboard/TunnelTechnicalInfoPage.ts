@@ -50,11 +50,6 @@ export default class TunnelTechnicalInfoPage {
 
   // Available Versions
 
-  public selectLanguage(partialLanguage: string, language: string) {
-    cy.get('catalog-tunnel-technical-info movie-form-version-info form-language input').type(partialLanguage);
-    cy.get('mat-option').contains(language).click();
-  }
-
   public assertLanguageExists(language: string) {
     cy.get('catalog-tunnel-technical-info movie-form-version-info h5').contains(language);
   }

@@ -41,7 +41,7 @@ export default class TunnelBudgetPage {
   }
 
   public fillBoxOfficeCountry(partialCountry: string) {
-    cy.get('catalog-movie-tunnel-budget movie-form-box-office form-country input').type(partialCountry);
+    cy.get('catalog-movie-tunnel-budget movie-form-box-office static-select input').type(partialCountry);
   }
 
   public selectBoxOfficeCountry(country: string) {
@@ -49,7 +49,7 @@ export default class TunnelBudgetPage {
   }
 
   public assertBoxOfficeCountryExists(country: string) {
-    cy.get('catalog-movie-tunnel-budget movie-form-box-office form-country input').should(`have.value`, country);
+    cy.get('catalog-movie-tunnel-budget movie-form-box-office static-select input').should(`have.value`, country);
   }
 
   public fillBoxOfficeEarnings(earning: string) {
@@ -61,7 +61,7 @@ export default class TunnelBudgetPage {
   }
 
   public fillRatingsCountry(partialcountry: string) {
-    cy.get('catalog-movie-tunnel-budget movie-form-ratings form-country input').type(partialcountry);
+    cy.get('catalog-movie-tunnel-budget movie-form-ratings static-select input').type(partialcountry);
   }
 
   public selectRatingsCountry(country: string) {
@@ -69,7 +69,7 @@ export default class TunnelBudgetPage {
   }
 
   public assertRatingsCountry(country: string) {
-    cy.get('catalog-movie-tunnel-budget movie-form-ratings form-country input').should('have.value', country);
+    cy.get('catalog-movie-tunnel-budget movie-form-ratings static-select input').should('have.value', country);
   }
 
   public fillRating(rating: string) {
