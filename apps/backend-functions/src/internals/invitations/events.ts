@@ -1,5 +1,5 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
-import { wasCreated, wasAccepted, wasDeclined } from "./utils";
+import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
 import { NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { getUser } from "../utils";
@@ -32,14 +32,16 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
   const recipients: string[] = [];
   if (!!invitation.toUser) {
     /**
-     * @dev We wants to send this email only if user have an orgId. If not, this means that he already received an
+     * @dev We wants to send this email only if user have an orgId and a validated account. If not, this means that he already received an
      * email inviting him along with his credentials.
     */
     const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
-    if (!user.orgId) {
+    const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([invitation.toUser.email]);
+    if (!hasOrgOrOrgInvitation) {
       console.log('Invitation have already been sent along with user credentials');
       return;
     }
+
     recipients.push(invitation.toUser.uid);
   } else if (!!invitation.toOrg) {
     const adminIds = await getAdminIds(invitation.toOrg.id);

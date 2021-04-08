@@ -5,13 +5,13 @@ import { FormControl } from '@angular/forms';
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
 import { EventService, Event } from '@blockframes/event/+state';
-import { InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { Screening } from '@blockframes/event/+state/event.firestore';
 
 // RxJs
-import { map, take, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { Screening } from '@blockframes/event/+state/event.firestore';
+import { map, take } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
   selector: 'movie-screening',
@@ -40,7 +40,6 @@ export class UpcomingScreeningsComponent {
     private query: MovieQuery,
     private eventService: EventService,
     private invitationService: InvitationService,
-    private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
   ) {
     const q = ref => ref
@@ -72,12 +71,11 @@ export class UpcomingScreeningsComponent {
 
   checkInvitationStatus() {
     const index = this.sessionCtrl.value;
-    this.buttonState$ = this.screenings$.pipe(
-      switchMap(screening => {
-        return this.invitationQuery.whereCurrentUserIsGuest().pipe(
-          map(invits => !!invits.filter(invit => invit.eventId === screening[index].id).length)
-        );
-      }),
+    this.buttonState$ = combineLatest([
+      this.screenings$,
+      this.invitationService.guestInvitations$
+    ]).pipe(
+      map(([screenings, invitations]) => !!invitations.some(invitation => invitation.eventId === screenings[index].id))
     )
   }
 }
