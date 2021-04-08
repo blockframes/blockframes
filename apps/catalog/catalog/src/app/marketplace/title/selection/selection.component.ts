@@ -29,6 +29,7 @@ export class MarketplaceSelectionComponent {
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
 
+  // @TODO #5526 remove use of debounce Factory
   debouncedUpdatePriceControl = debounceFactory((index, price) => this.updatePrice(index, price), 1000);
   trackById = (i: number, doc: { id: string }) => doc.id;
 
@@ -58,7 +59,7 @@ export class MarketplaceSelectionComponent {
   updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => {
-      const contracts = [ ...bucket.contracts ];
+      const contracts = [...bucket.contracts];
       contracts[index].price = +price;
       return { contracts };
     });
@@ -69,13 +70,14 @@ export class MarketplaceSelectionComponent {
     this.bucketService.update(id, bucket => ({
       contracts: bucket.contracts.filter((_, i) => i !== index)
     }));
-    this.snackBar.open(`${title.title.international} was removed from your Selection`, 'close', { duration: 5000 });
+    const text = `${title.title.international} was removed from your Selection`;
+    this.snackBar.open(text, 'close', { duration: 5000 });
   }
 
   removeTerm(contractIndex: number, termIndex: number) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => {
-      const contracts = [ ...bucket.contracts ];
+      const contracts = [...bucket.contracts];
       const terms = contracts[contractIndex].terms.filter((_, i) => i !== termIndex);
       // If there are no terms anymore, remove contract
       if (!terms.length) return { contracts: contracts.filter((_, i) => i !== contractIndex) };
@@ -91,7 +93,7 @@ export class MarketplaceSelectionComponent {
       return contract.terms.some((term, index) => {
         const from = term.duration.from.getTime();
         const to = term.duration.to.getTime();
-        
+
         return contract.terms.some((t, i) => {
           if (i === index) return false;
           const startDuringDuration = from >= t.duration.from.getTime() && from <= t.duration.to.getTime();

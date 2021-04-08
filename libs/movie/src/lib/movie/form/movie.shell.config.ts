@@ -67,7 +67,8 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
       tap(movie => {
-        /* We need to check if in the form the value for productionStatus is already set, because
+        /* @TODO #5529 investigate & clean this up.
+        We need to check if in the form the value for productionStatus is already set, because
         initially, this value is null, but since we made a request with `this.service.getValue(id)` to
         firebase, this code will get pushed onto the async stack, which will be executed later. The result
         of this is that all the "sync" code that updates this form will be overwritten with the value
