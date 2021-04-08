@@ -2,7 +2,6 @@ import {
   MoviePromotionalElements,
   MovieLanguageSpecificationContainer,
   Title,
-  StoreConfig,
   MovieAnalytics,
   MovieStakeholders,
   MovieLanguageSpecification,
@@ -23,12 +22,14 @@ import {
   MovieVideos,
   MovieVideo,
   MovieBase,
-  MovieNote
+  MovieNote,
+  NewStoreConfig,
+  MovieStoreConfigRecord
 } from './movie.firestore';
-import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { app, App } from '@blockframes/utils/apps';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -85,6 +86,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     estimatedBudget: null,
     orgIds: [],
     ...params,
+    app: createMovieAppAccess(params.app),
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
     banner: createStorageFile(params?.banner),
@@ -95,7 +97,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     release: createReleaseYear(params.release),
     shooting: createShooting(params.shooting),
     stakeholders: createMovieStakeholders(params.stakeholders),
-    storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
   };
 }
@@ -153,6 +154,23 @@ export function createMovieLanguageSpecification(
   };
 }
 
+export function createNewStoreConfig(params: Partial<NewStoreConfig<Date>>) {
+  return {
+    status: 'draft',
+    acceptedAt: null,
+    refusedAt: null,
+    ...params
+  }
+}
+
+export function createMovieAppAccess(_appAccess: Partial<{[app in App]: NewStoreConfig<Date>}> = {}): MovieStoreConfigRecord {
+  const appAccess = {};
+  for (const a of app) {
+    appAccess[a] = createNewStoreConfig(_appAccess[a]);
+  }
+  return (appAccess as MovieStoreConfigRecord);
+}
+
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
   return {
     country: null,
@@ -202,15 +220,6 @@ export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRel
   return {
     status: '',
     ...release
-  };
-}
-
-export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
-  return {
-    status: 'draft',
-    storeType: 'line_up',
-    ...params,
-    appAccess: createMovieAppAccess(params.appAccess)
   };
 }
 

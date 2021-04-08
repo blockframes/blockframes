@@ -57,7 +57,6 @@ export const appDescription = {
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
-export type MovieAppAccess = Record<App, boolean>;
 
 export const applicationUrl: Record<App, string> = {
   festival: appUrl.market,
@@ -85,14 +84,6 @@ export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgA
   const appAccess = {} as OrgAppAccess;
   for (const a of app) {
     appAccess[a] = createModuleAccess(_appAccess[a]);
-  }
-  return appAccess;
-}
-
-export function createMovieAppAccess(_appAccess: Partial<MovieAppAccess> = {}): MovieAppAccess {
-  const appAccess = {} as MovieAppAccess;
-  for (const a of app) {
-    appAccess[a] = _appAccess[a] === true;
   }
   return appAccess;
 }
@@ -138,7 +129,8 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
 
 /** Return an array of the app access of the movie */
 export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
-  return app.filter(a => movie.storeConfig.appAccess[a]);
+  // return app.filter(a => movie.storeConfig.appAccess[a]);
+  return ['catalog'];
 }
 
 /**
