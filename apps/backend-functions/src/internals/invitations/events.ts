@@ -37,7 +37,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
     */
     const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([invitation.toUser.email]);
-    if (!user.orgId && !hasOrgOrOrgInvitation) {
+    if (!hasOrgOrOrgInvitation) {
       console.log('Invitation have already been sent along with user credentials');
       return;
     }
