@@ -14,14 +14,14 @@
       </div>
     </header>
 
-    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+    <div mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All</button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
       <button mat-tab-link (click)="applyFilter('submitted')"
         [active]="(filter$ | async) === 'submitted'">Submitted</button>
       <button mat-tab-link (click)="applyFilter('accepted')"
         [active]="(filter$ | async) === 'accepted'">Published</button>
-    </nav>
+    </div>
 
     <mat-card>
       <bf-table-filter [source]="movies | filterBy: filterByMovie: filter.value" [columns]="columns"
