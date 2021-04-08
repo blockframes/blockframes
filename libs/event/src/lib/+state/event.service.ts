@@ -50,13 +50,13 @@ const eventQueries = {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
+  readonly useMemorization = true;
   private analytics: Record<string, EventsAnalytics> = {};
 
   constructor(
     protected store: EventStore,
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
-    private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
   ) {
     super(store);

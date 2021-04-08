@@ -25,6 +25,7 @@ export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.wher
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
+  readonly useMemorization = true;
 
   constructor(
     private authQuery: AuthQuery,

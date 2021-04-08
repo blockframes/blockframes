@@ -24,6 +24,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Pipes
 import { GetLinkModule, CMSPipeModule, SortByPipeModule } from '@blockframes/utils/pipes';
+import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 
 @NgModule({
   declarations: [MarketplaceHomeComponent],
@@ -37,6 +38,7 @@ import { GetLinkModule, CMSPipeModule, SortByPipeModule } from '@blockframes/uti
     OrganizationBannerModule,
     MovieCardModule,
     CMSPipeModule,
+    GetOrgPipeModule,
     GetLinkModule,
     MatLayoutModule,
     WishlistButtonModule,

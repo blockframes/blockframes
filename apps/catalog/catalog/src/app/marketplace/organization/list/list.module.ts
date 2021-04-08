@@ -10,7 +10,7 @@ import { ListComponent } from './list.component';
 // Blockframes
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module'
-import { FormCountryModule } from '@blockframes/ui/form';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 
 // Material
@@ -28,7 +28,7 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     OrganizationCardModule,
     ListPageModule,
-    FormCountryModule,
+    StaticSelectModule,
     ListFilterModule,
 
     // Material
