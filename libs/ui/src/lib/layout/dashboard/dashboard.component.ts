@@ -8,7 +8,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 // Blockframes
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
-import { InvitationQuery } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
 
 // RxJs
@@ -25,9 +25,10 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationQuery.selectCount();
-  public invitationCount$ = this.invitationQuery.toMe(invitation => invitation.status === 'pending').pipe(
-    map(invitations => invitations.length)
-  );
+
+  public invitationCount$ = this.invitationService.myInvitations$.pipe(
+    map(invitations => invitations.filter(invitation => invitation.status === 'pending').length)
+  )
 
   public ltMd$ = this.breakpointsService.ltMd;
 
@@ -41,7 +42,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private breakpointsService: BreakpointsService,
-    private invitationQuery: InvitationQuery,
+    private invitationService: InvitationService,
     private notificationQuery: NotificationQuery,
     private router: Router,
   ) { }
