@@ -51,6 +51,8 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   crumbs$ = this.path$.pipe(map(getCrumbs));
   templates: Record<string, TemplateRef<any>> = {};
 
+  public keepOrder = (...args) => 0;
+
   org$ = new BehaviorSubject<Organization>(undefined);
   @Input()
   set org(org: Organization) {
@@ -60,7 +62,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     return this.org$.getValue();
   }
 
-  public keepOrder = (...args) => 0;
 
   @ViewChild('image') image?: TemplateRef<any>;
   @ViewChild('file') file?: TemplateRef<any>;
