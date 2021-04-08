@@ -29,6 +29,7 @@ export class MarketplaceSelectionComponent {
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
 
+  // @TODO #5526 remove use of debounce Factory
   debouncedUpdatePriceControl = debounceFactory((index, price) => this.updatePrice(index, price), 1000);
   trackById = (i: number, doc: { id: string }) => doc.id;
 
