@@ -102,7 +102,7 @@ function createMovieControls(movie: Partial<Movie>) {
     shooting: new MovieShootingForm(entity.shooting),
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
-    app: new AppStoreConfigForm(entity.app),
+    app: new MovieAppConfigForm(entity.app),
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
   }
@@ -541,7 +541,7 @@ type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
 //       MOVIE APP CONFIG
 // ------------------------------
 
-export class AppStoreConfigForm extends FormEntity<AppStoreConfigControl> {
+export class MovieAppConfigForm extends FormEntity<MovieAppConfigControl> {
   constructor(app?: Partial<{[app in App]: MovieAppConfig<Date>}>) {
     super(createMovieAppConfigFormControl(app));
   }
@@ -550,18 +550,18 @@ export class AppStoreConfigForm extends FormEntity<AppStoreConfigControl> {
 function createMovieAppConfigFormControl(app?: Partial<{[app in App]: MovieAppConfig<Date>}>) {
   const apps = {};
   for (const a in app) {
-    apps[a] = new AppAccessForm(app[a])
+    apps[a] = new AppConfigForm(app[a])
   }
   return apps;
 }
 
-type AppStoreConfigControl = ReturnType<typeof createMovieAppConfigFormControl>;
+type MovieAppConfigControl = ReturnType<typeof createMovieAppConfigFormControl>;
 
 // ------------------------------
 //         APP CONFIG
 // ------------------------------
 
-export class AppAccessForm extends FormEntity<AppAccessControl> {
+export class AppConfigForm extends FormEntity<AppConfigControl> {
   constructor(appAccess?: Partial<MovieAppConfig<Date>>) {
     super(createAppConfigFormControl(appAccess));
   }
@@ -577,7 +577,7 @@ function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig<Date>>) {
   }
 }
 
-type AppAccessControl = ReturnType<typeof createAppConfigFormControl>;
+type AppConfigControl = ReturnType<typeof createAppConfigFormControl>;
 
 // ------------------------------
 //   Every Promotional Elements
