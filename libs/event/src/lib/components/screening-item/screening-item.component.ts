@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { ScreeningEvent } from '../../+state';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { fade } from '@blockframes/utils/animations/fade';
   animations: [fade],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScreeningItemComponent implements OnDestroy {
+export class ScreeningItemComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private _event = new BehaviorSubject<ScreeningEvent>(null);
   public event$ = this._event.asObservable();
