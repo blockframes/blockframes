@@ -71,6 +71,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this._eventId = value;
   }
 
+  @Output() stateChange = new EventEmitter<'play' | 'pause'>();
+
   // in order to have several player displayed in the same page
   // we need to randomize the html id,
   // otherwise all the players will be in the same div, each overwriting the previous one
@@ -85,7 +87,6 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this.fullScreen = !this.fullScreen;
   }
 
-  @Output() stateChange = new EventEmitter<'play' | 'pause'>();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
