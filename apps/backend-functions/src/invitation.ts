@@ -13,9 +13,9 @@ import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
 import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
-import { invitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
+export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -192,26 +192,6 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
         });
     }
   })
-}
-
-export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
-  const db = admin.firestore();
-  const userPromises = userEmails.map(email => db.collection('users')
-    .where('email', '==', email)
-    .get());
-  const userQuery = await Promise.all(userPromises);
-
-  const hasUserAlreadyAnOrg = userQuery.some(d => d.docs && d.docs.some(u => !!u.data().orgId));
-  if (hasUserAlreadyAnOrg) return true;
-
-  const invitationPromises = userEmails.map(email => db.collection('invitations')
-    .where('type', '==', 'joinOrganization')
-    .where('toUser.email', '==', email)
-    .where('status', 'in', invitationStatus.filter(s => s !== 'declined'))
-    .get());
-  const invitationQuery = await Promise.all(invitationPromises);
-
-  return invitationQuery.some(d => d.docs.length > 0);
 }
 
 export async function getInvitationLinkedToEmail(email: string): Promise<boolean | AlgoliaOrganization> {
