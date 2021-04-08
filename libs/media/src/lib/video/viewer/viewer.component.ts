@@ -1,6 +1,6 @@
 
 import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnDestroy, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
@@ -85,6 +85,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this.fullScreen = !this.fullScreen;
   }
 
+  @Output() stateChange = new EventEmitter<'play' | 'pause'>();
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authQuery: AuthQuery,
@@ -149,6 +151,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         });
 
         this.player.on('ready', () => this.signalPlayerReady());
+        this.player.on('play', () => this.stateChange.emit('play'));
+        this.player.on('pause', () => this.stateChange.emit('pause'));
         this.updatePlayer();
       }
     } catch(error) {

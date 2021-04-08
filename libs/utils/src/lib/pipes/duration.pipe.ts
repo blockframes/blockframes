@@ -5,6 +5,14 @@ import { NgModule } from '@angular/core';
   name: 'duration'
 })
 export class DurationPipe implements PipeTransform {
+  /**
+   * Convert **milliseconds** into a time string.
+   * If value is 0 or incorrect the `placeholder` will be returned.
+   *
+   * Default `placeholder` is 'TBC'
+   *
+   * `{{60 * 1000 | duration}} // '1min'`
+   */
   transform(value: number, placeholder = 'TBC') {
     if (
       !value ||
