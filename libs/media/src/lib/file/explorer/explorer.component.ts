@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit } from '@angular/core';
 
 // Blockframes
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
 
@@ -83,14 +83,15 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       .where('orgIds', 'array-contains', this.org.id)
       .where(`storeConfig.appAccess.${app}`, '==', true);
 
+
+    const titles$ = this.movieService.valueChanges(query).pipe(
+      map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
+    );
+
     this.root$ = combineLatest([
       this.org$.asObservable(),
-      this.movieService.valueChanges(query)
+      titles$
     ]).pipe(
-      map(([org, titles]) => {
-        const sortedTitles = titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1);
-        return [ org, sortedTitles ] as [ Organization, Movie[] ];
-      }),
       map(([org, titles]) => getDirectories(org, titles)),
     );
   }
