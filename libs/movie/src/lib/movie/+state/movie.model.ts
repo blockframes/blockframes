@@ -166,7 +166,7 @@ export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
 
 export function createMovieAppConfig(_appAccess: Partial<{[app in App]: MovieAppConfig<Date>}> = {}): MovieAppConfigRecord {
   const appAccess = {};
-  for (const a of app) {
+  for (const a of app.filter(a => a !== 'crm')) {
     appAccess[a] = createAppConfig(_appAccess[a]);
   }
   return (appAccess as MovieAppConfigRecord);

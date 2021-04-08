@@ -3,7 +3,8 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import {
   createMovie,
   Movie,
-  createMovieAppConfig
+  createMovieAppConfig,
+  createAppConfig
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
@@ -59,7 +60,8 @@ export class MovieService extends CollectionService<MovieState> {
       orgIds
     });
     movie.app = {
-      ...createMovieAppConfig(movieImported?.app)
+      ...createMovieAppConfig(movieImported?.app),
+      [appName]: createAppConfig({ access: true })
     };
     await this.runTransaction(async (tx) => {
       movie.id = await this.add(cleanModel(movie), { write: tx });
