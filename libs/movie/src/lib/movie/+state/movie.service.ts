@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import {
   createMovie,
   Movie,
-  createStoreConfig,
+  createMovieAppConfig
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
@@ -13,7 +13,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
-import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
@@ -58,9 +58,8 @@ export class MovieService extends CollectionService<MovieState> {
       ...movieImported,
       orgIds
     });
-    movie.storeConfig = {
-      ...createStoreConfig(movieImported?.storeConfig),
-      appAccess: createMovieAppAccess({ [appName]: true })
+    movie.app = {
+      ...createMovieAppConfig(movieImported?.app)
     };
     await this.runTransaction(async (tx) => {
       movie.id = await this.add(cleanModel(movie), { write: tx });

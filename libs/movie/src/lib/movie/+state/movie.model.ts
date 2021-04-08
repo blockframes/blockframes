@@ -23,8 +23,8 @@ import {
   MovieVideo,
   MovieBase,
   MovieNote,
-  NewStoreConfig,
-  MovieStoreConfigRecord
+  MovieAppConfig,
+  MovieAppConfigRecord
 } from './movie.firestore';
 import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
@@ -86,7 +86,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     estimatedBudget: null,
     orgIds: [],
     ...params,
-    app: createMovieAppAccess(params.app),
+    app: createMovieAppConfig(params.app),
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
     banner: createStorageFile(params?.banner),
@@ -154,21 +154,22 @@ export function createMovieLanguageSpecification(
   };
 }
 
-export function createNewStoreConfig(params: Partial<NewStoreConfig<Date>>) {
+export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
   return {
     status: 'draft',
+    access: false,
     acceptedAt: null,
     refusedAt: null,
     ...params
   }
 }
 
-export function createMovieAppAccess(_appAccess: Partial<{[app in App]: NewStoreConfig<Date>}> = {}): MovieStoreConfigRecord {
+export function createMovieAppConfig(_appAccess: Partial<{[app in App]: MovieAppConfig<Date>}> = {}): MovieAppConfigRecord {
   const appAccess = {};
   for (const a of app) {
-    appAccess[a] = createNewStoreConfig(_appAccess[a]);
+    appAccess[a] = createAppConfig(_appAccess[a]);
   }
-  return (appAccess as MovieStoreConfigRecord);
+  return (appAccess as MovieAppConfigRecord);
 }
 
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {

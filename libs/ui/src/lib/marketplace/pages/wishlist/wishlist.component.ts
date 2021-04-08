@@ -51,7 +51,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
     this.sub = this.orgQuery.selectActive().pipe(
       switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
     ).subscribe(allMovies => {
-      const movies = allMovies.filter(movie => !!movie && movie.storeConfig.appAccess[getCurrentApp(this.routerQuery)]);
+      const movies = allMovies.filter(movie => !!movie && movie.app[getCurrentApp(this.routerQuery)].access);
       this.hasWishlist = !!movies.length;
       this.hasWishlist ?
         this.dynTitle.setPageTitle('Wishlist') :

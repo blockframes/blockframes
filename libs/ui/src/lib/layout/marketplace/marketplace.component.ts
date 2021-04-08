@@ -67,8 +67,8 @@ export class MarketplaceComponent implements OnInit {
 }
 
 const filterMovieByAppAccess = (currentApp: App) => (movie: Movie) => {
-  for (const app in movie.storeConfig.appAccess) {
-    if (movie.storeConfig.appAccess[app] && currentApp === app) return true;
+  for (const app in movie.app) {
+    if (movie.app[app].access && currentApp === app) return true;
   }
   return false;
 }

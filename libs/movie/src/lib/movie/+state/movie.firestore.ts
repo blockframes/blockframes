@@ -43,7 +43,7 @@ export interface MovieBase<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
-  app: Partial<{[app in App]: NewStoreConfig<D>}>, //! required
+  app: Partial<{[app in App]: MovieAppConfig<D>}>, //! required
   audience?: MovieGoalsAudience,
   banner?: StorageFile;
   boxOffice?: BoxOffice[],
@@ -139,13 +139,14 @@ export interface MoviePromotionalElements {
 
 type Timestamp = firebase.firestore.Timestamp;
 
-export interface NewStoreConfig<D> {
+export interface MovieAppConfig<D> {
   acceptedAt: D,
+  access: boolean,
   refusedAt: D,
   status: StoreStatus
 }
 
-export type MovieStoreConfigRecord = Record<App, NewStoreConfig<Date>>;
+export type MovieAppConfigRecord = Record<App, MovieAppConfig<Date>>;
 
 export interface Prize {
   name: string,
