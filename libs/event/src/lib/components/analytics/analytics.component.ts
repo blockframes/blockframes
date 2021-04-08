@@ -36,25 +36,27 @@ export class EventAnalyticsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const transformEvent = (event: EventAnalytics) => {
+
+    const analytics = await this.service.queryAnalytics(this.event.id);
+    // transform the analytics records
+    this.analytics = analytics.eventUsers.map(analytic => {
       const transformedAnalytic = {
-        ...event,
-        name: `${event.firstName} ${event.lastName}`,
+        ...analytic,
+        name: `${analytic.firstName} ${analytic.lastName}`,
       };
 
       // add watch time to the analytic record
       if (this.event.type === 'screening') {
+        // retrieve watch time from invitation
         const [invitation] = this.invitationQuery.getAll({
-          filterBy: invit => invit.toUser.uid === event.userId && invit.eventId === event.eventId
+          // we are looking for invitation between this event and this user id
+          filterBy: invit => invit.toUser.uid === analytic.userId && invit.eventId === analytic.eventId
         });
         transformedAnalytic.watchTime = invitation?.watchTime ?? 0;
       }
 
       return transformedAnalytic;
-    };
-
-    const analytics = await this.service.queryAnalytics(this.event.id);
-    this.analytics = analytics.eventUsers.map(transformEvent);
+    });
 
     // if event is a screening we add the watch time column to the table
     // and we compute the average watch time
