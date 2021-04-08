@@ -3,7 +3,7 @@ import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 
 
-describe('Permission Rules Tests', () => {
+describe.skip('Permission Rules Tests', () => {
   const projectId = `permrules-spec-${Date.now()}`;
   let db: Firestore;
 
