@@ -30,15 +30,6 @@ export const testFixture = {
     id: 'O004',
   },
 
-  /*
-  'permissions/O005': {
-    roles: {
-      'uid-user2': 'member',
-    },
-    id: 'O005',
-  },
-  */
-
   'permissions/O001/documentPermissions/D001': {
     id: 'D001',
     ownerId: 'O001',
@@ -90,12 +81,6 @@ export const testFixture = {
     id: 'O004',
     status: 'pending'
   },
-  /*
-  'orgs/O005': {
-    id: 'O005',
-    status: 'pending'
-  },
-  */
 
   'orgs/O001/carts/C001': {
     id: 'C001',
