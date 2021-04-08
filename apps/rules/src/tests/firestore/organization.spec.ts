@@ -19,7 +19,7 @@ describe('Organization Rules Tests', () => {
     });
 
     test('doc status: pending, should be able to create document', async () => {
-      const cartDocRef = db.doc('orgs/O004');
+      const cartDocRef = db.doc('orgs/O005');
       await assertSucceeds(cartDocRef.set({status: 'pending'}));
     });
 
@@ -52,13 +52,38 @@ describe('Organization Rules Tests', () => {
     });
 
     test('id == orgId & status: pending, should be able to create document', async () => {
-      const orgDocRef = db.doc('orgs/O005');
-      await assertSucceeds(orgDocRef.set({id: 'O005', status: 'pending'}));
+      //Note: O005 is created with non-member, so we need a different Org here.
+      const orgDocRef = db.doc('orgs/O006');
+      await assertSucceeds(orgDocRef.set({id: 'O006', status: 'pending'}));
     });
 
     test('should not be able to delete document', async () => {
       const orgDocRef = db.doc('orgs/O001');
       await assertFails(orgDocRef.delete());
+    });
+
+    describe('Update Org', () => {
+      const existingOrg = 'O003';
+      const fields: any = [
+        ['id', 'O004'],
+        ['userIds', ['uid-sAdmin']],
+        ['_meta', { createdBy: '' }],
+        ['_meta', { createdAt: '' }],
+        ['appAccess', { festival: true }],
+        ['email', 'adming@O003.org'],
+        ['status', 'dissolved'],
+      ];
+      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
+        const orgRef = db.doc(`orgs/${existingOrg}`);
+        const details = {};
+        details[key] = value;
+        await assertFails(orgRef.update(details));
+      });
+
+      test('updating unrestricted field, should be able to update document', async () => {
+        const orgRef = db.doc(`orgs/${existingOrg}`);
+        await assertSucceeds(orgRef.update({note : 'document updated'}));
+      });
     });
   });
 
@@ -77,6 +102,33 @@ describe('Organization Rules Tests', () => {
     test('should not be able to delete document', async () => {
       const orgDocRef = db.doc('orgs/O001');
       await assertFails(orgDocRef.delete());
+    });
+
+    describe('Update Org', () => {
+      const existingOrg = 'O003';
+      const fields: any = [
+        ['id', 'O004'],
+        ['_meta', { createdBy: '' }],
+        ['_meta', { createdAt: '' }],
+        ['appAccess', { festival: true }],
+        ['status', 'dissolved'],
+      ];
+      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
+        const orgRef = db.doc(`orgs/${existingOrg}`);
+        const details = {};
+        details[key] = value;
+        await assertFails(orgRef.update(details));
+      });
+
+      test('updating appAccess with pending status, should be able to update document', async () => {
+        const orgRef = db.doc('orgs/O004');
+        await assertSucceeds(orgRef.update({appAccess: { festival: true }}));
+      });
+
+      test('updating unrestricted field, should be able to update document', async () => {
+        const orgRef = db.doc(`orgs/${existingOrg}`);
+        await assertSucceeds(orgRef.update({note : 'document updated'}));
+      });
     });
   });
 });
