@@ -11,7 +11,9 @@
             <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
 
               <div fxLayout="row" fxLayoutGap="24px">
-                <form-country test-id="release-country" [form]="releaseForm.get('country')" fxFlex></form-country>
+                <static-select test-id="release-country" [control]="releaseForm.get('country')" scope="territories" fxFlex>
+                  <mat-label>Country</mat-label>
+                </static-select>
 
                 <static-select test-id="release-media" [control]="releaseForm.get('media')" scope="medias" fxFlex
                   [withoutValues]="['payTv', 'freeTv', 'payPerView', 'est', 'nVod','aVod', 'fVod', 'sVod', 'planes', 'boats', 'educational', 'rental','through']">
@@ -67,7 +69,9 @@
             <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">
 
               <div fxLayout fxLayoutGap="24px">
-                <form-country test-id="boxoffice-territory" [form]="boxOfficeForm.get('territory')"></form-country>
+                <static-select test-id="boxoffice-territory" scope="territories" [control]="boxOfficeForm.get('territory')">
+                  <mat-label>Country</mat-label>
+                </static-select>
 
                 <mat-form-field appearance="outline">
                   <mat-label>Metrics</mat-label>
@@ -122,9 +126,10 @@
                 <mat-hint>Please specify your title's rating, if existing.</mat-hint>
               </mat-form-field>
 
-              <form-country test-id="rating-country" [form]="ratingForm.get('country')">
+              <static-select test-id="rating-country" [control]="ratingForm.get('country')" scope="territories">
+                <mat-label>Country</mat-label>
                 <mat-hint>Please specify country applying rating system.</mat-hint>
-              </form-country>
+              </static-select>
             </div>
 
             <ng-template saveButtonText>Save Rating</ng-template>
