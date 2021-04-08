@@ -1,20 +1,23 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Event } from '../../+state/event.model';
-import { InvitationService, Invitation, InvitationQuery } from '@blockframes/invitation/+state';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { InvitationService, Invitation } from '@blockframes/invitation/+state';
+import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { Location } from '@angular/common';
+import { fade } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'event-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
+  animations: [fade],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventViewComponent implements OnInit {
+export class EventViewComponent implements OnInit, OnDestroy {
+  private sub: Subscription;
   private _event = new BehaviorSubject<Event>(null);
   event$ = this._event.asObservable();
-  invitation$: Observable<Invitation>;
+  invitation: Invitation;
   editMeeting: string;
   accessRoute: string;
 
@@ -27,8 +30,8 @@ export class EventViewComponent implements OnInit {
   }
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private invitationService: InvitationService,
-    private invitationQuery: InvitationQuery,
     private location: Location
   ) { }
 
@@ -37,10 +40,19 @@ export class EventViewComponent implements OnInit {
     this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
     this.accessRoute = `/c/o/marketplace/event/${this.event.id}/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
 
-    this.invitation$ = this.invitationQuery.whereCurrentUserIsGuest().pipe(
-      map(invits => invits.find(e => e.eventId === this.event.id)),
-      shareReplay(1),
-    );
+    this.sub = combineLatest([
+      this.event$.pipe(filter(event => !!event)),
+      this.invitationService.guestInvitations$
+    ]).pipe(
+      map(([event, invitations]) => invitations.find(invitation => invitation.eventId === event.id))
+    ).subscribe(invitation => {
+      this.invitation = invitation
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   goBack() {
