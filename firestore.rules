@@ -316,7 +316,7 @@ service cloud.firestore {
         && isNotUpdatingField(['storeConfig','storeType'])
         && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
         && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
-        // && isNotUpdatingField(['storeConfig','appAccess', 'financiers']) // @TODO #5192 
+        && isNotUpdatingField(['storeConfig','appAccess', 'financiers'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
     }
 
