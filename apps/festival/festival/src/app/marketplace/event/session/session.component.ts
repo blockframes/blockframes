@@ -18,6 +18,8 @@ import { extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
+import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { InvitationQuery } from '@blockframes/invitation/+state';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -49,10 +51,27 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   private countdownId: number = undefined;
 
+  private watchTime: number; // watch-time in secondes
+  private watchTimeIntervalId: number;
+  private invitationId: string;
+  private _playingState: 'play' | 'pause' = 'pause';
+  public get playingState() { return this._playingState; }
+  public set playingState(value: 'play' | 'pause') {
+    this._playingState = value;
+    if (!!this.invitationId && this.watchTime !== undefined && value === 'pause') {
+      const event = this.eventQuery.getActive();
+      if (event.type === 'screening' && event.ownerOrgId !== this.authQuery.orgId) {
+        this.invitationService.update(this.invitationId, { watchTime: this.watchTime });
+      }
+    }
+  }
+
   constructor(
     private functions: AngularFireFunctions,
     private eventQuery: EventQuery,
     private service: EventService,
+    private invitationService: InvitationService,
+    private invitationQuery: InvitationQuery,
     private movieService: MovieService,
     private mediaService: MediaService,
     private authQuery: AuthQuery,
@@ -77,6 +96,30 @@ export class SessionComponent implements OnInit, OnDestroy {
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener;
+
+          // if user is not a screening owner we need to track the watch time
+          if (event.ownerOrgId !== this.authQuery.orgId) {
+            const [invitation] = this.invitationQuery.getAll({
+              filterBy: invit => invit.toUser.uid === this.authQuery.userId && invit.eventId === event.id
+            });
+
+            // this should never happen since previous checks & guard should have worked
+            if (!invitation) throw new Error(`Missing Screening Invitation`);
+            this.invitationId = invitation.id;
+            this.deleteWatchTimeInterval();
+            this.watchTime = invitation.watchTime ?? 0;
+
+            this.watchTimeIntervalId = window.setInterval(() => {
+              if (this.playingState === 'play') {
+                this.watchTime += 1;
+              }
+
+              // push new watch-time every minutes
+              if (this.watchTime % 60 === 0) {
+                this.invitationService.update(this.invitationId, { watchTime: this.watchTime });
+              }
+            }, 1000);
+          }
         }
 
       // MEETING
@@ -209,12 +252,25 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.countdownId = undefined;
   }
 
+  deleteWatchTimeInterval() {
+    window.clearInterval(this.watchTimeIntervalId);
+    this.watchTimeIntervalId = undefined;
+  }
+
   autoLeave() {
     if (!!this.countdownId) this.twilioService.disconnect();
     this.deleteCountDown();
+    this.deleteWatchTimeInterval();
   }
 
   ngOnDestroy() {
+    if (!!this.invitationId && this.watchTime !== undefined) {
+      const event = this.eventQuery.getActive();
+      if (event.type === 'screening' && event.ownerOrgId !== this.authQuery.orgId) {
+        this.invitationService.update(this.invitationId, { watchTime: this.watchTime });
+      }
+    }
+    this.deleteWatchTimeInterval();
     this.twilioService.disconnect();
     this.deleteCountDown();
     this.sub.unsubscribe();
