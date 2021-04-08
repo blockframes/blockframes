@@ -20,7 +20,7 @@ import { Media, StoreStatus } from '@blockframes/utils/static-model/types';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { AvailsFilter, getMandateTerms, isInBucket, isSold } from '@blockframes/contract/avails/avails';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { createTerm, Term } from '@blockframes/contract/term/+state/term.model';
+import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
 import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
@@ -29,6 +29,7 @@ import { centralOrgID } from '@env';
 import { BucketContract, createBucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
+import { AlgoliaMovie } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -115,6 +116,7 @@ export class ListComponent implements OnInit, OnDestroy {
   clear() {
     const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
+    this.availsForm.reset();
     this.cdr.markForCheck();
   }
 
@@ -136,9 +138,10 @@ export class ListComponent implements OnInit, OnDestroy {
     return Promise.all(promises);
   }
 
-  addAvail(titleId: string) {
+  addAvail(title: AlgoliaMovie) {
+    const titleId = title.objectID;
     if (this.availsForm.invalid) {
-      this.snackbar.open('Specify the avails before adding to selection', 'close', { duration: 3000 })
+      this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
       return;
     }
     // Get the parent term
@@ -225,6 +228,7 @@ export class ListComponent implements OnInit, OnDestroy {
       })
       this.bucketService.add(bucket);
     }
+    this.snackbar.open(`${title.title.international} was added to your Selection`, 'close', { duration: 4000 });
   }
 
   ngOnDestroy() {

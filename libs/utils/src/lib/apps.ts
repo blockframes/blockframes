@@ -17,7 +17,7 @@ export interface AppMailSetting {
   url?: string,
 }
 
-export const app = ['catalog', 'festival', 'financiers'] as const;
+export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
 export type App = typeof app[number];
 
 export const modules = ['dashboard', 'marketplace'] as const;
@@ -37,6 +37,7 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
   financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
+  crm: { email: 'team@cascade8.com', name: 'Cascade 8' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
@@ -44,6 +45,7 @@ export const appLogo = {
   catalog: `${appUrl.content}/assets/logo/light/content-primary-blue.png`,
   festival: `${appUrl.market}/assets/logo/light/market-primary-blue.png`,
   financiers: `${appUrl.financiers}/assets/logo/light/mf-primary-blue.png`,
+  crm: ''
 };
 type AppLogoValue = typeof appLogo[App];
 
@@ -60,7 +62,8 @@ export type MovieAppAccess = Record<App, boolean>;
 export const applicationUrl: Record<App, string> = {
   festival: appUrl.market,
   catalog: appUrl.content,
-  financiers: appUrl.financiers
+  financiers: appUrl.financiers,
+  crm: appUrl.crm
 }
 
 export function getCurrentApp(routerQuery: RouterQuery): App {
