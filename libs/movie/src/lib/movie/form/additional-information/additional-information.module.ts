@@ -21,7 +21,6 @@ import { MovieFormStoryModule } from '@blockframes/movie/form/story/story.module
 import { MovieFormBudgetRangeModule } from '@blockframes/movie/form/budget/range/budget-range.module';
 
 // Blockframes UI
-import { FormCountryModule } from '@blockframes/ui/form';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
@@ -48,7 +47,6 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     MatDatepickerModule,
     MatNativeDateModule,
     FlexLayoutModule,
-    FormCountryModule,
     FormListModule,
     HasStatusModule,
     ToLabelModule,
