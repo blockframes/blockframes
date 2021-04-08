@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit } from '@angular/core';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/+state';
+import { Movie, MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
 
@@ -60,6 +60,8 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     return this.org$.getValue();
   }
 
+  public keepOrder = (...args) => 0;
+
   @ViewChild('image') image?: TemplateRef<any>;
   @ViewChild('file') file?: TemplateRef<any>;
   @ViewChild('fileList') fileList?: TemplateRef<any>;
@@ -85,6 +87,10 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       this.org$.asObservable(),
       this.movieService.valueChanges(query)
     ]).pipe(
+      map(([org, titles]) => {
+        const sortedTitles = titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1);
+        return [ org, sortedTitles ] as [ Organization, Movie[] ];
+      }),
       map(([org, titles]) => getDirectories(org, titles)),
     );
   }
