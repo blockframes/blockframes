@@ -10,7 +10,7 @@ import { ListComponent } from './list.component';
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module';
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
-import { FormCountryModule } from '@blockframes/ui/form';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     RouterModule.forChild([{ path: '', component: ListComponent }]),
     ListFilterModule,
-    FormCountryModule,
+    StaticSelectModule,
 
     // Material
     MatProgressSpinnerModule,
