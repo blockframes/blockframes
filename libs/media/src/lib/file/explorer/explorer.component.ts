@@ -51,8 +51,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   crumbs$ = this.path$.pipe(map(getCrumbs));
   templates: Record<string, TemplateRef<any>> = {};
 
-  public keepOrder = (...args) => 0;
-
   org$ = new BehaviorSubject<Organization>(undefined);
   @Input()
   set org(org: Organization) {
@@ -106,6 +104,8 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       fileList: this.fileList
     }
   }
+
+  keepOrder(...args) { return 0; }
 
   setPath(path: string) {
     this.path$.next(path);
