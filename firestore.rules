@@ -1,4 +1,4 @@
-﻿rules_version = '2';
+rules_version = '2';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///                                               DATABASE RULES                                        ///
@@ -231,7 +231,7 @@ service cloud.firestore {
         && isNotUpdatingId('id', existingData().id);
     }
 
-    // Org members have less update possibilities than admins
+    // Org members have less update possibilities than admis
     // but need to be able to update movieIds
     function isMemberAllowedToUpdateOrg() {
       return isOrgMember(existingData().id)
@@ -609,3 +609,4 @@ service cloud.firestore {
 
   }
 }
+
