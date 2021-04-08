@@ -104,13 +104,13 @@
 
 
   <h1 *ngIf="(movie | hasKeys: keys.prizes) && (movie | hasStatus: status.afterProd)">
-    Selection & Reviews
+    Selections & Reviews
   </h1>
 
 
   <!-- Festival -->
   <section *ngIf="(movie.prizes.length || movie.customPrizes.length) && (movie | hasStatus: status.afterProd)">
-    <h2>Festivals</h2>
+    <h2>Festivals & Awards</h2>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">
         <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
@@ -122,7 +122,6 @@
 
     <mat-divider></mat-divider>
   </section>
-
 
   <!-- Review -->
   <section *ngIf="movie.review.length && (movie | hasStatus: status.afterProd)">

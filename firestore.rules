@@ -252,7 +252,7 @@ service cloud.firestore {
 
     match /permissions/{orgId} {
     	allow read: if isOrgMember(existingData().id) && notInMaintenance();
-      allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
+      allow create: if isRequestFieldValueEqualTo(['id'], orgId)
         && isCreatingOrganization(orgId)
         && notInMaintenance();
 			allow update: if isOrgAdmin(existingData().id)
@@ -262,7 +262,7 @@ service cloud.firestore {
       match /documentPermissions/{docId} {
         allow read: if isOrgMember(orgId) && notInMaintenance();
         allow create: if isOrgMember(orgId)
-          && isRequestFieldValueEqualToOrNotSetted(['id'], docId)
+          && isRequestFieldValueEqualTo(['id'], docId)
           && isBrandNewDocument(docId)
           && notInMaintenance();
         allow update: if isOrgAdmin(orgId)
@@ -316,7 +316,7 @@ service cloud.firestore {
         && isNotUpdatingField(['storeConfig','storeType'])
         && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
         && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
-        // && isNotUpdatingField(['storeConfig','appAccess', 'financiers']) // @TODO #5192 
+        && isNotUpdatingField(['storeConfig','appAccess', 'financiers'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
     }
 
@@ -526,11 +526,7 @@ service cloud.firestore {
 
     function isCreatingOrganization(orgId) {
 			return userId() in getAfter(/databases/$(database)/documents/orgs/$(orgId)).data.userIds
-      	&& (
-          exists(/databases/$(database)/documents/orgs/$(orgId)) == false
-          // Needed if org creation and permissions doc associated are not made in the same batch write
-          || get(/databases/$(database)/documents/orgs/$(orgId)).data.status == 'pending'
-        );
+      	&& exists(/databases/$(database)/documents/orgs/$(orgId)) == false;
     }
 
     function getOrgPermissions(orgId) {

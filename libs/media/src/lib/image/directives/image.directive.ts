@@ -1,7 +1,7 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subscription, timer } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
-import { delayWhen, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { getAssetPath } from '../../+state/media.model';
 import { ImageParameters } from './imgix-helpers';
 import { MediaService } from '../../+state/media.service';
@@ -73,8 +73,6 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.asset$.next(asset);
   }
 
-  @Input() delay = 5000;
-
   constructor(
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
@@ -102,15 +100,8 @@ export class ImageDirective implements OnInit, OnDestroy {
       map(([local, global]) => local || global)
     );
 
-    const obs$: Observable<any>[] = [this.asset$, this.parameters, theme$]
 
-    let _delay = 0;
-    if (this.ref$.value) {
-      // Adds a 5 (default) sec delay on image loading except for the first one.
-      // This is to prevent imgIx to load the image before it is even uploaded or moved to good directory.
-      // This variable will be updated on the fly inside the `subscribe` to update next observable's behaviour.
-      obs$.push(this.ref$.pipe(delayWhen(() => timer(_delay))))
-    }
+    const obs$: Observable<any>[] = [this.asset$, this.parameters, theme$, this.ref$]
 
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
@@ -118,11 +109,7 @@ export class ImageDirective implements OnInit, OnDestroy {
       if (!!ref) {
         // ref
         this.srcset = await this.mediaService.generateImageSrcset(ref, params);
-
         this.src = this.srcset.split(' ')[0];
-
-        // Next subscription change will be delayed
-        _delay = this.delay;
       } else {
 
         // asset

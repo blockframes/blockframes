@@ -8,7 +8,7 @@ import { MovieFormMediaVideosComponent } from './media-videos.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
-import { FileNameModule } from '@blockframes/utils/pipes';
+import { FileNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
@@ -44,6 +44,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
+
+    //Modules
+    ToLabelModule,
 
     // Route
     RouterModule.forChild([{ path: '', component: MovieFormMediaVideosComponent }])

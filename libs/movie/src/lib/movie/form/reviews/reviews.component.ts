@@ -17,7 +17,7 @@ export class MovieFormReviewsComponent {
   public premieres = Object.keys(premiereType);
 
   constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Selection & Reviews');
+    this.dynTitle.setPageTitle('Selections & Reviews');
   }
 
   onChange() {
@@ -25,8 +25,9 @@ export class MovieFormReviewsComponent {
   }
 
   onClick(group: MatButtonToggleGroup, form: FormControl) {
-    if (!this.toggleChanged) group.value = '';
-    form.setValue(group.value);
+    // We need to make sure not to set value to undefined in the form, firebase will throw an error
+    const value = !this.toggleChanged || typeof group.value === 'undefined' ? ''  : group.value;
+    form.setValue(value);
     this.toggleChanged = false;
   }
 }

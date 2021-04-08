@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation, ViewContainerRef, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation, ViewContainerRef, OnDestroy, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -18,16 +18,12 @@ const fade = trigger('fade', [
   selector: 'overlay-widget',
   template: `
   <ng-template #ref>
-    <div tabindex="-1" role="menu" @fade class="bf-widget">
+    <div tabindex="-1" role="menu" @fade class="bf-widget" [ngStyle]="{ 'overflow': overflow }">
       <ng-content></ng-content>
     </div>
   </ng-template>
   `,
   styles: [`
-    .bf-widget {
-      overflow: auto;
-    }
-  `, `
     .bf-widget:focus {
       outline: none;
     }
@@ -59,6 +55,8 @@ const fade = trigger('fade', [
 export class OverlayWidgetComponent implements OnDestroy {
   @ViewChild('ref') public ref: TemplateRef<any>;
   @Output() openedChanged = new EventEmitter<boolean>();
+  // Toggle scrolling ability. if set to auto, border-box may be invisible.
+  @Input() overflow: 'auto' | 'unset' = 'unset';
   private overlayRef: OverlayRef;
   private widgetPortal: TemplatePortal;
   private isOpen = false;

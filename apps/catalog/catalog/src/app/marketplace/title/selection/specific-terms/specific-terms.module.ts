@@ -9,6 +9,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FlexLayoutModule,
     ReactiveFormsModule,
     ImageModule,
+    MatDialogModule,
 
     MatButtonModule,
     MatInputModule,

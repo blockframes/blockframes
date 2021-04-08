@@ -367,7 +367,7 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
   return {
     to: getSupportEmail(information.app),
     subject: 'A demo has been requested',
-    text: `A user wants to schedule a demo of Archipel Content.
+    text: `A user wants to schedule a demo.
 
     User informations
 

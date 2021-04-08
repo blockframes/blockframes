@@ -110,15 +110,13 @@ export const colors = {
 
 // @dev sort the value alphabetically, not the keys
 export const contentType = {
-  collection: 'Collection',
+  animation: 'Animation',
   documentary: 'Documentary',
-  episode: 'Episode',
   feature_film: 'Feature Film',
   flow: 'Flow',
   short: 'Short Film',
   tv_film: 'TV Film',
-  series: 'TV Series',
-  volume: 'Volume'
+  series: 'TV Series'
 }
 
 export const crewRoles = {
@@ -168,6 +166,12 @@ export const genres = {
   webSeries: 'Web Series', //web-series
   virtualReality: 'Virtual Reality', // virtual-reality
   family: 'Family',
+  wildlife: 'Wildlife',
+  natureEnvironment: 'Nature & Environment',
+  huntingFishing: 'Hunting & Fishing',
+  archeologyHistory: 'Archeology & History',
+  travelDiscovery: 'Travel & Discovery',
+  fashion: 'Fashion'
 } as const
 
 export const hostedVideoTypes = {
@@ -751,9 +755,9 @@ export const territories = {
   uganda: "Uganda",
   ukraine: "Ukraine",
   "united-arab-emirates": "United Arab Emirates",
-  "united-kingdom": "United Kingdom",
+  "united-kingdom": "United Kingdom (UK)",
   "united-states-minor-outlying-islands": "United States Minor Outlying Islands",
-  "united-states-of-america": "United States of America",
+  "united-states-of-america": "United States of America (USA)",
   uruguay: "Uruguay",
   uzbekistan: "Uzbekistan",
   vanuatu: "Vanuatu",

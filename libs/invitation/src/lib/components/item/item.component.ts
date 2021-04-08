@@ -6,7 +6,8 @@ import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { BehaviorStore } from '@blockframes/utils/behavior-store';
-
+import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'invitation-item',
@@ -15,6 +16,8 @@ import { BehaviorStore } from '@blockframes/utils/behavior-store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemComponent {
+  public applicationUrl = applicationUrl;
+  public app = getCurrentApp(this.routerQuery);
 
   @Input() set invitation(invitation: Invitation) {
     this._invitation = invitation;
@@ -52,24 +55,21 @@ export class ItemComponent {
     private invitationService: InvitationService,
     private eventService: EventService,
     private organizationService: OrganizationService,
-    private userService: UserService
+    private userService: UserService,
+    private routerQuery: RouterQuery
   ) { }
 
   get eventLink() {
     if (this._invitation.type === 'attendEvent') {
       if (this._invitation.mode === 'request') {
-        return `/c/o/dashboard/event/${this._invitation.eventId}/edit`;
+        return `${this.applicationUrl.festival}/c/o/dashboard/event/${this._invitation.eventId}/edit`;
       } else {
-        if (this.eventType === 'meeting') {
-          return [`/c/o/marketplace/event`, this._invitation.eventId, 'lobby'];
-        }
-        else {
-          return [`/c/o/marketplace/event`, this._invitation.eventId, 'session'];
-        }
+        const urlPart = this.eventType === 'meeting' ? 'lobby': 'session';
+        return `${this.applicationUrl.festival}/c/o/marketplace/event/${this._invitation.eventId}/${urlPart}`;
       }
     } else if (this._invitation.type === 'joinOrganization') {
       const orgId = this._invitation.fromOrg ? this._invitation.fromOrg.id : this._invitation.toOrg.id;
-      return `/c/o/organization/${orgId}/view/members`;
+      return `${this.applicationUrl[this.app]}/c/o/organization/${orgId}/view/members`;
     }
   }
 

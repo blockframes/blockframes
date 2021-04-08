@@ -25,6 +25,7 @@ export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.wher
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
+  readonly useMemorization = true;
 
   constructor(
     private authQuery: AuthQuery,
@@ -41,11 +42,11 @@ export class MovieService extends CollectionService<MovieState> {
     return createMovie(movie);
   }
 
-  async create(movieImported?: Movie): Promise<Movie> {
+  async create(movieImported?: Partial<Movie>): Promise<Movie> {
     const createdBy = this.authQuery.userId;
     const appName = getCurrentApp(this.routerQuery);
     let orgIds = [];
-    if (!!movieImported?.orgIds.length) {
+    if (!!movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
     } else {
       const orgId = this.orgQuery.getActiveId();
@@ -58,7 +59,7 @@ export class MovieService extends CollectionService<MovieState> {
       orgIds
     });
     movie.storeConfig = {
-      ...createStoreConfig(),
+      ...createStoreConfig(movieImported?.storeConfig),
       appAccess: createMovieAppAccess({ [appName]: true })
     };
     await this.runTransaction(async (tx) => {

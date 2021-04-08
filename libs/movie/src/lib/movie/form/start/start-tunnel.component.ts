@@ -4,9 +4,19 @@ import { Router } from '@angular/router';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state';
+import { App, getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // RxJs
 import { BehaviorSubject } from 'rxjs';
+
+
+const predefinedTitleConfig: Record<App, any> = {
+  catalog: { productionStatus: 'released' },
+  festival: {},
+  financiers: {},
+  crm: {}
+}
 
 @Component({
   selector: 'movie-form-start-tunnel',
@@ -16,13 +26,19 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class MovieFormStartTunnelComponent {
   public loadingTunnel = new BehaviorSubject(false);
+  public app = getCurrentApp(this.routerQuery);
 
-  constructor(private movieService: MovieService, private router: Router) {}
+  constructor(
+    private movieService: MovieService,
+    private router: Router,
+    private routerQuery: RouterQuery,
+  ) { }
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
     try {
-      const { id } = await this.movieService.create();
+      const { id } = await this.movieService.create(predefinedTitleConfig[this.app]);
+
       this.router.navigate(['/c/o/dashboard/tunnel/movie/', id]);
     } catch (err) {
       this.loadingTunnel.next(false);

@@ -4,17 +4,17 @@
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
       <mat-icon matPrefix svgIcon="search"></mat-icon>
       <input type="text" formControlName="query" [value]="searchForm.query.value"
-        placeholder="Search for a sales company...">
+        placeholder="Search for a specific company...">
     </form>
   </list-page-app-bar>
 
   <list-page-title>
-    <h1 class="mat-display-2 page-title">Partners</h1>
+    <h1 class="mat-display-2 page-title">Sellers</h1>
   </list-page-title>
 
   <list-page-search>
     <mat-form-field appearance="outline" [formGroup]="searchForm">
-      <mat-label>Search for a sales company...</mat-label>
+      <mat-label>Search for a specific company...</mat-label>
       <mat-icon matPrefix svgIcon="search"></mat-icon>
       <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
     </mat-form-field>
@@ -22,7 +22,7 @@
 
   <list-page-description>
     <span i18n *ngIf="nbHits" class="mat-body-2">
-      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partner{nbHits, plural, =0 {} =1 {} other {s}}
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} seller{nbHits, plural, =0 {} =1 {} other {s}}
       available.
     </span>
   </list-page-description>
@@ -38,7 +38,7 @@
   </ng-template>
 
   <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
-    <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
+    <span>You've viewed {{ hitsViewed }} sellers from {{ nbHits }}.</span>
   </list-page-progress>
 
 </list-page>

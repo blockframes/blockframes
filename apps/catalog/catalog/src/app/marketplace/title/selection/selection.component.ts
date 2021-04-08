@@ -2,12 +2,15 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
+import { MovieCurrency, movieCurrencies, Scope } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
+import { debounceFactory } from '@blockframes/utils/helpers';
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { Movie } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'catalog-selection',
@@ -25,6 +28,9 @@ export class MarketplaceSelectionComponent {
   };
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
+
+  // @TODO #5526 remove use of debounce Factory
+  debouncedUpdatePriceControl = debounceFactory((index, price) => this.updatePrice(index, price), 1000);
   trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
@@ -53,23 +59,25 @@ export class MarketplaceSelectionComponent {
   updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => {
-      const contracts = [ ...bucket.contracts ];
+      const contracts = [...bucket.contracts];
       contracts[index].price = +price;
       return { contracts };
     });
   }
 
-  removeContract(index: number) {
+  removeContract(index: number, title: Movie) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => ({
       contracts: bucket.contracts.filter((_, i) => i !== index)
     }));
+    const text = `${title.title.international} was removed from your Selection`;
+    this.snackBar.open(text, 'close', { duration: 5000 });
   }
 
   removeTerm(contractIndex: number, termIndex: number) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => {
-      const contracts = [ ...bucket.contracts ];
+      const contracts = [...bucket.contracts];
       const terms = contracts[contractIndex].terms.filter((_, i) => i !== termIndex);
       // If there are no terms anymore, remove contract
       if (!terms.length) return { contracts: contracts.filter((_, i) => i !== contractIndex) };
@@ -77,6 +85,7 @@ export class MarketplaceSelectionComponent {
       contracts[contractIndex].terms = terms;
       return { contracts };
     });
+    this.snackBar.open(`Rights deleted`, 'close', { duration: 4000 })
   }
 
   createOffer(bucket: Bucket) {
@@ -84,7 +93,7 @@ export class MarketplaceSelectionComponent {
       return contract.terms.some((term, index) => {
         const from = term.duration.from.getTime();
         const to = term.duration.to.getTime();
-        
+
         return contract.terms.some((t, i) => {
           if (i === index) return false;
           const startDuringDuration = from >= t.duration.from.getTime() && from <= t.duration.to.getTime();
@@ -100,9 +109,9 @@ export class MarketplaceSelectionComponent {
 
       })
     })) {
-      this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms', '', { duration: 2000 });
+      this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
     } else if (bucket.contracts.some(contract => !contract.price || contract.price < 0)) {
-      this.snackBar.open('Please add price on every item', '', { duration: 2000 });
+      this.snackBar.open('Missing price information.', '', { duration: 2000 });
     } else {
       this.dialog.open(SpecificTermsComponent);
     }
@@ -110,5 +119,9 @@ export class MarketplaceSelectionComponent {
 
   openIntercom() {
     this.intercom?.show();
+  }
+
+  openDetails(terms: string, scope: Scope) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
   }
 }

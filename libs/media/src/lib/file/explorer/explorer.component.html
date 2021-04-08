@@ -43,7 +43,8 @@
   <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept" (selectionChange)="change($event, dir.meta)">
     <h3 title>Upload {{ dir.name }}</h3>
   </file-uploader>
-  <section fxLayout="row" fxLayoutAlign="end center" class="save">
+  <section fxLayout="row" fxLayoutAlign="space-between center" class="save">
+    <bf-preview-modal *ngIf="!!dir.form.value.storagePath" [ref]="dir.form.value"></bf-preview-modal>
     <button mat-stroked-button (click)="update()">
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save</span>

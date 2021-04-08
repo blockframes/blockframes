@@ -6,6 +6,7 @@ import { hostedVideoTypes } from '@blockframes/utils/static-model';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { MovieVideos } from '@blockframes/movie/+state/movie.firestore';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
+import { MovieSalesPitchForm } from '../../form/movie.form';
 
 @Component({
   selector: 'movie-video-upload',
@@ -16,6 +17,8 @@ import { FileUploaderService } from '@blockframes/media/+state/file-uploader.ser
 export class MovieVideoUploadComponent implements OnInit {
 
   public form: MovieVideosForm;
+  public salesPitchForm: MovieSalesPitchForm;
+  
   public filePrivacy: Privacy = 'protected';
   @Input() movie: Movie;
   public hostedVideoTypes = Object.keys(hostedVideoTypes);
@@ -27,11 +30,12 @@ export class MovieVideoUploadComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.form = new MovieVideosForm();
+    this.salesPitchForm = new MovieSalesPitchForm();
   }
 
   async ngOnInit() {
     this.form = new MovieVideosForm(this.movie.promotional.videos);
-
+    this.salesPitchForm = new MovieSalesPitchForm(this.movie.promotional.salesPitch);
     // Add empty upload zone
     this.form.otherVideos.add({ ref: '' });
     this.cdr.markForCheck();

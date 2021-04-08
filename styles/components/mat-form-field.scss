@@ -40,9 +40,5 @@
         border-width: 1px;
       }
     }
-
-    .mat-form-field-prefix, .mat-form-field-suffix {
-      top: unset;   // put the prefix/suffic on the same level as text
-    }
   }
 }
