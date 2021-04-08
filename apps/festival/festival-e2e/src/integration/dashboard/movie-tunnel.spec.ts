@@ -184,7 +184,7 @@ const testSteps = [
     input: 'artisticTeam', comp_save: ['table-save'], save_form: true, debug: false},
   {title: 'Selections & Reviews', selector: 'movie-form-reviews static-select, input, textarea',
     input: 'reviews', comp_save: [], save_form: true, debug: false},
-  {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select',
+  {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, static-select, movie-form-budget-range, static-select',
     input: 'additionalInfo', comp_save: [], save_form: true, debug: false},
   {title: 'Shooting Information', selector: 'movie-shooting-information mat-radio-button, static-select, input',
     input: 'shootingInformation', comp_save: [], save_form: true, debug: false},
