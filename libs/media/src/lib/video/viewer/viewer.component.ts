@@ -71,7 +71,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this._eventId = value;
   }
 
-  @Output() stateChange = new EventEmitter<'play' | 'pause'>();
+  @Output() stateChange = new EventEmitter<'play' | 'pause' | 'complete'>();
 
   // in order to have several player displayed in the same page
   // we need to randomize the html id,
@@ -154,6 +154,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         this.player.on('ready', () => this.signalPlayerReady());
         this.player.on('play', () => this.stateChange.emit('play'));
         this.player.on('pause', () => this.stateChange.emit('pause'));
+        this.player.on('complete', () => this.stateChange.emit('complete'));
         this.updatePlayer();
       }
     } catch(error) {

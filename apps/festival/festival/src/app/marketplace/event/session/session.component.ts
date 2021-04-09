@@ -20,6 +20,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { InvitationQuery } from '@blockframes/invitation/+state';
+import { filter, map, tap } from 'rxjs/operators';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -109,15 +110,14 @@ export class SessionComponent implements OnInit, OnDestroy {
             this.watchTime = invitation.watchTime ?? 0;
 
             this.watchTimeInterval?.unsubscribe();
-            this.watchTimeInterval = interval(1000).subscribe(() => {
-              if (this.isPlaying) {
-                this.watchTime += 1;
-              }
 
-              // push new watch-time every minutes
-              if (this.watchTime % 60 === 0) {
-                this.invitationService.update(this.invitationId, { watchTime: this.watchTime });
-              }
+            this.watchTimeInterval = interval(1000).pipe(
+              filter(() => !!this.isPlaying),
+              map(() => this.watchTime += 1),
+              filter(watchTime => watchTime % 60 === 0),
+            ).subscribe(watchTime => {
+              console.log('update');
+              this.invitationService.update(this.invitationId, { watchTime });
             });
           }
         }
