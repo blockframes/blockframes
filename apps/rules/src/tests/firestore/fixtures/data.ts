@@ -90,12 +90,15 @@ export const testFixture = {
   },
   'orgs/O004': {
     id: 'O004',
+    userIds: ['uid-admin4']
   },
   'orgs/O005': {
     id: 'O005',
+    userIds: ['uid-user5'],
   },
   'orgs/O006': {
     id: 'O006',
+    userIds: ['uid-admin6'],
     status: 'pending'
   },
 
@@ -145,7 +148,6 @@ export const testFixture = {
   'users/uid-user4': {
     email: 'u4@cascade8.com',
     uid: 'uid-user4',
-    orgId: 'O0X4'
   },
   'users/uid-user5': {
     email: 'u5@cascade8.com',

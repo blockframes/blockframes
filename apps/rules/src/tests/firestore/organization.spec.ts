@@ -48,7 +48,7 @@ describe('Organization Rules Tests', () => {
 
     test('id ≠ orgId, should not be able to create document', async () => {
       const orgDocRef = db.doc('orgs/O004');
-      await assertFails(orgDocRef.set({id: 'O005'}));
+      await assertFails(orgDocRef.set({id: 'O0X5'}));
     });
 
     test('id == orgId & status: pending, should be able to create document', async () => {
