@@ -209,14 +209,6 @@ service cloud.firestore {
       allow update: if (isAdminAllowedToUpdateOrg() || isMemberAllowedToUpdateOrg())
         && notInMaintenance();
       allow delete: if false; // Allowed only to blockframesAdmin via CRM
-
-      match /carts/{cartId} {
-        allow read: if isOrgMember(orgId) && notInMaintenance();
-        allow create: if isOrgMember(orgId) && notInMaintenance();
-        allow update: if isOrgMember(orgId) && notInMaintenance();
-        allow delete: if isOrgAdmin(userOrgId()) && notInMaintenance();
-      }
-
     }
 
     /// FUNCTIONS ///
