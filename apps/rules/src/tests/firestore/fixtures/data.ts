@@ -99,10 +99,6 @@ export const testFixture = {
     status: 'pending'
   },
 
-  'orgs/O001/carts/C001': {
-    id: 'C001',
-  },
-
   //Users Collection
   'users/uid-bfAdmin': {
     email: 'bfadmin@cascade8.com',

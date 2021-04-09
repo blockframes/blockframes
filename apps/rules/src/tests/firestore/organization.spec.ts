@@ -14,23 +14,23 @@ describe('Organization Rules Tests', () => {
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
     test('should be able to read document', async () => {
-      const cartDocRef = db.doc('orgs/O001');
-      await assertSucceeds(cartDocRef.get());
+      const orgDocRef = db.doc('orgs/O001');
+      await assertSucceeds(orgDocRef.get());
     });
 
     test('doc status: pending, should be able to create document', async () => {
-      const cartDocRef = db.doc('orgs/O007');
-      await assertSucceeds(cartDocRef.set({status: 'pending'}));
+      const orgDocRef = db.doc('orgs/O007');
+      await assertSucceeds(orgDocRef.set({status: 'pending'}));
     });
 
     test('should not be able to update document', async () => {
-      const cartDocRef = db.doc('orgs/O001');
-      await assertFails(cartDocRef.update({note : 'document updated'}));
+      const orgDocRef = db.doc('orgs/O001');
+      await assertFails(orgDocRef.update({note : 'document updated'}));
     });
     
     test('should not be able to delete document', async () => {
-      const cartDocRef = db.doc('orgs/O001');
-      await assertFails(cartDocRef.delete());
+      const orgDocRef = db.doc('orgs/O001');
+      await assertFails(orgDocRef.delete());
     });
   });
 
