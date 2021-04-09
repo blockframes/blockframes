@@ -1,17 +1,44 @@
+import { User } from '@blockframes/user/types';
 import * as util from './util'
+import { initFunctionsTestMock, getTestingProjectId, populate } from '@blockframes/testing/firebase/functions';
+import { loadAdminServices } from '@blockframes/firebase-utils';
+import { clearFirestoreData } from '@firebase/rules-unit-testing';
 
-//TODO: 4838. Fix failing test
-// Enabling this test to check if it works..
+let db: FirebaseFirestore.Firestore;
 describe('Test util.ts generator function getCollectionInBatches', () => {
-  const { db } = util.loadAdminServices()
+  beforeAll(async () => {
+    initFunctionsTestMock();
+    const adminServices = loadAdminServices();
+    db = adminServices.db;
+    await clearFirestoreData({ projectId: getTestingProjectId() });
+  });
+
   it('should return batches of the correct size', async () => {
-    const usersRef = db.collection('users')
-    const batchSize = 10
+
+    // Populate with 12 users
+    await populate('users', [
+      { uid: 'A' },
+      { uid: 'B' },
+      { uid: 'C' },
+      { uid: 'D' },
+      { uid: 'E' },
+      { uid: 'F' },
+      { uid: 'G' },
+      { uid: 'H' },
+      { uid: 'I' },
+      { uid: 'J' },
+      { uid: 'K' },
+      { uid: 'L' }
+    ]);
+
+    const usersRef = db.collection('users');
+
+    const batchSize = 4;
     let iterations = 3;
     expect.assertions(iterations);
-    const docs = util.getCollectionInBatches(usersRef, 'uid', batchSize)
+    const docs = util.getCollectionInBatches(usersRef, 'uid', batchSize);
     for await (const chunk of docs) {
-      expect(chunk.length).toBe(batchSize)
+      expect(chunk.length).toBe(batchSize);
       iterations -= 1;
       if (!iterations) break
     }
