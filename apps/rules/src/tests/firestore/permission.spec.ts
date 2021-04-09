@@ -43,13 +43,22 @@ describe('Permission Rules Tests', () => {
       await assertFails(permissionDocRef.set(docData));
     });
 
+  });
+
+  describe('With User as Org Member', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user4' });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
     //test the scenario when org and permission is created at the same time..
     test('org not yet created, should be able to create document', async () => {
-      const docName = 'permissions/O004';
-      const docData = {id: 'O004', roles: { 'uid-user2': 'member' }, note: 'Creating org and permission doc'};
+      const docName = 'permissions/O0X4';
+      const docData = {id: 'O0X4', roles: { 'uid-user4': 'member' }, note: 'Creating org and permission doc'};
       const permissionDocRef = db.doc(docName);
-      const orgDoc = 'orgs/O004';
-      const orgUserIds = ['uid-user2'];
+      const orgDoc = 'orgs/O0X4';
+      const orgUserIds = ['uid-user4'];
 
       await db.runTransaction(async tx => {
         const orgRef = db.doc(orgDoc);
@@ -59,7 +68,6 @@ describe('Permission Rules Tests', () => {
 
       await assertSucceeds(permissionDocRef.get());
     });
-
   });
 
   describe('With User as Org Admin', () => {

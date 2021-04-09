@@ -22,17 +22,23 @@ export const testFixture = {
 
   'permissions/O004': {
     roles: {
-      'uid-user2': 'admin',
+      'uid-admin4': 'admin',
     },
     id: 'O004',
   },
-
   'permissions/O005': {
     roles: {
-      'uid-user2': 'member',
+      'uid-user5': 'member',
     },
     id: 'O005',
   },
+  'permissions/O006': {
+    roles: {
+      'uid-admin6': 'admin',
+    },
+    id: 'O006',
+  },
+
 
   'permissions/O001/documentPermissions/D001': {
     id: 'D001',
@@ -72,6 +78,7 @@ export const testFixture = {
 
   //Orgs
   'orgs/O001': {
+    id: 'O001',
     status: 'accepted', //belongs to O001
   },
   'orgs/O002': {
@@ -83,11 +90,13 @@ export const testFixture = {
   },
   'orgs/O004': {
     id: 'O004',
-    status: 'pending'
   },
   'orgs/O005': {
     id: 'O005',
-    userIds: ['uid-c8'],
+  },
+  'orgs/O006': {
+    id: 'O006',
+    status: 'pending'
   },
 
   'orgs/O001/carts/C001': {
@@ -109,6 +118,16 @@ export const testFixture = {
     uid: 'uid-admin',
     orgId: 'O001',
   },
+  'users/uid-admin4': {
+    email: 'admin4@cascade8.com',
+    uid: 'uid-admin4',
+    orgId: 'O004',
+  },
+  'users/uid-admin6': {
+    email: 'admin6@cascade8.com',
+    uid: 'uid-admin6',
+    orgId: 'O006',
+  },
   'users/uid-c8': {
     email: 'c8@cascade8.com',
     uid: 'uid-c8',
@@ -126,6 +145,16 @@ export const testFixture = {
     email: 'u3@cascade8.com',
     uid: 'uid-user3',
     orgId: 'O002'
+  },
+  'users/uid-user4': {
+    email: 'u4@cascade8.com',
+    uid: 'uid-user4',
+    orgId: 'O0X4'
+  },
+  'users/uid-user5': {
+    email: 'u5@cascade8.com',
+    uid: 'uid-user5',
+    orgId: 'O005'
   },
 
   //Blockframes Admin

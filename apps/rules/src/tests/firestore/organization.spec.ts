@@ -19,7 +19,7 @@ describe('Organization Rules Tests', () => {
     });
 
     test('doc status: pending, should be able to create document', async () => {
-      const cartDocRef = db.doc('orgs/O006');
+      const cartDocRef = db.doc('orgs/O007');
       await assertSucceeds(cartDocRef.set({status: 'pending'}));
     });
 
@@ -36,7 +36,7 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user5' });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -52,9 +52,9 @@ describe('Organization Rules Tests', () => {
     });
 
     test('id == orgId & status: pending, should be able to create document', async () => {
-      //Note: O006 is created with non-member, so we need a different Org here.
-      const orgDocRef = db.doc('orgs/O007');
-      await assertSucceeds(orgDocRef.set({id: 'O007', status: 'pending'}));
+      //Note: O007 is created with non-member, so we need a different Org here.
+      const orgDocRef = db.doc('orgs/O008');
+      await assertSucceeds(orgDocRef.set({id: 'O008', status: 'pending'}));
     });
 
     test('should not be able to delete document', async () => {
@@ -89,7 +89,7 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2' });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin4' });
     });
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
@@ -105,9 +105,9 @@ describe('Organization Rules Tests', () => {
     });
 
     describe('Update Org', () => {
-      const existingOrg = 'O005';
+      const existingOrg = 'O004';
       const fields: any = [
-        ['id', 'O004'],
+        ['id', 'O005'],
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],
         ['appAccess', { festival: true }],
@@ -120,15 +120,26 @@ describe('Organization Rules Tests', () => {
         await assertFails(orgRef.update(details));
       });
 
-      test('updating appAccess with pending status, should be able to update document', async () => {
-        const orgRef = db.doc('orgs/O004');
-        await assertSucceeds(orgRef.update({appAccess: { festival: true }}));
-      });
-
       test('updating unrestricted field, should be able to update document', async () => {
         const orgRef = db.doc(`orgs/${existingOrg}`);
         await assertSucceeds(orgRef.update({note : 'document updated'}));
       });
+    });
+  });
+
+  describe('With User as Org Admin', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin6' });
+    });
+
+    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+
+    const existingOrg = 'O006';
+
+    test('updating appAccess for org with pending status, should be able to update document', async () => {
+      const orgPath = `orgs/${existingOrg}`;
+      const orgRef = db.doc(orgPath);
+      await assertSucceeds(orgRef.update({appAccess: { festival: true }}));
     });
   });
 });
