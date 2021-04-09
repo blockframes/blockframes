@@ -1,8 +1,7 @@
-import { User } from '@blockframes/user/types';
 import * as util from './util'
 import { initFunctionsTestMock, getTestingProjectId, populate } from '@blockframes/testing/firebase/functions';
 import { loadAdminServices } from '@blockframes/firebase-utils';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { apps, clearFirestoreData } from '@firebase/rules-unit-testing';
 
 let db: FirebaseFirestore.Firestore;
 describe('Test util.ts generator function getCollectionInBatches', () => {
@@ -12,6 +11,8 @@ describe('Test util.ts generator function getCollectionInBatches', () => {
     db = adminServices.db;
     await clearFirestoreData({ projectId: getTestingProjectId() });
   });
+
+  afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
   it('should return batches of the correct size', async () => {
 
