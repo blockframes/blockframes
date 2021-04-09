@@ -149,7 +149,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       map(orgs => orgs.filter(org => org.appAccess[this.app]))
     );
   }
-  
+
   //////////////////
   /// WISHLIST STUFF
   //////////////////
@@ -175,6 +175,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       });
     }
 
-    this.update({ ...orgState, wishlist });
+    this.update(orgState.id, { wishlist });
   }
 }
