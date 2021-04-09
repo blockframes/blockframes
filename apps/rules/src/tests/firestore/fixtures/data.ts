@@ -17,9 +17,6 @@ export const testFixture = {
   },
 
   'permissions/O003': {
-    roles: {
-      'uid-user2': 'member',
-    },
     id: 'O003',
   },
 
@@ -28,6 +25,13 @@ export const testFixture = {
       'uid-user2': 'admin',
     },
     id: 'O004',
+  },
+
+  'permissions/O005': {
+    roles: {
+      'uid-user2': 'member',
+    },
+    id: 'O005',
   },
 
   'permissions/O001/documentPermissions/D001': {
@@ -80,6 +84,10 @@ export const testFixture = {
   'orgs/O004': {
     id: 'O004',
     status: 'pending'
+  },
+  'orgs/O005': {
+    id: 'O005',
+    userIds: ['uid-c8'],
   },
 
   'orgs/O001/carts/C001': {

@@ -19,7 +19,7 @@ describe('Organization Rules Tests', () => {
     });
 
     test('doc status: pending, should be able to create document', async () => {
-      const cartDocRef = db.doc('orgs/O005');
+      const cartDocRef = db.doc('orgs/O006');
       await assertSucceeds(cartDocRef.set({status: 'pending'}));
     });
 
@@ -52,9 +52,9 @@ describe('Organization Rules Tests', () => {
     });
 
     test('id == orgId & status: pending, should be able to create document', async () => {
-      //Note: O005 is created with non-member, so we need a different Org here.
-      const orgDocRef = db.doc('orgs/O006');
-      await assertSucceeds(orgDocRef.set({id: 'O006', status: 'pending'}));
+      //Note: O006 is created with non-member, so we need a different Org here.
+      const orgDocRef = db.doc('orgs/O007');
+      await assertSucceeds(orgDocRef.set({id: 'O007', status: 'pending'}));
     });
 
     test('should not be able to delete document', async () => {
@@ -63,7 +63,7 @@ describe('Organization Rules Tests', () => {
     });
 
     describe('Update Org', () => {
-      const existingOrg = 'O003';
+      const existingOrg = 'O005';
       const fields: any = [
         ['id', 'O004'],
         ['userIds', ['uid-sAdmin']],
@@ -105,7 +105,7 @@ describe('Organization Rules Tests', () => {
     });
 
     describe('Update Org', () => {
-      const existingOrg = 'O003';
+      const existingOrg = 'O005';
       const fields: any = [
         ['id', 'O004'],
         ['_meta', { createdBy: '' }],
