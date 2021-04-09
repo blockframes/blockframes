@@ -1,5 +1,4 @@
 import {
-  cartStatus,
   languages,
   certifications,
   colors,
@@ -7,7 +6,6 @@ import {
   contractStatus,
   contractType,
   crewRoles,
-  distributionRightStatus,
   genres,
   hostedVideoTypes,
   legalRoles,
@@ -41,8 +39,6 @@ import {
 
 export type NumberRange = keyof typeof budgetRange;
 
-export type CartStatus = keyof typeof cartStatus;
-
 export type Certification = keyof typeof certifications;
 export type CertificationValue = typeof certifications[Certification];
 
@@ -56,8 +52,6 @@ export type ContractType = keyof typeof contractType;
 
 export type CrewRole = keyof typeof crewRoles;
 export type CrewRoleValue = typeof crewRoles[CrewRole];
-
-export type DistributionRightStatus = keyof typeof distributionRightStatus;
 
 export type Genre = keyof typeof genres;
 export type GenresValue = keyof typeof genres[Genre] & string;
