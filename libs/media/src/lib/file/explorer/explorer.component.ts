@@ -60,6 +60,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     return this.org$.getValue();
   }
 
+
   @ViewChild('image') image?: TemplateRef<any>;
   @ViewChild('file') file?: TemplateRef<any>;
   @ViewChild('fileList') fileList?: TemplateRef<any>;
@@ -81,9 +82,14 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       .where('orgIds', 'array-contains', this.org.id)
       .where(`storeConfig.appAccess.${app}`, '==', true);
 
+
+    const titles$ = this.movieService.valueChanges(query).pipe(
+      map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
+    );
+
     this.root$ = combineLatest([
       this.org$.asObservable(),
-      this.movieService.valueChanges(query)
+      titles$
     ]).pipe(
       map(([org, titles]) => getDirectories(org, titles)),
     );
@@ -98,6 +104,8 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       fileList: this.fileList
     }
   }
+
+  keepOrder(...args) { return 0; }
 
   setPath(path: string) {
     this.path$.next(path);

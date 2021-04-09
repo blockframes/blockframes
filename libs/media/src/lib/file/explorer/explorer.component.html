@@ -68,7 +68,7 @@
 <!-- Directory -->
 <ng-template #directory let-dir>
   <mat-action-list>
-    <ng-container *ngFor="let child of dir.children | keyvalue">
+    <ng-container *ngFor="let child of dir.children | keyvalue: keepOrder">
       <button mat-list-item (click)="next(child.key)">
         <ng-container *ngIf="child.value as node">
           <ng-container *ngIf="node.type === 'directory'">
