@@ -24,8 +24,18 @@ export function fakeEmail(name: string) {
   return `dev+${suffix}-${random}@blockframes.io`;
 }
 
+function randomNumber() {
+  return Math.floor(Math.random() * 255);
+}
+
 function fakeIp() {
-  return (Math.floor(Math.random() * 255) + 1) + "." + (Math.floor(Math.random() * 255)) + "." + (Math.floor(Math.random() * 255)) + "." + (Math.floor(Math.random() * 255));
+  return (randomNumber() + 1) + "." + randomNumber() + "." + randomNumber() + "." + randomNumber();
+}
+
+function fakeFiscalNumber() {
+  const fakeValues = ['FR', 'EN', 'PL', 'GB', 'AL'];
+  const start = fakeValues[Math.floor(Math.random() * fakeValues.length)];
+  return start + " " + randomNumber() + "-" + randomNumber() + "-" + randomNumber() + "-" + randomNumber();
 }
 
 function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T {
@@ -36,7 +46,7 @@ function processUser<T extends User | PublicUser>(u: T): T {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = fakeEmail(firstName);
-  const privacyPolicy = { date: new Date(), ip: fakeIp() }
+  const privacyPolicy = { date: new Date(), ip: fakeIp() };
   return { ...u, firstName, lastName, email, privacyPolicy };
 }
 
@@ -44,7 +54,11 @@ function processOrg<T extends Organization | PublicOrganization>(o: T): T {
   const companyName = faker.company.companyName();
   const denomination = { full: companyName, public: companyName };
   const email = fakeEmail(companyName);
-  return { ...o, denomination, email };
+  const org = { ...o, denomination, email } as any;
+  if (!!org.fiscalNumber) {
+    org.fiscalNumber = fakeFiscalNumber();
+  };
+  return org;
 }
 
 function processInvitation(i: Invitation): Invitation {
@@ -90,7 +104,7 @@ function updateOrg(org: Organization | PublicOrganization) {
     const newOrg = orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
     return createPublicOrganization(newOrg);
   }
-  if (hasKeys<Organization>(org, 'email')) {
+  if (hasKeys<Organization>(org, 'email') || hasKeys<Organization>(org, 'fiscalNumber')) {
     return orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
   }
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
