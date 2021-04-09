@@ -79,11 +79,7 @@ export class MovieComponent implements OnInit {
 
     this.movie = {
       ...this.movie,
-      // storeConfig: {
-      //   ...this.movie.storeConfig,
-      //   status: this.movieForm.get('storeStatus').value,
-      //   storeType: this.movieForm.get('storeType').value
-      // },
+      app: this.updateAppAccess(),
       productionStatus: this.movieForm.get('productionStatus').value,
       internalRef: this.movieForm.get('internalRef').value
     }
@@ -99,29 +95,26 @@ export class MovieComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
-  public async updateAppAccess() {
+  public updateAppAccess() {
     if (this.movieAppConfigForm.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
     }
 
     for (const app of this.apps) {
-      if(this.movie.app[app].status !== "accepted" && this.movieAppConfigForm[app].get('status').value === "accepted") {
-        this.movie.app[app].status = this.movieAppConfigForm[app].get('status').value;
+      if(this.movie.app[app].status !== "accepted" && this.movieAppConfigForm.controls[app].get('status').value === "accepted") {
+        this.movie.app[app].status = this.movieAppConfigForm.controls[app].get('status').value;
         this.movie.app[app].acceptedAt = new Date();
-        this.movieAppConfigForm[app].get('refusedAt').reset();
+        this.movie.app[app].refusedAt = null;
       }
-      if(this.movie.app[app].status !== "refused" && this.movieAppConfigForm[app].get('status').value === "refused") {
-        this.movie.app[app].status = this.movieAppConfigForm[app].get('status').value;
+      if(this.movie.app[app].status !== "refused" && this.movieAppConfigForm.controls[app].get('status').value === "refused") {
+        this.movie.app[app].status = this.movieAppConfigForm.controls[app].get('status').value;
         this.movie.app[app].refusedAt = new Date();
-        this.movieAppConfigForm[app].get('acceptedAt').reset();
-
+        this.movie.app[app].acceptedAt = null;
       }
-      this.movie.app[app].access = this.movieAppConfigForm[app].get('access').value;
+      this.movie.app[app].access = this.movieAppConfigForm.controls[app].get('access').value;
     }
 
-    await this.movieService.update(this.movieId, this.movie);
-
-    this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+    return this.movie.app;
   }
 
   public filterPredicate(data: any, filter: string) {
