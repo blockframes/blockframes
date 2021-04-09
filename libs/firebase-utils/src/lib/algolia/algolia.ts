@@ -135,10 +135,9 @@ export function storeSearchableMovie(
           [],
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
-      storeConfig: movie.storeConfig?.status || '',
+      storeConfig: '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
-      storeType: movie.storeConfig?.storeType || '',
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,
@@ -154,14 +153,19 @@ export function storeSearchableMovie(
     };
 
     /* App specific properties */
-    if (movie.storeConfig.appAccess.financiers) {
+    if (movie.app.financiers.access) {
       movieRecord['socialGoals'] = movie?.audience?.goals;
       movieRecord['minPledge'] = movie['minPledge'];
     }
 
-    const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+    const movieAppAccess = Object.keys(movie.app).filter(app => movie.app[app].access);
 
-    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord));
+    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(
+      {
+        ...movieRecord,
+        storeConfig: movie.app[appName]?.status || '',
+      }
+    ));
 
     return Promise.all(promises)
 

@@ -121,7 +121,6 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   originalLanguages: Language[],
   runningTime: MovieRunningTime,
   release: MovieRelease
-  storeType: StoreType | string,
   contentType: ContentType
 }
 

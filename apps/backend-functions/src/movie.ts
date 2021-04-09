@@ -1,5 +1,5 @@
 import { db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, getDocument, getOrganizationsOfMovie } from './data/internals';
 import { removeAllSubcollections } from './utils';
@@ -25,7 +25,7 @@ export async function onMovieCreate(
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
-  if (movie.storeConfig.status === 'accepted') {
+  if (Object.keys(movie.app).some(app => movie.app[app].status === 'accepted')) {
     await storeSearchableOrg(organization);
   }
 
@@ -81,7 +81,7 @@ export async function onMovieDelete(
   });
 
   // Update algolia's index
-  const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+  const movieAppAccess = Object.keys(movie.app).filter(app => movie.app[app].access);
   const promises = movieAppAccess.map(appName => deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>);
 
   await Promise.all(promises)
@@ -99,9 +99,9 @@ export async function onMovieUpdate(
 
   await cleanMovieMedias(before, after);
 
-  const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);
-  const isMovieAccepted = isAccepted(before.storeConfig, after.storeConfig);
-  const appAccess = apps.filter(a => !!after.storeConfig.appAccess[a]);
+  const isMovieSubmitted = isSubmitted(before.app, after.app);
+  const isMovieAccepted = isAccepted(before.app, after.app);
+  const appAccess = apps.filter(a => !!after.app[a].access);
 
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content
     const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
@@ -135,7 +135,8 @@ export async function onMovieUpdate(
   }
 
   // If movie was accepted but is not anymore, clean wishlists
-  if (before.storeConfig.status === 'accepted' && after.storeConfig.status !== before.storeConfig.status) {
+  if (Object.keys(before.app).map(a => before.app[a].status === 'accepted')
+    && Object.keys(after.app).map(a => after.app[a].status !== before.app[a].status)) {
     await removeMovieFromWishlists(after);
   }
 
@@ -146,8 +147,8 @@ export async function onMovieUpdate(
   if (creatorOrg.denomination?.full) {
     await storeSearchableOrg(creatorOrg);
     await storeSearchableMovie(after, orgName(creatorOrg));
-    for (const app in after.storeConfig.appAccess) {
-      if (after.storeConfig.appAccess[app] === false && before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
+    for (const app in after.app) {
+      if (after.app[app].access === false && before.app[app].access !== after.app[app].access) {
         await deleteObject(algolia.indexNameMovies[app], before.id);
       }
     }
@@ -155,27 +156,30 @@ export async function onMovieUpdate(
 }
 
 /** Checks if the store status is going from draft to submitted. */
-function isSubmitted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
-  return (
-    (beforeStore && beforeStore.status === 'draft') &&
-    (afterStore && afterStore.status === 'submitted')
-  )
+function isSubmitted(beforeApp, afterApp) {
+  let isSubmitted = false;
+  for (const app of apps) {
+    isSubmitted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
+    if (!!isSubmitted) return isSubmitted;
+  }
+  return isSubmitted;
 }
 
 /** Checks if the store status is going from submitted to accepted. */
-function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
-
-  // in catalog `draft` -> `submitted` -> `accepted`
-  const acceptedInCatalog =
-    (beforeStore && beforeStore.status === 'submitted') &&
-    (afterStore && afterStore.status === 'accepted');
-
-  // in festival `draft` -> `accepted`
-  const acceptedInFestival =
-    (beforeStore && beforeStore.status === 'draft') &&
-    (afterStore && afterStore.status === 'accepted');
-
-  return acceptedInCatalog || acceptedInFestival;
+function isAccepted(beforeApp, afterApp) {
+  let isAccepted = false;
+  for (const app of apps) {
+    if (app === 'festival') {
+      // in festival `draft` -> `accepted`
+      isAccepted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');
+      return isAccepted;
+    } else {
+      // in catalog/financiers `draft` -> `submitted` -> `accepted`
+      isAccepted = (beforeApp && beforeApp[app].status === 'submitted') && (afterApp && afterApp[app].status === 'accepted');
+      return isAccepted;
+    }
+  }
+  return isAccepted;
 }
 
 async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {
