@@ -69,31 +69,6 @@ export const licenseStatus = {
   paid: 'paid'
 } as const
 
-export const distributionRightStatus = {
-  /**
-   * @dev first status of a right
-   * Starting from this status, the right is visible by creator only
-   */
-  draft: 'Draft',
-
-  /**
-   * @dev first status of a right
-   * Starting from this status, the right is visible by creator only
-   */
-  cart: 'In cart',
-
-  /**
-   * @dev the right have been sold
-   */
-  sold: 'Sold',
-
-  /**
-   * @dev in this status, a contract should exists regarding this distribution right.
-   * When Contract status changes, this could change too
-   */
-  undernegotiation: 'Under negotiation',
-} as const
-
 export const certifications = {
   artEssai: 'Art & Essai',
   eof: 'EOF',
@@ -456,13 +431,6 @@ export const unitBox = {
   usd: 'USD',
   eur: 'EUR',
   admissions: 'Admissions',
-} as const
-
-export const cartStatus = {
-  pending: 'Pending',
-  submitted: 'Submitted',
-  accepted: 'Accepted',
-  paid: 'Paid'
 } as const
 
 export const orgActivity = {
@@ -1833,7 +1801,6 @@ export const staticModel = {
   legalRoles,
   subLicensorRoles,
   licenseStatus,
-  distributionRightStatus,
   certifications,
   colors,
   contentType,
@@ -1860,7 +1827,6 @@ export const staticModel = {
   storeStatus,
   storeType,
   unitBox,
-  cartStatus,
   organizationStatus,
   festival,
   months,
