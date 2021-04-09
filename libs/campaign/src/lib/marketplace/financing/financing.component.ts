@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { formatCurrency, formatPercent } from '@angular/common';
-import { Budget, Campaign, CampaignService, Funding } from '../../+state';
+import { Budget, Campaign, CampaignQuery, CampaignService, Funding } from '../../+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { isEmpty, switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 import { ThemeService } from '@blockframes/ui/theme';
 
@@ -11,10 +11,10 @@ import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { fileURLToPath } from 'url';
-import { stringToKeyValue } from '@angular/flex-layout/extended/typings/style/style-transforms';
-import { GetUrlPipe } from '@blockframes/media/file/pipes/download.pipe';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { Consents } from '@blockframes/consents/+state/consents.firestore';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -37,22 +37,24 @@ const budgetData: { serie: keyof Budget, label: string }[] = [{
   selector: 'campaign-marketplace-financing',
   templateUrl: './financing.component.html',
   styleUrls: ['./financing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceFinancingComponent implements OnInit {
   public totalFundings: number;
-  public acceptConsent = false;
-  // file = GetUrlPipe;
+  campaign: Campaign;
+  public storagePath: StorageFile;
   campaign$: Observable<Campaign>;
   budgetData = budgetData;
   formatter = {
     currency: (campaign: Campaign) => ({
-      formatter: (value: number) => typeof value === 'number' ? formatCurrency(value, this.locale, campaign.currency) : ''
+      formatter: (value: number) =>
+        typeof value === 'number' ? formatCurrency(value, this.locale, campaign.currency) : '',
     }),
     percent: {
-      formatter: (value: number) => typeof value === 'number' ? formatPercent(value / 100, this.locale) : ''
-    }
-  }
+      formatter: (value: number) =>
+        typeof value === 'number' ? formatPercent(value / 100, this.locale) : '',
+    },
+  };
 
   constructor(
     @Inject(LOCALE_ID) private locale,
@@ -62,68 +64,46 @@ export class MarketplaceFinancingComponent implements OnInit {
 
     private queryOrg: OrganizationQuery,
     private consentsService: ConsentsService,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
+    private queryCampaign: CampaignQuery
+  ) {}
 
   ngOnInit(): void {
     this.campaign$ = this.route.selectParams<string>('movieId').pipe(
-      switchMap(id => this.service.valueChanges(id)),
-      tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
+      switchMap((id) => this.service.valueChanges(id)),
+      tap((campaign) => (this.totalFundings = getTotalFundings(campaign.fundings)))
     );
   }
 
-  consentBeforeDownload(file: string){
-    // let file: Partial<Campaign> ;
-    // let test: GetUrlPipe;
+  consentBeforeDownload(file: string, campaign: Partial<Campaign>) {
     const orgId = this.queryOrg.getActiveId();
-    const a = document.createElement('a');
-    // console.log(file);
-    // console.log(orgId);
-    const content = a.innerHTML;
-    // a.innerHTML = ;
-    const linkText = document.createTextNode("Confidentiality Policy");
-    // a.appendChild(linkText);
-    // a.title = "Confidentiality Policy";
-    // a.href = "https://www.mediafinanciers.com/c/o/marketplace/privacy";
-
-    // document.body.appendChild(a);
-    a.innerHTML += `<a href="https://www.mediafinanciers.com/c/o/marketplace/privacy"> Confidentiality Policy </a>`;
-
-
-    // let urlPipe: GetUrlPipe;
-    // urlPipe.transform(file);
-
-    console.log(file);
+    const campaignId = this.queryCampaign.getActiveId();
     // if(!!File){
-      this.dialog.open(CrmFormDialogComponent, {
-        data: {
-          title: 'Confidentiality Reminder',
-          subTitle: 'You are about to download a confidential document. Please make sure that you are aware of our '+a+' before doing so.',
-          text: 'By submitting your project, you assume the responsibility of disclosing all of the information previously filled out to potential future investors. Before submitting your project, please confirm by writing “I AGREE” in the field below.',
-          confirmationWord: 'i agree',
-          confirmButtonText: 'Confirm and download',
-          onConfirm: async () => {
-            // console.log(file);
-            // file.files.budget.toString();
-              // if(file.files.budget){
-                await this.consentsService.createConsent('access', orgId, file);
-                // window.location.href = file;
-                window.open(file, '_blank');
-              // }
-              // if(file.files.financingPlan){
-              //   await this.consentsService.createConsent('access', orgId, file.files.financingPlan);
-              // }
-              // if(file.files.waterfall){
-              //   await this.consentsService.createConsent('access', orgId, file.files.waterfall);
-              // }
-              // window.location.href = file;
-              // console.log(file.files.budget);
+      // if (orgId )
+      console.log(orgId);
+    this.dialog.open(CrmFormDialogComponent, {
+      data: {
+        title: 'Confidentiality Reminder',
+        text:
+          'To confirm that you agree with these terms, please write “I AGREE” in the field below.',
+        confirmationWord: 'i agree',
+        confirmButtonText: 'confirm and download',
+        onConfirm: async () => {
 
+          if (campaign.files.budget.storagePath || campaign.files.financingPlan.storagePath || campaign.files.waterfall.storagePath){
 
+            await this.consentsService.createConsent('access', orgId, file);
+            // window.location.href = file;
+            window.open(file, '_blank');
           }
+          else if (!campaign.files.budget.storagePath || !campaign.files.financingPlan.storagePath || !campaign.files.waterfall.storagePath) {
+            return this.snackbar.open('The file is not found. Please contact the seller.', 'close', { duration: 3000 });
+          }
+            // return this.snackbar.open('Sorry, the file is not found. Please contact the seller.', 'close', { duration: 3000 });
         }
-      })
-    // }
+      }
+    });
   }
 }
 

@@ -1,6 +1,25 @@
 <section fxLayout="column">
-  <p>{{ data.title }}</p>
-  <span *ngIf="data.subTitle">{{ data.subTitle }}</span>
+  <!-- Some modales don't contain a bold title, just a long sentence. -->
+  <ng-container *ngIf="data.title.length < 50 else noBoldTitle">
+    <strong>{{ data.title }}</strong>
+    <br>
+  </ng-container>
+  <ng-template #noBoldTitle>{{ data.title }}</ng-template>
+  <!-- To display a link to click on, underline and put a bold word, need to move the subTitle in the DOM -->
+  <ng-container *ngIf="data.title == 'Confidentiality Reminder'">
+    <p *ngIf="!data.subTitle else hasAsubTitle">You are about to download a confidential document.<br><br>
+      Please make sure that you are aware of our
+      <u>
+        <strong>
+          <a target="_blank" href="https://www.mediafinanciers.com/c/o/marketplace/privacy">Confidentiality Policy</a>
+        </strong>
+      </u>
+      before doing so.
+    </p>
+    <br>
+    <ng-template #hasAsubTitle>{{ data.subTitle }}<br></ng-template>
+  </ng-container>
+
   <span *ngIf="data.warning" class="mat-body-2 text-warn">{{ data.warning }}</span>
   <span *ngIf="data.text">{{ data.text }}</span>
 
@@ -18,6 +37,6 @@
 
   <article fxLayout="row" fxLayoutAlign="space-evenly">
     <button mat-stroked-button (click)="close()">Cancel</button>
-    <button mat-flat-button color="warn" (click)="confirm()">{{ data.confirmButtonText | titlecase }}</button>
+    <button mat-flat-button color="warn" (click)="confirm()">{{ titleCaseWord(data.confirmButtonText) }}</button>
   </article>
 </section>
