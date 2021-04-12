@@ -1,4 +1,4 @@
-import { Avails } from '../utils/type';
+import { Avails } from '@blockframes/e2e/utils/type';
 
 export const avails: Avails = {
   territories: ['world'],
@@ -12,6 +12,6 @@ export const avails: Avails = {
     month: 'DEC',
     day: 31
   },
-  medias: ['S-VOD'],
+  medias: ['A-VOD'],
   exclusive: true
 };

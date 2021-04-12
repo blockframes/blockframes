@@ -1,63 +1,66 @@
+import { SEC } from "@blockframes/e2e/utils/env";
 
 export default class SelectionPage {
   constructor() {
-    cy.get('catalog-selection');
+    cy.get('catalog-selection', {timeout: 60 * SEC});
   }
 
   public selectCurrency(currency: string = 'Euro') {
-    cy.get('mat-select[test-id=selection-currency]').click();
-    cy.get('mat-option').contains(currency).click();
+    cy.get('mat-select[test-id=selection-currency]', {timeout: 30 * SEC}).click();
+    cy.get('mat-option', {timeout: 30 * SEC}).contains(currency).click();
   }
 
   /** Check how many sections we should get on the selection page (one by sales agent and by film) */
   public checkNumberOfSection(number: number) {
-    cy.get('section[test-id="avails-section"]').should('have.length', number);
+    cy.get('section[test-id="avails-section"]', {timeout: 30 * SEC}).should('have.length', number);
     cy.log(`Find ${number} sections`);
   }
 
   public checkTitleContract(title: string) {
-    cy.get('section[test-id="avails-section"]').find(`h2`).contains(title);
+    cy.get('section[test-id="avails-section"]', {timeout: 30 * SEC}).find(`h2`).contains(title);
     cy.log(`Find section with ${title} movie`);
   }
 
   public fillPrice(number: number, index: number) {
-    cy.get(`section[test-id="avails-section"]`)
+    cy.get(`section[test-id="avails-section"]`, {timeout: 30 * SEC})
       .find(`input[test-id="price-${index}"]`).type(`${number}`).blur();
-    cy.get(`input[test-id="price-${index}"]`).should('contain.text', '')
+    cy.get(`input[test-id="price-${index}"]`, {timeout: 30 * SEC}).should('contain.text', '')
   }
 
   public checkTotalPrice(amount: string) {
-    cy.get('footer[test-id="footer-total-price"]').scrollIntoView()
-      .get('p[test-id="total-price"]').invoke('text').should('contain', `${amount}`);
+    cy.get('footer[test-id="footer-total-price"]', {timeout: 30 * SEC}).scrollIntoView()
+      .get('p[test-id="total-price"]', {timeout: 30 * SEC}).invoke('text').should('contain', `${amount}`);
   }
 
   public deleteContract() {
-    cy.get('section[test-id="avails-section"]').first().find('button[test-id="delete-contract"]').click();
+    cy.get('section[test-id="avails-section"]', {timeout: 30 * SEC}).first().find('button[test-id="delete-contract"]').click();
   }
 
   public createNewOffer(specificText: string, deliveryText: string) {
-    cy.get('footer[test-id="footer-total-price"] button[test-id="create-offer"]').click();
-    cy.get('catalog-specific-terms').should('be.visible');
+    cy.get('footer[test-id="footer-total-price"] button[test-id="create-offer"]', {timeout: 30 * SEC}).click();
+    cy.get('catalog-specific-terms', {timeout: 30 * SEC}).should('be.visible');
 
     // Test if the specific terms textarea has already a value, if it's the first offer for the organization, it has to be empty
     // But if the org has already did some offer, it will be filled with the last values
-    cy.get('catalog-specific-terms textarea[test-id="specific-terms"]').invoke('val').then((value) => {
+    cy.get('catalog-specific-terms textarea[test-id="specific-terms"]', {timeout: 30 * SEC}).invoke('val').then((value) => {
       if (!value) {
-        cy.get('textarea[test-id="specific-terms"]').type(specificText);
+        cy.get('textarea[test-id="specific-terms"]', {timeout: 30 * SEC}).type(specificText);
+        cy.log('Fill correctly specfic terms textarea');
       } else {
         cy.log('There is already existing text in the specific-terms textarea');
       }
     })
 
     // Same as specific terms textarea
-    cy.get('catalog-specific-terms textarea[test-id="delivery-list"]').invoke('val').then((value) => {
+    cy.get('catalog-specific-terms textarea[test-id="delivery-list"]', {timeout: 30 * SEC}).invoke('val').then((value) => {
       if (!value) {
-        cy.get('textarea[test-id="delivery-list"]').type(deliveryText);
+        cy.get('textarea[test-id="delivery-list"]', {timeout: 30 * SEC}).type(deliveryText);
+        cy.log('Fill correctly delivery list textarea');
       } else {
         cy.log('There is already existing text in the delivery-list textarea');
       }
     })
 
-    cy.get('button[test-id="send-offer"]').click();
+    cy.get('button[test-id="send-offer"]', {timeout: 30 * SEC}).click();
   }
 }

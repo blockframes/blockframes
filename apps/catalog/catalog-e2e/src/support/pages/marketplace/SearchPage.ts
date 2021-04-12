@@ -22,7 +22,7 @@ export default class SearchPage extends NavbarPage {
   }
 
   public checkMovieCardDisappears(title: string) {
-    cy.get(`movie-card article h6[value="${title}"]`).should('not.exist');
+    cy.get(`movie-card article h6[value="${title}"]`, {timeout: 30 * SEC}).should('not.exist');
   }
 
   /////////////
@@ -36,54 +36,59 @@ export default class SearchPage extends NavbarPage {
 
   /** Fill all fields of the avails filter. Mandatory to be able to add movie to the bucket (selection page) */
   public fillAvailFilter(avail: Avails) {
-    cy.get('catalog-marketplace-title-list button').contains('Avails').click();
+    cy.get('catalog-marketplace-title-list button', {timeout: 3 * SEC}).contains('Avails').click();
 
     // TERRITORIES
-    cy.get('avails-filter static-group[test-id="territories"]').click();
+    cy.get('avails-filter static-group[test-id="territories"]', {timeout: 3 * SEC}).click();
     for(const territory of avail.territories) {
       if(territory === 'world') {
-        cy.get('mat-checkbox[test-id="checked-all"]').click();
+        cy.get('mat-checkbox[test-id="checked-all"]', {timeout: 3 * SEC}).click();
       } else {
-        cy.get('mat-option').contains(territory).click({force: true});
+        cy.get('mat-option', {timeout: 3 * SEC}).contains(territory).click({force: true});
       }
     }
+    cy.log('Territories filled');
     // Allow the closure of the static-group component
-    cy.get('input[test-id="search-input"]').type('{esc}');
+    cy.get('input[test-id="search-input"]', {timeout: 3 * SEC}).type('{esc}');
 
     cy.wait(1 * SEC);
 
     // DATES
-    cy.get('avails-filter mat-datepicker-toggle[test-id="dateFrom"]').click();
-    cy.get('button.mat-calendar-period-button').click();
-    cy.get('td.mat-calendar-body-cell').contains(avail.from.year).click();
-    cy.get('td.mat-calendar-body-cell').contains(avail.from.month.toUpperCase()).click();
-    cy.get('td.mat-calendar-body-cell').contains(avail.from.day).click();
+    cy.get('avails-filter mat-datepicker-toggle[test-id="dateFrom"]', {timeout: 3 * SEC}).click();
+    cy.get('button.mat-calendar-period-button', {timeout: 3 * SEC}).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.year).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.month.toUpperCase()).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.day).click();
     cy.wait(1 * SEC);
 
-    cy.get('avails-filter mat-datepicker-toggle[test-id="dateTo"]').click();
-    cy.get('button.mat-calendar-period-button').click();
-    cy.get('td.mat-calendar-body-cell').contains(avail.to.year).click();
-    cy.get('td.mat-calendar-body-cell').contains(avail.to.month.toUpperCase()).click();
-    cy.get('td.mat-calendar-body-cell').contains(avail.to.day).click();
+    cy.get('avails-filter mat-datepicker-toggle[test-id="dateTo"]', {timeout: 3 * SEC}).click();
+    cy.get('button.mat-calendar-period-button', {timeout: 3 * SEC}).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.to.year).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.to.month.toUpperCase()).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.to.day).click();
     cy.wait(1 * SEC);
+
+    cy.log('Dates filled');
 
     // MEDIAS
-    cy.get('avails-filter static-group[test-id="medias"]').click();
+    cy.get('avails-filter static-group[test-id="medias"]', {timeout: 3 * SEC}).click();
     for(const media of avail.medias) {
-      cy.get('mat-option').contains(media).click({force: true});
+      cy.get('mat-option', {timeout: 3 * SEC}).contains(media).click({force: true});
       cy.wait(1 * SEC);
     }
+    cy.log('Medias filled');
     // Allow the closure of the static-group component
-    cy.get('input[test-id="search-input"]').type('{esc}');
+    cy.get('input[test-id="search-input"]', {timeout: 3 * SEC}).type('{esc}');
 
     // EXCLUSIVE
     if(!avail.exclusive) {
-      cy.get('mat-select[formControlName="exclusive"]').click();
-      cy.get(`mat-option`).contains('Non exclusive').click();
+      cy.get('mat-select[formControlName="exclusive"]', {timeout: 3 * SEC}).click();
+      cy.get(`mat-option`, {timeout: 3 * SEC}).contains('Non exclusive').click();
     }
+    cy.log('Exclusive changed');
     cy.wait(1 * SEC);
 
-    cy.get('button[test-id="save-filter"]').click();
+    cy.get('button[test-id="save-filter"]', {timeout: 3 * SEC}).click();
   }
 
   ///////////////////////////

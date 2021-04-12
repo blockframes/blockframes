@@ -21,7 +21,9 @@ export default class HomePage extends NavbarPage {
   }
 
   public openSidenavMenuAndNavigate(button: string = '') {
-    cy.get('button[test-id="menu"]').click();
-    if(button) cy.get(`a[test-id="${button}"]`).click();
+    cy.get('button[test-id="menu"]', {timeout: 30 * SEC}).click();
+    if(button) {
+      cy.get(`a[test-id="${button}"]`, {timeout: 3 * SEC}).click()
+    };
   }
 }
