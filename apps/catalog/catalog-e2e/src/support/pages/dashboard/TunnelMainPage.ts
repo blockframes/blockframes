@@ -1,4 +1,4 @@
-import TunnelStorylinePage from "./TunnelStorylinePage";
+﻿import TunnelStorylinePage from "./TunnelStorylinePage";
 
 export default class TunnelMainPage {
   constructor() {
@@ -157,6 +157,30 @@ export default class TunnelMainPage {
 
   public assertLastDistributorCountryExists(country: string) {
     cy.get(`catalog-movie-tunnel-main movie-form-stakeholders [test-id=auto-complete] mat-chip`).last().contains(country);
+  }
+
+  // Original Language
+
+  public fillFirstOriginalLanguage(partialLanguage: string, language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').first().type(partialLanguage);
+    cy.get('mat-option').contains(language).click();
+  }
+
+  public assertFirstOriginalLanguageExists(language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').first().should('have.value', language);
+  }
+
+  public addOriginalLanguage() {
+    cy.get('catalog-movie-tunnel-main movie-form-languages button').click();
+  }
+
+  public fillLastOriginalLanguage(partialLanguage: string, language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').last().type(partialLanguage);
+    cy.get('mat-option').contains(language).click();
+  }
+
+  public assertLastOriginalLanguageExists(language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').last().should('have.value', language);
   }
 
   // Genre
