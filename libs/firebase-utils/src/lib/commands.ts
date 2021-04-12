@@ -69,10 +69,27 @@ export function awaitProcOutput(proc: ChildProcess, output: string) {
 export function runInBackground(cmd: string) {
   let proc: ChildProcess;
   const procPromise = new Promise<string>((res, rej) => {
-    proc = exec(cmd, (err, stdout, stderr) => {
-      if (err || stderr) rej(err || stderr);
+    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2 }, (err, stdout, stderr) => {
+      if (err) rej(err);
       res(stdout);
-    })
+    });
   })
   return { proc, procPromise }
+}
+
+export function runShellCommandExec(cmd: string) {
+  console.log('Running command:', cmd);
+  const { proc, procPromise } = runInBackground(cmd);
+  proc.stdout.pipe(process.stdout);
+  proc.stderr.pipe(process.stderr);
+  return procPromise;
+}
+
+export async function gsutilTransfer({ from, to, quiet, rsync = true, mirror }: { from: string; to: string; quiet?: boolean; rsync?: boolean; mirror?: boolean }) {
+  if (!rsync && mirror) {
+    const cmd = `gsutil -m ${quiet ? '-q ' : ''}rm -r "${to}"`;
+    await runShellCommandExec(cmd);
+  }
+  const cmd = `gsutil -m ${quiet ? '-q ' : ''}${rsync ? 'rsync' : 'cp'} ${rsync && mirror ? '-d ' : ''}-r "${from}" "${to}"`;
+  return runShellCommandExec(cmd);
 }

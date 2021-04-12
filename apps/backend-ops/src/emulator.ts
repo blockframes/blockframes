@@ -15,7 +15,8 @@ import {
   getFirestoreExportPath,
   getBackupBucket,
   CI_STORAGE_BACKUP,
-  latestAnonStorageDir
+  latestAnonStorageDir,
+  gsutilTransfer
 } from '@blockframes/firebase-utils';
 import { ChildProcess, execSync } from 'child_process';
 import { join } from 'path';
@@ -145,7 +146,7 @@ export async function anonDbProcess() {
  * `loadEmulator` afterwards to start the Firestore emulator with import from default path
  */
 export async function anonymizeLatestProdDb() {
-  await downloadProdDbBackup(defaultEmulatorBackupPath)
+  await downloadProdDbBackup(defaultEmulatorBackupPath);
   const proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
   try {
     await anonDbProcess();
@@ -154,8 +155,12 @@ export async function anonymizeLatestProdDb() {
   } finally {
     await shutdownEmulator(proc, defaultEmulatorBackupPath);
   }
+  console.log('Storing golden database data');
   await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
-  storeAnonStorageBackup(firebase().storageBucket);
+
+  console.log('Storing golden storage data');
+  const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
+  await gsutilTransfer({ from: `gs://${firebase().storageBucket}`, to: anonBucketBackupDirURL, mirror: true, quiet: true, });
 }
 
 /**
@@ -185,26 +190,4 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
   } finally {
     await shutdownEmulator(proc);
   }
-}
-
-function storeAnonStorageBackup(sourceBucketName: string) {
-  const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
-
-  let cmd: string;
-  let output: string;
-
-  try {
-    cmd = `gsutil -m -q rm -r "${anonBucketBackupDirURL}"`;
-    console.log('Running command:', cmd);
-    output = execSync(cmd).toString();
-    console.log(output);
-  } catch (e) {
-    console.warn(e.toString());
-  }
-
-  cmd = `gsutil -m -q cp -r "gs://${sourceBucketName}/*" "${anonBucketBackupDirURL}"`
-  console.log('Running command:', cmd);
-  output = execSync(cmd).toString();
-  console.log(output);
-
 }

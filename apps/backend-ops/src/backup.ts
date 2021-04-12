@@ -2,7 +2,7 @@ import { backupBucket, firebase } from '@env'
 import { execSync } from "child_process";
 import { enableMaintenanceInEmulator } from "./emulator";
 import camelcase from 'camelcase'
-import { clearDbCLI, defaultEmulatorBackupPath, getLatestDirName, getLatestFolderURL, importFirestoreEmulatorBackup, loadAdminServices, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
+import { clearDbCLI, defaultEmulatorBackupPath, getLatestDirName, getLatestFolderURL, gsutilTransfer, importFirestoreEmulatorBackup, loadAdminServices, runShellCommandExec, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
 import { deleteAllUsers } from "@blockframes/testing/firebase";
 import { ensureMaintenanceMode } from "./tools";
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from "./algolia";
@@ -21,26 +21,16 @@ export async function backupEnv(dirName?: string) {
 
   console.log(`backing up Firestore to ${firestoreURL}`);
   cmd = `gcloud firestore export --project ${firebase().projectId} ${firestoreURL}`;
-  console.log('Running cmd:', cmd);
-  let output = execSync(cmd).toString();
-  console.log(output);
+  await runShellCommandExec(cmd);
 
   console.log(`backing up storage to ${storageURL}`);
-  cmd = `gsutil -m cp -r "gs://${firebase().storageBucket}/*" "${storageURL}"`;
-  console.log('Running cmd:', cmd);
-  output = execSync(cmd).toString();
-  console.log(output);
+  await gsutilTransfer({ from: `gs://${firebase().storageBucket}`, to: storageURL });
 
   console.log(`backing up auth to ${authURL}`);
   cmd = `firebase auth:export -P ${firebase().projectId} ./tmp/auth-backup.json`;
-  console.log('Running cmd:', cmd);
-  output = execSync(cmd).toString();
-  console.log(output);
+  await runShellCommandExec(cmd);
 
-  cmd = `gsutil -m cp "./tmp/auth-backup.json" "${authURL}"`
-  console.log('Running cmd:', cmd);
-  output = execSync(cmd).toString();
-  console.log(output);
+  await gsutilTransfer({ rsync: false, from: './tmp/auth-backup.json', to: authURL });
 
   console.log('Firebase backup done!');
 }
@@ -59,20 +49,14 @@ export async function restoreEnv(dirName?: string) {
   const authURL = `${backupURL}auth-backup.json`;
 
   let cmd: string;
-  let output: string;
 
   console.log('Clearing existing env!')
 
   console.log('Ensuring maintenance mode stays enabled')
   const maintenanceInsurance = await ensureMaintenanceMode(db)
+
   console.log('Clearing Firestore...')
-
   await clearDbCLI(db);
-
-  console.log('Clearing storage...');
-  cmd = `gsutil -m rm -r "gs://${firebase().storageBucket}/*"`;
-  output = execSync(cmd).toString();
-  console.log(output);
 
   console.log('Clearing auth...');
   await deleteAllUsers(auth);
@@ -86,22 +70,16 @@ export async function restoreEnv(dirName?: string) {
 
   console.log('Importing Firestore');
   cmd = `gcloud firestore import ${firestoreURL}`;
-  output = execSync(cmd).toString();
-  console.log(output);
+  await runShellCommandExec(cmd);
 
   console.log('Importing storage');
-  cmd = `gsutil -m cp -r "${storageURL}/*" "gs://${firebase().storageBucket}"`;
-  output = execSync(cmd).toString();
-  console.log(output);
+  await gsutilTransfer({ from: `${storageURL}`, to: `gs://${firebase().storageBucket}`, mirror: true });
 
   console.log('Importing auth');
-  cmd = `gsutil cp "${authURL}" ./tmp/`
-  output = execSync(cmd).toString()
-  console.log(output);
+  await gsutilTransfer({ from: authURL, to: './tmp/', rsync: false });
 
-  cmd = `firebase auth:import --hash-algo SCRYPT --hash-key ${process.env.AUTH_KEY} --mem-cost 14 --rounds 8 --salt-separator Bw==`;
-  output = execSync(cmd).toString()
-  console.log(output);
+  cmd = `firebase auth:import --hash-algo SCRYPT --hash-key ${process.env.AUTH_KEY} --mem-cost 14 --rounds 8 --salt-separator Bw== ./tmp/auth-backup.json`;
+  await runShellCommandExec(cmd);
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();

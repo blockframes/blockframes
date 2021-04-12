@@ -4,7 +4,7 @@ import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';
 import { backupBucket } from '@env';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
-import { runShellCommand } from './commands';
+import { gsutilTransfer, runShellCommand } from './commands';
 
 export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl';
 
@@ -62,13 +62,8 @@ export async function copyFirestoreExportFromCiBucket() {
   if (ciBucketName === backupBucket) return;
 
   const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
-  const localBucketURL = `gs://${backupBucket}`;
+  const localBucketURL = `gs://${backupBucket}/${latestAnonDbDir}`;
 
-  let cmd = `gsutil -m -q rm -r "gs://${backupBucket}/${latestAnonDbDir}/*"`;
-  console.log('Clearing old golden data:', cmd);
-  await runShellCommand(cmd);
-
-  cmd = `gsutil -m -q cp -r ${anonBackupURL} ${localBucketURL}`;
-  console.log('Copying golden data from CI', cmd);
-  await runShellCommand(cmd);
+  console.log('Copying golden data from CI');
+  await gsutilTransfer({ rsync: true, mirror: true, from: anonBackupURL, to: localBucketURL });
 }
