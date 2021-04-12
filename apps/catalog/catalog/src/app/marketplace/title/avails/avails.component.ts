@@ -51,28 +51,6 @@ export class MarketplaceMovieAvailsComponent {
   /** Apply filters and display results on the world map. */
   public async applyAvailsFilter() {
     try {
-      // TODO: bind every controls to the form to avoid tricky error handling => ISSUE#1942
-      // Check if terms are valid, throw an error in the snackbar if not
-/*       areTermsValid(this.availsForm.value.terms);
-      if (!this.availsForm.value.licenseType.length) {
-        throw new Error('Please fill all the required fields (Terms and Media)');
-      }
-
-      this.availsForm.get('isActive').setValue(true);
-      if (!this.movie.distributionRights) {
-        throw new Error('Archipel Content got no mandate on this movie');
-      }
-
-      const mandateRights = await this.rightService.getMandateRights(this.movie);
-      const mandateRightIds = mandateRights.map(right => right.id);
-      const filteredRights = this.movie.distributionRights.filter(
-        right => !mandateRightIds.includes(right.id)
-      );
- */
-/*       this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateRights)
-      this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateRights, filteredRights);
-      this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateRights, filteredRights); */
-
       this.availsForm.disable();
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 3000 });
@@ -89,30 +67,11 @@ export class MarketplaceMovieAvailsComponent {
   /** Add a distribution right to the user selection for the active movie. */
   public addRight() {
     try {
-/*       // Verify the form values and throw errors if some are missing/incorrect.
-      this.rightService.verifyRight(this.availsForm.getRawValue(), this.availableTerritories)
-
-      // Then check if the right in preparation doesn't match an already existing right.
-      const rightsInStore = this.marketplaceQuery.getTitleRights(this.movie.id);
-      if (this.rightService.rightExist(this.availsForm.getRawValue(), rightsInStore)) {
-        throw new Error('You already got an Exploitation Right for this availability');
-      }
-
-      // Create a distribution right from the avails form values.
-      const { terms, licenseType, territory, territoryExcluded, exclusive } = this.availsForm.getRawValue()
-      const distributionRight: DistributionRight = createDistributionRight(
-        { terms, licenseType, territory, territoryExcluded, exclusive }
-      ); */
 
       // If title don't exist in the marketplace store, create one.
       if (!this.marketplaceQuery.getEntity(this.movie.id)) {
         this.marketplaceStore.addTitle(this.movie.id);
       }
-
-      // Update the title with the new right.
-/*       this.marketplaceStore.update(this.movie.id, title => ({
-        rights: arrayAdd(title.rights, distributionRight)
-      })); */
 
       this.snackBar.open('Exploitation Rights added to your Selection', 'close', {
         duration: 3000

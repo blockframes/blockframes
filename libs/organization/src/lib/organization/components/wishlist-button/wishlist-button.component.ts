@@ -3,11 +3,10 @@ import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Out
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
-import { CartService } from '@blockframes/cart/+state/cart.service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { MovieService } from '@blockframes/movie/+state';
-import { CartQuery } from '@blockframes/cart/+state/cart.query';
 import { Observable } from 'rxjs';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 
 @Directive({
   selector: 'wishlist-add-text [wishlistAddText]',
@@ -42,13 +41,13 @@ export class WishlistButtonComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
-    private cartQuery: CartQuery,
-    private cartService: CartService,
+    private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
     private snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
-    this.toggle$ = this.cartQuery.isAddedToWishlist(this.movieId);
+    this.toggle$ = this.orgQuery.isAddedToWishlist(this.movieId);
   }
 
   public async addToWishlist(event?: Event) {
@@ -56,7 +55,7 @@ export class WishlistButtonComponent implements OnInit {
     event.preventDefault();
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title?.international ?? movie.title.original;
-    this.cartService.updateWishlist(movie);
+    this.orgService.updateWishlist(movie);
     this.snackbar.open(`${title} has been added to your wishlist.`, 'close', { duration: 2000 });
     this.added.emit(this.movieId)
   }
@@ -66,7 +65,7 @@ export class WishlistButtonComponent implements OnInit {
     event.preventDefault();
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
-    this.cartService.updateWishlist(movie);
+    this.orgService.updateWishlist(movie);
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
     this.removed.emit(this.movieId)
   }

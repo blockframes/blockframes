@@ -69,31 +69,6 @@ export const licenseStatus = {
   paid: 'paid'
 } as const
 
-export const distributionRightStatus = {
-  /**
-   * @dev first status of a right
-   * Starting from this status, the right is visible by creator only
-   */
-  draft: 'Draft',
-
-  /**
-   * @dev first status of a right
-   * Starting from this status, the right is visible by creator only
-   */
-  cart: 'In cart',
-
-  /**
-   * @dev the right have been sold
-   */
-  sold: 'Sold',
-
-  /**
-   * @dev in this status, a contract should exists regarding this distribution right.
-   * When Contract status changes, this could change too
-   */
-  undernegotiation: 'Under negotiation',
-} as const
-
 export const certifications = {
   artEssai: 'Art & Essai',
   eof: 'EOF',
@@ -110,15 +85,13 @@ export const colors = {
 
 // @dev sort the value alphabetically, not the keys
 export const contentType = {
-  collection: 'Collection',
+  animation: 'Animation',
   documentary: 'Documentary',
-  episode: 'Episode',
   feature_film: 'Feature Film',
   flow: 'Flow',
   short: 'Short Film',
   tv_film: 'TV Film',
-  series: 'TV Series',
-  volume: 'Volume'
+  series: 'TV Series'
 }
 
 export const crewRoles = {
@@ -168,6 +141,12 @@ export const genres = {
   webSeries: 'Web Series', //web-series
   virtualReality: 'Virtual Reality', // virtual-reality
   family: 'Family',
+  wildlife: 'Wildlife',
+  natureEnvironment: 'Nature & Environment',
+  huntingFishing: 'Hunting & Fishing',
+  archeologyHistory: 'Archeology & History',
+  travelDiscovery: 'Travel & Discovery',
+  fashion: 'Fashion'
 } as const
 
 export const hostedVideoTypes = {
@@ -452,13 +431,6 @@ export const unitBox = {
   usd: 'USD',
   eur: 'EUR',
   admissions: 'Admissions',
-} as const
-
-export const cartStatus = {
-  pending: 'Pending',
-  submitted: 'Submitted',
-  accepted: 'Accepted',
-  paid: 'Paid'
 } as const
 
 export const orgActivity = {
@@ -751,9 +723,9 @@ export const territories = {
   uganda: "Uganda",
   ukraine: "Ukraine",
   "united-arab-emirates": "United Arab Emirates",
-  "united-kingdom": "United Kingdom",
+  "united-kingdom": "United Kingdom (UK)",
   "united-states-minor-outlying-islands": "United States Minor Outlying Islands",
-  "united-states-of-america": "United States of America",
+  "united-states-of-america": "United States of America (USA)",
   uruguay: "Uruguay",
   uzbekistan: "Uzbekistan",
   vanuatu: "Vanuatu",
@@ -1829,7 +1801,6 @@ export const staticModel = {
   legalRoles,
   subLicensorRoles,
   licenseStatus,
-  distributionRightStatus,
   certifications,
   colors,
   contentType,
@@ -1856,7 +1827,6 @@ export const staticModel = {
   storeStatus,
   storeType,
   unitBox,
-  cartStatus,
   organizationStatus,
   festival,
   months,

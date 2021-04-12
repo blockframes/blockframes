@@ -11,21 +11,23 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, App, modules, getSendgridFrom } from '@blockframes/utils/apps';
-import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail, getDocument } from './data/internals';
+import { app, App, getOrgAppAccess, getSendgridFrom } from '@blockframes/utils/apps';
+import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
+  const createdFrom = getOrgAppAccess(org);
   return createNotification({
     toUserId,
     type: notificationType,
     user: createPublicUserDocument(user),
-    organization: createPublicOrganizationDocument(org)
+    organization: createPublicOrganizationDocument(org),
+    _meta: createDocumentMeta({ createdFrom:createdFrom[0] })
   });
 }
 
@@ -79,10 +81,6 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   const emailRequest = await organizationCreated(org);
   const from = getSendgridFrom(org._meta.createdFrom);
 
-  if (await hasAcceptedMovies(org)) {
-    org['hasAcceptedMovies'] = true;
-  }
-
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from).catch(e => console.warn(e.message)),
@@ -121,12 +119,14 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
 
   if (becomeAccepted) {
+    const appAccess = getOrgAppAccess(after)
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
       toUserId: after.userIds[0],
       organization: createPublicOrganizationDocument(before),
-      type: 'organizationAcceptedByArchipelContent'
+      type: 'organizationAcceptedByArchipelContent',
+      _meta: createDocumentMeta({ createdFrom: appAccess[0] })
     });
     await triggerNotifications([notification]);
   }
@@ -139,11 +139,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     await Promise.all(promises)
   }
 
-  if (await hasAcceptedMovies(after)) {
-    after['hasAcceptedMovies'] = true;
-  }
-
-  storeSearchableOrg(after)
+  await storeSearchableOrg(after);
 
   return Promise.resolve(true); // no-op by default
 }

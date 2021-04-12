@@ -1,4 +1,4 @@
-<ng-container *ngIf="events$ | async as events">
+<ng-container *ngIf="events$ | async as events else loading">
   <ng-container *ngIf="events.length; else empty">
     <h1>Screening Schedule</h1>
     <event-list [events]="events">
@@ -11,4 +11,10 @@
 
 <ng-template #empty>
   <event-empty type="screening"></event-empty>
+</ng-template>
+
+<ng-template #loading>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </article>
 </ng-template>

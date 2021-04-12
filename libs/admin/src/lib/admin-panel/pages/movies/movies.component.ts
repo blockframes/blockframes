@@ -15,7 +15,7 @@ export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': { value: 'Id', disableSort: true },
     'poster': { value: 'Poster', disableSort: true },
-    'title.original': 'Original title',
+    'title.international': 'International title',
     'org': 'Organization',
     'storeConfig.status': 'Status'
   };
@@ -23,7 +23,7 @@ export class MoviesComponent implements OnInit {
   public initialColumns: string[] = [
     'id',
     'poster',
-    'title.original',
+    'title.international',
     'org',
     'storeConfig.status'
   ];
@@ -58,7 +58,7 @@ export class MoviesComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'internalRef',
-      'title.original',
+      'title.international',
       'storeConfig.status',
       'org.denomination.full',
       'org.denomination.public'

@@ -43,7 +43,8 @@
   <file-uploader [form]="dir.form" [meta]="dir.meta" [accept]="dir.accept" (selectionChange)="change($event, dir.meta)">
     <h3 title>Upload {{ dir.name }}</h3>
   </file-uploader>
-  <section fxLayout="row" fxLayoutAlign="end center" class="save">
+  <section fxLayout="row" fxLayoutAlign="space-between center" class="save">
+    <bf-preview-modal *ngIf="!!dir.form.value.storagePath" [ref]="dir.form.value"></bf-preview-modal>
     <button mat-stroked-button (click)="update()">
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save</span>
@@ -67,7 +68,7 @@
 <!-- Directory -->
 <ng-template #directory let-dir>
   <mat-action-list>
-    <ng-container *ngFor="let child of dir.children | keyvalue">
+    <ng-container *ngFor="let child of dir.children | keyvalue: keepOrder">
       <button mat-list-item (click)="next(child.key)">
         <ng-container *ngIf="child.value as node">
           <ng-container *ngIf="node.type === 'directory'">

@@ -1,6 +1,7 @@
 strong {
   opacity: 0.5;
   font-weight: normal;
+  white-space: nowrap;
 }
 
 h6 {
@@ -18,6 +19,6 @@ a.mat-icon-button {
   width: 32px;
 }
 
-strong {
-  white-space: nowrap;
+li strong.margin {
+  margin-top: 16px;
 }

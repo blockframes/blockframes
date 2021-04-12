@@ -18,10 +18,12 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { App } from '@blockframes/utils/apps';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
+  readonly useMemorization = true;
 
   private app = getCurrentApp(this.routerQuery)
 
@@ -32,7 +34,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private analytics: FireAnalytics,
   ) {
     super(store);
   }
@@ -57,7 +60,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   formatFromFirestore(org: OrganizationDocument): Organization {
     return {
       ...org,
-     _meta: formatDocumentMetaFromFirestore(org._meta)
+      _meta: formatDocumentMetaFromFirestore(org._meta)
     };
   }
 
@@ -73,6 +76,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     });
 
     return Promise.all([
+      this.userService.update(org.userIds[0], { orgId }, { write }),
       this.permissionsService.add(permissions, { write }),
     ]);
   }
@@ -85,31 +89,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       userIds: [user.uid],
     });
 
-    const orgId = await this.add(newOrganization);
-
-    // @TODO(#2710) This timeout is needed to prevent permission denied
-    // when user is creating organization
-    // Once bug resolved move this to onCreate
-    return new Promise(resolve => setTimeout(resolve, 500))
-      .then(_ => this.userService.update(user.uid, { ...user, orgId }))
-      .then(_ => orgId)
+    return this.add(newOrganization);
   }
-
-  // TODO(#679): somehow the updateActiveMembers array don't filter correctly
-  // the id out of the activeMembersArray.
-  /* public async deleteActiveSigner(member: OrganizationMember) {
-  public async deleteActiveSigner(member: OrganizationMember, action: OrganizationActionOld) {
-    const organizationId = this.query.id;
-    const actionData = await this.db.snapshot<OrganizationActionOld>(
-      `orgs/${organizationId}/actions/${action.id}`
-    );
-    const updatedActiveMembers = actionData.activeMembers.filter(
-      _member => _member.uid !== member.uid
-    );
-    return this.db
-      .doc<OrganizationActionOld>(`orgs/${organizationId}/actions/${action.id}`)
-      .update({ activeMembers: updatedActiveMembers });
-  }*/
 
   public async setBlockchainFeature(value: boolean) {
     const orgId = this.query.getActiveId();
@@ -123,7 +104,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public requestAppAccess(app: App, orgId: string) {
     const f = this.functions.httpsCallable('requestFromOrgToAccessApp');
-    return f({app, orgId}).toPromise();
+    return f({ app, orgId }).toPromise();
   }
 
   ////////////
@@ -167,5 +148,33 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.valueChanges(movie.orgIds).pipe(
       map(orgs => orgs.filter(org => org.appAccess[this.app]))
     );
+  }
+
+  //////////////////
+  /// WISHLIST STUFF
+  //////////////////
+
+  /**
+   *
+   * @param movie
+   */
+  public async updateWishlist(movie: Movie) {
+    const orgState = this.query.getActive();
+    let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
+    if (wishlist.includes(movie.id)) {
+      wishlist = orgState.wishlist.filter(id => id !== movie.id);
+      this.analytics.event('removedFromWishlist', {
+        movieId: movie.id,
+        movieTitle: movie.title.original
+      });
+    } else {
+      wishlist.push(movie.id);
+      this.analytics.event('addedToWishlist', {
+        movieId: movie.id,
+        movieTitle: movie.title.original
+      });
+    }
+
+    this.update(orgState.id, { wishlist });
   }
 }

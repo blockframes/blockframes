@@ -31,6 +31,8 @@ export class TwilioService {
   private room: Room;
   private getAccessToken = this.functions.httpsCallable('getAccessToken');
 
+  private preference: {[K in TrackKind]: boolean} = { 'video': true, 'audio': true };
+
   constructor(
     private functions: AngularFireFunctions,
     private twilioStore: TwilioStore,
@@ -39,6 +41,10 @@ export class TwilioService {
 
   getToken(eventId: string) {
     return this.getAccessToken({ eventId }).toPromise<ErrorResultResponse>();
+  }
+
+  togglePreference(kind: TrackKind) {
+    this.preference[kind] = !this.preference[kind];
   }
 
   async initLocal(userName: string) {
@@ -55,6 +61,10 @@ export class TwilioService {
       createLocalVideoTrack().catch(e => null),
       createLocalAudioTrack().catch(e => null)
     ]) as [ LocalVideoTrack | null, LocalAudioTrack | null ];
+
+    // check user preference and disable tracks accordingly
+    if (!this.preference['video']) video.disable();
+    if (!this.preference['audio']) audio.disable();
 
     this.twilioStore.update(local.id, { tracks: { video, audio } });
   }

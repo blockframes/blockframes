@@ -54,9 +54,11 @@ export class UsersComponent implements OnInit {
     ) { }
 
   async ngOnInit() {
-    await this.adminService.loadAnalyticsData();
-
-    const [users, orgs] = await Promise.all([this.userService.getAllUsers(), this.orgService.getValue()]);
+    const [users, orgs] = await Promise.all([
+      this.userService.getAllUsers(),
+      this.orgService.getValue(),
+      this.adminService.loadAnalyticsData()
+    ]);
     this.rows = users.map(u => {
       const org = orgs.find(o => o.id === u.orgId);
       return { 

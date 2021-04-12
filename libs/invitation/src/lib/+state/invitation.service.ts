@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { OrganizationQuery, createPublicOrganization, Organization } from '@blockframes/organization/+state';
-import { AuthQuery, User } from '@blockframes/auth/+state';
+import { AuthQuery, AuthState, User } from '@blockframes/auth/+state';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
@@ -10,11 +10,14 @@ import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
+import { combineLatest, Observable } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
+  readonly useMemorization = true;
   /** 
    * Return true if there is already a pending invitation for a list of users 
    */
@@ -26,6 +29,25 @@ export class InvitationService extends CollectionService<InvitationState> {
    */
   public getInvitationLinkedToEmail = this.functions.httpsCallable('getInvitationLinkedToEmail');
 
+  myInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
+    switchMap((user: AuthState) => combineLatest([
+      this.valueChanges(ref => ref.where('toOrg.id', '==', user.profile.orgId)),
+      this.valueChanges(ref => ref.where('toUser.uid', '==', user.profile.uid))
+    ])),
+    map(([toOrg, toUser]) => [...toOrg, ...toUser]),
+    shareReplay(1)
+  )
+
+  /** Invitations where current user is a guest */
+  guestInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
+    switchMap((user: AuthState) => combineLatest([
+      this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid).where('mode', '==', 'request')),
+      this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid).where('mode', '==', 'invitation'))
+    ])),
+    map(([fromUser, toUser]) => [...fromUser, ...toUser]),
+    shareReplay(1)
+  )
+  
   constructor(
     store: InvitationStore,
     private authQuery: AuthQuery,
@@ -104,9 +126,12 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        const app = getCurrentApp(this.routerQuery); // @TODO #5049 problem here if invite comes from CRM
+        let app = getCurrentApp(this.routerQuery);
+        if (app === 'crm') {
+          // Instead use first found app where org has access to
+          app = getOrgAppAccess(fromOrg)[0];
+        }
         return f({ emails: recipients, invitation, app }).toPromise();
-
       }
     }
   }

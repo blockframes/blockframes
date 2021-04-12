@@ -6,8 +6,7 @@ import {
   storeSearchableMovie,
   storeSearchableOrg,
   storeSearchableUser,
-  getDocument,
-  hasAcceptedMovies
+  getDocument
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
@@ -45,13 +44,6 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
     const { db } = loadAdminServices();
     const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
     for await (const orgs of orgsIterator) {
-
-      for (const org of orgs) {
-        if (await hasAcceptedMovies(org)) {
-          org['hasAcceptedMovies'] = true;
-        }
-      }
-
       const promises = orgs.map(org => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
 
       await Promise.all(promises);

@@ -1,5 +1,5 @@
 import { MediaRatioType } from '../../image/uploader/uploader.component';
-import { MovieForm } from "@blockframes/movie/form/movie.form";
+import { MovieForm, MovieVideoForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
 import { AllowedFileType } from "@blockframes/utils/utils";
 import { Movie } from "@blockframes/movie/+state";
@@ -9,7 +9,7 @@ import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
 import { StorageFileForm } from "@blockframes/media/form/media.form";
 import { FormList } from "@blockframes/utils/form";
-import { StorageFile } from "@blockframes/media/+state/media.firestore";
+import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
 
 interface DirectoryBase {
   type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';
@@ -74,7 +74,7 @@ export function getFormList(form: OrganizationForm | MovieForm, field: string) {
 function titlesDirectory(titles: Movie[]) {
   const documents = {};
   for (const title of titles) {
-    documents[title.id] = titleDirectory(title);
+    documents[title.title.international + title.id] = titleDirectory(title);
   }
   return documents;
 }
@@ -89,82 +89,111 @@ function getFormListStorage(object: { id: string }, collection: CollectionHoldin
   return FormList.factory<StorageFile>(value, file => new StorageFileForm(file));
 }
 
+function getFormStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return new MovieVideoForm(value);
+}
+
+function getFormListStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
+  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  return FormList.factory<StorageVideo>(value, file => new MovieVideoForm(file));
+}
+
 function titleDirectory(title: Movie): Directory {
   return {
     name: title.title.international,
     type: 'directory',
     children: {
-      poster: {
-        name: 'Poster',
-        type: 'image',
-        ratio: 'poster',
-        meta: ['movies', 'poster', title.id],
-        form: getFormStorage(title, 'movies', 'poster'),
-      },
-      banner: {
-        name: 'Banner',
-        type: 'image',
-        ratio: 'banner',
-        meta: ['movies', 'banner', title.id],
-        form: getFormStorage(title, 'movies', 'banner'),
-      },
-      scenario: {
-        name: 'Scenario',
-        type: 'file',
-        accept: 'pdf',
-        meta: ['movies', 'scenario', title.id],
-        form: getFormStorage(title, 'movies', 'scenario'),
-      },
-      moodboard: {
-        name: 'Moodboard / Artistic Deck',
-        type: 'file',
-        accept: 'pdf',
-        meta: ['movies', 'moodboard', title.id],
-        form: getFormStorage(title, 'movies', 'moodboard'),
-      },
-      'presentation_deck': {
-        name: 'Presentation Deck',
-        type: 'file',
-        accept: 'pdf',
-        meta: ['movies', 'presentation_deck', title.id],
-        form: getFormStorage(title, 'movies', 'presentation_deck'),
-      },
-      'still_photo': {
+
+      images: {
         name: 'Images',
-        type: 'imageList',
-        accept: 'image',
-        ratio: 'still',
-        meta: ['movies', 'still_photo', title.id],
-        form: getFormListStorage(title, 'movies', 'still_photo'),
+        type: 'directory',
+        children: {
+          poster: {
+            name: 'Poster',
+            type: 'image',
+            ratio: 'poster',
+            meta: ['movies', 'poster', title.id],
+            form: getFormStorage(title, 'movies', 'poster'),
+          },
+          banner: {
+            name: 'Banner',
+            type: 'image',
+            ratio: 'banner',
+            meta: ['movies', 'banner', title.id],
+            form: getFormStorage(title, 'movies', 'banner'),
+          },
+          'still_photo': {
+            name: 'Other Images',
+            type: 'imageList',
+            accept: 'image',
+            ratio: 'still',
+            meta: ['movies', 'still_photo', title.id],
+            form: getFormListStorage(title, 'movies', 'still_photo'),
+          },
+        },
       },
-      screener: {
-        name: 'Screener',
-        type: 'file',
-        accept: 'video',
-        meta: ['movies', 'screener', title.id],
-        form: getFormStorage(title, 'movies', 'screener'),
+      videos: {
+        name: 'Videos',
+        type: 'directory',
+        children: {
+          screener: {
+            name: 'Screener',
+            type: 'file',
+            accept: 'video',
+            meta: ['movies', 'screener', title.id],
+            form: getFormStorageVideo(title, 'movies', 'screener'),
+          },
+          salesPitch: {
+            name: 'Sales Pitch',
+            type: 'file',
+            accept: 'video',
+            meta: ['movies', 'salesPitch', title.id],
+            form: getFormStorageVideo(title, 'movies', 'salesPitch'),
+          },
+          otherVideos: {
+            name: 'Other Videos',
+            type: 'fileList',
+            accept: 'video',
+            meta: ['movies', 'otherVideos', title.id],
+            form: getFormListStorageVideo(title, 'movies', 'otherVideos'),
+          },
+        },
       },
-      otherVideos: {
-        name: 'Other Videos',
-        type: 'fileList',
-        accept: 'video',
-        meta: ['movies', 'otherVideos', title.id],
-        form: getFormListStorage(title, 'movies', 'otherVideos'),
+      documents: {
+        name: 'Other Documents',
+        type: 'directory',
+        children: {
+          'presentation_deck': {
+            name: 'Presentation Deck',
+            type: 'file',
+            accept: 'pdf',
+            meta: ['movies', 'presentation_deck', title.id],
+            form: getFormStorage(title, 'movies', 'presentation_deck'),
+          },
+          moodboard: {
+            name: 'Moodboard / Artistic Deck',
+            type: 'file',
+            accept: 'pdf',
+            meta: ['movies', 'moodboard', title.id],
+            form: getFormStorage(title, 'movies', 'moodboard'),
+          },
+          scenario: {
+            name: 'Scenario',
+            type: 'file',
+            accept: 'pdf',
+            meta: ['movies', 'scenario', title.id],
+            form: getFormStorage(title, 'movies', 'scenario'),
+          },
+          notes: {
+            name: 'Notes & Statements',
+            type: 'fileList',
+            accept: 'pdf',
+            meta: ['movies', 'notes', title.id],
+            form: getFormListStorage(title, 'movies', 'notes'),
+          }
+        },
       },
-      salesPitch: {
-        name: 'Sales Pitch',
-        type: 'file',
-        accept: 'video',
-        meta: ['movies', 'salesPitch', title.id],
-        form: getFormStorage(title, 'movies', 'salesPitch'),
-      },
-      notes: {
-        name: 'Notes & Statements',
-        type: 'fileList',
-        accept: 'pdf',
-        meta: ['movies', 'notes', title.id],
-        form: getFormListStorage(title, 'movies', 'notes'),
-      }
     }
   }
 }

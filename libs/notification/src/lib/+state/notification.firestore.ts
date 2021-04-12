@@ -12,7 +12,7 @@ export const notificationTypesBase = [
   'movieAccepted',
 
   // Notifications relative to invitations
-  'requestFromUserToJoinOrgCreate',
+  'requestFromUserToJoinOrgCreate', // Notification sent to org admins
   'requestFromUserToJoinOrgDeclined',
   'orgMemberUpdated',
 
@@ -29,10 +29,14 @@ export const notificationTypesBase = [
 
 // All the other notification types
 export const notificationTypesPlus = [
+  // Notifications relative to invitations
+  'requestFromUserToJoinOrgPending', // Notification sent to the user that made the request
+  'invitationToJoinOrgDeclined',
+
+  // Other notifications
   'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
   'orgAppAccessChanged',
-  'invitationToJoinOrgDeclined',
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
