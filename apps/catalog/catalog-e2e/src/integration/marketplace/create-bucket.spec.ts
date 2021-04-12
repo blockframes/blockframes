@@ -59,6 +59,7 @@ describe('Create a new bucket and finalize a new offer', () => {
           p3.fillPrice(5000, index);
           break;
       }
+      cy.wait(1 * SEC);
     });
     cy.wait(1 * SEC);
     p3.checkTotalPrice('35,000');
