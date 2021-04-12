@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
-import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, defer, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -20,7 +20,8 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { InvitationQuery } from '@blockframes/invitation/+state';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, scan } from 'rxjs/operators';
+import { finalizeWithValue } from '@blockframes/utils/helpers';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -52,20 +53,9 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   private countdownId: number = undefined;
 
-  private watchTime: number; // watch-time in secondes
   private watchTimeInterval: Subscription;
   private invitationId: string;
-  private _isPlaying = false;
-  public get isPlaying() { return this._isPlaying; }
-  public set isPlaying(value: boolean) {
-    this._isPlaying = value;
-    if (!!this.invitationId && this.watchTime !== undefined && !value) {
-      const event = this.eventQuery.getActive();
-      if (event.type === 'screening' && event.ownerOrgId !== this.authQuery.orgId) {
-        this.invitationService.update(this.invitationId, { watchTime: this.watchTime });
-      }
-    }
-  }
+  public isPlaying = false;
 
   constructor(
     private functions: AngularFireFunctions,
@@ -107,16 +97,17 @@ export class SessionComponent implements OnInit, OnDestroy {
             // this should never happen since previous checks & guard should have worked
             if (!invitation) throw new Error(`Missing Screening Invitation`);
             this.invitationId = invitation.id;
-            this.watchTime = invitation.watchTime ?? 0;
 
             this.watchTimeInterval?.unsubscribe();
 
             this.watchTimeInterval = interval(1000).pipe(
               filter(() => !!this.isPlaying),
-              map(() => this.watchTime += 1),
+              scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
+              finalizeWithValue(watchTime => {
+                if (watchTime !== undefined) this.invitationService.update(this.invitationId, { watchTime });
+              }),
               filter(watchTime => watchTime % 60 === 0),
             ).subscribe(watchTime => {
-              console.log('update');
               this.invitationService.update(this.invitationId, { watchTime });
             });
           }
@@ -259,12 +250,6 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (!!this.invitationId && this.watchTime !== undefined) {
-      const event = this.eventQuery.getActive();
-      if (event.type === 'screening' && event.ownerOrgId !== this.authQuery.orgId) {
-        this.invitationService.update(this.invitationId, { watchTime: this.watchTime });
-      }
-    }
     this.watchTimeInterval?.unsubscribe();
     this.twilioService.disconnect();
     this.deleteCountDown();
