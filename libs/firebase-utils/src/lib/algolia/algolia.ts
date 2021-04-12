@@ -158,7 +158,7 @@ export function storeSearchableMovie(
       movieRecord['minPledge'] = movie['minPledge'];
     }
 
-    const movieAppAccess = Object.keys(movie.app).filter(app => movie.app[app].access);
+    const movieAppAccess = Object.keys(movie.app).filter(a => movie.app[a].access);
 
     const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(
       {

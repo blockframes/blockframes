@@ -157,29 +157,31 @@ export async function onMovieUpdate(
 
 /** Checks if the store status is going from draft to submitted. */
 function isSubmitted(beforeApp, afterApp) {
-  let isSubmitted = false;
-  for (const app of apps) {
-    isSubmitted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
-    if (!!isSubmitted) return isSubmitted;
+  let submitted = false;
+  for (const app of apps.filter(a => a !== 'crm')) {
+    console.log('!!!!! before app', app, beforeApp[app]);
+    console.log('!!!!! after app', app, afterApp[app]);
+    submitted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
+    if (!!submitted) return submitted;
   }
-  return isSubmitted;
+  return submitted;
 }
 
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(beforeApp, afterApp) {
-  let isAccepted = false;
+  let accepted = false;
   for (const app of apps) {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
-      isAccepted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');
-      return isAccepted;
+      accepted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');
+      return accepted;
     } else {
       // in catalog/financiers `draft` -> `submitted` -> `accepted`
-      isAccepted = (beforeApp && beforeApp[app].status === 'submitted') && (afterApp && afterApp[app].status === 'accepted');
-      return isAccepted;
+      accepted = (beforeApp && beforeApp[app].status === 'submitted') && (afterApp && afterApp[app].status === 'accepted');
+      return accepted;
     }
   }
-  return isAccepted;
+  return accepted;
 }
 
 async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {
