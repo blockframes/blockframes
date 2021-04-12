@@ -45,7 +45,7 @@ describe('Permission Rules Tests', () => {
 
   });
 
-  describe('With User as Org Member', () => {
+  describe('With User as or going to be Org Member', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user4' });
     });

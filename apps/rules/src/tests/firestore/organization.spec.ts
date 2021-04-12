@@ -34,7 +34,7 @@ describe('Organization Rules Tests', () => {
     });
   });
 
-  describe('With User as Org Member', () => {
+  describe('With User as or going to be Org Member', () => {
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user5' });
     });
@@ -47,7 +47,7 @@ describe('Organization Rules Tests', () => {
     });
 
     test('id ≠ orgId, should not be able to create document', async () => {
-      const orgDocRef = db.doc('orgs/O004');
+      const orgDocRef = db.doc('orgs/O0X4');
       await assertFails(orgDocRef.set({id: 'O0X5'}));
     });
 
@@ -100,7 +100,7 @@ describe('Organization Rules Tests', () => {
     });
 
     test('should not be able to delete document', async () => {
-      const orgDocRef = db.doc('orgs/O001');
+      const orgDocRef = db.doc('orgs/O004');
       await assertFails(orgDocRef.delete());
     });
 
