@@ -86,10 +86,11 @@ export function runShellCommandExec(cmd: string) {
 }
 
 export async function gsutilTransfer({ from, to, quiet, rsync = true, mirror }: { from: string; to: string; quiet?: boolean; rsync?: boolean; mirror?: boolean }) {
+  let cmd: string;
   if (!rsync && mirror) {
-    const cmd = `gsutil -m ${quiet ? '-q ' : ''}rm -r "${to}"`;
+    cmd = `gsutil -m ${quiet ? '-q ' : ''}rm -r "${to}"`;
     await runShellCommandExec(cmd);
   }
-  const cmd = `gsutil -m ${quiet ? '-q ' : ''}${rsync ? 'rsync' : 'cp'} ${rsync && mirror ? '-d ' : ''}-r "${from}" "${to}"`;
+  cmd = `gsutil -m ${quiet ? '-q ' : ''}${rsync ? 'rsync' : 'cp'} ${rsync && mirror ? '-d ' : ''}-r "${from}" "${to}"`;
   return runShellCommandExec(cmd);
 }
