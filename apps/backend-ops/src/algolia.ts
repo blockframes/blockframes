@@ -57,7 +57,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
 export async function upgradeAlgoliaMovies(appConfig?: App) {
 
   if (!appConfig) {
-    const promises = app.map(upgradeAlgoliaMovies);
+    const promises = app.filter(a => a !== 'crm').map(upgradeAlgoliaMovies);
     await Promise.all(promises);
   } else {
 
