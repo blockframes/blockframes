@@ -34,10 +34,10 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private query: MovieQuery,
-    private queryOrg: OrganizationQuery,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     private consentsService: ConsentsService,
+    private movieQuery: MovieQuery,
     private dialog: MatDialog
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
@@ -53,7 +53,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   }
 
   public async submit() {
-    const orgId = this.queryOrg.getActiveId();
+    const movieId = this.movieQuery.getActiveId();
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         title: 'Confidentiality Reminder',
@@ -64,7 +64,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
         onConfirm: async () => {
           try {
             await this.shell.layout.update({ publishing: true });
-            await this.consentsService.createConsent('share', orgId);
+            await this.consentsService.createConsent('share', movieId);
             const ref = this.snackBar.open('Your title was successfully submitted!', '', { duration: 1000 });
             ref.afterDismissed().subscribe(_ => this.router.navigate(['../end'], { relativeTo: this.route }))
           } catch (err) {

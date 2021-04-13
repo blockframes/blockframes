@@ -3,7 +3,7 @@ import { formatCurrency, formatPercent } from '@angular/common';
 import { Budget, Campaign, CampaignQuery, CampaignService, Funding } from '../../+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { isEmpty, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 import { ThemeService } from '@blockframes/ui/theme';
 
@@ -12,9 +12,10 @@ import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/component
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
-import { Consents } from '@blockframes/consents/+state/consents.firestore';
+import { Access } from '@blockframes/consents/+state/consents.firestore';
+
+import { MovieQuery } from '@blockframes/movie/+state';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -44,6 +45,8 @@ export class MarketplaceFinancingComponent implements OnInit {
   campaign: Campaign;
   public storagePath: StorageFile;
   campaign$: Observable<Campaign>;
+  public access: Access<Date>;
+  accessConsent: Observable<Access<Date>>;
   budgetData = budgetData;
   formatter = {
     currency: (campaign: Campaign) => ({
@@ -61,12 +64,9 @@ export class MarketplaceFinancingComponent implements OnInit {
     private service: CampaignService,
     private route: RouterQuery,
     private mediaService: MediaService,
-
-    private queryOrg: OrganizationQuery,
     private consentsService: ConsentsService,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar,
-    private queryCampaign: CampaignQuery
+    private movieQuery: MovieQuery
   ) {}
 
   ngOnInit(): void {
@@ -76,31 +76,18 @@ export class MarketplaceFinancingComponent implements OnInit {
     );
   }
 
-  consentBeforeDownload(file: string, campaign: Partial<Campaign>) {
-    const orgId = this.queryOrg.getActiveId();
-    const campaignId = this.queryCampaign.getActiveId();
-    // if(!!File){
-      // if (orgId )
-      console.log(orgId);
+  consentBeforeDownload(file: string) {
+    const movieId = this.movieQuery.getActiveId();
+
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         title: 'Confidentiality Reminder',
-        text:
-          'To confirm that you agree with these terms, please write “I AGREE” in the field below.',
+        text: 'To confirm that you agree with these terms, please write “I AGREE” in the field below.',
         confirmationWord: 'i agree',
         confirmButtonText: 'confirm and download',
         onConfirm: async () => {
-
-          if (campaign.files.budget.storagePath || campaign.files.financingPlan.storagePath || campaign.files.waterfall.storagePath){
-
-            await this.consentsService.createConsent('access', orgId, file);
-            // window.location.href = file;
-            window.open(file, '_blank');
-          }
-          else if (!campaign.files.budget.storagePath || !campaign.files.financingPlan.storagePath || !campaign.files.waterfall.storagePath) {
-            return this.snackbar.open('The file is not found. Please contact the seller.', 'close', { duration: 3000 });
-          }
-            // return this.snackbar.open('Sorry, the file is not found. Please contact the seller.', 'close', { duration: 3000 });
+          await this.consentsService.createConsent('access', movieId, file);
+          window.open(file, '_blank');
         }
       }
     });
