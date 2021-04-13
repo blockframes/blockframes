@@ -3,11 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { CartService } from '@blockframes/cart/+state/cart.service';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
@@ -37,7 +37,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private service: CartService,
+    private service: OrganizationService,
     private snackbar: MatSnackBar,
     private routerQuery: RouterQuery,
     private route: ActivatedRoute,

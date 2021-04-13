@@ -18,6 +18,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
 import { App } from '@blockframes/utils/apps';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -33,7 +34,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private functions: AngularFireFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private analytics: FireAnalytics,
   ) {
     super(store);
   }
@@ -146,5 +148,33 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.valueChanges(movie.orgIds).pipe(
       map(orgs => orgs.filter(org => org.appAccess[this.app]))
     );
+  }
+
+  //////////////////
+  /// WISHLIST STUFF
+  //////////////////
+
+  /**
+   *
+   * @param movie
+   */
+  public async updateWishlist(movie: Movie) {
+    const orgState = this.query.getActive();
+    let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
+    if (wishlist.includes(movie.id)) {
+      wishlist = orgState.wishlist.filter(id => id !== movie.id);
+      this.analytics.event('removedFromWishlist', {
+        movieId: movie.id,
+        movieTitle: movie.title.original
+      });
+    } else {
+      wishlist.push(movie.id);
+      this.analytics.event('addedToWishlist', {
+        movieId: movie.id,
+        movieTitle: movie.title.original
+      });
+    }
+
+    this.update(orgState.id, { wishlist });
   }
 }
