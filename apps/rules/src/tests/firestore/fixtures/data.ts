@@ -79,10 +79,12 @@ export const testFixture = {
   //Orgs
   'orgs/O001': {
     id: 'O001',
-    status: 'accepted', //belongs to O001
+    status: 'accepted',
+    userIds: ['uid-admin', 'uid-sAdmin', 'uid-user2', ],
   },
   'orgs/O002': {
-    status: 'accepted'
+    status: 'accepted',
+    userIds: ['uid-user3'],
   },
   'orgs/O003': {
     id: 'O003',
@@ -130,6 +132,7 @@ export const testFixture = {
   'users/uid-c8': {
     email: 'c8@cascade8.com',
     uid: 'uid-c8',
+    orgId: 'O003'
   },
   'users/uid-user2': {
     email: 'u2@cascade8.com',

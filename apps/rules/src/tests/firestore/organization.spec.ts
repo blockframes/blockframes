@@ -41,8 +41,8 @@ describe('Organization Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('should be able to read document', async () => {
-      const orgDocRef = db.doc('orgs/O001');
+    test('should be able to read own Org document', async () => {
+      const orgDocRef = db.doc('orgs/O005');
       await assertSucceeds(orgDocRef.get());
     });
 
@@ -58,7 +58,7 @@ describe('Organization Rules Tests', () => {
     });
 
     test('should not be able to delete document', async () => {
-      const orgDocRef = db.doc('orgs/O001');
+      const orgDocRef = db.doc('orgs/O005');
       await assertFails(orgDocRef.delete());
     });
 
