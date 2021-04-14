@@ -5,7 +5,7 @@
   <form [formGroup]="form" fxLayout="column">
     <mat-form-field appearance="outline">
       <mat-label>Specific Terms</mat-label>
-      <textarea 
+      <textarea
         matInput
         placeholder="eg: Licensee shall have t
         he exclusive option to acquire additional Episodes of the Program(s) or additional Rights during the Licence Period for an additional fee equal or superior to the actual fee per Episode."
@@ -13,24 +13,26 @@
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
         cdkAutosizeMinRows="4"
-        maxlength="500">
+        maxlength="500"
+        test-id="specific-terms">
       </textarea>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Delivery List</mat-label>
-      <textarea 
+      <textarea
         matInput
         placeholder="Delivery list"
         formControlName="delivery"
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
         cdkAutosizeMinRows="4"
-        maxlength="500">
+        maxlength="500"
+        test-id="delivery-list">
       </textarea>
     </mat-form-field>
   </form>
 
-  <button mat-flat-button color="primary" (click)="createOffer()">
+  <button mat-flat-button color="primary" (click)="createOffer()" test-id="send-offer">
     Send Your Offer
   </button>
   <button mat-button mat-dialog-close>

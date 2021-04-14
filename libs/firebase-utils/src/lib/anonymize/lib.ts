@@ -146,7 +146,8 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'campaigns/',
     'permissions/',
     'publicContracts/',
-    'analytics/'
+    'analytics/',
+    'terms/'
   ];
   if (!doc || ignorePaths.some((path) => docPath.includes(path))) return { docPath, content: doc };
 

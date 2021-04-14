@@ -12,7 +12,9 @@
     </mat-select>
   </mat-form-field>
 
-  <static-select [withoutValues]="['world']" [control]="form.get('addresses').get('main').get('country')" required
+  <static-select [withoutValues]="['world']" [control]="form.get('addresses').get('main').get('country')"
+    required
+    test-id="address-country"
     scope="territories">
     <mat-label>Company Country of Origin</mat-label>
   </static-select>
