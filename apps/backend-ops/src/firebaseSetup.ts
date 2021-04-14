@@ -81,7 +81,7 @@ export async function prepareForTestingBeta() {
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');
-  restoreAnonStorageFromCI();
+  await restoreAnonStorageFromCI();
   console.info('Storage synced!');
 
   console.info('Preparing database & storage by running migrations...');
