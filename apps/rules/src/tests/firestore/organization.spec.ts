@@ -23,7 +23,7 @@ describe('Organization Rules Tests', () => {
       await assertSucceeds(orgDocRef.set({status: 'pending'}));
     });
 
-    test('should not be able to update document', async () => {
+    test('non-member should not be able to update document', async () => {
       const orgDocRef = db.doc('orgs/O001');
       await assertFails(orgDocRef.update({note : 'document updated'}));
     });
@@ -94,8 +94,8 @@ describe('Organization Rules Tests', () => {
 
     afterAll(() => Promise.all(apps().map((app) => app.delete())));
 
-    test('should be able to read document', async () => {
-      const orgDocRef = db.doc('orgs/O001');
+    test('should be able to read own Org document', async () => {
+      const orgDocRef = db.doc('orgs/O004');
       await assertSucceeds(orgDocRef.get());
     });
 
@@ -143,5 +143,3 @@ describe('Organization Rules Tests', () => {
     });
   });
 });
-
-
