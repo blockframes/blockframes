@@ -25,6 +25,7 @@ export async function restoreStorageFromCi(ciApp: admin.app.App) {
       quiet: true,
       mirror: true,
       from: `gs://${CI_STORAGE_BACKUP}/${folderName}`,
+      exclude: 'protected.*\.mp4$|protected.*\.mov$',
       to: `gs://${firebase().storageBucket}`,
     });
 }

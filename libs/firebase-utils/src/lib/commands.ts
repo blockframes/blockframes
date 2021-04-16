@@ -85,12 +85,19 @@ export function runShellCommandExec(cmd: string) {
   return procPromise;
 }
 
-export async function gsutilTransfer({ from, to, quiet, rsync = true, mirror }: { from: string; to: string; quiet?: boolean; rsync?: boolean; mirror?: boolean }) {
+/**
+ * WARNING - if not using `rsync` and enabling `mirror`, this command will WIPE
+ * the destination URL. So if you specify the root of a GCS bucket, that whole bucket
+ * will be deleted. Be careful!
+ * @param param0 settings object
+ * @returns a promise which is resolved when transfer is complete
+ */
+export async function gsutilTransfer({ from, to, quiet, rsync = true, mirror, exclude }: { from: string; to: string; quiet?: boolean; rsync?: boolean; mirror?: boolean, exclude?: string }) {
   let cmd: string;
   if (!rsync && mirror) {
     cmd = `gsutil -m ${quiet ? '-q ' : ''}rm -r "${to}"`;
     await runShellCommandExec(cmd);
   }
-  cmd = `gsutil -m ${quiet ? '-q ' : ''}${rsync ? 'rsync' : 'cp'} ${rsync && mirror ? '-d ' : ''}-r "${from}" "${to}"`;
+  cmd = `gsutil -m ${quiet ? '-q ' : ''}${rsync ? 'rsync' : 'cp'} ${rsync && mirror ? '-d ' : ''}${exclude ? `-x "${exclude}" ` : ''}-r "${from}" "${to}"`;
   return runShellCommandExec(cmd);
 }
