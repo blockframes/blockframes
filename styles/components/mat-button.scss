@@ -90,7 +90,11 @@
     }
   }
 
-  .mat-button,
+  .mat-button {
+    padding: 12px 8px;
+    margin: 0 24px;
+  }
+
   .mat-flat-button,
   .mat-raised-button,
   .mat-stroked-button {
