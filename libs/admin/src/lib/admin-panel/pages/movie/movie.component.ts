@@ -6,7 +6,7 @@ import { getValue } from '@blockframes/utils/helpers';
 import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { app } from '@blockframes/utils/apps';
+import { app, appName } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
@@ -32,6 +32,7 @@ export class MovieComponent implements OnInit {
   public storeStatus = storeStatus;
   public productionStatus = productionStatus;
   public apps = app.filter(app => app !== 'crm');
+  public appName = appName;
 
   public versionColumnsTable = {
     'id': { value: 'Id', disableSort: true },
@@ -101,17 +102,17 @@ export class MovieComponent implements OnInit {
     }
 
     for (const app of this.apps) {
-      if(this.movie.app[app].status !== "accepted" && this.movieAppConfigForm.controls[app].get('status').value === "accepted") {
-        this.movie.app[app].status = this.movieAppConfigForm.controls[app].get('status').value;
-        this.movie.app[app].acceptedAt = new Date();
-        this.movie.app[app].refusedAt = null;
-      }
-      if(this.movie.app[app].status !== "refused" && this.movieAppConfigForm.controls[app].get('status').value === "refused") {
-        this.movie.app[app].status = this.movieAppConfigForm.controls[app].get('status').value;
-        this.movie.app[app].refusedAt = new Date();
-        this.movie.app[app].acceptedAt = null;
-      }
+      this.movie.app[app].refusedAt = null;
+      this.movie.app[app].acceptedAt = null;
       this.movie.app[app].access = this.movieAppConfigForm.controls[app].get('access').value;
+      this.movie.app[app].status = this.movieAppConfigForm.controls[app].get('status').value;
+
+      if(this.movieAppConfigForm.controls[app].get('status').value === "accepted") {
+        this.movie.app[app].acceptedAt = new Date();
+      }
+      if(this.movieAppConfigForm.controls[app].get('status').value === "refused") {
+        this.movie.app[app].refusedAt = new Date();
+      }
     }
 
     return this.movie.app;

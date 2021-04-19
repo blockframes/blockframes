@@ -20,7 +20,7 @@ import {
   SocialGoal
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/static-model/types";
-import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
+import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
 import { App } from "@blockframes/utils/apps";

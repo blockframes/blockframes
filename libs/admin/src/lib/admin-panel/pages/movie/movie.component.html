@@ -35,6 +35,7 @@
     <h2>Application Access</h2>
     <form [formGroup]="movieAppConfigForm" fxLayout="column">
       <div *ngFor="let app of apps" fxFlex>
+        <span>{{ appName[app] }}</span>
         <div [formGroupName]="app" fxLayoutAlign="start center" fxLayoutGap="16px">
           <mat-form-field appearance="outline">
             <mat-label>Status</mat-label>
