@@ -144,6 +144,7 @@ export const icons = [
   { name: 'update', url: 'assets/icons/update.svg' },
   { name: 'USD', url: 'assets/icons/attach_money.svg' },
   { name: 'validation_required', url: 'assets/icons/validation_required.svg' },
+  { name: 'video', url: 'assets/icons/video.svg' },
   { name: 'videocam', url: 'assets/icons/videocam.svg' },
   { name: 'videocam_off', url: 'assets/icons/videocam_off.svg' },
   { name: 'video_library', url: 'assets/icons/video_library.svg' },
