@@ -130,7 +130,7 @@ commands:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
       - deploy
-      - run: npm run backend-ops upgrade
+      - run: npm run backend-ops upgradeBeta
       - slack/status
   build_deploy_prepare:
     description: 'Build & deploy project & prepare by loading test data'
