@@ -57,7 +57,15 @@ export class ItemComponent {
     private organizationService: OrganizationService,
     private userService: UserService,
     private routerQuery: RouterQuery
-  ) { }
+  ) { 
+    // @ts-ignore
+    if (window.Cypress) {
+      const host = location.protocol + '//' + location.hostname + 
+                    (location.port ? ':' +location.port: '');
+      this.applicationUrl.festival = host;
+      this.applicationUrl[this.app] = host;
+    }
+  }
 
   get eventLink() {
     if (this._invitation.type === 'attendEvent') {
