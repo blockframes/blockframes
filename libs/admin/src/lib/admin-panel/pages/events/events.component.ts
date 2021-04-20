@@ -62,7 +62,7 @@ export class EventsComponent implements OnInit {
     this.rows = events.map(event => {
       const row = { ...event } as any;
       const invitations = invites.filter(inv => inv.eventId === event.id);
-      const org = orgs.find(org => org.id === event.ownerOrgId);
+      const org = orgs.find(o => o.id === event.ownerOrgId);
       row.hostedBy = !!org ? orgName(org) : '--';
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
