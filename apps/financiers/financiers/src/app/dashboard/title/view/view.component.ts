@@ -13,6 +13,10 @@ import { switchMap } from 'rxjs/operators';
 
 const links: RouteDescription[] = [
   {
+    path: 'activity',
+    label: 'Marketplace'
+  },
+  {
     path: 'main',
     label: 'Main'
   },
