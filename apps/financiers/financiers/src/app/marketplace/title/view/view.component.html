@@ -17,7 +17,7 @@
     </movie-header>
 
     <section class="progress" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
-      <h1>Project Funding</h1>
+      <h2>Project Funding</h2>
       <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
       <ng-container *ngIf="orgs$ | async as orgs">
         <p class="mat-caption">Contact financier for further information</p>

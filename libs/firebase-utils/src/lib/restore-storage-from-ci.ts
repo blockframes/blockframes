@@ -19,7 +19,9 @@ export async function restoreStorageFromCi(ciApp: admin.app.App) {
     console.log('Latest backup:', folderName);
 
     console.log("Mirroring storage bucket from blockframe-ci to your local project's storage bucket...");
+    const exclude = 'protected.*.mp4$|protected.*.mov$|protected.*.mkv$|protected.*.3gpp$|protected.*.wmv$|protected.*.avi$';
     await gsutilTransfer({
+      exclude,
       quiet: true,
       mirror: true,
       from: `gs://${CI_STORAGE_BACKUP}/${folderName}`,

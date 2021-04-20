@@ -29,7 +29,7 @@
       <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
       <article fxFlex fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
-        <span class="mat-display-2">{{ org | orgName }}</span>
+        <h1 class="mat-display-2">{{ org | orgName }}</h1>
         <h2>{{ org | orgAddress }}</h2>
         <p class="mat-body-2">{{ org.description }}</p>
         <ng-content></ng-content>
