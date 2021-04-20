@@ -7,7 +7,7 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate, migrateBeta } from './migrations';
 import { importFirestore, restore } from './admin';
-import { copyFirestoreExportFromCiBucket, getBackupBucket, latestAnonDbDir, latestAnonDbFilename, loadAdminServices, restoreAnonStorageFromCI, runShellCommand } from "@blockframes/firebase-utils";
+import { copyFirestoreExportFromCiBucket, getBackupBucket, latestAnonDbDir, latestAnonDbFilename, loadAdminServices, restoreAnonStorageFromCI } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
