@@ -21,11 +21,14 @@ import {
   invitationToJoinOrgDeclined,
   requestToJoinOrgDeclined,
   invitationToEventFromOrgUpdated,
-  userJoinOrgPendingRequest
+  userJoinOrgPendingRequest,
+  offerCreatedEmail
 } from './templates/mail';
 import { templateIds, unsubscribeGroupIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
+import { appUrl } from '@env';
+import { format } from "date-fns";
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -189,6 +192,11 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'invitationToAttendEventUpdated':
         await sendInvitationToAttendEventUpdatedEmail(recipient, notification)
+          .then(_ => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case 'offerCreated':
+        await sendOfferCreated(recipient, notification)
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -424,5 +432,15 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
   const user = createPublicUserDocument(notification.user);
   const app = notification._meta.createdFrom;
   const template = requestToJoinOrgDeclined(user, orgName(org));
+  await sendMailFromTemplate(template, app, unsubscribeId);
+}
+
+/** Send copy of offer that recipient has created */
+async function sendOfferCreated(recipient: User, notification: NotificationDocument) {
+  const org =  await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
+  const app: App = 'catalog';
+  const baseUrl = appUrl['content'];
+  const date = format(new Date(), 'dd MMMM, yyyy');
+  const template = offerCreatedEmail(org, notification.bucket, recipient, baseUrl, date);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }

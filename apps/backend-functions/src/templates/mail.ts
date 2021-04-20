@@ -8,6 +8,7 @@ import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocumen
 import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData } from '@blockframes/utils/emails/utils';
 import { App } from '@blockframes/utils/apps';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -297,6 +298,12 @@ export function reminderEventToUser(
 export function movieAcceptedEmail(toUser: PublicUser, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { userFirstName: toUser.firstName, movieTitle, movieUrl };
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
+}
+
+/** */
+export function offerCreatedEmail(org: OrganizationDocument, bucket: Bucket, user: User, baseUrl: string, date: string): EmailTemplateRequest {
+  const data = { org, bucket, user, baseUrl, date };
+  return { to: user.email, templateId: templateIds.offer.created, data };
 }
 
 // ------------------------- //

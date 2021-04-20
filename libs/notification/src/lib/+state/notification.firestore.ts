@@ -5,6 +5,7 @@ import { PublicInvitation } from '@blockframes/invitation/+state/invitation.fire
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 
 // Type of notification used in front
 export const notificationTypesBase = [
@@ -25,6 +26,9 @@ export const notificationTypesBase = [
   'requestToAttendEventCreated',
   'invitationToAttendMeetingCreated',
   'invitationToAttendScreeningCreated',
+
+  // Notifications related to offers
+  'offerCreated'
 ] as const;
 
 // All the other notification types
@@ -54,7 +58,8 @@ export interface NotificationBase<D> {
   docId?: string;
   movie?: PublicMovie;
   organization?: PublicOrganization;
-  invitation?: PublicInvitation,
+  invitation?: PublicInvitation;
+  bucket?: Bucket;
   /** @dev Type of the notification */
   type: NotificationTypes;
   email?: {
