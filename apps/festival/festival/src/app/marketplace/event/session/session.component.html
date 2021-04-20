@@ -8,7 +8,7 @@
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
               <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo">
               <h4>{{ event.org | orgName }} presents</h4>
-              <span class="mat-display-2">{{ event.movie.title.international }}</span>
+              <h1 class="mat-display-2">{{ event.movie.title.international }}</h1>
               <h2>by {{ event.movie.directors | displayName }}</h2>
               <span class="mat-caption">Screening now</span>
               <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">

@@ -78,7 +78,7 @@
             <mat-icon [matBadge]="node.form.length ? node.form.length : ''" matBadgeSize="small" mat-list-icon svgIcon="folder"></mat-icon>
           </ng-container>
           <ng-container *ngIf="node.type === 'file'">
-            <mat-icon [matBadge]="!!node.form.value.storagePath ? '✓' : ''" matBadgeSize="small" mat-list-icon svgIcon="document"></mat-icon>
+            <mat-icon [matBadge]="!!node.form.value.storagePath ? '✓' : ''" matBadgeSize="small" mat-list-icon [svgIcon]="node.accept === 'video' ? 'video' : 'document'"></mat-icon>
           </ng-container>
           <ng-container *ngIf="node.type === 'image'">
             <mat-icon [matBadge]="!!node.form.value.storagePath ? '✓' : ''" matBadgeSize="small" mat-list-icon svgIcon="image"></mat-icon>

@@ -11,7 +11,7 @@ import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
@@ -30,10 +30,14 @@ export class InvitationService extends CollectionService<InvitationState> {
   public getInvitationLinkedToEmail = this.functions.httpsCallable('getInvitationLinkedToEmail');
 
   myInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
-    switchMap((user: AuthState) => combineLatest([
-      this.valueChanges(ref => ref.where('toOrg.id', '==', user.profile.orgId)),
-      this.valueChanges(ref => ref.where('toUser.uid', '==', user.profile.uid))
-    ])),
+    switchMap((user: AuthState) => {
+      if (!!user.profile) {
+        return combineLatest([
+          this.valueChanges(ref => ref.where('toOrg.id', '==', user.profile.orgId)),
+          this.valueChanges(ref => ref.where('toUser.uid', '==', user.profile.uid))
+        ])
+      } else return of()
+    }),
     map(([toOrg, toUser]) => [...toOrg, ...toUser]),
     shareReplay(1)
   )

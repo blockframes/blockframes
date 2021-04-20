@@ -1,10 +1,10 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
 
-  <h1>Main Information</h1>
+  <h2>Main Information</h2>
   <!-- Sales Pitch -->
   <ng-container *ngIf="movie.promotional.salesPitch?.jwPlayerId || movie.promotional.salesPitch?.description">
     <section id="sales-pitch" *ngIf="movie.promotional.salesPitch as salesPitch">
-      <h2>Sales Pitch</h2>
+      <h3>Sales Pitch</h3>
       <article fxLayout="row" fxLayoutGap="40px">
         <video-viewer [ref]="salesPitch" *ngIf="salesPitch.jwPlayerId"></video-viewer>
         <p>{{ salesPitch.description }}</p>
@@ -16,7 +16,7 @@
 
   <!-- Storyline Information -->
   <section *ngIf="movie | hasKeys: keys.main">
-    <h2>Storyline Elements</h2>
+    <h3>Storyline Elements</h3>
     <article *ngIf="movie.logline">
       <h5>Logline</h5>
       <p>{{ movie.logline }}</p>
@@ -41,7 +41,7 @@
 
   <!-- GENERAL INFORMATION -->
   <section *ngIf="movie | hasKeys: keys.general ">
-    <h2>General Information</h2>
+    <h3>General Information</h3>
 
     <article *ngIf="movie.release.year">
       <h5>Release Year</h5>
@@ -94,7 +94,7 @@
 
   <!-- Directors -->
   <section *ngIf="movie.directors.length">
-    <h2>Directors</h2>
+    <h3>Directors</h3>
     <article grid>
       <ng-container *ngFor="let director of movie.directors">
         <title-credit-card [col]="3" [credit]="director" type="director"></title-credit-card>
@@ -103,14 +103,14 @@
   </section>
 
 
-  <h1 *ngIf="(movie | hasKeys: keys.prizes) && (movie | hasStatus: status.afterProd)">
+  <h2 *ngIf="(movie | hasKeys: keys.prizes) && (movie | hasStatus: status.afterProd)">
     Selections & Reviews
-  </h1>
+  </h2>
 
 
   <!-- Festival -->
   <section *ngIf="(movie.prizes.length || movie.customPrizes.length) && (movie | hasStatus: status.afterProd)">
-    <h2>Festivals & Awards</h2>
+    <h3>Festivals & Awards</h3>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">
         <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
@@ -125,7 +125,7 @@
 
   <!-- Review -->
   <section *ngIf="movie.review.length && (movie | hasStatus: status.afterProd)">
-    <h2>Film Reviews</h2>
+    <h3>Film Reviews</h3>
     <article grid>
       <ng-container *ngFor="let review of movie.review">
         <title-review-card [col]="3" [review]="review"></title-review-card>
