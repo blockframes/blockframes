@@ -10,12 +10,16 @@ export async function upgrade(db: Firestore) {
   */
   return runChunks(movies.docs, async (movieDoc) => {
     const movie = movieDoc.data();
+    let update = false;
     for (const release of movie.originalRelease) {
       if (release.media === 'hotels') {
         release.media = 'video';
+        update = true;
       }
     }
   
-    await movieDoc.ref.set(movie);
+    if (update) {
+      await movieDoc.ref.set(movie);
+    }
   });
 }
