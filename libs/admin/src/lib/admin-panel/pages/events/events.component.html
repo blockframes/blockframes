@@ -20,8 +20,5 @@
     <ng-template colRef="end" let-end>
       {{ end | date: 'medium'}}
     </ng-template>
-    <ng-template colRef="hostedBy" let-hostedBy>
-      {{ hostedBy ? (hostedBy | orgName:'long') : '--'}}
-    </ng-template>
   </bf-table-filter>
 </main>
