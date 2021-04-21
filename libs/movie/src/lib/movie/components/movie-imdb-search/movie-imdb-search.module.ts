@@ -42,10 +42,6 @@ import { MovieImdbSearchComponent } from "./movie-imdb-search.component";
     // Librairies
     PasswordConfirmModule,
   ],
-  providers: [ ],
-  entryComponents: [
-    MovieImdbSearchComponent
-  ],
   exports: [
     MovieImdbSearchComponent
   ],
