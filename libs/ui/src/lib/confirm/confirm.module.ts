@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 @NgModule({
   declarations: [ConfirmComponent],
   imports: [CommonModule, MatButtonModule, FlexLayoutModule,],
-  exports: [ConfirmComponent],
-  entryComponents: [ConfirmComponent,]
+  exports: [ConfirmComponent]
 })
 export class ConfirmModule { }
