@@ -15,6 +15,10 @@
     &.hidden {
       visibility: hidden;
     }
+
+    &.mirrored {
+      transform: rotateY(180deg);
+    }
   }
 
   svg {

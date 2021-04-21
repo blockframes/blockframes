@@ -28,7 +28,9 @@ beforeEach(() => {
   p2.clickSignIn();
 });
 
-describe('Create a new bucket and finalize a new offer', () => {
+//TODO : Dependent on import function
+//Issue #5469: E2E excel import test
+describe.skip('Create a new bucket and finalize a new offer', () => {
   it('Log in, go to the library page, add movie to the bucket and create an offer', () => {
     const p1 = new HomePage();
     p1.openSidenavMenuAndNavigate('library');
