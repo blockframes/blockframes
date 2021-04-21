@@ -215,7 +215,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'offerCreated':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: `Your offer has been sent`,
+          message: `Your offer was successfully sent.`,
           placeholderUrl: 'profil_user.webp'
         }
       default:
