@@ -85,7 +85,6 @@ export class MoviesComponent implements OnInit {
         'org': m.org ? orgName(m.org) : '--',
         'orgId': m.org ? m.org.id : '--',
         'status': m.storeConfig.status,
-        'storeType': m.storeConfig.storeType,
         'distributionRightsInfo': m.distributionRightsInfo.count,
         'contractsInfo': m.contractsInfo.count,
       }));

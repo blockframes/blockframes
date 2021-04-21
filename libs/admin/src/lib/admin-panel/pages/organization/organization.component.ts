@@ -43,7 +43,6 @@ export class OrganizationComponent implements OnInit {
     'title.original': 'Original title',
     'releaseYear': 'Release year',
     'storeConfig.status': 'Status',
-    'storeConfig.storeType': 'Store type'
   };
 
   public initialColumnsMovies: string[] = [
@@ -53,7 +52,6 @@ export class OrganizationComponent implements OnInit {
     'title.original',
     'releaseYear',
     'storeConfig.status',
-    'storeConfig.storeType'
   ];
 
   public memberColumns = {
@@ -152,7 +150,6 @@ export class OrganizationComponent implements OnInit {
       'title.original',
       'releaseYear',
       'storeConfig.status',
-      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

@@ -280,12 +280,16 @@ service cloud.firestore {
     	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
       allow read: if userHasValidOrg()
         && notInMaintenance()
-        && ( existingData().storeConfig.status == 'accepted'
+        && ( existingData().app.catalog.status == 'accepted'
+         || existingData().app.festival.status == 'accepted'
+         || existingData().app.financiers.status == 'accepted'
          || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
         )
       allow create: if userHasValidOrg()
-        && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
-      	&& isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
+        && incomingData().app.catalog.status == 'draft'
+        && incomingData().app.festival.status == 'draft'
+        && incomingData().app.financiers.status == 'draft'
+        && isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
         && canCreateNewPermissions(userOrgId(), movieId)
         && notInMaintenance();
       allow update: if isAllowedToUpdateMovie() && notInMaintenance();
@@ -300,15 +304,14 @@ service cloud.firestore {
         && isNotUpdatingField(['_meta', 'createdBy'])
         && isNotUpdatingField(['_meta', 'createdAt'])
         && isNotUpdatingField(['_type'])
-        && ( isNotUpdatingField(['storeConfig','status'])
-          || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'draft', 'accepted'] )
-          || ( existingData().storeConfig.appAccess.catalog == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
-          || ( existingData().storeConfig.appAccess.financiers == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
+        && ( isNotUpdatingField(['app'])
+          || ( existingData().app.festival.access == true && incomingData().app.festival.status in ['submitted', 'draft', 'accepted'] )
+          || ( existingData().app.catalog.access == true && incomingData().app.catalog.status in ['submitted', 'draft'] )
+          || ( existingData().app.financiers.access == true && incomingData().app.financiers.status in ['submitted', 'draft'] )
         )
-        && isNotUpdatingField(['storeConfig','storeType'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'financiers'])
+        && isNotUpdatingField(['app','catalog', 'access'])
+        && isNotUpdatingField(['app','festival', 'access'])
+        && isNotUpdatingField(['app','financiers', 'access'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
     }
 

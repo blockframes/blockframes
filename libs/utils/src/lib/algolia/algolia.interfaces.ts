@@ -3,7 +3,6 @@ import {
   Territory,
   Genre,
   Language,
-  StoreType,
   StoreStatus,
   ProductionStatus,
   OrgActivity,
@@ -44,7 +43,6 @@ interface MovieIndexConfig {
   originCountries: Territory,
   status: ProductionStatus,
   storeConfig: StoreStatus,
-  storeType: StoreType,
 }
 
 interface OrganizationIndexConfig {

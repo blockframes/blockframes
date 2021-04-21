@@ -223,10 +223,6 @@ const fields = {
   //////////////////
   // ADMIN FIELDS
   //////////////////
-  storeType: {
-    multiLine: false,
-    index: index++
-  },
   storeStatus: {
     multiLine: false,
     index: index++
@@ -406,9 +402,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
       //////////////////
 
       if (this.isUserBlockframesAdmin) {
-
-        // STORE TYPE
-        formatSingleValue(this.mapping.storeType, 'storeType', 'storeConfig.storeType', movie);
 
         // MOVIE STATUS
         formatSingleValue(this.mapping.storeStatus, 'storeStatus', 'storeConfig.status', movie);
