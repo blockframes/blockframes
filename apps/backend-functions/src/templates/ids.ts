@@ -62,6 +62,9 @@ export const templateIds = {
   },
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
+  },
+  offer: {
+    created: 'd-94a20b20085842f68fb2d64fe325638a'
   }
 }
 
