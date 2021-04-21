@@ -62,8 +62,7 @@ export class ItemComponent {
     //where app is launced to remove dependency on external host.
     // @ts-ignore
     if (window.Cypress) {
-      const host = location.protocol + '//' + location.hostname + 
-                    (location.port ? ':' +location.port: '');
+      const host = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port: ' '}`;
       this.applicationUrl.festival = host;
       this.applicationUrl[this.app] = host;
     }
