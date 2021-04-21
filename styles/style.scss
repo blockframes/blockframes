@@ -35,23 +35,21 @@ a {
 
 p a {
   position: relative;
-  text-decoration: underline;
 }
 
 p a:after {
-  width: 0;
+  left: 0;
   bottom: 0;
   content: "";
   display: block;
   height: 1px;
   position: absolute;
   background: var(--foreground-text);
-  transition: bottom 300ms ease-in
+  width: 100%;
+  transition: transform 300ms ease-in;
 }
 p a:hover:after {
-  width: 100%;
-  left: 0;
-  bottom: -2px;
+  transform: translateY(2px);
 }
 
 p a:hover {
