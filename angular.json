@@ -1595,7 +1595,7 @@
           "options": {
             "cypressConfig": "apps/financiers/financiers-e2e/cypress.json",
             "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
-            "devServerTarget": "financiers:serve",
+            "baseUrl": "http://localhost:4200",
             "browser": "chrome"
           },
           "configurations": {

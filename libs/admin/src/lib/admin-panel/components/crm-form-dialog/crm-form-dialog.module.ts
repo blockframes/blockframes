@@ -17,7 +17,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     MatFormFieldModule
   ],
-  exports: [CrmFormDialogComponent],
-  entryComponents: [CrmFormDialogComponent]
+  exports: [CrmFormDialogComponent]
 })
 export class CrmFormDialogModule { }

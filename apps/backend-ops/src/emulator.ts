@@ -18,12 +18,12 @@ import {
   latestAnonStorageDir,
   gsutilTransfer
 } from '@blockframes/firebase-utils';
-import { ChildProcess, execSync } from 'child_process';
+import { ChildProcess } from 'child_process';
 import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket, firebase } from '@env'
-import { migrate, migrateBeta } from './migrations';
+import { migrateBeta } from './migrations';
 import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
