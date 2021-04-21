@@ -76,7 +76,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
             {
               path: 'o',
               canActivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard, EmailVerifiedGuard],
-              canDeactivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard, EmailVerifiedGuard],
+              canDeactivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
               children
             }
           ]

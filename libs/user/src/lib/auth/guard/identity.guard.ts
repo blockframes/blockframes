@@ -29,15 +29,15 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
         if (!userAuth) {
           return of(true);
         };
+        if (!userAuth.emailVerified) {
+          return of(this.router.navigate(['c/organization/join-congratulations']));
+        }
         return this.service.sync().pipe(
           catchError(() => Promise.resolve(true)),
           map(_ => this.query.user),
           map(async user => {
             if (!hasDisplayName(user)) { return true; }
             if (!!user.orgId) {
-              const { emailVerified } = await this.service.user;
-              if (!emailVerified) return this.router.navigate(['c/organization/join-congratulations']);
-
               const org = await this.orgService.getValue(user.orgId);
               if (!org) {
                 return true;
