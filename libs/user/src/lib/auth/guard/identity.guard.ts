@@ -35,6 +35,9 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
           map(async user => {
             if (!hasDisplayName(user)) { return true; }
             if (!!user.orgId) {
+              const { emailVerified } = await this.service.user;
+              if (!emailVerified) return this.router.navigate(['c/organization/join-congratulations']);
+
               const org = await this.orgService.getValue(user.orgId);
               if (!org) {
                 return true;

@@ -33,19 +33,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OrganizationPendingComponent } from './pages/organization-pending/organization-pending.component';
 
 // Guards
-import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
-import { NoOrganizationGuard } from './guard/no-organization.guard';
+import { NotFullyVerifiedGuard } from '@blockframes/auth/guard/not-fully-verified.guard';
 import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 
 export const noOrganizationRoutes: Routes = [
   {
     path: '',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canActivate: [NotFullyVerifiedGuard],
     pathMatch: 'full'
   },
   {
     path: 'join-congratulations',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
+    canActivate: [NotFullyVerifiedGuard],
     component: OrganizationPendingComponent
   },
   {

@@ -1,6 +1,7 @@
 import { Routes, Route } from '@angular/router';
 import { UserRedirectionGuard } from '@blockframes/auth/guard/user-redirection.guard';
 import { AuthGuard } from '@blockframes/auth/guard/auth.guard';
+import { EmailVerifiedGuard } from '@blockframes/auth/guard/email-verified.guard';
 import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.guard';
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { NotificationsGuard } from '@blockframes/notification/notifications.guard';
@@ -74,8 +75,8 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
             },
             {
               path: 'o',
-              canActivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
-              canDeactivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
+              canActivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard, EmailVerifiedGuard],
+              canDeactivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard, EmailVerifiedGuard],
               children
             }
           ]
