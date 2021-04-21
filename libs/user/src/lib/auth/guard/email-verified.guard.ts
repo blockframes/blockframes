@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthQuery } from '../+state';
 import { map } from 'rxjs/operators';
+import { toDate } from '@blockframes/utils/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,9 @@ export class EmailVerifiedGuard implements CanActivate  {
   canActivate() {
     return this.authQuery.select().pipe(
       map(user => {
-        // Before we forced users to verify email, the user didnt have a createdAt value yet.
-        // Therefore we still give access to these old users by checking if they have this value.
-        if (!!user.profile._meta?.createdAt && !user.emailVerified) {
+        // Only since the specified date we enforce users to verify their email address.
+        const isOld = !user.profile._meta || toDate(user.profile._meta.createdAt) < new Date('2021-05-31');
+        if (!isOld && !user.emailVerified) {
           return this.router.createUrlTree(['/auth/identity']);
         } else {
           return true;
