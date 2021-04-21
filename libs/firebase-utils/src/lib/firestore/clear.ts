@@ -4,7 +4,6 @@ import { Queue } from "../queue";
 import { CollectionReference, DocumentReference, Firestore } from "../types";
 import { firebase } from '@env';
 import { throwOnProduction } from "../util";
-import { execSync } from "child_process";
 import { runShellCommandExec } from "../commands";
 
 export async function clear(db: FirebaseFirestore.Firestore) {

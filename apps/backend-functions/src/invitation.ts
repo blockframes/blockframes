@@ -41,7 +41,7 @@ export async function onInvitationWrite(
   if (!invitationDoc) {
 
     if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') {
-      const user = await getUser(invitationDocBefore.toUser.uid)
+      const user = await getUser(invitationDocBefore.toUser.uid);
 
       // Remove user in users collection
       if (invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
@@ -50,7 +50,7 @@ export async function onInvitationWrite(
         const invitationCollectionRef = db.collection('invitations')
           .where('toUser.uid', '==', user.uid)
           .where('mode', '==', 'invitation')
-          .where('status', '==', 'pending')
+          .where('status', '==', 'pending');
         const existingInvitation = await invitationCollectionRef.get();
 
         // If there is an other invitation or the user has already an org, we don't want to delete its account

@@ -4,7 +4,7 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers, UserConfig } from './users';
-import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks, } from '@blockframes/firebase-utils';
+import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
@@ -231,7 +231,12 @@ export function cleanOrganizations(
     const { userIds = [], wishlist = [] } = org as OrganizationDocument;
 
     const validUserIds = Array.from(new Set(userIds.filter(userId => existingUserIds.includes(userId))));
-    if (validUserIds.length !== userIds.length) {
+    /* @TODO #5371
+    if (validUserIds.length === 0) {
+      // Removes permissions and orgs doc
+      const permissionRef = await getDocumentRef(`permissions/${org.id}`);
+      return Promise.all([permissionRef.ref.delete(), orgDoc.ref.delete()]);
+    } else */if (validUserIds.length !== userIds.length) {
       await orgDoc.ref.update({ userIds: validUserIds });
     }
 
