@@ -27,8 +27,6 @@ import {
 import { templateIds, unsubscribeGroupIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
-import { appUrl } from '@env';
-import { format } from "date-fns";
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -439,8 +437,6 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
 async function sendOfferCreated(recipient: User, notification: NotificationDocument) {
   const org =  await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const app: App = 'catalog';
-  const baseUrl = appUrl['content'];
-  const date = format(new Date(), 'dd MMMM, yyyy');
-  const template = offerCreatedEmail(org, notification.bucket, recipient, baseUrl, date);
+  const template = offerCreatedEmail(org, notification.bucket, recipient);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
