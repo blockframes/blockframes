@@ -6,19 +6,19 @@ import type { File as GFile } from '@google-cloud/storage';
 import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
 import { RuntimeOptions } from 'firebase-functions';
 
-export function getDocument<T>(path: string): Promise<T> {
+export function getDocumentRef(path: string): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
   const db = admin.firestore();
-  return db
-    .doc(path)
-    .get()
-    .then(doc => doc.data() as T);
+  return db.doc(path).get();
 }
 
-export function getCollectionRef<T>(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
+export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
-  return db
-    .collection(path)
-    .get();
+  return getDocumentRef(path).then(doc => doc.data() as T);
+}
+
+export function getCollectionRef(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
+  const db = admin.firestore();
+  return db.collection(path).get();
 }
 
 export function getCollection<T>(path: string): Promise<T[]> {

@@ -1,8 +1,6 @@
 import { backupBucket, firebase } from '@env'
-import { execSync } from "child_process";
 import { enableMaintenanceInEmulator } from "./emulator";
-import camelcase from 'camelcase'
-import { clearDbCLI, defaultEmulatorBackupPath, getLatestDirName, getLatestFolderURL, gsutilTransfer, importFirestoreEmulatorBackup, loadAdminServices, runShellCommandExec, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
+import { clearDbCLI, defaultEmulatorBackupPath, getLatestDirName, gsutilTransfer, importFirestoreEmulatorBackup, loadAdminServices, runShellCommandExec, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
 import { deleteAllUsers } from "@blockframes/testing/firebase";
 import { ensureMaintenanceMode } from "./tools";
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from "./algolia";
