@@ -4,7 +4,7 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers, UserConfig } from './users';
-import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks, getDocumentRef, } from '@blockframes/firebase-utils';
+import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks, getDocumentRef } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
