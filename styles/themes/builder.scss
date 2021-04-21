@@ -86,7 +86,7 @@
   // FOREGROUND //
   ////////////////
   $mat-foreground: (
-    base: rgba(map-get($primary, 200), 0.5),
+    base: map-get($foreground, 900),
     divider: map-get($foreground, 500),
     dividers: map-get($foreground, 500),
     disabled: map-get($foreground, 500),
