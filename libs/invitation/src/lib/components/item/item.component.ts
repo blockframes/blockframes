@@ -58,6 +58,8 @@ export class ItemComponent {
     private userService: UserService,
     private routerQuery: RouterQuery
   ) { 
+    //For cypress-environment, keep the event link same as from
+    //where app is launced to remove dependency on external host.
     // @ts-ignore
     if (window.Cypress) {
       const host = location.protocol + '//' + location.hostname + 
