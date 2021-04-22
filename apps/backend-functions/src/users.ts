@@ -7,7 +7,6 @@ import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationD
 import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
-import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
 
@@ -233,8 +232,7 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
 
     const urlToUse = applicationUrl[app];
 
-    const templateId = templateIds.user.credentials.joinOrganization[app];
-    const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
+    const template = userInvite(email, newUser.password, orgName, urlToUse);
     await sendMailFromTemplate(template, app);
 
     return newUser.user;
