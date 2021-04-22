@@ -88,15 +88,15 @@
 
         <div class="privacy" fxLayout="column" fxLayoutAlign="start">
           <auth-accept-conditions [control]="form.get('termsOfUse')">
-            <span conditionText>I hereby accept {{ appName }}</span>
-            <span conditionLink>Terms and Conditions</span>
+            <span conditionText>I hereby accept {{ appName }}&nbsp;</span>
+            <a conditionLink>Terms and Conditions</a>
             <ng-template authConditions>
               <auth-terms-conditions></auth-terms-conditions>
             </ng-template>
           </auth-accept-conditions>
           <auth-accept-conditions [control]="form.get('privacyPolicy')">
-            <span conditionText>I hereby accept the Processing of my Personal Data and declare to know</span>
-            <span conditionLink>the Conditions of such Processing and my rights under GDPR Regulation.</span>
+            <span conditionText>I hereby accept the Processing of my Personal Data and declare to know&nbsp;</span>
+            <a conditionLink>the Conditions of such Processing and my rights under GDPR Regulation</a>
             <ng-template authConditions>
               <auth-privacy-policy></auth-privacy-policy>
             </ng-template>
