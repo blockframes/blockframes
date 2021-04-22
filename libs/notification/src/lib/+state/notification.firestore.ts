@@ -41,6 +41,7 @@ export const notificationTypesPlus = [
   'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
   'orgAppAccessChanged',
+  'orgAppAccessRemoved'
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];

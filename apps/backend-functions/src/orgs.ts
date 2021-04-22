@@ -234,19 +234,19 @@ export async function onOrganizationDelete(
 }
 
 export const accessToAppChanged = async (
-  orgId: string
+  data: { orgId: string, accessGiven: boolean }
 ): Promise<ErrorResultResponse> => {
 
-  const adminIds = await getAdminIds(orgId);
+  const adminIds = await getAdminIds(data.orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+  const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
   const notifications: NotificationDocument[] = [];
   admins.map(async admin => {
     const notification = createNotification({
       toUserId: admin.uid,
       docId: admin.orgId,
       organization: createPublicOrganizationDocument(organization),
-      type: 'orgAppAccessChanged'
+      type: data.accessGiven ? 'orgAppAccessChanged' : 'orgAppAccessRemoved'
     });
 
     notifications.push(notification);

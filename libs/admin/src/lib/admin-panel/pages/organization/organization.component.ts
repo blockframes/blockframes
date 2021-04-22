@@ -17,6 +17,7 @@ import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
+import { OrgAppAccess } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organization',
@@ -139,7 +140,14 @@ export class OrganizationComponent implements OnInit {
     await this.organizationService.update(this.orgId, this.orgForm.value);
 
     if (this.notifyCheckbox.value) {
-      this.organizationService.notifyAppAccessChange(this.orgId);
+      const before = this.org.appAccess;
+      const after = this.orgForm.value.appAccess as OrgAppAccess;
+      const accessGiven = Object.keys(after).some(app => {
+        return Object.keys(after[app]).some(module => {
+          return after[app][module] === true && before[app][module] === false
+        });
+      });
+      this.organizationService.notifyAppAccessChange(this.orgId, accessGiven);
     }
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });

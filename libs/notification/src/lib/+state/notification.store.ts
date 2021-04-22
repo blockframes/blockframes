@@ -127,6 +127,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
+      case 'orgAppAccessRemoved':
         // @TODO #4046 Update text if needed
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
