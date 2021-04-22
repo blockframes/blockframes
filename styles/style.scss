@@ -57,6 +57,29 @@ p a:hover {
   text-decoration: none;
 }
 
+.inline-link {
+  position: relative;
+  white-space: nowrap;
+
+  &:after {
+    left: 0;
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 1px;
+    position: absolute;
+    background: var(--foreground-text);
+    width: 100%;
+    transition: transform 300ms ease-in;
+  }
+  &:after:hover {
+    transform: translateY(2px);
+  }
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 main {
   height: 100%;
 }
