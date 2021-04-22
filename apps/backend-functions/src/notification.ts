@@ -288,7 +288,7 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
       const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
       await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
-      const template = requestToAttendEventFromUserRefused(recipient, orgName(organizerOrg), eventData);
+      const template = requestToAttendEventFromUserRefused(recipient, orgName(organizerOrg), eventData, notification.organization.id);
       await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {
@@ -309,11 +309,11 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
     const userOrgName = orgName(userOrg);
     if (notification.invitation.status === 'accepted') {
       const templateId = templateIds.invitation.attendEvent.accepted;
-      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, templateId);
+      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, invitation.fromOrg.id, templateId);
       return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
       const templateId = templateIds.invitation.attendEvent.declined;
-      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, templateId);
+      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, invitation.fromOrg.id, templateId);
       return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {

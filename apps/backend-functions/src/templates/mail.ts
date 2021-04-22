@@ -203,6 +203,7 @@ export function invitationToEventFromOrgUpdated(
   user: User,
   userOrgName: string,
   event: EventEmailData,
+  orgId: string,
   templateId: string
 ): EmailTemplateRequest {
   const data = {
@@ -211,7 +212,8 @@ export function invitationToEventFromOrgUpdated(
     userLastName: user.lastName,
     userOrgName,
     event,
-    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`
+    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`,
+    pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}}/title`
   };
   return { to: admin.email, templateId, data };
 }
@@ -268,12 +270,14 @@ export function requestToAttendEventFromUserAccepted(
 export function requestToAttendEventFromUserRefused(
   toUser: PublicUser,
   organizerOrgName: string,
-  event: EventEmailData
+  event: EventEmailData,
+  orgId: string
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     organizerOrgName,
     event,
+    pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}/title`
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.declined, data };
 }
