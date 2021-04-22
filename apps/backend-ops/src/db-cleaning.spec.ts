@@ -17,6 +17,7 @@ import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/testing';
+import { app } from '@blockframes/utils/apps';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 let db: FirebaseFirestore.Firestore;
@@ -169,7 +170,7 @@ describe('DB cleaning script', () => {
 
     await cleanUsers(usersBefore, [testOrg.id], adminAuth, db);
 
-    /** 
+    /**
      * In this scenario, user should be removed from DB because it was not found in Auth (empty)
      * Since it is linked to an existing org, org and permissions documents should be updated
      * */
@@ -194,7 +195,23 @@ describe('DB cleaning script', () => {
 
   it('should clean organizations', async () => {
     const testUsers = [{ uid: 'A', email: 'A@fake.com' }, { uid: 'B', email: 'B@fake.com' }, { uid: 'C', email: 'C@fake.com' }, { uid: 'D', email: 'D@fake.com' }];
-    const testMovies = [{ id: 'mov-A', storeConfig: { status: 'accepted' } }, { id: 'mov-B', storeConfig: { status: 'draft' } }, { id: 'mov-C', storeConfig: { status: 'refused' } }];
+    const testMovies = [
+      { id: 'mov-A', app: {
+        catalog: { status: 'accepted', access: true },
+        festival: { status: 'draft', access: false },
+        financiers: { status: 'draft', access: false }}
+      },
+      { id: 'mov-B', app: {
+        catalog: { status: 'draft', access: true },
+        festival: { status: 'draft', access: false },
+        financiers: { status: 'draft', access: false }}
+      },
+      { id: 'mov-C', app: {
+        catalog: { status: 'refused', access: false },
+        festival: { status: 'draft', access: false },
+        financiers: { status: 'draft', access: false }}
+      }
+    ];
 
     const testOrgs = [
       { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid] },
@@ -666,8 +683,23 @@ describe('DB cleaning script', () => {
       { id: 'org-B', email: 'org-B@fake.com', wishlist: ['mov-B', 'mov-B'] },
       { id: 'org-C', email: 'org-C@fake.com', wishlist: ['mov-B', 'mov-A', 'mov-C'] },
     ];
-    const testMovies = [{ id: 'mov-A', storeConfig: { status: 'accepted' } }, { id: 'mov-B', storeConfig: { status: 'accepted' } }, { id: 'mov-C', storeConfig: { status: 'accepted' } }];
-
+    const testMovies = [
+      { id: 'mov-A', app: {
+        catalog: { status: 'accepted', access: true },
+        festival: { status: 'accepted', access: true },
+        financiers: { status: 'accepted', access: true }}
+      },
+      { id: 'mov-B', app: {
+        catalog: { status: 'accepted', access: true },
+        festival: { status: 'accepted', access: true },
+        financiers: { status: 'accepted', access: true }}
+      },
+      { id: 'mov-C', app: {
+        catalog: { status: 'accepted', access: true },
+        festival: { status: 'accepted', access: true },
+        financiers: { status: 'accepted', access: true }}
+      }
+    ];
     // Load our test set
     await populate('orgs', testOrgs);
     await populate('movies', testMovies);
@@ -739,7 +771,10 @@ function isOrgClean(
 
   const existingAndValidMovieIds = existingMovies.docs.filter(m => {
     const movie = m.data();
-    return movie.storeConfig.status === 'accepted'
+    const status = app.filter(a => a !== 'crm').map(appli => {
+      return movie.app[appli].status;
+    })
+    return status.some(s => s === 'accepted');
   }).map(m => m.id);
 
   const { userIds = [], wishlist = [] } = o;
