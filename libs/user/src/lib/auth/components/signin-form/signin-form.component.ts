@@ -9,7 +9,6 @@ import { SigninForm } from '../../forms/signin.form';
 })
 
 export class SigninFormComponent {
-  @Output() opened = new EventEmitter();
   @Output() submited = new EventEmitter();
 
   public signinForm = new SigninForm();
