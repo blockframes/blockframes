@@ -7,6 +7,7 @@ import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 import { SEC } from "@blockframes/e2e/utils/env";
+import { time } from "console";
 
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Hettie) ];
@@ -53,7 +54,32 @@ describe('User can fill and save contract tunnel form', () => {
       .should('be.visible')
       .should('contain', 'File uploaded');
 
-    cy.log("Movies uploaded successfully");
+    cy.log("Movies uploaded successfully; Starting import..");
+
+    cy.get('button[test-id="start-import"]', { timeout: 30 * SEC })
+      .click();
+
+    cy.log("Check if we reached submission container");
+    cy.wait(3 * SEC);
+    cy.get('h1', {timeout: 30 * SEC})
+      .contains("finalizing your submission");
+
+    cy.log("Check for 5 records in the extracted data");
+    cy.get('p[test-id="record-length"]', {timeout: 10 * SEC})
+      .contains("5");
+    
+    cy.log("Selecting all records to submit");
+    cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
+      .click();
+
+    cy.get('button[test-id="submit-records"]', {timeout: 3 * SEC})
+      .click();
+
+    cy.wait(5 * SEC);
+
+    cy.log("Movies submitted; navigate back");
+    cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
+      .click();
   });
 
   it.skip('Login as admin, Select contracts and import ', () => {
