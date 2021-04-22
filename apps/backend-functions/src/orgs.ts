@@ -55,8 +55,16 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
-    return triggerNotifications(notifications);
+    // Only send notification if invitations is invitation and not a request
+    const invitationsSnapshot = await db
+      .collection(`invitations`)
+      .where('toUser.uid', '==', userAddedId)
+      .where('type', '==', 'joinOrganization')
+      .where('fromOrg.id', '==', after.id).get();
+    if (!!invitationsSnapshot.docs.length) {
+      const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
+      return triggerNotifications(notifications);
+    }
 
     // Member removed
   } else if (before.userIds.length > after.userIds.length) {
