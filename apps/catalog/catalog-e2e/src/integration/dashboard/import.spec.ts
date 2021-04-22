@@ -13,6 +13,7 @@ const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Hettie) ];
 
 const movieFixture = 'movie1.xlsx';
+const contractFixture = 'Contract.xlsx';
 
 describe('User can fill and save contract tunnel form', () => {
   beforeEach(() => {
@@ -82,7 +83,7 @@ describe('User can fill and save contract tunnel form', () => {
       .click();
   });
 
-  it.skip('Login as admin, Select contracts and import ', () => {
+  it('Login as admin, Select contracts and import ', () => {
     // Connexion
     //const p2: AuthLoginPage = new AuthLoginPage();
     //p2.fillSignin(users[0]);
@@ -92,19 +93,50 @@ describe('User can fill and save contract tunnel form', () => {
     // Navigate to tunnel-contract
     //TODO: Check if we are in marketplace and switch to dashboard
 
-    cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
-      .click();
-
     cy.wait(1 * SEC);
 
+    cy.log("Select Contract type to upload");
     cy.get('mat-form-field', {timeout: 30 * SEC})
       .click();
     
     cy.get('mat-option')
-      .contains("Contracts")
+      .contains("Contract")
       .click();
+      
+    //Import the Movie file here: filePicker
+    cy.log("Start upload by attaching the fixture");
+    cy.get('#filePicker', {timeout: 10 * SEC})
+      .attachFile(contractFixture);
+
+    cy.get('[test-id="status-import"]', { timeout: 30 * SEC })
+      .should('be.visible')
+      .should('contain', 'File uploaded');
+
+    cy.log("Movies uploaded successfully; Starting import..");
+
+    cy.get('button[test-id="start-import"]', { timeout: 30 * SEC })
+      .click();
+
+    cy.log("Check if we reached submission container");
+    cy.wait(3 * SEC);
+    cy.get('h1', {timeout: 30 * SEC})
+      .contains("finalize your import");
+
+    cy.log("Check for 19 records in the extracted data");
+    cy.get('p[test-id="record-length"]', {timeout: 10 * SEC})
+      .contains("19");
     
-    //Import the contract file here:
-    cy.get('a [test-id="import-file"]')
+    cy.log("Selecting all records to submit");
+    cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
+      .click();
+
+    cy.get('button[test-id="submit-records"]', {timeout: 3 * SEC})
+      .click();
+
+    cy.wait(5 * SEC);
+
+    cy.log("Contracts submitted; navigate back");
+    cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
+      .click();
   });
 });
