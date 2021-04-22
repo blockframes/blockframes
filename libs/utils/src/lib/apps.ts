@@ -129,8 +129,13 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
 
 /** Return an array of the app access of the movie */
 export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
-  // return app.filter(a => movie.storeConfig.appAccess[a]);
-  return ['catalog'];
+  const apps = [];
+  app.filter(a => a !== 'crm').map(a => {
+    if (movie.app[a].access) {
+      apps.push(a)
+    }
+  });
+  return apps;
 }
 
 /**
@@ -138,7 +143,7 @@ export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
  * @param org
  * @param a
  * @example
- * // we don't know in witch app the module is
+ * // we don't know in which app the module is
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
  * getOrgModuleAccess(orgB); // ['marketplace']
  */

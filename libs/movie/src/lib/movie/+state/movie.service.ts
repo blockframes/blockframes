@@ -14,12 +14,12 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { App, getCurrentApp } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
-export const fromOrgAndAccepted = (orgId: string): QueryFn => ref => ref.where('storeConfig.status', '==', 'accepted').where('orgIds', 'array-contains', orgId);
+export const fromOrgAndAccepted = (orgId: string, app: App): QueryFn => ref => ref.where(`app.${app}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
 export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
 export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.where('internalRef', '==', internalRef);
 

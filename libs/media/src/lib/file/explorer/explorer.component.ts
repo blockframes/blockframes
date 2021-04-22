@@ -80,7 +80,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     const app: App = this.routerQuery.getData('app');
     const query: QueryFn = ref => ref
       .where('orgIds', 'array-contains', this.org.id)
-      .where(`storeConfig.appAccess.${app}`, '==', true);
+      .where(`app.${app}.access`, '==', true);
 
 
     const titles$ = this.movieService.valueChanges(query).pipe(

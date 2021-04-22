@@ -404,7 +404,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       if (this.isUserBlockframesAdmin) {
 
         // MOVIE STATUS
-        formatSingleValue(this.mapping.storeStatus, 'storeStatus', 'storeConfig.status', movie);
+        // formatSingleValue(this.mapping.storeStatus, 'storeStatus', 'app.festival.status', movie);
 
         // USER ID (to override who is creating this title)
         if (this.mapping.ownerId) {

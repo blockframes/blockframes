@@ -5,12 +5,12 @@ import { App } from '@blockframes/utils/apps';
 export function titlesFromApp(app: App): WhereQuery[] {
   return [{
     method: 'where',
-    field: `storeConfig.appAccess.${app}`,
+    field: `app.${app}.access`,
     condition: '==',
     value: true
   }, {
     method: 'where',
-    field: `storeConfig.status`,
+    field: `app.${app}.status`,
     condition: '==',
     value: 'accepted'
   }];

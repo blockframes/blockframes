@@ -17,7 +17,6 @@ export class MoviesComponent implements OnInit {
     'poster': { value: 'Poster', disableSort: true },
     'title.international': 'International title',
     'org': 'Organization',
-    'storeConfig.status': 'Status'
   };
 
   public initialColumns: string[] = [
@@ -25,7 +24,6 @@ export class MoviesComponent implements OnInit {
     'poster',
     'title.international',
     'org',
-    'storeConfig.status'
   ];
   public rows: any[] = [];
   public exporting = new BehaviorStore(false);
@@ -59,7 +57,6 @@ export class MoviesComponent implements OnInit {
       'id',
       'internalRef',
       'title.international',
-      'storeConfig.status',
       'org.denomination.full',
       'org.denomination.public'
     ];
@@ -84,7 +81,6 @@ export class MoviesComponent implements OnInit {
         'internal ref': m.internalRef ? m.internalRef : '--',
         'org': m.org ? orgName(m.org) : '--',
         'orgId': m.org ? m.org.id : '--',
-        'status': m.storeConfig.status,
         'distributionRightsInfo': m.distributionRightsInfo.count,
         'contractsInfo': m.contractsInfo.count,
       }));

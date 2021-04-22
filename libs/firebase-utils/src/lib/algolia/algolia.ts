@@ -135,7 +135,7 @@ export function storeSearchableMovie(
           [],
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
-      storeConfig: '',
+      storeStatus: '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
       originalLanguages: movie.originalLanguages,
@@ -163,7 +163,7 @@ export function storeSearchableMovie(
     const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(
       {
         ...movieRecord,
-        storeConfig: movie.app[appName]?.status || '',
+        storeStatus: movie.app[appName]?.status || '',
       }
     ));
 
