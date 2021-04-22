@@ -227,6 +227,10 @@ const fields = {
     multiLine: false,
     index: index++
   },
+  appAccess: {
+    multiLine: false,
+    index: index++
+  },
   ownerId: {
     multiLine: false,
     index: index++
@@ -403,8 +407,18 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
       if (this.isUserBlockframesAdmin) {
 
-        // MOVIE STATUS
-        // formatSingleValue(this.mapping.storeStatus, 'storeStatus', 'app.festival.status', movie);
+        /** MOVIE APP ACCESS
+        * For each app registered in the excel, we apply the status registered in the excel as well
+        */
+        const apps = this.mapping.appAccess.split(',');
+        apps.forEach(a => {
+          // MOVIE STATUS
+          formatSingleValue(this.mapping.storeStatus, 'storeStatus', `app.${a.trim()}.status`, movie);
+          movie.app[a.trim()].access = true;
+          if (this.mapping.storeStatus === 'accepted') {
+            movie.app[a.trim()].acceptedAt = new Date();
+          }
+        })
 
         // USER ID (to override who is creating this title)
         if (this.mapping.ownerId) {

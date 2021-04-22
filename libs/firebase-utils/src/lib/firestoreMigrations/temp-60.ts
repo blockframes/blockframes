@@ -25,9 +25,8 @@ function createNewAppConfig(storeConfig: OldStoreConfig) {
   return appConfig;
 }
 
-function createAppConfig(storeConfig: OldStoreConfig, app: Partial<App>) {
-  const isAccepted = storeConfig?.appAccess[app];
-  console.log('is accepted: ', isAccepted);
+function createAppConfig(storeConfig: OldStoreConfig, appli: Partial<App>) {
+  const isAccepted = storeConfig?.appAccess[appli];
   return {
     status: isAccepted ? storeConfig.status : 'draft',
     access: isAccepted || false,

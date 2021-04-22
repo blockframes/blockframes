@@ -60,8 +60,8 @@ export class MovieService extends CollectionService<MovieState> {
       orgIds
     });
     movie.app = {
+      [appName]: createAppConfig({ access: true }),
       ...createMovieAppConfig(movieImported?.app),
-      [appName]: createAppConfig({ access: true })
     };
     await this.runTransaction(async (tx) => {
       movie.id = await this.add(cleanModel(movie), { write: tx });
