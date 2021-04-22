@@ -335,7 +335,6 @@ async function sendOrgAppAccessChangedEmail(recipient: User, notification: Notif
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const app = await getOrgAppKey(org);
   const url = applicationUrl[app];
-  // @#4046 Change text to something more generic than `Your organization has now access to Archipel Market.` wich can be wrong
   const template = organizationAppAccessChanged(recipient, url);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
