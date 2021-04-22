@@ -191,9 +191,7 @@ export async function onUserDelete(
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
   const from = getSendgridFrom(data.app);
-  await sendMail(sendDemoRequestMail(data), from)
-    .catch(e => console.warn(e.message));
-
+  await sendMail(sendDemoRequestMail(data), from);
   return data;
 }
 
@@ -209,8 +207,7 @@ export const sendUserMail = async (data: { subject: string, message: string, app
 
   const from = getSendgridFrom(app);
 
-  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from)
-    .catch(e => console.warn(e.message));
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
 
 
