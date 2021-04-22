@@ -4,7 +4,7 @@ import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, getDocument, getOrganizationsOfMovie } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
-import { centralOrgID } from './environments/environment';
+import { centralOrgId } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
@@ -104,7 +104,7 @@ export async function onMovieUpdate(
   const appAccess = apps.filter(a => !!after.storeConfig.appAccess[a]);
 
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content
-    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
+    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgId.catalog}`);
     const notifications = archipelContent.userIds.map(
       toUserId => createNotification({
         toUserId,

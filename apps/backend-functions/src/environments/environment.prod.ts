@@ -14,7 +14,7 @@ export {
   sentryEnv,
   sentryDsn,
   bigQueryAnalyticsTable,
-  centralOrgID,
+  centralOrgId,
   supportEmails
 } from '@env';
 
