@@ -1,8 +1,10 @@
-import { init as sentryInit, flush as sentryFlush, captureException } from '@sentry/node';
-import { sentryDsn, sentryEnv } from '../environments/environment';
+import { init as sentryInit, flush as sentryFlush, captureException, Severity } from '@sentry/node';
+import { projectId, sentryDsn, sentryEnv } from '../environments/environment';
+import { logger } from 'firebase-functions';
+import { firebaseRegion } from './utils';
+
 
 if (!!sentryDsn) {
-  console.info("using sentry:", sentryDsn, "to log errors");
   sentryInit({ dsn: sentryDsn, environment: sentryEnv });
 }
 
@@ -15,18 +17,33 @@ if (!!sentryDsn) {
  * as of today (2019-07-02).
  */
 export function logErrors(f: any): any {
-  return async (...args: any[]) => {
-    try {
-      return f(...args);
-    } catch (err) {
+  return (...args: any[]) => {
+    return Promise.resolve(f(...args)).catch(async err => {
+
       // Send the exception to sentry IF we have a configuration.
       if (sentryDsn) {
-        captureException(err);
+        captureException(err, {
+          level: Severity.Error,
+          tags: {
+            projectId,
+            firebaseRegion,
+            location: 'backend-functions',
+          },
+        }); 
         // the function runtime we are in might get killed immediately,
         // flush events.
         await sentryFlush();
       }
+
+      // Even if sentry logger is enabled we display error into firebase console
+      if (!!err.message) {
+        const code = !!err.code ? `[${err.code}] ` : '';
+        logger.error(`${code}${err.message}`);
+      } else {
+        logger.error(err);
+      }
+
       throw err;
-    }
+    });
   };
 }

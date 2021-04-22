@@ -1,10 +1,10 @@
 <ng-container *ngIf="movie$ | async as movie">
-  <h1 *ngIf="(movie | hasKeys: keys.additional)">
+  <h2 *ngIf="(movie | hasKeys: keys.additional)">
     Additional Information
-  </h1>
+  </h2>
 
   <section *ngIf="(movie | hasStatus: ['released']) && (movie.originalRelease.length)">
-    <h2>Release</h2>
+    <h3>Release</h3>
     <article *ngFor="let release of movie.originalRelease">
       <h5>{{ release.country | toLabel : 'territories'}}</h5>
       <p>{{ release.media | toLabel: 'medias' }} {{ release.date | toDate | date: 'shortDate' }}</p>
@@ -13,7 +13,7 @@
   </section>
 
   <section *ngIf="(movie | hasStatus: ['released']) && (movie.boxOffice.length)">
-    <h2>Box Office</h2>
+    <h3>Box Office</h3>
     <article *ngFor="let boxOffice of movie.boxOffice">
       <h5>{{ boxOffice.territory | toLabel : 'territories' }}</h5>
       <p *ngIf="boxOffice.unit !== 'admissions'">{{ boxOffice.value | currency: (boxOffice.unit | uppercase) }}</p>
@@ -24,7 +24,7 @@
   </section>
 
   <section *ngIf="(movie | hasStatus: status.finished) && movie.rating.length">
-    <h2>Ratings</h2>
+    <h3>Ratings</h3>
     <article *ngFor="let rating of movie.rating">
       <h5>{{ rating.country | toLabel : 'territories' }}</h5>
       <p>{{ rating.value }}</p>
@@ -34,7 +34,7 @@
   </section>
 
   <section *ngIf="(movie | hasKeys: 'estimatedBudget')">
-    <h2>Budget</h2>
+    <h3>Budget</h3>
     <article>
       <h5>Budget Range</h5>
       <p>{{ movie.estimatedBudget | toLabel: 'budgetRange' }}</p>
@@ -44,7 +44,7 @@
   </section>
 
   <section *ngIf="(movie | hasKeys: 'certifications')">
-    <h2>Qualifications</h2>
+    <h3>Qualifications</h3>
     <article>
       <p>{{ movie.certifications | toLabel: 'certifications' }}</p>
     </article>
@@ -54,11 +54,11 @@
 
 
   <section *ngIf="(movie | hasKeys: keys.formats) && (movie | hasStatus: status.finished)">
-    <h1>
+    <h2>
       Technical Information
-    </h1>
+    </h2>
 
-    <h2>Formats</h2>
+    <h3>Formats</h3>
     <article *ngIf="movie.format">
       <h5>Shooting Format</h5>
       <p>{{ movie.format | toLabel: 'movieFormat' }}</p>

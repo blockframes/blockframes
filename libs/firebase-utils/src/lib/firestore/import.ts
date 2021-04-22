@@ -7,6 +7,7 @@ import { DbRecord, loadAdminServices } from '../util';
 import { clear, clearDbCLI } from './clear';
 import { backupBucket, firebase } from '@env';
 import { execSync } from 'child_process';
+import { runShellCommandExec } from '../commands';
 
 const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
 
@@ -115,7 +116,5 @@ export async function importFirestoreFromBucket(dirName: string) {
   const { db } = loadAdminServices();
   await clearDbCLI(db);
 
-  console.log('Run:', cmd);
-  const out = execSync(cmd).toString();
-  console.log(out);
+  return runShellCommandExec(cmd)
 }

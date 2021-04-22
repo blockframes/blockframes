@@ -15,6 +15,8 @@ export class LoginComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
   private snackbarDuration = 8000;
 
+  public buttonText = 'Log In';
+
   constructor(
     private service: AuthService,
     private router: Router,
@@ -32,6 +34,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     try {
+      this.buttonText = 'Logging in...'
       const { email, password } = signinForm.value;
       await this.service.signin(email.trim(), password);
       // Reset page title to default
@@ -44,6 +47,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['c']);
       }
     } catch (err) {
+      this.buttonText = 'Log In';
       console.error(err); // let the devs see what happened
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
         this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: this.snackbarDuration });

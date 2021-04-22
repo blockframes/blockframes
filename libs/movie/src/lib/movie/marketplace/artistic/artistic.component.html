@@ -1,8 +1,8 @@
 <ng-container *ngIf="(movie$ | async) as movie" test-id="content" >
-  <h1 *ngIf="movie | hasKeys: ['cast', 'crew']">Artistic Information</h1>
+  <h2 *ngIf="movie | hasKeys: ['cast', 'crew']">Artistic Information</h2>
 
   <section *ngIf="movie.cast.length">
-    <h2>Cast Members</h2>
+    <h3>Cast Members</h3>
     <article grid>
       <ng-container *ngFor="let cast of movie.cast">
         <title-credit-card [col]="3" [credit]="cast" type="cast"></title-credit-card>
@@ -14,7 +14,7 @@
 
 
   <section *ngIf="movie.crew.length">
-    <h2>Crew Members</h2>
+    <h3>Crew Members</h3>
     <article grid>
       <ng-container *ngFor="let crew of movie.crew">
         <title-credit-card [col]="3" [credit]="crew" type="crew"></title-credit-card>
@@ -25,7 +25,7 @@
   </section>
 
   <section *ngIf="movie.promotional.notes.length">
-    <h2>Notes and Statements</h2>
+    <h3>Notes and Statements</h3>
     <article fxLayout="row wrap" fxLayoutGap="32px">
       <ng-container *ngFor="let note of movie.promotional.notes">
         <div class="note" fxLayout fxLayoutAlign="space-between center" *ngIf="note.ref">

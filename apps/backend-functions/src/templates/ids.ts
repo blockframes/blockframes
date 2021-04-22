@@ -13,11 +13,7 @@ export const templateIds = {
     // Templates for informing new user that his account have been created
     credentials: {
       attendEvent: 'd-ce3e57248a694cefacad49bc4c820078',
-      joinOrganization: {
-        catalog: 'd-a34ce9ea59c5477f9feae8f556157b6b',
-        festival: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
-        financiers: 'd-4b8c8ebb99464f87b8eaf8223ba4b562'
-      }
+      joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
     },
   },
   // Templates for the org management flow
@@ -62,6 +58,9 @@ export const templateIds = {
   },
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26'
+  },
+  offer: {
+    created: 'd-94a20b20085842f68fb2d64fe325638a'
   }
 }
 

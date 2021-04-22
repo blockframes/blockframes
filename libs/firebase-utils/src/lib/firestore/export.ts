@@ -6,6 +6,7 @@ import type { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '
 import type { Bucket } from "@google-cloud/storage";
 import type { storage } from 'firebase-admin';
 import { execSync } from 'child_process';
+import { runShellCommandExec } from '../commands';
 
 export async function getBackupOutput(bucket: Bucket, name: string): Promise<Writable> {
   const blob = bucket.file(`${name}.jsonl`);
@@ -77,13 +78,11 @@ export async function exportFirestoreToBucket(db: FirebaseFirestore.Firestore, b
  * @param dirName optional directory to which to export Firestore backup in GCS bucket, otherwise current date will be used
  * with directory naming convention to generate dirName
  */
-export async function exportFirestoreToBucketBeta(dirName?: string) {
+export function exportFirestoreToBucketBeta(dirName?: string) {
   const suffix = dirName || getFirestoreExportDirname(new Date());
   const url = `gs://${backupBucket}/${suffix}`;
   const cmd = `gcloud firestore export --project ${firebase().projectId} ${url}`;
-  console.log('Running cmd:', cmd);
-  const output = execSync(cmd).toString();
-  console.log(output);
+  return runShellCommandExec(cmd)
 }
 
 /**

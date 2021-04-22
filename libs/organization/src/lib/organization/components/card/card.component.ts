@@ -17,7 +17,7 @@ export class OrganizationCardComponent implements OnInit {
   @Input() org: Organization;
 
   public orgMovieCount$: Observable<number>
-  private app = getCurrentApp(this.routerQuery)
+  public app = getCurrentApp(this.routerQuery)
 
   constructor(private movieService: MovieService, private routerQuery: RouterQuery) { }
 

@@ -7,7 +7,6 @@ import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationD
 import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
-import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
 
@@ -191,9 +190,7 @@ export async function onUserDelete(
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
   const from = getSendgridFrom(data.app);
-  await sendMail(sendDemoRequestMail(data), from)
-    .catch(e => console.warn(e.message));
-
+  await sendMail(sendDemoRequestMail(data), from);
   return data;
 }
 
@@ -209,8 +206,7 @@ export const sendUserMail = async (data: { subject: string, message: string, app
 
   const from = getSendgridFrom(app);
 
-  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from)
-    .catch(e => console.warn(e.message));
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
 
 
@@ -236,8 +232,7 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
 
     const urlToUse = applicationUrl[app];
 
-    const templateId = templateIds.user.credentials.joinOrganization[app];
-    const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
+    const template = userInvite(email, newUser.password, orgName, urlToUse);
     await sendMailFromTemplate(template, app);
 
     return newUser.user;

@@ -9,7 +9,8 @@ import { appUrl, supportEmails } from '@env';
 import { staticModel } from '@blockframes/utils/static-model';
 import { format } from "date-fns";
 import { User } from '@blockframes/user/types';
-
+import { createNotification, triggerNotifications } from './notification';
+import { templateIds } from './templates/ids';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
@@ -37,14 +38,23 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
     }
   }
 
+  // Send copy of offer to user who created the offer 
+  const notification = createNotification({
+    toUserId: user.uid,
+    type: 'offerCreated',
+    docId: snap.id,
+    bucket
+  })
+  triggerNotifications([notification])
+
+  // Also send offer to admin of Cascade8
   const app: App = 'catalog';
   const baseUrl = appUrl['content'];
   const date = format(new Date(), 'dd MMMM, yyyy');
   const request: EmailTemplateRequest = {
     to: supportEmails[app],
-    templateId: 'd-94a20b20085842f68fb2d64fe325638a',
+    templateId: templateIds.offer.created,
     data: { org, bucket, user, baseUrl, date }
   }
   sendMailFromTemplate(request, app);
-
 }

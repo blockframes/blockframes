@@ -259,6 +259,46 @@ describe('DB cleaning script', () => {
     expect(orgD.data().wishlist.length).toEqual(0);
   });
 
+  // @TODO #5371 unskip
+  it.skip('should remove orgs with no users', async () => {
+    const testUsers = [
+      { uid: 'A', email: 'A@fake.com' },
+      { uid: 'B', email: 'B@fake.com' },
+      { uid: 'C', email: 'C@fake.com' }
+    ];
+
+    const testOrgs = [
+      { id: 'org-A', email: 'org-A@fake.com', userIds: [testUsers[0].uid, testUsers[1].uid], wishlist: [] },
+      { id: 'org-B', email: 'org-B@fake.com', userIds: [], wishlist: [] },
+      { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: [] },
+    ];
+
+    // Load our test set
+    await populate('users', testUsers);
+    await populate('orgs', testOrgs);
+
+    const [users, organizationsBefore, movies] = await Promise.all([
+      getCollectionRef('users'),
+      getCollectionRef('orgs'),
+      getCollectionRef('movies')
+    ]);
+
+    // Check if data have been correctly added
+    expect(users.docs.length).toEqual(3);
+    expect(organizationsBefore.docs.length).toEqual(3);
+
+    const userIds = users.docs.map(ref => ref.id);
+
+    await cleanOrganizations(organizationsBefore, userIds, movies);
+
+    const organizationsAfter: Snapshot = await getCollectionRef('orgs');
+    const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movies));
+    expect(cleanedOrgs.length).toEqual(2);
+
+    const orgsWithNoUsers = organizationsAfter.docs.filter(o => o.data().userIds.length === 0);
+    expect(orgsWithNoUsers.length).toEqual(0);
+  });
+
   it('should remove permissions not belonging to existing org', async () => {
 
     const testPermissions = [{ id: "org-A" }, { id: "org-B" }];
@@ -678,10 +718,17 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove duplicates in org.wishlist', async () => {
+
+    const testUsers = [
+      { uid: 'A', email: 'A@fake.com' },
+      { uid: 'B', email: 'B@fake.com' },
+      { uid: 'C', email: 'C@fake.com' }
+    ];
+
     const testOrgs = [
-      { id: 'org-A', email: 'org-A@fake.com', wishlist: ['mov-A', 'mov-A', 'mov-C'] },
-      { id: 'org-B', email: 'org-B@fake.com', wishlist: ['mov-B', 'mov-B'] },
-      { id: 'org-C', email: 'org-C@fake.com', wishlist: ['mov-B', 'mov-A', 'mov-C'] },
+      { id: 'org-A', email: 'org-A@fake.com', userIds: [testUsers[0].uid], wishlist: ['mov-A', 'mov-A', 'mov-C'] },
+      { id: 'org-B', email: 'org-B@fake.com', userIds: [testUsers[1].uid], wishlist: ['mov-B', 'mov-B'] },
+      { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['mov-B', 'mov-A', 'mov-C'] },
     ];
     const testMovies = [
       { id: 'mov-A', app: {
@@ -703,17 +750,22 @@ describe('DB cleaning script', () => {
     // Load our test set
     await populate('orgs', testOrgs);
     await populate('movies', testMovies);
+    await populate('users', testUsers);
 
-    const [organizationsBefore, movies] = await Promise.all([
+    const [organizationsBefore, movies, users] = await Promise.all([
       getCollectionRef('orgs'),
-      getCollectionRef('movies')
+      getCollectionRef('movies'),
+      getCollectionRef('users'),
     ]);
 
     // Check if data have been correctly added
     expect(organizationsBefore.docs.length).toEqual(3);
     expect(movies.docs.length).toEqual(3);
+    expect(users.docs.length).toEqual(3);
 
-    await cleanOrganizations(organizationsBefore, [], movies);
+    const userIds = users.docs.map(ref => ref.id);
+
+    await cleanOrganizations(organizationsBefore, userIds, movies);
 
     const organizationsAfter: Snapshot = await getCollectionRef('orgs');
 
@@ -778,8 +830,14 @@ function isOrgClean(
   }).map(m => m.id);
 
   const { userIds = [], wishlist = [] } = o;
+
   const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
   const validMovieIds = wishlist.filter(movieId => existingAndValidMovieIds.includes(movieId));
+
+  if (userIds.length === 0) {
+    // Org must have at least one user (admin)
+    return false;
+  }
 
   if (validUserIds.length !== userIds.length) {
     return false;

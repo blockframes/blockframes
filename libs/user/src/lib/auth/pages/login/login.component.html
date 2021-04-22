@@ -1,7 +1,9 @@
 <main bgAsset="rocket_background.svg">
   <a routerLink="/"><app-logo></app-logo></a>
 
-  <auth-signin-form (submited)="signin($event)"></auth-signin-form>
+  <auth-signin-form (submited)="signin($event)">
+    <span buttonText>{{ buttonText }}</span>
+  </auth-signin-form>
 
 </main>
 <ng-template #customSnackBarTemplate>
