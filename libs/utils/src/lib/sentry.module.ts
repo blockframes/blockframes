@@ -23,6 +23,9 @@ export class SentryErrorHandler implements ErrorHandler {
   }
 
   handleError(error) {
+    if (sentryEnv as any !== 'production') {
+      console.error(error);
+    }
     Sentry.captureException(error.originalError || error);
   }
 }
