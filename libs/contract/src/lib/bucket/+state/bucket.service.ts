@@ -8,7 +8,7 @@ import { ContractService } from '../../contract/+state';
 import { OfferService } from '../../offer/+state';
 import { IncomeService } from '../../income/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { centralOrgID } from '@env';
+import { centralOrgId } from '@env';
 import { AuthQuery } from "@blockframes/auth/+state";
 
 @Injectable({ providedIn: 'root' })
@@ -70,7 +70,7 @@ export class BucketService extends CollectionService<BucketState> {
         titleId: contract.titleId,
         parentTermId: contract.parentTermId,
         buyerId: orgId,
-        sellerId: centralOrgID, // @todo(#5156) Use centralOrgId.catalog instead
+        sellerId: centralOrgId.catalog,
         stakeholders: [ ...parentContract.stakeholders, orgId ],
         termIds,
         offerId,
