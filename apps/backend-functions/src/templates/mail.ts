@@ -69,7 +69,7 @@ export function userInvite(
   password: string,
   orgName: string,
   pageURL: string = appUrl.market,
-  templateId: string = templateIds.user.credentials.joinOrganization.festival,
+  templateId: string = templateIds.user.credentials.joinOrganization,
   event?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
