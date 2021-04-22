@@ -6,13 +6,14 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Event } from '@blockframes/event/+state/event.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
+import { Organization, OrganizationService, orgName, PublicOrganization } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, applicationUrl, getCurrentApp, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { format } from "date-fns";
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -138,13 +139,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(event => {
-          this.update(notification.id, newNotification => {
-            return {
-              ...newNotification,
-              imgRef: this.getPoster(event.meta.titleId),
-              message: `REMINDER - Your ${event.type} "${event.title}" is about to start.`
-            };
-          });
+          this.getDocument<PublicOrganization>(`orgs/${event.ownerOrgId}`).then(org => {
+            this.update(notification.id, newNotification => {
+              return {
+                ...newNotification,
+                imgRef: this.getPoster(event.meta.titleId),
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" is about to start.`
+              };
+            });
+          })
         });
 
         return {
@@ -157,13 +160,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(event => {
-          this.update(notification.id, newNotification => {
-            return {
-              ...newNotification,
-              imgRef: this.getPoster(event.meta.titleId),
-              message: `REMINDER - Your ${event.type} "${event.title}" is tomorrow.`
-            };
-          });
+          this.getDocument<PublicOrganization>(`orgs/${event.ownerOrgId}`).then(org => {
+            this.update(notification.id, newNotification => {
+              return {
+                ...newNotification,
+                imgRef: this.getPoster(event.meta.titleId),
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`
+              };
+            });
+          })
         });
 
         return {
