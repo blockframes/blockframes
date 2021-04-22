@@ -7,7 +7,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
-import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
+import { DeepKeyPipeModule, ReducePipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
@@ -38,6 +38,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MovieFeatureModule,
     ToLabelModule,
     DetailedTermsModule,
+    ReducePipeModule,
 
     // Material
     MatButtonModule,

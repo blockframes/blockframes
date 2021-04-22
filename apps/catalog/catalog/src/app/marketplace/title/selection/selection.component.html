@@ -5,7 +5,7 @@
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
         <p>There are {{ bucket.contracts.length }} titles in my selection</p>
-        <p>Total price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
+        <p>Total price: {{ cachedPrice | reduce | currency:bucket.currency }}</p>
       </div>
       <div fxLayout="column" fxLayoutAlign="center center">
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
@@ -19,7 +19,8 @@
       <h2>Please choose currency</h2>
       <mat-form-field appearance="outline">
         <mat-label>Select</mat-label>
-        <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)" test-id="selection-currency">
+        <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)"
+          test-id="selection-currency">
           <ng-container *ngFor="let currency of currencies | keyvalue">
             <mat-option [value]="currency.key">{{ currency.value }}</mat-option>
           </ng-container>
@@ -44,8 +45,8 @@
             </section>
             <mat-form-field appearance="outline">
               <mat-label>Price</mat-label>
-              <input matInput type="number" min="0" [value]="contract.price"
-                (input)="debouncedUpdatePriceControl(i, $event.target.value)" [attr.test-id]="'price-' + i"/>
+              <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
+              (input)="cachePrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
               <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
             </mat-form-field>
           </header>

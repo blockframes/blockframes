@@ -8,7 +8,6 @@ import { tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
-import { debounceFactory } from '@blockframes/utils/helpers';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
 
@@ -28,9 +27,7 @@ export class MarketplaceSelectionComponent {
   };
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
-
-  // @TODO #5526 remove use of debounce Factory
-  debouncedUpdatePriceControl = debounceFactory((index, price) => this.updatePrice(index, price), 1000);
+  cachedPrice: number[] = [];
   trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
@@ -42,7 +39,12 @@ export class MarketplaceSelectionComponent {
     private snackBar: MatSnackBar
   ) {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
-      tap(bucket => this.setTitle(bucket?.contracts.length)),
+      tap(bucket => {
+        if (!this.cachedPrice.length && bucket) {
+          this.cachedPrice = bucket?.contracts.map(contract => contract.price);
+        }
+        this.setTitle(bucket?.contracts.length)
+      }),
     );
   }
 
@@ -56,9 +58,13 @@ export class MarketplaceSelectionComponent {
     this.bucketService.update(id, { currency });
   }
 
-  updatePrice(index: number, price: string) {
+  cachePrice(index: number, price: string) {
+    this.cachedPrice[index] = +price
+  }
+
+  async updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
-    this.bucketService.update(id, bucket => {
+    await this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       contracts[index].price = +price;
       return { contracts };
