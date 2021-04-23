@@ -18,7 +18,7 @@ export interface LanguagesSearch {
 }
 
 export interface MovieSearch extends AlgoliaSearch {
-  storeStatus: StoreStatus[]
+  storeStatus: StoreStatus[];
   genres: Genre[];
   originCountries: Territory[];
   languages: LanguagesSearch;

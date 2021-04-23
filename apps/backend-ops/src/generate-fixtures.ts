@@ -50,6 +50,7 @@ async function generateMovies() {
   const output: Partial<Movie>[] = movies.map((movie) => ({
     id: movie.id,
     title: movie.title,
+    app: movie.app
   }));
   const dest = join(process.cwd(), 'tools', 'fixtures', 'movies.json');
   await fsPromises.writeFile(dest, JSON.stringify(output));

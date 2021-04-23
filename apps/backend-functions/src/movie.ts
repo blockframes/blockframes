@@ -135,8 +135,7 @@ export async function onMovieUpdate(
   }
 
   // If movie was accepted but is not anymore, clean wishlists
-  if (Object.keys(before.app).map(a => before.app[a].status === 'accepted')
-    && Object.keys(after.app).map(a => after.app[a].status !== before.app[a].status)) {
+  if (Object.keys(after.app).map(a => before.app[a].status === 'accepted' && after.app[a].status !== before.app[a].status)) {
     await removeMovieFromWishlists(after);
   }
 
