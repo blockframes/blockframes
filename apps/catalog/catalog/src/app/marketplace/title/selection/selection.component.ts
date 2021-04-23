@@ -3,8 +3,8 @@ import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies, Scope } from '@blockframes/utils/static-model';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -27,7 +27,17 @@ export class MarketplaceSelectionComponent {
   };
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
-  cachedPrice: number[] = [];
+  private prices: number[] = [];
+  priceChanges = new Subject();
+  total$ = this.priceChanges.pipe(
+    debounceTime(100),
+    map(value => {
+      console.log(value)
+      return this.getTotal(this.prices)
+    }),
+    distinctUntilChanged(),
+  );
+
   trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
@@ -40,10 +50,8 @@ export class MarketplaceSelectionComponent {
   ) {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
       tap(bucket => {
-        if (!this.cachedPrice.length && bucket) {
-          this.cachedPrice = bucket?.contracts.map(contract => contract.price);
-        }
         this.setTitle(bucket?.contracts.length)
+        bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price))
       }),
     );
   }
@@ -53,14 +61,20 @@ export class MarketplaceSelectionComponent {
     this.dynTitle.setPageTitle(title);
   }
 
+  private getTotal(prices) {
+    return prices.reduce((arr, curr) => (arr + curr), 0)
+  }
+
   updateCurrency(currency: MovieCurrency) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, { currency });
   }
 
-  cachePrice(index: number, price: string) {
-    this.cachedPrice[index] = +price
+  setPrice(i: number, price: number | string) {
+    this.prices[i] = +price;
+    this.priceChanges.next();
   }
+
 
   async updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
@@ -73,6 +87,7 @@ export class MarketplaceSelectionComponent {
 
   removeContract(index: number, title: Movie) {
     const id = this.bucketQuery.getActiveId();
+    delete this.prices[index];
     this.bucketService.update(id, bucket => ({
       contracts: bucket.contracts.filter((_, i) => i !== index)
     }));
@@ -86,7 +101,12 @@ export class MarketplaceSelectionComponent {
       const contracts = [...bucket.contracts];
       const terms = contracts[contractIndex].terms.filter((_, i) => i !== termIndex);
       // If there are no terms anymore, remove contract
-      if (!terms.length) return { contracts: contracts.filter((_, i) => i !== contractIndex) };
+      if (!terms.length) {
+        delete this.prices[contractIndex]
+        return {
+          contracts: contracts.filter((_, i) => i !== contractIndex)
+        };
+      }
       // Else update the terms
       contracts[contractIndex].terms = terms;
       return { contracts };
