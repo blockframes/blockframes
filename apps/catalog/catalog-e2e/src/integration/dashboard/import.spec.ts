@@ -128,12 +128,12 @@ describe('User can fill and save contract tunnel form', () => {
       .click();
 
     cy.log("Check if we reached submission container");
-    cy.wait(20 * SEC);
+    cy.wait(30 * SEC);
     cy.get('h1', {timeout: 30 * SEC})
       .contains("finalize your import");
 
     cy.log(`Check for ${contractRecords} records in the extracted data`);
-    cy.get('p[test-id="record-length"]', {timeout: 120 * SEC})
+    cy.get('p[test-id="record-length"]', {timeout: 150 * SEC})
       .contains(`${contractRecords}`);
     
     cy.log("Selecting all records to submit");
