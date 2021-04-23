@@ -2,10 +2,12 @@
 
 import { LandingPage } from '../../support/pages/landing';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
+import { assertMoveTo, clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 import { SEC } from "@blockframes/e2e/utils/env";
+
+const MY_TITLES_PAGE = '/c/o/dashboard/title';
 
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Hettie) ];
@@ -34,8 +36,7 @@ const logInAdminAndNavigate = () => {
   cy.get('aside a[routerlink="title"]', {timeout: 5 * SEC})
     .click();
 
-  cy.get('catalog-dashboard h1', {timeout: 60 * SEC})
-    .contains("My Titles");
+  assertMoveTo(MY_TITLES_PAGE);
 
   cy.log("Navigate to import page");
   cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
@@ -63,7 +64,7 @@ describe('User can fill and save contract tunnel form', () => {
       .contains("Movies")
       .click();
       
-    //Import the Movie file here: filePicker
+    //Import the Movie file here
     cy.log("Start upload by attaching the fixture");
     cy.get('#filePicker', {timeout: 10 * SEC})
       .attachFile(movieFixture);
@@ -72,7 +73,7 @@ describe('User can fill and save contract tunnel form', () => {
       .should('be.visible')
       .should('contain', 'File uploaded');
 
-    cy.log("Movies uploaded successfully; Starting import..");
+    cy.log("Movie File uploaded successfully; Starting import..");
 
     cy.get('button[test-id="start-import"]', { timeout: 30 * SEC })
       .click();
@@ -113,7 +114,7 @@ describe('User can fill and save contract tunnel form', () => {
       .contains("Contract")
       .click();
       
-    //Import the Movie file here: filePicker
+    //Import the Contracts file here
     cy.log("Start upload by attaching the fixture");
     cy.get('#filePicker', {timeout: 10 * SEC})
       .attachFile(contractFixture);
@@ -122,7 +123,7 @@ describe('User can fill and save contract tunnel form', () => {
       .should('be.visible')
       .should('contain', 'File uploaded');
 
-    cy.log("Movies uploaded successfully; Starting import..");
+    cy.log("Contract File uploaded successfully; Starting import..");
 
     cy.get('button[test-id="start-import"]', { timeout: 30 * SEC })
       .click();
