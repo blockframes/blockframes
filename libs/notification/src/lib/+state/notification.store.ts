@@ -127,15 +127,16 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
-      case 'orgAppAccessRemoved':
-        // @TODO #4046 Update text if needed
+        const message = !!notification.appAccess
+          ? `Your organization has now access to ${notification.appAccess}`
+          : 'Your organization\'s app access have changed.'
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: 'Your organization\'s app access have changed.',
+          message,
+          placeholderUrl: `empty_organization.webp`,
           imgRef: notification.organization?.logo,
-          placeholderUrl: 'empty_organization.webp',
-          url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
-        };
+          url: `${applicationUrl[notification.appAccess]}`
+        }
       case 'eventIsAboutToStart':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)

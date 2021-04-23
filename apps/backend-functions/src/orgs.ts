@@ -234,7 +234,7 @@ export async function onOrganizationDelete(
 }
 
 export const accessToAppChanged = async (
-  data: { orgId: string, accessGiven: boolean }
+  data: { orgId: string, app: App }
 ): Promise<ErrorResultResponse> => {
 
   const adminIds = await getAdminIds(data.orgId);
@@ -246,7 +246,8 @@ export const accessToAppChanged = async (
       toUserId: admin.uid,
       docId: admin.orgId,
       organization: createPublicOrganizationDocument(organization),
-      type: data.accessGiven ? 'orgAppAccessChanged' : 'orgAppAccessRemoved'
+      appAccess: data.app,
+      type: 'orgAppAccessChanged'
     });
 
     notifications.push(notification);

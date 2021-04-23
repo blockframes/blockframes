@@ -100,9 +100,9 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   /**
    * @param accessGiven true if access given to new app, false if only revoked access
    */
-  public notifyAppAccessChange(orgId: string, accessGiven: boolean) {
+  public notifyAppAccessChange(orgId: string, app: App) {
     const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
-    return callOnAccessToAppChanged({orgId, accessGiven}).toPromise();
+    return callOnAccessToAppChanged({orgId, app}).toPromise();
   }
 
   public requestAppAccess(app: App, orgId: string) {

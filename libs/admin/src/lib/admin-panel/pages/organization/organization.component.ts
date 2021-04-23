@@ -17,7 +17,7 @@ import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { OrgAppAccess } from '@blockframes/utils/apps';
+import { App, OrgAppAccess } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organization',
@@ -135,19 +135,21 @@ export class OrganizationComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
       return;
     }
+    const org = await this.organizationService.getValue(this.orgId); 
 
     this.uploaderService.upload();
     await this.organizationService.update(this.orgId, this.orgForm.value);
 
     if (this.notifyCheckbox.value) {
-      const before = this.org.appAccess;
+      const before = org.appAccess;
       const after = this.orgForm.value.appAccess as OrgAppAccess;
-      const accessGiven = Object.keys(after).some(app => {
-        return Object.keys(after[app]).some(module => {
-          return after[app][module] === true && before[app][module] === false
-        });
-      });
-      this.organizationService.notifyAppAccessChange(this.orgId, accessGiven);
+
+      for (const app in after) {
+        if (Object.keys(after[app]).every(module => before[app][module] === false)
+          && Object.keys(after[app]).some(module => after[app][module] === true)) {
+          this.organizationService.notifyAppAccessChange(this.orgId, app as App)
+        }
+      }
     }
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
