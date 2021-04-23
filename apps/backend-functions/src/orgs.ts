@@ -234,18 +234,19 @@ export async function onOrganizationDelete(
 }
 
 export const accessToAppChanged = async (
-  orgId: string
+  data: { orgId: string, app: App }
 ): Promise<ErrorResultResponse> => {
 
-  const adminIds = await getAdminIds(orgId);
+  const adminIds = await getAdminIds(data.orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+  const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
   const notifications: NotificationDocument[] = [];
   admins.map(async admin => {
     const notification = createNotification({
       toUserId: admin.uid,
       docId: admin.orgId,
       organization: createPublicOrganizationDocument(organization),
+      appAccess: data.app,
       type: 'orgAppAccessChanged'
     });
 
@@ -264,8 +265,8 @@ export const accessToAppChanged = async (
 export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string}, context?: CallableContext) => {
   if (!!context.auth.uid && !!data.app && !!data.orgId) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
-    const mailRequest = await organizationRequestedAccessToApp(organization);
-    const from = await getSendgridFrom(data.app);
+    const mailRequest = await organizationRequestedAccessToApp(organization, data.app);
+    const from = getSendgridFrom(data.app);
     return sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
   return;
