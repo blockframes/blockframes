@@ -7,7 +7,8 @@ export enum USER {
   Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
   Ivo = 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
   Daphney = 'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
-  Camilla = 'qFbytROWQYWJplzck42RLdgAr3K3'
+  Camilla = 'qFbytROWQYWJplzck42RLdgAr3K3',
+  Hettie = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
 }
 
 const newUsers: Partial<UserType>[] = [
