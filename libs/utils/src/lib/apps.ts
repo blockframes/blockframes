@@ -33,6 +33,15 @@ export const appName = {
 };
 type AppNameValue = typeof appName[App];
 
+export const appShortName = {
+  catalog: 'AC',
+  festival: 'AM',
+  financiers: 'MF',
+  blockframes: 'BF',
+  crm: 'CRM',
+  cms: 'CMS'
+};
+
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
@@ -105,8 +114,9 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
   }
 }
 
-export function getAppName(slug: App) {
-  return { slug, label: appName[slug] };
+export function getAppName(slug: App, short = false) {
+  const label = short ? appShortName[slug] : appName[slug];
+  return { slug, label };
 }
 
 /**

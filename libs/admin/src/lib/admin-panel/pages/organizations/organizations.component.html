@@ -39,9 +39,8 @@
     </ng-template>
     <ng-template colRef="appAccess" let-appAccess>
       <ul>
-        <ng-container *ngFor="let access of appAccess | keyvalue">
-          <li>{{ access.key | appName }} - dashboard : {{ access.value.dashboard ? 'yes': 'no' }} </li>
-          <li>{{ access.key | appName }} - marketplace : {{ access.value.marketplace ? 'yes': 'no' }} </li>
+        <ng-container *ngFor="let a of app">
+          <li>{{ a | appName:true }} : {{ !! appAccess[a] && appAccess[a].dashboard ? 'yes': 'no' }} : {{ !! appAccess[a] && appAccess[a].marketplace ? 'yes': 'no' }} </li>
         </ng-container>
       </ul>
     </ng-template>
