@@ -1,5 +1,5 @@
 import algoliasearch from 'algoliasearch';
-import { algolia as algoliaClient, centralOrgID } from '@env';
+import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
 import { App, app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
@@ -61,7 +61,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     return Promise.resolve(true);
   }
 
-  if (org.id === centralOrgID) return;
+  if (Object.values(centralOrgId).includes(org.id)) return;
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
   const orgAppAccess = findOrgAppAccess(org);

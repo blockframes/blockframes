@@ -1311,12 +1311,18 @@
           "options": {
             "cypressConfig": "apps/crm/crm-e2e/cypress.json",
             "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
-            "devServerTarget": "crm:serve",
+            "baseUrl": "http://localhost:4200",
             "browser": "chrome"
           },
           "configurations": {
             "production": {
               "devServerTarget": "crm:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "crm:serve"
+            },
+            "staging": {
+              "devServerTarget": "crm:serve"
             }
           }
         },
@@ -1601,6 +1607,12 @@
           "configurations": {
             "production": {
               "devServerTarget": "financiers:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "financiers:serve"
+            },
+            "staging": {
+              "devServerTarget": "financiers:serve"
             }
           }
         },

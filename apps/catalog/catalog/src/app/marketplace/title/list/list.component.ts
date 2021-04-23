@@ -25,7 +25,7 @@ import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
 import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { centralOrgID } from '@env';
+import { centralOrgId } from '@env';
 import { BucketContract, createBucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
@@ -122,7 +122,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private async getContract(type: Contract['type']) {
     const contracts = type === 'mandate'
-      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgID).where('status', '==', 'accepted'))
+      ? await this.contractService.getValue(ref => ref.where('type', '==', 'mandate').where('buyerId', '==', centralOrgId.catalog).where('status', '==', 'accepted'))
       : await this.contractService.getValue(ref => ref.where('type', '==', 'sale').where('status', '==', 'accepted'))
     const termIdsByTitle = {};
 

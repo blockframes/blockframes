@@ -14,7 +14,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { parseToAll } from '@blockframes/utils/static-model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { centralOrgID } from '@env';
+import { centralOrgId } from '@env';
 import { Scope } from '@blockframes/utils/static-model/static-model';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 
@@ -137,7 +137,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   private async getOrgId(name: string) {
     if (!name) return '';
-    if (name === 'Archipel Content') return centralOrgID;
+    if (name === 'Archipel Content') return centralOrgId.catalog;
     if (!this.memory.org[name]) {
       const orgs = await this.orgService.getValue(ref => ref.where('denomination.full', '==', name));
       this.memory.org[name] = orgs.length === 1 ? orgs[0].id : '';
