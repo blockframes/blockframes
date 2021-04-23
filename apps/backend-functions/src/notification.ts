@@ -22,7 +22,7 @@ import {
   requestToJoinOrgDeclined,
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest,
-  offerCreatedEmail
+  offerCreatedConfirmationEmail
 } from './templates/mail';
 import { templateIds, unsubscribeGroupIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -193,8 +193,8 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-      case 'offerCreated':
-        await sendOfferCreated(recipient, notification)
+      case 'offerCreatedConfirmation':
+        await sendOfferCreatedConfirmation(recipient, notification)
           .then(_ => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -288,7 +288,7 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
       const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
       await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
-      const template = requestToAttendEventFromUserRefused(recipient, orgName(organizerOrg), eventData);
+      const template = requestToAttendEventFromUserRefused(recipient, orgName(organizerOrg), eventData, notification.organization.id);
       await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {
@@ -309,11 +309,11 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
     const userOrgName = orgName(userOrg);
     if (notification.invitation.status === 'accepted') {
       const templateId = templateIds.invitation.attendEvent.accepted;
-      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, templateId);
+      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, invitation.fromOrg.id, templateId);
       return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
       const templateId = templateIds.invitation.attendEvent.declined;
-      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, templateId);
+      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, invitation.fromOrg.id, templateId);
       return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {
@@ -332,11 +332,9 @@ async function sendMailToOrgAcceptedAdmin(recipient: User, notification: Notific
 
 /** Send email to organization's admins when org appAccess has changed */
 async function sendOrgAppAccessChangedEmail(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
-  const app = await getOrgAppKey(org);
+  const app = notification.appAccess;
   const url = applicationUrl[app];
-  // @#4046 Change text to something more generic than `Your organization has now access to Archipel Market.` wich can be wrong
-  const template = organizationAppAccessChanged(recipient, url);
+  const template = organizationAppAccessChanged(recipient, url, notification.appAccess);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
@@ -434,9 +432,9 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
 }
 
 /** Send copy of offer that recipient has created */
-async function sendOfferCreated(recipient: User, notification: NotificationDocument) {
+async function sendOfferCreatedConfirmation(recipient: User, notification: NotificationDocument) {
   const org =  await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const app: App = 'catalog';
-  const template = offerCreatedEmail(org, notification.bucket, recipient);
+  const template = offerCreatedConfirmationEmail(org, notification.bucket, recipient);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }

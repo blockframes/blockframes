@@ -6,13 +6,14 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Event } from '@blockframes/event/+state/event.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Organization, OrganizationService, orgName } from '@blockframes/organization/+state';
+import { Organization, OrganizationService, orgName, PublicOrganization } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, applicationUrl, getCurrentApp, getCurrentModule, getMovieAppAccess } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { format } from "date-fns";
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -126,25 +127,29 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
-        // @TODO #4046 Update text if needed
+        const msg = !!notification.appAccess
+          ? `Your organization has now access to ${appName[notification.appAccess]}`
+          : 'Your organization\'s app access have changed.'
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message: 'Your organization\'s app access have changed.',
+          message: msg,
+          placeholderUrl: `empty_organization.webp`,
           imgRef: notification.organization?.logo,
-          placeholderUrl: 'empty_organization.webp',
-          url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
-        };
+          url: `${applicationUrl[notification.appAccess]}`
+        }
       case 'eventIsAboutToStart':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(event => {
-          this.update(notification.id, newNotification => {
-            return {
-              ...newNotification,
-              imgRef: this.getPoster(event.meta.titleId),
-              message: `REMINDER - Your ${event.type} "${event.title}" is about to start.`
-            };
-          });
+          this.getDocument<PublicOrganization>(`orgs/${event.ownerOrgId}`).then(org => {
+            this.update(notification.id, newNotification => {
+              return {
+                ...newNotification,
+                imgRef: this.getPoster(event.meta.titleId),
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" is about to start.`
+              };
+            });
+          })
         });
 
         return {
@@ -157,13 +162,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(event => {
-          this.update(notification.id, newNotification => {
-            return {
-              ...newNotification,
-              imgRef: this.getPoster(event.meta.titleId),
-              message: `REMINDER - Your ${event.type} "${event.title}" is tomorrow.`
-            };
-          });
+          this.getDocument<PublicOrganization>(`orgs/${event.ownerOrgId}`).then(org => {
+            this.update(notification.id, newNotification => {
+              return {
+                ...newNotification,
+                imgRef: this.getPoster(event.meta.titleId),
+                message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`
+              };
+            });
+          })
         });
 
         return {
@@ -212,7 +219,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
-      case 'offerCreated':
+      case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was successfully sent.`,

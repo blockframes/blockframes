@@ -31,7 +31,7 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     requestToAttendEventCreated: new  NotificationSettingsForm(settings.requestToAttendEventCreated, true),
     invitationToAttendMeetingCreated: new  NotificationSettingsForm(settings.invitationToAttendMeetingCreated, true),
     invitationToAttendScreeningCreated: new  NotificationSettingsForm(settings.invitationToAttendScreeningCreated, true),
-    offerCreated: new NotificationSettingsForm(settings.offerCreated)
+    offerCreatedConfirmation: new NotificationSettingsForm(settings.offerCreatedConfirmation)
   }
 }
 

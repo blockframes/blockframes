@@ -1,7 +1,7 @@
-<p>Found <strong>{{ rows.data.length }}</strong> movie(s).</p>
+﻿<p test-id="record-length">Found <strong>{{ rows.data.length }}</strong> movie(s).</p>
 <ng-container *ngIf="mode === 'create'; else update">
   <p>For selection ({{ selection.selected.length }} items selected) :
-    <button mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
+    <button test-id="submit-records" mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
       (click)="createSelectedMovies()">
       <ng-container *ngIf="processedTitles === 0 else createinprogress">
         <mat-icon svgIcon="save"></mat-icon>
@@ -16,7 +16,7 @@
 </ng-container>
 <ng-template #update>
   <p>For selection ({{ selection.selected.length }} items selected) :
-    <button mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
+    <button test-id="submit-records" mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
       (click)="updateSelectedMovies()">
       <ng-container *ngIf="processedTitles === 0 else updateinprogress">
         <mat-icon svgIcon="access_time"></mat-icon>
@@ -40,7 +40,7 @@
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
     <th mat-header-cell *matHeaderCellDef>
-      <mat-checkbox [disabled]="processedTitles > 0" (change)="$event ? masterToggle() : null"
+      <mat-checkbox test-id="select-all" [disabled]="processedTitles > 0" (change)="$event ? masterToggle() : null"
         [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()"
         [aria-label]="checkboxLabel()" color="primary">
       </mat-checkbox>
