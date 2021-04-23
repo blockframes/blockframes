@@ -4,17 +4,15 @@ import {
   createMovie,
   Movie,
   createMovieAppConfig,
-  createAppConfig
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
+import { App, app } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
@@ -32,7 +30,6 @@ export class MovieService extends CollectionService<MovieState> {
     private authQuery: AuthQuery,
     private permissionsService: PermissionsService,
     private userService: UserService,
-    private routerQuery: RouterQuery,
     protected store: MovieStore,
     private orgQuery: OrganizationQuery
   ) {
@@ -45,7 +42,6 @@ export class MovieService extends CollectionService<MovieState> {
 
   async create(movieImported?: Partial<Movie>): Promise<Movie> {
     const createdBy = this.authQuery.userId;
-    const appName = getCurrentApp(this.routerQuery);
     let orgIds = [];
     if (!!movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
@@ -60,8 +56,7 @@ export class MovieService extends CollectionService<MovieState> {
       orgIds
     });
     movie.app = {
-      [appName]: createAppConfig({ access: true }),
-      ...createMovieAppConfig(movieImported?.app),
+      ...createMovieAppConfig(movieImported?.app)
     };
     await this.runTransaction(async (tx) => {
       movie.id = await this.add(cleanModel(movie), { write: tx });
@@ -75,7 +70,17 @@ export class MovieService extends CollectionService<MovieState> {
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
     const ref = this.getRef(movie.id);
-    write.update(ref, { '_meta.createdAt': new Date() });
+    app.filter(a => a !== 'crm').map(appli => {
+      if (movie.app[appli].status === 'accepted') {
+        movie.app[appli].acceptedAt = new Date();
+        movie.app[appli].refusedAt = null;
+      }
+      else if (movie.app[appli].status === 'refused') {
+        movie.app[appli].refusedAt = new Date();
+        movie.app[appli].acceptedAt = null;
+      }
+    })
+    write.update(ref, { '_meta.createdAt': new Date(), app: movie.app });
     return this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, user.orgId);
   }
 

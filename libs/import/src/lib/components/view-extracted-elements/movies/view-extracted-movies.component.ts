@@ -28,6 +28,8 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MovieImportState } from '../../../import-utils';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { UserService } from '@blockframes/user/+state';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 let index = 0;
 const fields = {
@@ -223,11 +225,15 @@ const fields = {
   //////////////////
   // ADMIN FIELDS
   //////////////////
-  storeStatus: {
+  catalogStatus: {
     multiLine: false,
     index: index++
   },
-  appAccess: {
+  festivalStatus: {
+    multiLine: false,
+    index: index++
+  },
+  financiersStatus: {
     multiLine: false,
     index: index++
   },
@@ -265,6 +271,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
     private userService: UserService,
+    private router: RouterQuery
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -330,7 +337,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
       formatProductionStatus(this.mapping.productionStatus, movie, importErrors);
 
       // RELEASE YEAR
-      formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie);
+      if (!isNaN(this.mapping.releaseYear)) {
+        formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie);
+      } else {
+        formatSingleValue(this.mapping.releaseYearStatus, 'screeningStatus', 'movie.release.status', movie);
+      }
 
       // PRODUCTION COMPANIES (Production Companie(s))
       formatStakeholders(this.mapping.stakeholders, movie, importErrors);
@@ -407,18 +418,21 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
       if (this.isUserBlockframesAdmin) {
 
-        /** MOVIE APP ACCESS
-        * For each app registered in the excel, we apply the status registered in the excel as well
-        */
-        const apps = this.mapping.appAccess.split(',');
-        apps.forEach(a => {
-          // MOVIE STATUS
-          formatSingleValue(this.mapping.storeStatus, 'storeStatus', `app.${a.trim()}.status`, movie);
-          movie.app[a.trim()].access = true;
-          if (this.mapping.storeStatus === 'accepted') {
-            movie.app[a.trim()].acceptedAt = new Date();
-          }
-        })
+        /**
+       * MOVIE APP ACCESS
+       * For each app, we set a status. If there is no status registered, it will be draft by default.
+       */
+        // CATALOG STATUS
+        formatSingleValue(this.mapping.catalogStatus, 'storeStatus', `app.catalog.status`, movie);
+        if (!!this.mapping.catalogStatus) movie.app.catalog.access = true;
+
+        // FESTIVAL STATUS
+        formatSingleValue(this.mapping.festivalStatus, 'storeStatus', `app.festival.status`, movie);
+        if (!!this.mapping.festivalStatus) movie.app.festival.access = true;
+
+        // FINANCIERS STATUS
+        formatSingleValue(this.mapping.financiersStatus, 'storeStatus', `app.financiers.status`, movie);
+        if (!!this.mapping.financiersStatus) movie.app.financiers.access = true;
 
         // USER ID (to override who is creating this title)
         if (this.mapping.ownerId) {
@@ -437,6 +451,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
             });
           }
         }
+      } else {
+        const currentApp = getCurrentApp(this.router);
+        movie.app[currentApp].access = true;
       }
 
       ///////////////

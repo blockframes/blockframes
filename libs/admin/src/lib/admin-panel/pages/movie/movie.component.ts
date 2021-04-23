@@ -31,7 +31,7 @@ export class MovieComponent implements OnInit {
   public movieAppConfigForm: MovieAppConfigForm;
   public storeStatus = storeStatus;
   public productionStatus = productionStatus;
-  public apps = app.filter(app => app !== 'crm');
+  public apps = app.filter(appli => appli !== 'crm');
   public appName = appName;
 
   public versionColumnsTable = {
@@ -101,17 +101,17 @@ export class MovieComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
     }
 
-    for (const app of this.apps) {
-      this.movie.app[app].refusedAt = null;
-      this.movie.app[app].acceptedAt = null;
-      this.movie.app[app].access = this.movieAppConfigForm.controls[app].get('access').value;
-      this.movie.app[app].status = this.movieAppConfigForm.controls[app].get('status').value;
+    for (const application of this.apps) {
+      this.movie.app[application].refusedAt = null;
+      this.movie.app[application].acceptedAt = null;
+      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
+      this.movie.app[application].status = this.movieAppConfigForm.controls[application].get('status').value;
 
-      if(this.movieAppConfigForm.controls[app].get('status').value === "accepted") {
-        this.movie.app[app].acceptedAt = new Date();
+      if(this.movieAppConfigForm.controls[application].get('status').value === "accepted") {
+        this.movie.app[application].acceptedAt = new Date();
       }
-      if(this.movieAppConfigForm.controls[app].get('status').value === "refused") {
-        this.movie.app[app].refusedAt = new Date();
+      if(this.movieAppConfigForm.controls[application].get('status').value === "refused") {
+        this.movie.app[application].refusedAt = new Date();
       }
     }
 
