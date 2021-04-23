@@ -7,7 +7,6 @@ import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { AuthQuery } from '@blockframes/auth/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
