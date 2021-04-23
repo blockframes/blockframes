@@ -217,7 +217,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'profil_user.webp',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
-      case 'offerCreated':
+      case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was successfully sent.`,
