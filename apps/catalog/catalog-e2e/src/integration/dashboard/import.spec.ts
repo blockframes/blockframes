@@ -13,7 +13,7 @@ const users  =  [ userFixture.getByUID(USER.Hettie) ];
 const movieFixture = 'movie1.xlsx';
 const contractFixture = 'Contract.xlsx';
 const movieRecords = 5;
-const contractRecords = 16;
+const contractRecords = 19;
 
 const logInAdminAndNavigate = () => {
   const loginPage: AuthLoginPage = new AuthLoginPage();
@@ -48,11 +48,6 @@ describe('User can fill and save contract tunnel form', () => {
     cy.visit('/');
     const p1 = new LandingPage();
     p1.clickLogin();
-  });
-
-  it.skip('Login test', () => {
-    cy.log("Log in as admin and import the movies");
-    logInAdminAndNavigate();
   });
   
   it('Login as admin, Select Movies and import ', () => {
@@ -133,12 +128,12 @@ describe('User can fill and save contract tunnel form', () => {
       .click();
 
     cy.log("Check if we reached submission container");
-    cy.wait(3 * SEC);
+    cy.wait(20 * SEC);
     cy.get('h1', {timeout: 30 * SEC})
       .contains("finalize your import");
 
     cy.log(`Check for ${contractRecords} records in the extracted data`);
-    cy.get('p[test-id="record-length"]', {timeout: 10 * SEC})
+    cy.get('p[test-id="record-length"]', {timeout: 120 * SEC})
       .contains(`${contractRecords}`);
     
     cy.log("Selecting all records to submit");
