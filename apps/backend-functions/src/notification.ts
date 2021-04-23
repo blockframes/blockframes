@@ -332,11 +332,9 @@ async function sendMailToOrgAcceptedAdmin(recipient: User, notification: Notific
 
 /** Send email to organization's admins when org appAccess has changed */
 async function sendOrgAppAccessChangedEmail(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
-  const app = await getOrgAppKey(org);
+  const app = notification.appAccess;
   const url = applicationUrl[app];
-  // @#4046 Change text to something more generic than `Your organization has now access to Archipel Market.` wich can be wrong
-  const template = organizationAppAccessChanged(recipient, url);
+  const template = organizationAppAccessChanged(recipient, url, notification.appAccess);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
 

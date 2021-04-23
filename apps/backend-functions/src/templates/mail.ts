@@ -101,10 +101,11 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
 }
 
 /** Email to let org admin knows that his/her organization has access to a new app */
-export function organizationAppAccessChanged(admin: PublicUser, url: string): EmailTemplateRequest {
+export function organizationAppAccessChanged(admin: PublicUser, url: string, app: App): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
-    url
+    url,
+    app
   }
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
 }
