@@ -264,8 +264,8 @@ export const accessToAppChanged = async (
 export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string}, context?: CallableContext) => {
   if (!!context.auth.uid && !!data.app && !!data.orgId) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
-    const mailRequest = await organizationRequestedAccessToApp(organization);
-    const from = await getSendgridFrom(data.app);
+    const mailRequest = await organizationRequestedAccessToApp(organization, data.app);
+    const from = getSendgridFrom(data.app);
     return sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
   return;
