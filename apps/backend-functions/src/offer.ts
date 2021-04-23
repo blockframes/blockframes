@@ -41,7 +41,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   // Send copy of offer to user who created the offer 
   const notification = createNotification({
     toUserId: user.uid,
-    type: 'offerCreated',
+    type: 'offerCreatedConfirmation',
     docId: snap.id,
     bucket
   })

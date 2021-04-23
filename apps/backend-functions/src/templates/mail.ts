@@ -306,7 +306,7 @@ export function movieAcceptedEmail(toUser: PublicUser, movieTitle: string, movie
 }
 
 /** */
-export function offerCreatedEmail(org: OrganizationDocument, bucket: Bucket, user: User): EmailTemplateRequest {
+export function offerCreatedConfirmationEmail(org: OrganizationDocument, bucket: Bucket, user: User): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
   const data = { org, bucket, user, baseUrl: appUrl.content, date };
   return { to: user.email, templateId: templateIds.offer.created, data };
