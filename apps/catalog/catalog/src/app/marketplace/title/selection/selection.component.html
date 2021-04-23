@@ -5,7 +5,7 @@
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
         <p>There are {{ bucket.contracts.length }} titles in my selection</p>
-        <p>Total price: {{ cachedPrice | reduce | currency:bucket.currency }}</p>
+        <p>Total price: {{ total$ | async | currency:bucket.currency }}</p>
       </div>
       <div fxLayout="column" fxLayoutAlign="center center">
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
@@ -46,7 +46,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Price</mat-label>
               <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
-              (input)="cachePrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
+                (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
               <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
             </mat-form-field>
           </header>
@@ -81,7 +81,7 @@
     </ng-container>
 
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
-      <p test-id="total-price">Total Bucket Price: {{ bucket | bucketTotalPrice | currency:bucket.currency }}</p>
+      <p test-id="total-price">Total Bucket Price: {{ total$ | async | currency:bucket.currency }}</p>
       <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer">Create Offer</button>
     </footer>
   </ng-container>
