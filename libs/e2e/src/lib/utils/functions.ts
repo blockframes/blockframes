@@ -8,7 +8,9 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
   cy.clearCookies();
   cy.clearLocalStorage();
   indexedDB.deleteDatabase('firebaseLocalStorageDb');
-  cy.visit(path);
+  if (path !== '') {
+    cy.visit(path);
+  }
   cy.viewport('ipad-2', 'landscape');
 }
 
