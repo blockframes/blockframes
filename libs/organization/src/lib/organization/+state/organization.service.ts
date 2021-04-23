@@ -97,9 +97,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.update(orgId, { isBlockchainEnabled: value });
   }
 
-  /**
-   * @param accessGiven true if access given to new app, false if only revoked access
-   */
   public notifyAppAccessChange(orgId: string, app: App) {
     const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
     return callOnAccessToAppChanged({orgId, app}).toPromise();
