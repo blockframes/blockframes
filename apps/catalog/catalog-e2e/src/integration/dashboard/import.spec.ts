@@ -1,40 +1,62 @@
 ﻿/// <reference types="cypress" />
 
-import { HomePage } from "../../support/pages/marketplace";
 import { LandingPage } from '../../support/pages/landing';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 import { SEC } from "@blockframes/e2e/utils/env";
-import { time } from "console";
 
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(USER.Hettie) ];
 
 const movieFixture = 'movie1.xlsx';
 const contractFixture = 'Contract.xlsx';
+const movieRecords = 5;
+const contractRecords = 16;
+
+const logInAdminAndNavigate = () => {
+  const loginPage: AuthLoginPage = new AuthLoginPage();
+  loginPage.fillSignin(users[0]);
+  loginPage.clickSignIn();
+
+  //cy.url().contains("marketplace/home", {timeout: 60 * SEC});
+  cy.location('pathname', {timeout: 120 * SEC})
+    .should('include', '/marketplace/home');
+
+  cy.log("Switch to dashboard home");
+  //Reach dashboard home
+  cy.get('catalog-marketplace button[test-id=menu]', {timeout: 3 * SEC})
+    .first().click();
+  cy.get('aside a[routerlink="/c/o/dashboard/home"]', {timeout: 0.5 * SEC})
+    .click();
+  cy.wait(5 * SEC);
+  cy.get('aside a[routerlink="title"]', {timeout: 5 * SEC})
+    .click();
+
+  cy.get('catalog-dashboard h1', {timeout: 60 * SEC})
+    .contains("My Titles");
+
+  cy.log("Navigate to import page");
+  cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
+    .click();
+}
 
 describe('User can fill and save contract tunnel form', () => {
   beforeEach(() => {
-    clearDataAndPrepareTest('c/o/dashboard/import');
-    //cy.visit('/');
-    //const p1 = new LandingPage();
-    //p1.clickLogin();
+    clearDataAndPrepareTest();
+    cy.visit('/');
+    const p1 = new LandingPage();
+    p1.clickLogin();
+  });
+
+  it.skip('Login test', () => {
+    cy.log("Log in as admin and import the movies");
+    logInAdminAndNavigate();
   });
   
   it('Login as admin, Select Movies and import ', () => {
-    // Connexion
-    //const p2: AuthLoginPage = new AuthLoginPage();
-    //p2.fillSignin(users[0]);
-    //p2.clickSignIn();
-    //const p3 = new HomePage();
-
-    // Navigate to tunnel-contract
-    //TODO: Check if we are in marketplace and switch to dashboard
-
-    //cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
-    //  .click();
+    logInAdminAndNavigate();
 
     cy.wait(1 * SEC);
 
@@ -65,9 +87,9 @@ describe('User can fill and save contract tunnel form', () => {
     cy.get('h1', {timeout: 30 * SEC})
       .contains("finalizing your submission");
 
-    cy.log("Check for 5 records in the extracted data");
+    cy.log(`Check for ${movieRecords} records in the extracted data`);
     cy.get('p[test-id="record-length"]', {timeout: 10 * SEC})
-      .contains("5");
+      .contains(`${movieRecords}`);
     
     cy.log("Selecting all records to submit");
     cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
@@ -84,14 +106,7 @@ describe('User can fill and save contract tunnel form', () => {
   });
 
   it('Login as admin, Select contracts and import ', () => {
-    // Connexion
-    //const p2: AuthLoginPage = new AuthLoginPage();
-    //p2.fillSignin(users[0]);
-    //p2.clickSignIn();
-    //const p3 = new HomePage();
-
-    // Navigate to tunnel-contract
-    //TODO: Check if we are in marketplace and switch to dashboard
+    logInAdminAndNavigate();
 
     cy.wait(1 * SEC);
 
@@ -122,9 +137,9 @@ describe('User can fill and save contract tunnel form', () => {
     cy.get('h1', {timeout: 30 * SEC})
       .contains("finalize your import");
 
-    cy.log("Check for 19 records in the extracted data");
+    cy.log(`Check for ${contractRecords} records in the extracted data`);
     cy.get('p[test-id="record-length"]', {timeout: 10 * SEC})
-      .contains("19");
+      .contains(`${contractRecords}`);
     
     cy.log("Selecting all records to submit");
     cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
