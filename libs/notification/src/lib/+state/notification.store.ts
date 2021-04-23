@@ -127,12 +127,12 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
-        const message = !!notification.appAccess
+        const msg = !!notification.appAccess
           ? `Your organization has now access to ${appName[notification.appAccess]}`
           : 'Your organization\'s app access have changed.'
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
-          message,
+          message: msg,
           placeholderUrl: `empty_organization.webp`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`
