@@ -128,7 +128,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         };
       case 'orgAppAccessChanged':
         const message = !!notification.appAccess
-          ? `Your organization has now access to ${notification.appAccess}`
+          ? `Your organization has now access to ${appName[notification.appAccess]}`
           : 'Your organization\'s app access have changed.'
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
