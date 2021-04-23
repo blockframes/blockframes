@@ -70,17 +70,7 @@ export class MovieService extends CollectionService<MovieState> {
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
     const ref = this.getRef(movie.id);
-    app.filter(a => a !== 'crm').map(appli => {
-      if (movie.app[appli].status === 'accepted') {
-        movie.app[appli].acceptedAt = new Date();
-        movie.app[appli].refusedAt = null;
-      }
-      else if (movie.app[appli].status === 'refused') {
-        movie.app[appli].refusedAt = new Date();
-        movie.app[appli].acceptedAt = null;
-      }
-    })
-    write.update(ref, { '_meta.createdAt': new Date(), app: movie.app });
+    write.update(ref, { '_meta.createdAt': new Date()});
     return this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, user.orgId);
   }
 

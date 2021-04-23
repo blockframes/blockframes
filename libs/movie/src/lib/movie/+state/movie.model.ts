@@ -158,9 +158,9 @@ export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
   return {
     status: 'draft',
     access: false,
-    acceptedAt: null,
-    refusedAt: null,
-    ...params
+    ...params,
+    acceptedAt: toDate(params?.acceptedAt),
+    refusedAt: toDate(params?.refusedAt),
   }
 }
 
