@@ -127,3 +127,31 @@ export async function loadJWPlayerScript(document: Document, playerUrl: string) 
     }
   });
 }
+
+/** Take size in Bytes and parse it into a human readable string */
+export function fileSizeToString(fileSize: number) {
+  const size = fileSize / 1000;
+  if (size < 1000) {
+    return `${size.toFixed(1)} KB`;
+  } else if (size < 1000 * 1000) {
+    return `${(size / 1000).toFixed(1)} MB`;
+  } else {
+    return `${(size / (1000 * 1000)).toFixed(1)} GB`;
+  }
+}
+
+/** Return the max allowed file size in **Bytes** for a given type of file */
+export function maxAllowedFileSize(type: AllowedFileType) {
+  switch (type) {
+    case 'image':
+    case 'docx':
+    case 'xls':
+    case 'json':
+    case 'csv':
+      return 5 * 1000000; // 5MB in bytes
+    case 'pdf':
+      return 50 * 1000000; // 50MB in bytes
+    case 'video':
+      return 50000 * 1000000; // 50GB in bytes
+  }
+}
