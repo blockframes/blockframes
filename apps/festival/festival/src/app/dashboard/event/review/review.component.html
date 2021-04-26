@@ -1,4 +1,4 @@
 <ng-container *ngIf="event$ | async as event">
   <event-review [event]="event"></event-review>
-  <event-analytics [eventId]="event.id"></event-analytics>
+  <event-analytics [event]="event"></event-analytics>
 </ng-container>
