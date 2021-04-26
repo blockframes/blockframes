@@ -31,7 +31,7 @@ export default class SelectionPage {
             cy.wrap($el).find(`input[test-id="price-${i}"]`, {timeout: 1 * SEC})
               .type(price.toString() + '{enter}').blur();
             cy.wait(1 * SEC);
-            cy.log(`Movie: ${title} - cost: {price}`);
+            cy.log(`Movie: ${title} - cost: ${price}`);
           }
         });
       });
