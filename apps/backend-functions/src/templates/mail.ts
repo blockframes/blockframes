@@ -285,14 +285,12 @@ export function requestToAttendEventFromUserRefused(
 
 /** Generate an email to remind users they have an event starting soon */
 export function reminderEventToUser(
-  movieTitle: string,
   toUser: PublicUser,
   organizerOrgName: string,
   event: EventEmailData,
   template: string
 ): EmailTemplateRequest {
   const data = {
-    movieTitle,
     userFirstName: toUser.firstName,
     organizerOrgName,
     event,

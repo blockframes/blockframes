@@ -270,9 +270,8 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const eventData = getEventEmailData(event);
-  const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
 
-  const email = reminderEventToUser(movie.title.international, recipient, orgName(org), eventData, template);
+  const email = reminderEventToUser(recipient, orgName(org), eventData, template);
   return await sendMailFromTemplate(email, eventAppKey, unsubscribeId);
 }
 
