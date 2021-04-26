@@ -6,6 +6,9 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
+import { FilePreviewComponent } from '@blockframes/media/file/preview/preview.component';
+import { MatDialog } from '@angular/material/dialog';
+import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -22,6 +25,7 @@ export class TitleMarketplaceShellComponent {
   @ViewChild('main') main: ElementRef<HTMLDivElement>;
 
   constructor(
+    private dialog: MatDialog,
     private movieQuery: MovieQuery,
     public router: Router,
     public routerQuery: RouterQuery,
@@ -40,5 +44,9 @@ export class TitleMarketplaceShellComponent {
 
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
+  }
+
+  fullscreen(ref: StorageFile) {
+    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh' })
   }
 }

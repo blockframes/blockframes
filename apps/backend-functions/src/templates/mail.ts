@@ -7,7 +7,7 @@ import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
 import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData } from '@blockframes/utils/emails/utils';
-import { App } from '@blockframes/utils/apps';
+import { App, appName } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
 
@@ -101,10 +101,11 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
 }
 
 /** Email to let org admin knows that his/her organization has access to a new app */
-export function organizationAppAccessChanged(admin: PublicUser, url: string): EmailTemplateRequest {
+export function organizationAppAccessChanged(admin: PublicUser, url: string, app: App): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
-    url
+    url,
+    app
   }
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
 }
@@ -284,14 +285,12 @@ export function requestToAttendEventFromUserRefused(
 
 /** Generate an email to remind users they have an event starting soon */
 export function reminderEventToUser(
-  movieTitle: string,
   toUser: PublicUser,
   organizerOrgName: string,
   event: EventEmailData,
   template: string
 ): EmailTemplateRequest {
   const data = {
-    movieTitle,
     userFirstName: toUser.firstName,
     organizerOrgName,
     event,
@@ -329,11 +328,11 @@ const organizationCreatedTemplate = (orgId: string) =>
 /**
  * @param orgId
  */
-const organizationRequestAccessToAppTemplate = (orgId: string) =>
+const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App) =>
   `
-  An organization requested access to an app,
+  Organization '${org.denomination.full}' requested access to ${appName[app]},
 
-  Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId} or go to ${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
+  Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
 
 
@@ -360,11 +359,11 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
  * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
  * It sends an email to admin to accept or reject the request
  */
-export async function organizationRequestedAccessToApp(org: OrganizationDocument): Promise<EmailRequest> {
+export async function organizationRequestedAccessToApp(org: OrganizationDocument, app: App): Promise<EmailRequest> {
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
-    text: organizationRequestAccessToAppTemplate(org.id)
+    text: organizationRequestAccessToAppTemplate(org, app)
   };
 }
 
