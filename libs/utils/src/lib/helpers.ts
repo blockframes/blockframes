@@ -3,8 +3,6 @@ import { staticModel, Scope } from './static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { User } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { defer, Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
 
 /**
  * This method is used before pushing data on db
@@ -227,28 +225,3 @@ export function hasDenomination(organization: Organization): boolean {
   return !!organization && !!organization.denomination.full;
 }
 
-/**
- * Observable operator that executes its callback when the source observable complete.
- * The callback is then executed with the last emitted value of the observable.
- * @note It's basically a wrapper around rxjs's `finalize()` but with the last emitted value passed as an argument.
- * @note Rxjs's `finalize()`: https://rxjs.dev/api/operators/finalize
- * @note Github discussion about this code snippets: https://github.com/ReactiveX/rxjs/issues/4803
- * @example
- * of(1, 2, 3, 4).pipe(
-    finalizeWithValue(v => console.log('final:', v)),
-  ).subscribe(v => console.log('current:', v));
-  // current: 1
-  // current: 2
-  // current: 3
-  // current: 4
-  // final: 4
-*/
-export function finalizeWithValue<T>(callback: (value: T) => void) {
-  return (source: Observable<T>) => defer(() => {
-    let lastValue: T;
-    return source.pipe(
-      tap(value => lastValue = value),
-      finalize(() => callback(lastValue)),
-    )
-  })
-}

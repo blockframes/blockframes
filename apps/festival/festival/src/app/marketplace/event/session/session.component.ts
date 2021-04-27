@@ -21,7 +21,7 @@ import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.fires
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { filter, scan } from 'rxjs/operators';
-import { finalizeWithValue } from '@blockframes/utils/helpers';
+import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { BehaviorStore } from '@blockframes/utils/behavior-store';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
 import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
@@ -61,7 +61,7 @@ export class UsersComponent implements OnInit {
     ]);
     this.rows = users.map(u => {
       const org = orgs.find(o => o.id === u.orgId);
-      return { 
+      return {
         uid: u.uid,
         firstName: u.firstName,
         lastName: u.lastName,
@@ -129,7 +129,7 @@ export class UsersComponent implements OnInit {
         'country': r.org?.addresses.main.country ?? '--',
         'role': r.userOrgRole ? r.userOrgRole : '--',
         'position': r.position ? r.position : '--',
-        'org activity': r.org ? r.org.activity : '--', 
+        'org activity': r.org ? r.org.activity : '--',
         'email': r.email,
         'first connexion': r.firstConnexion ? r.firstConnexion : '--',
         'last connexion': r.lastConnexion ? r.lastConnexion : '--',
