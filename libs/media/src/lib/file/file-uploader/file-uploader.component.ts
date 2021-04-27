@@ -19,7 +19,7 @@ import {
 } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/+state';
 import { FileMetaData } from '../../+state/media.model';
-import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
+import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -28,17 +28,6 @@ import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
-
-function computeSize(fileSize: number) {
-  const size = fileSize / 1000;
-  if (size < 1000) {
-    return `${size.toFixed(1)} KB`;
-  } else if (size < 1000 * 1000) {
-    return `${(size / 1000).toFixed(1)} MB`;
-  } else {
-    return `${(size / (1000 * 1000)).toFixed(1)} GB`;
-  }
-}
 
 @Component({
   selector: '[form][meta][accept] file-uploader',
@@ -83,8 +72,12 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     types.forEach(type => {
       this.allowedTypes = this.allowedTypes.concat(allowedFiles[type].extension);
       this.types = this.types.concat(allowedFiles[type].mime);
-    })
+    });
+    const maxSizePerType = types.map(type => maxAllowedFileSize(type));
+    this.maxSize = Math.min(...maxSizePerType);
   }
+
+  public maxSize: number = 5 * 1000000;
 
   // listen to db changes to keep form up-to-date after an upload
   @Input() @boolean listenToChanges: boolean;
@@ -98,7 +91,6 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   @ContentChild('onFile') onFileTemplate: TemplateRef<any>;
   @ViewChild('fileExplorer') fileExplorer: ElementRef<HTMLInputElement>;
 
-  public localSize: string;
   public state$ = new BehaviorSubject<UploadState>('waiting');
   public file: File;
   public fileName: string;
@@ -188,15 +180,21 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
 
     const isFileTypeValid = this.types && this.types.includes(fileType);
     if (!isFileTypeValid) {
-      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 1000 });
+      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 4000 });
       this.state$.next('waiting');
       this.fileExplorer.nativeElement.value = null;
       return;
     }
 
+    if (this.file.size >= this.maxSize) {
+      this.snackBar.open(`Your file is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
+      this.state$.next('waiting');
+      this.fileExplorer.nativeElement.value = null;
+      return
+    }
+
     this.state$.next('ready');
     this.fileName = sanitizeFileName(this.file.name);
-    this.localSize = computeSize(this.file.size);
 
     this.uploaderService.addToQueue(this.storagePath, { fileName: this.fileName, file: this.file, metadata: this.metadata });
     this.selectionChange.emit('added');
@@ -219,7 +217,6 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       if (!!retrieved) {
         this.state$.next('ready');
         this.fileName = retrieved.fileName;
-        this.localSize = computeSize(retrieved.file.size);
       } else {
         this.state$.next('waiting');
       }

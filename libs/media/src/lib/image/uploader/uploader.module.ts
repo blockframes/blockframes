@@ -14,6 +14,7 @@ import { ImageModule } from '../../image/directives/image.module';
 // Components
 import { ImageUploaderComponent } from './uploader.component';
 import { ReferencePipe } from '../uploader/reference-path.pipe';
+import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 
 @NgModule({
   declarations: [ ImageUploaderComponent, ReferencePipe ],
@@ -22,6 +23,7 @@ import { ReferencePipe } from '../uploader/reference-path.pipe';
     FlexLayoutModule,
     ImageCropperModule,
     ImageModule,
+    DownloadPipeModule,
 
     // Material
     MatIconModule,

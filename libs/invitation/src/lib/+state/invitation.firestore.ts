@@ -27,6 +27,9 @@ export interface InvitationBase<D> extends PublicInvitation{
    */
   eventId?: string;
   message?: string;
+
+  /** Watch time in secondes, only used for 'screening' events */
+  watchTime?: number;
 }
 
 /** Public interface of an invitation (for notifications). */

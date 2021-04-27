@@ -21,7 +21,7 @@
 
         <ng-template #showVideo>
           <article class="screen">
-            <video-viewer [eventId]="event.id" [ref]="screeningFileRef" class="overlay"></video-viewer>
+            <video-viewer [eventId]="event.id" [ref]="screeningFileRef" class="overlay" (stateChange)="isPlaying = $event === 'play'"></video-viewer>
           </article>
         </ng-template>
 

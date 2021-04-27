@@ -10,15 +10,17 @@ import { SEC } from "@blockframes/e2e/utils/env";
 const MOVIE_LIST_PATH = '/c/o/marketplace/title';
 const SELECTION_PATH = '/c/o/marketplace/selection';
 const movies = [
-  { title: 'Bigfoot Family', price: 20000 },
-  { title: 'GAZA MON AMOUR', price: 10000 },
-  { title: 'Mother Schmuckers', price: 5000 }
+  { title: 'Movie 3', price: 20000 },
+  { title: 'Movie 4', price: 10000 },
+  { title: 'Movie 2', price: 5000  }
 ];
 const specificText = 'Payment schedule: 20% each semester starting at the following from signature date';
 const deliveryText = 'Prores file deliver through cloud';
 const userFixture = new User();
 const user = userFixture.getByUID(USER.Camilla);
 const currency = 'US Dollar';
+const numSections = 4;
+const totalContractValue = '55,000';
 
 beforeEach(() => {
   clearDataAndPrepareTest('/');
@@ -28,17 +30,18 @@ beforeEach(() => {
   p2.clickSignIn();
 });
 
-//TODO : Dependent on import function
-//Issue #5469: E2E excel import test
-describe.skip('Create a new bucket and finalize a new offer', () => {
+describe('Create a new bucket and finalize a new offer', () => {
   it('Log in, go to the library page, add movie to the bucket and create an offer', () => {
     const p1 = new HomePage();
     p1.openSidenavMenuAndNavigate('library');
 
     // CREATE NEW BUCKET BY ADDING MOVIES TO IT
+    cy.log("Arrive at Titles Search and wait for movies to load");
     const p2 = new SearchPage();
     assertMoveTo(MOVIE_LIST_PATH);
-    cy.wait(3 * SEC);
+    cy.wait(15 * SEC);
+    cy.log("Movs displayed!")
+
     p2.fillAvailFilter(avails);
     cy.wait(3 * SEC);
     for(const movie of movies) {
@@ -54,17 +57,18 @@ describe.skip('Create a new bucket and finalize a new offer', () => {
     const p3 = new SelectionPage();
     p3.selectCurrency(currency);
     cy.log(`Correctly selected ${currency}`);
-    p3.checkNumberOfSection(3);
-    movies.forEach((movie, index) => {
+    p3.checkNumberOfSection(numSections);
+    movies.forEach((movie) => {
       p3.checkTitleContract(movie.title);
-      p3.fillPrice(movie.price, index);
-      cy.log(`Filled ${movie.price} for the movie ${movie.title}`);
-      cy.wait(1 * SEC);
+      p3.fillPrice(movie.title, movie.price);
+      cy.wait(3 * SEC);
     });
-    cy.wait(1 * SEC);
-    p3.checkTotalPrice('35,000');
+    p3.checkTotalPrice(totalContractValue);
+
+    cy.log("Creating Offer:");
     p3.createNewOffer(specificText, deliveryText);
     assertMoveTo('/c/o/marketplace/selection/congratulations');
+    cy.log("Check if offer is sent");
     cy.get('catalog-congratulations h1', {timeout: 10 * SEC}).should('contain', 'Your Offer was successfully sent.');
   });
 });

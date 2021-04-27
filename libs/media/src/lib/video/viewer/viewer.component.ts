@@ -1,6 +1,6 @@
 
 import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnDestroy, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
@@ -71,6 +71,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this._eventId = value;
   }
 
+  @Output() stateChange = new EventEmitter<'play' | 'pause' | 'complete'>();
+
   // in order to have several player displayed in the same page
   // we need to randomize the html id,
   // otherwise all the players will be in the same div, each overwriting the previous one
@@ -84,6 +86,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   trackFullScreenMode() {
     this.fullScreen = !this.fullScreen;
   }
+
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -149,6 +152,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         });
 
         this.player.on('ready', () => this.signalPlayerReady());
+        this.player.on('play', () => this.stateChange.emit('play'));
+        this.player.on('pause', () => this.stateChange.emit('pause'));
+        this.player.on('complete', () => this.stateChange.emit('complete'));
         this.updatePlayer();
       }
     } catch(error) {
