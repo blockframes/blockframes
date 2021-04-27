@@ -19,6 +19,7 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 import { HasKeysModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
+import { FilePreviewModule } from '@blockframes/media/file/preview/preview.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -46,6 +47,7 @@ import { MatCardModule } from '@angular/material/card';
     DownloadPipeModule,
     VideoViewerModule,
     ToLabelModule,
+    FilePreviewModule,
 
     // Material
     MatChipsModule,

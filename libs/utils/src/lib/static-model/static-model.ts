@@ -91,7 +91,8 @@ export const contentType = {
   flow: 'Flow',
   short: 'Short Film',
   tv_film: 'TV Film',
-  series: 'TV Series'
+  series: 'TV Series',
+  performing_arts: 'Performing Arts'
 }
 
 export const crewRoles = {

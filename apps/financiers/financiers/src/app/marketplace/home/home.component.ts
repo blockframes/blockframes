@@ -1,5 +1,6 @@
 // Angular
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Blockframes
 import { AlgoliaMovie, AlgoliaOrganization, AlgoliaService, SearchResponse } from '@blockframes/utils/algolia';
@@ -71,5 +72,17 @@ export class HomeComponent implements OnInit {
       // CMS will add more
     ];
     this.orgs = this.algoliaService.query('org', { activePage: 0, limitResultsTo: 50, facets: { isAccepted: true, hasAcceptedMovies: true } })
+      .then(result => {
+        for (const org of result.hits) {
+          org.logo = createStorageFile({
+            storagePath: org.logo,
+            collection: 'orgs',
+            docId: org.objectID,
+            field: 'logo',
+            privacy: 'public'
+          }) as any;
+        }
+        return result
+      })
   }
 }

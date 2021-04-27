@@ -14,8 +14,8 @@
     autocorrect="off"
     spellcheck="false"
     [required]="required"
-    autocomplete="off" 
-  />
+    autocomplete="nope"
+  /> <!-- https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off -->
   <mat-icon matSuffix svgIcon="close" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
   <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()" class="pointer"></mat-icon>
   <mat-hint>
