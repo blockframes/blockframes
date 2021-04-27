@@ -280,15 +280,11 @@ service cloud.firestore {
     	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
       allow read: if userHasValidOrg()
         && notInMaintenance()
-        && ( existingData().app.catalog.status == 'accepted'
-         || existingData().app.festival.status == 'accepted'
-         || existingData().app.financiers.status == 'accepted'
-         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
+        && ( checkStatus(existingData, 'accepted')
+        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
         )
       allow create: if userHasValidOrg()
-        && incomingData().app.catalog.status == 'draft'
-        && incomingData().app.festival.status == 'draft'
-        && incomingData().app.financiers.status == 'draft'
+        && checkAllStatusAreEqual(incomingData, 'draft')
         && isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
         && canCreateNewPermissions(userOrgId(), movieId)
         && notInMaintenance();
@@ -313,6 +309,18 @@ service cloud.firestore {
         && isNotUpdatingField(['app','festival', 'access'])
         && isNotUpdatingField(['app','financiers', 'access'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
+    }
+
+    function checkStatus(data, status) {
+      return data().app.catalog.status == status
+        || data().app.festival.status == status
+        || data().app.financiers.status == status;
+    }
+
+    function checkAllStatusAreEqual(data, status) {
+      return data().app.catalog.status == status
+        && data().app.festival.status == status
+        && data().app.financiers.status == status
     }
 
     ////////////////////////////////

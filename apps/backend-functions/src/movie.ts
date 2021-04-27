@@ -1,11 +1,12 @@
 import { db } from './internals/firebase';
 import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { createDocumentMeta, getDocument, getOrganizationsOfMovie } from './data/internals';
+import { createDocumentMeta, getDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
 import { centralOrgId } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
@@ -157,30 +158,28 @@ export async function onMovieUpdate(
 }
 
 /** Checks if the store status is going from draft to submitted. */
-function isSubmitted(beforeApp, afterApp) {
-  let submitted = false;
-  for (const app of apps) {
-    submitted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
-    if (!!submitted) return submitted;
-  }
-  return submitted;
+function isSubmitted(
+  beforeApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>,
+  afterApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>)
+{
+  return apps.some(app => {
+    return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
+  })
 }
 
 /** Checks if the store status is going from submitted to accepted. */
-function isAccepted(beforeApp, afterApp) {
-  let accepted = false;
-  for (const app of apps) {
+function isAccepted(
+  beforeApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>,
+  afterApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>)
+{
+  return apps.some(app => {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
-      accepted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');
-      return accepted;
-    } else {
-      // in catalog/financiers `draft` -> `submitted` -> `accepted`
-      accepted = (beforeApp && beforeApp[app].status === 'submitted') && (afterApp && afterApp[app].status === 'accepted');
-      return accepted;
+      return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');
     }
-  }
-  return accepted;
+    // in catalog/financiers `draft` -> `submitted` -> `accepted`
+    return (beforeApp && beforeApp[app].status === 'submitted') && (afterApp && afterApp[app].status === 'accepted');
+  });
 }
 
 async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {

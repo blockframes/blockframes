@@ -823,10 +823,7 @@ function isOrgClean(
 
   const existingAndValidMovieIds = existingMovies.docs.filter(m => {
     const movie = m.data();
-    const status = getAllAppsExcept(['crm']).map(appli => {
-      return movie.app[appli].status;
-    })
-    return status.some(s => s === 'accepted');
+    return getAllAppsExcept(['crm']).some(appli => movie.app[appli].status === 'accepted');
   }).map(m => m.id);
 
   const { userIds = [], wishlist = [] } = o;

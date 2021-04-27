@@ -144,13 +144,7 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
 
 /** Return an array of the app access of the movie */
 export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
-  const apps = [];
-  app.filter(a => a !== 'crm').map(a => {
-    if (movie.app[a].access) {
-      apps.push(a)
-    }
-  });
-  return apps;
+  return app.filter(a => !['crm'].includes(a) && movie.app[a].access);
 }
 
 /**

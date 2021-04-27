@@ -243,11 +243,7 @@ export function cleanOrganizations(
 
     const existingAndValidMovieIds = existingMovies.docs.filter(m => {
       const movie = m.data();
-      const status = [];
-      getAllAppsExcept(['crm']).map(a => {
-        status.push(movie.app[a].status);
-      })
-      return status.some(s => s === 'accepted');
+      return getAllAppsExcept(['crm']).some(a => movie.app[a].status === 'accepted');
     }).map(m => m.id);
 
     const validMovieIds = Array.from(new Set(wishlist.filter(movieId => existingAndValidMovieIds.includes(movieId))));

@@ -44,7 +44,7 @@ export function createPublicUserDocument(user: any = {}) {
   }
 }
 
-type Timestamp = admin.firestore.Timestamp;
+export type Timestamp = admin.firestore.Timestamp;
 
 export function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}): DocumentMeta<Timestamp> {
   return {

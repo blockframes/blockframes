@@ -13,7 +13,7 @@ export async function upgrade(db: Firestore) {
     data.app = createNewAppConfig(data.storeConfig);
     delete data.storeConfig;
 
-    await movieDoc.ref.set(data);
+    return movieDoc.ref.set(data);
   });
 }
 
