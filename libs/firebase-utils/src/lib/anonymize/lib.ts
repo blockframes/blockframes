@@ -111,7 +111,7 @@ function updateOrg(org: Organization | PublicOrganization) {
 }
 
 function updateHostedVideo(screener: MovieVideo): MovieVideo | MovieSalesPitch {
-  const jwPlayerId = 'sduHGGRk';
+  const jwPlayerId = 'J4owWnLi';
   return {
     ...screener,
     jwPlayerId
@@ -119,13 +119,13 @@ function updateHostedVideo(screener: MovieVideo): MovieVideo | MovieSalesPitch {
 }
 
 function processMovie(movie: Movie): Movie {
-  if (movie.promotional?.videos?.screener) {
+  if (movie.promotional?.videos?.screener?.jwPlayerId) {
     movie.promotional.videos.screener = updateHostedVideo(movie.promotional.videos.screener);
   }
   if (movie.promotional?.videos?.otherVideos) {
     movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
   }
-  if (movie.promotional?.salesPitch) {
+  if (movie.promotional?.salesPitch?.jwPlayerId) {
     movie.promotional.salesPitch = updateHostedVideo(movie.promotional.salesPitch);
   }
   return movie;
