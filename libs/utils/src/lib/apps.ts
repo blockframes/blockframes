@@ -149,7 +149,7 @@ export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
 
 /** Return true if the movie has the status passed in parameter for at least one application */
 export function checkMovieStatus(movie: MovieDocument| Movie, status: StoreStatus) {
-  return (Object.keys(movie.app).some(app => movie.app[app].status === status))
+  return (Object.keys(movie.app).some(a => movie.app[a].status === status))
 }
 
 /**
