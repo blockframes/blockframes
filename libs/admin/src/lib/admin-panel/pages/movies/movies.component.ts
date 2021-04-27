@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { BehaviorStore } from '@blockframes/utils/behavior-store';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 
