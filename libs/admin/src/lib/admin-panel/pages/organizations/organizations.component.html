@@ -40,7 +40,7 @@
     <ng-template colRef="appAccess" let-appAccess>
       <ul>
         <ng-container *ngFor="let a of app">
-          <li>{{ a | appName:true }} : {{ !! appAccess[a] && appAccess[a].dashboard ? 'yes': 'no' }} : {{ !! appAccess[a] && appAccess[a].marketplace ? 'yes': 'no' }} </li>
+          <li>{{ a | appName:true }} : {{ !!appAccess[a] && appAccess[a].dashboard ? 'yes': 'no' }} : {{ !!appAccess[a] && appAccess[a].marketplace ? 'yes': 'no' }} </li>
         </ng-container>
       </ul>
     </ng-template>
