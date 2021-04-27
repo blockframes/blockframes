@@ -9,7 +9,9 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
-import { app as apps } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept } from '@blockframes/utils/apps';
+
+const apps: App[] = getAllAppsExcept(['crm']);
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -101,7 +103,7 @@ export async function onMovieUpdate(
 
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);
-  const appAccess = apps.filter(a => a !=='crm').filter(a => !!after.app[a].access);
+  const appAccess = apps.filter(a => !!after.app[a].access);
 
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content
     const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgId.catalog}`);
@@ -157,7 +159,7 @@ export async function onMovieUpdate(
 /** Checks if the store status is going from draft to submitted. */
 function isSubmitted(beforeApp, afterApp) {
   let submitted = false;
-  for (const app of apps.filter(a => a !== 'crm')) {
+  for (const app of apps) {
     submitted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
     if (!!submitted) return submitted;
   }
@@ -167,7 +169,7 @@ function isSubmitted(beforeApp, afterApp) {
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(beforeApp, afterApp) {
   let accepted = false;
-  for (const app of apps.filter(a => a !== 'crm')) {
+  for (const app of apps) {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
       accepted = (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'accepted');

@@ -6,7 +6,7 @@ import { getValue } from '@blockframes/utils/helpers';
 import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { app, appName } from '@blockframes/utils/apps';
+import { getAllAppsExcept, appName } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
@@ -31,7 +31,7 @@ export class MovieComponent implements OnInit {
   public movieAppConfigForm: MovieAppConfigForm;
   public storeStatus = storeStatus;
   public productionStatus = productionStatus;
-  public apps = app.filter(appli => appli !== 'crm');
+  public apps = getAllAppsExcept(['crm']);
   public appName = appName;
 
   public versionColumnsTable = {

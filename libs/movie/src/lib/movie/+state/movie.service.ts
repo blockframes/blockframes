@@ -12,7 +12,7 @@ import { PermissionsService } from '@blockframes/permissions/+state/permissions.
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
-import { App, app } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 

@@ -1,6 +1,6 @@
 import { Firestore } from '@blockframes/firebase-utils';
 import { runChunks } from '../firebase-utils';
-import { App, app } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { OldStoreConfig } from './old-types';
 
 export async function upgrade(db: Firestore) {
@@ -19,7 +19,7 @@ export async function upgrade(db: Firestore) {
 
 function createNewAppConfig(storeConfig: OldStoreConfig) {
   const appConfig = {};
-  for (const a of app.filter(appli => appli !== 'crm')) {
+  for (const a of getAllAppsExcept(['crm'])) {
     appConfig[a] = createAppConfig(storeConfig, a);
   }
   return appConfig;

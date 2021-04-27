@@ -17,7 +17,7 @@ import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/testing';
-import { app } from '@blockframes/utils/apps';
+import { getAllAppsExcept } from '@blockframes/utils/apps';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 let db: FirebaseFirestore.Firestore;
@@ -823,7 +823,7 @@ function isOrgClean(
 
   const existingAndValidMovieIds = existingMovies.docs.filter(m => {
     const movie = m.data();
-    const status = app.filter(a => a !== 'crm').map(appli => {
+    const status = getAllAppsExcept(['crm']).map(appli => {
       return movie.app[appli].status;
     })
     return status.some(s => s === 'accepted');

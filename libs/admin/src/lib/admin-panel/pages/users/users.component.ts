@@ -7,7 +7,7 @@ import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
 import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
-import { app, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
+import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
 import { territories } from '@blockframes/utils/static-model/static-model';
 
 @Component({
@@ -44,7 +44,7 @@ export class UsersComponent implements OnInit {
   ];
   public rows: any[] = [];
   public exporting = new BehaviorStore(false);
-  public app = app.filter(a => !['crm', 'cms'].includes(a));
+  public app = getAllAppsExcept(['crm']);
 
   constructor(
     private userService: UserService,

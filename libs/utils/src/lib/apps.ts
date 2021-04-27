@@ -78,6 +78,11 @@ export function getCurrentApp(routerQuery: RouterQuery): App {
   return routerQuery.getValue().state?.root.data.app;
 }
 
+/** Return an array of app without the value passing in argument */
+export function getAllAppsExcept(applications: App[]) {
+  return app.filter(a => !applications.includes(a));
+}
+
 export function getCurrentModule(path: string): Module | 'landing' {
   const fragments = path.split('/');
   if (fragments.includes('marketplace')) {

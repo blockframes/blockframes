@@ -7,7 +7,7 @@ import { removeUnexpectedUsers, UserConfig } from './users';
 import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
-import { app } from '@blockframes/utils/apps';
+import { getAllAppsExcept } from '@blockframes/utils/apps';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -244,7 +244,7 @@ export function cleanOrganizations(
     const existingAndValidMovieIds = existingMovies.docs.filter(m => {
       const movie = m.data();
       const status = [];
-      app.filter(a => a !== 'crm').map(a => {
+      getAllAppsExcept(['crm']).map(a => {
         status.push(movie.app[a].status);
       })
       return status.some(s => s === 'accepted');
