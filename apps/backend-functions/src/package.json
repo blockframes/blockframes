@@ -24,7 +24,6 @@
     "firebase": "^8.2.2",
     "firebase-admin": "^9.4.1",
     "firebase-functions": "^3.11.0",
-    "rxjs": "~6.5.5",
     "faker":"5.1.0",
     "generate-password": "^1.4.2",
     "jwplatform": "0.0.5",
