@@ -7,11 +7,6 @@ import {
 } from '@blockframes/utils/maintenance';
 import { loadAdminServices } from './util';
 
-interface MaintenanceOptions {
-  checkMissingVars?: boolean,
-  db?: FirebaseFirestore.Firestore
-}
-
 const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   if (!db) db = loadAdminServices().db;
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
@@ -31,19 +26,13 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
 /**
  * Disabled maintenance mode
  * @param db db to operate on
- * @param ago if set, will offset endedAt time into the past - seconds
  */
-export function endMaintenance(db?: FirebaseFirestore.Firestore, ago?: number) {
+export function endMaintenance(db?: FirebaseFirestore.Firestore) {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
 
-  let endedAt = admin.firestore.FieldValue.serverTimestamp();
-  if (ago) {
-    const time = new Date(new Date().getTime() - ago)
-    endedAt = admin.firestore.Timestamp.fromDate(time);
-  }
   return maintenanceRef(db).set(
     {
-      endedAt,
+      endedAt: admin.firestore.FieldValue.serverTimestamp(),
       startedAt: null,
     },
     { merge: false }
@@ -61,7 +50,7 @@ export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise
       return true;
     }
 
-    return _isInMaintenance(doc.data() as IMaintenanceDoc, 0);
+    return _isInMaintenance(doc.data() as IMaintenanceDoc);
   } catch (e) {
     throw new Error(`Error while checking if app is in maintenance mode: ${e.message}`);
   }
