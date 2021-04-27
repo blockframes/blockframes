@@ -10,7 +10,7 @@ import { MovieAppConfig } from '@blockframes/movie/+state/movie.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
-import { App, getAllAppsExcept } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus } from '@blockframes/utils/apps';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -28,7 +28,7 @@ export async function onMovieCreate(
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
-  if (Object.keys(movie.app).some(app => movie.app[app].status === 'accepted')) {
+  if (checkMovieStatus(movie, 'accepted')) {
     await storeSearchableOrg(organization);
   }
 
@@ -84,7 +84,7 @@ export async function onMovieDelete(
   });
 
   // Update algolia's index
-  const movieAppAccess = Object.keys(movie.app).filter(app => movie.app[app].access);
+  const movieAppAccess = getMovieAppAccess(movie);
   const promises = movieAppAccess.map(appName => deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>);
 
   await Promise.all(promises)

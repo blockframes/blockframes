@@ -9,6 +9,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
+import { getMovieAppAccess } from '@blockframes/utils/apps';
 
 export const algolia = {
   ...algoliaClient,
@@ -158,7 +159,7 @@ export function storeSearchableMovie(
       movieRecord['minPledge'] = movie['minPledge'];
     }
 
-    const movieAppAccess = Object.keys(movie.app).filter(a => movie.app[a].access);
+    const movieAppAccess = getMovieAppAccess(movie);
 
     const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(
       {
