@@ -4,7 +4,7 @@ import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies, Scope } from '@blockframes/utils/static-model';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, mapTo, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -30,12 +30,10 @@ export class MarketplaceSelectionComponent {
   private prices: number[] = [];
   priceChanges = new Subject();
   total$ = this.priceChanges.pipe(
+    startWith(0),
     debounceTime(100),
-    map(value => {
-      console.log(value)
-      return this.getTotal(this.prices)
-    }),
-    distinctUntilChanged(),
+    map(_ => this.getTotal(this.prices)),
+    distinctUntilChanged()
   );
 
   trackById = (i: number, doc: { id: string }) => doc.id;
