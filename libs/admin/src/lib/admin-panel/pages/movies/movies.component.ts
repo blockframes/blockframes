@@ -4,6 +4,7 @@ import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
+import { EventService } from '@blockframes/event/+state';
 
 @Component({
   selector: 'admin-movies',
@@ -17,7 +18,8 @@ export class MoviesComponent implements OnInit {
     'poster': { value: 'Poster', disableSort: true },
     'title.international': 'International title',
     'org': 'Organization',
-    'storeConfig.status': 'Status'
+    'storeConfig.status': 'Status',
+    'screeningCount': 'Screening count'
   };
 
   public initialColumns: string[] = [
@@ -25,7 +27,8 @@ export class MoviesComponent implements OnInit {
     'poster',
     'title.international',
     'org',
-    'storeConfig.status'
+    'storeConfig.status',
+    'screeningCount'
   ];
   public rows: any[] = [];
   public exporting = new BehaviorStore(false);
@@ -33,6 +36,7 @@ export class MoviesComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private orgService: OrganizationService,
+    private eventService: EventService,
     private cdRef: ChangeDetectorRef,
     private router: Router
   ) { }
@@ -41,11 +45,16 @@ export class MoviesComponent implements OnInit {
     const movies = await this.movieService.getAllMovies();
     // movie.orgIds is an array but in the front-end we only display one
     const orgIds = movies.map(movie => movie.orgIds[0]);
-    const orgs = await this.orgService.getValue(orgIds);
+
+    const [orgs, screenings] = await Promise.all([
+      this.orgService.getValue(orgIds),
+      this.eventService.getValue(ref => ref.where('type', '==', 'screening'))
+    ])
 
     this.rows = movies.map(movie => {
       const org = orgs.find(o => o.id === movie.orgIds[0]);
-      return { org, ...movie };
+      const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length.toString();
+      return { org, ...movie, screeningCount };
     })
     this.cdRef.markForCheck();
   }
@@ -71,14 +80,7 @@ export class MoviesComponent implements OnInit {
     try {
       this.exporting.value = true;
 
-      const movies = await this.movieService.getAllMovies();
-      const promises = movies.map(async m => {
-        const row = { ...m } as any;
-
-        return row;
-      })
-      const data = await Promise.all(promises);
-      const exportedRows = data.map(m => ({
+      const exportedRows = this.rows.map(m => ({
         'movie id': m.id,
         'title': m.title.international,
         'internal ref': m.internalRef ? m.internalRef : '--',
@@ -86,8 +88,7 @@ export class MoviesComponent implements OnInit {
         'orgId': m.org ? m.org.id : '--',
         'status': m.storeConfig.status,
         'storeType': m.storeConfig.storeType,
-        'distributionRightsInfo': m.distributionRightsInfo.count,
-        'contractsInfo': m.contractsInfo.count,
+        'screeningCount': m.screeningCount,
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
