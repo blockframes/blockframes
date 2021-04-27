@@ -8,6 +8,7 @@ import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
 import { app, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
+import { territories } from '@blockframes/utils/static-model/static-model';
 
 @Component({
   selector: 'admin-users',
@@ -114,11 +115,12 @@ export class UsersComponent implements OnInit {
             link: `/c/o/admin/panel/user/${u.uid}`,
           },
           org: org,
-          orgCountry: org?.addresses?.main.country,
+          orgCountry: org?.addresses?.main.country && territories[org.addresses?.main.country] ? territories[org.addresses?.main.country] : '--',
           userOrgRole: org ? await this.orgService.getMemberRole(org, u.uid) : undefined,
           type: org ? (getOrgModuleAccess(org).includes('dashboard') ? 'seller' : 'buyer') : undefined
         }
-      })
+      });
+
       const data = await Promise.all(promises);
       const exportedRows = data.map(r => {
         const row = {
@@ -129,7 +131,7 @@ export class UsersComponent implements OnInit {
           'org id': r.orgId ? r.orgId : '--',
           'org status': r.org ? r.org.status : '--',
           'type': r.type ? r.type : '--',
-          'country': r.org?.addresses.main.country ?? '--',
+          'country': r.orgCountry,
           'role': r.userOrgRole ? r.userOrgRole : '--',
           'position': r.position ? r.position : '--',
           'org activity': r.org ? r.org.activity : '--',
