@@ -1,6 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, ChangeDetectorRef } from '@angular/core';;
 import { EventService } from '@blockframes/event/+state/event.service';
 import { EventAnalytics } from '@blockframes/event/+state/event.firestore';
+import { Event, EventQuery } from '@blockframes/event/+state';
+import { InvitationQuery } from '@blockframes/invitation/+state';
 
 const columns = {
   name: 'Name',
@@ -20,20 +22,51 @@ export class EventAnalyticsComponent implements OnInit {
 
   analytics: EventAnalytics[];
 
-  @Input() eventId: string;
+  @Input() event: Event<any>;
 
-  public columns = columns;
+  public columns: Record<string, string> = columns;
   public initialColumns = Object.keys(columns);
+
+  public averageWatchTime = 0; // in seconds
 
   constructor(
     private service: EventService,
+    private invitationQuery: InvitationQuery,
     private cdr: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
-    const transformEvent = (event: EventAnalytics) => ({ ...event, name: `${event.firstName} ${event.lastName}` });
-    const analytics = await this.service.queryAnalytics(this.eventId);
-    this.analytics = analytics.eventUsers.map(transformEvent);
+
+    const analytics = await this.service.queryAnalytics(this.event.id);
+    // transform the analytics records
+    this.analytics = analytics.eventUsers.map(analytic => {
+      const transformedAnalytic = {
+        ...analytic,
+        name: `${analytic.firstName} ${analytic.lastName}`,
+      };
+
+      // add watch time to the analytic record
+      if (this.event.type === 'screening') {
+        // retrieve watch time from invitation
+        const [invitation] = this.invitationQuery.getAll({
+          // we are looking for invitation between this event and this user id
+          filterBy: invit => invit.toUser.uid === analytic.userId && invit.eventId === analytic.eventId
+        });
+        transformedAnalytic.watchTime = invitation?.watchTime ?? 0;
+      }
+
+      return transformedAnalytic;
+    });
+
+    // if event is a screening we add the watch time column to the table
+    // and we compute the average watch time
+    if (this.event.type === 'screening') {
+      this.columns.watchTime = 'Watch Time';
+      this.initialColumns.push('watchTime');
+      const totalWatchTime = this.analytics.reduce((acc, curr) => acc + curr.watchTime, 0);
+      this.averageWatchTime = totalWatchTime / this.analytics.length;
+    }
+
     this.cdr.markForCheck();
   }
 }

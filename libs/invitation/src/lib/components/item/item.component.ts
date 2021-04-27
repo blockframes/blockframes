@@ -5,7 +5,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { BehaviorStore } from '@blockframes/utils/behavior-store';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
@@ -57,7 +57,7 @@ export class ItemComponent {
     private organizationService: OrganizationService,
     private userService: UserService,
     private routerQuery: RouterQuery
-  ) { 
+  ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.
     // @ts-ignore

@@ -14,7 +14,7 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { allowedFiles } from '@blockframes/utils/utils';
+import { allowedFiles, fileSizeToString } from '@blockframes/utils/utils';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -77,6 +77,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   metadata: FileMetaData;
   fileName: string;
 
+  public maxSize: number = 5 * 1000000;
 
   /////////////
   // Inputs //
@@ -250,6 +251,10 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     if (!isFileTypeValid) {
       this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
       this.delete();
+    } else if (this.file.size >= this.maxSize) {
+      this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
+      this.delete();
+      return;
     } else {
       this.nextStep('crop');
       this.fileUploader.nativeElement.value = null;

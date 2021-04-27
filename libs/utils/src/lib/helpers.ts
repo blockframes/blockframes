@@ -215,12 +215,13 @@ export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
   }
 }
 
-// Verify if the user exists and has a name and surname.
+/** Verify if the user exists and has a name and surname. */
 export function hasDisplayName(user: User): boolean {
   return !!user && !!user.firstName && !!user.lastName;
 }
 
-// Verify if the org exists and has denomination.full.
+/** Verify if the org exists and has denomination.full. */
 export function hasDenomination(organization: Organization): boolean {
   return !!organization && !!organization.denomination.full;
 }
+

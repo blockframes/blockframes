@@ -6,6 +6,7 @@ import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { App } from '@blockframes/utils/apps';
 
 // Type of notification used in front
 export const notificationTypesBase = [
@@ -28,7 +29,7 @@ export const notificationTypesBase = [
   'invitationToAttendScreeningCreated',
 
   // Notifications related to offers
-  'offerCreated'
+  'offerCreatedConfirmation'
 ] as const;
 
 // All the other notification types
@@ -40,7 +41,7 @@ export const notificationTypesPlus = [
   // Other notifications
   'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
-  'orgAppAccessChanged',
+  'orgAppAccessChanged'
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
@@ -60,6 +61,7 @@ export interface NotificationBase<D> {
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket;
+  appAccess?: App;
   /** @dev Type of the notification */
   type: NotificationTypes;
   email?: {

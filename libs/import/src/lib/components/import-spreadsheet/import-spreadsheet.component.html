@@ -1,4 +1,4 @@
-<article fxLayout="column" fxLayoutAlign="center">
+﻿<article fxLayout="column" fxLayoutAlign="center">
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>{{ pageTitle }} </h1>
 
@@ -36,7 +36,7 @@
   <section class="file-section" fxLayout="column" fxLayoutAlign="center center">
 
     <ng-container *ngIf="sheets.length; else fileUpload">
-      <p>
+      <p test-id="status-import">
         <mat-icon svgIcon="attachment"></mat-icon>
         <span>File uploaded, click on "Start import" to continue!</span>
       </p>
@@ -44,7 +44,7 @@
 
     <ng-template #fileUpload>
       <input #filePicker id="filePicker" [accept]="allowedTypes" type="file" (change)="importSpreadsheet($event.target.files)" />
-      <a mat-flat-button (click)="filePicker.click()">Import File</a>
+      <a test-id="import-file" mat-flat-button (click)="filePicker.click()">Import File</a>
       <p class="mat-caption">Accepted Formats: .xls, .csv</p>
     </ng-template>
   </section>
@@ -55,12 +55,12 @@
 
     <section fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
       <ng-container *ngIf="sheets.length">
-        <button mat-flat-button color="warn" (click)="removeFile()">
+        <button test-id="remove-file" mat-flat-button color="warn" (click)="removeFile()">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-container>
 
-      <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">
+      <button test-id="start-import" mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">
         Start import
         <mat-icon svgIcon="arrow_downward"></mat-icon>
       </button>
