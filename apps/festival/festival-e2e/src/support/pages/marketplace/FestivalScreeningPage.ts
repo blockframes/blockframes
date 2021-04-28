@@ -36,10 +36,13 @@ export default class FestivalScreeningPage {
   clickOnMenu() {
     cy.get('festival-marketplace button[test-id=menu]', {timeout: 3 * SEC})
       .click();
+    cy.wait(1 * SEC);
   }
 
   selectCalendar() {
-    cy.get('layout-marketplace a').contains(CALENDAR_LABEL).click();
+    cy.get('layout-marketplace a', {timeout: 3 * SEC})
+      .contains(CALENDAR_LABEL).click();
+    cy.wait(0.5 * SEC);
     return new FestivalMarketplaceCalendarPage();
   }
 

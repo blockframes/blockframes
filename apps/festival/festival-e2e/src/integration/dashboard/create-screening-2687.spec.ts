@@ -113,11 +113,18 @@ describe('User create a screening', () => {
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     cy.wait(10 * SEC);
+
+    //Search for Partner Org and go the screenings
+    cy.log(`Seek out partner: ${OrgName}`);
     p2.searchPartner(OrgName);
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
+
+    //Check if public screening exists and request it.
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     p4.clickRequestInvitation(screeningEvent);
+
+    cy.log(`>Check in market place event page for {${movieTitle}}`);
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
     const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(movieTitle);
