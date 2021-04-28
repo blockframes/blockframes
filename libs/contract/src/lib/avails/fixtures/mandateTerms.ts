@@ -223,21 +223,19 @@ export const mandateTerms = [
             "from": "2021-01-01T00:00:00.000Z"
         },
         "criteria": [],
-        "contractId": "",
+        "contractId": "XMsimwCPnYBWpAGCMXiD",
         "languages": {
             "all": {
                 "subtitle": true,
                 "caption": true,
                 "dubbed": true
             }
-        },
-        "titleId": "HgU5WygrYoon1QnFqEpe"
+        }
     },
     {
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "criteria": [],
-        "contractId": "",
+        "contractId": "0ktmfDHxZShN2v6EX3Zp",
         "duration": {
             "from": "2021-01-01T00:00:00.000Z",
             "to": "2035-01-30T00:00:00.000Z"
@@ -467,7 +465,6 @@ export const mandateTerms = [
         }
     },
     {
-        "titleId": "1eJm06mvagJDNJ2yAlDt",
         "languages": {
             "all": {
                 "subtitle": true,
@@ -475,7 +472,7 @@ export const mandateTerms = [
                 "caption": true
             }
         },
-        "contractId": "",
+        "contractId": "vlGcwmeUaita0vyyxIyX",
         "criteria": [],
         "licensedOriginal": true,
         "id": "36SZ5uSKiqY26nDV6GeX",
@@ -724,8 +721,7 @@ export const mandateTerms = [
             "hotels",
             "planes"
         ],
-        "titleId": "cXHN9C9GftkMhYmu7CV1",
-        "contractId": "",
+        "contractId": "3HRXkLzz8pjeyphIGg92",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "territories": [
             "afghanistan",
@@ -965,8 +961,7 @@ export const mandateTerms = [
                 "caption": true
             }
         },
-        "titleId": "bR4fTHmDDuOSPrNaz39J",
-        "contractId": "",
+        "contractId": "37eQEnj5u5hhfkbqFGm8",
         "territories": [
             "afghanistan",
             "albania",

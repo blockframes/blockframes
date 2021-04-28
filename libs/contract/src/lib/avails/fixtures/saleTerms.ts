@@ -17,7 +17,7 @@ export const saleTerms = [
         ],
         "exclusive": true,
         "criteria": [],
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "duration": {
             "to": "2030-12-30T23:00:00.000Z",
             "from": "2019-01-06T00:00:00.000Z"
@@ -35,22 +35,20 @@ export const saleTerms = [
             }
         },
         "licensedOriginal": true,
-        "orgId": "035zZAYcEXjSkcf8BmSi",
-        "titleId": "Cr3NYe9RXaMwP98LQMyD"
+        "orgId": "035zZAYcEXjSkcf8BmSi"
     },
     {
         "exclusive": true,
         "medias": [
             "freeTv"
         ],
-        "contractId": "",
+        "contractId": "4hlzz4AhVHuDTiicGAMR",
         "id": "bmRso5IYL2EmdahMwClU",
         "duration": {
             "from": "2021-01-06T00:00:00.000Z",
             "to": "2023-01-01T00:00:00.000Z"
         },
         "licensedOriginal": true,
-        "titleId": "HgU5WygrYoon1QnFqEpe",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "languages": {},
         "territories": [
@@ -93,13 +91,12 @@ export const saleTerms = [
         "territories": [
             "germany"
         ],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "exclusive": false
     },
     {
         "id": "Q0VItsb3A6i9JLC6dFbv",
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "licensedOriginal": true,
         "duration": {
             "to": "2030-12-30T23:00:00.000Z",
@@ -133,11 +130,10 @@ export const saleTerms = [
                 "dubbed": true
             }
         },
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "exclusive": true
     },
     {
-        "contractId": "",
+        "contractId": "xa5VSTY0osOMdlO99Aou",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "licensedOriginal": true,
         "territories": [
@@ -149,7 +145,6 @@ export const saleTerms = [
         "medias": [
             "freeTv"
         ],
-        "titleId": "cXHN9C9GftkMhYmu7CV1",
         "duration": {
             "from": "2033-01-06T00:00:00.000Z",
             "to": "2035-01-01T00:00:00.000Z"
@@ -159,9 +154,8 @@ export const saleTerms = [
     {
         "languages": {},
         "criteria": [],
-        "titleId": "cXHN9C9GftkMhYmu7CV1",
         "exclusive": false,
-        "contractId": "",
+        "contractId": "xa5VSTY0osOMdlO99Aou",
         "duration": {
             "to": "2023-01-01T00:00:00.000Z",
             "from": "2021-01-06T00:00:00.000Z"
@@ -187,14 +181,13 @@ export const saleTerms = [
             "theatrical",
             "video"
         ],
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "licensedOriginal": true,
         "duration": {
             "from": "2019-01-06T00:00:00.000Z",
             "to": "2030-12-30T23:00:00.000Z"
         },
         "orgId": "035zZAYcEXjSkcf8BmSi",
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "criteria": [],
         "exclusive": true,
         "id": "GfIqWs5LkCRaSXuFymGa",
@@ -242,13 +235,12 @@ export const saleTerms = [
                 "subtitle": true
             }
         },
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "duration": {
             "from": "2019-01-06T00:00:00.000Z",
             "to": "2030-12-30T23:00:00.000Z"
         },
         "id": "OG7ERWvRd5QpM3FLiHif",
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "territories": [
             "south-korea",
             "vietnam"
@@ -259,7 +251,6 @@ export const saleTerms = [
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "id": "QiUzmnMAolsQFTNtDaJL",
         "languages": {},
-        "titleId": "1eJm06mvagJDNJ2yAlDt",
         "territories": [
             "argentina"
         ],
@@ -267,7 +258,7 @@ export const saleTerms = [
             "sVod"
         ],
         "exclusive": false,
-        "contractId": "",
+        "contractId": "Vl5wh5BNngWCw6d7Hxxl",
         "duration": {
             "to": "2023-01-01T00:00:00.000Z",
             "from": "2021-01-06T00:00:00.000Z"
@@ -276,7 +267,6 @@ export const saleTerms = [
     },
     {
         "licensedOriginal": true,
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "criteria": [],
         "languages": {
             "polish": {
@@ -295,7 +285,7 @@ export const saleTerms = [
             "to": "2030-12-30T23:00:00.000Z"
         },
         "id": "5g8KCvH2jqXs9reZ1bpg",
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "territories": [
             "poland"
         ],
@@ -345,8 +335,7 @@ export const saleTerms = [
         ],
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "exclusive": false,
-        "contractId": "",
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "id": "qx7BgenTn05Acd6sEu3i",
         "duration": {
             "to": "2030-12-30T23:00:00.000Z",
@@ -375,13 +364,12 @@ export const saleTerms = [
             "video"
         ],
         "exclusive": true,
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "duration": {
             "to": "2030-12-30T23:00:00.000Z",
             "from": "2019-01-06T00:00:00.000Z"
         },
         "id": "mXKskAAbzqUzcnaeACM9",
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "licensedOriginal": true,
         "languages": {
             "french": {
@@ -409,8 +397,7 @@ export const saleTerms = [
     {
         "criteria": [],
         "exclusive": true,
-        "titleId": "bR4fTHmDDuOSPrNaz39J",
-        "contractId": "",
+        "contractId": "UDXAghhp33XGGyh3urA8",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "languages": {},
         "licensedOriginal": true,
@@ -431,8 +418,7 @@ export const saleTerms = [
             "freeTv"
         ],
         "orgId": "035zZAYcEXjSkcf8BmSi",
-        "titleId": "bR4fTHmDDuOSPrNaz39J",
-        "contractId": "",
+        "contractId": "UDXAghhp33XGGyh3urA8",
         "duration": {
             "from": "2033-01-06T00:00:00.000Z",
             "to": "2035-01-01T00:00:00.000Z"
@@ -447,8 +433,7 @@ export const saleTerms = [
         "languages": {}
     },
     {
-        "contractId": "",
-        "titleId": "cXHN9C9GftkMhYmu7CV1",
+        "contractId": "xa5VSTY0osOMdlO99Aou",
         "criteria": [],
         "id": "38SdgcYTsiqpAlDWWI4g",
         "exclusive": true,
@@ -473,7 +458,7 @@ export const saleTerms = [
         "orgId": "035zZAYcEXjSkcf8BmSi"
     },
     {
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "languages": {
             "spanish": {
                 "dubbed": true,
@@ -490,7 +475,6 @@ export const saleTerms = [
             "to": "2030-12-30T23:00:00.000Z",
             "from": "2019-01-06T00:00:00.000Z"
         },
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "criteria": [],
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "licensedOriginal": true,
@@ -517,11 +501,10 @@ export const saleTerms = [
         },
         "exclusive": true,
         "id": "BPvBNI4kuE8ewJtmF4Qs",
-        "titleId": "1eJm06mvagJDNJ2yAlDt",
         "languages": {},
         "criteria": [],
         "orgId": "035zZAYcEXjSkcf8BmSi",
-        "contractId": "",
+        "contractId": "Vl5wh5BNngWCw6d7Hxxl",
         "medias": [
             "freeTv"
         ],
@@ -536,7 +519,6 @@ export const saleTerms = [
             "to": "2030-12-30T23:00:00.000Z"
         },
         "exclusive": true,
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "id": "8BcxyCBozVHGImMZdjHP",
         "territories": [
             "singapore"
@@ -557,7 +539,7 @@ export const saleTerms = [
         "medias": [
             "payTv"
         ],
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "licensedOriginal": true,
         "criteria": []
     },
@@ -568,13 +550,12 @@ export const saleTerms = [
         "licensedOriginal": false,
         "exclusive": true,
         "id": "M8jkVyVysmGLRyQx7FDV",
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "duration": {
             "to": "2030-12-30T23:00:00.000Z",
             "from": "2019-01-06T00:00:00.000Z"
         },
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "medias": [
             "payTv",
             "payPerView",
@@ -619,10 +600,9 @@ export const saleTerms = [
                 "dubbed": true
             }
         },
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "criteria": [],
         "licensedOriginal": false,
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "medias": [
             "payTv",
             "payPerView",
@@ -642,7 +622,6 @@ export const saleTerms = [
     {
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "licensedOriginal": false,
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "languages": {
             "french": {
                 "caption": true,
@@ -655,7 +634,7 @@ export const saleTerms = [
                 "subtitle": true
             }
         },
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "exclusive": true,
         "territories": [
             "france"
@@ -679,7 +658,7 @@ export const saleTerms = [
         "id": "Y3Zyx9awhTt2TzEcQ4vh"
     },
     {
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "licensedOriginal": true,
         "territories": [
             "malaysia"
@@ -708,7 +687,6 @@ export const saleTerms = [
                 "dubbed": true
             }
         },
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "exclusive": true
     },
@@ -734,8 +712,7 @@ export const saleTerms = [
             "to": "2030-12-30T23:00:00.000Z",
             "from": "2019-01-06T00:00:00.000Z"
         },
-        "contractId": "",
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "exclusive": false,
         "medias": [
             "payTv",
@@ -765,7 +742,6 @@ export const saleTerms = [
             "theatrical",
             "video"
         ],
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "languages": {
             "dutch": {
@@ -786,7 +762,7 @@ export const saleTerms = [
             "netherlands"
         ],
         "exclusive": false,
-        "contractId": ""
+        "contractId": "06YVmYXZYnEtowGKekBg"
     },
     {
         "id": "6b1vfwoxWpYfdPyCZbvh",
@@ -796,10 +772,9 @@ export const saleTerms = [
             "from": "2023-01-06T00:00:00.000Z",
             "to": "2024-01-01T00:00:00.000Z"
         },
-        "titleId": "HgU5WygrYoon1QnFqEpe",
         "licensedOriginal": true,
         "orgId": "035zZAYcEXjSkcf8BmSi",
-        "contractId": "",
+        "contractId": "4hlzz4AhVHuDTiicGAMR",
         "medias": [
             "freeTv"
         ],
@@ -810,8 +785,7 @@ export const saleTerms = [
     },
     {
         "exclusive": true,
-        "contractId": "",
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "duration": {
             "to": "2030-12-30T23:00:00.000Z",
             "from": "2019-01-06T00:00:00.000Z"
@@ -850,7 +824,7 @@ export const saleTerms = [
     {
         "id": "NUMGGT6UlS8p51jIYGKY",
         "criteria": [],
-        "contractId": "",
+        "contractId": "UDXAghhp33XGGyh3urA8",
         "medias": [
             "planes"
         ],
@@ -868,7 +842,6 @@ export const saleTerms = [
             "from": "2022-01-06T00:00:00.000Z",
             "to": "2029-01-01T00:00:00.000Z"
         },
-        "titleId": "bR4fTHmDDuOSPrNaz39J",
         "exclusive": true,
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "licensedOriginal": true
@@ -886,7 +859,6 @@ export const saleTerms = [
                 "subtitle": true
             }
         },
-        "titleId": "Cr3NYe9RXaMwP98LQMyD",
         "medias": [
             "payTv",
             "payPerView",
@@ -909,7 +881,7 @@ export const saleTerms = [
         },
         "orgId": "035zZAYcEXjSkcf8BmSi",
         "criteria": [],
-        "contractId": "",
+        "contractId": "06YVmYXZYnEtowGKekBg",
         "id": "sDQLi08p1SpA1orT6ZcO"
     }
 ]
