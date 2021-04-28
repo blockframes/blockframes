@@ -43,7 +43,12 @@ describe('Create a new bucket and finalize a new offer', () => {
     cy.log("Movs displayed!")
 
     p2.fillAvailFilter(avails);
+
+    cy.log("Search for titles named Movie");
+    p2.searchForMovies("Movie");
+
     cy.wait(3 * SEC);
+
     for(const movie of movies) {
       p2.addToBucket(movie.title);
       cy.log(`${movie.title} added to the bucket`);
