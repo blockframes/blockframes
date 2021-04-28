@@ -84,7 +84,7 @@ export class OrganizationsComponent implements OnInit {
 
       for (const a of this.app) {
         for (const module of modules) {
-          row[`${appName[a]} - ${module}`] = !!r.appAccess[a] && r.appAccess[a][module] ? 'true' : 'false';
+          row[`${appName[a]} - ${module}`] = r.appAccess[a][module] ? 'true' : 'false';
         }
       }
 
