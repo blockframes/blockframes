@@ -20,11 +20,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
     artisticRoute,
     productionRoute,
     additionalRoute,
-    // TODO 4368 Uncomment and reactivate this section when we relaunch Archipel Content
-    // {
-    //   path: 'avails',
-    //   label: 'Avails'
-    // }
+    {
+      path: 'avails',
+      label: 'Avails'
+    }
   ];
 
   // @TODO #5350 Now we can upload video, clean old links
