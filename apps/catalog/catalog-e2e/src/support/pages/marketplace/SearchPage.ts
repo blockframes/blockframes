@@ -55,7 +55,7 @@ export default class SearchPage extends NavbarPage {
     }
     cy.log('Territories filled');
     // Allow the closure of the static-group component
-    cy.get('input[test-id="search-input"]', {timeout: 3 * SEC}).type('{esc}');
+    cy.get('input[test-id="search-input-control"]', {timeout: 3 * SEC}).type('{esc}');
 
     cy.wait(1 * SEC);
 
