@@ -25,6 +25,12 @@ export default class SearchPage extends NavbarPage {
     cy.get(`movie-card article h6[value="${title}"]`, {timeout: 30 * SEC}).should('not.exist');
   }
 
+  public searchForMovies(title: string) {
+    cy.get('input[test-id="search-titles"]', {timeout: 3 * SEC})
+      .type(title);
+    cy.wait(0.5 * SEC);
+  }
+
   /////////////
   // FILTERS //
   /////////////
