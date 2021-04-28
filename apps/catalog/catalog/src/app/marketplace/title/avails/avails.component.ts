@@ -1,10 +1,14 @@
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TerritoryValue, TerritoryISOA3Value } from '@blockframes/utils/static-model';
-import { territories, territoriesISOA3 } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
+
+interface TerritoryMarker {
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue
+}
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
