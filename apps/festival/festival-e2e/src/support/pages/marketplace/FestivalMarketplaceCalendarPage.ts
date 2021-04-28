@@ -14,7 +14,6 @@ export default class FestivalMarketplaceCalendarPage {
 
     //Locate movie card by the name movieTitle
     cy.log(`FestivalMarketplaceCalendarPage: searching for card: ${movieTitle}`);
-    cy.pause();
     cy.get('festival-event-calendar event-card h5[test-id="movie-title"]', {timeout: 30 * SEC})
       .contains(movieTitle).click();
     return new FestivalMarketplaceEventPage();
