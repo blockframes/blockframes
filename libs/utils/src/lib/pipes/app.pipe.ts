@@ -11,8 +11,8 @@ export class AppPipe implements PipeTransform {
 }
 @Pipe({ name: 'appName' })
 export class AppNamePipe implements PipeTransform {
-  transform(app: App): string {
-    return getAppName(app).label;
+  transform(app: App, short = false): string {
+    return getAppName(app, short).label;
   }
 }
 

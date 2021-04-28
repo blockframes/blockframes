@@ -12,7 +12,6 @@ export function getDocumentRef(path: string): Promise<FirebaseFirestore.Document
 }
 
 export function getDocument<T>(path: string): Promise<T> {
-  const db = admin.firestore();
   return getDocumentRef(path).then(doc => doc.data() as T);
 }
 
