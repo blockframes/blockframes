@@ -26,7 +26,7 @@ export default class SearchPage extends NavbarPage {
   }
 
   public searchForMovies(title: string) {
-    cy.get('input[test-id="search-titles"]', {timeout: 3 * SEC})
+    cy.get('input[test-id="search-input"]', {timeout: 3 * SEC})
       .type(title);
     cy.wait(0.5 * SEC);
   }
