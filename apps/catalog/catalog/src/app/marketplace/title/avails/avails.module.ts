@@ -7,8 +7,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { MapModule } from '@blockframes/ui/map';
 import { RegionChipsAutocompleteModule } from '@blockframes/ui/form/region-chips-autocomplete/region-chips-autocomplete.module';
-import {  ToLabelModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -28,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RegionChipsAutocompleteModule,
     ToLabelModule,
     OverlayWidgetModule,
+    OrgNameModule,
 
     // Material
     MatCardModule,

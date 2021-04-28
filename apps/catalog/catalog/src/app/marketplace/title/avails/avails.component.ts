@@ -1,7 +1,10 @@
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TerritoryValue, TerritoryISOA3Value } from '@blockframes/utils/static-model';
 import { territories, territoriesISOA3 } from '@blockframes/utils/static-model';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { Observable } from 'rxjs';
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
@@ -14,8 +17,9 @@ interface TerritoryMarker {
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent {
+export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
+  public org$: Observable<Organization>;
 
   /** List of world map territories */
   public notLicensedTerritories: TerritoryMarker[] = [];
@@ -29,26 +33,21 @@ export class MarketplaceMovieAvailsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-  ) {
-    /**
-     * @dev this is an example. France will be selected in map, if your 
-     * mouse is over the tooltip is displayed (right top)
-     * if you click on it, selected territory is in browser console.
-     */
-    this.rightsSoldTerritories.push({ isoA3: territoriesISOA3.netherlands, 'label': territories.netherlands });
-    this.availableTerritories.push({ isoA3: territoriesISOA3.france, 'label': territories.france });
+    private orgService: OrganizationService,
+  ) { }
+
+  public async ngOnInit() {
+    this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
-  public select(territory: any) { // @TODO #5647 find correct typing
+  public select(territory: any) { // @TODO #5573 find correct typing
     console.log(territory);
   }
 
   /** Get a list of iso_a3 strings from the territories of the form. */
   public get territoriesIsoA3(): string[] {
-    /** @dev this is an example. */
-    return [territoriesISOA3['united-states-of-america']];
-    //return this.availsForm.territory.value.map(territorySlug => territoriesISOA3[territorySlug]);
+    return [];
   }
 
   public trackByTag(tag) {
