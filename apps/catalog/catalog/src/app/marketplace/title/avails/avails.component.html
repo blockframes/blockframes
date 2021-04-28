@@ -2,6 +2,19 @@
 
   <aside>
     <mat-card>
+      <mat-card-header>
+        <mat-card-title>Avail Search Criteria</mat-card-title>
+      </mat-card-header>
+      <mat-divider></mat-divider>
+      <mat-card-header>
+        <mat-card-subtitle>
+          <span>Fill in the following fields to know where, when and in which conditions this title is available</span>
+          <span>
+            Search results use an "and" logic for multiple conditions, not and "or" logic.
+            <mat-icon matTooltip="If you check TV and VOD media, you will get territories where both media are available (not either of them)" svgIcon="info"></mat-icon>
+          </span>
+        </mat-card-subtitle>
+      </mat-card-header>
       <mat-card-content>
         AVAIL FORM
       </mat-card-content>
@@ -9,6 +22,13 @@
   </aside>
 
   <mat-card class="map-card">
+    <mat-card-header>
+      <mat-card-title>Available territories</mat-card-title>
+      <mat-card-subtitle *ngIf="org$ | async as org">
+        Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to 
+        <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
+      </mat-card-subtitle>
+    </mat-card-header>
     <mat-card-content>
       <world-map>
 
@@ -59,7 +79,10 @@
               <svg viewBox="0 0 100 100" width="10px" height="10px">
                 <rect fill="var(--color-3)" x="0" y="0" width="100" height="100" />
               </svg>
-              <span class="mat-caption">Not Licensed</span>
+              <span class="mat-caption">
+                Not Licensed 
+                <mat-icon matTooltip="You can contact the seller directly for more information." svgIcon="info"></mat-icon>
+              </span>
             </mat-list-item>
           </mat-list>
         </mat-card>

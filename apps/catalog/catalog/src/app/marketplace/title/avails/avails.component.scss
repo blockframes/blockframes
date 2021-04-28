@@ -1,17 +1,29 @@
 @import '~@angular/flex-layout/mq';
 
-section {
-  padding: 15px 0;
+:host {
+  display: block;
+  padding: 25px;
 }
 
 aside {
   position: sticky;
   top: calc(var(--toolbarHeight) + 20px);
-  width: 500px;
+  width: 30%;
+  mat-card {
+    mat-card-subtitle {
+      margin-top: 20px;
+    }
+  }
 }
 
 .map-card {
   flex: 1;
+
+  mat-card-subtitle {
+    a {
+      text-decoration: underline;
+    }
+  }
 
   world-map {
     height: 500px;
@@ -22,7 +34,7 @@ aside {
 .colors-card {
   position: absolute;
   bottom: 30px;
-  right: 15px;
+  left: 15px;
   z-index: 2;
 
   svg {
