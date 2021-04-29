@@ -118,10 +118,10 @@ export class TableExtractedContractsComponent implements OnInit {
     if (!!titleId && importState.contract.type === 'mandate') {
       const title = await this.movieService.getValue(titleId);
       const app = getCurrentApp(this.routerQuery);
-      title.storeConfig.appAccess[app] = true;
+      title.app[app].access = true;
       this.movieService.update(title);
     }
-    
+
     importState.errors.push({
       type: 'error',
       field: 'contract',

@@ -12,7 +12,6 @@ import {
   ContentType,
   ProductionStatus,
   StoreStatus,
-  StoreType,
   PremiereType,
   UnitBox,
   ShootingPeriod,
@@ -21,10 +20,10 @@ import {
   SocialGoal
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/static-model/types";
-import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
+import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import type firebase from 'firebase';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analytics-model';
-import { MovieAppAccess } from "@blockframes/utils/apps";
+import { App } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
@@ -44,6 +43,7 @@ export interface MovieBase<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
+  app: Partial<{[app in App]: MovieAppConfig<D>}>, //! required
   audience?: MovieGoalsAudience,
   banner?: StorageFile;
   boxOffice?: BoxOffice[],
@@ -81,7 +81,6 @@ export interface MovieBase<D> {
   shooting?: MovieShooting,
   soundFormat?: SoundFormat,
   stakeholders?: MovieStakeholders,
-  storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
   orgIds: string[] //! required
@@ -140,11 +139,14 @@ export interface MoviePromotionalElements {
 
 type Timestamp = firebase.firestore.Timestamp;
 
-export interface StoreConfig {
-  status: StoreStatus,
-  storeType: StoreType,
-  appAccess: MovieAppAccess
+export interface MovieAppConfig<D> {
+  acceptedAt: D,
+  access: boolean,
+  refusedAt: D,
+  status: StoreStatus
 }
+
+export type MovieAppConfigRecord = Record<App, MovieAppConfig<Date>>;
 
 export interface Prize {
   name: string,

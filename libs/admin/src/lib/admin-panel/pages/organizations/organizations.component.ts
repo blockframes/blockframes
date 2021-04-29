@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { Organization } from '@blockframes/organization/+state';
-import { app, appName, modules } from '@blockframes/utils/apps';
+import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organizations',
@@ -37,7 +37,7 @@ export class OrganizationsComponent implements OnInit {
   ];
   public rows: Organization[] = [];
   public orgListLoaded = false;
-  public app = app.filter(a => !['crm', 'cms'].includes(a));
+  public app = getAllAppsExcept(['crm']);
 
   constructor(
     private organizationService: OrganizationService,
@@ -84,7 +84,7 @@ export class OrganizationsComponent implements OnInit {
 
       for (const a of this.app) {
         for (const module of modules) {
-          row[`${appName[a]} - ${module}`] = !!r.appAccess[a] && r.appAccess[a][module] ? 'true' : 'false';
+          row[`${appName[a]} - ${module}`] = r.appAccess[a][module] ? 'true' : 'false';
         }
       }
 
