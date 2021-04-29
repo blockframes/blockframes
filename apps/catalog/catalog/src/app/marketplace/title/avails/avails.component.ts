@@ -1,9 +1,19 @@
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MarketplaceStore, MarketplaceQuery } from '../../+state';
-import { TerritoryValue, Territory } from '@blockframes/utils/static-model';
-import { territories, territoriesISOA3 } from '@blockframes/utils/static-model';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { TerritoryValue, TerritoryISOA3Value } from '@blockframes/utils/static-model';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { Observable } from 'rxjs';
+
+interface TerritoryMarker {
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue
+}
+
+interface TerritoryMarker {
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue
+}
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -11,15 +21,14 @@ import { territories, territoriesISOA3 } from '@blockframes/utils/static-model';
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent {
-  public availsForm
+export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
-  public territories = territories;
+  public org$: Observable<Organization>;
 
   /** List of world map territories */
-  public notLicensedTerritories: Territory[] = [];
-  public rightsSoldTerritories: Territory[] = [];
-  public availableTerritories: Territory[] = [];
+  public notLicensedTerritories: TerritoryMarker[] = [];
+  public rightsSoldTerritories: TerritoryMarker[] = [];
+  public availableTerritories: TerritoryMarker[] = [];
 
   public hoveredTerritory: {
     name: string;
@@ -28,58 +37,25 @@ export class MarketplaceMovieAvailsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-    private marketplaceStore: MarketplaceStore,
-    private marketplaceQuery: MarketplaceQuery,
-    private snackBar: MatSnackBar
+    private orgService: OrganizationService,
   ) { }
 
+  public async ngOnInit() {
+    this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
+  }
+
   /** Whenever you click on a territory, add it to availsForm.territories. */
-  public select(territory: Territory) {
-    const territorySlug = territoriesISOA3[territory];
-    this.availsForm.addTerritory(territorySlug);
+  public select(territory: any) { // @TODO #5573 find correct typing
+    console.log(territory);
   }
 
   /** Get a list of iso_a3 strings from the territories of the form. */
   public get territoriesIsoA3(): string[] {
-    return this.availsForm.territory.value.map(territorySlug => territoriesISOA3[territorySlug]);
+    return [];
   }
 
   public trackByTag(tag) {
     return tag;
-  }
-
-  /** Apply filters and display results on the world map. */
-  public async applyAvailsFilter() {
-    try {
-      this.availsForm.disable();
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 3000 });
-    }
-  }
-
-  /** Reenable the form for a new search. */
-  // TODO: bind every controls to the form to avoid tricky disable => ISSUE#1942
-  public deactivateAvailsFilter() {
-    this.availsForm.get('isActive').setValue(false);
-    this.availsForm.enable();
-  }
-
-  /** Add a distribution right to the user selection for the active movie. */
-  public addRight() {
-    try {
-
-      // If title don't exist in the marketplace store, create one.
-      if (!this.marketplaceQuery.getEntity(this.movie.id)) {
-        this.marketplaceStore.addTitle(this.movie.id);
-      }
-
-      this.snackBar.open('Exploitation Rights added to your Selection', 'close', {
-        duration: 3000
-      });
-
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 3000 });
-    }
   }
 
   /** Display the territories information in the tooltip */
