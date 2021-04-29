@@ -10,7 +10,7 @@
         <mat-label>Subject</mat-label>
         <input formControlName="subject" matInput placeholder="Subject" required>
         <mat-error *ngIf="form.get('subject').hasError('required')">
-          Subject field is <strong>required</strong>
+          Subject is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field class="textarea" appearance="outline">
@@ -18,7 +18,7 @@
         <textarea formControlName="message" matInput placeholder="Message" cdkTextareaAutosize
         cdkAutosizeMinRows="6" required></textarea>
         <mat-error *ngIf="form.get('message').hasError('required')">
-          Message field is <strong>required</strong>
+          Message is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </form>
