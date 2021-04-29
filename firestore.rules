@@ -133,8 +133,10 @@ service cloud.firestore {
         )
         && isRequestFieldValueEqualToOrNotSetted(['id'], invitationId)
         && notInMaintenance();
-    	allow update: if isOnlyChangingInvitationStatus()
-      && notInMaintenance();
+    	allow update: if  (
+      	isOnlyChangingInvitationWatchTime()
+        || isOnlyChangingInvitationStatus()
+      ) && notInMaintenance();
       allow delete: if isInvitationSender()
         && notInMaintenance();
     }
@@ -176,9 +178,6 @@ service cloud.firestore {
     }
 
     function isOnlyChangingInvitationStatus() {
-      // Update is used to change status only. Allowed to recepients only
-      // @TODO (#2500) should be handled by a backend function to prevent ugly rules
-      // Only "status" can be updated.
       return isInvitationRecepient()
         &&
         (
@@ -190,6 +189,21 @@ service cloud.firestore {
           && isNotUpdatingField(['toUser', 'uid'])
           && isNotUpdatingField(['docId'])
         );
+    }
+
+    function isOnlyChangingInvitationWatchTime() {
+      return (
+        existingData().type == 'attendEvent'
+        && isNotUpdatingId('id', existingData().id)
+        && isNotUpdatingField(['mode'])
+        && isNotUpdatingField(['fromOrg', 'id'])
+        && isNotUpdatingField(['fromUser', 'uid'])
+        && isNotUpdatingField(['toOrg', 'id'])
+        && isNotUpdatingField(['toUser', 'uid'])
+        && isNotUpdatingField(['docId'])
+        && isNotUpdatingField(['status'])
+        && isNotUpdatingField(['type'])
+    	);
     }
 
 
