@@ -20,7 +20,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];
-  isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
+  isPublished$ = this.query.selectActive(movie => movie.app.financiers.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
   )
 

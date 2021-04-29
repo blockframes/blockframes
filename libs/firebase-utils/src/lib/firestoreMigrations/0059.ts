@@ -17,7 +17,7 @@ export async function upgrade(db: Firestore) {
         update = true;
       }
     }
-  
+
     if (update) {
       await movieDoc.ref.set(movie);
     }

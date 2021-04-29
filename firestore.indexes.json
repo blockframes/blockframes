@@ -3,33 +3,24 @@
     "collectionGroup": "movies",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "storeConfig.appAccess.catalog", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.catalog.access", "order": "ASCENDING" },
+      { "fieldPath": "app.catalog.status", "order": "ASCENDING" },
       { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
     ]
   },{
     "collectionGroup": "movies",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "storeConfig.appAccess.financiers", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.financiers.access", "order": "ASCENDING" },
+      { "fieldPath": "app.financiers.status", "order": "ASCENDING" },
       { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
     ]
   },{
     "collectionGroup": "movies",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "storeConfig.appAccess.festival", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
-      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
-    ]
-  },{
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
-      { "fieldPath": "storeConfig.appAccess.catalog", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.festival.access", "order": "ASCENDING" },
+      { "fieldPath": "app.festival.status", "order": "ASCENDING" },
       { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
     ]
   },{
@@ -37,8 +28,17 @@
     "queryScope": "COLLECTION",
     "fields": [
       { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
-      { "fieldPath": "storeConfig.appAccess.financiers", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.catalog.access", "order": "ASCENDING" },
+      { "fieldPath": "app.catalog.status", "order": "ASCENDING" },
+      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
+    ]
+  },{
+    "collectionGroup": "movies",
+    "queryScope": "COLLECTION",
+    "fields": [
+      { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "app.financiers.access", "order": "ASCENDING" },
+      { "fieldPath": "app.financiers.status", "order": "ASCENDING" },
       { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
     ]
   }, {
@@ -46,32 +46,32 @@
     "queryScope": "COLLECTION",
     "fields": [
       { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
-      { "fieldPath": "storeConfig.appAccess.festival", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.festival.access", "order": "ASCENDING" },
+      { "fieldPath": "app.festival.status", "order": "ASCENDING" },
       { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
     ]
   }, {
     "collectionGroup": "movies",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "storeConfig.appAccess.catalog", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.catalog.access", "order": "ASCENDING" },
+      { "fieldPath": "app.catalog.status", "order": "ASCENDING" },
       { "fieldPath": "release.year", "order": "DESCENDING" }
     ]
   }, {
     "collectionGroup": "movies",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "storeConfig.appAccess.financiers", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.financiers.access", "order": "ASCENDING" },
+      { "fieldPath": "app.financiers.status", "order": "ASCENDING" },
       { "fieldPath": "release.year", "order": "DESCENDING" }
     ]
   }, {
     "collectionGroup": "movies",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "storeConfig.appAccess.festival", "order": "ASCENDING" },
-      { "fieldPath": "storeConfig.status", "order": "ASCENDING" },
+      { "fieldPath": "app.festival.access", "order": "ASCENDING" },
+      { "fieldPath": "app.festival.status", "order": "ASCENDING" },
       { "fieldPath": "release.year", "order": "DESCENDING" }
     ]
   }, {
@@ -100,7 +100,7 @@
       { "fieldPath": "type", "order": "ASCENDING" },
       { "fieldPath": "end", "order": "ASCENDING" }
     ]
-  }, 
+  },
   {
     "collectionGroup": "events",
     "queryScope": "COLLECTION",
