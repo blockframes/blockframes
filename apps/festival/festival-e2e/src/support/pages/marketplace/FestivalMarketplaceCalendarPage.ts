@@ -10,8 +10,11 @@ export default class FestivalMarketplaceCalendarPage {
   clickOnEvent(movieTitle: string) {
     cy.get('festival-marketplace main', {timeout: 3 * SEC})
       .scrollTo('top');
-    cy.wait(2 * SEC);
-    cy.get('festival-event-calendar event-card h5[test-id=movie-title]', {timeout: 30 * SEC})
+    cy.wait(5 * SEC);
+
+    //Locate movie card by the name movieTitle
+    cy.log(`FestivalMarketplaceCalendarPage: searching for card: ${movieTitle}`);
+    cy.get('festival-event-calendar event-card h5[test-id="movie-title"]', {timeout: 30 * SEC})
       .contains(movieTitle).click();
     return new FestivalMarketplaceEventPage();
   }

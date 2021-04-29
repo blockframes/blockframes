@@ -25,6 +25,12 @@ export default class SearchPage extends NavbarPage {
     cy.get(`movie-card article h6[value="${title}"]`, {timeout: 30 * SEC}).should('not.exist');
   }
 
+  public searchForMovies(title: string) {
+    cy.get('input[test-id="search-input"]', {timeout: 3 * SEC})
+      .type(title);
+    cy.wait(0.5 * SEC);
+  }
+
   /////////////
   // FILTERS //
   /////////////
@@ -49,7 +55,7 @@ export default class SearchPage extends NavbarPage {
     }
     cy.log('Territories filled');
     // Allow the closure of the static-group component
-    cy.get('input[test-id="search-input"]', {timeout: 3 * SEC}).type('{esc}');
+    cy.get('input[test-id="search-input-control"]', {timeout: 3 * SEC}).type('{esc}');
 
     cy.wait(1 * SEC);
 
@@ -78,7 +84,7 @@ export default class SearchPage extends NavbarPage {
     }
     cy.log('Medias filled');
     // Allow the closure of the static-group component
-    cy.get('input[test-id="search-input"]', {timeout: 3 * SEC}).type('{esc}');
+    cy.get('input[test-id="search-input-control"]', {timeout: 3 * SEC}).type('{esc}');
 
     // EXCLUSIVE
     if(!avail.exclusive) {
