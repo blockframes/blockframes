@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 import { clearDataAndPrepareTest, assertMoveTo } from '@blockframes/e2e/utils/functions';
 import { LandingPage } from '../../support/pages/landing';
@@ -43,7 +43,12 @@ describe('Create a new bucket and finalize a new offer', () => {
     cy.log("Movs displayed!")
 
     p2.fillAvailFilter(avails);
+
+    cy.log("Search for titles named Movie");
+    p2.searchForMovies("Movie");
+
     cy.wait(3 * SEC);
+
     for(const movie of movies) {
       p2.addToBucket(movie.title);
       cy.log(`${movie.title} added to the bucket`);
