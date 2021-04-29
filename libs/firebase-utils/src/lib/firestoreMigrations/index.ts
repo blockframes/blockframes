@@ -58,7 +58,7 @@ import * as v0057 from './0057';
 import * as v0058 from './0058';
 import * as v0059 from './0059';
 import * as v0060 from './0060';
-import * as v0061 from './temp-60';
+import * as v0061 from './0061';
 
 import { Firestore, Storage } from '../types';
 

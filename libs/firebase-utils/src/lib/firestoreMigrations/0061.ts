@@ -5,6 +5,30 @@ import { OldStoreConfig } from './old-types';
 
 export async function upgrade(db: Firestore) {
 
+  // Update the CMS setting
+  const cms = await db.collection('cms').get();
+  cms.docs.map(async cms => {
+    const docRef = await cms.ref.collection('home').doc('live');
+    const doc = await docRef.get();
+    const data = doc.data();
+
+    for (const section of data.sections) {
+      if(['orgTitles', 'slider', 'titles'].includes(section._type) && !!section.query) {
+        const application = section.query[0].field.split('.')[2];
+        for (const q of section.query) {
+          const array = q.field?.split('.');
+          if (!!array && array.includes('storeConfig')) {
+            array.length === 3
+            ? q.field = `app.${array[2]}.access`
+            : q.field = `app.${application}.status`
+          }
+        }
+      }
+    }
+    await docRef.set(data);
+  })
+
+  // Update movies app access
   const movies = await db.collection('movies').get();
 
   return runChunks(movies.docs, async (movieDoc) => {
