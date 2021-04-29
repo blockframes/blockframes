@@ -13,7 +13,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 const columns = {
   'title.international': 'Title',
-  view: { value: '# VIEWS', disableSort: true },
+  view: { value: '# Views', disableSort: true },
   directors: 'Director(s)',
   productionStatus: 'Production Status',
   'app.festival.status': 'Status'
