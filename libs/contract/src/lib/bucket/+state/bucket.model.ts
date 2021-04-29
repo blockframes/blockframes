@@ -1,4 +1,5 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
+import { Term } from '@blockframes/contract/term/+state';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 
 export interface Bucket {
@@ -23,6 +24,15 @@ export interface BucketContract {
   /** List of sub terms derived from the parent terms that the buyer want to buy */
   terms: AvailsFilter[];
   specificity: string;
+}
+
+export function fromTermToAvail(term: Term): AvailsFilter {
+  return {
+    medias: term.medias,
+    duration: term.duration,
+    territories: term.territories,
+    exclusive: term.exclusive
+  }
 }
 
 function createBucketTerm(params: Partial<AvailsFilter> = {}): AvailsFilter {

@@ -22,5 +22,6 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
+  "include": ["./src"],
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
 }
