@@ -49,9 +49,18 @@ aside {
   z-index: 2;
 }
 
-strong {
-  opacity: 0.5;
-  font-weight: normal;
+mat-card {
+  margin-bottom: 24px;
+}
+
+div {
+  mat-divider {
+    border-top-color: var(--primary);
+    width: 100%;
+  }
+  span {
+    white-space: nowrap;
+  }
 }
 
 @include layout-bp(lt-lg) {

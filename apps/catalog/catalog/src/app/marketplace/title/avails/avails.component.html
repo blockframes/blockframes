@@ -25,7 +25,7 @@
     <mat-card-header>
       <mat-card-title>Available territories</mat-card-title>
       <mat-card-subtitle *ngIf="org$ | async as org">
-        Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to 
+        Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to
         <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
       </mat-card-subtitle>
     </mat-card-header>
@@ -51,7 +51,7 @@
         <ng-container *ngFor="let tag of territoriesIsoA3">
           <map-feature [tag]="tag" color="color-4"></map-feature>
         </ng-container>
-   
+
         <!-- TOOLTIP ON HOVERING-->
         <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
           <ul>
@@ -80,7 +80,7 @@
                 <rect fill="var(--color-3)" x="0" y="0" width="100" height="100" />
               </svg>
               <span class="mat-caption">
-                Not Licensed 
+                Not Licensed
                 <mat-icon matTooltip="You can contact the seller directly for more information." svgIcon="info"></mat-icon>
               </span>
             </mat-list-item>
@@ -92,18 +92,113 @@
   </mat-card>
 </section>
 
-<mat-card>
-  <mat-card-content>
-    TERM CARD
-  </mat-card-content>
+<h2>Preselected Rights</h2>
+<ng-container *ngIf="(bucket$ | async) as bucket">
+  <mat-card *ngFor="let contracts of bucket.contracts">
+    <ng-container *ngFor="let term of contracts.terms">
+      <mat-card-header>
+        <mat-card-title>Exclusive rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-accordion>
+          <!-- TERRITORIES -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Territories
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-chip-list aria-label="Territories">
+              <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
+            </mat-chip-list>
 
-  <mat-divider></mat-divider>
+          </mat-expansion-panel>
 
-  <mat-card-footer fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" class="mat-body-2">
-      <span>Add to Selection</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </button>
-  </mat-card-footer>
+          <!-- MEDIAS -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Medias
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-chip-list aria-label="Medias">
+              <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
+            </mat-chip-list>
+          </mat-expansion-panel>
 
-</mat-card>
+          <!-- VERSIONS -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Versions
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <article>
+              <strong>Original Languages</strong>
+              <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
+              <strong>Request Specific Versions</strong>
+
+              <!-- FORM -->
+              <article [formGroup]="languageForm" fxLayout="column" fxLayoutGap="24px">
+                <ng-container *ngFor="let language of languageForm.controls | keyvalue">
+                  <div fxLayout="column" fxLayoutGap="8px">
+                    <h5>{{ language.key | titlecase }}</h5>
+                    <div [formGroupName]="language.key" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                      <div fxLayout="row" fxLayoutGap="16px">
+                        <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
+                        <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
+                        <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
+                      </div>
+                      <button mat-mini-fab (click)="deleteLanguage(language.key)" color="warn">
+                        <mat-icon svgIcon="delete"></mat-icon>
+                      </button>
+                    </div>
+                    <ng-container *ngIf="language.value.hasError('noVersion')">
+                      <p class="mat-error" *ngIf="language.value.touched">Please select a version above or delete this language.</p>
+                      <p class="mat-caption" *ngIf="language.value.untouched">Please select the applicable version(s).</p>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </article>
+
+              <!-- ADD LANGUAGE -->
+              <div *ngIf="!showButtons">
+                <input-autocomplete test-id="languages" scope="languages" [control]="languageCtrl" withoutValues="['all']">
+                  <mat-label>Languages</mat-label>
+                </input-autocomplete>
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+                  <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
+                    [disabled]="!languageCtrl.value">
+                    <mat-icon svgIcon="save"></mat-icon>
+                    <span>Save Language</span>
+                  </button>
+                </div>
+              </div>
+              <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons">
+                <mat-divider inset></mat-divider>
+                <span class="mat-caption text-primary">Add a Version</span>
+                <button mat-mini-fab color="primary" (click)="showForm()">
+                  <mat-icon svgIcon="add"></mat-icon>
+                </button>
+              </div>
+            </article>
+          </mat-expansion-panel>
+
+          <!-- RUNS -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Runs
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>This is the primary content of the panel.</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-content>
+    </ng-container>
+  </mat-card>
+  <button mat-flat-button color="primary" class="mat-body-2">
+    <span>Add to Selection</span>
+    <mat-icon svgIcon="arrow_forward"></mat-icon>
+  </button>
+</ng-container>
