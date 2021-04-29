@@ -7,8 +7,8 @@ export async function upgrade(db: Firestore) {
 
   // Update the CMS setting
   const cms = await db.collection('cms').get();
-  cms.docs.map(async cms => {
-    const docRef = await cms.ref.collection('home').doc('live');
+  cms.docs.map(async cmsDoc => {
+    const docRef = await cmsDoc.ref.collection('home').doc('live');
     const doc = await docRef.get();
     const data = doc.data();
 
