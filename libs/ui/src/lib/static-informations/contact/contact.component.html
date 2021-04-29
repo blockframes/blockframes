@@ -8,12 +8,18 @@
     <form [formGroup]="form" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label>Subject</mat-label>
-        <input formControlName="subject" matInput placeholder="Subject">
+        <input formControlName="subject" matInput placeholder="Subject" required>
+        <mat-error *ngIf="form.get('subject').hasError('required')">
+          Subject field is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
       <mat-form-field class="textarea" appearance="outline">
         <mat-label>Message</mat-label>
         <textarea formControlName="message" matInput placeholder="Message" cdkTextareaAutosize
-          cdkAutosizeMinRows="6"></textarea>
+        cdkAutosizeMinRows="6" required></textarea>
+        <mat-error *ngIf="form.get('message').hasError('required')">
+          Message field is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
     </form>
     <div fxLayout="row" fxLayoutAlign="center">
