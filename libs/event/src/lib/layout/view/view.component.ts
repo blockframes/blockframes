@@ -44,7 +44,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
       this.event$.pipe(filter(event => !!event)),
       this.invitationService.guestInvitations$
     ]).pipe(
-      map(([event, invitations]) => invitations.find(invitation => invitation.eventId === event.id))
+      map(([event, invitations]) => invitations.find(invitation => invitation.eventId === event.id) ?? null)
     ).subscribe(invitation => {
       this.invitation = invitation
       this.cdr.markForCheck();
