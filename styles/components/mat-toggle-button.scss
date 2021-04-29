@@ -11,7 +11,7 @@
     border-left: solid 1px mat-color($primary, 500);
   }
 
-  [dir='rtl'] .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
+  [dir="rtl"] .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
     border-left: none;
     border-right: solid 1px mat-color($primary, 500);
   }
@@ -23,6 +23,6 @@
 
   .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
     background-color: mat-color($primary, 800);
-    color: white
+    color: mat-color($primary, default-contrast);
   }
 }
