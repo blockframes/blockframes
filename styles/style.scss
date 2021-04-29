@@ -28,58 +28,6 @@ span + .mat-icon {
   margin-left: 8px;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-p a {
-  position: relative;
-  white-space: nowrap;
-}
-
-p a:after {
-  left: 0;
-  bottom: 0;
-  content: "";
-  display: block;
-  height: 1px;
-  position: absolute;
-  background: var(--foreground-text);
-  width: 100%;
-  transition: transform 300ms ease-in;
-}
-p a:hover:after {
-  transform: translateY(2px);
-}
-
-p a:hover {
-  text-decoration: none;
-}
-
-.inline-link {
-  position: relative;
-  white-space: nowrap;
-
-  &:after {
-    left: 0;
-    bottom: 0;
-    content: "";
-    display: block;
-    height: 1px;
-    position: absolute;
-    background: var(--foreground-text);
-    width: 100%;
-    transition: transform 300ms ease-in;
-  }
-  &:hover:after {
-    transform: translateY(2px);
-  }
-  &:hover {
-    text-decoration: none;
-  }
-}
-
 main {
   height: 100%;
 }

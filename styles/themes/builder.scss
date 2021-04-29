@@ -1,31 +1,33 @@
-@import "~@angular/material/theming";
-@import "../components/mat-list";
-@import "../components/mat-card";
-@import "../components/mat-table";
-@import "../components/mat-toolbar";
-@import "../components/mat-button";
-@import "../components/mat-expansion-panel";
-@import "../components/mat-chips";
-@import "../components/mat-form-field";
-@import "../components/mat-icon.scss";
-@import "../components/mat-toggle-button.scss";
-@import "../components/mat-sidenav.scss";
-@import "../components/mat-snack-bar.scss";
-@import "../components/mat-dialog.scss";
-@import "../components/mat-slider.scss";
-@import "../components/mat-tooltip.scss";
-@import "../components/apex-chart.scss";
-@import "../components/bf-widget.scss";
-@import "../components/bf-tunnel.scss";
-@import "../components/bf-table.scss";
-@import "../components/bf-font-color.scss";
-@import "../components/bf-missing-control.scss";
-@import "../components/bf-world-map.scss";
-@import "../components/bf-calendar.scss";
-@import "../components/mat-native-control.scss";
-@import "../components/mat-datepicker.scss";
-@import "../components/surface.scss";
-@import "../components/scroll.scss";
+@import '~@angular/material/theming';
+@import '../components/mat-list';
+@import '../components/anchor';
+@import '../components/mat-card';
+@import '../components/mat-table';
+@import '../components/mat-toolbar';
+@import '../components/mat-button';
+@import '../components/mat-expansion-panel';
+@import '../components/mat-chips';
+@import '../components/mat-form-field';
+@import '../components/mat-icon.scss';
+@import '../components/mat-toggle-button.scss';
+@import '../components/mat-sidenav.scss';
+@import '../components/mat-snack-bar.scss';
+@import '../components/mat-dialog.scss';
+@import '../components/mat-slider.scss';
+@import '../components/mat-tooltip.scss';
+@import '../components/apex-chart.scss';
+@import '../components/bf-widget.scss';
+@import '../components/bf-tunnel.scss';
+@import '../components/bf-table.scss';
+@import '../components/bf-font-color.scss';
+@import '../components/bf-missing-control.scss';
+@import '../components/bf-world-map.scss';
+@import '../components/bf-calendar.scss';
+@import '../components/mat-native-control.scss';
+@import '../components/mat-datepicker.scss';
+@import '../components/surface.scss';
+@import '../components/scroll.scss';
+
 
 @include mat-core();
 
@@ -134,6 +136,7 @@
 
 @mixin mat-theme($theme) {
   @include angular-material-color($theme);
+  @include anchor($theme);
   @include mat-bf-button-theme($theme);
   @include mat-bf-card-theme($theme);
   @include mat-bf-chips-theme($theme);
