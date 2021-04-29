@@ -43,7 +43,6 @@ import { FestivalModule } from './festival.module';
 import { filter } from 'rxjs/operators';
 import { MatNativeDateModule } from '@angular/material/core';
 
-import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
@@ -79,7 +78,6 @@ import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
     // Router
     FestivalModule,
 
-    SafariBannerModule,
     CookieBannerModule,
   ],
   providers: [

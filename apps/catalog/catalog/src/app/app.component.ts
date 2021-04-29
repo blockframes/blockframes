@@ -5,7 +5,7 @@ import { TunnelService } from '@blockframes/ui/tunnel';
 
 @Component({
   selector: 'catalog-root',
-  template: '<router-outlet></router-outlet><cookie-banner></cookie-banner><safari-banner><safari-banner>',
+  template: '<router-outlet></router-outlet><cookie-banner></cookie-banner>',
   styles: [':host{ display: block; height: 100vh; }'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

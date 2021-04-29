@@ -175,11 +175,11 @@
 
   // Add css variables here when you need one
   --primary: #{mat-color($primary, default)};
-  --primary-contract: #{mat-color($primary, default-contrast)};
+  --primary-contrast: #{mat-color($primary, default-contrast)};
   --accent: #{mat-color($accent, default)};
-  --accent-contract: #{mat-color($accent, default-contrast)};
+  --accent-contrast: #{mat-color($accent, default-contrast)};
   --warn: #{mat-color($warn, default)};
-  --warn-contract: #{mat-color($warn, default-contrast)};
+  --warn-contrast: #{mat-color($warn, default-contrast)};
   --active: #5f6e8680;
   // Background
   --background-disabled-button: #{mat-color($background, disabled-button)};

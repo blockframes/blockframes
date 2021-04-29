@@ -43,7 +43,6 @@ import { FinanciersModule } from './financiers.module';
 import { filter } from 'rxjs/operators';
 import { MatNativeDateModule } from '@angular/material/core';
 
-import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
@@ -83,7 +82,6 @@ import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
     FinanciersModule,
 
     // Blockframes
-    SafariBannerModule,
     CookieBannerModule
   ],
   providers: [
