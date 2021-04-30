@@ -112,3 +112,21 @@ export function isInBucket(
   // If all check above are available: term is not in bucket
   return false;
 }
+
+
+
+
+///////////
+// utils //
+///////////
+export function findSameTermIndex(avails: AvailsFilter[], term: Term) {
+  for (let i = 0; i < avails.length; i++) {
+    const avail = avails[i];
+    if (avail.exclusive !== term.exclusive) continue;
+    if (avail.duration.from.getTime() !== term.duration.from.getTime()) continue;
+    if (avail.duration.to.getTime() !== term.duration.to.getTime()) continue;
+    if (avail.medias.some(medium => !term.medias.includes(medium))) continue; 
+    return i;
+  }
+  return -1;
+}
