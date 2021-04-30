@@ -119,7 +119,7 @@ export function isInBucket(
 ///////////
 // utils //
 ///////////
-export function findSameAvailIndex(avails: AvailsFilter[], term: Term) {
+export function findSameTermIndex(avails: AvailsFilter[], term: Term) {
   for (let i = 0; i < avails.length; i++) {
     const avail = avails[i];
     if (avail.exclusive !== term.exclusive) continue;
