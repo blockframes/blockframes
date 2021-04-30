@@ -97,7 +97,7 @@ describe('Organiser invites other users to private screening', () => {
     p2.verifyNotification(users[UserIndex.InvitedUser2].firstName, false);
   });
 
-  it.only('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
+  it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
     signIn(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 
