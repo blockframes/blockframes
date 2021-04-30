@@ -60,6 +60,7 @@ export const icons = [
   { name: 'expand_more', url: 'assets/icons/expand_more.svg' },
   { name: 'facebook', url: 'assets/icons/facebook.svg' },
   { name: 'favorite', url: 'assets/icons/favorite.svg' },
+  { name: 'favorite_filled', url: 'assets/icons/favorite_filled.svg' },
   { name: 'favorite_border', url: 'assets/icons/favorite_border.svg' },
   { name: 'file_copy', url: 'assets/icons/file_copy.svg' },
   { name: 'filter_list', url: 'assets/icons/filter_list.svg' },
