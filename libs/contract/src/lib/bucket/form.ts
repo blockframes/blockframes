@@ -61,11 +61,10 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    */
   toggleTerritory(mandate: Mandate, term: Term, territory: Territory) {
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(contract => contract.parentTermId === mandate.parentTermId);
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
     // Contract is not registered
     if (contractIndex === -1) {
-      const contract = toBucketContract(mandate, [term]);
-      this.get('contracts').add(contract);
+      this.get('contracts').add(toBucketContract(mandate, [term]));
       return;
     }
     const contract = bucket.contracts[contractIndex];
