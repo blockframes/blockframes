@@ -14,6 +14,7 @@
 @import '../components/mat-snack-bar.scss';
 @import '../components/mat-dialog.scss';
 @import '../components/mat-slider.scss';
+@import '../components/mat-tabs.scss';
 @import '../components/mat-tooltip.scss';
 @import '../components/apex-chart.scss';
 @import '../components/bf-widget.scss';
@@ -144,6 +145,7 @@
   @include mat-bf-form-field-theme($theme);
   @include mat-bf-list-theme($theme);
   @include mat-bf-table-theme($theme);
+  @include mat-bf-tabs-theme($theme);
   @include mat-bf-toolbar-theme($theme);
   @include mat-bf-button-toggle-theme($theme);
   @include mat-bf-sidenav-theme($theme);
