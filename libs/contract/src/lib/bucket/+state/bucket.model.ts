@@ -25,7 +25,7 @@ export interface BucketContract {
   /** Parent terms on which the contract is create. */
   parentTermId: string;
   /** List of sub terms derived from the parent terms that the buyer want to buy */
-  terms: AvailsFilter[];
+  terms: BucketTerm[];
   specificity: string;
 }
 
@@ -47,7 +47,7 @@ export function toBucketTerm(term: Term): BucketTerm {
   }
 }
 
-function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
+export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
   return {
     territories: [],
     medias: [],
