@@ -1,8 +1,8 @@
 <mat-checkbox test-id="checkbox" (change)="toggleCondition()" color="primary">
   <span class="mat-caption"><ng-content select="[conditionText]"></ng-content>
-    <p (click)="openTermsOfUse(displayConditions)" class="terms-link">
+    <a (click)="openTermsOfUse(displayConditions)" class="terms-link">
       <ng-content select="[conditionLink]"></ng-content>
-    </p>.
+    </a>.
   </span>
 </mat-checkbox>
 

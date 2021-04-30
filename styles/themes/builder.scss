@@ -1,5 +1,6 @@
 @import '~@angular/material/theming';
 @import '../components/mat-list';
+@import '../components/anchor';
 @import '../components/mat-card';
 @import '../components/mat-table';
 @import '../components/mat-toolbar';
@@ -30,36 +31,30 @@
 
 @include mat-core();
 
-
 @function getContrast($theme) {
   $foreground-contrast: (
-		900: #ffffff,
-		800: #ffffff,
-		700: #ffffff,
-		600: #ffffff,
-		500: #ffffff
+    900: #ffffff,
+    800: #ffffff,
+    700: #ffffff,
+    600: #ffffff,
+    500: #ffffff,
   );
   @return (
-    is-dark: map-get($theme, 'is-dark'),
-    primary: map-get($theme, 'primary'),
-    accent: map-get($theme, 'accent'),
-    warn: map-get($theme, 'warn'),
-    background: map-get($theme, 'background'),
-    foreground: $foreground-contrast,
+    is-dark: map-get($theme, "is-dark"),
+    primary: map-get($theme, "primary"),
+    accent: map-get($theme, "accent"),
+    warn: map-get($theme, "warn"),
+    background: map-get($theme, "background"),
+    foreground: $foreground-contrast
   );
 }
 
-
-
-
-
 @function getTheme($theme) {
-
-  $primary: map-get($theme, 'primary');
-  $accent: map-get($theme, 'accent');
-  $warn: map-get($theme, 'warn');
-  $background: map-get($theme, 'background');
-  $foreground: map-get($theme, 'foreground');
+  $primary: map-get($theme, "primary");
+  $accent: map-get($theme, "accent");
+  $warn: map-get($theme, "warn");
+  $background: map-get($theme, "background");
+  $foreground: map-get($theme, "foreground");
 
   ////////////////
   // BACKGROUND //
@@ -70,7 +65,7 @@
     background: map-get($background, 900),
     disabled-button: map-get($background, 500),
     hover: rgba(map-get($primary, 800), 0.05),
-    card: map-get($background, 600),
+    card: map-get($background, 800),
     dialog: map-get($background, 800),
     raised-button: map-get($primary, 800),
     focused-button: map-get($primary, 800),
@@ -79,7 +74,7 @@
     disabled-button-toggle: map-get($background, 500),
     unselected-chip: map-get($background, 500),
     disabled-list-option: map-get($background, 500),
-    tooltip: rgba(map-get($background, 500), 0.9),    
+    tooltip: rgba(map-get($background, 500), 0.9),
   );
 
   ////////////////
@@ -119,7 +114,7 @@
     h6: map-get($foreground, 800),
     mat-body-1: map-get($foreground, 800),
     mat-body-2: map-get($foreground, 700),
-    mat-caption: map-get($foreground, 600)
+    mat-caption: map-get($foreground, 600),
   );
 
   ///////////
@@ -130,18 +125,18 @@
     primary: mat-palette($primary, 500, 200, 800),
     accent: mat-palette($accent, 500, 200, 800),
     warn: mat-palette($warn, 500),
-    is-dark: map-get($theme, 'is-dark'),
+    is-dark: map-get($theme, "is-dark"),
     foreground: $mat-foreground,
     background: $mat-background,
-    font: $font,
+    font: $font
   );
-
 
   @return $mat-theme;
 }
 
 @mixin mat-theme($theme) {
   @include angular-material-color($theme);
+  @include anchor($theme);
   @include mat-bf-button-theme($theme);
   @include mat-bf-card-theme($theme);
   @include mat-bf-chips-theme($theme);
@@ -165,7 +160,6 @@
   @include bf-missing-control-theme($theme);
   @include bf-tunnel-theme($theme);
   @include apex-chart-theme($theme);
-
 
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
@@ -192,10 +186,10 @@
   --foreground-divider: #{mat-color($foreground, divider)};
   --foreground-text: #{mat-color($foreground, text)};
   --foreground-base: #{mat-color($foreground, base)};
-
+  --primary-lighter: #{mat-color($primary, 200)};
 }
 
-@import '../typography.scss';
+@import "../typography.scss";
 
 // COMPONENT TYPOGRAPHY
 @include angular-material-typography($bf-typography);
