@@ -97,15 +97,20 @@ describe('Organiser invites other users to private screening', () => {
     p2.verifyNotification(users[UserIndex.InvitedUser2].firstName, false);
   });
 
-  it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
+  it.only('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
     signIn(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 
+    cy.log("Reach Market Home.")
     const p1 = new FestivalMarketplaceHomePage();
+
+    cy.log("Navigate to Screening Page from Screening Schedule");
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
+
+    cy.log("Navigate to Marketplace Event Page");
     const p5: FestivalMarketplaceEventPage = p4.clickPrivateEvent();
     p5.assertJoinScreeningNotExists();
 
