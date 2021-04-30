@@ -28,3 +28,7 @@ widget-card {
   transform: translate(-50%);
   color: var(--warn);
 }
+// .mat-button class has a default margin-left which doesnt make sense here
+.logout-btn {
+  margin-left: 0;
+}

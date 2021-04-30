@@ -8,7 +8,8 @@
       <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">
         <img asset="profil_user.webp" [ref]="user.avatar" alt="Profile picture">
       </button>
-      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin (db <strong>v{{ (appVersion$ | async)?.currentVersion }}</strong> | emulators : <strong>{{ emulators }}</strong> )</span>
+      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin (db <strong>v{{ (appVersion$ |
+          async)?.currentVersion }}</strong> | emulators : <strong>{{ emulators }}</strong> )</span>
       <overlay-widget #menu>
         <widget-card>
           <mat-nav-list>
@@ -27,7 +28,8 @@
             </mat-list-item>
           </mat-nav-list>
           <footer widgetFooter>
-            <button mat-button test-id="logout" color="warn" (click)="logout()" test-id="auth-logout">
+            <button mat-button test-id="logout" color="warn" (click)="logout()" test-id="auth-logout"
+              class="logout-btn">
               <mat-icon svgIcon="logout"></mat-icon>
               <span>Log out</span>
             </button>
