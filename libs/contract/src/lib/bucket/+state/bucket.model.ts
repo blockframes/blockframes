@@ -1,4 +1,6 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
+import { Mandate } from '@blockframes/contract/contract/+state';
+import { Term } from '@blockframes/contract/term/+state';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 
 export interface Bucket {
@@ -25,6 +27,15 @@ export interface BucketContract {
   specificity: string;
 }
 
+export function toBucketTerm(term: Term): AvailsFilter {
+  return {
+    medias: term.medias,
+    duration: term.duration,
+    territories: term.territories,
+    exclusive: term.exclusive
+  }
+}
+
 function createBucketTerm(params: Partial<AvailsFilter> = {}): AvailsFilter {
   return {
     territories: [],
@@ -45,6 +56,16 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
     ...params,
     terms: params.terms?.map(createBucketTerm) ?? []
   }
+}
+
+
+export function toBucketContract(contract: Mandate, terms: Term[] = []): BucketContract {
+  return createBucketContract({
+    titleId: contract.titleId,
+    orgId: contract.sellerId,
+    parentTermId: contract.parentTermId,
+    terms: terms.map(toBucketTerm)
+  });
 }
 
 export function createBucket(params: Partial<Bucket> = {}): Bucket {
