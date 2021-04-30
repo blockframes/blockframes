@@ -1,11 +1,36 @@
-import { FormControl } from '@angular/forms';
-import { FormEntity, FormList } from '@blockframes/utils/form';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { Territory } from '@blockframes/utils/static-model';
+import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
 import { findSameTermIndex } from '../avails/avails';
 import { AvailsForm } from '../avails/form/avails.form';
 import { Term } from '../term/+state';
 import { Mandate } from '../contract/+state';
-import { Bucket, BucketContract, toBucketContract, toBucketTerm } from './+state/bucket.model';
+import { Bucket, BucketContract, BucketTerm, toBucketContract, toBucketTerm } from './+state/bucket.model';
+
+//////////
+// TERM //
+//////////
+function createBucketTermControl(term: Partial<BucketTerm> = {}) {
+  return {
+    territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),
+    medias: new FormStaticValueArray<'medias'>(term.medias, 'medias'),
+    exclusive: new FormControl(term.exclusive ?? true),
+    duration: new FormGroup({
+      from: new FormControl(term.duration?.from),
+      to: new FormControl(term.duration?.to)
+    }),
+    languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl)
+  }
+}
+
+type AvailControl = ReturnType<typeof createBucketTermControl>
+
+export class BucketTermForm extends FormEntity<AvailControl, BucketTerm> {
+  constructor(term: Partial<BucketTerm> = {}) {
+    super(createBucketTermControl(term))
+  }
+}
 
 //////////////
 // CONTRACT //
