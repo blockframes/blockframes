@@ -1,0 +1,11 @@
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+hr {
+  border: 0.5px solid var(--foreground-divider);
+  border-bottom-width: 0px;
+  margin-top: 0px;
+  margin-bottom: 24px;
+}

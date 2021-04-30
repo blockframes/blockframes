@@ -16,8 +16,17 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        AVAIL FORM
+        <avails-title-filter [form]="availsForm"></avails-title-filter>
       </mat-card-content>
+      <mat-card-actions align="end" fxLayoutGap="24px">
+        <button mat-flat-button color="warn" (click)="clear()" matTooltip="Clear all filters">
+          Clear
+        </button>
+        
+        <button mat-flat-button color="primary" (click)="query()">
+          Aplly filters
+        </button>
+      </mat-card-actions>
     </mat-card>
   </aside>
 
@@ -33,18 +42,18 @@
       <world-map>
 
         <!-- MAP LAYERS -->
-        <ng-container *ngFor="let tag of notLicensedTerritories; trackBy: trackByTag">
+        <ng-container *ngFor="let tag of (notLicensedTerritories$ | async); trackBy: trackByTag">
           <map-feature [tag]="tag.isoA3" color="color-3"
             (mouseover)="dislpayTerritoryTooltip(tag.label, 'Not licensed')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>
-        <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
+        <ng-container *ngFor="let tag of (rightsSoldTerritories$ | async); trackBy: trackByTag">
           <map-feature [tag]="tag.isoA3" color="color-2"
             (mouseover)="dislpayTerritoryTooltip(tag.label, 'Rights sold')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>
-        <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag.isoA3" color="color-1" (click)="select($event)"
+        <ng-container *ngFor="let tag of (availableTerritories$ | async); trackBy: trackByTag">
+          <map-feature [tag]="tag.isoA3" color="color-1" (click)="select(tag)"
             (mouseover)="dislpayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>

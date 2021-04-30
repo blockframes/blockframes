@@ -18,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AvailsTitleFilterModule } from '@blockframes/contract/term/form/filter/avails-title/avails-title-filter.module';
 
 @NgModule({
   declarations: [MarketplaceMovieAvailsComponent],
@@ -30,6 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToLabelModule,
     OverlayWidgetModule,
     OrgNameModule,
+    AvailsTitleFilterModule,
 
     // Material
     MatCardModule,
