@@ -20,13 +20,21 @@ function createBucketTermControl(term: Partial<BucketTerm> = {}) {
       from: new FormControl(term.duration?.from),
       to: new FormControl(term.duration?.to)
     }),
-    languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl)
+    languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
+    runs: new FormGroup({
+      broadcasts: new FormControl(term.runs?.broadcasts),
+      catchup: new FormGroup({
+        from: new FormControl(term.runs?.catchup.from),
+        duration: new FormControl(term.runs?.catchup.duration),
+        period: new FormControl(term.runs?.catchup.period),
+      }),
+    })
   }
 }
 
-type AvailControl = ReturnType<typeof createBucketTermControl>
+type BucketTermControl = ReturnType<typeof createBucketTermControl>
 
-export class BucketTermForm extends FormEntity<AvailControl, BucketTerm> {
+export class BucketTermForm extends FormEntity<BucketTermControl, BucketTerm> {
   constructor(term: Partial<BucketTerm> = {}) {
     super(createBucketTermControl(term))
   }
