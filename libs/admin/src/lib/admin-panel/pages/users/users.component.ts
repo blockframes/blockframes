@@ -7,7 +7,8 @@ import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
 import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
-import { appName, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
+import { territories } from '@blockframes/utils/static-model/static-model';
 
 @Component({
   selector: 'admin-users',
@@ -42,7 +43,8 @@ export class UsersComponent implements OnInit {
     'createdFrom',
   ];
   public rows: any[] = [];
-  public exporting =  new BehaviorStore(false);
+  public exporting = new BehaviorStore(false);
+  public app = getAllAppsExcept(['crm']);
 
   constructor(
     private userService: UserService,
@@ -51,7 +53,7 @@ export class UsersComponent implements OnInit {
     private adminQuery: AdminQuery,
     private orgService: OrganizationService,
     private router: Router,
-    ) { }
+  ) { }
 
   async ngOnInit() {
     const [users, orgs] = await Promise.all([
@@ -70,7 +72,7 @@ export class UsersComponent implements OnInit {
         lastConnexion: this.adminQuery.getLastConnexion(u.uid),
         pageView: this.adminQuery.getPageView(u.uid),
         sessionCount: this.adminQuery.getSessionCount(u.uid),
-        createdFrom: !! u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
+        createdFrom: !!u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
         org: org,
       };
     })
@@ -107,36 +109,48 @@ export class UsersComponent implements OnInit {
           lastConnexion: this.adminQuery.getLastConnexion(u.uid),
           pageView: this.adminQuery.getPageView(u.uid),
           sessionCount: this.adminQuery.getSessionCount(u.uid),
-          createdFrom: !! u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
+          createdFrom: !!u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
           edit: {
             id: u.uid,
             link: `/c/o/admin/panel/user/${u.uid}`,
           },
           org: org,
-          orgCountry: org?.addresses?.main.country,
+          orgCountry: territories[org.addresses?.main.country] ?? '--',
           userOrgRole: org ? await this.orgService.getMemberRole(org, u.uid) : undefined,
           type: org ? (getOrgModuleAccess(org).includes('dashboard') ? 'seller' : 'buyer') : undefined
         }
-      })
+      });
+
       const data = await Promise.all(promises);
-      const exportedRows = data.map(r => ({
-        'userId': r.uid,
-        'first name': r.firstName ? r.firstName : '--',
-        'last name': r.lastName ? r.lastName : '--',
-        'organization': r.org ? orgName(r.org) : '--',
-        'org id': r.orgId ? r.orgId : '--',
-        'type': r.type ? r.type : '--',
-        'country': r.org?.addresses.main.country ?? '--',
-        'role': r.userOrgRole ? r.userOrgRole : '--',
-        'position': r.position ? r.position : '--',
-        'org activity': r.org ? r.org.activity : '--',
-        'email': r.email,
-        'first connexion': r.firstConnexion ? r.firstConnexion : '--',
-        'last connexion': r.lastConnexion ? r.lastConnexion : '--',
-        'page view': r.pageView ? r.pageView : '--',
-        'session count': r.sessionCount ? r.sessionCount : '--',
-        'created from': r.createdFrom ? r.createdFrom : '--',
-      }))
+      const exportedRows = data.map(r => {
+        const row = {
+          'userId': r.uid,
+          'first name': r.firstName ?? '--',
+          'last name': r.lastName ?? '--',
+          'organization': r.org ? orgName(r.org) : '--',
+          'org id': r.orgId ?? '--',
+          'org status': r.org ? r.org.status : '--',
+          'type': r.type ? r.type : '--',
+          'country': r.orgCountry,
+          'role': r.userOrgRole ? r.userOrgRole : '--',
+          'position': r.position ?? '--',
+          'org activity': r.org ? r.org.activity : '--',
+          'email': r.email,
+          'first connexion': r.firstConnexion ?? '--',
+          'last connexion': r.lastConnexion ?? '--',
+          'page view': r.pageView ?? '--',
+          'session count': r.sessionCount ?? '--',
+          'created from': r.createdFrom ?? '--',
+        }
+
+        for (const a of this.app) {
+          for (const module of modules) {
+            row[`${appName[a]} - ${module}`] = r.org.appAccess[a][module] ? 'true' : 'false';
+          }
+        }
+
+        return row;
+      })
       downloadCsvFromJson(exportedRows, 'user-list');
 
       this.exporting.value = false;

@@ -1,4 +1,4 @@
-<ng-container *ngIf="groups$ | async as groups">
+﻿<ng-container *ngIf="groups$ | async as groups">
 	<ng-container *ngIf="value$ | async as value">
 		<mat-form-field appearance="outline">
 			<mat-label>
@@ -9,7 +9,7 @@
 					<mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
 						[checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)" test-id="checked-all">
 					</mat-checkbox>
-					<input #inputEl matInput [placeholder]="placeholder" [formControl]="search" test-id="search-input"/>
+					<input #inputEl matInput [placeholder]="placeholder" [formControl]="search" test-id="search-input-control"/>
 					<mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
 					<button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset()" matTooltip="Clear text">
             <mat-icon svgIcon="refresh"></mat-icon>

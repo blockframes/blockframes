@@ -3,7 +3,6 @@ import {
   Territory,
   Genre,
   Language,
-  StoreType,
   StoreStatus,
   ProductionStatus,
   OrgActivity,
@@ -43,8 +42,7 @@ interface MovieIndexConfig {
   languages: Partial<Record<keyof MovieLanguageSpecification, Language>>,
   originCountries: Territory,
   status: ProductionStatus,
-  storeConfig: StoreStatus,
-  storeType: StoreType,
+  storeStatus: StoreStatus,
 }
 
 interface OrganizationIndexConfig {
@@ -113,7 +111,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
     caption: Language[]
   },
   status: ProductionStatus | string,
-  storeConfig: StoreStatus | string,
+  storeStatus: StoreStatus | string,
   budget: number,
   orgName: string,
   poster: string,
@@ -121,7 +119,6 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   originalLanguages: Language[],
   runningTime: MovieRunningTime,
   release: MovieRelease
-  storeType: StoreType | string,
   contentType: ContentType
 }
 

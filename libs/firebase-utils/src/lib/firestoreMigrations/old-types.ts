@@ -1,6 +1,7 @@
 import { HostedVideoType, Language, Territory } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
 import { AttendeeStatus, MeetingMediaControl } from "@blockframes/event/+state/event.firestore";
+import { StoreStatus } from "@blockframes/utils/static-model";
 
 export interface OldPromotionalElement {
   label: string,
@@ -86,6 +87,16 @@ export interface OldMovieImgRefDocument {
     crew: Crew[],
     producers: Producer[]
   }
+}
+
+export interface OldStoreConfig {
+  appAccess: {
+    catalog: boolean,
+    festival: boolean,
+    financiers?: boolean
+  },
+  status: StoreStatus,
+  storeType: string
 }
 
 export function createOldPromotionalElement(

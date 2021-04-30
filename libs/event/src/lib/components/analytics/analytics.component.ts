@@ -50,7 +50,11 @@ export class EventAnalyticsComponent implements OnInit {
         // retrieve watch time from invitation
         const [invitation] = this.invitationQuery.getAll({
           // we are looking for invitation between this event and this user id
-          filterBy: invit => invit.toUser.uid === analytic.userId && invit.eventId === analytic.eventId
+          filterBy: invit => invit.eventId === analytic.eventId &&
+          (
+            invit.toUser?.uid === analytic.userId ||
+            invit.fromUser?.uid === analytic.userId
+          )
         });
         transformedAnalytic.watchTime = invitation?.watchTime ?? 0;
       }
@@ -62,7 +66,7 @@ export class EventAnalyticsComponent implements OnInit {
     // and we compute the average watch time
     if (this.event.type === 'screening') {
       this.columns.watchTime = 'Watch Time';
-      this.initialColumns.push('watchTime');
+      if (!this.initialColumns.includes('watchTime')) this.initialColumns.push('watchTime');
       const totalWatchTime = this.analytics.reduce((acc, curr) => acc + curr.watchTime, 0);
       this.averageWatchTime = totalWatchTime / this.analytics.length;
     }

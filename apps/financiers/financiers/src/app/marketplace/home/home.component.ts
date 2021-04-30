@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
     this.sections = [
       {
         title: 'New on Media Financiers',
-        movies: this.algoliaService.query('movie', { activePage: 0, limitResultsTo: 50, facets: { storeConfig: 'accepted' } }),
+        movies: this.algoliaService.query('movie', { activePage: 0, limitResultsTo: 50, facets: { storeStatus: 'accepted' } }),
         size: 'poster'
       }
       // CMS will add more

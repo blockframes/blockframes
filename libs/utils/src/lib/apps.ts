@@ -33,6 +33,15 @@ export const appName = {
 };
 type AppNameValue = typeof appName[App];
 
+export const appShortName = {
+  catalog: 'AC',
+  festival: 'AM',
+  financiers: 'MF',
+  blockframes: 'BF',
+  crm: 'CRM',
+  cms: 'CMS'
+};
+
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
@@ -57,7 +66,6 @@ export const appDescription = {
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
-export type MovieAppAccess = Record<App, boolean>;
 
 export const applicationUrl: Record<App, string> = {
   festival: appUrl.market,
@@ -68,6 +76,11 @@ export const applicationUrl: Record<App, string> = {
 
 export function getCurrentApp(routerQuery: RouterQuery): App {
   return routerQuery.getValue().state?.root.data.app;
+}
+
+/** Return an array of app without the value passing in argument */
+export function getAllAppsExcept(applications: App[]) {
+  return app.filter(a => !applications.includes(a));
 }
 
 export function getCurrentModule(path: string): Module | 'landing' {
@@ -89,14 +102,6 @@ export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgA
   return appAccess;
 }
 
-export function createMovieAppAccess(_appAccess: Partial<MovieAppAccess> = {}): MovieAppAccess {
-  const appAccess = {} as MovieAppAccess;
-  for (const a of app) {
-    appAccess[a] = _appAccess[a] === true;
-  }
-  return appAccess;
-}
-
 export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): ModuleAccess {
   return {
     dashboard: false,
@@ -105,8 +110,9 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
   }
 }
 
-export function getAppName(slug: App) {
-  return { slug, label: appName[slug] };
+export function getAppName(slug: App, short = false) {
+  const label = short ? appShortName[slug] : appName[slug];
+  return { slug, label };
 }
 
 /**
@@ -138,7 +144,12 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
 
 /** Return an array of the app access of the movie */
 export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
-  return app.filter(a => movie.storeConfig.appAccess[a]);
+  return app.filter(a => !['crm'].includes(a) && movie.app[a].access);
+}
+
+/** Return true if the movie has the status passed in parameter for at least one application */
+export function checkMovieStatus(movie: MovieDocument| Movie, status: StoreStatus) {
+  return (Object.keys(movie.app).some(a => movie.app[a].status === status))
 }
 
 /**
@@ -146,7 +157,7 @@ export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
  * @param org
  * @param a
  * @example
- * // we don't know in witch app the module is
+ * // we don't know in which app the module is
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
  * getOrgModuleAccess(orgB); // ['marketplace']
  */

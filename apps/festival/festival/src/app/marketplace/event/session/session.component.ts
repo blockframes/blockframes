@@ -91,7 +91,11 @@ export class SessionComponent implements OnInit, OnDestroy {
           // if user is not a screening owner we need to track the watch time
           if (event.ownerOrgId !== this.authQuery.orgId) {
             const [invitation] = this.invitationQuery.getAll({
-              filterBy: invit => invit.toUser.uid === this.authQuery.userId && invit.eventId === event.id
+              filterBy: invit => invit.eventId === event.id &&
+                (
+                  invit.toUser?.uid === this.authQuery.userId ||
+                  invit.fromUser?.uid === this.authQuery.userId
+                )
             });
 
             // this should never happen since previous checks & guard should have worked
