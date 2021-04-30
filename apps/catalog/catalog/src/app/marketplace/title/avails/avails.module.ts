@@ -22,6 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [MarketplaceMovieAvailsComponent],
@@ -46,6 +48,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatChipsModule,
     MatInputModule,
     MatCheckboxModule,
+    MatDatepickerModule,
+    MatSelectModule,
 
     RouterModule.forChild([{ path: '', component: MarketplaceMovieAvailsComponent }])
   ]

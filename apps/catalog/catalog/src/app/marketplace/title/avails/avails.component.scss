@@ -63,6 +63,10 @@ div {
   }
 }
 
+article.expansion-panel-content {
+  padding: 0 16px;
+}
+
 @include layout-bp(lt-lg) {
   section aside {
     position: static;

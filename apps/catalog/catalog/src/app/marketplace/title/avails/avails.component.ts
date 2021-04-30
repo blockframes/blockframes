@@ -28,6 +28,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
   public org$: Observable<Organization>;
   public bucket$: Observable<Bucket>;
+  public periods = ['period1', 'period2' ,'period3'];
 
   /** List of world map territories */
   public notLicensedTerritories: TerritoryMarker[] = [];

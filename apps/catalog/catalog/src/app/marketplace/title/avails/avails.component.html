@@ -108,9 +108,11 @@
                 Territories
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-chip-list aria-label="Territories">
-              <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
-            </mat-chip-list>
+            <article class="expansion-panel-content">
+              <mat-chip-list aria-label="Territories">
+                <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
+              </mat-chip-list>
+            </article>
 
           </mat-expansion-panel>
 
@@ -121,9 +123,11 @@
                 Medias
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-chip-list aria-label="Medias">
-              <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
-            </mat-chip-list>
+            <article class="expansion-panel-content">
+              <mat-chip-list aria-label="Medias">
+                <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
+              </mat-chip-list>
+            </article>
           </mat-expansion-panel>
 
           <!-- VERSIONS -->
@@ -131,9 +135,10 @@
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Versions
+                <span>&nbsp;(Non Mandatory)</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <article>
+            <article class="expansion-panel-content">
               <strong>Original Languages</strong>
               <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
               <strong>Request Specific Versions</strong>
@@ -149,7 +154,7 @@
                         <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
                         <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
                       </div>
-                      <button mat-mini-fab (click)="deleteLanguage(language.key)" color="warn">
+                      <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn">
                         <mat-icon svgIcon="delete"></mat-icon>
                       </button>
                     </div>
@@ -189,9 +194,39 @@
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Runs
+                <span>&nbsp;(Non Mandatory)</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <p>This is the primary content of the panel.</p>
+            <article class="expansion-panel-content" fxLayout="column" fxFlex>
+              <p>Broadcasts</p>
+              <mat-form-field appearance="outline">
+                <mat-label>Number of Broadcasts</mat-label>
+                <input matInput type="number" placeholder="Number of Broadcasts">
+              </mat-form-field>
+              <p>Catch Up Rights</p>
+              <div fxFlex fxLayout fxLayoutGap="16px" fxLayoutAlign="start space-between">
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Start Date</mat-label>
+                  <input matInput [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
+                  <mat-datepicker-toggle matPrefix [for]="datePicker">
+                    <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #datePicker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Duration</mat-label>
+                  <input matInput type="number" placeholder="Duration">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Period</mat-label>
+                  <mat-select matInput placeholder="Period">
+                    <mat-option *ngFor="let period of periods" [value]="period">
+                      {{ period }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </article>
           </mat-expansion-panel>
         </mat-accordion>
       </mat-card-content>
