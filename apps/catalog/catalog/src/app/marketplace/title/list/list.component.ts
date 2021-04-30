@@ -26,7 +26,7 @@ import { SearchResponse } from '@algolia/client-search';
 import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgId } from '@env';
-import { BucketContract, createBucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
+import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
@@ -152,7 +152,8 @@ export class ListComponent implements OnInit, OnDestroy {
       // contract should only contain media and territories which are on the parentTerm
       newTerm.medias = parentTerm.medias.filter(media => newTerm.medias.includes(media));
       newTerm.territories = parentTerm.territories.filter(territory => newTerm.territories.includes(territory));
-      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [newTerm] });
+      const terms = [createBucketTerm(newTerm)];
+      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms });
       newContracts.push(contract);
     }
 
@@ -210,9 +211,9 @@ export class ListComponent implements OnInit, OnDestroy {
                 const recreatedTerm: AvailsFilter = { duration: newTerm.duration, exclusive: newTerm.exclusive, medias, territories }
                 terms.push(recreatedTerm);
               }
-              contract.terms = terms;
+              contract.terms = terms.map(createBucketTerm);
             } else {
-              contract.terms.push(newTerm);
+              contract.terms.push(createBucketTerm(newTerm));
             }
 
           } else { // Else add new contract
