@@ -12,7 +12,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "types": [],
-    "lib": ["dom", "es2018"]
+    "lib": ["dom", "es2018", "ES2019.Array"]
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
@@ -22,5 +22,6 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
+  "include": ["./src"],
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
 }
