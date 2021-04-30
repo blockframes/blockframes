@@ -79,16 +79,19 @@
         </organization-lite-form>
 
         <!-- PASSWORD FIELDS -->
-
-        <ng-container *ngIf="form.get('generatedPassword').enabled">
+        <!--  form.get('generatedPassword').enabled -->
+        <ng-container *ngIf="true">
           <mat-form-field appearance="outline">
             <mat-label>Invitation Pass</mat-label>
             <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
               test-id="invitation-code" required />
-            <mat-hint align="start">You'll find your Invitation Pass in your invitation email.</mat-hint>
-            <mat-hint align="end">Can't find it? <a [routerLink]="['./']" (click)="openIntercom()">Contact us</a>.
-            </mat-hint>
+            <mat-hint>You'll find your Invitation Pass in your invitation email.</mat-hint>
           </mat-form-field>
+          <div class="pass-info">
+            <mat-icon svgIcon="info"></mat-icon>
+            <span class="mat-caption">Can't find it? <button mat-button (click)="openIntercom()">Contact
+                us</button></span>
+          </div>
         </ng-container>
 
         <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>

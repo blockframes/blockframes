@@ -66,6 +66,18 @@ section {
   }
 }
 
+.pass-info {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  span {
+    button {
+      margin-top: 0;
+    }
+  }
+}
+
 .org-logo {
   img {
     width: 40px;
