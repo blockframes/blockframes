@@ -50,6 +50,10 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   ) { }
 
   public async ngOnInit() {
+    // @TODO #5573 for testing purposes, remove
+    this.availsForm.get('duration').get('from').value = new Date('05/01/2021')
+    this.availsForm.get('duration').get('to').value = new Date('05/31/2021')
+
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
     const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id))
@@ -120,6 +124,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   }
 
   clear() {
+    // @TODO #5573 also reset map
     this.availsForm.reset();
   }
 
