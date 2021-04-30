@@ -1,18 +1,18 @@
 @mixin anchor($theme) {
   $primary: map-get($theme, primary);
 
-  a:not(.mat-button) {
+  a:not(.mat-button-base) {
     color: mat-color($primary, 500);
     text-decoration-color: mat-color($primary, 500);
     text-decoration: underline;
   }
 
-  a:not(.mat-button):hover {
+  a:not(.mat-button-base):hover {
     color: mat-color($primary, 800);
     text-decoration-color: mat-color($primary, 800);
   }
 
-  a:not(.mat-button):visited {
+  a:not(.mat-button-base):visited {
     color: mat-color($primary, 800);
     text-decoration-color: mat-color($primary, 800);
   }
