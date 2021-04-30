@@ -1,4 +1,4 @@
-<ng-container *ngIf="!small; else smallButton" fxLayoutGap="50px">
+<ng-container *ngIf="!small; else smallButton">
 
   <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
     <button test-id="heart-button" mat-button (click)="removeFromWishlist($event)">
