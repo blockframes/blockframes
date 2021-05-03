@@ -4,7 +4,8 @@ import { TerritoryValue, TerritoryISOA3Value, Language } from '@blockframes/util
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
-import { Bucket, BucketQuery, BucketTerm } from '@blockframes/contract/bucket/+state';
+import { map, tap } from 'rxjs/operators';
+import { Bucket, BucketContract, BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { FormControl } from '@angular/forms';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
@@ -28,7 +29,8 @@ interface TerritoryMarker {
 export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
   public org$: Observable<Organization>;
-  public bucket$: Observable<Partial<Bucket>>;
+  public bucket$: Observable<Bucket>;
+  public contracts: BucketContract[] = [];
   public periods = ['weeks', 'months' ,'years'];
 
   /** List of world map territories */
@@ -49,12 +51,31 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
-    private bucketQuery: BucketQuery
+    private bucketQuery: BucketQuery,
+    private bucketService: BucketService
   ) { }
 
   public async ngOnInit() {
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
-    this.bucket$ = this.bucketQuery.selectActive();
+    this.bucket$ = this.bucketQuery.selectActive()
+    .pipe(
+      tap(bucket => {
+        for (const contract of bucket.contracts) {
+          if (contract.titleId === this.movie.id) {
+            this.contracts.push(contract);
+          }
+        }
+      })
+    );
+    // this.bucket$.subscribe(bucket => {
+    //   console.log(bucket);
+    //   for (const contract of bucket.contracts) {
+    //     if (contract.titleId === this.movie.id) {
+    //       this.contracts.push(contract);
+    //     }
+    //   }
+    //   console.log(this.contracts);
+    // })
     this.form.valueChanges.subscribe(value => {
       console.log(value)
     })
@@ -99,5 +120,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   showForm() {
     this.showButtons = !this.showButtons
   }
+
+  addToSelection() { }
 
 }
