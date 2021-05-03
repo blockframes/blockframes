@@ -4,9 +4,10 @@ import { TerritoryValue, TerritoryISOA3Value, Language } from '@blockframes/util
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
-import { Bucket, BucketQuery } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketQuery, BucketTerm } from '@blockframes/contract/bucket/+state';
+import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { FormControl } from '@angular/forms';
-import { VersionSpecificationForm, MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
+import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
@@ -27,18 +28,18 @@ interface TerritoryMarker {
 export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
   public org$: Observable<Organization>;
-  public bucket$: Observable<Bucket>;
-  public periods = ['period1', 'period2' ,'period3'];
+  public bucket$: Observable<Partial<Bucket>>;
+  public periods = ['weeks', 'months' ,'years'];
 
   /** List of world map territories */
   public notLicensedTerritories: TerritoryMarker[] = [];
   public rightsSoldTerritories: TerritoryMarker[] = [];
   public availableTerritories: TerritoryMarker[] = [];
 
+  public form = new BucketTermForm();
   /** Languages Form */
   public languageCtrl = new FormControl();
   public showButtons = true;
-  public languageForm = new MovieVersionInfoForm();
 
   public hoveredTerritory: {
     name: string;
@@ -54,10 +55,11 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public async ngOnInit() {
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
     this.bucket$ = this.bucketQuery.selectActive();
-    this.languageForm.valueChanges.subscribe(value => {
+    this.form.valueChanges.subscribe(value => {
       console.log(value)
     })
   }
+
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: any) { // @TODO #5573 find correct typing
@@ -85,13 +87,13 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   addLanguage() {
     const spec = createMovieLanguageSpecification({});
-    this.languageForm.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
+    this.form.get('languages').addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
     this.languageCtrl.reset();
     this.showButtons = true;
   }
 
   deleteLanguage(language: Language) {
-    this.languageForm.removeControl(language);
+    this.form.controls.languages.removeControl(language);
   }
 
   showForm() {

@@ -67,6 +67,10 @@ article.expansion-panel-content {
   padding: 0 16px;
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
 @include layout-bp(lt-lg) {
   section aside {
     position: static;
