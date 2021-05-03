@@ -129,8 +129,8 @@
 
 <ng-container *ngIf="bucket$ | async as bucket">
   <h2>Preselected Rights</h2>
-  <mat-card *ngFor="let contract of bucket.contracts">
-    <ng-container *ngFor="let term of contract.terms">
+  <ng-container *ngFor="let contract of bucket.contracts">
+    <mat-card *ngFor="let term of contract.terms">
       <form [formGroup]="bucketForm">
         <mat-card-header>
           <mat-card-title>Exclusive rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
@@ -265,8 +265,8 @@
           </mat-accordion>
         </mat-card-content>
       </form>
-    </ng-container>
-  </mat-card>
+    </mat-card>
+  </ng-container>
   <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()">
     <span>Add to Selection</span>
     <mat-icon svgIcon="arrow_forward"></mat-icon>

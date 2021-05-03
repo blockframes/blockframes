@@ -62,6 +62,9 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.bucket$ = this.bucketQuery.selectActive();
   }
 
+  public applyFilters() {
+    // @TODO (#5655)
+  }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: any) { // @TODO #5573 find correct typing
