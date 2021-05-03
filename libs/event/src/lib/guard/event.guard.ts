@@ -87,7 +87,7 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
       }
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: {
-          title: 'Are you sure ?',
+          title: 'Are you sure?',
           question: `You might not be able to come back to this ${event.type} as its access is time-limited.`,
           buttonName: 'Yes',
         }

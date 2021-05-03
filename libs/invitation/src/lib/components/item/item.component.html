@@ -64,7 +64,7 @@
   </button>
 </mat-list-item>
 <mat-menu #menu="matMenu">
-  <a test-id="go-to-event" mat-menu-item [href]="eventLink">More details</a>
+  <a test-id="go-to-event" mat-menu-item [href]="eventLink">More Details</a>
   <ng-container [ngSwitch]="_invitation.status">
     <ng-container *ngSwitchCase="'pending'">
       <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'acceptInvitation')">

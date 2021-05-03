@@ -12,7 +12,7 @@ export class MovieFormTechnicalInfoComponent {
     form = this.shell.getForm('movie');
 
     constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
-        this.dynTitle.setPageTitle('Technical Information')
+        this.dynTitle.setPageTitle('Technical Specifications')
     }
 
     get soundFormat() {
