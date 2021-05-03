@@ -133,7 +133,7 @@ export class MovieComponent implements OnInit {
     const simulation = await this.simulateDeletion(this.movie);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        question: 'You are about to delete this movie from Archipel, are you sure ?',
+        question: 'You are about to delete this movie from Archipel, Are you sure?',
         warning: 'Doing this will also delete everything regarding this movie',
         simulation,
         confirmationWord: 'DELETE',
