@@ -90,6 +90,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   @Input() placeholder: string = 'Tap to filter'
   @Input() withoutValues: string[] = [];
   @Input() scope: Scope;
+  @Input() icon: string;
 
   get groups() {
     return this.groups$.getValue();

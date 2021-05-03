@@ -13,6 +13,15 @@ aside {
     mat-card-subtitle {
       margin-top: 20px;
     }
+
+    mat-form-field {
+      width: 100%;
+
+      mat-icon {
+        margin-left: 12px;
+        margin-right: 12px;
+      }
+    }
   }
 }
 

@@ -4,6 +4,7 @@ import { TerritoryValue, TerritoryISOA3Value } from '@blockframes/utils/static-m
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
+import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
@@ -35,6 +36,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     status: string;
   }
 
+  public form = new AvailsForm({ territories: [] }, ['duration'])
+
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
@@ -42,6 +45,10 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   public async ngOnInit() {
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
+  }
+
+  public applyFilters() {
+    // @TODO (#5655)
   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
