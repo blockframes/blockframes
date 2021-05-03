@@ -92,9 +92,9 @@
   </mat-card>
 </section>
 
-<ng-container *ngIf="contracts.length">
+<ng-container *ngIf="bucket$ | async as bucket">
   <h2>Preselected Rights</h2>
-  <mat-card *ngFor="let contract of contracts">
+  <mat-card *ngFor="let contract of bucket.contracts">
     <ng-container *ngFor="let term of contract.terms">
       <form [formGroup]="form">
         <mat-card-header>

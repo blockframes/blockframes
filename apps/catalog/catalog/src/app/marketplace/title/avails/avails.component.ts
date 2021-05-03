@@ -30,7 +30,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
   public org$: Observable<Organization>;
   public bucket$: Observable<Bucket>;
-  public contracts: BucketContract[] = [];
   public periods = ['weeks', 'months' ,'years'];
 
   /** List of world map territories */
@@ -57,25 +56,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   public async ngOnInit() {
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
-    this.bucket$ = this.bucketQuery.selectActive()
-    .pipe(
-      tap(bucket => {
-        for (const contract of bucket.contracts) {
-          if (contract.titleId === this.movie.id) {
-            this.contracts.push(contract);
-          }
-        }
-      })
-    );
-    // this.bucket$.subscribe(bucket => {
-    //   console.log(bucket);
-    //   for (const contract of bucket.contracts) {
-    //     if (contract.titleId === this.movie.id) {
-    //       this.contracts.push(contract);
-    //     }
-    //   }
-    //   console.log(this.contracts);
-    // })
+    this.bucket$ = this.bucketQuery.selectActive();
     this.form.valueChanges.subscribe(value => {
       console.log(value)
     })
