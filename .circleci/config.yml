@@ -239,7 +239,11 @@ jobs:
       - prepare_environment
       - build_deploy_prepare
       - run:
+          name: emulator_start
+          command: npm run firebase:emulator
+      - run:
           command: npm run test
+          requires: emulator_start
           no_output_timeout: 15m
       - test_e2e_all
       - save_build_cache
@@ -261,7 +265,11 @@ jobs:
       - build_deploy_prepare
       - test_e2e_all
       - run:
+          name: emulator_start
+          command: npm run firebase:emulator
+      - run:
           command: npm run test
+          requires: emulator_start
           no_output_timeout: 15m
       - save_build_cache
       - slack/status
