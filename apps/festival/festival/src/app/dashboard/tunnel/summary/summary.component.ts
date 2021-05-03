@@ -52,7 +52,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       })
     } else {
       // Log the invalid forms
-      this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
+      this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
     }
   }
 }
