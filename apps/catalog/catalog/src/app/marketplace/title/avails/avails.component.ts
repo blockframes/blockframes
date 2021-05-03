@@ -9,6 +9,7 @@ import { Bucket, BucketContract, BucketQuery, BucketService, BucketTerm } from '
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { FormControl } from '@angular/forms';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
+import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
@@ -37,7 +38,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public rightsSoldTerritories: TerritoryMarker[] = [];
   public availableTerritories: TerritoryMarker[] = [];
 
-  public form = new BucketTermForm();
+  public bucketForm = new BucketTermForm();
   /** Languages Form */
   public languageCtrl = new FormControl();
   public showButtons = true;
@@ -46,6 +47,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     name: string;
     status: string;
   }
+
+  public form = new AvailsForm({ territories: [] }, ['duration'])
 
   constructor(
     private movieQuery: MovieQuery,
@@ -86,13 +89,13 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   addLanguage() {
     const spec = createMovieLanguageSpecification({});
-    this.form.get('languages').addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
+    this.bucketForm.get('languages').addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
     this.languageCtrl.reset();
     this.showButtons = true;
   }
 
   deleteLanguage(language: Language) {
-    this.form.controls.languages.removeControl(language);
+    this.bucketForm.controls.languages.removeControl(language);
   }
 
   addToSelection() { }

@@ -101,11 +101,16 @@ describe('Organiser invites other users to private screening', () => {
     signIn(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 
+    cy.log("Reach Market Home.")
     const p1 = new FestivalMarketplaceHomePage();
+
+    cy.log("Navigate to Screening Page from Screening Schedule");
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
+
+    cy.log("Navigate to Marketplace Event Page");
     const p5: FestivalMarketplaceEventPage = p4.clickPrivateEvent();
     p5.assertJoinScreeningNotExists();
 

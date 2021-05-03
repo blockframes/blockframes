@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db, getStorageBucketName } from './internals/firebase';
-import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite } from './templates/mail';
+import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
 import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
@@ -13,20 +13,21 @@ import { cleanUserMedias } from './media';
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-// @TODO (#2821)
-/*
 export const startVerifyEmailFlow = async (data: any) => {
   const { email, app } = data;
-  const from = getSendgridFrom(app);
 
   if (!email) {
-    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+    throw new Error('email is a mandatory parameter for the "sendVerifyEmailAddress()" function');
   }
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-  await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from).catch(e => console.warn(e.message));
+  try {
+    const template = userVerifyEmail(email, verifyLink);
+    await sendMailFromTemplate(template, app);
+  } catch (e) {
+    throw new Error(`There was an error while sending email verification email : ${e.message}`);
+  }
 };
-*/
 
 export const startAccountCreationEmailFlow = async (data: any) => {
   const { email, app, firstName } = data;
