@@ -131,7 +131,7 @@
   <h2>Preselected Rights</h2>
   <mat-card *ngFor="let contract of bucket.contracts">
     <ng-container *ngFor="let term of contract.terms">
-      <form [formGroup]="form">
+      <form [formGroup]="bucketForm">
         <mat-card-header>
           <mat-card-title>Exclusive rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
         </mat-card-header>
@@ -181,7 +181,7 @@
 
                 <!-- FORM -->
                 <article formGroupName="languages" fxLayout="column" fxLayoutGap="24px">
-                  <ng-container *ngFor="let language of form.controls.languages.controls | keyvalue">
+                  <ng-container *ngFor="let language of bucketForm.controls.languages.controls | keyvalue">
                     <div fxLayout="column" fxLayoutGap="8px">
                       <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
                       <div [formGroupName]="language.key" fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
