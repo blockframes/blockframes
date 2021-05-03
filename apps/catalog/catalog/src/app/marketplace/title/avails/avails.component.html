@@ -10,13 +10,48 @@
         <mat-card-subtitle>
           <span>Fill in the following fields to know where, when and in which conditions this title is available</span>
           <span>
-            Search results use an "and" logic for multiple conditions, not and "or" logic.
+            Search results use an "and" logic for multiple conditions, not an "or" logic.
             <mat-icon matTooltip="If you check TV and VOD media, you will get territories where both media are available (not either of them)" svgIcon="info"></mat-icon>
           </span>
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        AVAIL FORM
+        <form [formGroup]="form">
+          <static-group formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
+            <mat-label>Media</mat-label>
+          </static-group>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Exlusivity</mat-label>
+            <mat-select formControlName="exclusive">
+              <mat-option [value]="true">Exclusive</mat-option>
+              <mat-option [value]="false">Non exclusive</mat-option>
+            </mat-select>
+            <mat-icon matPrefix svgIcon="star"></mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" formGroupName="duration">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="datepickerFrom" formControlName="from">
+            <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
+            <mat-datepicker #datepickerFrom> </mat-datepicker>
+            <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
+            <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" formGroupName="duration">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="datepickerTo" formControlName="to">
+            <mat-datepicker-toggle matPrefix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
+            <mat-datepicker #datepickerTo> </mat-datepicker>
+            <mat-error *ngIf="form.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
+            <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+          </mat-form-field>
+        </form>
+        <article fxLayout fxLayoutAlign="space-between">
+          <button mat-stroked-button (click)="form.reset()">Clear</button>
+          <button mat-flat-button color="primary" (click)="applyFilters()">Apply Filters</button>
+        </article>
       </mat-card-content>
     </mat-card>
   </aside>
