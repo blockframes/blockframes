@@ -49,9 +49,7 @@ export const onUserUpdate = functions.runWith(heavyConfig) // user update can po
 export const onUserDelete = onDocumentDelete('/users/{userID}', users.onUserDelete);
 
 /** Trigger: REST call to send a verify email to a user. */
-// @TODO (#2821)
-/*export const sendVerifyEmail = functions.https
-  .onCall(users.startVerifyEmailFlow);*/
+export const sendVerifyEmailAddress = functions.https.onCall(skipInMaintenance(logErrors(users.startVerifyEmailFlow)));
 
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https.onCall(skipInMaintenance(users.startResetPasswordEmail));
