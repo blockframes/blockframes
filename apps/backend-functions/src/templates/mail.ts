@@ -31,7 +31,6 @@ function getSupportEmail(app?: App) {
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
 
-// @TODO (#2821)
 export function userVerifyEmail(email: string, link: string): EmailTemplateRequest {
   const data = {
     pageURL: link
