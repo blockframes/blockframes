@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
     <button test-id="heart-button" mat-button (click)="removeFromWishlist($event)">
-      <mat-icon color="warn" svgIcon="favorite"></mat-icon>
+      <mat-icon color="warn" svgIcon="favorite_filled"></mat-icon>
       <span class="mat-caption">Remove from Wishlist</span>
     </button>
   </ng-container>
@@ -18,7 +18,7 @@
 
   <ng-container *ngIf="(toggle$ | async); else alreadyAddedSmall">
     <button test-id="heart-button" mat-icon-button (click)="removeFromWishlist($event)">
-      <mat-icon color="warn" svgIcon="favorite"></mat-icon>
+      <mat-icon color="warn" svgIcon="favorite_filled"></mat-icon>
       <span>
         <ng-content select="wishlist-remove-text"></ng-content>
       </span>
