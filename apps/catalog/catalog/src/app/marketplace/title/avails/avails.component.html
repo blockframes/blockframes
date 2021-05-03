@@ -1,4 +1,4 @@
-<section fxLayout="row" fxLayout="space-between center" fxLayoutGap="24px">
+<section fxLayout fxLayout="space-between center" fxLayoutGap="24px">
 
   <aside>
     <mat-card>
@@ -136,7 +136,7 @@
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   Versions
-                  <span>&nbsp;(Non Mandatory)</span>
+                  <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <article class="expansion-panel-content">
@@ -149,12 +149,10 @@
                   <ng-container *ngFor="let language of form.controls.languages.controls | keyvalue">
                     <div fxLayout="column" fxLayoutGap="8px">
                       <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
-                      <div [formGroupName]="language.key" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-                        <div fxLayout="row" fxLayoutGap="16px">
-                          <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
-                          <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
-                          <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
-                        </div>
+                      <div [formGroupName]="language.key" fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+                        <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
+                        <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
+                        <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
                         <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn">
                           <mat-icon svgIcon="delete"></mat-icon>
                         </button>
@@ -168,25 +166,25 @@
                 </article>
 
                 <!-- ADD LANGUAGE -->
-                <div *ngIf="!showButtons">
+                <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons else noButtons">
+                  <mat-divider inset></mat-divider>
+                  <span class="mat-caption text-primary">Add a Version</span>
+                  <button mat-mini-fab color="primary" (click)="this.showButtons = !this.showButtons">
+                    <mat-icon svgIcon="add"></mat-icon>
+                  </button>
+                </div>
+                <ng-template #noButtons>
                   <input-autocomplete test-id="languages" scope="languages" [control]="languageCtrl" withoutValues="['all']">
                     <mat-label>Languages</mat-label>
                   </input-autocomplete>
-                  <div fxLayout="row" fxLayoutAlign="space-between start">
+                  <div fxLayout fxLayoutAlign="space-between start">
                     <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
                       [disabled]="!languageCtrl.value">
                       <mat-icon svgIcon="save"></mat-icon>
                       <span>Save Language</span>
                     </button>
                   </div>
-                </div>
-                <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons">
-                  <mat-divider inset></mat-divider>
-                  <span class="mat-caption text-primary">Add a Version</span>
-                  <button mat-mini-fab color="primary" (click)="showForm()">
-                    <mat-icon svgIcon="add"></mat-icon>
-                  </button>
-                </div>
+                </ng-template>
               </article>
             </mat-expansion-panel>
 
@@ -195,7 +193,7 @@
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   Runs
-                  <span>&nbsp;(Non Mandatory)</span>
+                  <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <article class="expansion-panel-content" fxLayout="column" fxFlex formGroupName="runs">

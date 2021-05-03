@@ -57,9 +57,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public async ngOnInit() {
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
     this.bucket$ = this.bucketQuery.selectActive();
-    this.form.valueChanges.subscribe(value => {
-      console.log(value)
-    })
   }
 
 
@@ -96,10 +93,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   deleteLanguage(language: Language) {
     this.form.controls.languages.removeControl(language);
-  }
-
-  showForm() {
-    this.showButtons = !this.showButtons
   }
 
   addToSelection() { }
