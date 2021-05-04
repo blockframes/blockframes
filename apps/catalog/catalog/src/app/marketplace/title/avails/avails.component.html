@@ -68,23 +68,20 @@
       <world-map>
 
         <!-- MAP LAYERS -->
-        <ng-container *ngFor="let tag of notLicensedTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag.isoA3" color="color-3"
-            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Not licensed')" (mouseout)="clearTerritoryTooltip()">
+        <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
+          <map-feature [tag]="tag.isoA3" color="color-1" (click)="select(tag)"
+            (mouseover)="displayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>
-        <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
+        <ng-container *ngFor="let tag of (sold$ | async); trackBy: trackByTag">
           <map-feature [tag]="tag.isoA3" color="color-2"
-            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Rights sold')" (mouseout)="clearTerritoryTooltip()">
+            (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>
-        <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag.isoA3" color="color-1" (click)="select($event)"
-            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
+        <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
+          <map-feature [tag]="tag.isoA3" color="color-4"
+            (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
-        </ng-container>
-        <ng-container *ngFor="let tag of territoriesIsoA3">
-          <map-feature [tag]="tag" color="color-4"></map-feature>
         </ng-container>
 
         <!-- TOOLTIP ON HOVERING-->
