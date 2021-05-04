@@ -92,7 +92,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.available$ = this.mandateTerms$.pipe(
       map(terms => {
         const mandateTerms = getMandateTerms(this.form.value, terms);
-
         return mandateTerms.map(term => term.territories
           .filter(t => !!territoriesISOA3[t])
           .map(territory => ({
@@ -104,12 +103,10 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
       })
     );
 
-
     // Territories that are already sold
     // @TODO #5573 use form values 
     this.sold$ = this.salesTerms$.pipe(
       map(terms => {
-
         return terms.map(term => term.territories
           .filter(t => !!territoriesISOA3[t])
           .map(territory => ({
