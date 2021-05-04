@@ -15,7 +15,7 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('terri
       from: new FormControl(avail.duration?.from, [...[compareDates('from', 'to', 'from'), isDateInFuture], ...durationRequired]),
       to: new FormControl(avail.duration?.to, [...[compareDates('from', 'to', 'to'), isDateInFuture], ...durationRequired])
     })
-  };
+  }
 }
 
 type AvailControl = ReturnType<typeof createAvailControl>
