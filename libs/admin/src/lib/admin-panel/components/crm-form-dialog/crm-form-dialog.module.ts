@@ -6,12 +6,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {  FirstWordTitlecaseModule } from '@blockframes/utils/pipes/first-titlecase.pipe';
 
 @NgModule({
   declarations: [CrmFormDialogComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FirstWordTitlecaseModule,
     MatButtonModule,
     FlexLayoutModule,
     MatInputModule,

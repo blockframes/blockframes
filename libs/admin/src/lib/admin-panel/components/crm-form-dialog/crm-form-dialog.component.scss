@@ -4,12 +4,25 @@ section {
 
   p {
     margin-bottom: 16px;
+    &.space-p {
+      margin-bottom: 36px;
+    }
   }
   span {
     margin-bottom: 24px;
+    &.space {
+      display: block;
+      margin: 8px;
+    }
   }
 }
 
 article {
   margin-top: 16px;
 }
+
+.underline {
+  text-decoration: underline;
+}
+
+

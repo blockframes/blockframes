@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 import { ThemeService } from '@blockframes/ui/theme';
-
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +13,6 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { Access } from '@blockframes/consents/+state/consents.firestore';
-
 import { MovieQuery } from '@blockframes/movie/+state';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
@@ -38,7 +36,7 @@ const budgetData: { serie: keyof Budget, label: string }[] = [{
   selector: 'campaign-marketplace-financing',
   templateUrl: './financing.component.html',
   styleUrls: ['./financing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceFinancingComponent implements OnInit {
   public totalFundings: number;
@@ -50,13 +48,11 @@ export class MarketplaceFinancingComponent implements OnInit {
   budgetData = budgetData;
   formatter = {
     currency: (campaign: Campaign) => ({
-      formatter: (value: number) =>
-        typeof value === 'number' ? formatCurrency(value, this.locale, campaign.currency) : '',
+      formatter: (value: number) => typeof value === 'number' ? formatCurrency(value, this.locale, campaign.currency) : '',
     }),
     percent: {
-      formatter: (value: number) =>
-        typeof value === 'number' ? formatPercent(value / 100, this.locale) : '',
-    },
+      formatter: (value: number) => typeof value === 'number' ? formatPercent(value / 100, this.locale) : '',
+    }
   };
 
   constructor(
@@ -71,8 +67,8 @@ export class MarketplaceFinancingComponent implements OnInit {
 
   ngOnInit(): void {
     this.campaign$ = this.route.selectParams<string>('movieId').pipe(
-      switchMap((id) => this.service.valueChanges(id)),
-      tap((campaign) => (this.totalFundings = getTotalFundings(campaign.fundings)))
+      switchMap(id => this.service.valueChanges(id)),
+      tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
     );
   }
 
