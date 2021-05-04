@@ -190,7 +190,7 @@ export class IdentityComponent implements OnInit {
 
       await this.orgService.addOrganization(org, this.app, user);
 
-      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
@@ -259,7 +259,7 @@ export class IdentityComponent implements OnInit {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.query.user);
 
-      this.snackBar.open('Your account have been created and your org is waiting for approval ! ', 'close', { duration: this.snackbarDuration });
+      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information.', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
