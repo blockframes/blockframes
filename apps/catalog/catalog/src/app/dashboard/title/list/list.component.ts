@@ -14,11 +14,11 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
 const columns = {
-  'title.international': 'TITLE',
-  'release.year': 'RELEASE YEAR',
-  directors: 'DIRECTOR(S)',
-  views: { value: '# VIEWS', disableSort: true },
-  'app.catalog.status': 'STATUS'
+  'title.international': 'Title',
+  'release.year': 'Release Year',
+  directors: 'Director(s)',
+  views: { value: '# Views', disableSort: true },
+  'app.catalog.status': 'Status'
 };
 
 @Component({
