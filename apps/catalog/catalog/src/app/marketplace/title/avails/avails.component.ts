@@ -3,10 +3,10 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TerritoryValue, TerritoryISOA3Value, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { getMandateTerms } from '@blockframes/contract/avails/avails';
-import { TermService } from '@blockframes/contract/term/+state';
+import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
@@ -34,12 +34,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public periods = ['weeks', 'months', 'years'];
 
   /** List of world map territories */
-  public notLicensedTerritories$: Observable<TerritoryMarker[]>;
-  public rightsSoldTerritories$: Observable<TerritoryMarker[]>;
-  public availableTerritories$: Observable<TerritoryMarker[]>;
+  available$: Observable<TerritoryMarker[]>;
+  sold$: Observable<TerritoryMarker[]>;
+  selected$ = new BehaviorSubject<TerritoryMarker[]>([]); // The one in the bucket form
 
   private mandates: Contract[];
   private sales: Contract[];
+  private mandateTerms$: Observable<Term<Date>[]>;
+  private salesTerms$: Observable<Term<Date>[]>;
 
   public bucketForm = new BucketTermForm();
   /** Languages Form */
@@ -74,6 +76,10 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.mandates = contracts.filter(c => c.type === 'mandate');
     this.sales = contracts.filter(c => c.type === 'sale');
     this.bucket$ = this.bucketQuery.selectActive();
+
+    this.mandateTerms$ = this.termService.valueChanges(this.mandates.map(m => m.termIds).flat());
+    this.salesTerms$ = this.termService.valueChanges(this.sales.map(m => m.termIds).flat());
+
   }
 
   applyFilters() {
@@ -83,55 +89,35 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     }
 
     // Territories available after form filtering 
-    this.availableTerritories$ = this.termService.valueChanges(this.mandates.map(m => m.termIds).flat()).pipe(
+    this.available$ = this.mandateTerms$.pipe(
       map(terms => {
         const mandateTerms = getMandateTerms(this.form.value, terms);
-        let availableTerritories = [];
-        mandateTerms.forEach(term => {
-          availableTerritories = term.territories.filter(t => !!territoriesISOA3[t]).map(territory => {
-            return {
-              isoA3: territoriesISOA3[territory],
-              label: territories[territory],
-              contract: this.mandates.find(m => m.id === term.contractId)
-            }
-          });
-        })
-        return availableTerritories;
+
+        return mandateTerms.map(term => term.territories
+          .filter(t => !!territoriesISOA3[t])
+          .map(territory => ({
+            isoA3: territoriesISOA3[territory],
+            label: territories[territory],
+            contract: this.mandates.find(m => m.id === term.contractId)
+          }))
+        ).flat();
       })
     );
 
 
     // Territories that are already sold
     // @TODO #5573 use form values 
-    this.rightsSoldTerritories$ = this.termService.valueChanges(this.sales.map(m => m.termIds).flat()).pipe(
+    this.sold$ = this.salesTerms$.pipe(
       map(terms => {
-        let availableTerritories = [];
-        terms.forEach(term => {
-          availableTerritories = term.territories.filter(t => !!territoriesISOA3[t]).map(territory => {
-            return {
-              isoA3: territoriesISOA3[territory],
-              label: territories[territory],
-              contract: this.mandates.find(m => m.id === term.contractId)
-            }
-          });
-        })
 
-
-        return availableTerritories;
-      })
-    );
-
-    // Territories that are not under a mandate
-    // @TODO #5573 usefull ? &  use form values 
-    this.notLicensedTerritories$ = this.termService.valueChanges(this.mandates.map(m => m.termIds).flat()).pipe(
-      map(terms => {
-        const notSoldTerritories = terms.map(t => t.territories).flat();
-        return Object.keys(territories)
-          .filter(t => !notSoldTerritories.includes(t as any))
-          .map(t => ({
-            isoA3: territoriesISOA3[t],
-            label: territories[t]
-          })).filter(t => !!t.isoA3);
+        return terms.map(term => term.territories
+          .filter(t => !!territoriesISOA3[t])
+          .map(territory => ({
+            isoA3: territoriesISOA3[territory],
+            label: territories[territory],
+            contract: this.mandates.find(m => m.id === term.contractId)
+          }))
+        ).flat();
       })
     );
 
@@ -144,13 +130,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: TerritoryMarker) {
-    console.log(territory);
-  }
+    const selected = this.selected$.getValue();
 
-  /** Get a list of iso_a3 strings from the territories of the form. */
-  // @TODO #5573 still usefull ?
-  public get territoriesIsoA3(): string[] {
-    return [];
+    if (selected.find(s => s.isoA3 === territory.isoA3)) {
+      this.selected$.next(selected.filter(s => s.isoA3 !== territory.isoA3));
+    } else {
+      selected.push(territory);
+      this.selected$.next(selected);
+    }
   }
 
   public trackByTag(tag) {
@@ -158,7 +145,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   }
 
   /** Display the territories information in the tooltip */
-  public dislpayTerritoryTooltip(territory: TerritoryValue, status: string) {
+  public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
     this.hoveredTerritory = { name: territory, status }
   }
 
