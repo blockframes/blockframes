@@ -1,19 +1,19 @@
 @mixin anchor($theme) {
-  $primary: map-get($theme, primary);
+//   $primary: map-get($theme, primary);
 
-  a:not(.mat-button-base):not(.mat-list-item) {
-    color: mat-color($primary, 500);
-    text-decoration-color: mat-color($primary, 500);
-    text-decoration: underline;
-  }
+//   a:not(.mat-button-base):not(.mat-list-item):not(.mat-tab-link) {
+//     color: mat-color($primary, 500);
+//     text-decoration-color: mat-color($primary, 500);
+//     text-decoration: underline;
+//   }
 
-  a:not(.mat-button-base):not(.mat-list-item):hover {
-    color: mat-color($primary, 800);
-    text-decoration-color: mat-color($primary, 800);
-  }
+//   a:not(.mat-button-base):not(.mat-list-item):hover {
+//     color: mat-color($primary, 800);
+//     text-decoration-color: mat-color($primary, 800);
+//   }
 
-  a:not(.mat-button-base):not(.mat-list-item):visited {
-    color: mat-color($primary, 800);
-    text-decoration-color: mat-color($primary, 800);
-  }
+//   a:not(.mat-button-base):not(.mat-list-item):not(.mat-tab-link):visited {
+//     color: mat-color($primary, 800);
+//     text-decoration-color: mat-color($primary, 800);
+//   }
 }
