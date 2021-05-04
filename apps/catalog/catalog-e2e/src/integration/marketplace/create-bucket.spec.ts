@@ -19,8 +19,8 @@ const deliveryText = 'Prores file deliver through cloud';
 const userFixture = new User();
 const user = userFixture.getByUID(USER.Camilla);
 const currency = 'US Dollar';
-const numSections = 4;
-const totalContractValue = '55,000';
+const numSections = 3;
+const totalContractValue = '35,000';
 
 beforeEach(() => {
   clearDataAndPrepareTest('/');

@@ -1,4 +1,3 @@
-import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { Mandate } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
@@ -35,16 +34,24 @@ export interface BucketTerm {
   territories: Territory[];
   exclusive: boolean;
   languages: Record<string, MovieLanguageSpecification>;
+  runs?: {
+    broadcasts: number;
+    catchup: {
+      from: Date,
+      duration: number,
+      period: 'day' | 'week' | 'month'
+    }
+  }
 }
 
 export function toBucketTerm(term: Term): BucketTerm {
-  return {
+  return createBucketTerm({
     medias: term.medias,
     duration: term.duration,
     territories: term.territories,
     exclusive: term.exclusive,
-    languages: term.languages
-  }
+    languages: term.languages,
+  });
 }
 
 export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
@@ -54,7 +61,8 @@ export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
     exclusive: false,
     duration: { from: new Date(), to: new Date() },
     ...params,
-    languages: createLanguageKey(params.languages)
+    languages: createLanguageKey(params.languages),
+
   }
 }
 
@@ -90,3 +98,4 @@ export function createBucket(params: Partial<Bucket> = {}): Bucket {
     contracts: params.contracts?.map(createBucketContract) ?? []
   }
 }
+

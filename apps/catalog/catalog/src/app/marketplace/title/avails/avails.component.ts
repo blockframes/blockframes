@@ -1,15 +1,19 @@
-import { MovieQuery, Movie } from '@blockframes/movie/+state';
+import { MovieQuery, Movie, createMovieLanguageSpecification } from '@blockframes/movie/+state';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { TerritoryValue, TerritoryISOA3Value, territoriesISOA3, territories } from '@blockframes/utils/static-model';
+import { TerritoryValue, TerritoryISOA3Value, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { getMandateTerms } from '@blockframes/contract/avails/avails';
 import { TermService } from '@blockframes/contract/term/+state';
-import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { map } from 'rxjs/operators';
+import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
+import { BucketTermForm } from '@blockframes/contract/bucket/form';
+import { FormControl } from '@angular/forms';
+import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
+import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
@@ -26,7 +30,8 @@ interface TerritoryMarker {
 export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
   public org$: Observable<Organization>;
-  public availsForm = new AvailsForm('single');
+  public bucket$: Observable<Bucket>;
+  public periods = ['weeks', 'months', 'years'];
 
   /** List of world map territories */
   public notLicensedTerritories$: Observable<TerritoryMarker[]>;
@@ -36,33 +41,40 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   private mandates: Contract[];
   private sales: Contract[];
 
+  public bucketForm = new BucketTermForm();
+  /** Languages Form */
+  public languageCtrl = new FormControl();
+  public showButtons = true;
+
   public hoveredTerritory: {
     name: string;
     status: string;
   }
+
+  public form = new AvailsForm({ territories: [] }, ['duration'])
 
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private contractService: ContractService,
     private termService: TermService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private bucketQuery: BucketQuery,
+    private bucketService: BucketService
   ) { }
 
   public async ngOnInit() {
-    // @TODO #5573 for testing purposes, remove
-    this.availsForm.get('duration').get('from').value = new Date('05/01/2021')
-    this.availsForm.get('duration').get('to').value = new Date('05/31/2021')
 
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
     const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id))
     this.mandates = contracts.filter(c => c.type === 'mandate');
     this.sales = contracts.filter(c => c.type === 'sale');
+    this.bucket$ = this.bucketQuery.selectActive();
   }
 
   query() {
-    if (this.availsForm.invalid) {
+    if (this.form.invalid) {
       this.snackBar.open('Invalid form', '', { duration: 2000 });
       return;
     }
@@ -70,7 +82,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     // Territories available after form filtering 
     this.availableTerritories$ = this.termService.valueChanges(this.mandates.map(m => m.termIds).flat()).pipe(
       map(terms => {
-        const mandateTerms = getMandateTerms(this.availsForm.value, terms);
+        const mandateTerms = getMandateTerms(this.form.value, terms);
 
         let availableTerritories = [];
         mandateTerms.forEach(term => {
@@ -125,7 +137,11 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   clear() {
     // @TODO #5573 also reset map
-    this.availsForm.reset();
+    this.form.reset();
+  }
+
+  public applyFilters() {
+    // @TODO (#5655)
   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
@@ -152,5 +168,18 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public clearTerritoryTooltip() {
     this.hoveredTerritory = null;
   }
+
+  addLanguage() {
+    const spec = createMovieLanguageSpecification({});
+    this.bucketForm.get('languages').addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
+    this.languageCtrl.reset();
+    this.showButtons = true;
+  }
+
+  deleteLanguage(language: Language) {
+    this.bucketForm.controls.languages.removeControl(language);
+  }
+
+  addToSelection() { }
 
 }
