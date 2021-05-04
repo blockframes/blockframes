@@ -29,7 +29,7 @@ export function getMandateTerms(
     }
 
     // If terms has some territories of avails: available
-    if (!!territories && term.territories.every(territory => !territories.includes(territory))) {
+    if (!!territories?.length && term.territories.every(territory => !territories.includes(territory))) {
       continue;
     }
 
@@ -41,9 +41,11 @@ export function getMandateTerms(
   if (medias.some(media => !resultMedias.includes(media))) return [];
 
   // If more territories are selected than there are in the mandates: not available
-  const resultTerritories = result.map(term => term.territories).flat();
-  if (!!territories && territories.some(territory => !resultTerritories.includes(territory))) return [];
-  
+  if(!!territories?.length){
+    const resultTerritories = result.map(term => term.territories).flat();
+    if (territories.some(territory => !resultTerritories.includes(territory))) return [];
+  }
+
   return result;
 }
 

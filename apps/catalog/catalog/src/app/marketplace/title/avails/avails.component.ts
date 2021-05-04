@@ -67,13 +67,16 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id))
+    const contracts = await this.contractService.getValue(
+      ref => ref.where('titleId', '==', this.movie.id)
+        .where('status', '==', 'accepted')
+    );
     this.mandates = contracts.filter(c => c.type === 'mandate');
     this.sales = contracts.filter(c => c.type === 'sale');
     this.bucket$ = this.bucketQuery.selectActive();
   }
 
-  query() {
+  applyFilters() {
     if (this.form.invalid) {
       this.snackBar.open('Invalid form', '', { duration: 2000 });
       return;
@@ -83,7 +86,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.availableTerritories$ = this.termService.valueChanges(this.mandates.map(m => m.termIds).flat()).pipe(
       map(terms => {
         const mandateTerms = getMandateTerms(this.form.value, terms);
-
         let availableTerritories = [];
         mandateTerms.forEach(term => {
           availableTerritories = term.territories.filter(t => !!territoriesISOA3[t]).map(territory => {
@@ -138,10 +140,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   clear() {
     // @TODO #5573 also reset map
     this.form.reset();
-  }
-
-  public applyFilters() {
-    // @TODO (#5655)
   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
