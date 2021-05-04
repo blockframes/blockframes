@@ -36,14 +36,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   /** List of world map territories */
-  available$: Observable<TerritoryMarker[]>;
-  sold$: Observable<TerritoryMarker[]>;
+  available$ = new BehaviorSubject<TerritoryMarker[]>([]);
+  sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
   selected$ = new BehaviorSubject<TerritoryMarker[]>([]); // The one in the bucket form
 
   private mandates: Contract[];
   private sales: Contract[];
-  private mandateTerms$: Observable<Term<Date>[]>;
-  private salesTerms$: Observable<Term<Date>[]>;
+  private mandateTerms: Term<Date>[];
+  private salesTerms: Term<Date>[];
 
   /** Languages Form */
   public languageCtrl = new FormControl();
@@ -83,8 +83,9 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     );
     this.mandates = contracts.filter(c => c.type === 'mandate');
     this.sales = contracts.filter(c => c.type === 'sale');
-    this.mandateTerms$ = this.termService.valueChanges(this.mandates.map(m => m.termIds).flat());
-    this.salesTerms$ = this.termService.valueChanges(this.sales.map(m => m.termIds).flat());
+
+    this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
+    this.salesTerms = await this.termService.getValue(this.sales.map(m => m.termIds).flat());
   }
 
   public ngOnDestroy() {
@@ -98,49 +99,50 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     }
 
     // Territories available after form filtering
-    this.available$ = this.mandateTerms$.pipe(
-      map(terms => {
-        const mandateTerms = getMandateTerms(this.availsForm.value, terms);
-        return mandateTerms.map(term => term.territories
-          .filter(t => !!territoriesISOA3[t])
-          .map(territory => ({
-            isoA3: territoriesISOA3[territory],
-            label: territories[territory],
-            contract: this.mandates.find(m => m.id === term.contractId)
-          }))
-        ).flat();
-      })
-    );
+    const mandateTerms = getMandateTerms(this.availsForm.value, this.mandateTerms);
+    const available: TerritoryMarker[] = mandateTerms.map(term => term.territories
+      .filter(t => !!territoriesISOA3[t])
+      .map(territory => ({
+        isoA3: territoriesISOA3[territory],
+        label: territories[territory],
+        contract: this.mandates.find(m => m.id === term.contractId)
+      }))
+    ).flat();
+    this.available$.next(available);
 
-    // Territories that are already sold
+    // Territories that are already sold after form filtering
     // @TODO #5573 use form values
-    this.sold$ = this.salesTerms$.pipe(
-      map(terms => {
-        return terms.map(term => term.territories
-          .filter(t => !!territoriesISOA3[t])
-          .map(territory => ({
-            isoA3: territoriesISOA3[territory],
-            label: territories[territory],
-            contract: this.mandates.find(m => m.id === term.contractId)
-          }))
-        ).flat();
-      })
-    );
+    const sold = this.salesTerms.map(term => term.territories
+      .filter(t => !!territoriesISOA3[t])
+      .map(territory => ({
+        isoA3: territoriesISOA3[territory],
+        label: territories[territory],
+        contract: this.mandates.find(m => m.id === term.contractId)
+      }))
+    ).flat();
+    this.sold$.next(sold);
 
   }
 
   clear() {
-    // @TODO #5573 also reset map
     this.availsForm.reset();
+    this.selected$.next([]);
+    this.available$.next([]);
   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: TerritoryMarker) {
     const selected = this.selected$.getValue();
+    const available = this.available$.getValue();
 
     if (selected.find(s => s.isoA3 === territory.isoA3)) {
+      // Add back territory to available layer and remove territory from seletion
       this.selected$.next(selected.filter(s => s.isoA3 !== territory.isoA3));
+      available.push(territory);
+      this.available$.next(available);
     } else {
+      // Add territory to selection and remove it from available
+      this.available$.next(available.filter(s => s.isoA3 !== territory.isoA3))
       selected.push(territory);
       this.selected$.next(selected);
     }
