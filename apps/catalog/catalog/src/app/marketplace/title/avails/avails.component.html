@@ -49,7 +49,7 @@
           </mat-form-field>
         </form>
         <article fxLayout fxLayoutAlign="space-between">
-          <button mat-stroked-button (click)="form.reset()">Clear</button>
+          <button mat-stroked-button (click)="clear()">Clear</button>
           <button mat-flat-button color="primary" (click)="applyFilters()">Apply Filters</button>
         </article>
       </mat-card-content>
@@ -79,7 +79,7 @@
           </map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
-          <map-feature [tag]="tag.isoA3" color="color-4"
+          <map-feature [tag]="tag.isoA3" color="color-4" (click)="select(tag)"
             (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>
