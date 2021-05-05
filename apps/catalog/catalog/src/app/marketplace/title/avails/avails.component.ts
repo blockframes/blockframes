@@ -6,10 +6,9 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { getMandateTerms } from '@blockframes/contract/avails/avails';
+import { getMandateTerms, getSoldTerms } from '@blockframes/contract/avails/avails';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map } from 'rxjs/operators';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { BucketTermForm, BucketForm } from '@blockframes/contract/bucket/form';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
@@ -77,10 +76,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
       this.bucketForm.change.next();
     });
 
-    const contracts = await this.contractService.getValue(
-      ref => ref.where('titleId', '==', this.movie.id)
-        .where('status', '==', 'accepted')
-    );
+    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
+
     this.mandates = contracts.filter(c => c.type === 'mandate');
     this.sales = contracts.filter(c => c.type === 'sale');
 
@@ -111,8 +108,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     this.available$.next(available);
 
     // Territories that are already sold after form filtering
-    // @TODO #5573 use form values
-    const sold = this.salesTerms.map(term => term.territories
+    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms);
+    const sold = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => ({
         isoA3: territoriesISOA3[territory],
