@@ -163,6 +163,6 @@ export const centralOrgId = {
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'demo2-backups';
+export const backupBucket = 'demo-2-backups-us';
 export const heavyChunkSize = 15;
 export const chunkSize = 30;
