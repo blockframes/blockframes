@@ -57,7 +57,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         title: 'Confidentiality Reminder',
-        subTitle: 'You are about to submit your project for publication. We kindly remind you that some of the information you\'re about to share might be confidential.',
+        subtitle: 'You are about to submit your project for publication. We kindly remind you that some of the information you\'re about to share might be confidential.',
         text: 'By submitting your project, you assume the responsibility of disclosing all of the information previously filled out to potential future investors. Before submitting your project, please confirm by writing “I AGREE” in the field below.',
         confirmationWord: 'i agree',
         confirmButtonText: 'accept',

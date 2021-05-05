@@ -9,7 +9,6 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { Access } from '@blockframes/consents/+state/consents.firestore';
@@ -78,6 +77,7 @@ export class MarketplaceFinancingComponent implements OnInit {
     this.dialog.open(CrmFormDialogComponent, {
       data: {
         title: 'Confidentiality Reminder',
+        subtitle: `You are about to download a confidential document. Please make sure that you are aware of our Confidentiality Policy before doing so.`,
         text: 'To confirm that you agree with these terms, please write “I AGREE” in the field below.',
         confirmationWord: 'i agree',
         confirmButtonText: 'confirm and download',

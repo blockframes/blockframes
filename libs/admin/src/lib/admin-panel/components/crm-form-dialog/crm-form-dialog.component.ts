@@ -17,8 +17,8 @@ export class CrmFormDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      title: string,
-      subTitle?: string,
+      title?: string,
+      subtitle?: string,
       text?: string,
       warning?: string,
       simulation?: string[],
