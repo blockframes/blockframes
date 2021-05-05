@@ -4,7 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
+import { StoreStatus, ProductionStatus, Territory, Language, Genre, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
@@ -18,8 +18,7 @@ export interface LanguagesSearch {
 }
 
 export interface MovieSearch extends AlgoliaSearch {
-  storeType: StoreType[];
-  storeConfig: StoreStatus[]
+  storeStatus: StoreStatus[];
   genres: Genre[];
   originCountries: Territory[];
   languages: LanguagesSearch;
@@ -35,8 +34,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     query: '',
     page: 0,
     hitsPerPage: 50,
-    storeType: [],
-    storeConfig: [],
+    storeStatus: [],
     genres: [],
     originCountries: [],
     languages: {
@@ -67,8 +65,7 @@ function createMovieSearchControl(search: MovieSearch) {
   return {
     query: new FormControl(search.query),
     page: new FormControl(search.page),
-    storeType: FormList.factory<GetKeys<'storeType'>>(search.storeType),
-    storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
+    storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
     originCountries: FormList.factory<Territory>(search.originCountries),
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
@@ -94,19 +91,18 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     super(control);
 
     this.movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
-    this.storeConfig.add(storeStatus);
+    this.storeStatus.add(storeStatus);
   }
 
   get query() { return this.get('query'); }
   get page() { return this.get('page'); }
   get genres() { return this.get('genres'); }
-  get storeType() { return this.get('storeType'); }
   get originCountries() { return this.get('originCountries'); }
   get languages() { return this.get('languages'); }
   get productionStatus() { return this.get('productionStatus'); }
   get minBudget() { return this.get('minBudget'); }
   get sellers() { return this.get('sellers'); }
-  get storeConfig() { return this.get('storeConfig'); }
+  get storeStatus() { return this.get('storeStatus'); }
   get socialGoals() { return this.get('socialGoals'); }
   get hitsPerPage() { return this.get('hitsPerPage'); }
   get contentType() { return this.get('contentType'); }
@@ -114,7 +110,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   isEmpty() {
     return (
       !this.query.value?.trim() &&
-      this.storeConfig.value?.length === 0 &&
+      this.storeStatus.value?.length === 0 &&
       this.genres.value?.length === 0 &&
       this.originCountries.value?.length === 0 &&
       this.languages.value?.original.length === 0 &&
@@ -124,7 +120,6 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
       this.sellers?.value.length === 0 &&
-      this.storeType?.value.length === 0 &&
       !this.contentType.value);
   }
 
@@ -144,8 +139,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         ],
         this.productionStatus.value.map(status => `status:${status}`),
         this.sellers.value.map(seller => `orgName:${seller.name}`),
-        this.storeType.value.map(type => `storeType:${type}`),
-        this.storeConfig.value.map(config => `storeConfig:${config}`),
+        this.storeStatus.value.map(config => `storeStatus:${config}`),
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
         [`contentType:${this.contentType.value || ''}`]
       ],

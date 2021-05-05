@@ -5,11 +5,6 @@ import { MovieService } from "../+state/movie.service";
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { map } from "rxjs/operators";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { MovieAppAccess } from "@blockframes/utils/apps";
-
-function hasAppAccess(appName: string, appAccess: MovieAppAccess): boolean {
-  return appAccess[appName];
-}
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -25,7 +20,7 @@ export class MovieActiveGuard extends CollectionGuard<MovieState> {
       map(movie => {
         if (!!movie) {
           const appName = this.routerQuery.getValue().state.root.data.app;
-          const hasAccess = hasAppAccess(appName, movie.storeConfig.appAccess);
+          const hasAccess = movie.app[appName].access;
           if (hasAccess) {
             return true;
           } else {

@@ -423,11 +423,6 @@ export const storeStatus = {
   refused: 'Refused',
 } as const
 
-export const storeType = {
-  library: 'Library',
-  line_up: 'Line-Up',
-} as const;
-
 export const unitBox = {
   usd: 'USD',
   eur: 'EUR',
@@ -1826,7 +1821,6 @@ export const staticModel = {
   soundFormat,
   stakeholderRoles,
   storeStatus,
-  storeType,
   unitBox,
   organizationStatus,
   festival,

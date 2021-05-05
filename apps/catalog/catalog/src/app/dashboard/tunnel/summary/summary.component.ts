@@ -19,7 +19,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];
-  isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
+  isPublished$ = this.query.selectActive(movie => movie.app.catalog.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
   )
 
@@ -53,7 +53,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       })
     } else {
       // Log the invalid forms
-      this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
+      this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
     }
   }
 

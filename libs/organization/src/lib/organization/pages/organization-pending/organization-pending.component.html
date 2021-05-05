@@ -6,26 +6,28 @@
   <mat-card>
     <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
       <ng-container *ngIf="orgActive">
-        <p class="mat-body-1">
-        We care about security on the Cascade8 applications. 
-        Please validate your email to help us authenticate you. 
-        The {{ appName }} team will come back to you shortly concerning your Company Account creation request.
+        <p class="mat-body-2">
+          We care about security on the Cascade8 applications.
+          Please validate your email to help us authenticate you.
+          <br>
+          The {{ appName }} team will come back to you shortly concerning your Company Account creation request.
         </p>
-        <p class="mat-body-2">Feel free to <a [routerLink]="['./']" (click)="openIntercom()"><span class="text-primary">contact us</span></a> if you have any questions.</p>
+        <p class="mat-body-2">Feel free to <a [routerLink]="['./']" (click)="openIntercom()"
+            class="text-primary">contact us</a> if you have any questions.</p>
         <auth-data-validation [organization]="orgActive"></auth-data-validation>
       </ng-container>
 
       <ng-container *ngIf="(org$ | async) as org">
-        <p class="mat-body-1">
-        We care about security on the Cascade8 applications. 
-        Please validate your email to help us authenticate you and wait for the {{ org.denomination.full }} team 
-        to answer your request to join their activity on {{ appName }}.
+        <p class="mat-body-2">
+          We care about security on the Cascade8 applications.
+          Please validate your email to help us authenticate you and wait for the {{ org.denomination.full }} team
+          to answer your request to join their activity on {{ appName }}.
         </p>
-        <p class="mat-body-2">Feel free to <a [routerLink]="['./']" (click)="openIntercom()"><span class="text-primary">contact us</span></a> if you have any questions.</p>
+        <p class="mat-body-2">Feel free to <a [routerLink]="['./']" (click)="openIntercom()"
+            class="text-primary">contact us</a> if you have any questions.</p>
         <auth-data-validation [organization]="org"></auth-data-validation>
       </ng-container>
 
     </mat-card-content>
   </mat-card>
 </section>
-

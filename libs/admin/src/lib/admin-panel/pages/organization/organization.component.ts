@@ -43,8 +43,6 @@ export class OrganizationComponent implements OnInit {
     'poster': { value: 'Poster', disableSort: true },
     'title.original': 'Original title',
     'releaseYear': 'Release year',
-    'storeConfig.status': 'Status',
-    'storeConfig.storeType': 'Store type'
   };
 
   public initialColumnsMovies: string[] = [
@@ -53,8 +51,6 @@ export class OrganizationComponent implements OnInit {
     'internalRef',
     'title.original',
     'releaseYear',
-    'storeConfig.status',
-    'storeConfig.storeType'
   ];
 
   public memberColumns = {
@@ -135,7 +131,7 @@ export class OrganizationComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
       return;
     }
-    const org = await this.organizationService.getValue(this.orgId); 
+    const org = await this.organizationService.getValue(this.orgId);
 
     this.uploaderService.upload();
     await this.organizationService.update(this.orgId, this.orgForm.value);
@@ -161,8 +157,6 @@ export class OrganizationComponent implements OnInit {
       'internalRef',
       'title.original',
       'releaseYear',
-      'storeConfig.status',
-      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
@@ -199,7 +193,7 @@ export class OrganizationComponent implements OnInit {
     const simulation = await this.simulateDeletion(this.orgId);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        title: 'You are currently deleting this organization from Archipel, are you sure ?',
+        title: 'You are currently deleting this organization from Archipel, are you sure?',
         text: 'If yes, please write \'DELETE\' inside the form below.',
         warning: 'You will also delete everything regarding this organization',
         simulation,
@@ -207,7 +201,7 @@ export class OrganizationComponent implements OnInit {
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.organizationService.remove(this.orgId);
-          this.snackBar.open('Organization deleted !', 'close', { duration: 5000 });
+          this.snackBar.open('Organization deleted!', 'close', { duration: 5000 });
           this.router.navigate(['c/o/admin/panel/organizations']);
         }
       }

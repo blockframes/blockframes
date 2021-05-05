@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 import { clearDataAndPrepareTest, assertMoveTo } from '@blockframes/e2e/utils/functions';
 import { LandingPage } from '../../support/pages/landing';

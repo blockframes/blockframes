@@ -181,7 +181,7 @@ export class UserComponent implements OnInit {
     const simulation = await this.simulateDeletion(this.user);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        title: 'You are currently deleting this user from Archipel, are you sure ?',
+        title: 'You are currently deleting this user from Archipel, are you sure?',
         text: 'If yes, please write \'DELETE\' inside the form below.',
         warning: 'This user will be deleted from the application.',
         simulation,

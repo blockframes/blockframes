@@ -15,9 +15,8 @@ import { UserService, OrganizationMember, createOrganizationMember, PublicUser }
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/utils/models-meta';
-import { App } from '@blockframes/utils/apps';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @Injectable({ providedIn: 'root' })

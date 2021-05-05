@@ -30,8 +30,8 @@ export class TitleComponent implements OnInit {
       switchMap(org => {
         return this.service.valueChanges(ref => ref
           .where('orgIds', 'array-contains', org.id)
-          .where('storeConfig.status', '==', 'accepted')
-          .where('storeConfig.appAccess.festival', '==', true)
+          .where('app.festival.status', '==', 'accepted')
+          .where('app.festival.access', '==', true)
           .orderBy('_meta.createdAt', 'desc')
           )
       }),
