@@ -129,11 +129,11 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
   }
 }
 
-export async function hasAcceptedMovies(org: OrganizationDocument, app: App) {
+export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
   const moviesColRef = await admin.firestore().collection('movies')
     .where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
-  return movies.some(movie => movie?.storeConfig?.status === 'accepted' && movie?.storeConfig?.appAccess[app]);
+  return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
 }
 
 export function throwOnProduction(): never | void {

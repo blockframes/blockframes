@@ -7,7 +7,7 @@ import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
 import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
-import { app, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
+import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
 import { territories } from '@blockframes/utils/static-model/static-model';
 
 @Component({
@@ -44,7 +44,7 @@ export class UsersComponent implements OnInit {
   ];
   public rows: any[] = [];
   public exporting = new BehaviorStore(false);
-  public app = app.filter(a => !['crm', 'cms'].includes(a));
+  public app = getAllAppsExcept(['crm']);
 
   constructor(
     private userService: UserService,
@@ -125,22 +125,22 @@ export class UsersComponent implements OnInit {
       const exportedRows = data.map(r => {
         const row = {
           'userId': r.uid,
-          'first name': r.firstName ? r.firstName : '--',
-          'last name': r.lastName ? r.lastName : '--',
+          'first name': r.firstName ?? '--',
+          'last name': r.lastName ?? '--',
           'organization': r.org ? orgName(r.org) : '--',
-          'org id': r.orgId ? r.orgId : '--',
+          'org id': r.orgId ?? '--',
           'org status': r.org ? r.org.status : '--',
           'type': r.type ? r.type : '--',
           'country': r.orgCountry,
           'role': r.userOrgRole ? r.userOrgRole : '--',
-          'position': r.position ? r.position : '--',
+          'position': r.position ?? '--',
           'org activity': r.org ? r.org.activity : '--',
           'email': r.email,
-          'first connexion': r.firstConnexion ? r.firstConnexion : '--',
-          'last connexion': r.lastConnexion ? r.lastConnexion : '--',
-          'page view': r.pageView ? r.pageView : '--',
-          'session count': r.sessionCount ? r.sessionCount : '--',
-          'created from': r.createdFrom ? r.createdFrom : '--',
+          'first connexion': r.firstConnexion ?? '--',
+          'last connexion': r.lastConnexion ?? '--',
+          'page view': r.pageView ?? '--',
+          'session count': r.sessionCount ?? '--',
+          'created from': r.createdFrom ?? '--',
         }
 
         for (const a of this.app) {

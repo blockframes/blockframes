@@ -43,8 +43,6 @@ export class OrganizationComponent implements OnInit {
     'poster': { value: 'Poster', disableSort: true },
     'title.original': 'Original title',
     'releaseYear': 'Release year',
-    'storeConfig.status': 'Status',
-    'storeConfig.storeType': 'Store type'
   };
 
   public initialColumnsMovies: string[] = [
@@ -53,8 +51,6 @@ export class OrganizationComponent implements OnInit {
     'internalRef',
     'title.original',
     'releaseYear',
-    'storeConfig.status',
-    'storeConfig.storeType'
   ];
 
   public memberColumns = {
@@ -135,7 +131,7 @@ export class OrganizationComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
       return;
     }
-    const org = await this.organizationService.getValue(this.orgId); 
+    const org = await this.organizationService.getValue(this.orgId);
 
     this.uploaderService.upload();
     await this.organizationService.update(this.orgId, this.orgForm.value);
@@ -161,8 +157,6 @@ export class OrganizationComponent implements OnInit {
       'internalRef',
       'title.original',
       'releaseYear',
-      'storeConfig.status',
-      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
@@ -199,7 +193,7 @@ export class OrganizationComponent implements OnInit {
     const simulation = await this.simulateDeletion(this.orgId);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        question: 'You are currently deleting this organization from Archipel, are you sure ?',
+        question: 'You are currently deleting this organization from Archipel, Are you sure?',
         warning: 'You will also delete everything regarding this organization',
         simulation,
         confirmationWord: 'delete',

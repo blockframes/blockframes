@@ -9,6 +9,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
+import { getMovieAppAccess } from '@blockframes/utils/apps';
 
 export const algolia = {
   ...algoliaClient,
@@ -135,10 +136,9 @@ export function storeSearchableMovie(
           [],
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
-      storeConfig: movie.storeConfig?.status || '',
+      storeStatus: '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
-      storeType: movie.storeConfig?.storeType || '',
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,
@@ -154,14 +154,19 @@ export function storeSearchableMovie(
     };
 
     /* App specific properties */
-    if (movie.storeConfig.appAccess.financiers) {
+    if (movie.app.financiers.access) {
       movieRecord['socialGoals'] = movie?.audience?.goals;
       movieRecord['minPledge'] = movie['minPledge'];
     }
 
-    const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+    const movieAppAccess = getMovieAppAccess(movie);
 
-    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord));
+    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(
+      {
+        ...movieRecord,
+        storeStatus: movie.app[appName]?.status || '',
+      }
+    ));
 
     return Promise.all(promises)
 

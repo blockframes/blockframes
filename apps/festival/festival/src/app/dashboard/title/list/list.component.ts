@@ -13,10 +13,10 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 const columns = {
   'title.international': 'Title',
-  view: { value: '# VIEWS', disableSort: true },
+  view: { value: '# Views', disableSort: true },
   directors: 'Director(s)',
   productionStatus: 'Production Status',
-  'storeConfig.status': 'Status'
+  'app.festival.status': 'Status'
 };
 
 @Component({
@@ -29,7 +29,7 @@ export class ListComponent implements OnInit {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'view', 'directors', 'productionStatus', 'storeConfig.status'];
+  initialColumns = ['title.international', 'view', 'directors', 'productionStatus', 'app.festival.status'];
   titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
@@ -47,7 +47,7 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     this.titles$ = this.service.valueChanges(fromOrg(this.orgQuery.getActive().id)).pipe(
       map(movies => movies.filter(movie => !!movie)),
-      map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
+      map(movies => movies.filter(movie => movie.app.festival.access)),
       map(movies => movies.sort((movieA, movieB) => movieA.title.international > movieB.title.international ? 1 : -1)),
       tap(movies => {
         movies.length ?

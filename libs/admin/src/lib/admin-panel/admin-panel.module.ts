@@ -20,7 +20,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
-import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, ToLabelModule, ToDateModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
@@ -98,7 +98,8 @@ export const panelRoutes: Routes = [
     CrmFormDialogModule,
     AppPipeModule,
     MoviePictureUploadModule,
-    StaticSelectModule
+    StaticSelectModule,
+    ToDateModule
   ],
   declarations: [
     MoviesComponent,

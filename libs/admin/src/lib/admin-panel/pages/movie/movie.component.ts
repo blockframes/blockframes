@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin.form';
+import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { getValue } from '@blockframes/utils/helpers';
-import { storeType, storeStatus, staticModel } from '@blockframes/utils/static-model';
+import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { app } from '@blockframes/utils/apps';
+import { getAllAppsExcept, appName } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
@@ -15,6 +15,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
+import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 
 
 @Component({
@@ -27,11 +28,11 @@ export class MovieComponent implements OnInit {
   public movieId = '';
   public movie: Movie;
   public movieForm: MovieAdminForm;
-  public movieAppAccessForm: MovieAppAccessAdminForm;
-  public storeType = storeType;
+  public movieAppConfigForm: MovieAppConfigForm;
   public storeStatus = storeStatus;
-  public staticConsts = staticModel;
-  public app = app;
+  public productionStatus = productionStatus;
+  public apps = getAllAppsExcept(['crm']);
+  public appName = appName;
 
   public versionColumnsTable = {
     'id': { value: 'Id', disableSort: true },
@@ -66,7 +67,7 @@ export class MovieComponent implements OnInit {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
-    this.movieAppAccessForm = new MovieAppAccessAdminForm(this.movie);
+    this.movieAppConfigForm = new MovieAppConfigForm(this.movie.app);
 
     this.cdRef.markForCheck();
   }
@@ -79,18 +80,14 @@ export class MovieComponent implements OnInit {
 
     this.movie = {
       ...this.movie,
-      storeConfig: {
-        ...this.movie.storeConfig,
-        status: this.movieForm.get('storeStatus').value,
-        storeType: this.movieForm.get('storeType').value
-      },
+      app: this.updateAppAccess(),
       productionStatus: this.movieForm.get('productionStatus').value,
       internalRef: this.movieForm.get('internalRef').value
     }
 
     const hasCampaign = await this.campaignService.getValue(this.movieId);
 
-    if (hasCampaign && !this.movie?.campaignStarted && this.movie.storeConfig.status === 'accepted') {
+    if (hasCampaign && !this.movie?.campaignStarted && this.movie.app.financiers.status === 'accepted') {
       this.movie.campaignStarted = new Date();
     }
 
@@ -99,16 +96,26 @@ export class MovieComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
-  public async updateAppAccess() {
-    if (this.movieAppAccessForm.invalid) {
+  public updateAppAccess() {
+    if (this.movieAppConfigForm.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
     }
 
-    this.movie.storeConfig.appAccess = this.movieAppAccessForm.value;
+    for (const application of this.apps) {
+      this.movie.app[application].refusedAt = null;
+      this.movie.app[application].acceptedAt = null;
+      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
+      this.movie.app[application].status = this.movieAppConfigForm.controls[application].get('status').value;
 
-    await this.movieService.update(this.movieId, this.movie);
+      if(this.movieAppConfigForm.controls[application].get('status').value === "accepted") {
+        this.movie.app[application].acceptedAt = new Date();
+      }
+      if(this.movieAppConfigForm.controls[application].get('status').value === "refused") {
+        this.movie.app[application].refusedAt = new Date();
+      }
+    }
 
-    this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+    return this.movie.app;
   }
 
   public filterPredicate(data: any, filter: string) {
@@ -126,7 +133,7 @@ export class MovieComponent implements OnInit {
     const simulation = await this.simulateDeletion(this.movie);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        question: 'You are about to delete this movie from Archipel, are you sure ?',
+        question: 'You are about to delete this movie from Archipel, Are you sure?',
         warning: 'Doing this will also delete everything regarding this movie',
         simulation,
         confirmationWord: 'DELETE',

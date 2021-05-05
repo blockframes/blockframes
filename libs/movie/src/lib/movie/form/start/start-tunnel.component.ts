@@ -37,7 +37,7 @@ export class MovieFormStartTunnelComponent {
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
     try {
-      const { id } = await this.movieService.create(predefinedTitleConfig[this.app]);
+      const { id } = await this.movieService.create({productionStatus: predefinedTitleConfig[this.app], app: {[this.app]: { access: true}}});
 
       this.router.navigate(['/c/o/dashboard/tunnel/movie/', id]);
     } catch (err) {
