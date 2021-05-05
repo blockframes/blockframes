@@ -73,6 +73,7 @@ export interface EventAnalytics {
   orgName?: string,
   orgActivity?: string,
   orgCountry?: string,
+  watchTime?: number, // in seconds
 }
 
 export interface EventsAnalytics {

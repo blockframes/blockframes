@@ -57,6 +57,9 @@
       svg path {
         fill: mat-color($primary, default-contrast);
       }
+      &:hover {
+        background-color: mat-color($primary, 800);
+      }
     }
     &.mat-accent {
       svg g,
@@ -64,12 +67,18 @@
       svg path {
         fill: mat-color($accent, default-contrast);
       }
+      &:hover {
+        background-color: mat-color($accent, 800);
+      }
     }
     &.mat-warn {
       svg g,
       svg polygon,
       svg path {
         fill: mat-color($warn, default-contrast);
+      }
+      &:hover {
+        background-color: mat-color($warn, 800);
       }
     }
     // Used only in the upload component, remove it when the component will be reworked
@@ -84,13 +93,21 @@
 
     &.mat-button-disabled {
       background-color: mat-color($background, disabled-button);
+      // Prevent override from above style
+      &:hover {
+        background-color: mat-color($background, disabled-button);
+      }
       svg g, svg polygon, svg path {
         fill: mat-color($foreground, disabled-button);
       }
     }
   }
 
-  .mat-button,
+  .mat-button {
+    padding: 12px 8px;
+    margin: 0 24px;
+  }
+
   .mat-flat-button,
   .mat-raised-button,
   .mat-stroked-button {
@@ -111,12 +128,21 @@
     border-color: mat-color($foreground, divider);
     &.mat-primary {
       border-color: mat-color($primary);
+      &:hover {
+        border-color: mat-color($primary, 800);
+      }
     }
     &.mat-accent {
       border-color: mat-color($accent);
+      &:hover {
+        border-color: mat-color($accent, 800);
+      }
     }
     &.mat-warn {
       border-color: mat-color($warn);
+      &:hover {
+        border-color: mat-color($warn, 800);
+      }
     }
   }
 

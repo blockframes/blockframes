@@ -6,6 +6,9 @@ import { Organization } from "@blockframes/organization/+state/organization.mode
 import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
+import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
+import { Movie } from "@blockframes/movie/+state/movie.model";
+import type { RouterQuery } from '@datorama/akita-ng-router-store';
 
 export interface AppMailSetting {
   description: string,
@@ -14,7 +17,7 @@ export interface AppMailSetting {
   url?: string,
 }
 
-export const app = ['catalog', 'festival', 'financiers'] as const;
+export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
 export type App = typeof app[number];
 
 export const modules = ['dashboard', 'marketplace'] as const;
@@ -30,10 +33,20 @@ export const appName = {
 };
 type AppNameValue = typeof appName[App];
 
+export const appShortName = {
+  catalog: 'AC',
+  festival: 'AM',
+  financiers: 'MF',
+  blockframes: 'BF',
+  crm: 'CRM',
+  cms: 'CMS'
+};
+
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
   financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
+  crm: { email: 'team@cascade8.com', name: 'Cascade 8' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
@@ -41,6 +54,7 @@ export const appLogo = {
   catalog: `${appUrl.content}/assets/logo/light/content-primary-blue.png`,
   festival: `${appUrl.market}/assets/logo/light/market-primary-blue.png`,
   financiers: `${appUrl.financiers}/assets/logo/light/mf-primary-blue.png`,
+  crm: ''
 };
 type AppLogoValue = typeof appLogo[App];
 
@@ -57,10 +71,11 @@ export type MovieAppAccess = Record<App, boolean>;
 export const applicationUrl: Record<App, string> = {
   festival: appUrl.market,
   catalog: appUrl.content,
-  financiers: appUrl.financiers
+  financiers: appUrl.financiers,
+  crm: appUrl.crm
 }
 
-export function getCurrentApp(routerQuery: any): App {
+export function getCurrentApp(routerQuery: RouterQuery): App {
   return routerQuery.getValue().state?.root.data.app;
 }
 
@@ -99,8 +114,9 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
   }
 }
 
-export function getAppName(slug: App) {
-  return { slug, label: appName[slug] };
+export function getAppName(slug: App, short = false) {
+  const label = short ? appShortName[slug] : appName[slug];
+  return { slug, label };
 }
 
 /**
@@ -128,6 +144,11 @@ export function getOrgAppAccess(org: OrganizationDocument | Organization, first:
   } else {
     return apps;
   }
+}
+
+/** Return an array of the app access of the movie */
+export function getMovieAppAccess(movie: MovieDocument | Movie): App[] {
+  return app.filter(a => movie.storeConfig.appAccess[a]);
 }
 
 /**

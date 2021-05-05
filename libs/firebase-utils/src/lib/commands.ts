@@ -69,10 +69,35 @@ export function awaitProcOutput(proc: ChildProcess, output: string) {
 export function runInBackground(cmd: string) {
   let proc: ChildProcess;
   const procPromise = new Promise<string>((res, rej) => {
-    proc = exec(cmd, (err, stdout, stderr) => {
-      if (err || stderr) rej(err || stderr);
+    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2 }, (err, stdout, stderr) => {
+      if (err) rej(err);
       res(stdout);
-    })
+    });
   })
   return { proc, procPromise }
+}
+
+export function runShellCommandExec(cmd: string) {
+  console.log('Running command:', cmd);
+  const { proc, procPromise } = runInBackground(cmd);
+  proc.stdout.pipe(process.stdout);
+  proc.stderr.pipe(process.stderr);
+  return procPromise;
+}
+
+/**
+ * WARNING - if not using `rsync` and enabling `mirror`, this command will WIPE
+ * the destination URL. So if you specify the root of a GCS bucket, that whole bucket
+ * will be deleted. Be careful!
+ * @param param0 settings object
+ * @returns a promise which is resolved when transfer is complete
+ */
+export async function gsutilTransfer({ from, to, quiet, rsync = true, mirror, exclude }: { from: string; to: string; quiet?: boolean; rsync?: boolean; mirror?: boolean, exclude?: string }) {
+  let cmd: string;
+  if (!rsync && mirror) {
+    cmd = `gsutil -m ${quiet ? '-q ' : ''}rm -r "${to}"`;
+    await runShellCommandExec(cmd);
+  }
+  cmd = `gsutil -m ${quiet ? '-q ' : ''}${rsync ? 'rsync' : 'cp'} ${rsync && mirror ? '-d ' : ''}${exclude ? `-x "${exclude}" ` : ''}-r "${from}" "${to}"`;
+  return runShellCommandExec(cmd);
 }

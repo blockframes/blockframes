@@ -42,7 +42,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       label: 'Artistic Team'
     }, {
       path: 'reviews',
-      label: 'Selection & Reviews',
+      label: 'Selections & Reviews',
       shouldHide: isStatus(status, ['development', 'shooting'])
     }, {
       path: 'additional-information',
@@ -127,10 +127,9 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     this.sub = combineLatest(subs).subscribe(() => this.cdr.markForCheck());
     this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
 
-
     const appSteps = this.route.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');
-    this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(
+    this.steps$ = movieForm.productionStatus.valueChanges.pipe(
       startWith(movieForm.get('productionStatus').value),
       map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps))
     );

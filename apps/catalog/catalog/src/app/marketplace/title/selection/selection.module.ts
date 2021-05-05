@@ -12,6 +12,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [MarketplaceSelectionComponent],
@@ -35,6 +37,7 @@ import { MatSelectModule } from '@angular/material/select';
     DisplayNameModule,
     MovieFeatureModule,
     ToLabelModule,
+    DetailedTermsModule,
 
     // Material
     MatButtonModule,
@@ -42,6 +45,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
+    MatSnackBarModule,
 
     RouterModule.forChild([
       {

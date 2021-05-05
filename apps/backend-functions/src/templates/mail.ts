@@ -7,10 +7,12 @@ import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
 import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData } from '@blockframes/utils/emails/utils';
-import { App } from '@blockframes/utils/apps';
+import { App, appName } from '@blockframes/utils/apps';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { format } from "date-fns";
 
 const ORG_HOME = '/c/o/organization/';
-const USER_CREDENTIAL_INVITATION = '/auth/connexion#login';
+const USER_CREDENTIAL_INVITATION = '/auth/identity';
 export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
 
@@ -29,15 +31,12 @@ function getSupportEmail(app?: App) {
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
 
-// @TODO (#2821)
-/*
 export function userVerifyEmail(email: string, link: string): EmailTemplateRequest {
   const data = {
     pageURL: link
   };
   return { to: email, templateId: templateIds.user.verifyEmail, data };
 }
-*/
 
 export function accountCreationEmail(email: string, link: string, userFirstName?: string): EmailTemplateRequest {
   const data = {
@@ -67,15 +66,15 @@ export function userInvite(
   password: string,
   orgName: string,
   pageURL: string = appUrl.market,
-  templateId: string = templateIds.user.credentials.joinOrganization.festival,
+  templateId: string = templateIds.user.credentials.joinOrganization,
   event?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
     orgName,
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`,
     event: event,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`,
   };
   return { to: email, templateId, data };
 }
@@ -99,10 +98,11 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
 }
 
 /** Email to let org admin knows that his/her organization has access to a new app */
-export function organizationAppAccessChanged(admin: PublicUser, url: string): EmailTemplateRequest {
+export function organizationAppAccessChanged(admin: PublicUser, url: string, app: App): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
-    url
+    url,
+    app
   }
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
 }
@@ -201,6 +201,7 @@ export function invitationToEventFromOrgUpdated(
   user: User,
   userOrgName: string,
   event: EventEmailData,
+  orgId: string,
   templateId: string
 ): EmailTemplateRequest {
   const data = {
@@ -209,7 +210,8 @@ export function invitationToEventFromOrgUpdated(
     userLastName: user.lastName,
     userOrgName,
     event,
-    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`
+    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`,
+    pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}}/title`
   };
   return { to: admin.email, templateId, data };
 }
@@ -266,26 +268,26 @@ export function requestToAttendEventFromUserAccepted(
 export function requestToAttendEventFromUserRefused(
   toUser: PublicUser,
   organizerOrgName: string,
-  event: EventEmailData
+  event: EventEmailData,
+  orgId: string
 ): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     organizerOrgName,
     event,
+    pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}/title`
   };
   return { to: toUser.email, templateId: templateIds.request.attendEvent.declined, data };
 }
 
 /** Generate an email to remind users they have an event starting soon */
 export function reminderEventToUser(
-  movieTitle: string,
   toUser: PublicUser,
   organizerOrgName: string,
   event: EventEmailData,
   template: string
 ): EmailTemplateRequest {
   const data = {
-    movieTitle,
     userFirstName: toUser.firstName,
     organizerOrgName,
     event,
@@ -297,6 +299,13 @@ export function reminderEventToUser(
 export function movieAcceptedEmail(toUser: PublicUser, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { userFirstName: toUser.firstName, movieTitle, movieUrl };
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
+}
+
+/** */
+export function offerCreatedConfirmationEmail(org: OrganizationDocument, bucket: Bucket, user: User): EmailTemplateRequest {
+  const date = format(new Date(), 'dd MMMM, yyyy');
+  const data = { org, bucket, user, baseUrl: appUrl.content, date };
+  return { to: user.email, templateId: templateIds.offer.created, data };
 }
 
 // ------------------------- //
@@ -316,11 +325,11 @@ const organizationCreatedTemplate = (orgId: string) =>
 /**
  * @param orgId
  */
-const organizationRequestAccessToAppTemplate = (orgId: string) =>
+const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App) =>
   `
-  An organization requested access to an app,
+  Organization '${org.denomination.full}' requested access to ${appName[app]},
 
-  Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${orgId} or go to ${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
+  Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
 
 
@@ -347,11 +356,11 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
  * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
  * It sends an email to admin to accept or reject the request
  */
-export async function organizationRequestedAccessToApp(org: OrganizationDocument): Promise<EmailRequest> {
+export async function organizationRequestedAccessToApp(org: OrganizationDocument, app: App): Promise<EmailRequest> {
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
-    text: organizationRequestAccessToAppTemplate(org.id)
+    text: organizationRequestAccessToAppTemplate(org, app)
   };
 }
 
@@ -367,7 +376,7 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
   return {
     to: getSupportEmail(information.app),
     subject: 'A demo has been requested',
-    text: `A user wants to schedule a demo of Archipel Content.
+    text: `A user wants to schedule a demo.
 
     User informations
 

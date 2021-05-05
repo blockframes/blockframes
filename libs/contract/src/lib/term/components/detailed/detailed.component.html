@@ -1,0 +1,5 @@
+<button mat-icon-button class="mat-dialog-close" (click)="dialogRef.close()">
+  <mat-icon svgIcon="close"></mat-icon>
+</button>
+<h3>{{ data.scope | titlecase }}</h3>
+<p>{{ data.terms | toLabel:data.scope }}</p>

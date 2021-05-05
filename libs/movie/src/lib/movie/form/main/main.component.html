@@ -6,7 +6,7 @@
 
       <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
-          <mat-label>International title</mat-label>
+          <mat-label>International Title</mat-label>
           <input test-id="international-title" matInput type="text" placeholder="International title"
             [formControl]="international" required />
           <mat-error *ngIf="international.hasError('required')">
@@ -15,7 +15,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
-          <mat-label>Original title</mat-label>
+          <mat-label>Original Title</mat-label>
           <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original" />
           <mat-hint>If different from International Title</mat-hint>
         </mat-form-field>
@@ -44,29 +44,29 @@
         <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Number of episodes</mat-label>
-            <input test-id="episode-count" matInput type="number" name="episodeCount"
-              [formControl]="form.runningTime.get('episodeCount')" min="0" max="1000" />
-            <mat-hint>Total number of episodes in a season.</mat-hint>
-            <mat-error>Please fill in a valid number of episodes.</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Seasons Number</mat-label>
+            <mat-label>Season Number</mat-label>
             <input test-id="episode-count" matInput type="number" name="seriesName"
               [formControl]="form.title.get('series')" min="1" max="100" />
             <mat-hint>Please fill in a valid season number.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Number of Episodes</mat-label>
+            <input test-id="episode-count" matInput type="number" name="episodeCount"
+              [formControl]="form.runningTime.get('episodeCount')" min="0" max="1000" />
+            <mat-hint>Please specify the number of episodes in this season.</mat-hint>
+            <mat-error>Please fill in a valid number of episodes.</mat-error>
           </mat-form-field>
 
         </article>
       </ng-container>
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
-        <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined'">
+        <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined' as timeRequired">
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
             <input test-id="run-time" matInput type="number" name="runningTime"
-              [formControl]="form.runningTime.get('time')" min="0" required />
+              [formControl]="form.runningTime.get('time')" [required]="timeRequired" />
             <mat-hint>In minutes.</mat-hint>
             <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
           </mat-form-field>
@@ -190,7 +190,7 @@
         <input test-id="other-genres" matInput [formControl]="customGenreCtrl" [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCustomGenre($event)"
           placeholder="Please specify if you did not find any genre above." />
-        <mat-hint>Please specify if you did not find any genre above.</mat-hint>
+        <mat-hint>Please fill in genre(s) yourself if you did not find the relevant genre(s) above.</mat-hint>
       </mat-form-field>
     </section>
 

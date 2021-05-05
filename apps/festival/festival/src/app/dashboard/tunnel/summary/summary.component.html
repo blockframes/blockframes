@@ -128,6 +128,7 @@
       <span>Publish to Marketplace</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
+    <p *ngIf="isPublished$ | async" class="submit mat-caption" >Already published!</p>
   </ng-container>
 
 </tunnel-page>

@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 
 const navLinks = [{
   path: 'title',
-  label: 'Line-up'
+  label: 'Catalog'
 },  {
   path: 'member',
   label: 'Contact'

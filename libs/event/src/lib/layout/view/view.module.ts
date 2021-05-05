@@ -9,6 +9,7 @@ import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
@@ -24,6 +25,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     InvitationActionModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule
   ]
 })
 export class EventViewModule { }

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { EventService, Event, EventQuery } from '@blockframes/event/+state';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, defer, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -18,6 +18,10 @@ import { extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
+import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { InvitationQuery } from '@blockframes/invitation/+state';
+import { filter, scan } from 'rxjs/operators';
+import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -49,10 +53,16 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   private countdownId: number = undefined;
 
+  private watchTimeInterval: Subscription;
+  private invitationId: string;
+  public isPlaying = false;
+
   constructor(
     private functions: AngularFireFunctions,
     private eventQuery: EventQuery,
     private service: EventService,
+    private invitationService: InvitationService,
+    private invitationQuery: InvitationQuery,
     private movieService: MovieService,
     private mediaService: MediaService,
     private authQuery: AuthQuery,
@@ -77,6 +87,30 @@ export class SessionComponent implements OnInit, OnDestroy {
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener;
+
+          // if user is not a screening owner we need to track the watch time
+          if (event.ownerOrgId !== this.authQuery.orgId) {
+            const [invitation] = this.invitationQuery.getAll({
+              filterBy: invit => invit.toUser.uid === this.authQuery.userId && invit.eventId === event.id
+            });
+
+            // this should never happen since previous checks & guard should have worked
+            if (!invitation) throw new Error(`Missing Screening Invitation`);
+            this.invitationId = invitation.id;
+
+            this.watchTimeInterval?.unsubscribe();
+
+            this.watchTimeInterval = interval(1000).pipe(
+              filter(() => !!this.isPlaying),
+              scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
+              finalizeWithValue(watchTime => {
+                if (watchTime !== undefined) this.invitationService.update(this.invitationId, { watchTime });
+              }),
+              filter(watchTime => watchTime % 60 === 0),
+            ).subscribe(watchTime => {
+              this.invitationService.update(this.invitationId, { watchTime });
+            });
+          }
         }
 
       // MEETING
@@ -135,6 +169,39 @@ export class SessionComponent implements OnInit, OnDestroy {
           if (!!requests.length) {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
           }
+
+          // If the current selected file hasn't any controls yet we should create them
+          if (!!event.meta.selectedFile) {
+            const selectedFile = event.meta.files.find(file =>
+              file.storagePath === event.meta.selectedFile
+            );
+            if (!selectedFile) {
+              console.warn('Selected file doesn\'t exists in this Meeting!');
+              this.select('');
+            }
+            if (!event.meta.controls[selectedFile.storagePath]) {
+              const fileType = extensionToType(getFileExtension(selectedFile.storagePath));
+              switch (fileType) {
+                case 'pdf': {
+                  this.creatingControl$.next(true);
+                  const control = await this.createPdfControl(selectedFile, event.id);
+                  const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                  const meta  = { ...event.meta, controls };
+                  await this.service.update(event.id, { meta });
+                  this.creatingControl$.next(false);
+                  break;
+                } case 'video': {
+                  this.creatingControl$.next(true);
+                  const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
+                  const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
+                  const meta  = { ...event.meta, controls };
+                  await this.service.update(event.id, { meta });
+                  this.creatingControl$.next(false);
+                  break;
+                } default: break;
+              }
+            }
+          }
         } else {
           const userStatus = event.meta.attendees[uid];
 
@@ -153,40 +220,6 @@ export class SessionComponent implements OnInit, OnDestroy {
             }
           }
         }
-
-        // If the current selected file hasn't any controls yet we should create them
-        if (!!event.meta.selectedFile) {
-          const selectedFile = event.meta.files.find(file =>
-            file.storagePath === event.meta.selectedFile
-          );
-          if (!selectedFile) {
-            console.warn('Selected file doesn\'t exists in this Meeting!');
-            this.select('');
-          }
-          if (!event.meta.controls[selectedFile.storagePath]) {
-            const fileType = extensionToType(getFileExtension(selectedFile.storagePath));
-            switch (fileType) {
-              case 'pdf': {
-                this.creatingControl$.next(true);
-                const control = await this.createPdfControl(selectedFile, event.id);
-                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                const meta  = { ...event.meta, controls };
-                await this.service.update(event.id, { meta });
-                this.creatingControl$.next(false);
-                break;
-              } case 'video': {
-                this.creatingControl$.next(true);
-                const control = await this.createVideoControl((selectedFile as StorageVideo), event.id);
-                const controls = { ...event.meta.controls, [event.meta.selectedFile]: control };
-                const meta  = { ...event.meta, controls };
-                await this.service.update(event.id, { meta });
-                this.creatingControl$.next(false);
-                break;
-              } default: break;
-            }
-          }
-        }
-
       }
     })
   }
@@ -198,7 +231,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     // firestore document only supports 1 write per seconds
     const randomDurationSeconds = Math.floor(Math.random() * 10);
 
-    this.snackbar.open(`The meeting owner has leaved, you will be disconnected in ${durationMinutes}m.`, 'dismiss', { duration: 5000 });
+    this.snackbar.open(`The organizer just left the meeting room. You will be disconnected in ${durationMinutes} minute.`, 'dismiss', { duration: 5000 });
     this.countdownId = window.setTimeout(
       () => this.autoLeave(),
       ((1000 * 60) * durationMinutes) + (1000 * randomDurationSeconds)
@@ -213,9 +246,12 @@ export class SessionComponent implements OnInit, OnDestroy {
   autoLeave() {
     if (!!this.countdownId) this.twilioService.disconnect();
     this.deleteCountDown();
+    this.watchTimeInterval?.unsubscribe();
   }
 
   ngOnDestroy() {
+    this.watchTimeInterval?.unsubscribe();
+    this.twilioService.disconnect();
     this.deleteCountDown();
     this.sub.unsubscribe();
     this.dialogSub?.unsubscribe();

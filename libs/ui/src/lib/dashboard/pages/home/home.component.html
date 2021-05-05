@@ -7,21 +7,23 @@
           <mat-icon svgIcon="video_library"></mat-icon>
           <span>View My Titles</span>
         </a>
-        <a mat-mini-fab color="primary" routerLink="../import" matTooltip="Import a new title">
+        <a mat-mini-fab color="primary" routerLink="../title/lobby" matTooltip="Add a new Title">
           <mat-icon svgIcon="add"></mat-icon>
         </a>
       </div>
     </header>
     <section>
       <h3>My Marketplace Activity</h3>
-      <movie-analytics-chart [analyticsData]="titles | getTitlesAnalytics | async"></movie-analytics-chart>
+      <ng-container *ngIf="(titles | getTitlesAnalytics | async) as titlesAnalytics; else loading">
+        <movie-analytics-chart [analyticsData]="titlesAnalytics"></movie-analytics-chart>
+      </ng-container>
     </section>
   </ng-container>
 
   <ng-template #noAcceptedMovies>
     <section fxLayout="column" fxLayoutAlign="center center">
       <ng-container *ngIf="(hasMovies$ | async) else noMovies">
-        <h1>You have no title published yet.</h1>
+        <h1>No title to display.</h1>
         <p class="mat-body-1">
           As long as you have no title to display, your organization will not appear on the marketplace.
           <br>
@@ -49,12 +51,12 @@
         </mat-card>
         <mat-card fxLayout="column">
           <img asset="add_files.webp" alt="Upload files image">
-          <a routerLink="../import" mat-button color="primary">Import your titles in bulk</a>
+          <a routerLink="../import" mat-button color="primary" test-id="import">Import titles in bulk</a>
         </mat-card>
       </article>
       <h3>Or</h3>
       <button (click)="openIntercom()" mat-flat-button color="primary">
-        Contact Archipel Team
+        Contact the {{ appName }} team
       </button>
     </section>
   </ng-template>

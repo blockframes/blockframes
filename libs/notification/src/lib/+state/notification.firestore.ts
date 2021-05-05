@@ -5,6 +5,8 @@ import { PublicInvitation } from '@blockframes/invitation/+state/invitation.fire
 import { firestore } from 'firebase-admin';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
+import { App } from '@blockframes/utils/apps';
 
 // Type of notification used in front
 export const notificationTypesBase = [
@@ -12,7 +14,7 @@ export const notificationTypesBase = [
   'movieAccepted',
 
   // Notifications relative to invitations
-  'requestFromUserToJoinOrgCreate',
+  'requestFromUserToJoinOrgCreate', // Notification sent to org admins
   'requestFromUserToJoinOrgDeclined',
   'orgMemberUpdated',
 
@@ -25,20 +27,21 @@ export const notificationTypesBase = [
   'requestToAttendEventCreated',
   'invitationToAttendMeetingCreated',
   'invitationToAttendScreeningCreated',
+
+  // Notifications related to offers
+  'offerCreatedConfirmation'
 ] as const;
 
 // All the other notification types
 export const notificationTypesPlus = [
-  'movieSubmitted', // (catalog only)
-  'organizationAcceptedByArchipelContent',
-  'orgAppAccessChanged',
+  // Notifications relative to invitations
+  'requestFromUserToJoinOrgPending', // Notification sent to the user that made the request
   'invitationToJoinOrgDeclined',
 
-  // @TODO #4859 remove once all notification of theses types are read or deleted (since we cannot make a migration script)
-  'invitationToAttendEventAccepted',
-  'invitationToAttendEventDeclined',
-  'memberAddedToOrg',
-  'memberRemovedFromOrg'
+  // Other notifications
+  'movieSubmitted', // (catalog only)
+  'organizationAcceptedByArchipelContent',
+  'orgAppAccessChanged'
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
@@ -56,7 +59,9 @@ export interface NotificationBase<D> {
   docId?: string;
   movie?: PublicMovie;
   organization?: PublicOrganization;
-  invitation?: PublicInvitation,
+  invitation?: PublicInvitation;
+  bucket?: Bucket;
+  appAccess?: App;
   /** @dev Type of the notification */
   type: NotificationTypes;
   email?: {

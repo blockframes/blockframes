@@ -1,7 +1,7 @@
-<h1>Contact</h1>
+<h2>Contact</h2>
 
 <section *ngIf="org$ | async as org">
-  <h2>Company Information</h2>
+  <h3>Company Information</h3>
   <article>
     <h5>Address</h5>
     <p>{{ org | orgAddress | titlecase }}</p>
@@ -17,7 +17,7 @@
 </section>
 
 <section>
-  <h2>Team</h2>
+  <h3>Team</h3>
   <article fxLayout="row wrap" fxLayoutGap="24px grid">
     <ng-container *ngFor="let user of members$ | async">
       <user-card [user]="user"></user-card>

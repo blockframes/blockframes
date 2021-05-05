@@ -18,12 +18,12 @@ export class LandingComponent {
   public tabTitle = [
     {
       title: 'For Investors',
-      imgAsset: 'seller_perspective.webp',
+      imgAsset: 'lp_financiers_seller_perspective.webp',
       description: 'A reliable way to invest in top film & TV projects, backed by professional financiers. By sharing their investment, investors benefit from their expertise in dealmaking and content acquisition.'
     },
     {
       title: 'For Professionals',
-      imgAsset: 'buyer_perspective.webp',
+      imgAsset: 'lp_financiers_buyer_perspective.webp',
       description: 'Package the financing of your projects by connecting with high-capacity investors looking to invest in films and series.'
     }
   ]

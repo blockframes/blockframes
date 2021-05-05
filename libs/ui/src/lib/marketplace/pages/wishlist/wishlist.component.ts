@@ -3,14 +3,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { CartService } from '@blockframes/cart/+state/cart.service';
 import { switchMap } from 'rxjs/operators';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { Subscription } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MovieService } from '@blockframes/movie/+state';
-
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'marketplace-wishlist',
@@ -37,9 +37,9 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private service: CartService,
+    private service: OrganizationService,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics,
+    private routerQuery: RouterQuery,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
@@ -51,8 +51,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
     this.sub = this.orgQuery.selectActive().pipe(
       switchMap(org => this.movieService.valueChanges(org?.wishlist || []))
     ).subscribe(allMovies => {
-      // valueChanges returns all documents even if they don't exist - created issue for this on akita-ng-fire https://github.com/dappsnation/akita-ng-fire/issues/138
-      const movies = allMovies.filter(movie => !!movie);
+      const movies = allMovies.filter(movie => !!movie && movie.storeConfig.appAccess[getCurrentApp(this.routerQuery)]);
       this.hasWishlist = !!movies.length;
       this.hasWishlist ?
         this.dynTitle.setPageTitle('Wishlist') :
@@ -75,6 +74,6 @@ export class WishlistComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 }

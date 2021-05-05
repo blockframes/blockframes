@@ -3,7 +3,7 @@
     <button mat-stroked-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
       {{filter.label}}
     </button>
-    <overlay-widget #filterWidget (openedChanged)="filter.active = $event">
+    <overlay-widget #filterWidget (openedChanged)="filter.active = $event" overflow="auto">
       <mat-card>
         <mat-card-header>
           <mat-card-title>{{ filter.label }}</mat-card-title>
@@ -14,7 +14,7 @@
         <mat-divider></mat-divider>
         <mat-card-actions fxLayout fxLayoutAlign="end center">
           <button mat-button (click)="filter.form.reset()">Clear</button>
-          <button mat-flat-button color="primary" (click)="filterWidget.close()">Save</button>
+          <button mat-flat-button color="primary" (click)="filterWidget.close()" test-id="save-filter">Save</button>
         </mat-card-actions>
       </mat-card>
     </overlay-widget>

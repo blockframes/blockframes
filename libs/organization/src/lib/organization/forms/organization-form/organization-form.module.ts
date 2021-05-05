@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrganizationFormAddressModule } from '../organization-form-address/organization-form-address.module';
 import { OrganizationFormDescriptionModule } from '../organization-form-description/organization-form-description.module';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
-import { FormCountryModule } from '@blockframes/ui/form/country/country.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -25,7 +24,6 @@ import { OrganizationFormComponent } from './organization-form.component';
     ImageUploaderModule,
     OrganizationFormAddressModule,
     OrganizationFormDescriptionModule,
-    FormCountryModule,
 
     // Material
     MatFormFieldModule,

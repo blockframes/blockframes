@@ -1,5 +1,4 @@
 import type firebase from 'firebase';
-import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, app, App } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
@@ -18,6 +17,7 @@ export interface PublicOrganization {
   id: string;
   denomination: Denomination;
   logo: StorageFile;
+  activity?: OrgActivity
 }
 
 export interface OrgMedias {
@@ -27,10 +27,8 @@ export interface OrgMedias {
 /** Document model of an Organization */
 export interface OrganizationBase<D> extends PublicOrganization {
   _meta?: DocumentMeta<D>;
-  activity?: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
-  cart: CatalogCart[];
   description?: string;
   email: string;
   fiscalNumber: string;
@@ -60,7 +58,6 @@ export function createOrganizationBase(
 ): OrganizationBase<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    cart: [],
     description: '',
     email: '',
     fiscalNumber: '',
@@ -73,6 +70,7 @@ export function createOrganizationBase(
     denomination: createDenomination(params.denomination),
     logo: createStorageFile(params?.logo),
     appAccess: createOrgAppAccess(params.appAccess),
+    documents: createOrgMedias(params?.documents),
   };
 }
 

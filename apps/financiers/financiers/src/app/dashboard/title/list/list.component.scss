@@ -4,21 +4,17 @@
   flex-direction: column;
 }
 
-.import {
+header {
   margin-bottom: 24px;
 }
 
-header {
-  margin-bottom: 16px;
-}
-
-nav[mat-tab-nav-bar] button {
+div[mat-tab-nav-bar] button {
   border: none;
   background-color: transparent;
 }
 
-mat-card {
-  margin-bottom: 80px;
+h3 {
+  margin-top: 24px;
 }
 
 .no-title-card {

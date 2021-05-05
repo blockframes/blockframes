@@ -1,6 +1,12 @@
 span {
   white-space: normal;
   .terms-link {
-    text-decoration: underline;
+    display: inline;
+  }
+}
+
+.mat-caption {
+  a {
+    margin-left: 4px;
   }
 }

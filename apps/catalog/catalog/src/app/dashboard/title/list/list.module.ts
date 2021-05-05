@@ -13,6 +13,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
+import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [TitleListComponent],
@@ -33,12 +35,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FilterByModule,
     AnalyticsPipeModule,
     DisplayNameModule,
+    NoTitleModule,
     // Material
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     // Router
     RouterModule.forChild([{ path: '', component: TitleListComponent }])
   ]

@@ -54,7 +54,7 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 @Injectable({ providedIn: 'root' })
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   form = new MovieForm(this.query.getActive());
-  name = 'Movie'
+  name = 'Title'
   constructor(
     private query: MovieQuery,
     private route: RouterQuery,
@@ -67,6 +67,26 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
       tap(movie => {
+        /* @TODO #5529 investigate & clean this up.
+        We need to check if in the form the value for productionStatus is already set, because
+        initially, this value is null, but since we made a request with `this.service.getValue(id)` to
+        firebase, this code will get pushed onto the async stack, which will be executed later. The result
+        of this is that all the "sync" code that updates this form will be overwritten with the value
+        from the db. For instance, in title-status component we set the movie status to released when
+        app is catalog. If we now wouldn't check if the productionStatus is already set to something, it will
+        erase `released` and set it to null */
+        if (this.form.productionStatus.value) {
+          movie.productionStatus = this.form.productionStatus.value
+        }
+
+        if (this.form.release.get('status').value) {
+          movie.release.status = this.form.release.get('status').value
+        }
+
+        if (this.form.runningTime.get('status').value) {
+          movie.runningTime.status = this.form.runningTime.get('status').value
+        }
+
         this.form.reset();
         this.form.setAllValue(movie);
       })
@@ -111,7 +131,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     // Specific update if publishing
     if (options.publishing) {
       const currentApp: App = this.route.getData('app');
-      movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.storeConfig.status = getMoviePublishStatus(currentApp);
       movie.storeConfig.appAccess[currentApp] = true;
     }
 

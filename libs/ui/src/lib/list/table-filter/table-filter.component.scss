@@ -44,6 +44,10 @@ widget-card {
   max-height: 300px;
   max-width: 500px;
   overflow: auto;
+
+  mat-selection-list {
+    border-radius: unset;
+  }
 }
 
 // Name your column 'main' in order to make it span the full width of the column

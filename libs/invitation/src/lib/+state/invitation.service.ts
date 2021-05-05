@@ -2,21 +2,56 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { OrganizationQuery, createPublicOrganization, Organization } from '@blockframes/organization/+state';
-import { AuthQuery, User } from '@blockframes/auth/+state';
-import { createPublicUser } from '@blockframes/user/+state';
+import { AuthQuery, AuthState, User } from '@blockframes/auth/+state';
+import { createPublicUser, PublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, getOrgAppAccess } from '@blockframes/utils/apps';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
-  private hasUserAnOrgOrIsAlreadyInvited = this.functions.httpsCallable('hasUserAnOrgOrIsAlreadyInvited');
+  readonly useMemorization = true;
+  /** 
+   * Return true if there is already a pending invitation for a list of users 
+   */
+  public hasUserAnOrgOrIsAlreadyInvited = this.functions.httpsCallable('hasUserAnOrgOrIsAlreadyInvited');
 
+  /**
+   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
+   * Return false if there is no invitation at all.
+   */
+  public getInvitationLinkedToEmail = this.functions.httpsCallable('getInvitationLinkedToEmail');
+
+  myInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
+    switchMap((user: AuthState) => {
+      if (!!user.profile) {
+        return combineLatest([
+          this.valueChanges(ref => ref.where('toOrg.id', '==', user.profile.orgId)),
+          this.valueChanges(ref => ref.where('toUser.uid', '==', user.profile.uid))
+        ])
+      } else return of()
+    }),
+    map(([toOrg, toUser]) => [...toOrg, ...toUser]),
+    shareReplay(1)
+  )
+
+  /** Invitations where current user is a guest */
+  guestInvitations$: Observable<Invitation[]> = this.authQuery.select().pipe(
+    switchMap((user: AuthState) => combineLatest([
+      this.valueChanges(ref => ref.where('fromUser.uid', '==', user.uid).where('mode', '==', 'request')),
+      this.valueChanges(ref => ref.where('toUser.uid', '==', user.uid).where('mode', '==', 'invitation'))
+    ])),
+    map(([fromUser, toUser]) => [...fromUser, ...toUser]),
+    shareReplay(1)
+  )
+  
   constructor(
     store: InvitationStore,
     private authQuery: AuthQuery,
@@ -55,11 +90,6 @@ export class InvitationService extends CollectionService<InvitationState> {
     return this.update({ ...invitation, status: 'declined' });
   }
 
-  /** Return true if there is already a pending invitation for a list of users */
-  public async orgInvitationOrUserOrgIdExists(userEmails: string[]): Promise<boolean> {
-    return await this.hasUserAnOrgOrIsAlreadyInvited(userEmails).toPromise();
-  }
-
   public isInvitationForMe(invitation: Invitation): boolean {
     return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
   }
@@ -68,7 +98,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    * Create an invitation with mode "request"
    * @param orgId The org the request is made to
    */
-  request(orgId: string, fromUser: User = this.authQuery.user) {
+  request(orgId: string, fromUser: User | PublicUser = this.authQuery.user) {
     return {
       to: async (type: 'attendEvent' | 'joinOrganization', eventId?: string, write?: AtomicWrite) => {
         const request = { mode: 'request', type } as Partial<Invitation>;
@@ -100,9 +130,12 @@ export class InvitationService extends CollectionService<InvitationState> {
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
         const f = this.functions.httpsCallable('inviteUsers');
-        const app = getCurrentApp(this.routerQuery);
+        let app = getCurrentApp(this.routerQuery);
+        if (app === 'crm') {
+          // Instead use first found app where org has access to
+          app = getOrgAppAccess(fromOrg)[0];
+        }
         return f({ emails: recipients, invitation, app }).toPromise();
-
       }
     }
   }

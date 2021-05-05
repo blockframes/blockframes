@@ -4,7 +4,7 @@ import { Queue } from "../queue";
 import { CollectionReference, DocumentReference, Firestore } from "../types";
 import { firebase } from '@env';
 import { throwOnProduction } from "../util";
-import { execSync } from "child_process";
+import { runShellCommandExec } from "../commands";
 
 export async function clear(db: FirebaseFirestore.Firestore) {
   const processingQueue = new Queue();
@@ -56,9 +56,7 @@ export async function clearDbCLI(db: FirebaseFirestore.Firestore) {
   const collections = (await db.listCollections()).filter((ref) => ref.id !== META_COLLECTION_NAME).map(ref => ref.id);
   const cmds = collections.map(collection => `firebase firestore:delete -P ${firebase().projectId} -r -y ${collection}`)
   for (const cmd of cmds) {
-    console.log('Run:', cmd);
-    const output = execSync(cmd).toString();
-    console.log(output);
+    await runShellCommandExec(cmd);
   }
   await db.collection(META_COLLECTION_NAME).doc(DB_DOCUMENT_NAME).delete()
   console.log(`Deleted ${DB_DOCUMENT_NAME} in ${META_COLLECTION_NAME}`)

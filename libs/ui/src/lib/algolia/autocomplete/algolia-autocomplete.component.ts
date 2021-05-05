@@ -11,7 +11,8 @@ import {
   TemplateRef,
   ViewChild,
   ElementRef,
-  OnDestroy
+  OnDestroy,
+  Directive
 } from '@angular/core';
 import { SearchIndex } from 'algoliasearch';
 
@@ -23,8 +24,14 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
+@Directive({ selector: '[optionRef]' })
+export class OptionRefDirective { }
+
+@Directive({ selector: '[lastOptionRef]' })
+export class LastOptionRefDirective { }
+
 @Component({
-  selector: '[index] [keyToDisplay] algolia-autocomplete',
+  selector: '[keyToDisplay] algolia-autocomplete',
   templateUrl: 'algolia-autocomplete.component.html',
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,7 +43,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * Set index
    */
-  @Input() index: AlgoliaIndex;
+  @Input() index: AlgoliaIndex = 'org';
+
+  @Input() indexGroup: string;
 
   /**
    * The path of the key to display : i.e. What part of the result should be displayed by the input ?
@@ -59,8 +68,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
 
-  /** Set your own labe */
-  @Input() label = 'Search...'
+  /** Set if it's required */
+  @Input() required = false;
 
   /** Set your own placeholder */
   @Input() placeholder = 'Search...'
@@ -71,8 +80,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Different behavior of the mat form field */
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
-  /** Wether to use a material input or a native html input */
-  @Input() @boolean native = false;
 
   /** The icon to display in the input prefix */
   @Input() prefixIcon: string;
@@ -97,8 +104,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Holds the last snapshot from algolia results */
   private lastValue$ = new BehaviorSubject(null);
 
-  /** Renders the template coming from the parent component */
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  /** Renders the templates coming from the parent component */
+  @ContentChild(OptionRefDirective, { read: TemplateRef }) optionRef: OptionRefDirective;
+  @ContentChild(LastOptionRefDirective, { read: TemplateRef }) lastOptionRef: LastOptionRefDirective;
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
@@ -110,9 +118,10 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       this.keyToDisplay = 'value';
     }
 
-    this.indexSearch = this.algoliaService.getIndex(this.index)
+    this.indexSearch = this.algoliaService.getIndex(this.index);
 
     // create search functions
+    const multipleSearch = (text: string) => this.algoliaService.multipleQuery(this.indexGroup, text);
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
     const facetSearch = (text: string) => this.indexSearch.searchForFacetValues(this.facet, text).then(result => result.facetHits);
 
@@ -121,7 +130,13 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
-      switchMap(text => (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)),
+      switchMap(async text => {
+        if (!!this.indexGroup) {
+          return multipleSearch(text);
+        } else {
+          return (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)
+        }
+      }),
       tap(data => this.lastValue$.next(data)),
     );
   }
@@ -136,4 +151,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe() }
   }
+
+
 }

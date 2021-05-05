@@ -1,3 +1,4 @@
+import { appName } from '@blockframes/utils/apps';
 import {
   Territory,
   TerritoryISOA2,
@@ -68,31 +69,6 @@ export const licenseStatus = {
   paid: 'paid'
 } as const
 
-export const distributionRightStatus = {
-  /**
-   * @dev first status of a right
-   * Starting from this status, the right is visible by creator only
-   */
-  draft: 'Draft',
-
-  /**
-   * @dev first status of a right
-   * Starting from this status, the right is visible by creator only
-   */
-  cart: 'In cart',
-
-  /**
-   * @dev the right have been sold
-   */
-  sold: 'Sold',
-
-  /**
-   * @dev in this status, a contract should exists regarding this distribution right.
-   * When Contract status changes, this could change too
-   */
-  undernegotiation: 'Under negotiation',
-} as const
-
 export const certifications = {
   artEssai: 'Art & Essai',
   eof: 'EOF',
@@ -109,15 +85,14 @@ export const colors = {
 
 // @dev sort the value alphabetically, not the keys
 export const contentType = {
-  collection: 'Collection',
+  animation: 'Animation',
   documentary: 'Documentary',
-  episode: 'Episode',
   feature_film: 'Feature Film',
   flow: 'Flow',
   short: 'Short Film',
   tv_film: 'TV Film',
   series: 'TV Series',
-  volume: 'Volume'
+  performing_arts: 'Performing Arts'
 }
 
 export const crewRoles = {
@@ -167,6 +142,12 @@ export const genres = {
   webSeries: 'Web Series', //web-series
   virtualReality: 'Virtual Reality', // virtual-reality
   family: 'Family',
+  wildlife: 'Wildlife',
+  natureEnvironment: 'Nature & Environment',
+  huntingFishing: 'Hunting & Fishing',
+  archeologyHistory: 'Archeology & History',
+  travelDiscovery: 'Travel & Discovery',
+  fashion: 'Fashion'
 } as const
 
 export const hostedVideoTypes = {
@@ -453,13 +434,6 @@ export const unitBox = {
   admissions: 'Admissions',
 } as const
 
-export const cartStatus = {
-  pending: 'Pending',
-  submitted: 'Submitted',
-  accepted: 'Accepted',
-  paid: 'Paid'
-} as const
-
 export const orgActivity = {
   actor: 'Actor',
   buyersRep: 'Buyer\'s Rep',
@@ -494,19 +468,19 @@ export const organizationStatus = {
 } as const
 
 export const festival = {
-  cannes: 'Cannes International Film Festival',
-  venice: 'Venice International Film Festival',
   berlinale: 'Berlin International Film Festival (The Berlinale)',
-  toronto: 'Toronto International Film Festival (TIFF)',
-  sundace: 'Sundance Film Festival',
-  locarno: 'Locarno International Film Festival',
-  rotterdam: 'International Film Festival Rotterdam',
-  triBeCa: 'TriBeCa Film Festival',
-  sxsw: 'SXSW Film Festival',
-  sanSebastian: 'San Sebastian International Film Festival',
-  oscar: 'Oscar Academy Awards',
+  bfta: 'BAFTA Film Awards',
+  cannes: 'Cannes International Film Festival',
   goldenGlobe: 'Golden Globe Awards',
-  bfta: 'BAFTA Film Awards'
+  locarno: 'Locarno International Film Festival',
+  oscar: 'Oscar Academy Awards',
+  rotterdam: 'International Film Festival Rotterdam',
+  sanSebastian: 'San Sebastian International Film Festival',
+  sundace: 'Sundance Film Festival',
+  sxsw: 'SXSW Film Festival',
+  toronto: 'Toronto International Film Festival (TIFF)',
+  triBeCa: 'TriBeCa Film Festival',
+  venice: 'Venice International Film Festival',
 } as const
 
 export const territories = {
@@ -750,9 +724,9 @@ export const territories = {
   uganda: "Uganda",
   ukraine: "Ukraine",
   "united-arab-emirates": "United Arab Emirates",
-  "united-kingdom": "United Kingdom",
+  "united-kingdom": "United Kingdom (UK)",
   "united-states-minor-outlying-islands": "United States Minor Outlying Islands",
-  "united-states-of-america": "United States of America",
+  "united-states-of-america": "United States of America (USA)",
   uruguay: "Uruguay",
   uzbekistan: "Uzbekistan",
   vanuatu: "Vanuatu",
@@ -1828,7 +1802,6 @@ export const staticModel = {
   legalRoles,
   subLicensorRoles,
   licenseStatus,
-  distributionRightStatus,
   certifications,
   colors,
   contentType,
@@ -1855,7 +1828,6 @@ export const staticModel = {
   storeStatus,
   storeType,
   unitBox,
-  cartStatus,
   organizationStatus,
   festival,
   months,
@@ -1866,7 +1838,8 @@ export const staticModel = {
   territoriesISOA2,
   territoriesISOA3,
   territoriesNUMCODE,
-  territoriesFR
+  territoriesFR,
+  appName
 };
 
 export type StaticModel = typeof staticModel;
@@ -1884,7 +1857,7 @@ export const isInKeys = (scope: Scope, givenValue: string) => {
  * @param code
  * @param system
  */
-export function getTerritoryFromGeoJson(
+function getTerritoryFromGeoJson(
   code: string,
   system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
   const territory = system === 'iso_a3'
@@ -1893,14 +1866,14 @@ export function getTerritoryFromGeoJson(
   if (!territory) {
     throw new Error(`Failed to retreive: ${code}.`);
   }
-  return territory;;
+  return territory;
 }
 
 /**
  * @param code
  * @param system
  */
-export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
+export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {// @TODO #5573 unused
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
@@ -1912,7 +1885,7 @@ export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'is
  * @param code
  * @param system
  */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
+export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') { // @TODO #5573 unused
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
@@ -1935,4 +1908,8 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
     numCode: territoriesNUMCODE[territory],
     fr: territoriesFR[territory],
   }
+}
+
+export function parseToAll(scope: Scope, allKey: string): any[] {
+  return Object.keys(staticModel[scope]).filter(key => key !== allKey)
 }

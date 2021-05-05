@@ -1,15 +1,24 @@
-<ng-container *ngIf="eventId">
+<ng-container *ngIf="!!event">
   <h2>Statistics</h2>
   <ng-container *ngIf="analytics as analytics; else loading">
     <ng-container *ngIf="analytics.length else noAnalytics">
       <section class="analytics">
-        <mat-card class="attendees">
-          <span fxLayout="row" fxLayoutAlign="start center">
-            <mat-icon svgIcon="group"></mat-icon>
-            <span class="mat-body-2">Number of attendees</span>
-          </span>
-          <h2>{{ analytics.length }}</h2>
-        </mat-card>
+        <span fxLayout="row" fxLayoutGap="24px">
+          <mat-card class="attendees">
+            <span fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon svgIcon="group"></mat-icon>
+              <span class="mat-body-2">Number of attendees</span>
+            </span>
+            <h2>{{ analytics.length }}</h2>
+          </mat-card>
+          <mat-card class="attendees">
+            <span fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon svgIcon="access_time"></mat-icon>
+              <span class="mat-body-2">Average Watch Time</span>
+            </span>
+            <h2>{{ averageWatchTime * 1000 | duration: '0min' }}</h2>
+          </mat-card>
+        </span>
         <mat-card>
           <h3>Attendees</h3>
           <bf-table-filter
@@ -21,6 +30,7 @@
             <ng-template colRef="name" let-name>{{ name | titlecase }}</ng-template>
             <ng-template colRef="orgActivity" let-orgActivity>{{ orgActivity | toLabel: 'orgActivity' }}</ng-template>
             <ng-template colRef="orgCountry" let-orgCountry>{{ orgCountry | toLabel: 'territories' }}</ng-template>
+            <ng-template colRef="watchTime" let-watchTime>{{ watchTime * 1000 | duration: '0min' }}</ng-template>
           </bf-table-filter>
         </mat-card>
       </section>
@@ -28,7 +38,7 @@
   </ng-container>
   <ng-template #noAnalytics>
     <article class="no-analytics" fxLayout="column" fxLayoutAlign="center center">
-      <img asset="wait.webp" alt="waiting">
+      <img asset="wait.svg" alt="waiting">
       <p class="mat-body-2">There is no statistics available here yet.</p>
     </article>
   </ng-template>

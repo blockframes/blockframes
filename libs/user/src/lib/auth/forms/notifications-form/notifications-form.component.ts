@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angula
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 // Blockframes
 import { NotificationsForm } from './notifications.form';
-import { getCurrentApp } from "@blockframes/utils/apps";
+import { App, getCurrentApp } from "@blockframes/utils/apps";
 import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 
@@ -24,10 +24,11 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   requestToAttendEventUpdated: { text:'Your request to join an event gets accepted or declined.', tooltip: false },
   requestToAttendEventCreated: { text:'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
   invitationToAttendMeetingCreated: { text:'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
-  invitationToAttendScreeningCreated: { text:'You are invited to a screening. (RECOMMENDED)', tooltip: true }
+  invitationToAttendScreeningCreated: { text:'You are invited to a screening. (RECOMMENDED)', tooltip: true },
+  offerCreatedConfirmation: { text: 'You send an offer', tooltip: false }
 };
 
-const tables = [
+const tables: {title: string, types: string[], appAuthorized: App[]}[] = [
   {
     title: 'Company Management',
     types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'requestFromUserToJoinOrgDeclined'],
@@ -52,6 +53,11 @@ const tables = [
     ],
     appAuthorized: ['festival']
   },
+  {
+    title: 'Offer Management',
+    types: ['offerCreatedConfirmation'],
+    appAuthorized: ['catalog']
+  }
 ];
 
 @Component({
@@ -119,7 +125,7 @@ export class EveryCheckedPipe implements PipeTransform {
 
 @Pipe({name: 'showNotification'})
 export class ShowNotificationPipe implements PipeTransform {
-  currentApp: string = getCurrentApp(this.routerQuery);
+  currentApp = getCurrentApp(this.routerQuery);
   public tables = tables;
   constructor(private routerQuery: RouterQuery) {}
 

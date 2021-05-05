@@ -1,6 +1,6 @@
 
 import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnDestroy, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthQuery } from "@blockframes/auth/+state";
@@ -32,6 +32,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   private signalPlayerReady: () => void;
   private waitForPlayerReady: Promise<void>;
+
+  private signalViewReady: () => void;
+  private waitForViewReady: Promise<void> = new Promise(res => this.signalViewReady = res);
+
+  private destroyed = false;
 
   public loading$ = new BehaviorSubject(true);
 
@@ -66,6 +71,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this._eventId = value;
   }
 
+  @Output() stateChange = new EventEmitter<'play' | 'pause' | 'complete'>();
+
   // in order to have several player displayed in the same page
   // we need to randomize the html id,
   // otherwise all the players will be in the same div, each overwriting the previous one
@@ -80,6 +87,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     this.fullScreen = !this.fullScreen;
   }
 
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authQuery: AuthQuery,
@@ -90,6 +98,12 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
   async initPlayer() {
     try {
+      await this.waitForViewReady; // we need the container div to exists, so we wait for the ngAfterViewInit
+
+      const playerUrl = this.functions.httpsCallable('playerUrl');
+      const url = await playerUrl({}).toPromise<string>();
+      await loadJWPlayerScript(this.document, url);
+
       const privateVideo = this.functions.httpsCallable('privateVideo');
       const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref }).toPromise();
 
@@ -97,6 +111,8 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         // if error is set, result will contain the error message
         throw new Error(result);
       } else {
+
+        // Watermark
         const parameters: ImageParameters = {
           auto: 'compress,format',
           fit: 'crop',
@@ -107,18 +123,24 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         }
         const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
 
+        // Auto refresh page when url expires
         const signedUrl = new URL(result.signedUrl);
         const expires = signedUrl.searchParams.get('exp');
         const timestamp = parseInt(expires, 10); // unix timestamp in seconds
         const millisecondTimestamp = timestamp * 1000; // js timestamp in milliseconds
         const refreshCountdown = millisecondTimestamp - Date.now();
 
+        // meanwhile the component has been destroyed
+        // this can happen if the component is placed in template that depend on an observable (`| async`)
+        // in this case the jwp lib will not be able to instantiate the player
+        // since the container div doesn't exists anymore
+        if (this.destroyed) { return; }
+
         this.timeout = window.setTimeout(() => window.location.reload(), refreshCountdown);
 
+        // Setup player
         this.player = jwplayer(this.playerContainerId);
 
-        // Hotfix for issue #5160 - Component is created twice and the firs ttime its destroyed before it could load the script causing an error.
-        if (!this.player.setup) return;
 
         this.player.setup({
           controls: !this.control,
@@ -130,19 +152,21 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         });
 
         this.player.on('ready', () => this.signalPlayerReady());
+        this.player.on('play', () => this.stateChange.emit('play'));
+        this.player.on('pause', () => this.stateChange.emit('pause'));
+        this.player.on('complete', () => this.stateChange.emit('complete'));
         this.updatePlayer();
       }
     } catch(error) {
       this.loading$.next(false);
+      console.warn(error);
       this.snackBar.open('Error while playing the video: ' + error, 'close', { duration: 8000 });
     }
   }
 
-  async ngAfterViewInit() {
+  ngAfterViewInit() {
     this.resetPlayerState();
-    const playerUrl = this.functions.httpsCallable('playerUrl');
-    const url = await playerUrl({}).toPromise<string>();
-    await loadJWPlayerScript(this.document, url);
+    this.signalViewReady();
   }
 
   resetPlayerState() {
@@ -165,6 +189,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.destroyed = true;
     window.clearTimeout(this.timeout);
   }
 

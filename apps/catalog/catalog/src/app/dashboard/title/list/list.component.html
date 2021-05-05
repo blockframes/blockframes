@@ -1,32 +1,36 @@
 <ng-container *ngIf="movies$ | async as movies; else loading">
   <ng-container *ngIf="movies.length; else empty">
 
-    <h1>My Titles</h1>
+    <header fxLayout="row" fxLayoutAlign="space-between center">
+      <h1>My Titles</h1>
+      <div fxLayoutGap="24px">
+        <a test-id="import-titles" mat-stroked-button color="primary" routerLink="../import">
+          <mat-icon svgIcon="excel"></mat-icon>
+          <span>Import Titles</span>
+        </a>
+        <a mat-mini-fab color="primary" routerLink="lobby" matTooltip="Add a new Title" test-id="add-movie">
+          <mat-icon svgIcon="add"></mat-icon>
+        </a>
+      </div>
+    </header>
 
-    <div fxLayout="row" fxLayoutAlign="end center">
-      <a mat-flat-button color="primary" routerLink="lobby" test-id="add-movie">
-        <span>New Title</span>
-        <mat-icon svgIcon="add"></mat-icon>
-      </a>
-    </div>
-
-    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All projects</button>
+    <div mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All</button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
       <button mat-tab-link (click)="applyFilter('submitted')"
         [active]="(filter$ | async) === 'submitted'">Submitted</button>
       <button mat-tab-link (click)="applyFilter('accepted')"
         [active]="(filter$ | async) === 'accepted'">Published</button>
-    </header>
+    </div>
 
     <mat-card>
       <bf-table-filter [source]="movies | filterBy: filterByMovie: filter.value" [columns]="columns"
         [initialColumns]="initialColumns" clickable showFilter showPaginator (rowClick)="goToTitle($event)">
-        <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
-        <ng-template colRef="release" let-release><b>{{ release.year }}</b></ng-template>
+        <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
+        <ng-template colRef="release.year" let-year><b>{{ year }}</b></ng-template>
         <ng-template colRef="directors" let-directors><b>{{ directors | displayName }}</b></ng-template>
         <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
-        <ng-template colRef="storeConfig" let-storeConfig>{{ storeConfig.status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="storeConfig.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
@@ -38,21 +42,20 @@
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>You have no titles to sell yet</h1>
-    <p class="mat-body-1">
-      You may add several titles at once or just one at a time.
-      <br>
-      All titles are subject to validation and a contract with Archipel Content.
-    </p>
+    <dashboard-no-title></dashboard-no-title>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
         <img asset="add_title.webp" alt="Add title">
-        <a routerLink="lobby" mat-stroked-button color="primary">Add one title</a>
+        <a routerLink="lobby" mat-button color="primary">Add one title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
         <img asset="add_files.webp" alt="Upload files">
-        <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
+        <a routerLink="../import" mat-button color="primary">Import titles in bulk</a>
       </mat-card>
     </article>
+    <h3>Or</h3>
+    <button (click)="openIntercom()" mat-flat-button color="primary">
+      Contact the {{ appName }} team
+    </button>
   </section>
 </ng-template>

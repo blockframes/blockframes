@@ -1,55 +1,52 @@
-@import "~@angular/material/theming";
 @import "~@angular/flex-layout/mq";
 
-mat-sidenav-container {
-  height: 100vh;
-  width: 100vw;
+main {
+  display: flex;
+  height: auto;
+  min-height: 100vh;
+  background-color: var(--background-card);
+  background-position: right bottom;
+  background-size: 70%;
+  background-repeat: no-repeat;
 }
 
-mat-sidenav-content {
-  background-size: cover;
+app-logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
 }
 
-button {
-  &:hover {
-    @include mat-elevation(4);
+auth-signin-form {
+  display: block;
+  width: 50%;
+  margin: auto;
+}
+
+a {
+  font-weight: bold;
+}
+
+@include layout-bp(lt-md) {
+  auth-signin-form {
+    width: 70%;
   }
 }
 
-.mat-fab {
-  height: 120px;
-  width: 120px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-mat-sidenav {
-  width: 800px;
-}
-
-// Tablet and medium
-@include layout-bp(lt-lg) {
-  mat-sidenav {
-    width: 500px;
+@include layout-bp(lt-sm) {
+  main {
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    background-image: none;
+    text-align: center;
+    padding: 16px 0;
   }
-  mat-sidenav-content {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position-y: center;
+  app-logo {
+    display: block;
+    position: inherit;
+    margin-bottom: 24px;
   }
-}
-
-// Mobile
-@include layout-bp(xs) {
-  mat-sidenav {
+  auth-signin-form {
     width: 100%;
-  }
-}
-
-.custom-snackbar-message {
-  text-align: center;
-  a {
-    font-weight: bold;
-    cursor: pointer;
   }
 }

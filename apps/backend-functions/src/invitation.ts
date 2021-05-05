@@ -13,7 +13,9 @@ import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
 import { EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
-import { invitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
+import { AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
+export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -38,8 +40,8 @@ export async function onInvitationWrite(
   // Doc was deleted
   if (!invitationDoc) {
 
-    if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') { 
-      const user = await getUser(invitationDocBefore.toUser.uid)
+    if (!!invitationDocBefore.toUser && invitationDocBefore.type === 'joinOrganization') {
+      const user = await getUser(invitationDocBefore.toUser.uid);
 
       // Remove user in users collection
       if (invitationDocBefore.mode === "invitation" && !!user && invitationDocBefore.status === "pending") {
@@ -48,7 +50,7 @@ export async function onInvitationWrite(
         const invitationCollectionRef = db.collection('invitations')
           .where('toUser.uid', '==', user.uid)
           .where('mode', '==', 'invitation')
-          .where('status', '==', 'pending')
+          .where('status', '==', 'pending');
         const existingInvitation = await invitationCollectionRef.get();
 
         // If there is an other invitation or the user has already an org, we don't want to delete its account
@@ -192,22 +194,38 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
   })
 }
 
-export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
+export async function getInvitationLinkedToEmail(email: string): Promise<boolean | AlgoliaOrganization> {
   const db = admin.firestore();
-  const userPromises = userEmails.map(email => db.collection('users')
-    .where('email', '==', email)
-    .get());
-  const userQuery = await Promise.all(userPromises);
-
-  const hasUserAlreadyAnOrg = userQuery.some(d => d.docs && d.docs.some(u => !!u.data().orgId));
-  if (hasUserAlreadyAnOrg) return true;
-
-  const invitationPromises = userEmails.map(email => db.collection('invitations')
-    .where('type', '==', 'joinOrganization')
+  const invitationRef = await db.collection('invitations')
     .where('toUser.email', '==', email)
-    .where('status', 'in', invitationStatus.filter(s => s !== 'declined'))
-    .get());
-  const invitationQuery = await Promise.all(invitationPromises);
+    .where('status', '==', 'pending')
+    .where('mode', '==', 'invitation')
+    .where('type', '==', 'joinOrganization')
+    .get();
 
-  return invitationQuery.some(d => d.docs.length > 0);
+  const joinOrgInvit = invitationRef.docs;
+
+  // We want to return invitation to join organization in priority
+  if (joinOrgInvit.length) {
+    const invit = joinOrgInvit[0].data();
+    const org = await getDocument<OrganizationDocument>(`orgs/${invit.fromOrg.id}`);
+    return createAlgoliaOrganization(org);
+  }
+
+  const userRef = await db.collection('users').where('email', '==', email).get();
+  if (userRef.docs.length === 1) {
+    const user = userRef.docs[0].data();
+
+    if (!user.firstName && !user.lastName) {
+      if (!!user.orgId) {
+        // If user was created along with org in CRM (without invitation)
+        const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
+        return createAlgoliaOrganization(org);
+      } else {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

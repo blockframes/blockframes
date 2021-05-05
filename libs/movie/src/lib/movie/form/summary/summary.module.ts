@@ -6,10 +6,10 @@ import { RouterModule } from '@angular/router';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatChipsModule } from '@angular/material/chips';
 
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
@@ -65,6 +65,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
+    ToLabelModule,
 
     MissingControlModule,
     ToLabelModule,
@@ -84,6 +85,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     MatButtonModule,
     MatSnackBarModule,
     MatDividerModule,
+
     RouterModule.forChild([])
   ],
   exports: [

@@ -1,33 +1,33 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db, getStorageBucketName } from './internals/firebase';
-import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite } from './templates/mail';
+import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
 import { upsertWatermark, getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
-import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-// @TODO (#2821)
-/*
 export const startVerifyEmailFlow = async (data: any) => {
   const { email, app } = data;
-  const from = getSendgridFrom(app);
 
   if (!email) {
-    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+    throw new Error('email is a mandatory parameter for the "sendVerifyEmailAddress()" function');
   }
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-  await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from).catch(e => console.warn(e.message));
+  try {
+    const template = userVerifyEmail(email, verifyLink);
+    await sendMailFromTemplate(template, app);
+  } catch (e) {
+    throw new Error(`There was an error while sending email verification email : ${e.message}`);
+  }
 };
-*/
 
 export const startAccountCreationEmailFlow = async (data: any) => {
   const { email, app, firstName } = data;
@@ -122,7 +122,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar.storagePath !== after.avatar.storagePath ||
+    before.avatar?.storagePath !== after.avatar?.storagePath ||
     before.orgId !== after.orgId
   ) {
     promises.push(storeSearchableUser(after));
@@ -191,9 +191,7 @@ export async function onUserDelete(
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
   const from = getSendgridFrom(data.app);
-  await sendMail(sendDemoRequestMail(data), from)
-    .catch(e => console.warn(e.message));
-
+  await sendMail(sendDemoRequestMail(data), from);
   return data;
 }
 
@@ -209,8 +207,7 @@ export const sendUserMail = async (data: { subject: string, message: string, app
 
   const from = getSendgridFrom(app);
 
-  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from)
-    .catch(e => console.warn(e.message));
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
 
 
@@ -236,8 +233,7 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
 
     const urlToUse = applicationUrl[app];
 
-    const templateId = templateIds.user.credentials.joinOrganization[app];
-    const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
+    const template = userInvite(email, newUser.password, orgName, urlToUse);
     await sendMailFromTemplate(template, app);
 
     return newUser.user;

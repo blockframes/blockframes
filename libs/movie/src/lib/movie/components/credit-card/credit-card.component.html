@@ -5,10 +5,10 @@
     <p class="mat-caption">
       <ng-container [ngSwitch]="type">
         <ng-container *ngSwitchCase="'director'">
-          Director's Category: {{ credit['category'] ? (credit['category'] | toLabel:'directorCategory') : 'Director' }}
+          <span *ngIf="credit['category']">Director's Category: {{ credit['category'] | toLabel:'directorCategory' }}</span>
         </ng-container>
         <ng-container *ngSwitchCase="'crew'">
-          {{ credit.role ? (credit.role | toLabel:'crewRoles') : 'Crew' }}
+          <span *ngIf="credit.role">{{ credit.role | toLabel:'crewRoles' }}</span>
         </ng-container>
         <ng-container *ngSwitchCase="'cast'">
           Actor
@@ -66,7 +66,6 @@
 <ng-template #dialogRef>
   <div fxLayout="column" fxLayoutAlign="center center" >
     <h5>{{ credit | displayName }}</h5>
-    <caption class="mat-caption">{{ credit.status || "-" }}</caption>
     <h6 class="mat-body-2">{{ credit.role }}</h6>
     <p class="mat-caption">{{ credit.description }}</p>
   </div>

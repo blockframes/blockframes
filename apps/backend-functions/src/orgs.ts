@@ -11,20 +11,23 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument, NotificationDocument, NotificationTypes } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, modules, getSendgridFrom } from '@blockframes/utils/apps';
-import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail, getDocument } from './data/internals';
+import { app, App, getOrgAppAccess, getSendgridFrom } from '@blockframes/utils/apps';
+import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies, storeSearchableUser } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
+  const createdFrom = getOrgAppAccess(org);
   return createNotification({
     toUserId,
     type: notificationType,
     user: createPublicUserDocument(user),
-    organization: createPublicOrganizationDocument(org)
+    organization: createPublicOrganizationDocument(org),
+    _meta: createDocumentMeta({ createdFrom:createdFrom[0] })
   });
 }
 
@@ -52,8 +55,16 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
-    return triggerNotifications(notifications);
+    // Only send notification if invitations is invitation and not a request
+    const invitationsSnapshot = await db
+      .collection(`invitations`)
+      .where('toUser.uid', '==', userAddedId)
+      .where('type', '==', 'joinOrganization')
+      .where('fromOrg.id', '==', after.id).get();
+    if (!!invitationsSnapshot.docs.length) {
+      const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
+      return triggerNotifications(notifications);
+    }
 
     // Member removed
   } else if (before.userIds.length > after.userIds.length) {
@@ -68,24 +79,6 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-/** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
-function newAppAccessGranted(before: OrganizationDocument, after: OrganizationDocument): boolean {
-  if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    return app.some(a => modules.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
-  }
-  return false;
-}
-
-/** Sends a mail to admin to inform that an org is waiting approval */
-async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
-  if (newAppAccessGranted(before, after)) {
-    // Send a mail to c8 admin to accept the organization given it's choosen app access
-    const mailRequest = await organizationRequestedAccessToApp(after);
-    const from = await getFromEmail(after);
-    await sendMail(mailRequest, from).catch(e => console.warn(e.message));
-  }
-}
-
 export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const org = snap.data() as OrganizationDocument;
 
@@ -95,10 +88,6 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   }
   const emailRequest = await organizationCreated(org);
   const from = getSendgridFrom(org._meta.createdFrom);
-
-  if (await hasAcceptedMovies(org)) {
-    org['hasAcceptedMovies'] = true;
-  }
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
@@ -134,19 +123,18 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   // Send notifications when a member is added or removed
   await notifyOnOrgMemberChanges(before, after);
 
-  // check if appAccess have changed
-  await sendMailIfOrgAppAccessChanged(before, after);
-
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
 
   if (becomeAccepted) {
+    const appAccess = getOrgAppAccess(after)
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
       toUserId: after.userIds[0],
       organization: createPublicOrganizationDocument(before),
-      type: 'organizationAcceptedByArchipelContent'
+      type: 'organizationAcceptedByArchipelContent',
+      _meta: createDocumentMeta({ createdFrom: appAccess[0] })
     });
     await triggerNotifications([notification]);
   }
@@ -159,11 +147,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     await Promise.all(promises)
   }
 
-  if (await hasAcceptedMovies(after)) {
-    after['hasAcceptedMovies'] = true;
-  }
-
-  storeSearchableOrg(after)
+  await storeSearchableOrg(after);
 
   return Promise.resolve(true); // no-op by default
 }
@@ -250,18 +234,19 @@ export async function onOrganizationDelete(
 }
 
 export const accessToAppChanged = async (
-  orgId: string
+  data: { orgId: string, app: App }
 ): Promise<ErrorResultResponse> => {
 
-  const adminIds = await getAdminIds(orgId);
+  const adminIds = await getAdminIds(data.orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+  const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
   const notifications: NotificationDocument[] = [];
   admins.map(async admin => {
     const notification = createNotification({
       toUserId: admin.uid,
       docId: admin.orgId,
       organization: createPublicOrganizationDocument(organization),
+      appAccess: data.app,
       type: 'orgAppAccessChanged'
     });
 
@@ -274,4 +259,15 @@ export const accessToAppChanged = async (
     error: '',
     result: 'OK'
   };
+}
+
+/** Send an email to C8 Admins when an organization requests to access to a new platform */
+export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string}, context?: CallableContext) => {
+  if (!!context.auth.uid && !!data.app && !!data.orgId) {
+    const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
+    const mailRequest = await organizationRequestedAccessToApp(organization, data.app);
+    const from = getSendgridFrom(data.app);
+    return sendMail(mailRequest, from).catch(e => console.warn(e.message));
+  }
+  return;
 }

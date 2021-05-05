@@ -9,6 +9,9 @@ import { RouterModule } from '@angular/router';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 
 const routes = [{
   path: '',
@@ -60,6 +63,9 @@ const routes = [{
     MovieHeaderModule,
     WishlistButtonModule,
     PromotionalLinksModule,
+    OrgChipModule,
+    MatButtonModule,
+    MatIconModule,
     RouterModule.forChild(routes)
   ]
 })
