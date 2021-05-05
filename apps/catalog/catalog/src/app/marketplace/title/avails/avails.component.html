@@ -16,7 +16,7 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <form [formGroup]="form">
+        <form [formGroup]="availsForm">
           <static-group formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
             <mat-label>Media</mat-label>
           </static-group>
@@ -35,8 +35,8 @@
             <input matInput [matDatepicker]="datepickerFrom" formControlName="from">
             <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
             <mat-datepicker #datepickerFrom> </mat-datepicker>
-            <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
-            <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+            <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
+            <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" formGroupName="duration">
@@ -44,8 +44,8 @@
             <input matInput [matDatepicker]="datepickerTo" formControlName="to">
             <mat-datepicker-toggle matPrefix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
             <mat-datepicker #datepickerTo> </mat-datepicker>
-            <mat-error *ngIf="form.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
-            <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+            <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
+            <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
           </mat-form-field>
         </form>
         <article fxLayout fxLayoutAlign="space-between">
@@ -124,148 +124,144 @@
   </mat-card>
 </section>
 
-<ng-container *ngIf="bucket$ | async as bucket">
   <h2>Preselected Rights</h2>
-  <ng-container *ngFor="let contract of bucket.contracts">
-    <mat-card *ngFor="let term of contract.terms">
-      <form [formGroup]="bucketForm">
-        <mat-card-header>
-          <mat-card-title>Exclusive rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <mat-accordion>
-            <!-- TERRITORIES -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Territories
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <article class="expansion-panel-content">
-                <mat-chip-list aria-label="Territories">
-                  <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
-                </mat-chip-list>
-              </article>
+  <mat-card *ngFor="let control of terms$ | async">
+    <form [formGroup]="control">
+      <mat-card-header *ngIf="control.value as term">
+        <mat-card-title>Exclusive rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content *ngIf="control.value as term">
+        <mat-accordion>
+          <!-- TERRITORIES -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Territories
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <article class="expansion-panel-content">
+              <mat-chip-list aria-label="Territories">
+                <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
+              </mat-chip-list>
+            </article>
 
-            </mat-expansion-panel>
+          </mat-expansion-panel>
 
-            <!-- MEDIAS -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Medias
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <article class="expansion-panel-content">
-                <mat-chip-list aria-label="Medias">
-                  <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
-                </mat-chip-list>
-              </article>
-            </mat-expansion-panel>
+          <!-- MEDIAS -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Medias
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <article class="expansion-panel-content">
+              <mat-chip-list aria-label="Medias">
+                <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
+              </mat-chip-list>
+            </article>
+          </mat-expansion-panel>
 
-            <!-- VERSIONS -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Versions
-                  <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <article class="expansion-panel-content">
-                <strong>Original Languages</strong>
-                <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
-                <strong>Request Specific Versions</strong>
+          <!-- VERSIONS -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Versions
+                <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <article class="expansion-panel-content">
+              <strong>Original Languages</strong>
+              <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
+              <strong>Request Specific Versions</strong>
 
-                <!-- FORM -->
-                <article formGroupName="languages" fxLayout="column" fxLayoutGap="24px">
-                  <ng-container *ngFor="let language of bucketForm.controls.languages.controls | keyvalue">
-                    <div fxLayout="column" fxLayoutGap="8px">
-                      <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
-                      <div [formGroupName]="language.key" fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-                        <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
-                        <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
-                        <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
-                        <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn">
-                          <mat-icon svgIcon="delete"></mat-icon>
-                        </button>
-                      </div>
-                      <ng-container *ngIf="language.value.hasError('noVersion')">
-                        <p class="mat-error" *ngIf="language.value.touched">Please select a version above or delete this language.</p>
-                        <p class="mat-caption" *ngIf="language.value.untouched">Please select the applicable version(s).</p>
-                      </ng-container>
+              <!-- FORM -->
+              <article formGroupName="languages" fxLayout="column" fxLayoutGap="24px">
+                <ng-container *ngFor="let language of control.controls.languages.controls | keyvalue">
+                  <div fxLayout="column" fxLayoutGap="8px">
+                    <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
+                    <div [formGroupName]="language.key" fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+                      <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
+                      <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
+                      <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
+                      <button mat-icon-button (click)="deleteLanguage(control, language.key)" color="warn">
+                        <mat-icon svgIcon="delete"></mat-icon>
+                      </button>
                     </div>
-                  </ng-container>
-                </article>
+                    <ng-container *ngIf="language.value.hasError('noVersion')">
+                      <p class="mat-error" *ngIf="language.value.touched">Please select a version above or delete this language.</p>
+                      <p class="mat-caption" *ngIf="language.value.untouched">Please select the applicable version(s).</p>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </article>
 
-                <!-- ADD LANGUAGE -->
-                <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons else noButtons">
-                  <mat-divider inset></mat-divider>
-                  <span class="mat-caption text-primary">Add a Version</span>
-                  <button mat-mini-fab color="primary" (click)="this.showButtons = !this.showButtons">
-                    <mat-icon svgIcon="add"></mat-icon>
+              <!-- ADD LANGUAGE -->
+              <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons else noButtons">
+                <mat-divider inset></mat-divider>
+                <span class="mat-caption text-primary">Add a Version</span>
+                <button mat-mini-fab color="primary" (click)="this.showButtons = !this.showButtons">
+                  <mat-icon svgIcon="add"></mat-icon>
+                </button>
+              </div>
+              <ng-template #noButtons>
+                <input-autocomplete scope="languages" [control]="languageCtrl" withoutValues="['all']">
+                  <mat-label>Languages</mat-label>
+                </input-autocomplete>
+                <div fxLayout fxLayoutAlign="space-between start">
+                  <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage(control)"
+                    [disabled]="!languageCtrl.value">
+                    <mat-icon svgIcon="save"></mat-icon>
+                    <span>Save Language</span>
                   </button>
                 </div>
-                <ng-template #noButtons>
-                  <input-autocomplete test-id="languages" scope="languages" [control]="languageCtrl" withoutValues="['all']">
-                    <mat-label>Languages</mat-label>
-                  </input-autocomplete>
-                  <div fxLayout fxLayoutAlign="space-between start">
-                    <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
-                      [disabled]="!languageCtrl.value">
-                      <mat-icon svgIcon="save"></mat-icon>
-                      <span>Save Language</span>
-                    </button>
-                  </div>
-                </ng-template>
-              </article>
-            </mat-expansion-panel>
+              </ng-template>
+            </article>
+          </mat-expansion-panel>
 
-            <!-- RUNS -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Runs
-                  <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <article class="expansion-panel-content" fxLayout="column" fxFlex formGroupName="runs">
-                <p>Broadcasts</p>
-                <mat-form-field appearance="outline">
-                  <mat-label>Number of Broadcasts</mat-label>
-                  <input matInput type="number" placeholder="Number of Broadcasts" formControlName="broadcasts">
+          <!-- RUNS -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Runs
+                <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <article class="expansion-panel-content" fxLayout="column" fxFlex formGroupName="runs">
+              <p>Broadcasts</p>
+              <mat-form-field appearance="outline">
+                <mat-label>Number of Broadcasts</mat-label>
+                <input matInput type="number" placeholder="Number of Broadcasts" formControlName="broadcasts">
+              </mat-form-field>
+              <p>Catch Up Rights</p>
+              <div fxFlex fxLayout fxLayoutGap="16px" fxLayoutAlign="start space-between" formGroupName="catchup">
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Start Date</mat-label>
+                  <input matInput [matDatepicker]="datePicker" placeholder="MM/DD/YYYY" formControlName="from">
+                  <mat-datepicker-toggle matPrefix [for]="datePicker">
+                    <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #datePicker></mat-datepicker>
                 </mat-form-field>
-                <p>Catch Up Rights</p>
-                <div fxFlex fxLayout fxLayoutGap="16px" fxLayoutAlign="start space-between" formGroupName="catchup">
-                  <mat-form-field appearance="outline" fxFlex>
-                    <mat-label>Start Date</mat-label>
-                    <input matInput [matDatepicker]="datePicker" placeholder="MM/DD/YYYY" formControlName="from">
-                    <mat-datepicker-toggle matPrefix [for]="datePicker">
-                      <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #datePicker></mat-datepicker>
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" fxFlex>
-                    <mat-label>Duration</mat-label>
-                    <input matInput type="number" placeholder="Duration" formControlName="duration">
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" fxFlex>
-                    <mat-label>Period</mat-label>
-                    <mat-select matInput placeholder="Period" formControlName="period">
-                      <mat-option *ngFor="let period of periods" [value]="period">
-                        {{ period | titlecase }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </article>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </mat-card-content>
-      </form>
-    </mat-card>
-  </ng-container>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Duration</mat-label>
+                  <input matInput type="number" placeholder="Duration" formControlName="duration">
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Period</mat-label>
+                  <mat-select matInput placeholder="Period" formControlName="period">
+                    <mat-option *ngFor="let period of periods" [value]="period">
+                      {{ period | titlecase }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </article>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-content>
+    </form>
+  </mat-card>
   <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()">
     <span>Add to Selection</span>
     <mat-icon svgIcon="arrow_forward"></mat-icon>
   </button>
-</ng-container>
