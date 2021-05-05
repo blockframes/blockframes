@@ -14,9 +14,7 @@
   .mat-stroked-button,
   .mat-button,
   .mat-icon-button {
-    .mat-button-wrapper {
-      color: mat-color($foreground, text);
-    }
+    color: mat-color($foreground, text);
     &.mat-primary {
       svg g,
       svg polygon,
