@@ -77,6 +77,21 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.sales = contracts.filter(c => c.type === 'sale');
     this.bucket$ = this.bucketQuery.selectActive();
 
+    this.bucketQuery.selectActive().subscribe( b=> {
+      if(!! b){
+        const territories = b.contracts.map(c => c.terms.map(t => t.territories).flat()).flat();
+
+        territories.forEach(t => {
+          this.select({
+            isoA3: territoriesISOA3[t],
+            label: territories[t],
+            //contract: this.mandates.find(m => m.id === term.contractId)
+          })
+        })
+      }
+
+    })
+
     this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
     this.salesTerms = await this.termService.getValue(this.sales.map(m => m.termIds).flat());
   }
@@ -135,6 +150,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
       selected.push(territory);
       this.selected$.next(selected);
     }
+
+    //this.bucketForm.toggleTerritory()
   }
 
   public trackByTag(tag) {
