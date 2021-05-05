@@ -57,7 +57,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   }
 
   public bucketForm = new BucketForm();
-  public availsForm = new AvailsForm({}, ['duration']);
+  public availsForm = new AvailsForm({ territories: [] }, ['duration']);
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
   constructor(
@@ -170,6 +170,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
       selected.push(territory);
       this.selected$.next(selected);
     }
+  }
+
+  public selectAll() {
+    const selected = this.selected$.getValue();
+    const available = this.available$.getValue();
+
+    this.selected$.next([...selected, ...available]);
+    this.available$.next([]);
   }
 
   public trackByTag(tag) {
