@@ -9,6 +9,5 @@ describe('crm-crm', () => {
 
   it('TBD Test', () => {
     cy.wait(300 * SEC);
-    expect(true).to.be.true;
   });
 });
