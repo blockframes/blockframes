@@ -158,7 +158,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
 
 describe('Test MOVIES anonymization function', () => {
   it('should anonymize movie documents', async () => {
-    const anonymizedJwplayerId = 'sduHGGRk';
+    const anonymizedJwplayerId = 'J4owWnLi';
     const id = 'MOV01';
     const titleRecord: DbRecord = {
       docPath: `movies/${id}`,

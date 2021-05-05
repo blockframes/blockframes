@@ -19,8 +19,8 @@ const deliveryText = 'Prores file deliver through cloud';
 const userFixture = new User();
 const user = userFixture.getByUID(USER.Camilla);
 const currency = 'US Dollar';
-const numSections = 4;
-const totalContractValue = '55,000';
+const numSections = 3;
+const totalContractValue = '35,000';
 
 beforeEach(() => {
   clearDataAndPrepareTest('/');
@@ -43,7 +43,12 @@ describe('Create a new bucket and finalize a new offer', () => {
     cy.log("Movs displayed!")
 
     p2.fillAvailFilter(avails);
+
+    cy.log("Search for titles named Movie");
+    p2.searchForMovies("Movie");
+
     cy.wait(3 * SEC);
+
     for(const movie of movies) {
       p2.addToBucket(movie.title);
       cy.log(`${movie.title} added to the bucket`);

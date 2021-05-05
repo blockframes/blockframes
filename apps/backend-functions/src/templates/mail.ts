@@ -31,15 +31,12 @@ function getSupportEmail(app?: App) {
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
 
-// @TODO (#2821)
-/*
 export function userVerifyEmail(email: string, link: string): EmailTemplateRequest {
   const data = {
     pageURL: link
   };
   return { to: email, templateId: templateIds.user.verifyEmail, data };
 }
-*/
 
 export function accountCreationEmail(email: string, link: string, userFirstName?: string): EmailTemplateRequest {
   const data = {

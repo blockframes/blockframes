@@ -74,13 +74,14 @@ export default class EventPage {
       .contains(eventType).click({force: true});
     
     //Input the title string
-    cy.get('input[test-id="event-title"]', {timeout: 1 * SEC})
+    cy.get('input[test-id="event-title-modal"]', {timeout: 1 * SEC})
       .click({force: true})
       .clear()
       .type(title);
 
-    cy.get('button[test-id=more-details]')
+    cy.get('button[test-id=more-details]', {timeout: 1 * SEC})
       .click();
+    cy.wait(0.5 * SEC);
     return new EventEditPage();
   }
 
