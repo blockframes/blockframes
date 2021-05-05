@@ -5,11 +5,10 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { getMandateTerms } from '@blockframes/contract/avails/avails';
+import { getMandateTerms, getSoldTerms } from '@blockframes/contract/avails/avails';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map } from 'rxjs/operators';
-import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketQuery } from '@blockframes/contract/bucket/+state';
 import { BucketTermForm } from '@blockframes/contract/bucket/form';
 import { FormControl } from '@angular/forms';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
@@ -62,17 +61,13 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     private termService: TermService,
     private snackBar: MatSnackBar,
     private bucketQuery: BucketQuery,
-    private bucketService: BucketService
   ) { }
 
   public async ngOnInit() {
 
     this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
-    const contracts = await this.contractService.getValue(
-      ref => ref.where('titleId', '==', this.movie.id)
-        .where('status', '==', 'accepted')
-    );
+    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
     this.mandates = contracts.filter(c => c.type === 'mandate');
     this.sales = contracts.filter(c => c.type === 'sale');
     this.bucket$ = this.bucketQuery.selectActive();
@@ -100,8 +95,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.available$.next(available);
 
     // Territories that are already sold after form filtering 
-    // @TODO #5573 use form values 
-    const sold = this.salesTerms.map(term => term.territories
+    const soldTerms = getSoldTerms(this.form.value, this.salesTerms);
+    const sold = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => ({
         isoA3: territoriesISOA3[territory],
