@@ -193,13 +193,15 @@ export class OrganizationComponent implements OnInit {
     const simulation = await this.simulateDeletion(this.orgId);
     this.dialog.open(CrmFormDialogComponent, {
       data: {
-        question: 'You are currently deleting this organization from Archipel, Are you sure?',
+        title: 'You are currently deleting this organization from Archipel, are you sure?',
+        text: 'If yes, please write \'DELETE\' inside the form below.',
         warning: 'You will also delete everything regarding this organization',
         simulation,
         confirmationWord: 'delete',
+        confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.organizationService.remove(this.orgId);
-          this.snackBar.open('Organization deleted !', 'close', { duration: 5000 });
+          this.snackBar.open('Organization deleted!', 'close', { duration: 5000 });
           this.router.navigate(['c/o/admin/panel/organizations']);
         }
       }
