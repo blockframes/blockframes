@@ -1,5 +1,6 @@
 @mixin anchor($theme) {
-  a, a:visited {
+  a:not(.mat-stroked-button),
+  a:not(.mat-stroked-button):visited {
     color: inherit;
   }
 }
