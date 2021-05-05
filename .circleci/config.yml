@@ -156,7 +156,7 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
-  build-deploy-prepare:
+  build-deploy-upgrade:
     executor: blockframes-ci
     environment:
       NG_CONFIG: ''
@@ -165,7 +165,7 @@ jobs:
       - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
       - fail_on_production
       - select_environment
-      - build_deploy_prepare
+      - build_deploy_upgrade
       - slack/notify:
           message: 'PFT complete for << pipeline.git.branch >>'
   prepare-for-testing:
@@ -303,9 +303,9 @@ workflows:
             branches:
               only:
                 - anon-db
-  build-deploy-prepare:
+  build-deploy-upgrade:
     jobs:
-      - build-deploy-prepare:
+      - build-deploy-upgrade:
           filters:
             branches:
               only:
