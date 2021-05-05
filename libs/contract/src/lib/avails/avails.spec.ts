@@ -1,6 +1,8 @@
 import { Term } from '../term/+state/term.model';
 import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './avails';
-import { mandateTerms as acTerms } from './fixtures/mandateTerms'
+import { mandates } from './fixtures/mandates';
+import { sales } from './fixtures/sales';
+import { mandateTerms as acTerms } from './fixtures/mandateTerms';
 import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
 
 describe('isTermSold', () => {
@@ -10,8 +12,6 @@ describe('isTermSold', () => {
     const MotherSchmuckers = 'bR4fTHmDDuOSPrNaz39J';
     const BigFootFamily = '1eJm06mvagJDNJ2yAlDt';
 
-    const mandateTerms: Term<Date>[] = (acTerms as unknown[]).map(toDate)
-    const saleTerms: Term<Date>[] = (acSaleTerms as unknown[]).map(toDate)
     let bucket: AvailsFilter[] = []
 
     beforeEach(() => {
@@ -24,11 +24,12 @@ describe('isTermSold', () => {
     Territory: South Korea
     Rights: Free TV
     Exclusive: No
-    Expected result: Not licensed`, () => {
-        const acHasRights = getMandateTerms({
-            duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, territories: ['south-korea'], medias: ['freeTv'], exclusive: false
-        }, mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!acHasRights.length).toBe(false);
+    Expected result: Not licensed`, () => { 
+      const acHasRights = getMandateTerms({
+        duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, territories: ['south-korea'], medias: ['freeTv'], exclusive: false },
+        getTerms(Resurrected, 'mandate')
+      );
+      expect(!!acHasRights.length).toBe(false);
     })
 
     it(`Mandate test (terms)
@@ -37,10 +38,11 @@ describe('isTermSold', () => {
     Rights: Free TV
     Exclusive: No
     Expected result: Not licensed`, () => {
-        const ACRights = getMandateTerms(
-            { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan'], medias: ['freeTv'] },
-            mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!ACRights.length).toBe(false)
+      const ACRights = getMandateTerms(
+        { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan'], medias: ['freeTv'] },
+        getTerms(Resurrected, 'mandate')
+      );
+      expect(!!ACRights.length).toBe(false)
     });
 
     it(`Terms: 01/01/2028 - 06/30/2036
@@ -48,10 +50,11 @@ describe('isTermSold', () => {
     Rights: Planes
     Exclusive: No
     Expected result: Not licensed`, () => {
-        const ACRights = getMandateTerms(
-            { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['france'], medias: ['planes'] },
-            mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!ACRights.length).toBe(false)
+      const ACRights = getMandateTerms(
+        { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['france'], medias: ['planes'] },
+        getTerms(Resurrected, 'mandate')
+      );
+      expect(!!ACRights.length).toBe(false)
     });
 
     it(`Terms check (existing ended sale)
@@ -60,15 +63,17 @@ describe('isTermSold', () => {
     Rights: Free TV
     Exclusive: Yes
     Expected result: Available`, () => {
-        const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(m => m.titleId === Resurrected));
-        expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(
-            availDetails,
-            saleTerms.filter(m => m.titleId === Resurrected));
-        expect(isTermSold).toBe(false);
+      const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
+      const ACRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      expect(!!ACRights.length).toBe(true);
+      const isTermSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      expect(isTermSold).toBe(false);
     });
 
     it(`Terms check (existing ongoing sale)
@@ -77,13 +82,17 @@ describe('isTermSold', () => {
     Rights: Free TV
     Exclusive: Yes
     Expected result: Not available`, () => {
-        const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerms(availDetails,
-            mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(availDetails,
-            saleTerms.filter(m => m.titleId === Resurrected));
-        expect(isTermSold).toBe(true);
+      const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
+      const ACRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      expect(!!ACRights.length).toBe(true);
+      const isTermSold = isSold(
+        availDetails, 
+        getTerms(Resurrected, 'sale')
+      );
+      expect(isTermSold).toBe(true);
     });
 
     it(`Cross territory check + exclusivity
@@ -93,9 +102,15 @@ describe('isTermSold', () => {
         Exclusive: No
         Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        const ACRights = getMandateTerms(
+          availDetails, 
+          getTerms(Resurrected, 'mandate')
+        );
         expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
+        const isTermSold = isSold(
+          availDetails,
+          getTerms(Resurrected, 'sale')
+        );
         expect(isTermSold).toBe(false);
     });
 
@@ -106,9 +121,15 @@ describe('isTermSold', () => {
         Exclusive: Yes
         Expected result: Not available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['germany', 'russia', 'czech'], medias: ['freeTv'] }
-        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        const ACRights = getMandateTerms(
+          availDetails,
+          getTerms(Resurrected, 'mandate')
+        );
         expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
+        const isTermSold = isSold(
+          availDetails,
+          getTerms(Resurrected, 'sale')
+        );
         expect(isTermSold).toBe(true);
     });
 
@@ -119,9 +140,15 @@ describe('isTermSold', () => {
       Exclusive: Yes
       Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['sVod'] }
-        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        const ACRights = getMandateTerms(
+          availDetails,
+          getTerms(Resurrected, 'mandate')
+        );
         expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
+        const isTermSold = isSold(
+          availDetails,
+          getTerms(Resurrected, 'sale')  
+        );
         expect(isTermSold).toBe(false);
     });
 
@@ -132,11 +159,17 @@ describe('isTermSold', () => {
     Rights: Pay TV
     Exclusive: Yes
     Expected result: Not available`, () => {
-        const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] }
-        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
-        expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
-        expect(isTermSold).toBe(true);
+      const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true, territories: ['argentina'], medias: ['payTv'] }
+      const ACRights = getMandateTerms(
+        availDetails, 
+        getTerms(Resurrected, 'mandate')
+      );
+      expect(!!ACRights.length).toBe(true);
+      const isTermSold = isSold(
+        availDetails, 
+        getTerms(Resurrected, 'sale')
+      );
+      expect(isTermSold).toBe(true);
     });
 
     it(`Exclusivity test (non exclusive)
@@ -146,9 +179,15 @@ describe('isTermSold', () => {
       Exclusive: No
       Expected result: Available`, () => {
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false, territories: ['germany'], medias: ['freeTv'] }
-        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        const ACRights = getMandateTerms(
+          availDetails,
+          getTerms(Resurrected, 'mandate')
+        );
         expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
+        const isTermSold = isSold(
+          availDetails,
+          getTerms(Resurrected, 'sale')
+        );
         expect(isTermSold).toBe(false);
     });
 
@@ -160,9 +199,15 @@ describe('isTermSold', () => {
       Expected result: Not available`, () => {
         // need to put in unix timestamp
         const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2021'), from: new Date(1609513293 * 1000) }, exclusive: true, territories: ['canada'], medias: ['freeTv'] };
-        const ACRights = getMandateTerms(availDetails, mandateTerms.filter(m => m.titleId === Resurrected))
+        const ACRights = getMandateTerms(
+          availDetails,
+          getTerms(Resurrected, 'mandate')
+        );
         expect(!!ACRights.length).toBe(true);
-        const isTermSold = isSold(availDetails, saleTerms.filter(m => m.titleId === Resurrected));
+        const isTermSold = isSold(
+          availDetails, 
+          getTerms(Resurrected, 'sale')
+        );
         expect(isTermSold).toBe(true);
     });
 
@@ -177,32 +222,49 @@ describe('isTermSold', () => {
     Not licensed: Resurrected, 512 Hours With Marina Abramovic (mandate without territory)
     Not available: Gaza mon amour (sale)
     Available: Mother Schmuckers, Bigfoot Family`, () => {
-        const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] };
-        const gazaRights = getMandateTerms(availDetails, mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails, mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails, mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails, mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails, mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(false);
-        expect(!!hoursRights.length).toBe(false);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isGazaSold = isSold(
-            availDetails, saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const isMotherSold = isSold(
-            availDetails, saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isBigfootSold = isSold(
-            availDetails, saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(isGazaSold).toBe(true);
-        expect(isMotherSold).toBe(false);
-        expect(isBigfootSold).toBe(false);
-        bucket.push(availDetails);
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = { duration: { to: new Date('06/30/2023'), from: new Date('01/01/2022') }, exclusive: false, territories: ['south-korea'], medias: ['freeTv'] };
+      const gazaRights = getMandateTerms(
+        availDetails, 
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails, 
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails, 
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails, 
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails, 
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(false);
+      expect(!!hoursRights.length).toBe(false);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isGazaSold = isSold(
+        availDetails, 
+        getTerms(GazaMonAmour, 'sale')
+      );
+      const isMotherSold = isSold(
+        availDetails, 
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      expect(isGazaSold).toBe(true);
+      expect(isMotherSold).toBe(false);
+      expect(isBigfootSold).toBe(false);
+      bucket.push(availDetails);
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Mandate test (terms)
@@ -214,44 +276,52 @@ describe('isTermSold', () => {
     Not licensed: Resurrected, Gaza mon amour (mandate ended)
     Not available: Mother Schmuckers, 512 Hours With Marina Abramovic (sale)
     Available: Bigfoot Family`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/2036'), from: new Date('01/01/2022') }, exclusive: false,
-            territories: ['afghanistan'], medias: ['freeTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(false);
-        expect(!!resurrectedRights.length).toBe(false);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(isMotherSold).toBe(true);
-        expect(isHoursSold).toBe(true);
-        expect(isBigfootSold).toBe(false);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/2036'), from: new Date('01/01/2022') }, exclusive: false,
+        territories: ['afghanistan'], medias: ['freeTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(false);
+      expect(!!resurrectedRights.length).toBe(false);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      expect(isMotherSold).toBe(true);
+      expect(isHoursSold).toBe(true);
+      expect(isBigfootSold).toBe(false);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Mandate test (rights)
@@ -263,48 +333,57 @@ describe('isTermSold', () => {
     Not licensed: Resurrected (right not licensed)
     Not available: Mother Schmuckers (sale)
     Available: Bigfoot Family, 512 Hours With Marina Abramovic, Gaza mon amour`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/2030'), from: new Date('01/01/2028') }, exclusive: false,
-            territories: ['france'], medias: ['planes']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(false);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(true);
-        expect(isHoursSold).toBe(false);
-        expect(isBigfootSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+          duration: { to: new Date('06/30/2030'), from: new Date('01/01/2028') }, exclusive: false,
+          territories: ['france'], medias: ['planes']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(false);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(true);
+      expect(isHoursSold).toBe(false);
+      expect(isBigfootSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Terms check (existing ended sale)
@@ -315,52 +394,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Mother Schmuckers (non exclusive German sale), Gaza mon amour (non exclusive Russian sale)
     Available: Resurrected, Bigfoot Family, 512 Hours With Marina Abramovic`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true,
-            territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(true);
-        expect(isGazaSold).toBe(true);
-        expect(isResurrectedSold).toBe(false);
-        expect(isHoursSold).toBe(false);
-        expect(isBigfootSold).toBe(false);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/2033'), from: new Date('01/01/2033') }, exclusive: true,
+        territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(true);
+      expect(isGazaSold).toBe(true);
+      expect(isResurrectedSold).toBe(false);
+      expect(isHoursSold).toBe(false);
+      expect(isBigfootSold).toBe(false);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Terms check (existing ongoing sale)
@@ -371,52 +460,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Resurrected (existing ongoing sale)
     Available: Bigfoot Family, 512 Hours With Marina Abramovic, Gaza mon amour, Mother Schmuckers`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true,
-            territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        expect(isResurrectedSold).toBe(true);
-        expect(isHoursSold).toBe(false);
-        expect(isBigfootSold).toBe(false);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/2031'), from: new Date('01/01/2029') }, exclusive: true,
+        territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      expect(isResurrectedSold).toBe(true);
+      expect(isHoursSold).toBe(false);
+      expect(isBigfootSold).toBe(false);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Cross territory check + exclusivity
@@ -427,52 +526,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Bigfoot Family (exclu sale), 512 Hours With Marina Abramovic (exclu sale)
     Available: Gaza mon amour (non exclusive sale), Mother Schmuckers, Resurrected`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false,
-            territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        expect(isHoursSold).toBe(true);
-        expect(isBigfootSold).toBe(true);
-        expect(isResurrectedSold).toBe(false);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false,
+        territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      expect(isHoursSold).toBe(true);
+      expect(isBigfootSold).toBe(true);
+      expect(isResurrectedSold).toBe(false);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
 
@@ -484,52 +593,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Resurrected (non exclu sale), Bigfoot Family (exclu sale), 512 Hours With Marina Abramovic (exclu sale), Gaza mon amour (non exclusive sale)
     Available: Mother Schmuckers`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true,
-            territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(true);
-        expect(isHoursSold).toBe(true);
-        expect(isBigfootSold).toBe(true);
-        expect(isResurrectedSold).toBe(true);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true,
+        territories: ['germany', 'czech', 'russia'], medias: ['freeTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(true);
+      expect(isHoursSold).toBe(true);
+      expect(isBigfootSold).toBe(true);
+      expect(isResurrectedSold).toBe(true);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Rights check
@@ -540,52 +659,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Bigfoot Family (svod sale),
     Available: Mother Schmuckers, Resurrected, 512 Hours With Marina Abramovic, Gaza mon amour`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('01/01/2022'), from: new Date('06/30/2022') }, exclusive: true,
-            territories: ['argentina'], medias: ['sVod']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        expect(isHoursSold).toBe(false);
-        expect(isBigfootSold).toBe(true);
-        expect(isResurrectedSold).toBe(false);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('01/01/2022'), from: new Date('06/30/2022') }, exclusive: true,
+        territories: ['argentina'], medias: ['sVod']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      expect(isHoursSold).toBe(false);
+      expect(isBigfootSold).toBe(true);
+      expect(isResurrectedSold).toBe(false);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Rights check
@@ -596,52 +725,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Resurrected (sale),
     Available: Mother Schmuckers, 512 Hours With Marina Abramovic, Gaza mon amour, Bigfoot Family`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive:true,
-            territories: ['argentina'], medias: ['payTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        expect(isHoursSold).toBe(false);
-        expect(isBigfootSold).toBe(false);
-        expect(isResurrectedSold).toBe(true);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive:true,
+        territories: ['argentina'], medias: ['payTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      expect(isHoursSold).toBe(false);
+      expect(isBigfootSold).toBe(false);
+      expect(isResurrectedSold).toBe(true);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Rights check
@@ -652,52 +791,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Resurrected (sale),
     Available: Mother Schmuckers, 512 Hours With Marina Abramovic, Gaza mon amour, Bigfoot Family`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true,
-            territories: ['argentina'], medias: ['payTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        expect(isHoursSold).toBe(false);
-        expect(isBigfootSold).toBe(false);
-        expect(isResurrectedSold).toBe(true);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: true,
+        territories: ['argentina'], medias: ['payTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      expect(isHoursSold).toBe(false);
+      expect(isBigfootSold).toBe(false);
+      expect(isResurrectedSold).toBe(true);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
     it(`Exclusivity test (non exclusive)
@@ -708,52 +857,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: 512 Hours With Marina Abramovic, Bigfoot Family (exclusive sales)
     Available: Mother Schmuckers, Gaza mon amour, Resurrected`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive: false,
-            territories: ['germany'], medias: ['freeTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        expect(isHoursSold).toBe(true);
-        expect(isBigfootSold).toBe(true);
-        expect(isResurrectedSold).toBe(false);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive: false,
+        territories: ['germany'], medias: ['freeTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      expect(isHoursSold).toBe(true);
+      expect(isBigfootSold).toBe(true);
+      expect(isResurrectedSold).toBe(false);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
 
@@ -765,52 +924,62 @@ describe('isTermSold', () => {
     Expected results:
     Not available: Resurrected
     Available: Mother Schmuckers, Gaza mon amour, 512 Hours With Marina Abramovic, Bigfoot Family`, () => {
-        const availDetails: AvailsFilter = {
-            duration: { to: new Date('01/01/2021'), from: new Date('06/30/2021') }, exclusive: true,
-            territories: ['canada'], medias: ['freeTv']
-        }
-        const gazaRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === GazaMonAmour));
-        const resurrectedRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === Resurrected));
-        const hoursRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const motherSchmuckersRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const bigFootFamilyRights = getMandateTerms(
-            availDetails,
-            mandateTerms.filter(sale => sale.titleId === BigFootFamily));
-        expect(!!gazaRights.length).toBe(true);
-        expect(!!resurrectedRights.length).toBe(true);
-        expect(!!hoursRights.length).toBe(true);
-        expect(!!motherSchmuckersRights.length).toBe(true);
-        expect(!!bigFootFamilyRights.length).toBe(true);
-        const isMotherSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MotherSchmuckers));
-        const isHoursSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === MarinaAbramovic));
-        const isBigfootSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === BigFootFamily));
-        const isResurrectedSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === Resurrected));
-        const isGazaSold = isSold(
-            availDetails,
-            saleTerms.filter(sale => sale.titleId === GazaMonAmour));
-        expect(isMotherSold).toBe(false);
-        expect(isGazaSold).toBe(false);
-        expect(isHoursSold).toBe(false);
-        expect(isBigfootSold).toBe(false);
-        expect(isResurrectedSold).toBe(true);
-        bucket.push(availDetails)
-        expect(isInBucket(availDetails, bucket)).toBe(true)
+      const availDetails: AvailsFilter = {
+        duration: { to: new Date('01/01/2021'), from: new Date('06/30/2021') }, exclusive: true,
+        territories: ['canada'], medias: ['freeTv']
+      }
+      const gazaRights = getMandateTerms(
+        availDetails,
+        getTerms(GazaMonAmour, 'mandate')
+      );
+      const resurrectedRights = getMandateTerms(
+        availDetails,
+        getTerms(Resurrected, 'mandate')
+      );
+      const hoursRights = getMandateTerms(
+        availDetails,
+        getTerms(MarinaAbramovic, 'mandate')
+      );
+      const motherSchmuckersRights = getMandateTerms(
+        availDetails,
+        getTerms(MotherSchmuckers, 'mandate')
+      );
+      const bigFootFamilyRights = getMandateTerms(
+        availDetails,
+        getTerms(BigFootFamily, 'mandate')
+      );
+      expect(!!gazaRights.length).toBe(true);
+      expect(!!resurrectedRights.length).toBe(true);
+      expect(!!hoursRights.length).toBe(true);
+      expect(!!motherSchmuckersRights.length).toBe(true);
+      expect(!!bigFootFamilyRights.length).toBe(true);
+      const isMotherSold = isSold(
+        availDetails,
+        getTerms(MotherSchmuckers, 'sale')
+      );
+      const isHoursSold = isSold(
+        availDetails,
+        getTerms(MarinaAbramovic, 'sale')
+      );
+      const isBigfootSold = isSold(
+        availDetails,
+        getTerms(BigFootFamily, 'sale')
+      );
+      const isResurrectedSold = isSold(
+        availDetails,
+        getTerms(Resurrected, 'sale')
+      );
+      const isGazaSold = isSold(
+        availDetails,
+        getTerms(GazaMonAmour, 'sale')
+      );
+      expect(isMotherSold).toBe(false);
+      expect(isGazaSold).toBe(false);
+      expect(isHoursSold).toBe(false);
+      expect(isBigfootSold).toBe(false);
+      expect(isResurrectedSold).toBe(true);
+      bucket.push(availDetails)
+      expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 })
 
@@ -818,4 +987,13 @@ function toDate(term: Term<Date>): Term<Date> {
     term.duration.from = new Date(term.duration.from)
     term.duration.to = new Date(term.duration.to)
     return term
+}
+
+function getTerms(titleId: string, type: 'mandate' | 'sale'): Term<Date>[] {
+  const contracts = type === 'mandate' ? mandates : sales;
+  const termIds = contracts.filter(contract => contract.titleId === titleId).map(sale => sale.termIds).flat();
+  const terms = type === 'mandate'
+    ? (acTerms as unknown[]).map(toDate)
+    : (acSaleTerms as unknown[]).map(toDate)
+  return terms.filter(term => termIds.includes(term.id));
 }

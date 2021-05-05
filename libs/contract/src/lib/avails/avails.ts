@@ -4,7 +4,7 @@ import { Term } from "../term/+state/term.model";
 export interface AvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
-  territories: Territory[],
+  territories?: Territory[],
   exclusive: boolean
 }
 
@@ -29,7 +29,7 @@ export function getMandateTerms(
     }
 
     // If terms has some territories of avails: available
-    if (term.territories.every(territory => !territories.includes(territory))) {
+    if (!!territories?.length && term.territories.every(territory => !territories.includes(territory))) {
       continue;
     }
 
@@ -41,16 +41,26 @@ export function getMandateTerms(
   if (medias.some(media => !resultMedias.includes(media))) return [];
 
   // If more territories are selected than there are in the mandates: not available
-  const resultTerritories = result.map(term => term.territories).flat();
-  if (territories.some(territory => !resultTerritories.includes(territory))) return [];
-  
+  if(!!territories?.length){
+    const resultTerritories = result.map(term => term.territories).flat();
+    if (territories.some(territory => !resultTerritories.includes(territory))) return [];
+  }
+
   return result;
 }
 
 export function isSold(
   { medias, duration, territories, exclusive }: AvailsFilter,
-  terms: Term<Date>[] // Terms of all sales of the title
+  terms: Term<Date>[], // Terms of all sales of the title
 ) {
+  return !!getSoldTerms({ medias, duration, territories, exclusive }, terms).length;
+}
+
+export function getSoldTerms(
+  { medias, duration, territories, exclusive }: AvailsFilter,
+  terms: Term<Date>[], // Terms of all sales of the title
+) {
+  const result: Term<Date>[] = [];
   for (const term of terms) {
     const startDuringDuration = duration.from.getTime() >= term.duration.from.getTime() && duration.from.getTime() <= term.duration.to.getTime();
     const endDuringDuration = duration.to.getTime() <= term.duration.to.getTime() && duration.to.getTime() >= term.duration.from.getTime();
@@ -59,19 +69,18 @@ export function isSold(
 
     if (exclusive) {
 
-      const intersectsMediaAndTerritory = territories.some(territory => term.territories.includes(territory)) &&
-        medias.some(medium => term.medias.includes(medium));
+      const intersectsMedia = medias.some(medium => term.medias.includes(medium));
+      const intersectsTerritories = !territories.length || territories.some(territory => term.territories.includes(territory));
 
-      if (intersectsMediaAndTerritory && inDuration) {
-        return true
-      }
-      continue;
+      if (intersectsMedia && intersectsTerritories && inDuration) {
+        result.push(term);
+      } else continue;
     } else if (term.exclusive) {
       if (inDuration || wrappedDuration) {
         if (!medias.some(medium => term.medias.includes(medium)) || !territories.some(territory => term.territories.includes(territory))) {
           continue;
         } else {
-          return true;
+          result.push(term);
         }
       } else {
         continue;
@@ -81,7 +90,7 @@ export function isSold(
       continue;
     }
   }
-  return false;
+  return result;
 }
 
 export function isInBucket(
@@ -111,4 +120,22 @@ export function isInBucket(
   }
   // If all check above are available: term is not in bucket
   return false;
+}
+
+
+
+
+///////////
+// utils //
+///////////
+export function findSameTermIndex(avails: AvailsFilter[], term: Term) {
+  for (let i = 0; i < avails.length; i++) {
+    const avail = avails[i];
+    if (avail.exclusive !== term.exclusive) continue;
+    if (avail.duration.from.getTime() !== term.duration.from.getTime()) continue;
+    if (avail.duration.to.getTime() !== term.duration.to.getTime()) continue;
+    if (avail.medias.some(medium => !term.medias.includes(medium))) continue; 
+    return i;
+  }
+  return -1;
 }

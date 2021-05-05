@@ -1,5 +1,8 @@
-import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { MovieCurrency } from '@blockframes/utils/static-model';
+import { Mandate } from '@blockframes/contract/contract/+state';
+import { Term } from '@blockframes/contract/term/+state';
+import { createLanguageKey } from '@blockframes/movie/+state';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
 
 export interface Bucket {
   id: string;
@@ -21,17 +24,45 @@ export interface BucketContract {
   /** Parent terms on which the contract is create. */
   parentTermId: string;
   /** List of sub terms derived from the parent terms that the buyer want to buy */
-  terms: AvailsFilter[];
+  terms: BucketTerm[];
   specificity: string;
 }
 
-function createBucketTerm(params: Partial<AvailsFilter> = {}): AvailsFilter {
+export interface BucketTerm {
+  medias: Media[];
+  duration: { from: Date, to: Date };
+  territories: Territory[];
+  exclusive: boolean;
+  languages: Record<string, MovieLanguageSpecification>;
+  runs?: {
+    broadcasts: number;
+    catchup: {
+      from: Date,
+      duration: number,
+      period: 'day' | 'week' | 'month'
+    }
+  }
+}
+
+export function toBucketTerm(term: Term): BucketTerm {
+  return createBucketTerm({
+    medias: term.medias,
+    duration: term.duration,
+    territories: term.territories,
+    exclusive: term.exclusive,
+    languages: term.languages,
+  });
+}
+
+export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
   return {
     territories: [],
     medias: [],
     exclusive: false,
     duration: { from: new Date(), to: new Date() },
-    ...params
+    ...params,
+    languages: createLanguageKey(params.languages),
+
   }
 }
 
@@ -47,6 +78,16 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   }
 }
 
+
+export function toBucketContract(contract: Mandate, terms: Term[] = []): BucketContract {
+  return createBucketContract({
+    titleId: contract.titleId,
+    orgId: contract.sellerId,
+    parentTermId: contract.parentTermId,
+    terms: terms.map(toBucketTerm)
+  });
+}
+
 export function createBucket(params: Partial<Bucket> = {}): Bucket {
   return {
     id: '',
@@ -57,3 +98,4 @@ export function createBucket(params: Partial<Bucket> = {}): Bucket {
     contracts: params.contracts?.map(createBucketContract) ?? []
   }
 }
+

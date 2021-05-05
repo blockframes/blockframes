@@ -47,7 +47,12 @@ export default class FestivalScreeningPage {
   }
 
   clickPrivateEvent() {
-    cy.get('festival-screening event-screening-item h3').first().click();
+    cy.log("Wait for events to load");
+    cy.get('[test-id="screening-spinner"]', {timeout: 90 * SEC})
+      .should('not.exist');
+
+    cy.get('festival-screening event-screening-item h3', {timeout: 10 * SEC})
+      .first().click();
     return new FestivalMarketplaceEventPage();
   }
 

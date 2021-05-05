@@ -1851,7 +1851,7 @@ export const isInKeys = (scope: Scope, givenValue: string) => {
  * @param code
  * @param system
  */
-export function getTerritoryFromGeoJson(
+function getTerritoryFromGeoJson(
   code: string,
   system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
   const territory = system === 'iso_a3'
@@ -1860,14 +1860,14 @@ export function getTerritoryFromGeoJson(
   if (!territory) {
     throw new Error(`Failed to retreive: ${code}.`);
   }
-  return territory;;
+  return territory;
 }
 
 /**
  * @param code
  * @param system
  */
-export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
+export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {// @TODO #5573 unused
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
@@ -1879,7 +1879,7 @@ export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'is
  * @param code
  * @param system
  */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
+export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') { // @TODO #5573 unused
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);

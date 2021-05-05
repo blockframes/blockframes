@@ -18,6 +18,7 @@ export class MoviesComponent implements OnInit {
     'poster': { value: 'Poster', disableSort: true },
     'title.international': 'International title',
     'org': 'Organization',
+    'storeConfig.status': 'Status',
     'screeningCount': 'Screening count'
   };
 
@@ -26,6 +27,7 @@ export class MoviesComponent implements OnInit {
     'poster',
     'title.international',
     'org',
+    'storeConfig.status',
     'screeningCount'
   ];
   public rows: any[] = [];
@@ -83,6 +85,8 @@ export class MoviesComponent implements OnInit {
         'internal ref': m.internalRef ? m.internalRef : '--',
         'org': m.org ? orgName(m.org) : '--',
         'orgId': m.org ? m.org.id : '--',
+        'status': m.storeConfig.status,
+        'storeType': m.storeConfig.storeType,
         'screeningCount': m.screeningCount,
       }));
 
