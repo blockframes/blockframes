@@ -44,7 +44,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @Input() featureTag = 'iso_a3';
   @Output() select = new EventEmitter();
-  @ContentChildren(MapFeature, {descendants: true}) features: QueryList<MapFeature>
+  @ContentChildren(MapFeature, { descendants: true }) features: QueryList<MapFeature>
 
   constructor(
     private el: ElementRef,
@@ -65,12 +65,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.sub = this.features.changes.pipe(
       startWith(this.features),
       switchMap((features: QueryList<MapFeature>) => {
+        // Reset all previous tags
+        tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle({ fillColor: '#ECEFF9' }));
         // Listen on changes of color & tag
         return combineLatest(features.map(f => combineLatest([f.color$, f.tag$]).pipe(map(_ => f))))
       })
     ).subscribe((features: MapFeature[]) => {
-      // reset all previous tags
-      tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle({ fillColor: '#ECEFF9' }));
       // Add new style
       features.forEach(({ color, tag }) => {
         if (!!this.layers[tag]) {
@@ -101,26 +101,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return tag.toLowerCase() === feature.properties[this.featureTag].toLowerCase();
     })
     this.layers[feature.properties[this.featureTag]] = layer;
-      layer.on({
-        mouseover: ({ target }) => {
-          const el = getFeature();
-          if (!!el) {
-            el.mouseover.emit(feature.properties)
-          }
-        },
-        mouseout: () => {
-          const el = getFeature();
-          if (!!el) {
-            el.mouseout.emit(feature.properties)
-          }
-        },
-        click: () => {
-          const el = getFeature();
-          !!el
-            ? el.click.emit(feature.properties)
-            : this.select.emit(feature.properties);
+    layer.on({
+      mouseover: ({ target }) => {
+        const el = getFeature();
+        if (!!el) {
+          el.mouseover.emit(feature.properties)
         }
-      });
+      },
+      mouseout: () => {
+        const el = getFeature();
+        if (!!el) {
+          el.mouseout.emit(feature.properties)
+        }
+      },
+      click: () => {
+        const el = getFeature();
+        !!el
+          ? el.click.emit(feature.properties)
+          : this.select.emit(feature.properties);
+      }
+    });
   }
 }
 
