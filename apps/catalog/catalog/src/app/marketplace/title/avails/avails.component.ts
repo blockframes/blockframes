@@ -55,7 +55,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   }
 
   public bucketForm = new BucketForm();
-  public availsForm = new AvailsForm({ territories: [] }, ['duration']);
+  public availsForm = new AvailsForm({}, ['duration']);
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
   constructor(

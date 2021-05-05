@@ -88,7 +88,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   constructor(bucket: Partial<Bucket> = {}) {
     const controls = createBucketControl(bucket);
     super(controls);
-    super.createControl = createBucketControl;
+    this.createControl = createBucketControl;
     this.change = new Subject();
   }
 
