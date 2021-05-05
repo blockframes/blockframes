@@ -1859,7 +1859,7 @@ export const isInKeys = (scope: Scope, givenValue: string) => {
  */
 function getTerritoryFromGeoJson(
   code: string,
-  system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
+  system: 'iso_a3'   = 'iso_a3') {
   const territory = system === 'iso_a3'
     ? Object.keys(territoriesISOA3).find(i => i[system] === code.toUpperCase())
     : Object.keys(territoriesISOA2).find(i => i[system] === code.toUpperCase())
@@ -1873,7 +1873,7 @@ function getTerritoryFromGeoJson(
  * @param code
  * @param system
  */
-export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {// @TODO #5573 unused
+export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') { // @TODO #5573 unused
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
@@ -1885,7 +1885,7 @@ export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'is
  * @param code
  * @param system
  */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') { // @TODO #5573 unused
+export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {  // @TODO #5573 unused
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);

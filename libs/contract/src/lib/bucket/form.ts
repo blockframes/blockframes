@@ -1,13 +1,22 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
-import { Territory } from '@blockframes/utils/static-model';
+import { Territory, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { findSameTermIndex } from '../avails/avails';
+import { AvailsFilter, findSameTermIndex } from '../avails/avails';
 import { Term } from '../term/+state';
-import { Mandate } from '../contract/+state';
+import { Contract, Mandate } from '../contract/+state';
 import { Bucket, BucketContract, BucketTerm, createBucket, createBucketContract, createBucketTerm, toBucketContract, toBucketTerm } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+interface TerritoryMarker { // @TODO move
+  slug: Territory,
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue,
+  term?: Term<Date>,
+  contract?: Contract,
+}
+
 
 //////////
 // TERM //
@@ -50,7 +59,7 @@ function createBucketContractControl(params: Partial<BucketContract> = {}) {
   const contract = createBucketContract(params);
   return {
     titleId: new FormControl(contract.titleId),
-    orgId:  new FormControl(contract.orgId),
+    orgId: new FormControl(contract.orgId),
     price: new FormControl(contract.price),
     parentTermId: new FormControl(contract.parentTermId),
     terms: FormList.factory(contract.terms, term => new BucketTermForm(term)),
@@ -110,20 +119,22 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param territory
    * @returns
    */
-  toggleTerritory(mandate: Mandate, term: Term, territory: Territory) {
+
+  toggleTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
+    const { contract: mandate, term, slug: territory } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
     // Contract is not registered
     if (contractIndex === -1) {
-      this.get('contracts').add(toBucketContract(mandate, [term]));
+      this.get('contracts').add(toBucketContract(mandate as Mandate, { ...avails, territories: [territory] }));
       this.change.next();
       return;
     }
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, term);
+    const termIndex = findSameTermIndex(contract.terms, avails);
     // New term
     if (termIndex === -1) {
-      this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm(term));
+      this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
       this.change.next();
       return;
     }
