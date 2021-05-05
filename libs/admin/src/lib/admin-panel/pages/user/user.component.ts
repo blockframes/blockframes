@@ -13,7 +13,7 @@ import { datastudio } from '@env'
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -30,9 +30,21 @@ export class UserComponent implements OnInit {
   public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
   public userForm: UserAdminForm;
+  public invitations: Invitation[];
   private originalOrgValue: string;
 
   public dashboardURL: SafeResourceUrl
+
+  public invitationsColumns = {
+    date: 'Date',
+    mode: 'Mode',
+    type: 'Type',
+    'fromOrg.denomination.full': 'From Organization',
+    'toOrg.denomination.full': 'To Organization',
+    status: 'Status',
+  };
+
+  public initialInvitationsColumns = ['date', 'mode', 'type', 'fromOrg.denomination.full', 'toOrg.denomination.full', 'status'];
 
   constructor(
     private userService: UserService,
@@ -70,6 +82,10 @@ export class UserComponent implements OnInit {
 
       this.cdRef.markForCheck();
     });
+
+    const invitationTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', this.userId));
+    const invitationFrom = await this.invitationService.getValue(ref => ref.where('fromUser.uid', '==', this.userId));
+    this.invitations = [...invitationFrom, ...invitationTo];
   }
 
   public async update() {

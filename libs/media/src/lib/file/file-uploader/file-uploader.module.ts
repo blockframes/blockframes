@@ -11,6 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FileNameModule } from '@blockframes/utils/pipes';
+import { DownloadPipeModule } from '../pipes/download.pipe';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { FileNameModule } from '@blockframes/utils/pipes';
     MatTooltipModule,
     ImageModule,
     FileNameModule,
+    DownloadPipeModule,
   ],
   declarations: [
     FileUploaderComponent

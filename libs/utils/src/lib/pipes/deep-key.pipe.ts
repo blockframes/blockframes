@@ -23,11 +23,11 @@ export class DeepKeyPipe implements PipeTransform {
 
       if (Array.isArray(value)) {
         return value.map(obj => {
-          const condition = conditions.find(c => !!getDeepValue(obj, c));
+          const condition = conditions.find(c => getDeepValue(obj, c) !== undefined);
           return condition ? getDeepValue(obj, condition) : undefined;
         });
       } else {
-        const condition = conditions.find(c => !!getDeepValue(value, c));
+        const condition = conditions.find(c => getDeepValue(value, c)  !== undefined);
         return condition ? getDeepValue(value, condition) : undefined;
       }
     } catch (error) {

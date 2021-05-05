@@ -3,6 +3,8 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { promotionalElementTypes } from '@blockframes/utils/static-model/static-model';
 
+const documents = ['presentation_deck', 'scenario', 'moodboard'];
+
 @Pipe({
   name: 'promotionalLinks',
   pure: true
@@ -17,8 +19,8 @@ export class PromotionalLinksPipe implements PipeTransform {
         const url = await this.mediaService.generateImgIxUrl(movie.promotional[link]);
         if (!!url) {
           const linkLabel = promotionalElementTypes[link];
-          const icon = 'play_arrow';
-          const label = `Watch ${linkLabel}`;
+          const icon = documents.includes(link) ? 'document' : 'play_arrow';
+          const label = `View ${linkLabel}`;
           return { url, icon, label };
         }
       }

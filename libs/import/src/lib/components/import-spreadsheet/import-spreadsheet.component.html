@@ -1,17 +1,17 @@
-<article fxLayout="column" fxLayoutAlign="center">
+﻿<article fxLayout="column" fxLayoutAlign="center">
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>{{ pageTitle }} </h1>
 
     <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
       <button mat-stroked-button color="primary" (click)="downloadTemplate('title')">
-        <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our template to import in bulk</span>
+        <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our template to import in bulk</span>
       </button>
       <ng-container *ngIf="isUserBlockframesAdmin">
         <button mat-stroked-button color="primary" (click)="downloadTemplate('contracts')">
-          <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our excel contracts template</span>
+          <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel contracts template</span>
         </button>
         <button mat-stroked-button color="primary" (click)="downloadTemplate('organizations')">
-          <mat-icon svgIcon="cloud_upload"></mat-icon><span>Download our excel organization template</span>
+          <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel organization template</span>
         </button>
       </ng-container>
     </div>
@@ -20,7 +20,7 @@
   <section fxLayout="row" fxLayoutAlign="center center" *ngIf="isUserBlockframesAdmin" class="type">
     <mat-form-field appearance="outline">
       <mat-label>Select import type</mat-label>
-      <mat-select [formControl]="fileType">
+      <mat-select [formControl]="fileType" test-id="import-select">
         <mat-option value="movies">Movies</mat-option>
         <mat-option value="contracts">Contracts</mat-option>
         <mat-option value="organizations">Organizations</mat-option>
@@ -36,7 +36,7 @@
   <section class="file-section" fxLayout="column" fxLayoutAlign="center center">
 
     <ng-container *ngIf="sheets.length; else fileUpload">
-      <p>
+      <p test-id="status-import">
         <mat-icon svgIcon="attachment"></mat-icon>
         <span>File uploaded, click on "Start import" to continue!</span>
       </p>
@@ -44,21 +44,23 @@
 
     <ng-template #fileUpload>
       <input #filePicker id="filePicker" [accept]="allowedTypes" type="file" (change)="importSpreadsheet($event.target.files)" />
-      <a mat-flat-button (click)="filePicker.click()">Import File</a>
+      <a test-id="import-file" mat-flat-button (click)="filePicker.click()">Import File</a>
       <p class="mat-caption">Accepted Formats: .xls, .csv</p>
     </ng-template>
   </section>
 
   <section fxLayout="column" fxLayoutAlign="center center">
 
+    <img asset="upload_380.webp" alt="Start import" width="220px">
+
     <section fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="12px">
       <ng-container *ngIf="sheets.length">
-        <button mat-flat-button color="warn" (click)="removeFile()">
+        <button test-id="remove-file" mat-flat-button color="warn" (click)="removeFile()">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-container>
 
-      <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">
+      <button test-id="start-import" mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">
         Start import
         <mat-icon svgIcon="arrow_downward"></mat-icon>
       </button>

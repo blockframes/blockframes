@@ -14,6 +14,7 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { allowedFiles, fileSizeToString } from '@blockframes/utils/utils';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -76,6 +77,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   metadata: FileMetaData;
   fileName: string;
 
+  public maxSize: number = 5 * 1000000;
 
   /////////////
   // Inputs //
@@ -139,8 +141,8 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
 
-  @Input() types: string[] = ['image/jpeg', 'image/png'];
-  @Input() accept: string[] = ['.jpg', '.png'];
+  @Input() types: string[] = allowedFiles.image.mime;
+  @Input() accept: string[] = allowedFiles.image.extension;
 
   // listen to db changes to keep form up-to-date after an upload
   @Input() @boolean listenToChanges: boolean;
@@ -162,7 +164,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (this.listenToChanges) {
       this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
-        const media = this.formIndex !== undefined 
+        const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
         if (!!media) {
@@ -199,12 +201,22 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   }
 
   private resetState() {
-    const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
-    if (!!retrieved) {
-      this.nextStep('show');
+    if (!!this.form.storagePath.value) {
+      this.mediaService.generateImgIxUrl({
+        ...this.metadata,
+        storagePath: this.form.storagePath.value,
+      }).then(previewUrl => {
+        this.previewUrl$.next(previewUrl);
+        this.nextStep('show');
+      });
     } else {
-      this.nextStep('drop');
-    };
+      const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
+      if (!!retrieved) {
+        this.nextStep('show');
+      } else {
+        this.nextStep('drop');
+      };
+    }
   }
 
   ///////////
@@ -239,10 +251,12 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     if (!isFileTypeValid) {
       this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
       this.delete();
+    } else if (this.file.size >= this.maxSize) {
+      this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
+      this.delete();
+      return;
     } else {
       this.nextStep('crop');
-      // TODO keep track of crop state
-      // this.form.patchValue({ cropped: false });
       this.fileUploader.nativeElement.value = null;
     }
 
@@ -276,8 +290,6 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       this.selectionChange.emit('added');
 
       this.form?.markAsDirty();
-      // TODO keep track of crop state
-      // cropped state = true
 
     } catch (err) {
       console.error(err);
@@ -289,7 +301,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       this.croppedImage = '';
     }
 
-    this.uploaderService.removeFromQueue(this.storagePath, this.fileName)
+    this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
     this.form.reset();
 
     this.fileUploader.nativeElement.value = null;

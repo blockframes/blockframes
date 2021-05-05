@@ -184,10 +184,13 @@ export const datastudio = {
 }
 
 
-// Archipel Content OrgId
+// Archipel OrgIds
 // ========
 
-export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+export const centralOrgId = {
+  cascade8: 'jnbHKBP5YLvRQGcyQ8In',
+  catalog: 'nBM8sy5EEAOtVBCX4nTJ',
+};
 
 // Import / Export parameters
 // =======

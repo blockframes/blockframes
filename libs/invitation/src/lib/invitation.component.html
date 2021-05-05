@@ -2,7 +2,7 @@
   <ng-container *ngIf="invitations.length else empty">
     <header fxLayout="row" fxLayoutAlign="space-between start">
       <h1>Invitations</h1>
-      <button mat-button test-id="invitation-accept-all" (click)="acceptAll()">
+      <button mat-button test-id="invitation-accept-all" (click)="acceptAll(invitations)">
         <mat-icon svgIcon="check_circle"></mat-icon>
         <span>Accept All</span>
       </button>

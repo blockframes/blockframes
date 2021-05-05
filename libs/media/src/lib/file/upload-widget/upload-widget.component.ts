@@ -4,7 +4,7 @@ import { AngularFireUploadTask } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 // Blockframes
-import { BehaviorStore } from '@blockframes/utils/behavior-store';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { slideUp } from '@blockframes/utils/animations/fade';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { deconstructFilePath } from '@blockframes/utils/file-sanitizer';

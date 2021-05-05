@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-
 :root {
   --layout-margin: 24px;
   --toolbarHeight: 80px;
@@ -10,9 +9,9 @@
   box-sizing: border-box;
 }
 
-html{
+html {
   height: 100vh;
-} 
+}
 
 body {
   margin: 0;
@@ -32,6 +31,53 @@ span + .mat-icon {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+p a {
+  position: relative;
+  white-space: nowrap;
+}
+
+p a:after {
+  left: 0;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 1px;
+  position: absolute;
+  background: var(--foreground-text);
+  width: 100%;
+  transition: transform 300ms ease-in;
+}
+p a:hover:after {
+  transform: translateY(2px);
+}
+
+p a:hover {
+  text-decoration: none;
+}
+
+.inline-link {
+  position: relative;
+  white-space: nowrap;
+
+  &:after {
+    left: 0;
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 1px;
+    position: absolute;
+    background: var(--foreground-text);
+    width: 100%;
+    transition: transform 300ms ease-in;
+  }
+  &:hover:after {
+    transform: translateY(2px);
+  }
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 main {
@@ -60,7 +106,8 @@ main {
     border-radius: 4px;
     font: inherit;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border-color: var(--primary);
     }
 

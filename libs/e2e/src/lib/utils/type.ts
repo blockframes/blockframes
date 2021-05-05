@@ -8,7 +8,6 @@
 
 export interface Organization {
   id: string;
-  name: string;
   email: string;
   address: Location;
   denomination: {
@@ -25,15 +24,6 @@ export interface Location {
   city: string;
   country: string;
   phoneNumber?: string;
-}
-
-export interface Availabilities {
-  yearFrom: string;
-  monthFrom: string;
-  dayFrom: string;
-  yearTo: string;
-  monthTo: string;
-  dayTo: string;
 }
 
 export interface Dates {
@@ -55,4 +45,20 @@ export interface Screening {
   org: Partial<Organization>;
   invitees: Partial<User>[];
   private: boolean;
+}
+
+export interface Avails {
+  territories: string[],
+  from: {
+    year: number,
+    month: string,
+    day: number
+  },
+  to: {
+    year: number,
+    month: string,
+    day: number
+  },
+  medias: string[],
+  exclusive: boolean
 }

@@ -11,7 +11,12 @@
     height: fit-content;
     header {
       display: flex;
-      align-items: center;
+      align-items: start;
+      button {
+        mat-icon {
+          margin-top: 8px;
+        }
+      }
     }
   }
 }
@@ -25,7 +30,7 @@ article {
     }
 
     .selected {
-      border-right: var(--primary) solid 5px; 
+      border-right: var(--primary) solid 5px;
     }
 
     .not-selected {

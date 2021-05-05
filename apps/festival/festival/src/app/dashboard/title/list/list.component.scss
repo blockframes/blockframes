@@ -4,12 +4,8 @@
   flex-direction: column;
 }
 
-.import {
-  margin-bottom: 24px;
-}
-
 header {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 header[mat-tab-nav-bar] button {
@@ -17,8 +13,8 @@ header[mat-tab-nav-bar] button {
   background-color: transparent;
 }
 
-mat-card {
-  margin-bottom: 80px;
+h3 {
+  margin-top: 24px;
 }
 
 .no-title-card {

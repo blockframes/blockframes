@@ -8,15 +8,13 @@ import { OrganizationsImportState } from '../../../import-utils';
 import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
-import { Module } from '@blockframes/utils/apps';
+import { getOrgModuleAccess, Module } from '@blockframes/utils/apps';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-// import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 
 enum SpreadSheetOrganization {
   fullDenomination,
   publicDenomination,
   email,
-  // logo, TODO issue #3091
   activity,
   fiscalNumber,
   street,
@@ -28,6 +26,7 @@ enum SpreadSheetOrganization {
   superAdminEmail,
   catalogAccess,
   festivalAccess,
+  financiersAccess,
 }
 
 @Component({
@@ -132,15 +131,29 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           importErrors.org.email = spreadSheetRow[SpreadSheetOrganization.email].trim().toLowerCase();
         }
 
-        // TODO issue #3091
-        // LOGO
-        // if (spreadSheetRow[SpreadSheetOrganization.logo]) {
-        //   org.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetOrganization.logo]);
-        // }
-
         // ORG INFOS
         if (spreadSheetRow[SpreadSheetOrganization.activity]) {
-          importErrors.org.activity = spreadSheetRow[SpreadSheetOrganization.activity];
+          const activity = getKeyIfExists('orgActivity', spreadSheetRow[SpreadSheetOrganization.activity]);
+          if (activity) {
+            importErrors.org.activity = activity;
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'activity',
+              name: 'Activity',
+              reason: `${spreadSheetRow[SpreadSheetOrganization.activity]} not found in activity list`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
+        } else {
+          // ACTIVITY
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'organization.activity',
+            name: 'Activity',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          });
         }
 
         if (spreadSheetRow[SpreadSheetOrganization.fiscalNumber]) {
@@ -205,6 +218,25 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           }
         }
 
+        if (spreadSheetRow[SpreadSheetOrganization.financiersAccess]) {
+          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.financiersAccess].split(this.separator).map(m => m.trim().toLowerCase());
+          if (module1) {
+            importErrors.org.appAccess.financiers[module1] = true;
+          }
+          if (module2) {
+            importErrors.org.appAccess.financiers[module2] = true;
+          }
+        }
+
+        if (getOrgModuleAccess(org).length === 0) {
+          importErrors.errors.push({
+            type: 'error',
+            field: 'appAccess',
+            name: 'Application access',
+            reason: `You need to give access to modules for at least one app`,
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
 
         ///////////////
         // VALIDATION
@@ -282,17 +314,6 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         type: 'warning',
         field: 'organization.denomination.public',
         name: 'Public demomination',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    // ACTIVITY
-    if (!organization.activity) {
-      errors.push({
-        type: 'warning',
-        field: 'organization.activity',
-        name: 'Activity',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });

@@ -7,6 +7,8 @@ import { EventRangeModule } from '../../pipes/event-range.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
+import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
+import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +25,8 @@ import { MatRippleModule } from '@angular/material/core';
     EventRangeModule,
     InvitationActionModule,
     OrgChipModule,
+    GetTitlePipeModule,
+    GetOrgPipeModule,
     MatIconModule,
     MatButtonModule,
     MatRippleModule

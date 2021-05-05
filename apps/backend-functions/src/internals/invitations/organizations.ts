@@ -8,9 +8,10 @@ import {
 import { triggerNotifications, createNotification } from './../../notification';
 import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
-import { getAdminIds, getDocument, getAppUrl, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument } from '../../data/internals';
+import { getAdminIds, getDocument, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument, createDocumentMeta } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { unsubscribeGroupIds } from '../../templates/ids';
+import { applicationUrl } from '@blockframes/utils/apps';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -81,19 +82,22 @@ async function onInvitationToOrgDecline(invitation: InvitationDocument) {
 
   const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
   const adminIds = await getAdminIds(org.id);
+  const appAccess = await getOrgAppKey(org);
 
   const notifications = adminIds.map(toAdminId =>
     createNotification({
       toUserId: toAdminId,
       user: createPublicUserDocument(invitation.toUser),
-      type: 'invitationToJoinOrgDeclined'
+      type: 'invitationToJoinOrgDeclined',
+      _meta: createDocumentMeta({ createdFrom: appAccess })
     })
   );
 
   return triggerNotifications(notifications);
 }
 
-/** Sends an email when an organization invites a user to join. */
+/** create a notification/email to sender and org member(s) when
+ * a request from user to join org is created. */
 async function onRequestFromUserToJoinOrgCreate({
   toOrg,
   fromUser
@@ -110,17 +114,29 @@ async function onRequestFromUserToJoinOrgCreate({
   }
 
   const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
-  const app = await getOrgAppKey(org);
+  const adminIds = await getAdminIds(org.id);
+  const fromApp = userData._meta.createdFrom;
 
-  // create notifications
-  const notifications = org.userIds.map(toUserId =>
+  // create notifications to org admin/superAdmin letting them know that an user is waiting for approval
+  const notifications = adminIds.map(toUserId =>
     createNotification({
       toUserId,
       user: createPublicUserDocument(userData),
       organization: createPublicOrganizationDocument(org),
-      type: 'requestFromUserToJoinOrgCreate'
+      type: 'requestFromUserToJoinOrgCreate',
+      _meta: createDocumentMeta({ createdFrom: fromApp })
     })
   );
+
+  // create a notification to user who want to join org letting him know that his request was sent and is beeing processed
+  notifications.push(
+    createNotification({
+      toUserId: userData.uid,
+      user: createPublicUserDocument(userData),
+      organization: createPublicOrganizationDocument(org),
+      type: 'requestFromUserToJoinOrgPending',
+      _meta: createDocumentMeta({ createdFrom: fromApp })
+    }))
 
   return triggerNotifications(notifications);
 }
@@ -135,8 +151,8 @@ async function onRequestFromUserToJoinOrgAccept({
     return;
   }
   await addUserToOrg(fromUser.uid, toOrg.id);
-  const urlToUse = await getAppUrl(toOrg.id);
   const app = await getOrgAppKey(toOrg.id);
+  const urlToUse = applicationUrl[app];
   const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
   return sendMailFromTemplate(template, app, unsubscribeGroupIds.allExceptCriticals);
 }
@@ -155,7 +171,8 @@ async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument)
     createNotification({
       toUserId,
       user: createPublicUserDocument(invitation.fromUser),
-      type: 'requestFromUserToJoinOrgDeclined'
+      type: 'requestFromUserToJoinOrgDeclined',
+      _meta: createDocumentMeta({ createdFrom: invitation.fromUser._meta.createdFrom })
     })
   );
 

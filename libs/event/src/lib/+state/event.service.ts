@@ -7,9 +7,8 @@ import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { AuthQuery } from '@blockframes/auth/+state';
 import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -50,13 +49,13 @@ const eventQueries = {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
+  readonly useMemorization = true;
   private analytics: Record<string, EventsAnalytics> = {};
 
   constructor(
     protected store: EventStore,
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
-    private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
   ) {
     super(store);
@@ -106,9 +105,10 @@ export class EventService extends CollectionService<EventState> {
   /** Query events based on types */
   queryByType(types: EventTypes[], queryFn?: QueryFn): Observable<Event[]> {
     const queries = types.map(type => eventQueries[type](queryFn));
-    const queries$ = queries.map(query => queryChanges.call(this, query))
+    const queries$ = queries.map(query => queryChanges.call(this, query));
     return combineLatest(queries$).pipe(
-      map((results) => results.flat())
+      map((results) => results.flat()),
+      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
   }
 

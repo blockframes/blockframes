@@ -17,7 +17,6 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
     MatButtonModule,
     MatBottomSheetModule
   ],
-  exports: [DoorbellBottomSheetComponent],
-  entryComponents: [DoorbellBottomSheetComponent]
+  exports: [DoorbellBottomSheetComponent]
 })
 export class DoorbellBottomSheetModule { }

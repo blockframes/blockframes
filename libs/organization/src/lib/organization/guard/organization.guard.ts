@@ -29,13 +29,13 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
           return of('/');
         }
         if (!user.orgId) {
-          return of('/c/organization');
+          return of('/auth/identity');
         } else {
           return this.service.syncActive({ id: user.orgId }).pipe(
             map(_ => this.query.getActive()),
             map(org => {
               if (!org) {
-                return '/c/organization';
+                return '/auth/identity';
               }
               if (org.status === 'pending') {
                 return '/c/organization/create-congratulations';

@@ -7,7 +7,7 @@
         <section [formGroup]="form.meta" fxLayout="column">
           <div class="link" fxLayout>
             <mat-form-field class="link" appearance="outline" fxFlex>
-              <mat-label>Link to Video Call</mat-label>
+              <mat-label>Direct link to Screening Room</mat-label>
               <input matInput type="text" disabled [value]="link">
             </mat-form-field>
             <button mat-icon-button [cdkCopyToClipboard]="link" matTooltip="Copy the link">
@@ -122,6 +122,6 @@
     </ng-container>
   </event-edit>
   <ng-container *ngIf="isEventStarted()">
-    <event-analytics [eventId]="form.id.value"></event-analytics>
+    <event-analytics [event]="form.value"></event-analytics>
   </ng-container>
 </ng-container>

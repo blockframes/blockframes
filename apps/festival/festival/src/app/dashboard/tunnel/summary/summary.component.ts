@@ -21,7 +21,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
-  )
+  );
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -45,7 +45,8 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   public async submit() {
     if (this.form.valid) {
       await this.shell.layout.update({ publishing: true });
-      const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
+      const text = `${this.form.get('title').get('international').value} successfully published.`;
+      const ref = this.snackBar.open(text, '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         this.router.navigate(['c/o/dashboard/title', this.query.getActiveId()])
       })

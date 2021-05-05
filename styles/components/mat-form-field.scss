@@ -4,7 +4,7 @@
 
 
   .mat-form-field {
-    &.ng-valid {
+    &.ng-valid, &.ng-invalid {
       .mat-form-field-wrapper {
         padding-bottom: 0.6em;
       }
@@ -39,10 +39,6 @@
       .mat-form-field-outline-gap {
         border-width: 1px;
       }
-    }
-
-    .mat-form-field-prefix, .mat-form-field-suffix {
-      top: unset;   // put the prefix/suffic on the same level as text
     }
   }
 }

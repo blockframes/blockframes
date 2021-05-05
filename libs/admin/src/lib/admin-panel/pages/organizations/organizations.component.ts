@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { Organization } from '@blockframes/organization/+state';
-import { appName, modules } from '@blockframes/utils/apps';
+import { app, appName, modules } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organizations',
@@ -22,7 +22,7 @@ export class OrganizationsComponent implements OnInit {
     'denomination.public': 'Short name',
     'addresses.main.country': 'Country',
     'email': 'Email',
-    'appAccess': { value: 'Authorizations', disableSort: true }
+    'appAccess': { value: 'App  : Dashboard : Marketplace', disableSort: true }
   };
 
   public initialColumns: string[] = [
@@ -37,6 +37,7 @@ export class OrganizationsComponent implements OnInit {
   ];
   public rows: Organization[] = [];
   public orgListLoaded = false;
+  public app = app.filter(a => !['crm', 'cms'].includes(a));
 
   constructor(
     private organizationService: OrganizationService,
@@ -81,9 +82,9 @@ export class OrganizationsComponent implements OnInit {
         activity: !!r.activity ? r.activity : '--',
       }
 
-      for (const app in r.appAccess) {
+      for (const a of this.app) {
         for (const module of modules) {
-          row[`${appName[app]} - ${module}`] = r.appAccess[app][module] ? 'true' : 'false';
+          row[`${appName[a]} - ${module}`] = !!r.appAccess[a] && r.appAccess[a][module] ? 'true' : 'false';
         }
       }
 

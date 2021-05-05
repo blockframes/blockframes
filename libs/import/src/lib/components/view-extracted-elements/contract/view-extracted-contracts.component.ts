@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { createMandate, createSale, Mandate, Sale } from '@blockframes/contract/contract/+state/contract.model';
 import { createTerm } from '@blockframes/contract/term/+state/term.model';
@@ -9,34 +8,95 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { Intercom } from 'ng-intercom';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ContractsImportState } from '../../../import-utils';
+import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { Language, LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
-import { TermService } from '@blockframes/contract/term/+state/term.service'
-import { centralOrgID } from '@env';
-import { Term } from '@blockframes/contract/term/+state/term.model';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { parseToAll } from '@blockframes/utils/static-model';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { centralOrgId } from '@env';
+import { Scope } from '@blockframes/utils/static-model/static-model';
+import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 
-enum SpreadSheetContract {
-  titleId,
-  titleInternalRef,
-  internationalTitle,
-  contractType,
-  parentTermId,
-  licensorName,
-  licenseeName,
-  stakeholders,
-  contractId,
-  territories,
-  medias,
-  exclusive,
-  startOfContract,
-  endOfContract,
-  originalLanguageLicensed,
-  dubbed,
-  subtitled,
-  closedCaptioning
+const separator = ';'
+type errorCodes = 'no-title-id' | 'no-seller-id' | 'no-buyer-id' | 'no-stakeholders' | 'no-territories' | 'no-medias' | 'no-duration-from' | 'no-duration-to';
+const errorsMap: {[key in errorCodes]: SpreadsheetImportError} = {
+  'no-title-id': {
+    type: 'warning',
+    field: 'contract.titleId',
+    reason: `No title found`,
+    name: 'no-title-id',
+    hint: 'Please check the international title or enter the ID of the title'
+  },
+  'no-seller-id': {
+    type: 'warning',
+    field: 'contract.sellerId',
+    reason: `Couldn\'t find Licensor with the provided name.`,
+    name: 'Seller ID',
+    hint: 'Edit corresponding sheet field.'
+  },
+  'no-buyer-id': {
+    type: 'warning',
+    field: 'contract.buyerId',
+    reason: `Couldn\'t find Licensee with the provided name.`,
+    name: 'Buyer ID',
+    hint: 'Edit corresponding sheet field.'
+  },
+  'no-stakeholders': {
+    type: 'warning',
+    field: 'contract.stakeholders',
+    name: 'Stakeholders',
+    reason: 'If this mandate has stakeholders, please fill in the name',
+    hint: 'Edit corresponding sheet field.'
+  },
+  'no-territories': {
+    type: 'error',
+    field: 'term.territories',
+    name: 'Territory',
+    reason: 'Archipel Content needs to know the territories in which the movie can be sold.',
+    hint: 'Edit corresponding sheet field.'
+  },
+  'no-medias': {
+    type: 'error',
+    field: 'term.medias',
+    name: 'Media',
+    reason: 'Archipel Content needs to know the medias in which the movie can be sold.',
+    hint: 'Edit corresponding sheet field.'
+  },
+  'no-duration-from': {
+    type: 'warning',
+    field: 'term.duration.from',
+    name: 'Duration from',
+    reason: 'Archipel Content needs to know the starting date of the contract.',
+    hint: 'Edit corresponding sheet field.'
+  },
+  'no-duration-to': {
+    type: 'warning',
+    field: 'term.duration.to',
+    name: 'Duration to',
+    reason: 'Archipel Content needs to know the ending date of the contract.',
+    hint: 'Edit corresponding sheet field.'
+  }
+}
+
+function split(cell: string) {
+  return cell.split(separator).filter(v => !!v).map(v => v.trim());
+}
+
+// Time is MM/DD/YYYY
+function getDate(time: string) {
+  if (isNaN(+time)) {
+    const [month, day, year] = time.split(/[/.]+/).map(t => parseInt(t, 10));
+    return new Date(year, month - 1, day, 0, 0, 0);
+  } else {
+    return new Date(Math.round(+time - 25569) * 86400 * 1000);
+  }
+}
+
+function getStatic(scope: Scope, value: string) {
+  if (!value) return []
+  if (value.toLowerCase() === 'all') return parseToAll(scope, 'all');
+  return split(value).map(v => getKeyIfExists(scope, v)).filter(v => !!v);
 }
 
 @Component({
@@ -49,21 +109,22 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   public contractsToUpdate = new MatTableDataSource<ContractsImportState>();
   public contractsToCreate = new MatTableDataSource<ContractsImportState>();
-  private separator = ';';
-  private subSeparator = ',';
   public isUserBlockframesAdmin = false;
+
+  private memory = {
+    org: {},
+    title: {},
+  };
 
   constructor(
     @Optional() private intercom: Intercom,
     private snackBar: MatSnackBar,
-    private movieService: MovieService,
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
-    private orgQuery: OrganizationQuery,
+    private movieService: MovieService,
     private orgService: OrganizationService,
-    private termService: TermService,
     private fire: AngularFirestore
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
@@ -74,298 +135,140 @@ export class ViewExtractedContractsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
+  private async getOrgId(name: string) {
+    if (!name) return '';
+    if (name === 'Archipel Content') return centralOrgId.catalog;
+    if (!this.memory.org[name]) {
+      const orgs = await this.orgService.getValue(ref => ref.where('denomination.full', '==', name));
+      this.memory.org[name] = orgs.length === 1 ? orgs[0].id : '';
+    }
+    return this.memory.org[name];
+  }
+
+  private async getTitleId(name: string) {
+    if (!name) return '';
+    if (!this.memory.title[name]) { 
+      const titles = await this.movieService.getValue(ref => ref.where('title.international', '==', name));
+      this.memory.title[name] = titles.length === 1 ? titles[0].id : '';
+    }
+    return this.memory.title[name];
+  }
+
   public async format(sheetTab: SheetTab) {
     this.clearDataSources();
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
-    for (const spreadSheetRow of sheetTab.rows) {
-      const trimmedRow = spreadSheetRow.map(cell => {
-        if (typeof cell === 'string') cell.trim()
-        return cell
-      })
-      let contract: Mandate | Sale;
-      let newContract = true;
-      if (trimmedRow[SpreadSheetContract.contractId]) {
-        const existingContract = await this.contractService.getValue(trimmedRow[SpreadSheetContract.contractId] as string);
-        const id = this.fire.createId();
-        if (!!existingContract) {
-          contract = existingContract.type === 'mandate' ? createMandate(existingContract as any) : createSale({ id, ...existingContract } as any)
-          newContract = false;
-          const terms = await this.termService.getValue(contract.termIds);
-          const parsedTerms = terms.map(createTerm)
-          this.contractsToUpdate.data.push({ contract, newContract: false, errors: [], terms: parsedTerms })
-          // Forcing change detection
-          this.contractsToUpdate.data = [...this.contractsToUpdate.data]
-        }
+
+    for (const rawRow of sheetTab.rows) {
+      const errors: SpreadsheetImportError[] = [];
+      const row = rawRow.map(cell => typeof cell === "string" ? cell.trim() : cell.toString());
+      if (!row.length) continue;
+
+      // optional fields are prefixed with underscore
+      const [
+        internationalTitle,
+        contractType,
+        licensorName,
+        licenseeName,
+        territoriesList, // Ok
+        mediaList,      // Ok
+        isExclusive,    // Ok
+        durationFrom,   // Ok
+        durationTo,     // Ok
+        originalLanguageLicensed,
+        dubbed,
+        subtitle,
+        closedCaptioning,
+        _contractId,      // Ok
+        _parentTermId,
+        _titleId,         // Ok
+        _stakeholdersList, // Ok
+      ] = row;
+
+      //////////////
+      // CONTRACT //
+      //////////////
+      // TITLE
+      const titleId = _titleId || (await this.getTitleId(internationalTitle));
+
+      if (!titleId) errors.push(errorsMap['no-title-id']);
+    
+      // BUYER / SELLER
+      const [sellerId, buyerId] = await Promise.all([
+        this.getOrgId(licensorName),
+        this.getOrgId(licenseeName)
+      ])
+      if (!sellerId) errors.push(errorsMap['no-seller-id']);
+      if (!buyerId) errors.push(errorsMap['no-buyer-id']);
+
+      // STAKEHOLDER
+      const getStakeholders = !!_stakeholdersList ? split(_stakeholdersList).map(orgName => this.getOrgId(orgName)) : [];
+      const stakeholders = (await Promise.all(getStakeholders)).filter(s => !!s);
+      if (!stakeholders.length) errors.push(errorsMap['no-stakeholders']);
+
+      // PARENT TERM ID
+      // TODO add parentTermId to the sales & mandates
+
+      // CONTRACT
+      let baseContract: Partial<Mandate | Sale> = {};
+      if (_contractId) {
+        baseContract = await this.contractService.getValue(_contractId as string);
+        if (!baseContract) throw new Error('No contract found for id' + _contractId);
       } else {
-        contract = trimmedRow[SpreadSheetContract.contractType] === 'mandate' ? createMandate() : createSale()
+        baseContract.id = this.fire.createId();
       }
-
-      if (trimmedRow.length) {
-
-        const importErrors = {
-          contract,
-          newContract: newContract,
-          errors: [],
-          terms: []
-        } as ContractsImportState;
-
-        if (newContract) {
-          if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'mandate') {
-            contract = createMandate({
-              sellerId: this.orgQuery.getActiveId(),
-              buyerId: centralOrgID
-            });
-          } else if (trimmedRow[SpreadSheetContract.contractType]?.toLowerCase() === 'sale') {
-            contract = createSale({
-              sellerId: this.orgQuery.getActiveId()
-            })
-          }
-          else {
-            importErrors.errors.push({
-              type: 'error',
-              field: 'contract.type',
-              name: 'Mandate',
-              reason: 'Contract type is mandatory',
-              hint: 'Edit corresponding sheet field.'
-            })
-          }
-
-          /* If title id is provided, add it to the contract, otherwise try to fetch the title id */
-          if (trimmedRow[SpreadSheetContract.titleId]) {
-            contract.titleId = trimmedRow[SpreadSheetContract.titleId];
-          } else if (trimmedRow[SpreadSheetContract.titleInternalRef]) {
-            const movie = await this.movieService.getFromInternalRef(trimmedRow[SpreadSheetContract.titleInternalRef])
-            if (movie) contract.titleId = movie.id
-          } else if (trimmedRow[SpreadSheetContract.internationalTitle]) {
-            const movie = await this.movieService.getValue(ref =>
-              ref.where('title.international', '==', trimmedRow[SpreadSheetContract.internationalTitle]))
-            if (movie.length) contract.titleId = movie[0].id
-          } else {
-            importErrors.errors.push({
-              type: 'error',
-              field: 'contract.titleId',
-              name: 'Title Id',
-              reason: 'We need to know the title otherwise we can\'t map the contract to the a movie',
-              hint: 'Edit corresponding sheet field.'
-            })
-          }
-
-          if (trimmedRow[SpreadSheetContract.parentTermId]) {
-            const term = await this.termService.getValue(trimmedRow[SpreadSheetContract.parentTermId]) as Term<Date>[]
-            if (term?.length) {
-              contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
-            } else {
-              contract.parentTermId = trimmedRow[SpreadSheetContract.parentTermId];
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'term.parentTermId',
-                name: 'Parent Term ID',
-                reason: 'Could not find provided term by Id.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-          } else {
-            importErrors.errors.push({
-              type: 'warning',
-              field: 'term.parentTermId',
-              name: 'Parent Term ID',
-              reason: 'If this sale happened on a mandate, please put the contract id',
-              hint: 'Edit corresponding sheet field.'
-            })
-
-            if (trimmedRow[SpreadSheetContract.stakeholders]?.length) {
-              let orgs: Organization[];
-              if (Array.isArray(trimmedRow[SpreadSheetContract.stakeholders])) {
-                orgs = await Promise.all(trimmedRow[SpreadSheetContract.stakeholders].map(orgName => this.orgService.getValue(ref => ref.where('denomination.public', '==', orgName))));
-              } else {
-                orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.stakeholders]))
-              }
-              contract.stakeholders = orgs.filter(org => !!org).map(org => org.id);
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'contracts.stakeholders',
-                name: 'Stakeholders',
-                reason: 'If this mandate has stakeholders, please fill in the name',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-
-            if (trimmedRow[SpreadSheetContract.licensorName]) {
-              const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licensorName]))
-              if (orgs.length === 1) {
-                contract.sellerId = orgs[0].id
-              }
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'contract.sellerId',
-                name: 'Seller Id',
-                reason: 'Couldn\'t find Licensor with the provided name.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-
-            if (trimmedRow[SpreadSheetContract.licenseeName]) {
-              const orgs = await this.orgService.getValue(ref => ref.where('denomination.public', '==', trimmedRow[SpreadSheetContract.licenseeName]))
-              if (orgs.length === 1) {
-                contract.buyerId = orgs[0].id
-              }
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'contract.buyerId',
-                name: 'Buyer Id',
-                reason: 'Couldn\'t find Licensee with the provided name.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-
-            /* Create term */
-            const term = createTerm({ orgId: this.orgQuery.getActiveId(), titleId: contract?.titleId })
-            if (trimmedRow[SpreadSheetContract.territories]?.length) {
-              const territoryValues: TerritoryValue[] = (trimmedRow[SpreadSheetContract.territories]).split(this.separator)
-              const territories = territoryValues.map(territory => getKeyIfExists('territories', territory.trim())).filter(territory => !!territory)
-              term.territories = territories;
-            } else {
-              importErrors.errors.push({
-                type: 'error',
-                field: 'term.territories',
-                name: 'Territory',
-                reason: 'Archipel Content needs to know the territories in which the movie can be sold.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-
-            if (trimmedRow[SpreadSheetContract.medias]?.length) {
-              const mediaValues: MediaValue[] = (trimmedRow[SpreadSheetContract.medias]).split(this.separator);
-              const medias = mediaValues.map(media => getKeyIfExists('medias', media.trim())).filter(media => !!media)
-              term.medias = medias;
-            } else {
-              importErrors.errors.push({
-                type: 'error',
-                field: 'term.medias',
-                name: 'Media',
-                reason: 'Archipel Content needs to know the medias in which the movie can be sold.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-
-            term.exclusive = trimmedRow[SpreadSheetContract.exclusive]?.toLowerCase() === 'yes' ? true : false;
-
-            term.contractId = contract.id;
-
-            if (trimmedRow[SpreadSheetContract.startOfContract]) {
-              if (typeof spreadSheetRow[SpreadSheetContract.startOfContract] === 'number') {
-                term.duration.from = new Date(Math.round((spreadSheetRow[SpreadSheetContract.startOfContract] - 25569) * 86400 * 1000));
-              } else {
-                term.duration.from = new Date(spreadSheetRow[SpreadSheetContract.startOfContract])
-              }
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'term.duration.from',
-                name: 'Duration from',
-                reason: 'Archipel Content needs to know the starting date of the contract.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-
-            if (trimmedRow[SpreadSheetContract.endOfContract]) {
-              if (typeof spreadSheetRow[SpreadSheetContract.endOfContract] === 'number') {
-                term.duration.to = new Date(Math.round((spreadSheetRow[SpreadSheetContract.endOfContract] - 25569) * 86400 * 1000));
-              } else {
-                term.duration.to = new Date(spreadSheetRow[SpreadSheetContract.endOfContract])
-              }
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'term.duration.to',
-                name: 'Duration to',
-                reason: 'Archipel Content needs to know the ending date of the contract.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-
-            if (trimmedRow[SpreadSheetContract.originalLanguageLicensed]) {
-              term.licensedOriginal =
-                trimmedRow[SpreadSheetContract.originalLanguageLicensed].toLowerCase() === 'yes' ? true : false;
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'term.licensedOriginal',
-                name: 'Original Language Licensed',
-                reason: 'Please choose yes or no',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
+      const contract = contractType === 'mandate'
+        ? createMandate({ ...baseContract as Mandate, titleId, buyerId, sellerId, stakeholders, status: 'accepted' })
+        : createSale({ ...baseContract as Sale, titleId, buyerId, sellerId, stakeholders, status: 'accepted' });
 
 
-            if (trimmedRow[SpreadSheetContract.dubbed]) {
-              const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.dubbed]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
-              for (const language of languages) {
-                if (language) {
-                  term.languages[language] = { ...term.languages[language], dubbed: true }
-                }
-              }
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'term.language.dubbed',
-                name: 'Language dubbed',
-                reason: 'Please provide dubbed version if available.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
+      ///////////
+      // TERMS //
+      ///////////
+      const contractId = contract.id;
+      const orgId = buyerId;
+  
+      // Duration
+      if (!durationFrom) errors.push(errorsMap['no-duration-from']);
+      if (!durationTo) errors.push(errorsMap['no-duration-to']);
+      const duration = {
+        from: getDate(durationFrom),
+        to: getDate(durationTo)
+      };
 
-            if (trimmedRow[SpreadSheetContract.subtitled]) {
-              const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.subtitled]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
-              for (const language of languages) {
-                if (language) {
-                  term.languages[language] = { ...term.languages[language], subtitle: true }
-                }
-              }
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'term.language.subtitle',
-                name: 'Language subtitle',
-                reason: 'Please provide subtitle version if available.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
+      // Statics
+      const territories = getStatic('territories', territoriesList);
+      const medias = getStatic('medias', mediaList);
+      const exclusive = isExclusive.toLowerCase() === 'yes' ? true : false;
 
-            if (trimmedRow[SpreadSheetContract.closedCaptioning]) {
-              const languageValues: LanguageValue[] = (trimmedRow[SpreadSheetContract.closedCaptioning]).split(this.separator);
-              const languages: Language[] = languageValues.map(language => getKeyIfExists('languages', language.trim()))
-              for (const language of languages) {
-                if (language) {
-                  term.languages[language] = { ...term.languages[language], caption: true }
-                }
-              }
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'term.language.caption',
-                name: 'Language caption',
-                reason: 'Please provide caption version if available.',
-                hint: 'Edit corresponding sheet field.'
-              })
-            }
-            importErrors.terms.push(term)
-            importErrors.contract = contract
-            this.contractsToCreate.data.push(importErrors);
-            // Forcing change detection
-            this.contractsToCreate.data = [...this.contractsToCreate.data]
-          } // End of parsing new contract
+      if (!territories.length) errors.push(errorsMap['no-territories']);
+      if (!medias.length) errors.push(errorsMap['no-medias']);
 
-          this.cdRef.markForCheck();
-        };
-        matSnackbarRef.dismissWithAction(); // loading ended */
+      const termId = this.fire.createId();
+      const term = createTerm({ id: termId, contractId, orgId, duration, territories, medias, exclusive });
+
+      // Languages
+      for (const [key, value] of Object.entries({ dubbed, subtitle, closedCaptioning })) {
+        const languages = getStatic('languages', value);
+        for (const language of languages) {
+          if (!term.languages[language]) term.languages[language] = createMovieLanguageSpecification();
+          term.languages[language][key] = true;
+        }
       }
+      
+      contract.termIds.push(termId);
+
+      this.contractsToCreate.data.push({
+        contract,
+        newContract: !_contractId,
+        errors,
+        terms: [term]
+      });
+      // Forcing change detection
+      this.contractsToCreate.data = [...this.contractsToCreate.data];
+      this.cdRef.markForCheck();
     }
+
+    matSnackbarRef.dismissWithAction(); // loading ended */
   }
 
   public openIntercom() {
@@ -376,4 +279,5 @@ export class ViewExtractedContractsComponent implements OnInit {
     this.contractsToCreate.data = [];
     this.contractsToUpdate.data = [];
   }
+
 }

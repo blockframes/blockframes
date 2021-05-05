@@ -10,6 +10,9 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -44,7 +47,9 @@ export class TableExtractedContractsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private contractService: ContractService,
-    private termService: TermService
+    private termService: TermService,
+    private movieService: MovieService,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
@@ -109,6 +114,14 @@ export class TableExtractedContractsComponent implements OnInit {
     const termIds = await this.termService.add(importState.terms);
     importState.contract.termIds = termIds;
     await this.contractService.add(importState.contract);
+    const titleId = importState.contract.titleId;
+    if (!!titleId && importState.contract.type === 'mandate') {
+      const title = await this.movieService.getValue(titleId);
+      const app = getCurrentApp(this.routerQuery);
+      title.storeConfig.appAccess[app] = true;
+      this.movieService.update(title);
+    }
+    
     importState.errors.push({
       type: 'error',
       field: 'contract',

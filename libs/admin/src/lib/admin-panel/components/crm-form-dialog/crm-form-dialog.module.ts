@@ -19,7 +19,6 @@ import {  FirstWordTitlecaseModule } from '@blockframes/utils/pipes/first-titlec
     MatInputModule,
     MatFormFieldModule
   ],
-  exports: [CrmFormDialogComponent],
-  entryComponents: [CrmFormDialogComponent]
+  exports: [CrmFormDialogComponent]
 })
 export class CrmFormDialogModule { }

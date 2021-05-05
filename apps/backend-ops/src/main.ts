@@ -4,8 +4,8 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, upgrade, prepareDb, prepareStorage, prepareForTestingBeta } from './firebaseSetup';
-import { migrate } from './migrations';
+import { prepareForTesting, upgrade, prepareDb, prepareStorage, prepareForTestingBeta, upgradeBeta } from './firebaseSetup';
+import { migrate, migrateBeta } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
@@ -71,6 +71,15 @@ async function runCommand() {
     case 'generateFixtures':
       await generateFixtures();
       break;
+    case 'upgradeBeta':
+      if (!await isMigrationRequired()) {
+        console.log('Skipping upgrade because migration is not required...');
+        return;
+      }
+      await startMaintenance(db);
+      await upgradeBeta();
+      await endMaintenance(db);
+      break;
     case 'upgrade':
       if (!await isMigrationRequired()) {
         console.log('Skipping upgrade because migration is not required...');
@@ -110,6 +119,15 @@ async function runCommand() {
       break;
     case 'healthCheck':
       await healthCheck();
+      break;
+    case 'migrateBeta':
+      if (!await isMigrationRequired()) {
+        console.log('Skipping because there is no migration to run...');
+        return;
+      }
+      await startMaintenance(db);
+      await migrateBeta();
+      await endMaintenance(db);
       break;
     case 'migrate':
       if (!await isMigrationRequired()) {

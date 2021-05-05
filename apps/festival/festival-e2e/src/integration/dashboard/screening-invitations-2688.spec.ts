@@ -9,7 +9,7 @@ import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 
 // Pages
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
-import { FestivalDashboardHomePage, EventPage, EventEditPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
+import { FestivalDashboardHomePage, EventPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
 
 const TestEVENT = EVENTS[0];
@@ -36,7 +36,7 @@ describe('Organiser invites other users to private screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     const p1 = new LandingPage();
-    p1.clickSignup();
+    p1.clickLogin();
   });
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
@@ -49,7 +49,7 @@ describe('Organiser invites other users to private screening', () => {
     cy.log(`Create screening {${TestEVENT.event}}`)
     const invitees = [users[UserIndex.InvitedUser1].email,
                       users[UserIndex.InvitedUser2].email];
-    p2.createEvent(TestEVENT.event, NOW, 
+    p2.createEvent(TestEVENT.event, NOW,
       TestEVENT.movie.title.international, false, invitees);
   });
 
@@ -101,11 +101,16 @@ describe('Organiser invites other users to private screening', () => {
     signIn(users[UserIndex.UninvitedGuest]);
     acceptCookie();
 
+    cy.log("Reach Market Home.")
     const p1 = new FestivalMarketplaceHomePage();
+
+    cy.log("Navigate to Screening Page from Screening Schedule");
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
+
+    cy.log("Navigate to Marketplace Event Page");
     const p5: FestivalMarketplaceEventPage = p4.clickPrivateEvent();
     p5.assertJoinScreeningNotExists();
 

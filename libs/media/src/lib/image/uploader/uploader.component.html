@@ -1,4 +1,4 @@
-<input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
+<input #fileUploader multiple hidden [accept]="accept" type="file" (change)="filesSelected($event.target.files)" />
 <section [ngSwitch]="step$ | async">
 
   <!-- Drop -->
@@ -8,7 +8,8 @@
     </button>
     <ng-content select="[title]"></ng-content>
     <p class="mat-body-2">{{ cropDimensions }}</p>
-    <p class="mat-caption">Accepted Formats: .jpg, .png</p>
+    <p class="mat-caption">Accepted Formats: {{ accept.join(', ') }}</p>
+    <p class="mat-caption">Max file size: {{ maxSize | fileSize }}</p>
     <p class="mat-caption">Drag and drop a file here or <a (click)="fileUploader.click()">browse</a></p>
   </article>
 

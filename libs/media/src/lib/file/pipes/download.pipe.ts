@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { MediaService } from '../../+state/media.service';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { fileSizeToString } from '@blockframes/utils/utils';
 
 
 @Pipe({ name: 'getUrl' })
@@ -24,8 +25,17 @@ export class ToBlobPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'fileSize' })
+export class FileSizePipe implements PipeTransform {
+  constructor() {}
+  /** Take size in Bytes and parse it into a human readable string */
+  transform(fileSize: number) {
+    return fileSizeToString(fileSize)
+  }
+}
+
 @NgModule({
-  declarations: [GetUrlPipe, ToBlobPipe],
-  exports: [GetUrlPipe, ToBlobPipe]
+  declarations: [GetUrlPipe, ToBlobPipe, FileSizePipe],
+  exports: [GetUrlPipe, ToBlobPipe, FileSizePipe]
 })
 export class DownloadPipeModule { }

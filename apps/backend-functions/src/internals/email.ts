@@ -9,8 +9,9 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as admin from 'firebase-admin';
 import { App, getSendgridFrom, AppMailSetting, getAppName, appLogo, applicationUrl, appDescription } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
+import { logger } from 'firebase-functions';
 
-const substitutions = {
+export const substitutions = {
   groupUnsubscribe: "<%asm_group_unsubscribe_raw_url%>",
   preferenceUnsubscribe: "<%asm_preferences_raw_url%>",
   notificationPage: "/c/o/account/profile/view/notifications"
@@ -69,8 +70,10 @@ async function send(msg: MailDataRequired): Promise<any> {
   SendGrid.setApiKey(sendgridAPIKey);
   return SendGrid.send(msg).catch(e => {
     if (e.message === 'Unauthorized') {
+      logger.error(emailErrorCodes.unauthorized.message);
       throw new Error(emailErrorCodes.unauthorized.code);
     } else {
+      logger.error(emailErrorCodes.general.message);
       throw new Error(emailErrorCodes.general.code);
     }
   });

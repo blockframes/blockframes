@@ -185,10 +185,13 @@ export const datastudio = {
   user: 'fd0ee9b3-0306-4404-ae96-a67d708e2c58/page/dLd2B'
 }
 
-// Archipel Content OrgId
+// Archipel OrgIds
 // ========
 
-export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+export const centralOrgId = {
+  cascade8: 'jnbHKBP5YLvRQGcyQ8In',
+  catalog: 'nBM8sy5EEAOtVBCX4nTJ',
+};
 
 // Import / Export parameters
 // =======

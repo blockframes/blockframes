@@ -7,8 +7,7 @@ import * as admin from 'firebase-admin';
 import { InvitationDocument, OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
-import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
-import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
+import { App, getOrgAppAccess, applicationUrl } from '@blockframes/utils/apps';
 import { getDocument } from '@blockframes/firebase-utils';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
@@ -21,6 +20,7 @@ export function createPublicOrganizationDocument(org: OrganizationDocument) {
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
     logo: createStorageFile(org.logo),
+    activity: org.activity ?? null,
   }
 }
 
@@ -96,22 +96,4 @@ export async function getOrgAppKey(_org: OrganizationDocument | string): Promise
   } else {
     return getOrgAppAccess(_org)[0];
   };
-}
-
-/**
- *  This guess the app from the org app access and returns the url of the app to use
- * @param _org
- */
-export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
-  const key = await getOrgAppKey(_org);
-  return applicationUrl[key];
-}
-
-/**
- * This guess the app from the org app access and returns the "from" email address to use
- * @param _org
- */
-export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailJSON> {
-  const key = await getOrgAppKey(_org);
-  return getSendgridFrom(key);
 }

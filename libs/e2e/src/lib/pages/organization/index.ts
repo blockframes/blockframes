@@ -1,13 +1,3 @@
-import OrganizationHomePage from './OrganizationHomePage';
-import OrganizationCreatePage from './OrganizationCreatePage';
-import OrganizationFindPage from './OrganizationFindPage';
-import OrganizationAppAccessPage from './OrganizationAppAccessPage';
-import OrganizationCongratulationPage from './OrganizationCongratulationPage';
+import OrganizationLiteFormPage from './OrganizationLiteFormPage';
 
-export {
-  OrganizationHomePage,
-  OrganizationCreatePage,
-  OrganizationFindPage,
-  OrganizationAppAccessPage,
-  OrganizationCongratulationPage
-};
+export { OrganizationLiteFormPage };

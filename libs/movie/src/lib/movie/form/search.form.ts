@@ -4,7 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
+import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal, ContentType } from '@blockframes/utils/static-model/types';
 import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
@@ -27,13 +27,14 @@ export interface MovieSearch extends AlgoliaSearch {
   minBudget: number;
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
+  contentType?: ContentType;
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
   return {
     query: '',
     page: 0,
-    hitsPerPage: 8,
+    hitsPerPage: 50,
     storeType: [],
     storeConfig: [],
     genres: [],
@@ -75,6 +76,7 @@ function createMovieSearchControl(search: MovieSearch) {
     minBudget: new FormControl(search.minBudget),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
+    contentType: new FormControl(search.contentType),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
     hitsPerPage: new FormControl(50, Validators.max(1000))
   };
@@ -106,7 +108,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
   get socialGoals() { return this.get('socialGoals'); }
-  get hitsPerPage() { return this.get('hitsPerPage') }
+  get hitsPerPage() { return this.get('hitsPerPage'); }
+  get contentType() { return this.get('contentType'); }
 
   isEmpty() {
     return (
@@ -121,7 +124,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
       this.sellers?.value.length === 0 &&
-      this.storeType?.value.length === 0);
+      this.storeType?.value.length === 0 &&
+      !this.contentType.value);
   }
 
   search() {
@@ -142,7 +146,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.sellers.value.map(seller => `orgName:${seller.name}`),
         this.storeType.value.map(type => `storeType:${type}`),
         this.storeConfig.value.map(config => `storeConfig:${config}`),
-        this.socialGoals.value.map(goal => `socialGoals:${goal}`)
+        this.socialGoals.value.map(goal => `socialGoals:${goal}`),
+        [`contentType:${this.contentType.value || ''}`]
       ],
 
     };

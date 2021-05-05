@@ -5,7 +5,7 @@ import { ClearFirestoreDataOptions } from '@firebase/rules-unit-testing/dist/src
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
-import { runShellCommand, runShellCommandUntil, awaitProcOutput, runInBackground } from '../commands';
+import { runShellCommand, runShellCommandUntil, awaitProcOutput, runInBackground, gsutilTransfer } from '../commands';
 import { getFirestoreExportDirname } from './export';
 import { catchErrors, sleep } from '../util';
 
@@ -36,7 +36,20 @@ export const defaultEmulatorBackupPath = join(process.cwd(), '.firebase', 'emula
  * @param emulatorBackupPath local path to root Firebase emulator export directory
  */
 export async function importFirestoreEmulatorBackup(gcsPath: string, emulatorBackupPath: string) {
-  await downloadFirestoreBackup(gcsPath, emulatorBackupPath);
+  const firestoreBackupPath = getFirestoreExportPath(emulatorBackupPath);
+  const trailingSlash = gcsPath.charAt(gcsPath.length - 1) === '/';
+  if (trailingSlash) gcsPath = gcsPath.slice(0, -1);
+  if (!existsSync(emulatorBackupPath)) mkdirSync(firestoreBackupPath, { recursive: true });
+  else {
+    rmdirSync(emulatorBackupPath, { recursive: true });
+    mkdirSync(firestoreBackupPath, { recursive: true });
+  }
+
+  await gsutilTransfer({
+    from: gcsPath,
+    to: firestoreBackupPath,
+  });
+
   createEmulatorMetadataJson(emulatorBackupPath);
 }
 
@@ -54,26 +67,6 @@ export async function startFirestoreEmulatorWithImport(emuPath: string) {
   process.on('SIGINT', async () => await shutdownEmulator(proc));
   await procPromise;
   return proc;
-}
-
-/**
- * This helper function will download a Firestore export from a GCS bucket and
- * save it inside a folder structure compatible with a local Firestore emulator
- * @param gcsPath The full GCS bucket URI pointing to the online Firestore export
- * @param emulatorBackupPath absolute path to the root Firebase emulator directory
- */
-export function downloadFirestoreBackup(gcsPath: string, emulatorBackupPath: string) {
-  const firestoreBackupPath = getFirestoreExportPath(emulatorBackupPath);
-  const trailingSlash = gcsPath.charAt(gcsPath.length - 1) === '/';
-  if (!existsSync(emulatorBackupPath)) mkdirSync(firestoreBackupPath, { recursive: true });
-  else {
-    rmdirSync(emulatorBackupPath, { recursive: true });
-    mkdirSync(firestoreBackupPath, { recursive: true });
-  }
-
-  const cmd = `gsutil -m cp -r "${gcsPath}${trailingSlash ? '*' : '/*'}"  "${firestoreBackupPath}"`;
-  console.log('Running command:', cmd);
-  return runShellCommand(cmd);
 }
 
 /**
@@ -195,22 +188,13 @@ export async function uploadDbBackupToBucket({ bucketName, remoteDir, localPath 
   emulatorMetaData.firestore.metadata_file = join(firestoreFolderName, newFirestoreMetaFilename);
   writeFileSync(emulatorMetadataJsonPath, JSON.stringify(emulatorMetaData, null, 4), 'utf-8');
 
-  let cmd: string;
-  let output: string;
   if (!remoteDir) throw Error('remoteDir is empty... this will clear the entire bucket!');
-  try {
-    cmd = `gsutil -m rm -r "gs://${bucketName}/${remoteDir}"`;
-    console.log('Running command:', cmd);
-    output = execSync(cmd).toString();
-    console.log(output);
-  } catch (e) {
-    console.warn(e.toString());
-  }
 
-  cmd = `gsutil -m cp -r "${firestoreExportAbsPath}" "gs://${bucketName}/${remoteDir}"`;
-  console.log('Running command:', cmd);
-  output = execSync(cmd).toString()
-  console.log(output);
+  await gsutilTransfer({
+    mirror: true,
+    from: firestoreExportAbsPath,
+    to: `gs://${bucketName}/${remoteDir}`,
+  });
 }
 
 export function isFirestoreBackupDir(backupDir: string) {

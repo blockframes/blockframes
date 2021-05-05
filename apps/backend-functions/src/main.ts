@@ -9,7 +9,7 @@ import {
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
@@ -22,6 +22,7 @@ import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio'
 import { heavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
+import { onOfferCreate } from './offer';
 
 
 //--------------------------------
@@ -48,9 +49,7 @@ export const onUserUpdate = functions.runWith(heavyConfig) // user update can po
 export const onUserDelete = onDocumentDelete('/users/{userID}', users.onUserDelete);
 
 /** Trigger: REST call to send a verify email to a user. */
-// @TODO (#2821)
-/*export const sendVerifyEmail = functions.https
-  .onCall(users.startVerifyEmailFlow);*/
+export const sendVerifyEmailAddress = functions.https.onCall(skipInMaintenance(logErrors(users.startVerifyEmailFlow)));
 
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https.onCall(skipInMaintenance(users.startResetPasswordEmail));
@@ -100,6 +99,9 @@ export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationI
 
 /** Used to check if users have already an invitation to join org existing */
 export const hasUserAnOrgOrIsAlreadyInvited = functions.https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
+
+/** Used to get invitation linked to an email when users signup for the first time */
+export const getInvitationLinkedToEmail = functions.https.onCall(invitations.getInvitationLinkedToEmail);
 
 //--------------------------------
 //    Events Management          //
@@ -189,6 +191,11 @@ export const sendMailWithTemplate = functions.https.onCall(skipInMaintenance(_se
 /** Trigger: when an notification is created to send email if requested */
 export const sendNotificationEmails = onDocumentCreate('notifications/{notifID}', onNotificationCreate);
 
+//--------------------------------
+//        Offer Management       //
+//--------------------------------
+
+export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCreate);
 
 //--------------------------------
 //       Orgs Management        //
@@ -205,6 +212,9 @@ export const onOrganizationUpdateEvent = functions
 
 /** Trigger: when an organization is removed. */
 export const onOrganizationDeleteEvent = onDocumentDelete('orgs/{orgID}', onOrganizationDelete);
+
+/** Trigger when an organization ask to access to a new platform  */
+export const requestFromOrgToAccessApp = functions.https.onCall(skipInMaintenance(onRequestFromOrgToAccessApp));
 
 //--------------------------------
 //      Files management        //

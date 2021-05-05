@@ -9,6 +9,8 @@ import { OrganizationFormModule } from './forms/organization-form/organization-f
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { WorkspacePipeModule } from '@blockframes/utils/pipes';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+import { AuthDataValidationModule } from '@blockframes/auth/components/data-validation/data-validation.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -25,54 +27,30 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
-import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
-import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
-import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
-import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
-import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
-import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
+import { OrganizationPendingComponent } from './pages/organization-pending/organization-pending.component';
 
 // Guards
-import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
-import { NoOrganizationGuard } from './guard/no-organization.guard';
+import { NotFullyVerifiedGuard } from '@blockframes/auth/guard/not-fully-verified.guard';
 import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 
 export const noOrganizationRoutes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    canActivate: [NotFullyVerifiedGuard],
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationHomeComponent,
-  },
-  {
-    path: 'find',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationFindComponent,
-  },
-  {
     path: 'join-congratulations',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationFeedbackComponent
+    canActivate: [NotFullyVerifiedGuard],
+    component: OrganizationPendingComponent
   },
   {
     path: 'create-congratulations',
     canActivate: [PendingOrganizationGuard],
-    component: OrganizationCreateFeedbackComponent
-  },
-  {
-    path: 'create',
-    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    component: OrganizationCreateComponent,
-  },
-  {
-    path: 'app-access',
-    component: OrganizationAppAccessComponent,
+    component: OrganizationPendingComponent
   }
 ];
 
@@ -86,6 +64,8 @@ export const noOrganizationRoutes: Routes = [
     ImageModule,
     AlgoliaAutocompleteModule,
     WorkspacePipeModule,
+    AppLogoModule,
+    AuthDataValidationModule,
 
     // Material
     MatFormFieldModule,
@@ -102,16 +82,12 @@ export const noOrganizationRoutes: Routes = [
     MatSnackBarModule,
     MatRadioModule,
     MatRippleModule,
+    MatTooltipModule,
 
     RouterModule.forChild(noOrganizationRoutes),
   ],
   declarations: [
-    OrganizationHomeComponent,
-    OrganizationFindComponent,
-    OrganizationFeedbackComponent,
-    OrganizationCreateComponent,
-    OrganizationAppAccessComponent,
-    OrganizationCreateFeedbackComponent
+    OrganizationPendingComponent,
   ]
 })
 export class NoOrganizationModule { }

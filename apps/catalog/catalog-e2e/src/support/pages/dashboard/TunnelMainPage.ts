@@ -1,4 +1,4 @@
-import TunnelStorylinePage from "./TunnelStorylinePage";
+﻿import TunnelStorylinePage from "./TunnelStorylinePage";
 
 export default class TunnelMainPage {
   constructor() {
@@ -88,12 +88,12 @@ export default class TunnelMainPage {
 
   // Country of origin
   public selectCountry(partialCountry: string, country: string) {
-    cy.get('catalog-movie-tunnel-main movie-form-original-releases form-country input').type(partialCountry);
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases static-select input').type(partialCountry);
     cy.get('mat-option').contains(country).click();
   }
 
   public assertCountryIsSelected(country: string) {
-    cy.get('catalog-movie-tunnel-main movie-form-original-releases form-country input').should('have.value', country);
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases static-select input').should('have.value', country);
   }
 
   public selectMedia(media: string) {

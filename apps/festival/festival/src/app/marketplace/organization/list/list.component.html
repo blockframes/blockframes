@@ -28,8 +28,10 @@
   </list-page-description>
 
   <list-filter>
-    <ng-template filter label="Company's Nationality" [form]="searchForm.country">
-      <form-country [form]="searchForm.country" noWorld></form-country>
+    <ng-template filter [form]="searchForm.country" label="Company's Nationality">
+      <static-select [control]="searchForm.country" [withoutValues]="['world']" scope="territories">
+        <mat-label>Country</mat-label>
+      </static-select>
     </ng-template>
   </list-filter>
 

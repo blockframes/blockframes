@@ -26,7 +26,7 @@ beforeEach(() => {
   clearDataAndPrepareTest();
   cy.visit('/');
   const p1 = new LandingPage();
-  p1.clickSignup();  
+  p1.clickSignup();
 });
 
 describe('User can fill and save contract tunnel form', () => {
@@ -36,7 +36,6 @@ describe('User can fill and save contract tunnel form', () => {
   it.skip('Login into an existing account, navigate on titles list page, go to movie tunnel page 1, go on movie tunnel page 2', () => {
     // Connexion
     const p2: AuthLoginPage = new AuthLoginPage();
-    p2.switchMode();
     p2.fillSignin(users[0]);
     p2.clickSignIn();
     //const p3 = new HomePage();
@@ -78,7 +77,7 @@ describe('User can fill and save contract tunnel form', () => {
     p5.clickSave(); */
     cy.reload();
     cy.wait(5000);
-    
+
 
     p5.assertEventIsSelected(EVENT);
     p5.assertDurationExists(DURATION);

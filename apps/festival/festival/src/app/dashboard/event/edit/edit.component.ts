@@ -75,7 +75,9 @@ export class EditComponent implements OnInit, OnDestroy {
     ).subscribe(event => {
       const app = getCurrentApp(this.routerQuery);
       const url = applicationUrl[app];
-      this.link = `${url}/c/o/marketplace/event/${event.id}/lobby`;
+
+      const place = this.type === 'meeting' ? 'lobby' : 'session';
+      this.link = `${url}/c/o/marketplace/event/${event.id}/${place}`;
 
       this.type = event.type;
       this.form = new EventForm(event);

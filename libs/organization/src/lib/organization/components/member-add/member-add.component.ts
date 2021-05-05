@@ -37,7 +37,7 @@ export class MemberAddComponent {
       const emails: string[] = this.emailForm.value.split(',');
       const invalid = emails.filter(value => Validators.email({ value } as any));
       if (invalid.length) {
-        this.error = `These mails are not valid email: ${invalid.join(', ')}.`;
+        this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
       } else {
         for (const email of emails) {
           if (!this.form.value.includes(email)) {
@@ -55,7 +55,7 @@ export class MemberAddComponent {
     try {
       this._isSending.next(true);
       const emails = this.form.value;
-      const invitationsExist = await this.invitationService.orgInvitationOrUserOrgIdExists(emails);
+      const invitationsExist = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails).toPromise<boolean>();
       if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
       await this.invitationService.invite(emails, this.org).to('joinOrganization');
       this.snackBar.open('Your invitation was sent', 'close', { duration: 5000 });

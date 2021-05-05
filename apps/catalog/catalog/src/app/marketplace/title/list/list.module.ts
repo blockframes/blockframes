@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -29,7 +30,7 @@ import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormFormatModule } from '@blockframes/ui/form/format/format.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -47,6 +48,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BudgetFilterModule,
     StaticCheckBoxesModule,
     AvailsFilterModule,
+    FormFormatModule,
 
     // Material
     MatIconModule,

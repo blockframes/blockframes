@@ -7,6 +7,8 @@ export enum USER {
   Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
   Ivo = 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
   Daphney = 'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
+  Camilla = 'qFbytROWQYWJplzck42RLdgAr3K3',
+  Hettie = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
 }
 
 const newUsers: Partial<UserType>[] = [
@@ -15,7 +17,7 @@ const newUsers: Partial<UserType>[] = [
     lastName: "Bangera",
     email: "mano@blockframes.com",
     password: "blockframes"
-  }  
+  }
 ]
 
 export class User {
@@ -24,7 +26,7 @@ export class User {
   }
 
   get(query: QueryInferface) : Partial<UserType>[] {
-    const userSet: Partial<UserType>[]  = (query.exist) ? 
+    const userSet: Partial<UserType>[]  = (query.exist) ?
                                           userFixture : newUsers;
 
     if (query.index && query.index !== -1) {
@@ -52,5 +54,5 @@ export class User {
    */
   getByUID(uid: string) : Partial<UserType> {
     return this.get({exist: true, key:'uid', value: uid})[0];
-  }  
+  }
 }

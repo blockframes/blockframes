@@ -9,7 +9,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 // Guards
-import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 // Material
@@ -56,8 +55,6 @@ const routes: Routes = [{
     },
     {
       path: 'selection',
-      canActivate: [CatalogCartGuard],
-      canDeactivate: [CatalogCartGuard],
       loadChildren: () => import('./title/selection/selection.module').then(m => m.SelectionModule)
     },
     {

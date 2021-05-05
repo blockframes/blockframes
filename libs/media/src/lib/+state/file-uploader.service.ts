@@ -7,7 +7,7 @@ import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage
 
 import { AuthQuery } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
-import { BehaviorStore } from "@blockframes/utils/behavior-store";
+import { BehaviorStore } from "@blockframes/utils/observable-helpers";
 import { delay } from '@blockframes/utils/helpers';
 
 import { UploadData, isValidMetadata } from "./media.model";
@@ -71,9 +71,9 @@ export class FileUploaderService {
 
     const uploads = this.queue[storagePath];
 
-    if (!uploads) return;
+    if (!uploads || !uploads.length) return;
 
-    const index = uploads.findIndex(upload => upload.fileName === fileName);
+    const index = uploads.findIndex(upload => upload?.fileName === fileName);
 
     // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
     if (index !== -1) uploads[index] = null;
