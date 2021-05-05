@@ -79,8 +79,7 @@
         </organization-lite-form>
 
         <!-- PASSWORD FIELDS -->
-        <!--  form.get('generatedPassword').enabled -->
-        <ng-container *ngIf="true">
+        <ng-container *ngIf="form.get('generatedPassword').enabled">
           <mat-form-field appearance="outline">
             <mat-label>Invitation Pass</mat-label>
             <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
@@ -89,8 +88,10 @@
           </mat-form-field>
           <div class="pass-info">
             <mat-icon svgIcon="info"></mat-icon>
-            <span class="mat-caption">Can't find it? <button mat-button (click)="openIntercom()">Contact
-                us</button></span>
+            <p class="mat-caption">
+              Can't find it?
+              <button (click)="openIntercom()">Contact us</button>
+            </p>
           </div>
         </ng-container>
 

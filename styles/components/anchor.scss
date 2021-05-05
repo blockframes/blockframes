@@ -1,19 +1,6 @@
 @mixin anchor($theme) {
-  $primary: map-get($theme, primary);
-
-  a:not(.mat-button-base):not(.mat-list-item) {
-    color: mat-color($primary, 500);
-    text-decoration-color: mat-color($primary, 500);
-    text-decoration: underline;
-  }
-
-  a:not(.mat-button-base):not(.mat-list-item):hover {
-    color: mat-color($primary, 800);
-    text-decoration-color: mat-color($primary, 800);
-  }
-
-  a:not(.mat-button-base):not(.mat-list-item):visited {
-    color: mat-color($primary, 800);
-    text-decoration-color: mat-color($primary, 800);
+  a:not(.mat-button):not(.mat-flat-button):not(.mat-stroked-button),
+  a:not(.mat-button):not(.mat-flat-button):not(.mat-stroked-button):visited {
+    color: inherit;
   }
 }
