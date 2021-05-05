@@ -104,7 +104,7 @@ export class ListComponent implements OnInit, OnDestroy {
           if (!parentTerms.length) return false;
           this.parentTerms[titleId] = parentTerms;
           const terms = bucketValue?.contracts.find(c => c.titleId === titleId)?.terms ?? [];
-          return !isSold(availsValue, this.terms[titleId].sale) && !isInBucket(availsValue, terms);
+          return !isSold(availsValue, this.terms[titleId].sale).length && !isInBucket(availsValue, terms);
         })
         this.movieResultsState.next(hits);
       } else { // if availsForm is invalid, put all the movies from algolia
