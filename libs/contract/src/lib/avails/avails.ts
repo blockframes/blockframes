@@ -53,6 +53,13 @@ export function isSold(
   { medias, duration, territories, exclusive }: AvailsFilter,
   terms: Term<Date>[], // Terms of all sales of the title
 ) {
+  return !!getSoldTerms({ medias, duration, territories, exclusive }, terms).length;
+}
+
+export function getSoldTerms(
+  { medias, duration, territories, exclusive }: AvailsFilter,
+  terms: Term<Date>[], // Terms of all sales of the title
+) {
   const result: Term<Date>[] = [];
   for (const term of terms) {
     const startDuringDuration = duration.from.getTime() >= term.duration.from.getTime() && duration.from.getTime() <= term.duration.to.getTime();

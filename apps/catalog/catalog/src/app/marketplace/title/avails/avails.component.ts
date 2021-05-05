@@ -5,7 +5,7 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { getMandateTerms, isSold } from '@blockframes/contract/avails/avails';
+import { getMandateTerms, getSoldTerms } from '@blockframes/contract/avails/avails';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Bucket, BucketQuery } from '@blockframes/contract/bucket/+state';
@@ -95,7 +95,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.available$.next(available);
 
     // Territories that are already sold after form filtering 
-    const soldTerms = isSold(this.form.value, this.salesTerms);
+    const soldTerms = getSoldTerms(this.form.value, this.salesTerms);
     const sold = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => ({
