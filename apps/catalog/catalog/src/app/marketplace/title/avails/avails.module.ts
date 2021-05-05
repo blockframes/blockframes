@@ -29,6 +29,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AvailsGuard } from './avails.guard';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [MarketplaceMovieAvailsComponent],
@@ -59,6 +60,7 @@ import { AvailsGuard } from './avails.guard';
     MatDatepickerModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatSlideToggleModule,
 
     RouterModule.forChild([{ path: '', component: MarketplaceMovieAvailsComponent, canDeactivate: [AvailsGuard] }])
   ]

@@ -16,6 +16,7 @@ import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { switchMap } from 'rxjs/operators';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
@@ -59,6 +60,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public bucketForm = new BucketForm();
   public availsForm = new AvailsForm({ territories: [] }, ['duration']);
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
+
+  public isCalendar = false;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -207,5 +210,9 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   addToSelection() {
     this.bucketService.update(this.orgId, this.bucketForm.value);
+  }
+
+  toggleCalendar(toggle: MatSlideToggleChange) {
+    this.isCalendar = toggle.checked;
   }
 }
