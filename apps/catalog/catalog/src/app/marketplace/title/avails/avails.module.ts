@@ -13,6 +13,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -43,6 +44,7 @@ import { AvailsGuard } from './avails.guard';
     InputAutocompleteModule,
     StaticGroupModule,
     ConfirmModule,
+    AvailsCalendarModule,
 
     // Material
     MatCardModule,

@@ -56,7 +56,7 @@
     </mat-card>
   </aside>
 
-  <mat-card class="map-card">
+  <mat-card class="avails-card">
     <mat-card-header>
       <mat-card-title>Available territories</mat-card-title>
       <mat-card-subtitle *ngIf="org$ | async as org">
@@ -128,6 +128,20 @@
     </mat-card-content>
 
   </mat-card>
+
+  <mat-card class="avails-card">
+    <mat-card-header>
+      <mat-card-title>Available Dates</mat-card-title>
+      <mat-card-subtitle *ngIf="org$ | async as org">
+        Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel free to
+        <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <avails-calendar></avails-calendar>
+    </mat-card-content>
+  </mat-card>
+
 </section>
 
   <h2>Preselected Rights</h2>
