@@ -34,7 +34,7 @@
   <div [@fadeIn]="!event.meta?.tmp" class="cal-event" *ngIf="weekEvent.event as event">
 
     <ng-container [ngSwitch]="event | eventSize">
-      <!-- Under Creatio -->
+      <!-- Under Creation -->
       <section @fadeOut *ngSwitchCase="'local'" fxLayout="column" fxLayoutAlign="center center">
         <mat-icon svgIcon="calendar_today"></mat-icon>
       </section>

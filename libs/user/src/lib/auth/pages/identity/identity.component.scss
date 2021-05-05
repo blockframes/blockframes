@@ -66,6 +66,25 @@ section {
   }
 }
 
+.pass-info {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  p {
+    margin: 0 6px;
+    button {
+      margin: 0;
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}
+
 .org-logo {
   img {
     width: 40px;

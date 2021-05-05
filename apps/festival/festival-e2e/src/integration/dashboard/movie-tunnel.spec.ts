@@ -213,7 +213,7 @@ const MovieFormSummary = [
     input: Movie.production, debug: false },
   {title: 'Artistic Team', selector: '#artistic-team [test-id]',
     input: Movie.artisticTeam, debug: false },
-  {title: 'Technical Information', selector: '#technical-information [test-id]',
+  {title: 'Technical Specifications', selector: '#technical-information [test-id]',
     input: Movie.techSpec, debug: false },
 ];
 

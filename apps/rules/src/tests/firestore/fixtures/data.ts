@@ -167,9 +167,25 @@ export const testFixture = {
     title: {
       original: 'UnitTest',
     },
-    storeConfig: {
-      appAccess: { festival: true },
-      status: 'accepted'
+    app: {
+      catalog: {
+        status: 'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      festival: {
+        status: 'accepted',
+        access: true,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      financiers: {
+        status: 'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      }
     },
     orgIds: ['O001']
   },
@@ -178,9 +194,25 @@ export const testFixture = {
     title: {
       original: 'UnitTest Eraser',
     },
-    storeConfig: {
-      appAccess: { festival: true },
-      status: 'accepted'
+    app: {
+      catalog: {
+        status: 'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      festival: {
+        status: 'accepted',
+        access: true,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      financiers: {
+        status: 'draft',
+        access: true,
+        refusedAt: null,
+        acceptedAt: null
+      }
     },
     orgIds: ['O001']
   },
@@ -189,9 +221,25 @@ export const testFixture = {
     title: {
       original: 'UnitTest',
     },
-    storeConfig: {
-      appAccess: { festival: true },
-      status: 'draft',
+    app: {
+      catalog: {
+        status: 'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      festival: {
+        status: 'draft',
+        access: true,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      financiers: {
+        status: 'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      }
     },
     note: '',
     orgIds: ['O001']

@@ -5,7 +5,7 @@
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>Create your account</h1>
     <p>Please fill in the form below to join the {{ appName }} platform</p>
-    <p *ngIf="!(user$ | async)" class="mat-body-2 text-primary">Already have an account ? <a
+    <p *ngIf="!(user$ | async)" class="mat-body-2 text-primary">Already have an account? <a
         routerLink="/auth/connexion">Log in here</a></p>
     <mat-card fxLayout="column" fxLayoutAlign="center center">
       <form [formGroup]="form" fxLayout="column">
@@ -58,7 +58,7 @@
 
             <mat-label>Company Name</mat-label>
             <mat-hint>
-              Join an existing company account or create a new one.
+              Select an existing company from the list or create a new one.
             </mat-hint>
             <mat-error>
               You have to select a choice from the list.
@@ -79,16 +79,20 @@
         </organization-lite-form>
 
         <!-- PASSWORD FIELDS -->
-
         <ng-container *ngIf="form.get('generatedPassword').enabled">
           <mat-form-field appearance="outline">
             <mat-label>Invitation Pass</mat-label>
             <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
               test-id="invitation-code" required />
-            <mat-hint align="start">Your Invitation Pass is the code you received in your invitation email.</mat-hint>
-            <mat-hint align="end">Can't find your Invitation Pass code ? <a [routerLink]="['./']"
-                (click)="openIntercom()">Contact us</a>.</mat-hint>
+            <mat-hint>You'll find your Invitation Pass in your invitation email.</mat-hint>
           </mat-form-field>
+          <div class="pass-info">
+            <mat-icon svgIcon="info"></mat-icon>
+            <p class="mat-caption">
+              Can't find it?
+              <button (click)="openIntercom()">Contact us</button>
+            </p>
+          </div>
         </ng-container>
 
         <password-confirm *ngIf="form.get('password').enabled" formControlName="password"></password-confirm>
@@ -98,14 +102,14 @@
         <div class="privacy" fxLayout="column" fxLayoutAlign="start">
           <auth-accept-conditions [control]="form.get('termsOfUse')">
             <span conditionText>I hereby accept {{ appName }}&nbsp;</span>
-            <span conditionLink class="inline-link">Terms and Conditions</span>
+            <span conditionLink>Terms and Conditions</span>
             <ng-template authConditions>
               <auth-terms-conditions></auth-terms-conditions>
             </ng-template>
           </auth-accept-conditions>
           <auth-accept-conditions [control]="form.get('privacyPolicy')">
             <span conditionText>I hereby accept the Processing of my Personal Data and declare to know&nbsp;</span>
-            <span conditionLink class="inline-link">the Conditions of such Processing and my rights under GDPR
+            <span conditionLink>the Conditions of such Processing and my rights under GDPR
               Regulation</span>
             <ng-template authConditions>
               <auth-privacy-policy></auth-privacy-policy>

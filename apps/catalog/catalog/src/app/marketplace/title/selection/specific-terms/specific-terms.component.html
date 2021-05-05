@@ -1,14 +1,13 @@
 <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
-  <h1>Add Specific Terms To Your Offer</h1>
-  <p>Please specify specific terms to your offer if any.<br/>
+  <h1>Specific Terms</h1>
+  <p>Please indicate any specific conditions you'd like to request for this deal.<br/>
   These terms will be applied to the whole contract</p>
   <form [formGroup]="form" fxLayout="column">
     <mat-form-field appearance="outline">
       <mat-label>Specific Terms</mat-label>
       <textarea
         matInput
-        placeholder="eg: Licensee shall have t
-        he exclusive option to acquire additional Episodes of the Program(s) or additional Rights during the Licence Period for an additional fee equal or superior to the actual fee per Episode."
+        placeholder="eg: Licensee shall have the exclusive option to acquire additional Episodes of the Program(s) or additional Rights during the Licence Period for an additional fee equal or superior to the actual fee per Episode."
         formControlName="specificity"
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
@@ -18,10 +17,10 @@
       </textarea>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Delivery List</mat-label>
+      <mat-label>Delivery Specifications</mat-label>
       <textarea
         matInput
-        placeholder="Delivery list"
+        placeholder="Please indicate here the specific items you require for your delivery, if any."
         formControlName="delivery"
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
