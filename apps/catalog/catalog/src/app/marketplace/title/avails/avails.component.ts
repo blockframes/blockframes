@@ -171,9 +171,16 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   }
 
   public selectAll() {
-    // @TODO #5573 if a territory is already selected, it should not be removed
-    const available = this.available$.getValue();
-    available.forEach(t => this.bucketForm.toggleTerritory(this.availsForm.value, t));
+    let available = this.available$.getValue();
+    available.forEach(t => {
+      const isAlreadyToggled = this.bucketForm.isAlreadyToggled(this.availsForm.value, t);
+      if (!isAlreadyToggled) {
+        this.bucketForm.toggleTerritory(this.availsForm.value, t);
+        available = available.filter(before => before.slug === t.slug);
+      }
+    });
+
+    this.available$.next(available);
   }
 
   public trackByTag(tag) {

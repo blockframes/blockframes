@@ -156,4 +156,16 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
       return false;
     }
   }
+
+  isAlreadyToggled(avails: AvailsFilter, marker: TerritoryMarker) {
+    const { contract: mandate, slug: territory } = marker;
+    const bucket = this.value;
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
+    if (contractIndex === -1) { return false; }
+    const contract = bucket.contracts[contractIndex];
+    const termIndex = findSameTermIndex(contract.terms, avails);
+    if (termIndex === -1) { return false }
+    const territories = contract.terms[termIndex].territories;
+    return territories.includes(territory);
+  }
 }
