@@ -1848,46 +1848,6 @@ export const isInKeys = (scope: Scope, givenValue: string) => {
 }
 
 /**
- * @param code
- * @param system
- */
-function getTerritoryFromGeoJson(
-  code: string,
-  system: 'iso_a3'   = 'iso_a3') {
-  const territory = system === 'iso_a3'
-    ? Object.keys(territoriesISOA3).find(i => i[system] === code.toUpperCase())
-    : Object.keys(territoriesISOA2).find(i => i[system] === code.toUpperCase())
-  if (!territory) {
-    throw new Error(`Failed to retreive: ${code}.`);
-  }
-  return territory;
-}
-
-/**
- * @param code
- * @param system
- */
-export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') { // @TODO #5573 unused
-  const territory = getTerritoryFromGeoJson(code, system);
-  if (!territory) {
-    throw new Error(`Failed to territory: ${code}.`);
-  }
-  return system === 'iso_a3' ? territory as TerritoryISOA3 : territory as TerritoryISOA2;
-}
-
-/**
- * @param code
- * @param system
- */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {  // @TODO #5573 unused
-  const territory = getTerritoryFromGeoJson(code, system);
-  if (!territory) {
-    throw new Error(`Failed to territory: ${code}.`);
-  }
-  return system === 'iso_a3' ? territoriesISOA3[territory] as TerritoryISOA3Value : territoriesISOA2[territory] as TerritoryISOA2Value;
-}
-
-/**
  * @param slug
  */
 export function getISO3166TerritoryFromSlug(slug: Territory) {
