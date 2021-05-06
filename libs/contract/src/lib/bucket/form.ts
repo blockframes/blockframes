@@ -1,22 +1,21 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
-import { Territory, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
 import { AvailsFilter, findSameTermIndex } from '../avails/avails';
-import { Term } from '../term/+state';
-import { Contract, Mandate } from '../contract/+state';
-import { Bucket, BucketContract, BucketTerm, createBucket, createBucketContract, createBucketTerm, toBucketContract, toBucketTerm } from './+state/bucket.model';
+import { Mandate } from '../contract/+state';
+import {
+  Bucket,
+  BucketContract,
+  BucketTerm,
+  createBucket,
+  createBucketContract,
+  createBucketTerm,
+  toBucketContract,
+  toBucketTerm
+} from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-interface TerritoryMarker { // @TODO move
-  slug: Territory,
-  isoA3: TerritoryISOA3Value,
-  label: TerritoryValue,
-  term?: Term<Date>,
-  contract?: Contract,
-}
-
+import { TerritoryMarker } from '@blockframes/ui/map/map.component';
 
 //////////
 // TERM //

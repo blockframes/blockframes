@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MovieQuery, Movie, createMovieLanguageSpecification } from '@blockframes/movie/+state';
-import { TerritoryValue, TerritoryISOA3Value, territoriesISOA3, territories, Language, Territory } from '@blockframes/utils/static-model';
+import { TerritoryValue, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
@@ -16,14 +16,7 @@ import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { map, switchMap } from 'rxjs/operators';
-
-export interface TerritoryMarker { // @TODO move
-  slug: Territory,
-  isoA3: TerritoryISOA3Value,
-  label: TerritoryValue,
-  term?: Term<Date>,
-  contract?: Contract, // @TODO mandate
-}
+import { TerritoryMarker } from '@blockframes/ui/map/map.component';
 
 @Component({
   selector: 'catalog-movie-avails',
