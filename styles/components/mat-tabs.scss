@@ -1,0 +1,15 @@
+@mixin mat-bf-tabs-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-tab-label:hover {
+    .mat-icon {
+      path, g, polygon {
+        fill: mat-color($foreground, base);
+      }
+    }
+  }
+}

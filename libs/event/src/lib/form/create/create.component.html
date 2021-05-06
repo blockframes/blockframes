@@ -2,11 +2,11 @@
   <mat-icon svgIcon="close"></mat-icon>
 </button>
 
-<h3>Add a new Event</h3>
+<h3>Add a New Event</h3>
 
 <form [formGroup]="form" fxLayout="column">
   <mat-form-field fxFlex appearance="outline">
-    <mat-label>Select event type</mat-label>
+    <mat-label>Select Event Type</mat-label>
     <mat-select test-id="event-type" required formControlName="type">
       <ng-container *ngFor="let type of types">
         <mat-option [value]="type">{{ type | titlecase }}</mat-option>
@@ -20,6 +20,6 @@
 
 <footer fxLayout fxLayoutAlign="end center"  fxLayoutGap="16px">
   <button type="button" mat-flat-button color="primary" (click)="createAndRedirect()" test-id="more-details" [disabled]="form.invalid">
-    More details
+    More Details
   </button>
 </footer>

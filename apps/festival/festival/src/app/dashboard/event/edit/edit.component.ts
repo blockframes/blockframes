@@ -63,7 +63,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id)))
+      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival')))
     );
 
     this.members$ = this.orgQuery.selectActive().pipe(

@@ -24,9 +24,9 @@ const columns = {
 function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   switch (filter) {
     case 'all': return movies;
-    case 'draft': return movies.filter(movie => movie.storeConfig.status === 'draft');
-    case 'ongoing': return movies.filter(movie => movie.storeConfig.status === 'accepted' && movie.campaign?.cap > movie.campaign?.received);
-    case 'achieved': return movies.filter(movie => movie.storeConfig.status === 'accepted' && movie.campaign?.cap === movie.campaign?.received);
+    case 'draft': return movies.filter(movie => movie.app.financiers.status === 'draft');
+    case 'ongoing': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap > movie.campaign?.received);
+    case 'achieved': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap === movie.campaign?.received);
   }
 }
 
@@ -60,7 +60,7 @@ export class ListComponent implements OnInit {
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
       switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
-      map(movies => movies.filter(movie => movie.storeConfig.appAccess.financiers)),
+      map(movies => movies.filter(movie => movie.app.financiers.access)),
       switchMap(movies => this.filter$.pipe(map(filter => filterMovieCampaign(movies, filter)))),
       tap(movies => {
         !!movies.length ?

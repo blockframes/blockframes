@@ -3,10 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+
+import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -20,7 +25,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];
-  isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
+  isPublished$ = this.query.selectActive(movie => movie.app.financiers.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
   )
 
@@ -30,7 +35,10 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private consentsService: ConsentsService,
+    private movieQuery: MovieQuery,
+    private dialog: MatDialog
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
@@ -45,16 +53,28 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   }
 
   public async submit() {
-    try {
-      await this.shell.layout.update({ publishing: true });
-      const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
-      const ref = this.snackBar.open(text, '', { duration: 1000 });
-      ref.afterDismissed().subscribe(_ => this.router.navigate(['../end'], { relativeTo: this.route }))
-    } catch (err) {
-      console.error(err);
-      // Log the invalid forms
-      this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
-    }
+    const movieId = this.movieQuery.getActiveId();
+    this.dialog.open(CrmFormDialogComponent, {
+      data: {
+        title: 'Confidentiality Reminder',
+        subtitle: 'You are about to submit your project for publication. We kindly remind you that some of the information you\'re about to share might be confidential.',
+        text: 'By submitting your project, you assume the responsibility of disclosing all of the information previously filled out to potential future investors. Before submitting your project, please confirm by writing “I AGREE” in the field below.',
+        confirmationWord: 'i agree',
+        confirmButtonText: 'accept',
+        onConfirm: async () => {
+          try {
+            await this.shell.layout.update({ publishing: true });
+            await this.consentsService.createConsent('share', movieId);
+            const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
+            const ref = this.snackBar.open(text, '', { duration: 1000 });
+            ref.afterDismissed().subscribe(_ => this.router.navigate(['../end'], { relativeTo: this.route }))
+          } catch (err) {
+            console.error(err);
+            // Log the invalid forms
+            this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+          }
+        }
+      }
+    })
   }
-
 }

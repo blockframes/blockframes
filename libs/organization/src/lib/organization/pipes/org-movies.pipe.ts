@@ -11,8 +11,8 @@ export class OrgMoviesPipe implements PipeTransform {
   transform(orgId: string, limit?: number) {
     const appName = getCurrentApp(this.routerQuery);
     const query: QueryFn = ref => ref
-      .where(`storeConfig.appAccess.${appName}`, '==', true)
-      .where(`storeConfig.status`, '==', 'accepted')
+      .where(`app.${appName}.access`, '==', true)
+      .where(`app.${appName}.status`, '==', 'accepted')
       .where('orgIds', 'array-contains', orgId);
     if (limit) {
       return this.movieService.valueChanges(ref => query(ref).limit(limit));

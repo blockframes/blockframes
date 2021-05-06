@@ -4,7 +4,7 @@ import { MovieQuery, Movie, createMovieLanguageSpecification } from '@blockframe
 import { TerritoryValue, TerritoryISOA3Value, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { getMandateTerms, getSoldTerms } from '@blockframes/contract/avails/avails';
 import { Term, TermService } from '@blockframes/contract/term/+state';
@@ -13,6 +13,10 @@ import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket
 import { BucketTermForm, BucketForm } from '@blockframes/contract/bucket/form';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { switchMap } from 'rxjs/operators';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
@@ -54,8 +58,10 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   }
 
   public bucketForm = new BucketForm();
-  public availsForm = new AvailsForm({}, ['duration']);
+  public availsForm = new AvailsForm({ territories: [] }, ['duration']);
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
+
+  public isCalendar = false;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -65,6 +71,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     private termService: TermService,
     private snackBar: MatSnackBar,
     private bucketQuery: BucketQuery,
+    private dialog: MatDialog,
     private bucketService: BucketService
   ) { }
 
@@ -87,6 +94,29 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  confirmExit() {
+    const isPristine = this.bucketForm.pristine;
+    if (isPristine) {
+      return of(true);
+    }
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'You are about to leave the page',
+        question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
+        buttonName: 'Leave anyway'
+      }
+    })
+    return dialogRef.afterClosed().pipe(
+      switchMap(exit => {
+        /* Undefined means user clicked on the backdrop, meaning just close the modal */
+        if (typeof exit === 'undefined') {
+          return of(false);
+        }
+        return of(exit)
+      })
+    )
   }
 
   applyFilters() {
@@ -145,6 +175,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  public selectAll() {
+    const selected = this.selected$.getValue();
+    const available = this.available$.getValue();
+
+    this.selected$.next([...selected, ...available]);
+    this.available$.next([]);
+  }
+
   public trackByTag(tag) {
     return tag;
   }
@@ -172,5 +210,9 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   addToSelection() {
     this.bucketService.update(this.orgId, this.bucketForm.value);
+  }
+
+  toggleCalendar(toggle: MatSlideToggleChange) {
+    this.isCalendar = toggle.checked;
   }
 }

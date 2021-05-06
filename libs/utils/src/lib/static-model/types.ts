@@ -26,7 +26,6 @@ import {
   soundFormat,
   stakeholderRoles,
   storeStatus,
-  storeType,
   subLicensorRoles,
   unitBox,
   territories,
@@ -99,9 +98,6 @@ export type StakeholderRole = keyof typeof stakeholderRoles;
 export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole] & string;
 
 export type StoreStatus = keyof typeof storeStatus;
-
-export type StoreType = keyof typeof storeType;
-export type StoreTypeValue = typeof storeType[StoreType];
 
 export type SubLicensorRole = keyof typeof subLicensorRoles;
 

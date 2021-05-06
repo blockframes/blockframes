@@ -16,7 +16,7 @@
     </header>
 
     <section>
-      <h2>Please choose currency</h2>
+      <h2>Please select a currency</h2>
       <mat-form-field appearance="outline">
         <mat-label>Select</mat-label>
         <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)"
@@ -73,7 +73,7 @@
           </bf-table-filter>
           <footer>
             <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-              Delete all the rights for the title
+              Delete all rights for this title
             </button>
           </footer>
         </section>
@@ -81,7 +81,7 @@
     </ng-container>
 
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
-      <p test-id="total-price">Total Bucket Price: {{ total$ | async | currency:bucket.currency }}</p>
+      <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>
       <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer">Create Offer</button>
     </footer>
   </ng-container>
@@ -92,6 +92,6 @@
     <h1>There is no title to display in your Selection.</h1>
     <span>Select titles to populate your Selection.</span>
     <img asset="no_titles.webp" alt="No rights in selection">
-    <button mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title']">Browse Library</button>
+    <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Browse Library</button>
   </section>
 </ng-template>

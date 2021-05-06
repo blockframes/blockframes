@@ -68,7 +68,6 @@ export class MoviesComponent implements OnInit {
       'id',
       'internalRef',
       'title.international',
-      'storeConfig.status',
       'org.denomination.full',
       'org.denomination.public'
     ];
