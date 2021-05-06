@@ -5,7 +5,7 @@ import { TerritoryValue, territoriesISOA3, territories, Language } from '@blockf
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
-import { Contract, ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { getMandateTerms, getSoldTerms, getTerritories } from '@blockframes/contract/avails/avails';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
