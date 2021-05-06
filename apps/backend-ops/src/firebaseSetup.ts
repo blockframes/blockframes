@@ -5,7 +5,7 @@
  */
 import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { migrate, migrateBeta } from './migrations';
+import { migrateBeta } from './migrations';
 import { importFirestore } from './admin';
 import { copyFirestoreExportFromCiBucket, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
@@ -79,32 +79,6 @@ export async function prepareStorage() {
 }
 
 export async function upgrade() {
-  const { db, auth, storage } = loadAdminServices();
-
-  console.info('Preparing the database...');
-  await migrate(true);
-  console.info('Database ready for deploy!');
-
-  console.info('Cleaning unused db data...');
-  await cleanDeprecatedData(db, auth);
-  console.info('DB data clean and fresh!');
-
-  console.info('Cleaning unused storage data...');
-  await cleanStorage(storage.bucket(storageBucket));
-  console.info('Storage data clean and fresh!');
-
-  console.info('Preparing Algolia...');
-  await upgradeAlgoliaOrgs();
-  await upgradeAlgoliaMovies();
-  await upgradeAlgoliaUsers();
-  console.info('Algolia ready for testing!');
-
-  console.info('Generating watermarks...');
-  await generateWatermarks();
-  console.info('Watermarks generated!');
-}
-
-export async function upgradeBeta() {
   const { db, auth, storage } = loadAdminServices();
 
   console.info('Preparing the database...');
