@@ -1,9 +1,9 @@
+import { restoreFromBackupBucket } from '@blockframes/firebase-utils';
 import { syncUsers, generateWatermarks } from './users';
 import { exportFirestoreToBucket, getBackupBucket, } from '@blockframes/firebase-utils';
 import { last } from 'lodash';
 import { loadDBVersion, selectAndOrderMigrations, updateDBVersion } from './migrations';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { restore } from './admin';
 import { latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
@@ -148,4 +148,15 @@ export async function migrateOld(
 export async function backup() {
   const { db, storage } = loadAdminServices();
   return exportFirestoreToBucket(db, await getBackupBucket(storage));
+}
+
+
+/**
+ * Trigger a firestore database restore operation for the given project
+ * @deprecated
+ */
+
+export async function restore(file?: string) {
+  const { db, storage } = loadAdminServices();
+  return restoreFromBackupBucket(await getBackupBucket(storage), db, file);
 }

@@ -8,18 +8,7 @@ import {
   getBackupBucket,
   getLatestDirName,
   importFirestoreFromBucket,
-  loadAdminServices,
-  restoreFromBackupBucket,
 } from '@blockframes/firebase-utils';
-
-/**
- * Trigger a firestore database restore operation for the given project
- * @deprecated
- */
-export async function restore(file?: string) {
-  const { db, storage } = loadAdminServices();
-  return restoreFromBackupBucket(await getBackupBucket(storage), db, file);
-}
 
 /**
  * This function will import a Firestore export from the local env's
