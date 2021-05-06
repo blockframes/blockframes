@@ -10,8 +10,9 @@ import { AcceptConditionsDirective } from './accept-conditions.directive';
 // Material
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
-const material = [ MatCheckboxModule, MatDialogModule ];
+const material = [ MatCheckboxModule, MatDialogModule, MatButtonModule ];
 
 @NgModule({
   declarations: [AcceptConditionsComponent, AcceptConditionsDirective],
