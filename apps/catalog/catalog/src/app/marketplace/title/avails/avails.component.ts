@@ -165,7 +165,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   public selectAll() {
     const available = this.available$.getValue();
-    available.forEach(t => this.bucketForm.toggleTerritory(this.availsForm.value, t))
+    available.forEach(t => this.bucketForm.toggleTerritory(this.availsForm.value, t));
   }
 
   public trackByTag(tag) {
