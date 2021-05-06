@@ -136,7 +136,7 @@ commands:
     description: 'Build & deploy project & prepare by loading test data'
     steps:
       - deploy
-      - run: npm run backend-ops prepareForTestingBeta
+      - run: npm run backend-ops prepareForTesting
       - slack/status
   test_e2e_all:
     description: 'Run all e2e tests'
@@ -177,7 +177,7 @@ jobs:
       - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
       - fail_on_production
       - select_environment
-      - run: npm run backend-ops prepareForTestingBeta
+      - run: npm run backend-ops prepareForTesting
       - slack/status
       - slack/notify:
           message: 'Deploy and PFT complete for << pipeline.git.branch >>'
