@@ -12,6 +12,7 @@ import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widg
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -40,6 +41,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     OrgNameModule,
     InputAutocompleteModule,
     StaticGroupModule,
+    LanguagesFormModule,
 
     // Material
     MatCardModule,
