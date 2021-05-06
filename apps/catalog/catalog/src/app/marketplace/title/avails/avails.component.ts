@@ -51,7 +51,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
   /** List of world map territories */
-  available$ = new BehaviorSubject<TerritoryMarker[]>([]); // @TODO #5573 Transform into record<slug, marker>
+  available$ = new BehaviorSubject<TerritoryMarker[]>([]); // @TODO #5573 Transform into record<slug, TerritoryMarker> & clean TerritoryMarker for unused attr
   sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
   selected$ = combineLatest([ // @TODO #5573 => display existing bucket
     this.availsForm.value$,
