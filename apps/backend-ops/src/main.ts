@@ -10,7 +10,7 @@ import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHe
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
-import { backup, restore, exportFirestore, importFirestore } from './admin';
+import { restore, exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
 import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
@@ -74,9 +74,6 @@ async function runCommand() {
       await startMaintenance(db);
       await upgrade();
       await endMaintenance(db);
-      break;
-    case 'backup':
-      await backup();
       break;
     case 'restore':
       await startMaintenance(db);

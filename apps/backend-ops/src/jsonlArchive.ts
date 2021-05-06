@@ -1,5 +1,5 @@
 import { syncUsers, generateWatermarks } from './users';
-import { backup, } from './admin';
+import { exportFirestoreToBucket, getBackupBucket, } from '@blockframes/firebase-utils';
 import { last } from 'lodash';
 import { loadDBVersion, selectAndOrderMigrations, updateDBVersion } from './migrations';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -137,4 +137,15 @@ export async function migrateOld(
     }
     console.info('end the migration process...');
   }
+}
+
+
+/**
+ * Trigger a firestore database backup operation for the given project
+ * @deprecated
+ */
+
+export async function backup() {
+  const { db, storage } = loadAdminServices();
+  return exportFirestoreToBucket(db, await getBackupBucket(storage));
 }

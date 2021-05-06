@@ -4,7 +4,6 @@
  * Helper to avoid duplicating all the "semi-broken" google type defs.
  */
 import {
-  exportFirestoreToBucket,
   exportFirestoreToBucketBeta,
   getBackupBucket,
   getLatestDirName,
@@ -20,15 +19,6 @@ import {
 export async function restore(file?: string) {
   const { db, storage } = loadAdminServices();
   return restoreFromBackupBucket(await getBackupBucket(storage), db, file);
-}
-
-/**
- * Trigger a firestore database backup operation for the given project
- * @deprecated
- */
-export async function backup() {
-  const { db, storage } = loadAdminServices();
-  return exportFirestoreToBucket(db, await getBackupBucket(storage));
 }
 
 /**
