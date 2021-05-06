@@ -130,17 +130,37 @@ export function findSameTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
   return terms.findIndex(t => isSameTerm(t, avail));
 }
 
+/**
+ * Avail is matching exactly the bucketTerm
+ * @param term 
+ * @param avail 
+ * @returns 
+ */
 export function isSameTerm(term: BucketTerm, avail: AvailsFilter) {
   if (term.exclusive !== avail.exclusive) return false;
   if (!avail.duration?.from || term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
   if (!avail.duration?.to || term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
-  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
+  if (term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
+  return true;
+}
+
+/**
+ * Avail is included in bucketTerm
+ * @param term 
+ * @param avail 
+ * @returns 
+ */
+export function isInTerm(term: BucketTerm, avail: AvailsFilter) {
+  if (term.exclusive !== avail.exclusive) return false;
+  if (!avail.duration?.from || term.duration.from.getTime() > avail.duration.from.getTime()) return false;
+  if (!avail.duration?.to || term.duration.to.getTime() < avail.duration.to.getTime()) return false;
+  if (term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
   return true;
 }
 
 export function getTerritories(avail: AvailsFilter, bucket: Bucket): Territory[] {
   return bucket.contracts
     .map(c => c.terms).flat()
-    .filter(t => isSameTerm(t, avail))
+    .filter(t => isSameTerm(t, avail) || isInTerm(t, avail))
     .map(t => t.territories).flat();
 }
