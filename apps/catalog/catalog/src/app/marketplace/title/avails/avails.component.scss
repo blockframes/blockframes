@@ -5,6 +5,10 @@
   padding: 25px;
 }
 
+div {
+  margin-bottom: 24px;
+}
+
 aside {
   position: sticky;
   top: calc(var(--toolbarHeight) + 20px);
@@ -25,7 +29,7 @@ aside {
   }
 }
 
-.map-card {
+.avails-card {
   flex: 1;
 
   mat-card-subtitle {
@@ -62,18 +66,20 @@ mat-card {
   margin-bottom: 24px;
 }
 
-div {
-  mat-divider {
-    border-top-color: var(--primary);
-    width: 100%;
+form {
+  div {
+    mat-divider {
+      border-top-color: var(--primary);
+      width: 100%;
+    }
+    span {
+      white-space: nowrap;
+    }
   }
-  span {
-    white-space: nowrap;
-  }
-}
 
-article.expansion-panel-content {
-  padding: 0 16px;
+  article.expansion-panel-content {
+    padding: 0 16px;
+  }
 }
 
 .uppercase {
