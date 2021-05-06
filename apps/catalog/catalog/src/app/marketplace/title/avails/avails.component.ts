@@ -53,14 +53,13 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   /** List of world map territories */
   available$ = new BehaviorSubject<TerritoryMarker[]>([]); // @TODO #5573 Transform into record<slug, TerritoryMarker> & clean TerritoryMarker for unused attr
+  available: TerritoryMarker[] = [];
   sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
   selected$ = combineLatest([ // @TODO #5573 => display existing bucket
     this.availsForm.value$,
     this.bucketForm.value$,
-    this.available$,
-  ]).pipe(map(([avail, bucket, markers]) =>
-    getTerritories(avail, bucket).map(t => markers.find(m => m.slug === t))
-  ))
+  ]).pipe(map(([avail, bucket]) => getTerritories(avail, bucket).map(t => this.available.find(m => m.slug === t))));
+
   public isCalendar = false;
 
   constructor(
@@ -127,7 +126,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
     // Territories available after form filtering
     const mandateTerms = getMandateTerms(this.availsForm.value, this.mandateTerms);
-    const available: TerritoryMarker[] = mandateTerms.map(term => term.territories
+    this.available = mandateTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => ({
         slug: territory,
@@ -137,7 +136,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
         term,
       }))
     ).flat();
-    this.available$.next(available);
+    this.available$.next(this.available);
 
     // Territories that are already sold after form filtering
     const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms); // @TODO #5573 unit test getSoldTerms
@@ -162,7 +161,13 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: TerritoryMarker) {
-    this.bucketForm.toggleTerritory(this.availsForm.value, territory);
+    const added = this.bucketForm.toggleTerritory(this.availsForm.value, territory);
+    const available = this.available$.getValue();
+    if (added) {
+      this.available$.next(available.filter(t => t.slug !== territory.slug));
+    } else {
+      this.available$.next([...available, territory]);
+    }
   }
 
   public selectAll() {

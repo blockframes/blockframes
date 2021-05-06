@@ -117,7 +117,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @returns
    */
 
-  toggleTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
+  toggleTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
     const { contract: mandate, term, slug: territory } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
@@ -125,7 +125,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     if (contractIndex === -1) {
       this.get('contracts').add(toBucketContract(mandate, { ...avails, territories: [territory] }));
       this.change.next();
-      return;
+      return true;
     }
     const contract = bucket.contracts[contractIndex];
     const termIndex = findSameTermIndex(contract.terms, avails);
@@ -133,7 +133,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
       this.change.next();
-      return;
+      return true;
     }
     // Toggle territory
     const territories = contract.terms[termIndex].territories;
@@ -142,15 +142,18 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     // Add territory
     if (!hasTerritory) {
       control.setValue([...territories, territory]);
+      return true;
     }
     // Remove the territory from the list
     else if (territories.length > 1) {
       control.setValue(territories.filter(t => t !== territory));
+      return false;
     }
     // Remove the term as it was the last territory
     else {
       this.get('contracts').at(contractIndex).get('terms').removeAt(termIndex);
       this.change.next();
+      return false;
     }
   }
 }
