@@ -2,7 +2,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
 import { AvailsFilter, findSameTermIndex } from '../avails/avails';
-import { Mandate } from '../contract/+state';
 import {
   Bucket,
   BucketContract,
@@ -76,7 +75,6 @@ class BucketContractForm extends FormEntity<BucketContractControls, BucketContra
 }
 
 
-
 ////////////
 // BUCKET //
 ////////////
@@ -125,7 +123,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
     // Contract is not registered
     if (contractIndex === -1) {
-      this.get('contracts').add(toBucketContract(mandate as Mandate, { ...avails, territories: [territory] }));
+      this.get('contracts').add(toBucketContract(mandate, { ...avails, territories: [territory] }));
       this.change.next();
       return;
     }
