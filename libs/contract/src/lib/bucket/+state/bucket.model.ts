@@ -60,8 +60,7 @@ export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
     exclusive: false,
     duration: { from: new Date(), to: new Date() },
     ...params,
-    languages: createLanguageKey(params.languages),
-
+    languages: createLanguageKey(params.languages)
   }
 }
 
