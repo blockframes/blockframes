@@ -1,6 +1,7 @@
 import { Validator } from './types';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 /** Generic EntityControl */
 export type EntityControl<E = any> = {
@@ -12,6 +13,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
   value: T;
   valueChanges: Observable<T>;
   controls: C;
+  value$ = this.valueChanges.pipe(startWith(this.value));
 
   createControl?: (value?: Partial<T>) => C
   static factory<E, Control extends EntityControl = any>(

@@ -60,3 +60,11 @@ export function createSale(params: Partial<Sale> = {}): Sale {
     ...params
   }
 }
+
+export function isMandate(contract: Contract): contract is Mandate {
+  return contract.type === 'mandate';
+}
+
+export function isSale(contract: Contract): contract is Sale {
+  return contract.type === 'sale';
+}

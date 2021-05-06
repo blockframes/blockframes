@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MovieQuery, Movie, createMovieLanguageSpecification } from '@blockframes/movie/+state';
-import { TerritoryValue, TerritoryISOA3Value, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
+import { TerritoryValue, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { getMandateTerms, getSoldTerms } from '@blockframes/contract/avails/avails';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
+import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { getMandateTerms, getSoldTerms, getTerritories } from '@blockframes/contract/avails/avails';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
@@ -15,14 +15,9 @@ import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { TerritoryMarker } from '@blockframes/ui/map/map.component';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-
-interface TerritoryMarker {
-  isoA3: TerritoryISOA3Value,
-  label: TerritoryValue
-  contract?: Contract,
-}
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -35,16 +30,11 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public org$: Observable<Organization>;
   public orgId = this.orgQuery.getActiveId();
   public bucket$: Observable<Bucket>;
-  public periods = ['weeks', 'months' ,'years'];
+  public periods = ['weeks', 'months', 'years'];
   private sub: Subscription;
 
-  /** List of world map territories */
-  available$ = new BehaviorSubject<TerritoryMarker[]>([]);
-  sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
-  selected$ = new BehaviorSubject<TerritoryMarker[]>([]); // The one in the bucket form
-
-  private mandates: Contract[];
-  private sales: Contract[];
+  private mandates: Mandate[];
+  private sales: Sale[];
   private mandateTerms: Term<Date>[];
   private salesTerms: Term<Date>[];
 
@@ -60,6 +50,15 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public bucketForm = new BucketForm();
   public availsForm = new AvailsForm({ territories: [] }, ['duration']);
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
+
+  /** List of world map territories */
+  available$ = new BehaviorSubject<TerritoryMarker[]>([]); // @TODO #5573 Transform into record<slug, TerritoryMarker> & clean TerritoryMarker for unused attr
+  available: TerritoryMarker[] = [];
+  sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
+  selected$ = combineLatest([ // @TODO #5573 => display existing bucket
+    this.availsForm.value$,
+    this.bucketForm.value$,
+  ]).pipe(map(([avail, bucket]) => getTerritories(avail, bucket).map(t => this.available.find(m => m.slug === t))));
 
   public isCalendar = false;
 
@@ -85,8 +84,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
     const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
 
-    this.mandates = contracts.filter(c => c.type === 'mandate');
-    this.sales = contracts.filter(c => c.type === 'sale');
+    this.mandates = contracts.filter(isMandate);
+    this.sales = contracts.filter(isSale);
 
     this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
     this.salesTerms = await this.termService.getValue(this.sales.map(m => m.termIds).flat());
@@ -127,21 +126,23 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
     // Territories available after form filtering
     const mandateTerms = getMandateTerms(this.availsForm.value, this.mandateTerms);
-    const available: TerritoryMarker[] = mandateTerms.map(term => term.territories
+    this.available = mandateTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => ({
+        slug: territory,
         isoA3: territoriesISOA3[territory],
         label: territories[territory],
         contract: this.mandates.find(m => m.id === term.contractId)
       }))
     ).flat();
-    this.available$.next(available);
+    this.available$.next(this.available);
 
     // Territories that are already sold after form filtering
-    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms);
+    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms); // @TODO #5573 unit test getSoldTerms
     const sold = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => ({
+        slug: territory,
         isoA3: territoriesISOA3[territory],
         label: territories[territory],
         contract: this.mandates.find(m => m.id === term.contractId)
@@ -153,34 +154,31 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   clear() {
     this.availsForm.reset();
-    this.selected$.next([]);
     this.available$.next([]);
   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: TerritoryMarker) {
-    const selected = this.selected$.getValue();
+    const added = this.bucketForm.toggleTerritory(this.availsForm.value, territory);
     const available = this.available$.getValue();
-
-    if (selected.find(s => s.isoA3 === territory.isoA3)) {
-      // Add back territory to available layer and remove territory from seletion
-      this.selected$.next(selected.filter(s => s.isoA3 !== territory.isoA3));
-      available.push(territory);
-      this.available$.next(available);
+    if (added) {
+      this.available$.next(available.filter(t => t.slug !== territory.slug));
     } else {
-      // Add territory to selection and remove it from available
-      this.available$.next(available.filter(s => s.isoA3 !== territory.isoA3))
-      selected.push(territory);
-      this.selected$.next(selected);
+      this.available$.next([...available, territory]);
     }
   }
 
   public selectAll() {
-    const selected = this.selected$.getValue();
-    const available = this.available$.getValue();
+    let available = this.available$.getValue();
+    available.forEach(t => {
+      const isAlreadyToggled = this.bucketForm.isAlreadyToggled(this.availsForm.value, t);
+      if (!isAlreadyToggled) {
+        this.bucketForm.toggleTerritory(this.availsForm.value, t);
+        available = available.filter(before => before.slug === t.slug);
+      }
+    });
 
-    this.selected$.next([...selected, ...available]);
-    this.available$.next([]);
+    this.available$.next(available);
   }
 
   public trackByTag(tag) {
