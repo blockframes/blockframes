@@ -1,6 +1,6 @@
 import type firebase from 'firebase';
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { OrgAppAccess, createOrgAppAccess, Module, app, App } from '@blockframes/utils/apps';
+import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
@@ -114,6 +114,6 @@ export function canAccessModule(module: Module, org: OrganizationBase<any>, _app
   if (!!_app) {
     return org.appAccess[_app]?.[module];
   } else {
-    return app.some(a => org.appAccess[a]?.[module]);
+    return getAllAppsExcept(['crm']).some(a => org.appAccess[a]?.[module]);
   }
 }

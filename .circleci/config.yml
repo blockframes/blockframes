@@ -142,7 +142,9 @@ commands:
     description: 'Run all e2e tests'
     steps:
         - run: npx cypress install
-        - run: npm run e2e
+        - run:
+            command: npm run e2e
+            no_output_timeout: 20m
         - store_artifacts:
             name: Uploading screenshots
             path: ~/repo/dist/cypress/apps
@@ -153,6 +155,8 @@ executors:
   blockframes-ci:
     docker:
       - image: blockframes/ci:latest
+        environment:
+          NODE_OPTIONS="--max-old-space-size=8192"
     working_directory: ~/repo
     resource_class: large
 jobs:
@@ -203,7 +207,9 @@ jobs:
       - prepare_environment
       - run: npm run affected:build
       - run: npm run affected:lint
-      - run: npm run affected:test
+      - run:
+          command: npm run affected:test
+          no_output_timeout: 15m
       - save_build_cache
       - run:
           name: Check size of apps being build
@@ -232,13 +238,16 @@ jobs:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - prepare_environment
       - build_deploy_prepare
+      - run:
+          command: npm run test
+          no_output_timeout: 15m
       - test_e2e_all
-      - run: npm run test
       - save_build_cache
       - run:
           name: send stability data
           command: ./.circleci/submit-stability.sh dist/test-reports
           when: always
+          require: test_e2e_all
       - slack/status
   test-e2e-release: # * Will build and test each release commit against staging
     executor: blockframes-ci
@@ -251,7 +260,9 @@ jobs:
       - prepare_environment
       - build_deploy_prepare
       - test_e2e_all
-      - run: npm run test
+      - run:
+          command: npm run test
+          no_output_timeout: 15m
       - save_build_cache
       - slack/status
   deploy-to-prod:

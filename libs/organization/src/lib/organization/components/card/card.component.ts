@@ -19,13 +19,12 @@ export class OrganizationCardComponent implements OnInit {
   public orgMovieCount$: Observable<number>
   public app = getCurrentApp(this.routerQuery)
 
-
   constructor(private movieService: MovieService, private routerQuery: RouterQuery) { }
 
   ngOnInit() {
-    this.orgMovieCount$ = this.movieService.valueChanges(fromOrgAndAccepted(this.org.id)).pipe(
+    this.orgMovieCount$ = this.movieService.valueChanges(fromOrgAndAccepted(this.org.id, this.app)).pipe(
       map(movies =>
-        movies.filter(movie => movie.storeConfig.appAccess[this.app]).length
+        movies.filter(movie => movie.app[this.app].access).length
       )
     );
   }

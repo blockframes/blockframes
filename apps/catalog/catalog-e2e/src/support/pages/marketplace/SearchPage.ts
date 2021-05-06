@@ -1,4 +1,4 @@
-import ViewPage from "./ViewPage";
+﻿import ViewPage from "./ViewPage";
 import NavbarPage from "./NavbarPage";
 import { Avails } from "@blockframes/e2e/utils/type";
 import { SEC } from "@blockframes/e2e/utils/env";

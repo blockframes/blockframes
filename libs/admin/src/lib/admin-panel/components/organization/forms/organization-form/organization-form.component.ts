@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 // Blockframes
 import { organizationStatus } from '@blockframes/utils/static-model';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
-import { app } from '@blockframes/utils/apps';
+import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -20,7 +20,7 @@ export class AdminOrganizationFormComponent {
   @Input() orgId: string;
 
   public organizationStatus = organizationStatus;
-  public app = app;
+  public app = getAllAppsExcept(['crm']);
   public notifyCheckbox = new FormControl(false);
 
   constructor(

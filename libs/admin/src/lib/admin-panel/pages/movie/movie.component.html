@@ -4,14 +4,14 @@
   <movie-header [movie]="movie"></movie-header>
 </article>
 
-<section *ngIf="movie" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="24px" fxFlex>
-  <article class="surface">
+<section *ngIf="movie" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="24px" fxFlex class="surface">
+  <article>
     <h2>
       {{ movie.title.international }} ({{ movie.internalRef || 'missing internal ref' }})
       <admin-go-to type="title" [id]="movieId"></admin-go-to>
     </h2>
 
-    <h4>({{ movie.title.original }})</h4>
+    <h4 *ngIf="movie.title.original">({{ movie.title.original }})</h4>
 
     <ng-container *ngIf="movieForm">
       <form [formGroup]="movieForm" fxLayout="column">
@@ -20,49 +20,47 @@
           <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" />
         </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>Movie Store Status</mat-label>
-          <mat-select formControlName="storeStatus" required>
-            <mat-option *ngFor="let status of storeStatus | keyvalue" [value]="status.key">
-              {{ status.value }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Movie Store Type</mat-label>
-          <mat-select formControlName="storeType" required>
-            <mat-option *ngFor="let type of storeType | keyvalue" [value]="type.key">
-              {{ type.value }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
           <mat-label>Production Status</mat-label>
           <mat-select formControlName="productionStatus" required>
-            <mat-option *ngFor="let status of staticConsts.productionStatus | keyvalue" [value]="status.key">
+            <mat-option *ngFor="let status of productionStatus | keyvalue" [value]="status.key">
               {{ status.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <div fxLayoutAlign="center end" fxLayoutGap="16px">
-          <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
-          <button mat-flat-button color="warn" (click)="deleteMovie()">Delete this movie</button>
-        </div>
       </form>
     </ng-container>
   </article>
 
-  <article class="surface">
+  <article>
     <h2>Application Access</h2>
-    <form [formGroup]="movieAppAccessForm" fxLayout="column">
-      <mat-form-field *ngFor="let a of app" appearance="outline">
-        <mat-label>{{ a | titlecase }} App</mat-label>
-        <mat-select [formControlName]="a" required>
-          <mat-option [value]="true">Yes</mat-option>
-          <mat-option [value]="false">No</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div align="end">
-        <button type="submit" mat-flat-button color="primary" (click)="updateAppAccess()">Update</button>
+    <form [formGroup]="movieAppConfigForm" fxLayout="column">
+      <fieldset *ngFor="let app of apps" fxFlex>
+        <legend>{{ appName[app] }}</legend>
+        <div [formGroupName]="app" fxLayoutAlign="start center" fxLayoutGap="16px">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option *ngFor="let status of storeStatus | keyvalue" [value]="status.key">
+                {{ status.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Access</mat-label>
+            <mat-select formControlName="access" required>
+              <mat-option [value]="true">Yes</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <span *ngIf="movie.app[app].acceptedAt">Accepted at {{ movie.app[app].acceptedAt | toDate | date: 'medium'}}</span>
+          <span *ngIf="movie.app[app].refusedAt">Refused at {{ movie.app[app].refusedAt | toDate | date: 'medium'}}</span>
+        </div>
+      </fieldset>
+      <div fxLayoutAlign="end end" fxLayoutGap="16px" align="end">
+        <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+        <button mat-flat-button color="warn" (click)="deleteMovie()">Delete this movie</button>
       </div>
     </form>
   </article>

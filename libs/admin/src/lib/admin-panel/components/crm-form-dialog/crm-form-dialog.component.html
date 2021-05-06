@@ -1,7 +1,8 @@
 <section fxLayout="column">
-  <p>{{ data.question }}</p>
-  <span class="mat-body-2 text-warn">{{ data.warning }}</span>
-  <span>If yes, please write '{{  data.confirmationWord | uppercase }}' inside the form below.</span>
+  <h3 *ngIf="data.title"> {{ data.title }} </h3>
+  <p *ngIf="data.subtitle"> {{ data.subtitle }} </p>
+  <span *ngIf="data.text">{{ data.text }}</span>
+  <span *ngIf="data.warning" class="mat-body-2 text-warn">{{ data.warning }}</span>
 
   <ng-container *ngIf="data.simulation?.length">
     <strong>Simulation : </strong>
@@ -17,6 +18,6 @@
 
   <article fxLayout="row" fxLayoutAlign="space-evenly">
     <button mat-stroked-button (click)="close()">Cancel</button>
-    <button mat-flat-button color="warn" (click)="confirm()">{{ data.confirmationWord | titlecase }}</button>
+    <button mat-flat-button color="warn" (click)="confirm()">{{ data.confirmButtonText | firstWordTitlecase }}</button>
   </article>
 </section>

@@ -1,8 +1,14 @@
 @mixin mat-bf-snack-bar-theme($theme) {
   $is-dark-theme: map-get($theme, is-dark);
   $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
 
   .mat-simple-snackbar-action {
-    color: if($is-dark-theme, inherit, mat-color($primary, text));
+    .mat-button {
+      .mat-button-wrapper {
+        color: map-get($foreground, divider);
+      }
+    }
   }
 }

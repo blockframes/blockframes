@@ -376,6 +376,8 @@ export function formatSingleValue(value: string, scope: Scope, path: string, mov
         movie[pathParts[0]] = key;
       } else if (pathParts.length === 2) {
         movie[pathParts[0]][pathParts[1]] = key;
+      } else if (pathParts.length === 3) {
+        movie[pathParts[0]][pathParts[1]][pathParts[2]] = key;
       }
     }
   }

@@ -19,6 +19,7 @@ import {
   MovieShooting,
   MovieVideos,
   MovieVideo,
+  MovieAppConfig,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -26,7 +27,7 @@ import {
   createMovie,
   createTitle,
   createReleaseYear,
-  createStoreConfig,
+  createAppConfig,
   createMovieStakeholders,
   createMoviePromotional,
   createMovieLanguageSpecification,
@@ -48,10 +49,10 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
-import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 import { Language } from '@blockframes/utils/static-model';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { App } from '@blockframes/utils/apps';
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
@@ -101,7 +102,7 @@ function createMovieControls(movie: Partial<Movie>) {
     shooting: new MovieShootingForm(entity.shooting),
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
-    storeConfig: new StoreConfigForm(entity.storeConfig),
+    app: new MovieAppConfigForm(entity.app),
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
   }
@@ -537,45 +538,46 @@ type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
 
 
 // ------------------------------
-//       STORE CONFIG
+//       MOVIE APP CONFIG
 // ------------------------------
 
-export class StoreConfigForm extends FormEntity<StoreConfigControl> {
-  constructor(storeConfig?: Partial<Movie['storeConfig']>) {
-    super(createStoreConfigFormControl(storeConfig));
+export class MovieAppConfigForm extends FormEntity<MovieAppConfigControl> {
+  constructor(app?: Partial<{[app in App]: MovieAppConfig<Date>}>) {
+    super(createMovieAppConfigFormControl(app));
   }
 }
 
-function createStoreConfigFormControl(storeConfig?: Partial<Movie['storeConfig']>) {
-  const { appAccess, status, storeType } = createStoreConfig(storeConfig);
+function createMovieAppConfigFormControl(app?: Partial<{[app in App]: MovieAppConfig<Date>}>) {
+  const apps = {};
+  for (const a in app) {
+    apps[a] = new AppConfigForm(app[a])
+  }
+  return apps;
+}
+
+type MovieAppConfigControl = ReturnType<typeof createMovieAppConfigFormControl>;
+
+// ------------------------------
+//         APP CONFIG
+// ------------------------------
+
+export class AppConfigForm extends FormEntity<AppConfigControl> {
+  constructor(appAccess?: Partial<MovieAppConfig<Date>>) {
+    super(createAppConfigFormControl(appAccess));
+  }
+}
+
+function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig<Date>>) {
+  const { acceptedAt, access, refusedAt, status } = createAppConfig(appAccess);
   return {
-    appAccess: new AppAccessForm(appAccess),
-    status: new FormControl(status),
-    storeType: new FormControl(storeType),
+    acceptedAt: new FormControl(acceptedAt),
+    access: new FormControl(access),
+    refusedAt: new FormControl(refusedAt),
+    status: new FormControl(status)
   }
 }
 
-type StoreConfigControl = ReturnType<typeof createStoreConfigFormControl>;
-
-// ------------------------------
-//         APP ACCESS
-// ------------------------------
-
-export class AppAccessForm extends FormEntity<AppAccessControl> {
-  constructor(appAccess?: Partial<Movie['storeConfig']['appAccess']>) {
-    super(createAppAccessFormControl(appAccess));
-  }
-}
-
-function createAppAccessFormControl(appAccess?: Partial<Movie['storeConfig']['appAccess']>) {
-  const { catalog, festival } = createMovieAppAccess(appAccess);
-  return {
-    catalog: new FormControl(catalog),
-    festival: new FormControl(festival)
-  }
-}
-
-type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
+type AppConfigControl = ReturnType<typeof createAppConfigFormControl>;
 
 // ------------------------------
 //   Every Promotional Elements

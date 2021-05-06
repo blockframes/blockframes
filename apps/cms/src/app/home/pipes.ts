@@ -12,14 +12,14 @@ export function getOrgsQueryFn(app: string): QueryFn {
 }
 
 export function getTitlesQueryFn(app: string): QueryFn {
-  const accepted = ['storeConfig.status', '==', 'accepted'] as const;
-  const appAccess = [`storeConfig.appAccess.${app}`, '==', true] as const;
+  const accepted = [`app.${app}.status`, '==', 'accepted'] as const;
+  const appAccess = [`app.${app}.access`, '==', true] as const;
   return ref => ref.where(...accepted).where(...appAccess);
 }
 
 export function getOrgTitlesQueryFn(app: string, orgId: string): QueryFn {
-  const accepted = ['storeConfig.status', '==', 'accepted'] as const;
-  const appAccess = [`storeConfig.appAccess.${app}`, '==', true] as const;
+  const accepted = [`app.${app}.status`, '==', 'accepted'] as const;
+  const appAccess = [`app.${app}.access`, '==', true] as const;
   const fromOrg = ['orgIds', 'array-contains', orgId] as const;
   return ref => ref.where(...accepted).where(...appAccess).where(...fromOrg);
 }

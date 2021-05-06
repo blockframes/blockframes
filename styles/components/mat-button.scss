@@ -39,7 +39,9 @@
 
     &.mat-button-disabled {
       color: mat-color($foreground, disabled-text);
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($foreground, disabled-text);
       }
     }
@@ -97,17 +99,15 @@
       &:hover {
         background-color: mat-color($background, disabled-button);
       }
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($foreground, disabled-button);
       }
     }
   }
 
-  .mat-button {
-    padding: 12px 8px;
-    margin: 0 24px;
-  }
-
+  .mat-button,
   .mat-flat-button,
   .mat-raised-button,
   .mat-stroked-button {

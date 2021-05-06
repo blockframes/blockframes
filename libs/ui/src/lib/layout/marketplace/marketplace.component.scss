@@ -43,3 +43,8 @@ mat-sidenav-content {
 app-bar {
   padding: 0 24px;
 }
+
+/* Outline none used to remove the automatic rectangular focus on Safari */
+.outline-logo {
+  outline: none;
+}
