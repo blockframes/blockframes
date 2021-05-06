@@ -5,7 +5,7 @@ import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } 
 warnMissingVars()
 
 import { prepareDb, prepareStorage, prepareForTesting, upgrade } from './firebaseSetup';
-import { migrate, migrateBeta } from './migrations';
+import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
@@ -105,15 +105,6 @@ async function runCommand() {
       break;
     case 'healthCheck':
       await healthCheck();
-      break;
-    case 'migrateBeta':
-      if (!await isMigrationRequired()) {
-        console.log('Skipping because there is no migration to run...');
-        return;
-      }
-      await startMaintenance(db);
-      await migrateBeta();
-      await endMaintenance(db);
       break;
     case 'migrate':
       if (!await isMigrationRequired()) {

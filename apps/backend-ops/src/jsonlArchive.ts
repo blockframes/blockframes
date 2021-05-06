@@ -1,6 +1,8 @@
 import { syncUsers, generateWatermarks } from './users';
+import { backup, } from './admin';
+import { last } from 'lodash';
+import { loadDBVersion, selectAndOrderMigrations, updateDBVersion } from './migrations';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { migrate } from './migrations';
 import { restore } from './admin';
 import { latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
@@ -33,7 +35,7 @@ export async function prepareForTestingOld() {
   console.info('Storage synced!');
 
   console.info('Preparing database & storage by running migrations...');
-  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
+  await migrateOld(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Migrations complete!');
 
   console.info('Cleaning unused DB data...');
@@ -64,7 +66,7 @@ export async function upgradeOld() {
   const { db, auth, storage } = loadAdminServices();
 
   console.info('Preparing the database...');
-  await migrate(true);
+  await migrateOld(true);
   console.info('Database ready for deploy!');
 
   console.info('Cleaning unused db data...');
@@ -84,4 +86,55 @@ export async function upgradeOld() {
   console.info('Generating watermarks...');
   await generateWatermarks();
   console.info('Watermarks generated!');
+}
+
+
+export async function migrateOld(
+  withBackup: boolean = true,
+  db = loadAdminServices().db,
+  storage = loadAdminServices().storage
+) {
+  console.info('start the migration process...');
+
+  try {
+    const currentVersion = await loadDBVersion(db);
+    const migrations = selectAndOrderMigrations(currentVersion);
+
+    if (migrations.length === 0) {
+      console.info('No migrations to run, leaving...');
+      return;
+    }
+
+    if (withBackup) {
+      console.info('backup the database before doing anything');
+      await backup();
+      console.info('backup done, moving on to the migrations...');
+    } else {
+      console.warn('⚠️ skipping the backup before running migrations, are you sure?');
+    }
+
+    const lastVersion = last(migrations).version;
+
+    console.info(`Running migrations: ${migrations.map((x) => x.version).join(', ')}`);
+
+    for (const migration of migrations) {
+      console.info(`applying migration: ${migration.version}`);
+      await migration.upgrade(db, storage);
+      console.info(`done applying migration: ${migration.version}`);
+    }
+
+    await updateDBVersion(db, lastVersion);
+  } catch (e) {
+    console.error(e);
+    console.error("the migration failed, revert'ing!");
+    await restore();
+    throw e;
+  } finally {
+    if (withBackup) {
+      console.info('running a backup post-migration');
+      await backup();
+      console.info('done with the backup post-migration');
+    }
+    console.info('end the migration process...');
+  }
 }
