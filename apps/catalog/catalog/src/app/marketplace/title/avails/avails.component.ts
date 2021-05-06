@@ -132,8 +132,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
         slug: territory,
         isoA3: territoriesISOA3[territory],
         label: territories[territory],
-        contract: this.mandates.find(m => m.id === term.contractId),
-        term,
+        contract: this.mandates.find(m => m.id === term.contractId)
       }))
     ).flat();
     this.available$.next(this.available);
@@ -146,8 +145,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
         slug: territory,
         isoA3: territoriesISOA3[territory],
         label: territories[territory],
-        contract: this.mandates.find(m => m.id === term.contractId),
-        term,
+        contract: this.mandates.find(m => m.id === term.contractId)
       }))
     ).flat();
     this.sold$.next(sold);
