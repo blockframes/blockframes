@@ -118,7 +118,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    */
 
   toggleTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
-    const { contract: mandate, term, slug: territory } = marker;
+    const { contract: mandate, slug: territory } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
     // Contract is not registered

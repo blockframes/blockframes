@@ -5,7 +5,7 @@ import { TerritoryValue, territoriesISOA3, territories, Language } from '@blockf
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
-import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
 import { getMandateTerms, getSoldTerms, getTerritories } from '@blockframes/contract/avails/avails';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -84,8 +84,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
     const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
 
-    this.mandates = contracts.filter(c => c.type === 'mandate').map(c => c as Mandate);
-    this.sales = contracts.filter(c => c.type === 'sale').map(c => c as Sale);
+    this.mandates = contracts.filter(isMandate);
+    this.sales = contracts.filter(isSale);
 
     this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
     this.salesTerms = await this.termService.getValue(this.sales.map(m => m.termIds).flat());
