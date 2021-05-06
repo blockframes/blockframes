@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { map, switchMap } from 'rxjs/operators';
 import { TerritoryMarker } from '@blockframes/ui/map/map.component';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -60,6 +61,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   ]).pipe(map(([avail, bucket, markers]) =>
     getTerritories(avail, bucket).map(t => markers.find(m => m.slug === t))
   ))
+  public isCalendar = false;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -196,5 +198,9 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   addToSelection() {
     this.bucketService.update(this.orgId, this.bucketForm.value);
+  }
+
+  toggleCalendar(toggle: MatSlideToggleChange) {
+    this.isCalendar = toggle.checked;
   }
 }
