@@ -96,23 +96,23 @@ export function getSoldTerms(
 
 export function isInBucket(
   { medias, duration, territories, exclusive }: AvailsFilter,
-  terms: AvailsFilter[]  // terms in the bucket for the parentTermId given by "getMandateTerm"
+  avails: AvailsFilter[]
 ) {
-  for (const term of terms) {
-    if (exclusive !== term.exclusive) {
+  for (const avail of avails) {
+    if (exclusive !== avail.exclusive) {
       continue;
     }
-    // If any territory is not included in the terms: not same term
-    if (!territories.every(territory => term.territories.includes(territory))) {
+    // If any territory is not included in the avail: not same term
+    if (!territories.every(territory => avail.territories.includes(territory))) {
       continue;
     }
-    // If any medium is not included in the terms: not same term
-    if (!medias.every(medium => term.medias.includes(medium))) {
+    // If any medium is not included in the avail: not same term
+    if (!medias.every(medium => avail.medias.includes(medium))) {
       continue;
     }
-    // If start before or end after term: not same term
-    const startBefore = duration.from.getTime() < term.duration.from.getTime();
-    const endAfter = duration.to.getTime() > term.duration.to.getTime();
+    // If start before or end after avail: not same term
+    const startBefore = duration.from.getTime() < avail.duration.from.getTime();
+    const endAfter = duration.to.getTime() > avail.duration.to.getTime();
     if (startBefore || endAfter) {
       continue;
     }
@@ -122,9 +122,6 @@ export function isInBucket(
   // If all check above are available: term is not in bucket
   return false;
 }
-
-
-
 
 ///////////
 // utils //

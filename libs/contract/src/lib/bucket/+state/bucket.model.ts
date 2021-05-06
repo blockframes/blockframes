@@ -44,12 +44,12 @@ export interface BucketTerm {
   }
 }
 
-export function toBucketTerm(term: AvailsFilter): BucketTerm {
+export function toBucketTerm(avail: AvailsFilter): BucketTerm {
   return createBucketTerm({
-    medias: term.medias,
-    duration: term.duration,
-    territories: term.territories,
-    exclusive: term.exclusive,
+    medias: avail.medias,
+    duration: avail.duration,
+    territories: avail.territories,
+    exclusive: avail.exclusive,
   });
 }
 
