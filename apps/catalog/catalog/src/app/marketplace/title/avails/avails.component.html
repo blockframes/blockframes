@@ -90,6 +90,11 @@
               (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
             </map-feature>
           </ng-container>
+          <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
+            <map-feature [tag]="tag.isoA3" color="color-4"
+              (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')" (mouseout)="clearTerritoryTooltip()">
+            </map-feature>
+          </ng-container>
 
           <!-- TOOLTIP ON HOVERING-->
           <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
