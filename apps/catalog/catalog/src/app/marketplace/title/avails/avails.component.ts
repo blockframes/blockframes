@@ -207,6 +207,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
       width: '80vw'
-    })
+    });
   }
 }
