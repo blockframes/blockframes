@@ -15,15 +15,6 @@ import { HttpClient } from '@angular/common/http';
 import { map as toMap, geoJSON, Layer } from 'leaflet';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, switchMap, map } from 'rxjs/operators';
-import { Territory, TerritoryISOA3Value, TerritoryValue } from '@blockframes/utils/static-model/types';
-import { Mandate } from '@blockframes/contract/contract/+state';
-
-export interface TerritoryMarker {
-  slug: Territory,
-  isoA3: TerritoryISOA3Value,
-  label: TerritoryValue,
-  contract?: Mandate,
-}
 
 @Directive({
   selector: 'map-feature, [mapFeature]'

@@ -1,12 +1,28 @@
-import { Media, Territory } from "@blockframes/utils/static-model";
+import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from "@blockframes/utils/static-model";
 import { Bucket, BucketTerm } from "../bucket/+state";
+import { Mandate } from "../contract/+state/contract.model";
 import { Term } from "../term/+state/term.model";
-
 export interface AvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
   territories?: Territory[],
   exclusive: boolean
+}
+
+export interface TerritoryMarker {
+  slug: Territory,
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue,
+  contract?: Mandate,
+}
+
+export function toTerritoryMarker(territory: Territory, contractId: string, mandates: Mandate[]): TerritoryMarker {
+  return {
+    slug: territory,
+    isoA3: territoriesISOA3[territory],
+    label: territories[territory],
+    contract: mandates.find(m => m.id === contractId)
+  }
 }
 
 export function getMandateTerms(
@@ -163,4 +179,21 @@ export function getTerritories(avail: AvailsFilter, bucket: Bucket, mode: 'exact
     .map(c => c.terms).flat()
     .filter(t => mode === 'exact' ? isSameTerm(t, avail) : isInTerm(t, avail))
     .map(t => t.territories).flat();
+}
+
+export function availableTerritories(
+  selected: TerritoryMarker[],
+  sold: TerritoryMarker[],
+  inSelection: TerritoryMarker[],
+  avails: AvailsFilter,
+  mandates: Mandate[],
+  terms: Term<Date>[],
+) {
+  const notAvailable = [...selected, ...sold, ...inSelection].map(t => t.slug).flat();
+  const mandateTerms = getMandateTerms(avails, terms);
+  return mandateTerms.map(term => term.territories
+    .filter(t => !!territoriesISOA3[t])
+    .filter(t => !notAvailable.includes(t))
+    .map(territory => toTerritoryMarker(territory, term.contractId, mandates))
+  ).flat();
 }

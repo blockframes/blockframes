@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { AvailsFilter, findSameTermIndex } from '../avails/avails';
+import { AvailsFilter, findSameTermIndex, TerritoryMarker } from '../avails/avails';
 import {
   Bucket,
   BucketContract,
@@ -14,7 +14,6 @@ import {
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TerritoryMarker } from '@blockframes/ui/map/map.component';
 
 //////////
 // TERM //
