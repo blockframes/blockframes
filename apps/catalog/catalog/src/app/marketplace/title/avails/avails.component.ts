@@ -58,14 +58,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     this.bucketForm.value$,
   ]).pipe(
     startWith([]),
-    map(([avail]) => getTerritories(avail, this.bucketForm.value, 'exact').map(t => this.territoryMarkers[t])));
+    map(([avail]) => !!avail ? getTerritories(avail, this.bucketForm.value, 'exact').map(t => this.territoryMarkers[t]) : []));
 
   inSelection$ = combineLatest([
     this.availsForm.value$,
     this.bucketForm.value$,
   ]).pipe(
     startWith([]),
-    map(([avail]) => getTerritories(avail, this.bucketForm.value, 'in').map(t => this.territoryMarkers[t])));
+    map(([avail]) => !!avail ? getTerritories(avail, this.bucketForm.value, 'in').map(t => this.territoryMarkers[t]) : []));
 
   available$ = combineLatest([
     this.selected$,
