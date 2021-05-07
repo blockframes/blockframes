@@ -7,7 +7,7 @@
         <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
         <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
         <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
-        <button mat-icon-button (click)="deleteLanguage(form, language.key)" color="warn">
+        <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </div>
@@ -23,7 +23,7 @@
 <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons else noButtons">
   <mat-divider inset></mat-divider>
   <span class="mat-caption text-primary">Add a Version</span>
-  <button mat-mini-fab color="primary" (click)="this.showButtons = !this.showButtons">
+  <button mat-mini-fab color="primary" (click)="showButtons = !showButtons">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </div>
@@ -32,7 +32,7 @@
     <mat-label>Languages</mat-label>
   </input-autocomplete>
   <div fxLayout fxLayoutAlign="space-between start">
-    <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage(form)"
+    <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
       [disabled]="!languageCtrl.value">
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save Language</span>

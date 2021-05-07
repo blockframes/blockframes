@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { VersionSpecificationForm, MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
-import { createMovieLanguageSpecification } from '@blockframes/movie/+state';
+import { MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
 import { Language } from '@blockframes/utils/static-model';
 
 @Component({
@@ -10,26 +9,19 @@ import { Language } from '@blockframes/utils/static-model';
   styleUrls: ['./languages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LanguagesFormComponent implements OnInit {
+export class LanguagesFormComponent {
 
   @Input() form: MovieVersionInfoForm;
   public languageCtrl = new FormControl();
   public showButtons = true;
 
-  constructor() {}
-
-  ngOnInit() {
-    console.log('form in language', this.form)
-  }
-
-  addLanguage(form: MovieVersionInfoForm) {
-    const spec = createMovieLanguageSpecification({});
-    form.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
+  addLanguage() {
+    this.form.addLanguage(this.languageCtrl.value)
     this.languageCtrl.reset();
     this.showButtons = true;
   }
 
-  deleteLanguage(form: MovieVersionInfoForm, language: Language) {
-    form.removeControl(language);
+  deleteLanguage(language: Language) {
+    this.form.removeLanguage(language);
   }
 }
