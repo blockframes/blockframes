@@ -1,2 +1,25 @@
+<ng-container *ngIf="state$ | async as state">
+  <table>
+    <tr>
+      <td></td> <!-- empty upper left corner -->
+      <th *ngFor="let col of columns; index as c" scope="col" [ngClass]="{ hover: c === state.hoverColumn }">{{col}}</th>
+    </tr>
 
-<p>CALENDAR</p>
+    <tr *ngFor="let row of rows; index as r">
+      <th scope="row"  [ngClass]="{ hover: r === state.hoverRow }">{{row}}</th>
+      <td
+        *ngFor="let col of columns; index as c"
+        [ngClass]="[stateMatrix[r][c], state.highlightedRange[r][c] ? 'highlighted' : '']"
+        (mouseenter)="onHover(r, c)"
+        (mouseleave)="onExit()"
+        (click)="select(r, c)"
+      >
+        <span *ngIf="state.hoverStart.row === r && state.hoverStart.column === c" class="selection-chip hover-start">start</span>
+        <span *ngIf="state.start.row === r && state.start.column === c" class="selection-chip start">start</span>
+        <span *ngIf="state.hoverEnd.row === r && state.hoverEnd.column === c" class="selection-chip hover-end">end</span>
+        <span *ngIf="state.end.row === r && state.end.column === c" class="selection-chip end">end</span>
+      </td>
+    </tr>
+  </table>
+</ng-container>
+

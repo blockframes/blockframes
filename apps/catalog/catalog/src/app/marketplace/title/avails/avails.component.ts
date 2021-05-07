@@ -153,7 +153,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
     // Territories that are already sold after form filtering
     const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms);
-    const sold = soldTerms.map(term => term.territories
+    const sold: TerritoryMarker[] = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => toTerritoryMarker(territory, term.contractId, this.mandates))
     ).flat();
@@ -204,7 +204,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   toggleCalendar(toggle: MatSlideToggleChange) {
     this.isCalendar = toggle.checked;
   }
-  
+
   explain() {
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
