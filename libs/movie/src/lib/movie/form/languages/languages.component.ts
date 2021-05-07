@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
+import { createMovieLanguageSpecification } from '@blockframes/movie/+state';
+import { MovieVersionInfoForm, VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
 import { Language } from '@blockframes/utils/static-model';
 
 @Component({
@@ -16,12 +17,13 @@ export class LanguagesFormComponent {
   public showButtons = true;
 
   addLanguage() {
-    this.form.addLanguage(this.languageCtrl.value)
+    const spec = createMovieLanguageSpecification({});
+    this.form.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec))
     this.languageCtrl.reset();
     this.showButtons = true;
   }
 
   deleteLanguage(language: Language) {
-    this.form.removeLanguage(language);
+    this.form.removeControl(language);
   }
 }
