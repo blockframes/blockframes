@@ -162,7 +162,7 @@
   <mat-card *ngFor="let control of terms$ | async">
     <form [formGroup]="control">
       <mat-card-header *ngIf="control.value as term">
-        <mat-card-title>Exclusive rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
       </mat-card-header>
       <mat-card-content *ngIf="control.value as term">
         <mat-accordion>

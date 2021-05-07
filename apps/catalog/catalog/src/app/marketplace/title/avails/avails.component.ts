@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MovieQuery, Movie, createMovieLanguageSpecification } from '@blockframes/movie/+state';
-import { TerritoryValue, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
+import { TerritoryValue, territoriesISOA3, territories, Language, Territory } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
@@ -64,7 +64,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     this.bucketForm.value$,
   ]).pipe(map(([avail]) => getTerritories(avail, this.bucketForm.value, 'in').map(t => this.mandatedTerritories.find(m => m.slug === t))));
 
-  public available: TerritoryMarker[] = []
+  public available: TerritoryMarker[] = [];
   available$ = combineLatest([
     this.selected$.pipe(startWith([])),
     this.sold$.pipe(startWith([])),
@@ -78,12 +78,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
         this.available = mandateTerms.map(term => term.territories
           .filter(t => !!territoriesISOA3[t])
           .filter(t => !notAvailable.includes(t))
-          .map(territory => ({
-            slug: territory,
-            isoA3: territoriesISOA3[territory],
-            label: territories[territory],
-            contract: this.mandates.find(m => m.id === term.contractId)
-          }))
+          .map(territory => this.toTerritoryMarker(territory, term.contractId))
         ).flat();
       }
       return this.available;
@@ -122,12 +117,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
     this.mandatedTerritories = this.mandateTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
-      .map(territory => ({
-        slug: territory,
-        isoA3: territoriesISOA3[territory],
-        label: territories[territory],
-        contract: this.mandates.find(m => m.id === term.contractId)
-      }))
+      .map(territory => this.toTerritoryMarker(territory, term.contractId))
     ).flat();
 
   }
@@ -169,12 +159,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms); // @TODO #5573 unit test getSoldTerms
     const sold = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
-      .map(territory => ({
-        slug: territory,
-        isoA3: territoriesISOA3[territory],
-        label: territories[territory],
-        contract: this.mandates.find(m => m.id === term.contractId)
-      }))
+      .map(territory => this.toTerritoryMarker(territory, term.contractId))
     ).flat();
     this.sold$.next(sold);
 
@@ -231,4 +216,15 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   toggleCalendar(toggle: MatSlideToggleChange) {
     this.isCalendar = toggle.checked;
   }
+
+
+  toTerritoryMarker(territory: Territory, contractId: string) {
+    return {
+      slug: territory,
+      isoA3: territoriesISOA3[territory],
+      label: territories[territory],
+      contract: this.mandates.find(m => m.id === contractId)
+    }
+  }
+
 }
