@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ExplanationComponent } from './explanation/explanation.component';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -201,5 +202,11 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   toggleCalendar(toggle: MatSlideToggleChange) {
     this.isCalendar = toggle.checked;
   }
-
+  
+  explain() {
+    this.dialog.open(ExplanationComponent, {
+      height: '80vh',
+      width: '80vw'
+    })
+  }
 }
