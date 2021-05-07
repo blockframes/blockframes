@@ -1,5 +1,5 @@
 <!-- FORM -->
-<article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
   <ng-container *ngFor="let language of form.controls | keyvalue">
     <div fxLayout="column" fxLayoutGap="8px">
       <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
@@ -17,7 +17,7 @@
       </ng-container>
     </div>
   </ng-container>
-</article>
+</form>
 
 <!-- ADD LANGUAGE -->
 <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons else noButtons">
@@ -39,7 +39,3 @@
     </button>
   </div>
 </ng-template>
-
-<!-- <bf-form-list [form]="form">
-  <ng-template itemRef let-languages>{{ languages | toLabel: 'languages' }}</ng-template>
-</bf-form-list> -->

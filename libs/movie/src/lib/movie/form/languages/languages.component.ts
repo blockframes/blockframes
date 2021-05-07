@@ -5,21 +5,21 @@ import { createMovieLanguageSpecification } from '@blockframes/movie/+state';
 import { Language } from '@blockframes/utils/static-model';
 
 @Component({
-  selector: 'languages-form',
+  selector: '[form] languages-form',
   templateUrl: './languages.component.html',
   styleUrls: ['./languages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LanguagesFormComponent implements OnInit {
-  // @Input() form: MovieVersionInfoForm;
-  form = new MovieVersionInfoForm();
+
+  @Input() form: MovieVersionInfoForm;
   public languageCtrl = new FormControl();
   public showButtons = true;
 
   constructor() {}
 
   ngOnInit() {
-    console.log('coucou', this.form)
+    console.log('form in language', this.form)
   }
 
   addLanguage(form: MovieVersionInfoForm) {
