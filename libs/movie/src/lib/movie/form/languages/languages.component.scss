@@ -1,0 +1,13 @@
+div {
+  mat-divider {
+    border-top-color: var(--primary);
+    width: 100%;
+  }
+  span {
+    white-space: nowrap;
+  }
+}
+
+.uppercase {
+  text-transform: uppercase;
+}

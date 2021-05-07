@@ -66,24 +66,8 @@ mat-card {
   margin-bottom: 24px;
 }
 
-form {
-  div {
-    mat-divider {
-      border-top-color: var(--primary);
-      width: 100%;
-    }
-    span {
-      white-space: nowrap;
-    }
-  }
-
-  article.expansion-panel-content {
-    padding: 0 16px;
-  }
-}
-
-.uppercase {
-  text-transform: uppercase;
+form article.expansion-panel-content {
+  padding: 0 16px;
 }
 
 @include layout-bp(lt-lg) {

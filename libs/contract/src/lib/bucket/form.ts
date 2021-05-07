@@ -59,7 +59,7 @@ function createBucketContractControl(params: Partial<BucketContract> = {}) {
     orgId: new FormControl(contract.orgId),
     price: new FormControl(contract.price),
     parentTermId: new FormControl(contract.parentTermId),
-    terms: FormList.factory(contract.terms, term => new BucketTermForm(term)),
+    terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, createBucketTermControl)),
     specificity: new FormControl(contract.price),
   }
 }
