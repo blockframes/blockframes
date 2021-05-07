@@ -15,6 +15,7 @@ import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/gro
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
+import { ExplanationModule } from './explanation/explanation.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -48,6 +49,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     LanguagesFormModule,
     ConfirmModule,
     AvailsCalendarModule,
+    ExplanationModule,
 
     // Material
     MatCardModule,
