@@ -11,6 +11,7 @@ import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/inp
 // Components
 import { MovieFormAvailableMaterialsComponent } from './available-materials.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
+import { LanguagesFormModule } from '../languages/languages.module';
 
 // Material
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -27,6 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
     ReactiveFormsModule,
     FlexLayoutModule,
     InputAutocompleteModule,
+    LanguagesFormModule,
 
     RouterModule.forChild([{ path: '', component: MovieFormAvailableMaterialsComponent }]),
 
