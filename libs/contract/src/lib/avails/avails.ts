@@ -1,4 +1,5 @@
 import { Media, Territory } from "@blockframes/utils/static-model";
+import { Bucket, BucketTerm } from "../bucket/+state";
 import { Term } from "../term/+state/term.model";
 
 export interface AvailsFilter {
@@ -24,7 +25,7 @@ export function getMandateTerms(
     }
 
     // If terms has some media of avails: available
-    if (term.medias.every(media => !medias.includes(media)) ) {
+    if (term.medias.every(media => !medias.includes(media))) {
       continue;
     }
 
@@ -41,7 +42,7 @@ export function getMandateTerms(
   if (medias.some(media => !resultMedias.includes(media))) return [];
 
   // If more territories are selected than there are in the mandates: not available
-  if(!!territories?.length){
+  if (!!territories?.length) {
     const resultTerritories = result.map(term => term.territories).flat();
     if (territories.some(territory => !resultTerritories.includes(territory))) return [];
   }
@@ -95,23 +96,23 @@ export function getSoldTerms(
 
 export function isInBucket(
   { medias, duration, territories, exclusive }: AvailsFilter,
-  terms: AvailsFilter[]  // terms in the bucket for the parentTermId given by "getMandateTerm"
+  avails: AvailsFilter[]
 ) {
-  for (const term of terms) {
-    if (exclusive !== term.exclusive) {
+  for (const avail of avails) {
+    if (exclusive !== avail.exclusive) {
       continue;
     }
-    // If any territory is not included in the terms: not same term
-    if (!territories.every(territory => term.territories.includes(territory))) {
+    // If any territory is not included in the avail: not same term
+    if (!territories.every(territory => avail.territories.includes(territory))) {
       continue;
     }
-    // If any medium is not included in the terms: not same term
-    if (!medias.every(medium => term.medias.includes(medium))) {
+    // If any medium is not included in the avail: not same term
+    if (!medias.every(medium => avail.medias.includes(medium))) {
       continue;
     }
-    // If start before or end after term: not same term
-    const startBefore = duration.from.getTime() < term.duration.from.getTime();
-    const endAfter = duration.to.getTime() > term.duration.to.getTime();
+    // If start before or end after avail: not same term
+    const startBefore = duration.from.getTime() < avail.duration.from.getTime();
+    const endAfter = duration.to.getTime() > avail.duration.to.getTime();
     if (startBefore || endAfter) {
       continue;
     }
@@ -122,20 +123,24 @@ export function isInBucket(
   return false;
 }
 
-
-
-
 ///////////
 // utils //
 ///////////
-export function findSameTermIndex(avails: AvailsFilter[], term: Term) {
-  for (let i = 0; i < avails.length; i++) {
-    const avail = avails[i];
-    if (avail.exclusive !== term.exclusive) continue;
-    if (avail.duration.from.getTime() !== term.duration.from.getTime()) continue;
-    if (avail.duration.to.getTime() !== term.duration.to.getTime()) continue;
-    if (avail.medias.some(medium => !term.medias.includes(medium))) continue; 
-    return i;
-  }
-  return -1;
+export function findSameTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
+  return terms.findIndex(t => isSameTerm(t, avail));
+}
+
+export function isSameTerm(term: BucketTerm, avail: AvailsFilter) {
+  if (term.exclusive !== avail.exclusive) return false;
+  if (!avail.duration?.from || term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
+  if (!avail.duration?.to || term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
+  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
+  return true;
+}
+
+export function getTerritories(avail: AvailsFilter, bucket: Bucket): Territory[] {
+  return bucket.contracts
+    .map(c => c.terms).flat()
+    .filter(t => isSameTerm(t, avail))
+    .map(t => t.territories).flat();
 }
