@@ -2,7 +2,7 @@
  * This module deal with migrating the system from a CURRENT version
  * to the LAST version.
  */
-import { backup, restore, exportFirestore, importFirestore } from './admin';
+import { exportFirestore, importFirestore } from './admin';
 import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, getFirestoreExportDirname } from "@blockframes/firebase-utils";
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
@@ -29,7 +29,7 @@ export async function updateDBVersion(db: Firestore, version: number): Promise<a
   }
 }
 
-function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[] {
+export function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[] {
   const versions = VERSIONS_NUMBERS.filter(version => version > afterVersion);
 
   return versions.map(version => ({
@@ -38,58 +38,7 @@ function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[]
   }));
 }
 
-export async function migrate(
-  withBackup: boolean = true,
-  db = loadAdminServices().db,
-  storage = loadAdminServices().storage
-) {
-  console.info('start the migration process...');
-
-  try {
-    const currentVersion = await loadDBVersion(db);
-    const migrations = selectAndOrderMigrations(currentVersion);
-
-    if (migrations.length === 0) {
-      console.info('No migrations to run, leaving...');
-      return;
-    }
-
-    if (withBackup) {
-      console.info('backup the database before doing anything');
-      await backup();
-      console.info('backup done, moving on to the migrations...');
-    } else {
-      console.warn('⚠️ skipping the backup before running migrations, are you sure?');
-    }
-
-    const lastVersion = last(migrations).version;
-
-    console.info(`Running migrations: ${migrations.map((x) => x.version).join(', ')}`);
-
-    for (const migration of migrations) {
-      console.info(`applying migration: ${migration.version}`);
-      await migration.upgrade(db, storage);
-      console.info(`done applying migration: ${migration.version}`);
-    }
-
-    await updateDBVersion(db, lastVersion);
-  } catch (e) {
-    console.error(e);
-    console.error("the migration failed, revert'ing!");
-    await restore();
-    throw e;
-  } finally {
-    if (withBackup) {
-      console.info('running a backup post-migration');
-      await backup();
-      console.info('done with the backup post-migration');
-    }
-    console.info('end the migration process...');
-  }
-}
-
-
-export async function migrateBeta({
+export async function migrate({
   withBackup = true,
   db = loadAdminServices().db,
   storage = loadAdminServices().storage,
