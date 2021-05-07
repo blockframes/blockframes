@@ -120,7 +120,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   toggleTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
     const { contract: mandate, slug: territory } = marker;
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
+    const contractIndex = bucket.contracts.findIndex(c => mandate.termIds.includes(c.parentTermId));
     // Contract is not registered
     if (contractIndex === -1) {
       this.get('contracts').add(toBucketContract(mandate, { ...avails, territories: [territory] }));
@@ -159,8 +159,9 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
 
   isAlreadyToggled(avails: AvailsFilter, marker: TerritoryMarker) {
     const { contract: mandate, slug: territory } = marker;
+
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === mandate.parentTermId);
+    const contractIndex = bucket.contracts.findIndex(c => mandate.termIds.includes(c.parentTermId));
     if (contractIndex === -1) { return false; }
     const contract = bucket.contracts[contractIndex];
     const termIndex = findSameTermIndex(contract.terms, avails);
