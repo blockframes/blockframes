@@ -50,7 +50,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
   /** List of world map territories */
-  mandatedTerritories: TerritoryMarker[] = [];
+  territoryMarkers: { [key: string]: TerritoryMarker } = {};
   sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
 
   selected$ = combineLatest([
@@ -58,14 +58,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     this.bucketForm.value$,
   ]).pipe(
     startWith([]),
-    map(([avail]) => getTerritories(avail, this.bucketForm.value, 'exact').map(t => this.mandatedTerritories.find(m => m.slug === t))));
+    map(([avail]) => getTerritories(avail, this.bucketForm.value, 'exact').map(t => this.territoryMarkers[t])));
 
   inSelection$ = combineLatest([
     this.availsForm.value$,
     this.bucketForm.value$,
   ]).pipe(
     startWith([]),
-    map(([avail]) => getTerritories(avail, this.bucketForm.value, 'in').map(t => this.mandatedTerritories.find(m => m.slug === t))));
+    map(([avail]) => getTerritories(avail, this.bucketForm.value, 'in').map(t => this.territoryMarkers[t])));
 
   public available: TerritoryMarker[] = [];
   available$ = combineLatest([
@@ -109,10 +109,13 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
     this.salesTerms = await this.termService.getValue(this.sales.map(m => m.termIds).flat());
 
-    this.mandatedTerritories = this.mandateTerms.map(term => term.territories
-      .filter(t => !!territoriesISOA3[t])
-      .map(territory => toTerritoryMarker(territory, term.contractId, this.mandates))
-    ).flat();
+    for (const term of this.mandateTerms) {
+      for (const territory of term.territories) {
+        if (territory in territoriesISOA3) {
+          this.territoryMarkers[territory] = toTerritoryMarker(territory, term.contractId, this.mandates);
+        }
+      }
+    }
 
   }
 
