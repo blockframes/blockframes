@@ -12,8 +12,10 @@ import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widg
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
+import { ExplanationModule } from './explanation/explanation.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -44,8 +46,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     OrgNameModule,
     InputAutocompleteModule,
     StaticGroupModule,
+    LanguagesFormModule,
     ConfirmModule,
     AvailsCalendarModule,
+    ExplanationModule,
 
     // Material
     MatCardModule,

@@ -7,6 +7,7 @@
 <section fxLayout fxLayout="space-between center" fxLayoutGap="24px">
 
   <aside>
+    First time here? <button mat-button (click)="explain()">Learn how it works</button>
     <mat-card>
       <mat-card-header>
         <mat-card-title>Avail Search Criteria</mat-card-title>
@@ -90,6 +91,11 @@
               (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
             </map-feature>
           </ng-container>
+          <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
+            <map-feature [tag]="tag.isoA3" color="color-4"
+              (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')" (mouseout)="clearTerritoryTooltip()">
+            </map-feature>
+          </ng-container>
 
           <!-- TOOLTIP ON HOVERING-->
           <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
@@ -157,7 +163,7 @@
   <mat-card *ngFor="let control of terms$ | async">
     <form [formGroup]="control">
       <mat-card-header *ngIf="control.value as term">
-        <mat-card-title>Exclusive rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
       </mat-card-header>
       <mat-card-content *ngIf="control.value as term">
         <mat-accordion>
@@ -203,47 +209,7 @@
               <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
               <strong>Request Specific Versions</strong>
 
-              <!-- FORM -->
-              <article formGroupName="languages" fxLayout="column" fxLayoutGap="24px">
-                <ng-container *ngFor="let language of control.controls.languages.controls | keyvalue">
-                  <div fxLayout="column" fxLayoutGap="8px">
-                    <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
-                    <div [formGroupName]="language.key" fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-                      <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
-                      <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
-                      <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
-                      <button mat-icon-button (click)="deleteLanguage(control, language.key)" color="warn">
-                        <mat-icon svgIcon="delete"></mat-icon>
-                      </button>
-                    </div>
-                    <ng-container *ngIf="language.value.hasError('noVersion')">
-                      <p class="mat-error" *ngIf="language.value.touched">Please select a version above or delete this language.</p>
-                      <p class="mat-caption" *ngIf="language.value.untouched">Please select the applicable version(s).</p>
-                    </ng-container>
-                  </div>
-                </ng-container>
-              </article>
-
-              <!-- ADD LANGUAGE -->
-              <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons else noButtons">
-                <mat-divider inset></mat-divider>
-                <span class="mat-caption text-primary">Add a Version</span>
-                <button mat-mini-fab color="primary" (click)="this.showButtons = !this.showButtons">
-                  <mat-icon svgIcon="add"></mat-icon>
-                </button>
-              </div>
-              <ng-template #noButtons>
-                <input-autocomplete scope="languages" [control]="languageCtrl" withoutValues="['all']">
-                  <mat-label>Languages</mat-label>
-                </input-autocomplete>
-                <div fxLayout fxLayoutAlign="space-between start">
-                  <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage(control)"
-                    [disabled]="!languageCtrl.value">
-                    <mat-icon svgIcon="save"></mat-icon>
-                    <span>Save Language</span>
-                  </button>
-                </div>
-              </ng-template>
+              <languages-form [form]="control.controls.languages"></languages-form>
             </article>
           </mat-expansion-panel>
 
