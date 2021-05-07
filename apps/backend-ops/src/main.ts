@@ -4,13 +4,13 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, upgrade, prepareDb, prepareStorage, prepareForTestingBeta, upgradeBeta } from './firebaseSetup';
-import { migrate, migrateBeta } from './migrations';
+import { prepareDb, prepareStorage, prepareForTesting, upgrade } from './firebaseSetup';
+import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
-import { backup, restore, exportFirestore, importFirestore } from './admin';
+import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
 import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
@@ -24,15 +24,10 @@ const [arg1, arg2] = flags;
 async function runCommand() {
   const { db } = loadAdminServices();
   switch (cmd) {
-    case 'prepareForTestingBeta':
-      await startMaintenance(db);
-      await prepareForTestingBeta();
-      await endMaintenance(db, EIGHT_MINUTES_IN_MS);
-      break;
     case 'prepareForTesting':
       await startMaintenance(db);
       await prepareForTesting();
-      await endMaintenance(db);
+      await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'displayCredentials':
       await displayCredentials();
@@ -71,15 +66,6 @@ async function runCommand() {
     case 'generateFixtures':
       await generateFixtures();
       break;
-    case 'upgradeBeta':
-      if (!await isMigrationRequired()) {
-        console.log('Skipping upgrade because migration is not required...');
-        return;
-      }
-      await startMaintenance(db);
-      await upgradeBeta();
-      await endMaintenance(db);
-      break;
     case 'upgrade':
       if (!await isMigrationRequired()) {
         console.log('Skipping upgrade because migration is not required...');
@@ -87,14 +73,6 @@ async function runCommand() {
       }
       await startMaintenance(db);
       await upgrade();
-      await endMaintenance(db);
-      break;
-    case 'backup':
-      await backup();
-      break;
-    case 'restore':
-      await startMaintenance(db);
-      await restore();
       await endMaintenance(db);
       break;
     case 'exportFirestore':
@@ -119,15 +97,6 @@ async function runCommand() {
       break;
     case 'healthCheck':
       await healthCheck();
-      break;
-    case 'migrateBeta':
-      if (!await isMigrationRequired()) {
-        console.log('Skipping because there is no migration to run...');
-        return;
-      }
-      await startMaintenance(db);
-      await migrateBeta();
-      await endMaintenance(db);
       break;
     case 'migrate':
       if (!await isMigrationRequired()) {
