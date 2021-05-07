@@ -25,28 +25,31 @@ export function toTerritoryMarker(territory: Territory, contractId: string, mand
   }
 }
 
-export function getMandateTerms(
-  { medias, duration, territories }: AvailsFilter,
-  terms: Term<Date>[] // Terms of all mandates of the title
-): Term<Date>[] | undefined {
+/**
+ * 
+ * @param avails 
+ * @param terms Terms of all mandates of the title
+ * @returns 
+ */
+export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
   const result: Term<Date>[] = []
   for (const term of terms) {
     // If starts before term: not available
-    if (duration.from.getTime() <= term.duration.from.getTime()) {
+    if (avails.duration.from.getTime() <= term.duration.from.getTime()) {
       continue;
     }
     // If ends after term: not available
-    if (duration.to.getTime() >= term.duration.to.getTime()) {
+    if (avails.duration.to.getTime() >= term.duration.to.getTime()) {
       continue;
     }
 
     // If terms has some media of avails: available
-    if (term.medias.every(media => !medias.includes(media))) {
+    if (term.medias.every(media => !avails.medias.includes(media))) {
       continue;
     }
 
     // If terms has some territories of avails: available
-    if (!!territories?.length && term.territories.every(territory => !territories.includes(territory))) {
+    if (!!avails.territories?.length && term.territories.every(territory => !avails.territories.includes(territory))) {
       continue;
     }
 
@@ -55,12 +58,12 @@ export function getMandateTerms(
 
   // If more medias are selected than there are in the mandates: not available
   const resultMedias = result.map(term => term.medias).flat();
-  if (medias.some(media => !resultMedias.includes(media))) return [];
+  if (avails.medias.some(media => !resultMedias.includes(media))) return [];
 
   // If more territories are selected than there are in the mandates: not available
-  if (!!territories?.length) {
+  if (!!avails.territories?.length) {
     const resultTerritories = result.map(term => term.territories).flat();
-    if (territories.some(territory => !resultTerritories.includes(territory))) return [];
+    if (avails.territories.some(territory => !resultTerritories.includes(territory))) return [];
   }
 
   return result;
