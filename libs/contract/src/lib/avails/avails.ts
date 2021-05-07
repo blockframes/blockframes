@@ -32,7 +32,7 @@ export function toTerritoryMarker(territory: Territory, contractId: string, mand
  * @returns 
  */
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
-  const result: Term<Date>[] = []
+  const result: Term<Date>[] = [];
   for (const term of terms) {
     // If starts before term: not available
     if (avails.duration.from.getTime() <= term.duration.from.getTime()) {

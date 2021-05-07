@@ -1,9 +1,9 @@
-import { Term } from '../term/+state/term.model';
-import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './avails';
-import { mandates } from './fixtures/mandates';
-import { sales } from './fixtures/sales';
-import { mandateTerms as acTerms } from './fixtures/mandateTerms';
-import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
+import { Term } from '../../term/+state/term.model';
+import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './../avails';
+import { mandates } from './../fixtures/mandates';
+import { sales } from './../fixtures/sales';
+import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
+import { saleTerms as acSaleTerms } from './../fixtures/saleTerms';
 
 describe('isTermSold', () => {
     const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
