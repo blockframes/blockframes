@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MovieQuery, Movie, createMovieLanguageSpecification } from '@blockframes/movie/+state';
-import { TerritoryValue, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
+import { MovieQuery, Movie } from '@blockframes/movie/+state';
+import { TerritoryValue, territoriesISOA3, territories } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
@@ -10,8 +10,7 @@ import { getMandateTerms, getSoldTerms, getTerritories } from '@blockframes/cont
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
-import { BucketTermForm, BucketForm } from '@blockframes/contract/bucket/form';
-import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
+import { BucketForm } from '@blockframes/contract/bucket/form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -193,17 +192,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   /** Clear the territories information */
   public clearTerritoryTooltip() {
     this.hoveredTerritory = null;
-  }
-
-  addLanguage(term: BucketTermForm) {
-    const spec = createMovieLanguageSpecification({});
-    term.controls.languages.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
-    this.languageCtrl.reset();
-    this.showButtons = true;
-  }
-
-  deleteLanguage(term: BucketTermForm, language: Language) {
-    term.controls.languages.removeControl(language);
   }
 
   addToSelection() {
