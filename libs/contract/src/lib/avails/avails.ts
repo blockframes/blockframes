@@ -69,35 +69,41 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
   return result;
 }
 
-export function isSold(
-  { medias, duration, territories, exclusive }: AvailsFilter,
-  terms: Term<Date>[], // Terms of all sales of the title
-) {
-  return !!getSoldTerms({ medias, duration, territories, exclusive }, terms).length;
+/**
+ * 
+ * @param avails 
+ * @param terms Terms of all sales of the title
+ * @returns 
+ */
+export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
+  return !!getSoldTerms({ medias: avails.medias, duration: avails.duration, territories: avails.territories, exclusive: avails.exclusive }, terms).length;
 }
 
-export function getSoldTerms(
-  { medias, duration, territories, exclusive }: AvailsFilter,
-  terms: Term<Date>[], // Terms of all sales of the title
-) {
+/**
+ * 
+ * @param avails 
+ * @param terms Terms of all sales of the title
+ * @returns 
+ */
+export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   const result: Term<Date>[] = [];
   for (const term of terms) {
-    const startDuringDuration = duration.from.getTime() >= term.duration.from.getTime() && duration.from.getTime() <= term.duration.to.getTime();
-    const endDuringDuration = duration.to.getTime() <= term.duration.to.getTime() && duration.to.getTime() >= term.duration.from.getTime();
+    const startDuringDuration = avails.duration.from.getTime() >= term.duration.from.getTime() && avails.duration.from.getTime() <= term.duration.to.getTime();
+    const endDuringDuration = avails.duration.to.getTime() <= term.duration.to.getTime() && avails.duration.to.getTime() >= term.duration.from.getTime();
     const inDuration = startDuringDuration || endDuringDuration;
-    const wrappedDuration = duration.from.getTime() <= term.duration.from.getTime() && duration.to.getTime() >= term.duration.to.getTime();
+    const wrappedDuration = avails.duration.from.getTime() <= term.duration.from.getTime() && avails.duration.to.getTime() >= term.duration.to.getTime();
 
-    if (exclusive) {
+    if (avails.exclusive) {
 
-      const intersectsMedia = medias.some(medium => term.medias.includes(medium));
-      const intersectsTerritories = !territories.length || territories.some(territory => term.territories.includes(territory));
+      const intersectsMedia = avails.medias.some(medium => term.medias.includes(medium));
+      const intersectsTerritories = !avails.territories.length || avails.territories.some(territory => term.territories.includes(territory));
 
       if (intersectsMedia && intersectsTerritories && inDuration) {
         result.push(term);
       } else continue;
     } else if (term.exclusive) {
       if (inDuration || wrappedDuration) {
-        if (!medias.some(medium => term.medias.includes(medium)) || !territories.some(territory => term.territories.includes(territory))) {
+        if (!avails.medias.some(medium => term.medias.includes(medium)) || !avails.territories.some(territory => term.territories.includes(territory))) {
           continue;
         } else {
           result.push(term);
