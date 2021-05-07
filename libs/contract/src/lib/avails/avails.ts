@@ -119,25 +119,22 @@ export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   return result;
 }
 
-export function isInBucket(
-  { medias, duration, territories, exclusive }: AvailsFilter,
-  avails: AvailsFilter[]
-) {
-  for (const avail of avails) {
-    if (exclusive !== avail.exclusive) {
+export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
+  for (const term of terms) {
+    if (avails.exclusive !== term.exclusive) {
       continue;
     }
     // If any territory is not included in the avail: not same term
-    if (!territories.every(territory => avail.territories.includes(territory))) {
+    if (!avails.territories.every(territory => term.territories.includes(territory))) {
       continue;
     }
     // If any medium is not included in the avail: not same term
-    if (!medias.every(medium => avail.medias.includes(medium))) {
+    if (!avails.medias.every(medium => term.medias.includes(medium))) {
       continue;
     }
     // If start before or end after avail: not same term
-    const startBefore = duration.from.getTime() < avail.duration.from.getTime();
-    const endAfter = duration.to.getTime() > avail.duration.to.getTime();
+    const startBefore = avails.duration.from.getTime() < term.duration.from.getTime();
+    const endAfter = avails.duration.to.getTime() > term.duration.to.getTime();
     if (startBefore || endAfter) {
       continue;
     }

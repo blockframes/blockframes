@@ -4,6 +4,7 @@ import { mandates } from './../fixtures/mandates';
 import { sales } from './../fixtures/sales';
 import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
 import { saleTerms as acSaleTerms } from './../fixtures/saleTerms';
+import { BucketTerm, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 
 describe('isTermSold', () => {
     const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
@@ -12,7 +13,7 @@ describe('isTermSold', () => {
     const MotherSchmuckers = 'bR4fTHmDDuOSPrNaz39J';
     const BigFootFamily = '1eJm06mvagJDNJ2yAlDt';
 
-    let bucket: AvailsFilter[] = []
+    let bucket: BucketTerm[] = [];
 
     beforeEach(() => {
         // We are starting with a new bucket for every test
@@ -263,7 +264,7 @@ describe('isTermSold', () => {
       expect(isGazaSold).toBe(true);
       expect(isMotherSold).toBe(false);
       expect(isBigfootSold).toBe(false);
-      bucket.push(availDetails);
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -320,7 +321,7 @@ describe('isTermSold', () => {
       expect(isMotherSold).toBe(true);
       expect(isHoursSold).toBe(true);
       expect(isBigfootSold).toBe(false);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -382,7 +383,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
       expect(isGazaSold).toBe(false);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -448,7 +449,7 @@ describe('isTermSold', () => {
       expect(isResurrectedSold).toBe(false);
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -514,7 +515,7 @@ describe('isTermSold', () => {
       expect(isResurrectedSold).toBe(true);
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -580,7 +581,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(true);
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(false);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -647,7 +648,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(true);
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(true);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -713,7 +714,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(false);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -779,7 +780,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
       expect(isResurrectedSold).toBe(true);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -845,7 +846,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
       expect(isResurrectedSold).toBe(true);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -911,7 +912,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(true);
       expect(isBigfootSold).toBe(true);
       expect(isResurrectedSold).toBe(false);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 
@@ -978,7 +979,7 @@ describe('isTermSold', () => {
       expect(isHoursSold).toBe(false);
       expect(isBigfootSold).toBe(false);
       expect(isResurrectedSold).toBe(true);
-      bucket.push(availDetails)
+      bucket.push(createBucketTerm(availDetails));
       expect(isInBucket(availDetails, bucket)).toBe(true)
     })
 })
