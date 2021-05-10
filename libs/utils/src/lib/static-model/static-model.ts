@@ -327,10 +327,9 @@ export const premiereType = {
 } as const
 
 export const producerRoles = {
+  producer: 'Producer',
   executiveProducer: 'Executive Producer',
-  lineProducer: 'Line Producer',
-  associateProducer: 'Associate Producer',
-  productionManager: 'Production Manager'
+  associateProducer: 'Associate Producer'
 } as const
 
 export const productionStatus = {
