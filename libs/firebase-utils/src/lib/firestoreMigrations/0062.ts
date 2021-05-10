@@ -1,20 +1,26 @@
 import { runChunks } from '../firebase-utils';
-import { producerRoles} from '@blockframes/utils/static-model/static-model';
 import { Firestore } from '../types';
-import { Producer } from '@blockframes/utils/common-interfaces/identity';
 
-export async function upgrade(db: Firestore, producer: Producer) {
+export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();
 
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data();
     let update = false;
 
-    if (movie.producers.role === producer.role) {
-      update = true;
-      movie.producers.role = producerRoles;
-    }
+    movie.producers.map(producer => {
+      if (producer.role === 'productionManager') {
+        producer.role = 'producer';
+        update = true;
+      }
+      else if (producer.role === 'lineProducer') {
+        producer.role = '';
+        update = true;
+      }
+    })
 
-    await doc.ref.set(movie);
+    if (update) {
+      await doc.ref.set(movie);
+    }
   });
 }
