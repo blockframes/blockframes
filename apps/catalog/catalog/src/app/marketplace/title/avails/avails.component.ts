@@ -31,6 +31,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public orgId = this.orgQuery.getActiveId();
   public periods = ['weeks', 'months', 'years'];
   private sub: Subscription;
+  public maxTerritories = 30;
 
   private mandates: Mandate[];
   private sales: Sale[];
