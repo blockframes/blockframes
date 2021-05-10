@@ -216,6 +216,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   /** Open a modal to display the entire list of territories when this one is too long */
   openTerritoryModal(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
   }
 }

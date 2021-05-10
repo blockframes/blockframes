@@ -7,6 +7,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { MatChipsModule } from '@angular/material/chips';
 
     MatButtonModule,
     MatIconModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDialogModule
   ],
   exports: [DetailedTermsComponent],
   declarations: [DetailedTermsComponent]
