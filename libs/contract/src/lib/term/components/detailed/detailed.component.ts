@@ -19,9 +19,11 @@ export class DetailedTermsComponent implements OnInit {
 
   ngOnInit() {
     const groups = staticGroups[this.data.scope]
-    for (const group of groups) {
-      group.items = group.items.filter(item => this.data.terms.includes(item));
+    if (!!groups) {
+      for (const group of groups) {
+        group.items = group.items.filter(item => this.data.terms.includes(item));
+      }
+      this.groups$.next(groups);
     }
-    this.groups$.next(groups);
   }
 }
