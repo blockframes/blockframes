@@ -187,7 +187,7 @@
                       <mat-chip *ngIf="i < 30">{{ territory | toLabel: 'territories' }}</mat-chip>
                     </ng-container>
                   </mat-chip-list>
-                  <button mat-button class="spacing">... See {{ term.territories.length - 30 }} More</button>
+                  <button mat-button class="spacing" (click)="openTerritoryModal(term.territories, 'territories')">... See {{ term.territories.length - 30 }} More</button>
                 </div>
               </ng-template>
             </article>
