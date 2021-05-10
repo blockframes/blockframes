@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { TerritoryValue, territoriesISOA3 } from '@blockframes/utils/static-model';
+import { TerritoryValue, territoriesISOA3, Scope } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
@@ -17,6 +17,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ExplanationComponent } from './explanation/explanation.component';
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -30,6 +31,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public orgId = this.orgQuery.getActiveId();
   public periods = ['weeks', 'months', 'years'];
   private sub: Subscription;
+  public maxTerritories = 30;
 
   private mandates: Mandate[];
   private sales: Sale[];
@@ -210,5 +212,10 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
       height: '80vh',
       width: '80vw'
     });
+  }
+
+  /** Open a modal to display the entire list of territories when this one is too long */
+  openTerritoryModal(terms: string, scope: Scope) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
   }
 }
