@@ -154,8 +154,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     }
 
     // Territories that are already sold after form filtering
-    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms);
-    const sold = soldTerms.map(term => term.territories
+    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms); // @TODO #5573 unit test getSoldTerms
+    const sold: TerritoryMarker[] = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => toTerritoryMarker(territory, term.contractId, this.mandates))
     ).flat();
