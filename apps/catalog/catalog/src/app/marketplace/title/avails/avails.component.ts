@@ -167,7 +167,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: TerritoryMarker) {
-    this.bucketForm.toggleTerritory(this.availsForm.value, territory);
+    const selected = this.bucketForm.toggleTerritory(this.availsForm.value, territory);
+    if (selected) this.bucketForm.markAsDirty();
   }
 
   public selectAll() {
@@ -197,6 +198,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   addToSelection() {
     this.bucketService.update(this.orgId, this.bucketForm.value);
+    this.bucketForm.markAsPristine();
   }
 
   toggleCalendar(toggle: MatSlideToggleChange) {
