@@ -109,58 +109,75 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   }
 
   /**
-   * Find the
-   * @param mandate
-   * @param term
-   * @param territory
-   * @returns
+   * 
+   * @param avails 
+   * @param marker 
+   * @returns 
    */
-
-  toggleTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
-    const { contract: mandate, slug: territory } = marker;
+  addTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
+    const { contract: mandate, slug: territory, term } = marker;
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(c => mandate.termIds.includes(c.parentTermId));
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     // Contract is not registered
     if (contractIndex === -1) {
-      this.get('contracts').add(toBucketContract(mandate, { ...avails, territories: [territory] }));
+      this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }));
       this.change.next();
-      return true;
+      return;
     }
+
     const contract = bucket.contracts[contractIndex];
     const termIndex = findSameTermIndex(contract.terms, avails);
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
       this.change.next();
-      return true;
+      return;
     }
-    // Toggle territory
+
     const territories = contract.terms[termIndex].territories;
     const control = this.get('contracts').at(contractIndex).get('terms').at(termIndex).get('territories');
     const hasTerritory = territories.includes(territory);
     // Add territory
     if (!hasTerritory) {
       control.setValue([...territories, territory]);
-      return true;
-    }
-    // Remove the territory from the list
-    else if (territories.length > 1) {
-      control.setValue(territories.filter(t => t !== territory));
-      return false;
-    }
-    // Remove the term as it was the last territory
-    else {
-      this.get('contracts').at(contractIndex).get('terms').removeAt(termIndex);
-      this.change.next();
-      return false;
     }
   }
 
-  isAlreadyToggled(avails: AvailsFilter, marker: TerritoryMarker) {
-    const { contract: mandate, slug: territory } = marker;
+  /**
+   * 
+   * @param avails 
+   * @param marker 
+   * @returns 
+   */
+  removeTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
+    const { slug: territory, term } = marker;
+    const bucket = this.value;
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
+    if (contractIndex === -1) { return; }
+
+    const contract = bucket.contracts[contractIndex];
+    const termIndex = findSameTermIndex(contract.terms, avails);
+    if (termIndex === -1) { return; }
+
+    const territories = contract.terms[termIndex].territories;
+    const control = this.get('contracts').at(contractIndex).get('terms').at(termIndex).get('territories');
+    const hasTerritory = territories.includes(territory);
+
+    if (!hasTerritory) { return; }
+
+    if (territories.length > 1) {
+      control.setValue(territories.filter(t => t !== territory));
+    } else { // Remove the term as it was the last territory
+      this.get('contracts').at(contractIndex).get('terms').removeAt(termIndex);
+      this.change.next()
+    }
+  }
+
+  isAlreadyInBucket(avails: AvailsFilter, marker: TerritoryMarker) : boolean {
+    const { slug: territory, term } = marker;
 
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(c => mandate.termIds.includes(c.parentTermId));
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     if (contractIndex === -1) { return false; }
     const contract = bucket.contracts[contractIndex];
     const termIndex = findSameTermIndex(contract.terms, avails);
