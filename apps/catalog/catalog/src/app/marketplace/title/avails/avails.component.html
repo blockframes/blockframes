@@ -77,7 +77,7 @@
 
           <!-- MAP LAYERS -->
           <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
-            <map-feature [tag]="tag.isoA3" color="color-1" (click)="select(tag)"
+            <map-feature [tag]="tag.isoA3" color="color-1" (click)="addTerritory(tag)"
               (mouseover)="displayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
             </map-feature>
           </ng-container>
@@ -87,7 +87,7 @@
             </map-feature>
           </ng-container>
           <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
-            <map-feature [tag]="tag.isoA3" color="color-4" (click)="select(tag)"
+            <map-feature [tag]="tag.isoA3" color="color-4" (click)="removeTerritory(tag)"
               (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
             </map-feature>
           </ng-container>
