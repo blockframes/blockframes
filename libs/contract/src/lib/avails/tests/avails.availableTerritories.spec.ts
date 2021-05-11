@@ -1,4 +1,4 @@
-import { createMandate, createSale } from "../../contract/+state/contract.model";
+import { createMandate } from "../../contract/+state/contract.model";
 import { availableTerritories, getMandateTerms, getSoldTerms, toTerritoryMarker } from "./../avails";
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form'
 import { createTerm } from "../../term/+state/term.model";
@@ -21,12 +21,12 @@ describe('availableTerritories', () => {
     term.duration.from = new Date('01/01/2020');
     term.duration.to = new Date('01/01/2030');
     term.medias = ['theatrical'];
-    term.territories = ['france'];
+    term.territories = ['france', 'germany', 'greece'];
     term.exclusive = true;
 
-    const selected = toTerritoryMarker('germany', 'A', [mandate]);
-    const available = availableTerritories([selected], [], [], availsForm.value, [mandate], [term]);
-
+    const selected = toTerritoryMarker('germany', 'MandateA', [mandate], term);
+    const sold = toTerritoryMarker('greece', 'MandateA', [mandate], term);
+    const available = availableTerritories([selected], [sold], [], availsForm.value, [mandate], [term]);
 
     expect(available.length).toBe(1);
     expect(available[0].slug).toBe('france');
@@ -53,7 +53,7 @@ describe('availableTerritories', () => {
     term.territories = ['france'];
     term.exclusive = true;
 
-    const selected = toTerritoryMarker('france', 'A', [mandate]);
+    const selected = toTerritoryMarker('france', 'MandateA', [mandate], term);
     const available = availableTerritories([selected], [], [], availsForm.value, [mandate], [term]);
 
     expect(available.length).toBe(0);
