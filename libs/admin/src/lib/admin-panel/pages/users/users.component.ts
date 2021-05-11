@@ -115,7 +115,7 @@ export class UsersComponent implements OnInit {
             link: `/c/o/admin/panel/user/${u.uid}`,
           },
           org: org,
-          orgCountry: territories[org.addresses?.main.country] ?? '--',
+          orgCountry: org?.addresses?.main.country && territories[org.addresses?.main.country] ? territories[org.addresses?.main.country] : '--',
           userOrgRole: org ? await this.orgService.getMemberRole(org, u.uid) : undefined,
           type: org ? (getOrgModuleAccess(org).includes('dashboard') ? 'seller' : 'buyer') : undefined
         }
@@ -145,7 +145,7 @@ export class UsersComponent implements OnInit {
 
         for (const a of this.app) {
           for (const module of modules) {
-            row[`${appName[a]} - ${module}`] = r.org.appAccess[a][module] ? 'true' : 'false';
+            row[`${appName[a]} - ${module}`] = !!r.org?.appAccess[a] && r.org.appAccess[a][module] ? 'true' : 'false';
           }
         }
 

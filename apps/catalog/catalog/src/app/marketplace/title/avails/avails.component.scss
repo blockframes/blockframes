@@ -1,17 +1,42 @@
 @import '~@angular/flex-layout/mq';
 
-section {
-  padding: 15px 0;
+:host {
+  display: block;
+  padding: 25px;
+}
+
+div {
+  margin-bottom: 24px;
 }
 
 aside {
   position: sticky;
   top: calc(var(--toolbarHeight) + 20px);
-  width: 500px;
+  width: 30%;
+  mat-card {
+    mat-card-subtitle {
+      margin-top: 20px;
+    }
+
+    mat-form-field {
+      width: 100%;
+
+      mat-icon {
+        margin-left: 12px;
+        margin-right: 12px;
+      }
+    }
+  }
 }
 
-.map-card {
+.avails-card {
   flex: 1;
+
+  mat-card-subtitle {
+    a {
+      text-decoration: underline;
+    }
+  }
 
   world-map {
     height: 500px;
@@ -22,7 +47,7 @@ aside {
 .colors-card {
   position: absolute;
   bottom: 30px;
-  right: 15px;
+  left: 15px;
   z-index: 2;
 
   svg {
@@ -37,9 +62,16 @@ aside {
   z-index: 2;
 }
 
-strong {
-  opacity: 0.5;
-  font-weight: normal;
+mat-card {
+  margin-bottom: 24px;
+}
+
+form article.expansion-panel-content {
+  padding: 0 16px;
+}
+
+button.spacing {
+  margin-top: 16px;
 }
 
 @include layout-bp(lt-lg) {
