@@ -2,6 +2,7 @@ import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue
 import { Bucket, BucketTerm } from "../bucket/+state";
 import { Mandate } from "../contract/+state/contract.model";
 import { Term } from "../term/+state/term.model";
+
 export interface AvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
@@ -14,14 +15,16 @@ export interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
   label: TerritoryValue,
   contract?: Mandate,
+  term?: Term<Date>
 }
 
-export function toTerritoryMarker(territory: Territory, contractId: string, mandates: Mandate[]): TerritoryMarker {
+export function toTerritoryMarker(territory: Territory, contractId: string, mandates: Mandate[], term: Term<Date>): TerritoryMarker {
   return {
     slug: territory,
     isoA3: territoriesISOA3[territory],
     label: territories[territory],
-    contract: mandates.find(m => m.id === contractId)
+    contract: mandates.find(m => m.id === contractId),
+    term,
   }
 }
 
@@ -200,6 +203,6 @@ export function availableTerritories(
   return mandateTerms.map(term => term.territories
     .filter(t => !!territoriesISOA3[t])
     .filter(t => !notAvailable.includes(t))
-    .map(territory => toTerritoryMarker(territory, term.contractId, mandates))
+    .map(territory => toTerritoryMarker(territory, term.contractId, mandates, term))
   ).flat();
 }
