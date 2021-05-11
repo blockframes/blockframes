@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { TerritoryValue, territoriesISOA3 } from '@blockframes/utils/static-model';
+import { TerritoryValue, territoriesISOA3, Scope } from '@blockframes/utils/static-model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
@@ -17,6 +17,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ExplanationComponent } from './explanation/explanation.component';
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -30,6 +31,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   public orgId = this.orgQuery.getActiveId();
   public periods = ['weeks', 'months', 'years'];
   private sub: Subscription;
+  public maxTerritories = 30;
 
   private mandates: Mandate[];
   private sales: Sale[];
@@ -152,8 +154,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     }
 
     // Territories that are already sold after form filtering
-    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms);
-    const sold = soldTerms.map(term => term.territories
+    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms); // @TODO #5573 unit test getSoldTerms
+    const sold: TerritoryMarker[] = soldTerms.map(term => term.territories
       .filter(t => !!territoriesISOA3[t])
       .map(territory => toTerritoryMarker(territory, term.contractId, this.mandates))
     ).flat();
@@ -167,7 +169,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: TerritoryMarker) {
-    this.bucketForm.toggleTerritory(this.availsForm.value, territory);
+    const selected = this.bucketForm.toggleTerritory(this.availsForm.value, territory);
+    if (selected) this.bucketForm.markAsDirty();
   }
 
   public selectAll() {
@@ -197,16 +200,22 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   addToSelection() {
     this.bucketService.update(this.orgId, this.bucketForm.value);
+    this.bucketForm.markAsPristine();
   }
 
   toggleCalendar(toggle: MatSlideToggleChange) {
     this.isCalendar = toggle.checked;
   }
-  
+
   explain() {
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
       width: '80vw'
     });
+  }
+
+  /** Open a modal to display the entire list of territories when this one is too long */
+  openTerritoryModal(terms: string, scope: Scope) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
   }
 }

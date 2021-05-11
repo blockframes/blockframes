@@ -16,6 +16,7 @@ import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
 import { ExplanationModule } from './explanation/explanation.module';
+import { AvailsGuard } from './avails.guard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +31,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AvailsGuard } from './avails.guard';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
