@@ -127,7 +127,7 @@ describe('User create a screening', () => {
     cy.log(`>Check in market place event page for {${movieTitle}}`);
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
-    const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(movieTitle);
+    const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(movieTitle, true);
     cy.log(`{${movieTitle}} must exist in user schedule! | [A]`);
     p6.assertScreeningExist(movieTitle);
 
