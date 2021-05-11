@@ -3,12 +3,11 @@ import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 
 describe('BucketTerm', () => {
 
-
   it('Checks if two terms are the same', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
-    }
+    };
 
     const bucketTerm = createBucketTerm(availDetails);
     expect(isSameTerm(bucketTerm, availDetails)).toBe(true);
@@ -18,7 +17,7 @@ describe('BucketTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
-    }
+    };
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/29/2030') } });
     expect(isSameTerm(bucketTerm, availDetails)).toBe(false);
@@ -28,7 +27,7 @@ describe('BucketTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/04/2028'), to: new Date('06/29/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
-    }
+    };
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') } });
     expect(isInTerm(bucketTerm, availDetails)).toBe(true);
@@ -38,7 +37,7 @@ describe('BucketTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/04/2028'), to: new Date('06/30/2031') }, exclusive: false,
       territories: ['france'], medias: ['planes']
-    }
+    };
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') } });
     expect(isInTerm(bucketTerm, availDetails)).toBe(false);
@@ -48,7 +47,7 @@ describe('BucketTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
-    }
+    };
 
     const bucketTerm = createBucketTerm(availDetails);
     expect(isSameTerm(bucketTerm, availDetails)).toBe(true);
