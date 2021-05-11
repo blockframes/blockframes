@@ -76,7 +76,7 @@ export class UserComponent implements OnInit {
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
     if (this.form.valid && this.form.value.length) {
-      const emails = this.form.value.map(guest => guest.email);
+      const emails = this.form.value.map(guest => guest.email.trim());
       this.form.reset([]);
       this.sending.next(true);
       const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
