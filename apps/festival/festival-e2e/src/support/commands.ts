@@ -9,6 +9,7 @@
 // ***********************************************
 // eslint-disable-next-line @typescript-eslint/no-namespace
 import 'cypress-wait-until';
+import 'cypress-mailosaur';
 
 declare namespace Cypress {
   interface Chainable<Subject> {
