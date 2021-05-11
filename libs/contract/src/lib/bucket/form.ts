@@ -109,7 +109,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   }
 
   /**
-   * 
+   * Adds a territory to bucket if not already in it
    * @param avails 
    * @param marker 
    * @returns 
@@ -144,7 +144,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   }
 
   /**
-   * 
+   * Removes a territory from Bucket and entire term if empty
    * @param avails 
    * @param marker 
    * @returns 
@@ -173,6 +173,12 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     }
   }
 
+  /**
+   * Checks if a territory is already in bucket
+   * @param avails 
+   * @param marker 
+   * @returns boolean
+   */
   isAlreadyInBucket(avails: AvailsFilter, marker: TerritoryMarker) : boolean {
     const { slug: territory, term } = marker;
 
