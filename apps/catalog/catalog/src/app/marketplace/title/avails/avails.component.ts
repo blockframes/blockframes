@@ -88,15 +88,15 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
         buttonName: 'Leave anyway'
       }
-    })
+    });
     return dialogRef.afterClosed().pipe(
       switchMap(exit => {
         /* Undefined means user clicked on the backdrop, meaning just close the modal */
         if (typeof exit === 'undefined') {
           return of(false);
         }
-        return of(exit)
+        return of(exit);
       })
-    )
+    );
   }
 }
