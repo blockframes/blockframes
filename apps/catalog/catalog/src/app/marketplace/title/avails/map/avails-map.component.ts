@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
-import { map, startWith } from 'rxjs/operators';
+import { map, shareReplay, startWith, take } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
@@ -64,6 +64,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
       if (this.availsForm.invalid) return [];
       return availableTerritories(selected, sold, inSelection, this.availsForm.value, this.mandates, this.mandateTerms);
     }),
+    shareReplay(1) // Multicast with replay
   );
 
 
@@ -87,7 +88,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
     for (const term of this.mandateTerms) {
         for (const territory of term.territories) {
           if (territory in territoriesISOA3) {
-            this.territoryMarkers[territory] = toTerritoryMarker(territory, term.contractId, this.mandates);
+            this.territoryMarkers[territory] = toTerritoryMarker(territory, term.contractId, this.mandates, term);
           }
         }
       }
@@ -108,21 +109,22 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
     this.hoveredTerritory = null;
   }
 
-  /** Whenever you click on a territory, add it to availsForm.territories. */
-  public select(territory: TerritoryMarker) {
-    const selected = this.shell.bucketForm.toggleTerritory(this.availsForm.value, territory);
-    if (selected) this.shell.bucketForm.markAsDirty();
+  public addTerritory(territory: TerritoryMarker) {
+    this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
   }
 
-  public selectAll() {
-    this.available$.toPromise().then(available => {
-      available.forEach(t => {
-        const isAlreadyToggled = this.shell.bucketForm.isAlreadyToggled(this.availsForm.value, t);
-        if (!isAlreadyToggled) {
-          this.shell.bucketForm.toggleTerritory(this.availsForm.value, t);
-        }
-      });
-    });
+  public removeTerritory(territory: TerritoryMarker) {
+    this.shell.bucketForm.removeTerritory(this.availsForm.value, territory);
+  }
+
+  public async selectAll() {
+    const available = await this.available$.pipe(take(1)).toPromise();
+    for (const term of available) {
+      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(this.availsForm.value, term);
+      if (!alreadyInBucket) {
+        this.shell.bucketForm.addTerritory(this.availsForm.value, term);
+      }
+    }
   }
 
   clear() {
