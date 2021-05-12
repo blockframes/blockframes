@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'catalog-selection',
@@ -17,8 +18,9 @@ import { Movie } from '@blockframes/movie/+state';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent {
-  currencies = movieCurrencies;
+export class MarketplaceSelectionComponent implements OnInit {
+  withoutCurrencies = Object.keys(movieCurrencies).filter(currency => !['EUR', 'USD'].includes(currency));
+  public currencyForm = new FormControl();
   columns = {
     duration: 'Terms',
     territories: 'Territories',
@@ -52,6 +54,10 @@ export class MarketplaceSelectionComponent {
         bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price))
       }),
     );
+  }
+
+  ngOnInit() {
+    this.currencyForm.valueChanges.subscribe(value => this.updateCurrency(value));
   }
 
   private setTitle(amount: number) {
