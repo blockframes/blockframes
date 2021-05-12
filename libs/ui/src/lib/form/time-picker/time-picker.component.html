@@ -16,6 +16,6 @@
     (input)="setDate()"
   />
 </div>
-<mat-autocomplete #timing="matAutocomplete" (optionSelected)="setDate()">
-  <mat-option *ngFor="let hour of hours" [value]="hour">{{ hour }}</mat-option>
+<mat-autocomplete #timing="matAutocomplete" (optionSelected)="setDate()">TEST
+  <mat-option *ngFor="let hour of hours" [value]="hour">{{ hour }} COUCOU</mat-option>
 </mat-autocomplete>

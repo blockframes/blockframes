@@ -5,6 +5,9 @@ import { Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { createEvent } from '@blockframes/event/+state';
+import { EventBase } from '@blockframes/event/+state/event.firestore';
+import { toDate } from '@blockframes/utils/helpers';
 
 function createDate({ day, time }: { day: Date, time: string }): Date {
   const [h, m] = time.split(':');
@@ -22,7 +25,14 @@ function getTime(date: Date): string {
 // List of hours to display ["00:00", "00:30", ...]
 const hours = (new Array(24)).fill('').map((_, i) => {
   const h = i < 10 ? `0${i}` : i;
-  return [`${h}:00`, `${h}:30`];
+  if (hours === '00:00') {
+    // return createDate(this.form.getRawValue());
+    // return createEvent({
+    //   start: toDate(start || new Date()),
+    // }) as EventBase<any>>
+    return createDate(hours);
+  }
+  return [`${h}:0042`, `${h}:30`];
 }).flat()
 
 @Component({
@@ -53,7 +63,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   id = `time-picker_${TimePickerComponent.nextId++}`;
   describedBy = '';
   isAllDay: boolean;
-  
+
   // PLACEHOLDER
 
   @Input()
