@@ -7,11 +7,11 @@
     <mat-divider></mat-divider>
     <mat-card-header>
       <mat-card-subtitle>
-        <span>Fill in the following fields to know where, when and in which conditions this title is available</span>
-        <span>
+        <p>Fill in the following fields to know where, when and in which conditions this title is available.</p>
+        <p>
           Search results use an "and" logic for multiple conditions, not an "or" logic.
           <mat-icon matTooltip="If you check TV and VOD media, you will get territories where both media are available (not either of them)" svgIcon="info"></mat-icon>
-        </span>
+        </p>
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
@@ -56,7 +56,7 @@
 
 <mat-card class="avails-card">
   <mat-card-header>
-    <mat-card-title>Available territories</mat-card-title>
+    <mat-card-title>Available Territories</mat-card-title>
     <mat-card-subtitle *ngIf="org$ | async as org">
       Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to
       <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
