@@ -1,0 +1,49 @@
+
+:host {
+  display: flex;
+}
+
+aside {
+  width: 30%;
+  margin-right: 24px;
+  mat-card {
+    mat-card-subtitle {
+      margin-top: 20px;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+.avails-card {
+  flex: 1;
+
+  world-map {
+    height: 500px;
+    z-index: 0;
+
+    .hovered-territory-card {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 2;
+    }
+
+    .colors-card {
+      position: absolute;
+      bottom: 30px;
+      left: 15px;
+      z-index: 2;
+
+      svg {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+mat-card {
+  margin-bottom: 24px;
+}

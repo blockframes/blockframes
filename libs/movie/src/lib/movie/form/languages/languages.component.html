@@ -31,11 +31,9 @@
   <input-autocomplete scope="languages" [control]="languageCtrl" withoutValues="['all']">
     <mat-label>Languages</mat-label>
   </input-autocomplete>
-  <div fxLayout fxLayoutAlign="space-between start">
-    <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
-      [disabled]="!languageCtrl.value">
-      <mat-icon svgIcon="save"></mat-icon>
-      <span>Save Language</span>
-    </button>
-  </div>
+  <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
+    [disabled]="!languageCtrl.value">
+    <mat-icon svgIcon="save"></mat-icon>
+    <span>Save Language</span>
+  </button>
 </ng-template>
