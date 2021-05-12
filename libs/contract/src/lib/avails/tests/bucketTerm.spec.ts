@@ -1,7 +1,7 @@
 import { AvailsFilter, isInTerm, isSameTerm } from "./../avails";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 
-describe('BucketTerm', () => {
+describe('Test isSameTerm pure function', () => {
 
   it('Checks if two terms are the same', () => {
     const availDetails: AvailsFilter = {
@@ -22,6 +22,10 @@ describe('BucketTerm', () => {
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/29/2030') } });
     expect(isSameTerm(bucketTerm, availDetails)).toBe(false);
   });
+
+})
+
+describe('Test isInTerm pure function', () => {
 
   it('Checks if one term is included in the other', () => {
     const availDetails: AvailsFilter = {
