@@ -19,7 +19,7 @@ import { FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSelectionComponent implements OnInit {
-  withoutCurrencies = Object.keys(movieCurrencies).filter(currency => !['EUR', 'USD'].includes(currency));
+  withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
   public currencyForm = new FormControl();
   columns = {
     duration: 'Terms',
