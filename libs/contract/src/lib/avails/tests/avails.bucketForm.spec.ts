@@ -135,7 +135,7 @@ describe('BucketForm', () => {
     expect(bucketForm.value.contracts[0].terms.length).toBe(0);
   });
 
-  it('Should return find and return termIndex', () => {
+  it('Should find and return termIndex', () => {
     const availsForm = new AvailsForm({ territories: [] }, ['duration']);
     availsForm.get('duration').get('from').setValue(new Date('06/01/2021'));
     availsForm.get('duration').get('to').setValue(new Date('12/01/2021'));

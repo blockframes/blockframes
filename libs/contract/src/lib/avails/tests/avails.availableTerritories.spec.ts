@@ -33,7 +33,6 @@ describe('availableTerritories', () => {
     expect(available[0].contract.id).toBe('MandateA');
   });
 
-
   it('France is already selected, not available', () => {
     const mandate = createMandate({
       id: 'MandateA',
@@ -102,7 +101,6 @@ describe('availableTerritories', () => {
     expect(soldTerms[1].id).toBe('termD');
   });
 
-
   it('When getting sold terms, should return none if not exclusive', () => {
 
     const availsForm = new AvailsForm({ territories: [] }, ['duration']);
@@ -144,7 +142,6 @@ describe('availableTerritories', () => {
     expect(soldTerms.length).toBe(0);
   });
 
-
   it('Should return available terms mandate', () => {
 
     const availsForm = new AvailsForm({ territories: [] }, ['duration']);
@@ -184,7 +181,5 @@ describe('availableTerritories', () => {
     const mandateTerms = getMandateTerms(availsForm.value, [termA, termB, termC, termD]);
     expect(mandateTerms.length).toBe(3);
   });
-
-
 })
 
