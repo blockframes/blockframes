@@ -2,12 +2,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { map, shareReplay, startWith, take } from 'rxjs/operators';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ContractService, isMandate, Mandate } from '@blockframes/contract/contract/+state';
 import { availableTerritories, getTerritories, TerritoryMarker, toTerritoryMarker } from '@blockframes/contract/avails/avails';
 
@@ -83,12 +83,12 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
     this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
 
     for (const term of this.mandateTerms) {
-        for (const territory of term.territories) {
-          if (territory in territoriesISOA3) {
-            this.territoryMarkers[territory] = toTerritoryMarker(territory, term.contractId, this.mandates, term);
-          }
+      for (const territory of term.territories) {
+        if (territory in territoriesISOA3) {
+          this.territoryMarkers[territory] = toTerritoryMarker(territory, term.contractId, this.mandates, term);
         }
       }
+    }
   }
 
 

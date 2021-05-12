@@ -2,9 +2,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 
+import { Observable } from 'rxjs';
+
 import { MovieQuery } from '@blockframes/movie/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { Observable } from 'rxjs';
+
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
 
@@ -14,21 +16,17 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   styleUrls: ['./avails-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsCalendarComponent implements OnInit {
+export class MarketplaceMovieAvailsCalendarComponent {
 
   public availsForm = this.shell.avails.calendarForm;
 
-  public org$: Observable<Organization>;
+  public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
   ) { }
-
-  public async ngOnInit() {
-    this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
-  }
 
   clear() {
     this.availsForm.reset();
