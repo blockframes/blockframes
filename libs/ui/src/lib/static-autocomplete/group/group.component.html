@@ -1,6 +1,7 @@
 ﻿<ng-container *ngIf="groups$ | async as groups">
 	<ng-container *ngIf="value$ | async as value">
 		<mat-form-field appearance="outline">
+      <mat-icon *ngIf="!!icon" matPrefix [svgIcon]="icon"></mat-icon>
 			<mat-label>
 				<ng-content select="mat-label"></ng-content>{{ required ? ' *' : '' }}
 			</mat-label>

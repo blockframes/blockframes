@@ -327,10 +327,9 @@ export const premiereType = {
 } as const
 
 export const producerRoles = {
+  producer: 'Producer',
   executiveProducer: 'Executive Producer',
-  lineProducer: 'Line Producer',
-  associateProducer: 'Associate Producer',
-  productionManager: 'Production Manager'
+  associateProducer: 'Associate Producer'
 } as const
 
 export const productionStatus = {
@@ -1845,46 +1844,6 @@ export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
 /** Check if the given value is a key of a scope */
 export const isInKeys = (scope: Scope, givenValue: string) => {
   return (Object.keys(staticModel[scope])).map((key) => key).includes(givenValue);
-}
-
-/**
- * @param code
- * @param system
- */
-export function getTerritoryFromGeoJson(
-  code: string,
-  system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
-  const territory = system === 'iso_a3'
-    ? Object.keys(territoriesISOA3).find(i => i[system] === code.toUpperCase())
-    : Object.keys(territoriesISOA2).find(i => i[system] === code.toUpperCase())
-  if (!territory) {
-    throw new Error(`Failed to retreive: ${code}.`);
-  }
-  return territory;;
-}
-
-/**
- * @param code
- * @param system
- */
-export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
-  const territory = getTerritoryFromGeoJson(code, system);
-  if (!territory) {
-    throw new Error(`Failed to territory: ${code}.`);
-  }
-  return system === 'iso_a3' ? territory as TerritoryISOA3 : territory as TerritoryISOA2;
-}
-
-/**
- * @param code
- * @param system
- */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
-  const territory = getTerritoryFromGeoJson(code, system);
-  if (!territory) {
-    throw new Error(`Failed to territory: ${code}.`);
-  }
-  return system === 'iso_a3' ? territoriesISOA3[territory] as TerritoryISOA3Value : territoriesISOA2[territory] as TerritoryISOA2Value;
 }
 
 /**
