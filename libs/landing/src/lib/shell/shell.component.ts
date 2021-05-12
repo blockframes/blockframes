@@ -69,14 +69,24 @@ export class LandingShellComponent {
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */
   public sendRequest(form: FormGroup) {
+    /*
     if (form.invalid) {
       this.snackBar.open('Please fill the required informations.', 'close', { duration: 2000 });
       return;
     }
+    */
     try {
       const currentApp = getCurrentApp(this.routerQuery);
-      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
-
+      //const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
+      const information: RequestDemoInformations = {
+        app: currentApp,
+        firstName: 'Mano',
+        lastName: 'Ban',
+        email: 'test@zjfwnf90.mailosaur.net',
+        phoneNumber: '123456',
+        companyName: 'Cascade8-Test',
+        role: 'buyer'
+      }
       this.sendDemoRequest(information);
       this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
       this.submitted = true;
