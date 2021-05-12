@@ -26,19 +26,19 @@ aside {
 
     .hovered-territory-card {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      top: 16px;
+      right: 16px;
       z-index: 2;
     }
 
     .colors-card {
       position: absolute;
-      bottom: 30px;
-      left: 15px;
+      bottom: 32px;
+      left: 16px;
       z-index: 2;
 
       svg {
-        margin-right: 10px;
+        margin-right: 12px;
       }
     }
   }

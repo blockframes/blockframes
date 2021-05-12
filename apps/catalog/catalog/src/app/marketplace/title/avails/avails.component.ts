@@ -2,7 +2,7 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 
 import { Scope } from '@blockframes/utils/static-model';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
@@ -11,8 +11,10 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -73,5 +75,28 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
+  }
+
+  confirmExit() {
+    const isPristine = this.bucketForm.pristine;
+    if (isPristine) {
+      return of(true);
+    }
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'You are about to leave the page',
+        question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
+        buttonName: 'Leave anyway'
+      }
+    });
+    return dialogRef.afterClosed().pipe(
+      switchMap(exit => {
+        /* Undefined means user clicked on the backdrop, meaning just close the modal */
+        if (typeof exit === 'undefined') {
+          return of(false);
+        }
+        return of(exit);
+      })
+    );
   }
 }
