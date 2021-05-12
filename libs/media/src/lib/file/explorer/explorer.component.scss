@@ -1,5 +1,6 @@
 :host {
   display: flex;
+  margin-right: 24px;
 
   aside {
     width: 200px;
@@ -15,7 +16,6 @@
   section {
     flex: 1;
     padding: 0;
-    height: fit-content;
     margin-bottom: 32px;
 
     header {
@@ -55,4 +55,8 @@ image-uploader {
 
 .save {
   margin-bottom: 12px;
+}
+
+file-list-uploader {
+  display: block;
 }
