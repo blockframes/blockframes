@@ -1,0 +1,64 @@
+
+:host {
+  display: flex;
+}
+
+div {
+  margin-bottom: 24px;
+}
+
+aside {
+  flex: 30%;
+  margin-right: 24px;
+  mat-card {
+    mat-card-subtitle {
+      margin-top: 20px;
+    }
+
+    mat-form-field {
+      width: 100%;
+
+      mat-icon {
+        margin-left: 12px;
+        margin-right: 12px;
+      }
+    }
+  }
+}
+
+.avails-card {
+  flex: 70%;
+
+  mat-card-subtitle {
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  world-map {
+    height: 500px;
+    z-index: 0;
+
+    .hovered-territory-card {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 2;
+    }
+
+    .colors-card {
+      position: absolute;
+      bottom: 30px;
+      left: 15px;
+      z-index: 2;
+
+      svg {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+mat-card {
+  margin-bottom: 24px;
+}

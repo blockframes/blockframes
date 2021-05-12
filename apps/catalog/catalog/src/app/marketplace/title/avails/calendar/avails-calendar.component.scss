@@ -1,0 +1,42 @@
+
+:host {
+  display: flex;
+
+}
+
+div {
+  margin-bottom: 24px;
+}
+
+aside {
+  flex: 30%;
+  margin-right: 24px;
+  mat-card {
+    mat-card-subtitle {
+      margin-top: 20px;
+    }
+
+    mat-form-field {
+      width: 100%;
+
+      mat-icon {
+        margin-left: 12px;
+        margin-right: 12px;
+      }
+    }
+  }
+}
+
+.avails-card {
+  flex: 70%;
+
+  mat-card-subtitle {
+    a {
+      text-decoration: underline;
+    }
+  }
+}
+
+mat-card {
+  margin-bottom: 24px;
+}
