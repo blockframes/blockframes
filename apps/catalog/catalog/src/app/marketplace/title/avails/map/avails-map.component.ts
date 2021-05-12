@@ -1,15 +1,15 @@
 
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
-import { map, shareReplay, startWith, take } from 'rxjs/operators';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractService, isMandate, Mandate } from '@blockframes/contract/contract/+state';
-import { availableTerritories, getTerritories, TerritoryMarker, toTerritoryMarker } from '@blockframes/contract/avails/avails';
+import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { availableTerritories, getSoldTerms, getTerritories, TerritoryMarker, toTerritoryMarker } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
@@ -34,23 +34,32 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
 
   public availsForm = this.shell.avails.mapForm;
 
-  public sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
-
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
   ]).pipe(
+    map(([avail, bucket]) => getTerritories(avail, bucket, 'exact').map(t => this.territoryMarkers[t])),
     startWith([]),
-    map(([avail]) => !!avail ? getTerritories(avail, this.shell.bucketForm.value, 'exact').map(t => this.territoryMarkers[t]) : []),
   );
 
   public inSelection$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
   ]).pipe(
+    map(([avail, bucket]) => getTerritories(avail, bucket, 'in').map(t => this.territoryMarkers[t])),
     startWith([]),
-    map(([avail]) => !!avail ? getTerritories(avail, this.shell.bucketForm.value, 'in').map(t => this.territoryMarkers[t]) : []),
   );
+
+  public sold$ = this.availsForm.value$.pipe(
+    filter(() => this.availsForm.valid),
+    map(avails => {
+      const soldTerms = getSoldTerms(avails, this.salesTerms);
+      return soldTerms.map(term => term.territories
+        .filter(territory => !!territoriesISOA3[territory])
+        .map(territory => toTerritoryMarker(territory, term.contractId, this.mandates, term))
+      ).flat();
+    })
+  )
 
   public available$ = combineLatest([
     this.selected$,
@@ -66,6 +75,8 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
 
   private mandates: Mandate[];
   private mandateTerms: Term<Date>[];
+  private sales: Sale[];
+  private salesTerms: Term<Date>[];
 
   constructor(
     private movieQuery: MovieQuery,
@@ -80,7 +91,10 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
     const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
 
     this.mandates = contracts.filter(isMandate);
-    this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
+    this.sales = contracts.filter(isSale);
+
+    this.mandateTerms = await this.termService.getValue(this.mandates.map(mandate => mandate.termIds).flat());
+    this.salesTerms = await this.termService.getValue(this.sales.map(sale => sale.termIds).flat());
 
     for (const term of this.mandateTerms) {
       for (const territory of term.territories) {
