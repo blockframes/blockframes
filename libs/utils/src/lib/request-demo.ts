@@ -9,6 +9,7 @@ export interface RequestDemoInformations {
   phoneNumber?: string;
   companyName: string;
   role: RequestDemoRole;
+  debug?: boolean;
 }
 
 export const requestDemoRole = {
