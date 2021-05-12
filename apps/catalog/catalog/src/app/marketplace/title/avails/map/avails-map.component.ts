@@ -24,10 +24,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
 
   public movie: Movie = this.movieQuery.getActive();
 
-  private mandates: Mandate[];
-  private mandateTerms: Term<Date>[];
-
-  public org$: Observable<Organization>;
+  public org$ = this.orgService.valueChanges(this.movie.orgIds[0]);
 
   public hoveredTerritory: {
     name: string;
@@ -67,6 +64,8 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
     shareReplay(1) // Multicast with replay
   );
 
+  private mandates: Mandate[];
+  private mandateTerms: Term<Date>[];
 
   constructor(
     private movieQuery: MovieQuery,
@@ -77,8 +76,6 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
   ) { }
 
   public async ngOnInit() {
-
-    this.org$ = this.orgService.valueChanges(this.movie.orgIds[0]);
 
     const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
 
