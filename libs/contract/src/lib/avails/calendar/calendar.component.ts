@@ -3,13 +3,14 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 
 import { BehaviorSubject } from 'rxjs';
 
+import { DurationMarker } from '../avails';
 import { calendarAvails } from '../fixtures/calendar';
-import { AvailCalendarState, CellState, hover, reset, select } from './calendar.model';
+import { AvailCalendarState, CellState, hover, markersToMatrix, reset, select } from './calendar.model';
 
 
 
 @Component({
-  selector: '[durationMarkers] avails-calendar',
+  selector: 'avails-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: [ './calendar.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +20,7 @@ export class AvailsCalendarComponent implements OnInit {
   public columns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   public rows = Array(10).fill(0).map((_,i) => new Date().getFullYear() + i); // [ 2021, 2022, ... 2030 ]
 
-  public stateMatrix: CellState[][] = [];
+  public stateMatrix: CellState[][] = this.rows.map(_ => this.columns.map(__ => 'empty'));
 
   public state$ = new BehaviorSubject<AvailCalendarState>({
     selectionState: 'waiting',
@@ -36,7 +37,12 @@ export class AvailsCalendarComponent implements OnInit {
     highlightedRange: [],
   });
 
-  @Input() set durationMarkers(value: any) {
+  @Input() set availableMarkers(markers: DurationMarker[]) {
+    this.stateMatrix = markersToMatrix(markers, this.stateMatrix, 'avail');
+  }
+
+  @Input() set soldMarkers(value: any) {
+    console.log('set sold marker', value);
     // TODO REMOVE FIXTURE AND CONVERT MARKERS INTO CELL-STATE
     this.stateMatrix = calendarAvails as CellState[][];
   }

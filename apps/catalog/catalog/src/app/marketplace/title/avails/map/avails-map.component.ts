@@ -99,7 +99,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
     for (const term of this.mandateTerms) {
       for (const territory of term.territories) {
         if (territory in territoriesISOA3) {
-          this.territoryMarkers[territory] = toTerritoryMarker(territory, term.contractId, this.mandates, term);
+          this.territoryMarkers[territory] = toTerritoryMarker(territory, this.mandates, term);
         }
       }
     }

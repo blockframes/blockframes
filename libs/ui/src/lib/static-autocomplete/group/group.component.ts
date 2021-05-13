@@ -68,7 +68,7 @@ function getItems(groups: StaticGroup[]): string[] {
 })
 export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   private subs: Subscription[] = [];
-  trackByLabel = (i: number, group: StaticGroup) => group.label;
+
   modes: Record<string, Observable<GroupMode>> = {};
   filteredGroups$: Observable<StaticGroup[]>;
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
@@ -87,7 +87,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   @Input() displayAll = '';
   @Input() @boolean required = false;
   @Input() @boolean disabled = false;
-  @Input() placeholder: string = 'Tap to filter'
+  @Input() placeholder = 'Tap to filter'
   @Input() withoutValues: string[] = [];
   @Input() scope: Scope;
   @Input() icon: string;
@@ -97,6 +97,8 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   }
 
   search = new FormControl();
+  trackByLabel = (i: number, group: StaticGroup) => group.label;
+
   constructor() {
     this.filteredGroups$ = combineLatest([
       this.groups$.asObservable(),
