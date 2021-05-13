@@ -11,11 +11,19 @@
 
 <h2>Preselected Rights</h2>
 <mat-card *ngFor="let control of terms$ | async">
-  <form [formGroup]="control">
-    <mat-card-header *ngIf="control.value as term">
+  <form [formGroup]="control" *ngIf="control.value as term">
+    <mat-card-header fxLayout fxLayoutAlign="space-between center">
       <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+      <section fxLayoutGap="12px">
+        <button mat-icon-button (click)="edit(term)">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="remove(control)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </section>
     </mat-card-header>
-    <mat-card-content *ngIf="control.value as term">
+    <mat-card-content>
       <mat-accordion>
         <!-- TERRITORIES -->
         <mat-expansion-panel>

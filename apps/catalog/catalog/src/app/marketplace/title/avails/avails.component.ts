@@ -6,10 +6,10 @@ import { of, Subscription } from 'rxjs';
 
 import { Scope } from '@blockframes/utils/static-model';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { BucketForm } from '@blockframes/contract/bucket/form';
+import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
+import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
@@ -17,6 +17,7 @@ import { ExplanationComponent } from './explanation/explanation.component';
 import { switchMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { FormList } from '@blockframes/utils/form';
 
 
 @Component({
@@ -108,5 +109,24 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
         return of(exit);
       })
     );
+  }
+
+  edit({ exclusive, duration, medias, territories }: BucketTerm) {
+    const mode = this.router.url.split('/').pop();
+
+    if (mode === 'map') {
+      this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
+    }
+
+    if (mode === 'calendar') {
+      this.avails.calendarForm.setValue({ exclusive, medias, territories });
+    }
+  }
+
+  remove(control: BucketTermForm) {
+    const terms = control.parent as FormList<BucketTermForm>;
+    const index = terms.controls.findIndex(c => c === control);
+    terms.removeAt(index);
+    this.bucketForm.change.next();
   }
 }
