@@ -37,9 +37,10 @@ export class MapFeature {
     this.state = color ? { fillColor: `var(--${color})`, fillOpacity: 1 } : { fillOpacity: 0 };
   }
   @Input()
-  set weight(weight: number) {
-    const stroke = weight !== undefined && weight !== 0;
-    this.state = stroke ? { weight: weight ? weight : 1 } : { stroke }
+  set weight(value: string | number) {
+    const weight = typeof value === "string" ? parseInt(value) : (value ?? 1);
+    const stroke = weight !== 0;
+    this.state = stroke ? { weight: weight ? weight : 1, stroke } : { stroke }
   }
   @Input()
   set tag(tag: string) {
@@ -87,7 +88,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       startWith(this.features),
       switchMap((features: QueryList<MapFeature>) => {
         // Reset all previous tags
-        tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle({ fillOpacity: 0 }));
+        tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle(this.setStyle()));
         // Listen on changes of color & tag
         return combineLatest(features.map(f => combineLatest([f.state$, f.tag$]).pipe(map(_ => f))))
       })
