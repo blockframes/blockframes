@@ -56,7 +56,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
       const soldTerms = getSoldTerms(avails, this.salesTerms);
       return soldTerms.map(term => term.territories
         .filter(territory => !!territoriesISOA3[territory])
-        .map(territory => toTerritoryMarker(territory, term.contractId, this.mandates, term))
+        .map(territory => toTerritoryMarker(territory, this.mandates, term))
       ).flat();
     })
   )
