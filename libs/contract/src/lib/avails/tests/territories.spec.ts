@@ -23,8 +23,8 @@ describe('Test availableTerritories pure function', () => {
       exclusive: true
     });
 
-    const selected = toTerritoryMarker('germany', 'MandateA', [mandate], term);
-    const sold = toTerritoryMarker('greece', 'MandateA', [mandate], term);
+    const selected = toTerritoryMarker('germany', [mandate], term);
+    const sold = toTerritoryMarker('greece', [mandate], term);
     const available = availableTerritories([selected], [sold], [], availDetailsExclusive, [mandate], [term]);
 
     expect(available.length).toBe(1);
@@ -50,7 +50,7 @@ describe('Test availableTerritories pure function', () => {
       exclusive: true
     });
 
-    const selected = toTerritoryMarker('france', 'MandateA', [mandate], term);
+    const selected = toTerritoryMarker('france', [mandate], term);
     const available = availableTerritories([selected], [], [], availDetailsExclusive, [mandate], [term]);
 
     expect(available.length).toBe(0);
