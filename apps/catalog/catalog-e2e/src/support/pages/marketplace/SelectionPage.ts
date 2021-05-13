@@ -6,7 +6,7 @@ export default class SelectionPage {
   }
 
   public selectCurrency(currency: string = 'Euro') {
-    cy.get('mat-select[test-id=selection-currency]', {timeout: 30 * SEC}).click();
+    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC}).click();
     cy.get('mat-option', {timeout: 30 * SEC}).contains(currency).click();
   }
 
