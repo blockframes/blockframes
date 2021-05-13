@@ -42,7 +42,6 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   @Input() set soldMarkers(value: any) {
-    console.log('set sold marker', value);
     // TODO REMOVE FIXTURE AND CONVERT MARKERS INTO CELL-STATE
     this.stateMatrix = calendarAvails as CellState[][];
   }

@@ -203,13 +203,13 @@ export function select(row: number, column: number, stateMatrix: readonly CellSt
 }
 
 
-export function dateToMatrixPosition(date: Date): MatrixPosition {
+export function dateToMatrixPosition(date: Date): MatrixPosition | undefined {
 
   const currentYear = new Date().getFullYear(); // row 0 = current year
 
   const row = date.getFullYear() - currentYear;
 
-  if (row < 0 || row > 9) throw new Error(`INVALID YEAR: year ${date.getFullYear()} must be between ${currentYear} (included) and ${currentYear + 9} (included)`)
+  if (row < 0 || row > 9) return;
 
   const column = date.getMonth(); // Jan = 0, Dec = 11
 
@@ -217,27 +217,19 @@ export function dateToMatrixPosition(date: Date): MatrixPosition {
 }
 
 
-export function markersToMatrix(markers: readonly DurationMarker[], stateMatrix: readonly CellState[][], cellState: Readonly<CellState>): CellState[][] {
+export function markersToMatrix(markers: readonly DurationMarker[], stateMatrix: CellState[][], cellState: Readonly<CellState>): CellState[][] {
 
-  const localMatrix = stateMatrix.map(row => [...row]); // copy state matrix
+  for (const marker of markers) {
 
-  markers.forEach(marker => {
+    const start = dateToMatrixPosition(marker.from) ?? { row: 0, column: 0 };
 
-    let start: MatrixPosition = { row: 0, column: 0 };
-    try {
-      start = dateToMatrixPosition(marker.from);
-    } catch(_) {} // marker was starting in the past, so we let `start` at 0/0
-
-
-    let end: MatrixPosition = { row: stateMatrix.length - 1, column: stateMatrix[0].length - 1 };
-    try {
-      end = dateToMatrixPosition(marker.to);
-    } catch(_) {} // marker was ending to far in the future, so we let `end` at length-1/length-1
+    const end = dateToMatrixPosition(marker.to) ?? { row: stateMatrix.length - 1, column: stateMatrix[0].length - 1 };
 
     applyToRange(start, end, stateMatrix[0].length, (row, column) => {
-      localMatrix[row][column] = cellState;
+      stateMatrix[row][column] = cellState;
     });
-  });
 
-  return localMatrix;
+  }
+
+  return stateMatrix;
 }
