@@ -15,6 +15,8 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';
 import { switchMap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -39,30 +41,38 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
 
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
 
   constructor(
     private movieQuery: MovieQuery,
     private orgQuery: OrganizationQuery,
     private bucketQuery: BucketQuery,
     private dialog: MatDialog,
-    private bucketService: BucketService
+    private bucketService: BucketService,
+    private snackbar: MatSnackBar,
+    private router: Router
   ) { }
 
   public async ngOnInit() {
-    this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
+    const sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
+    this.subs.push(sub);
   }
 
   public ngOnDestroy() {
-    this.sub.unsubscribe();
+    for (const sub of this.subs) {
+      sub.unsubscribe();
+    }
   }
 
   public addToSelection() {
     this.bucketService.update(this.orgId, this.bucketForm.value);
     this.bucketForm.markAsPristine();
+    const ref = this.snackbar.open(`${this.movie.title.international} Rights were added to your Selection`, 'GO TO SELECTION', { duration: 5000 });
+    const sub = ref.onAction().subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
+    this.subs.push(sub);
   }
 
   public explain() {

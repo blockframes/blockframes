@@ -121,6 +121,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     // Contract is not registered
     if (contractIndex === -1) {
       this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }));
+      this.markAsDirty();
       this.change.next();
       return;
     }
@@ -130,6 +131,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
+      this.markAsDirty();
       this.change.next();
       return;
     }
@@ -140,6 +142,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     // Add territory
     if (!hasTerritory) {
       control.setValue([...territories, territory]);
+      this.markAsDirty();
     }
   }
 
