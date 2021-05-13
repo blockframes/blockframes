@@ -17,7 +17,7 @@
 
     <section>
       <h2>Please select a currency</h2>
-      <static-select [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies"></static-select>
+      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies"></static-select>
     </section>
 
     <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
