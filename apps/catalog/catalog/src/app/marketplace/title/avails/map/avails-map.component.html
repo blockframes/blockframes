@@ -67,22 +67,22 @@
 
       <!-- MAP LAYERS -->
       <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="color-1" (click)="addTerritory(tag)"
+        <map-feature [tag]="tag.isoA3" color="primary" (click)="addTerritory(tag)"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
       <ng-container *ngFor="let tag of (sold$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="color-2"
+        <map-feature [tag]="tag.isoA3" color="background-disabled-button"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')" (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
       <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="color-4" (click)="removeTerritory(tag)"
+        <map-feature [tag]="tag.isoA3" color="primary-lighter" weight="2" (click)="removeTerritory(tag)"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
       <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="color-4"
+        <map-feature [tag]="tag.isoA3" color="primary-lighter" weight="2"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')" (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
@@ -100,19 +100,19 @@
         <mat-list>
           <mat-list-item>
             <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--color-1)" x="0" y="0" width="100" height="100" />
+              <rect fill="var(--primary)" x="0" y="0" width="100" height="100" />
             </svg>
             <span class="mat-caption">Available</span>
           </mat-list-item>
           <mat-list-item>
             <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--color-2)" x="0" y="0" width="100" height="100" />
+              <rect fill="var(--background-disabled-button)" x="0" y="0" width="100" height="100" />
             </svg>
             <span class="mat-caption">Rights Sold</span>
           </mat-list-item>
           <mat-list-item>
             <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--color-3)" x="0" y="0" width="100" height="100" />
+              <rect fill="var(--background)" x="0" y="0" width="100" height="100" />
             </svg>
             <span class="mat-caption">
               Not Licensed

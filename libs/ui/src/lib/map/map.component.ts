@@ -12,7 +12,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map as toMap, geoJSON, Layer } from 'leaflet';
+import { map as toMap, geoJSON, Path, PathOptions } from 'leaflet';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, switchMap, map } from 'rxjs/operators';
 
@@ -22,15 +22,25 @@ import { startWith, switchMap, map } from 'rxjs/operators';
 // tslint:disable-next-line: directive-class-suffix
 export class MapFeature {
 
-  color$ = new BehaviorSubject('');
+  state$ = new BehaviorSubject<PathOptions>({});
+  set state(state: Partial<PathOptions>) {
+    this.state$.next({ ...this.state$.getValue(), ...state });
+  }
+  get state() {
+    return this.state$.getValue();
+  }
+
   tag$ = new BehaviorSubject('');
 
   @Input()
   set color(color: string) {
-    this.color$.next(color);
+    this.state = color ? { fillColor: `var(--${color})`, fillOpacity: 1 } : { fillOpacity: 0 };
   }
-  get color(): string {
-    return this.color$.getValue();
+  @Input()
+  set weight(value: string | number) {
+    const weight = typeof value === "string" ? parseInt(value) : (value ?? 1);
+    const stroke = weight !== 0;
+    this.state = stroke ? { weight: weight ? weight : 1, stroke } : { stroke }
   }
   @Input()
   set tag(tag: string) {
@@ -47,12 +57,12 @@ export class MapFeature {
 @Component({
   selector: 'world-map',
   template: '<ng-content></ng-content>',
-  styles: [`:host { display: block; }`],
+  styles: [`:host { display: block; background-color: var(--background)}`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
-  layers = {};
+  layers: Record<string, Path> = {};
 
   @Input() featureTag = 'iso_a3';
   @Output() select = new EventEmitter();
@@ -78,15 +88,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       startWith(this.features),
       switchMap((features: QueryList<MapFeature>) => {
         // Reset all previous tags
-        tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle({ fillColor: '#ECEFF9' }));
+        tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle(this.setStyle()));
         // Listen on changes of color & tag
-        return combineLatest(features.map(f => combineLatest([f.color$, f.tag$]).pipe(map(_ => f))))
+        return combineLatest(features.map(f => combineLatest([f.state$, f.tag$]).pipe(map(_ => f))))
       })
     ).subscribe((features: MapFeature[]) => {
       // Add new style
-      features.forEach(({ color, tag }) => {
+      features.forEach(({ state, tag }) => {
         if (!!this.layers[tag]) {
-          this.layers[tag].setStyle({ fillColor: `var(--${color})` })
+          this.layers[tag].setStyle(state);
         }
       });
       // Keep in memory all current tags
@@ -99,16 +109,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /** Set the default style of this  */
-  private setStyle(feature: GeoJSON.Feature) {
+  private setStyle(): PathOptions {
     return {
-      fillColor: '#ECEFF9',
+      fillOpacity: 0,
+      stroke: true,
       weight: 1,
-      color: '#000000A0',
-      fillOpacity: 1
+      color: 'var(--foreground-text)'
     };
   }
 
-  private addFeature(feature: GeoJSON.Feature, layer: Layer): void {
+  private addFeature(feature: GeoJSON.Feature, layer: Path): void {
     const getFeature = () => this.features.find(({ tag }) => {
       return tag.toLowerCase() === feature.properties[this.featureTag].toLowerCase();
     })
