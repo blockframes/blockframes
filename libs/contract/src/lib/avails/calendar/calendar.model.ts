@@ -1,4 +1,6 @@
 
+import { DurationMarker } from '../avails';
+
 export type CellState = 'empty' | 'avail' | 'sold';
 export type SelectionState = 'waiting' | 'started' | 'selected';
 export interface MatrixPosition {
@@ -19,6 +21,48 @@ export interface AvailCalendarState {
   end: MatrixPosition;
 
   highlightedRange: boolean[][];
+}
+
+/** Apply a given function to each cell of a range */
+export function applyToRange(start: MatrixPosition, end: MatrixPosition, columnLength: number, apply: (row: number, column: number) => void) {
+
+  // There is 2 type of ranges:
+
+  // Type (A)
+  // | | |x|-|-|-|x| |  <- partial-line (from start to end)
+
+  // Type (B)
+  // | | |x|-|-|-|-|-|  <- partial-line (from start)
+  // |-|-|-|-|-|-|-|-|  <- (optional) full-line
+  // |-|-|-|-|x| | | |  <- partial-line (to end)
+
+  for (let row = start.row ; row <= end.row ; row++) {
+
+    // partial line: | | |x|-|-|-|x| |
+    if (row === start.row && row === end.row) {
+      for (let column = start.column ; column <= end.column ; column++) {
+        apply(row, column);
+      }
+
+    // partial line (from start): | | |x|-|-|-|-|-|
+    } else if (row === start.row) {
+      for (let column = start.column ; column < columnLength ; column++) {
+        apply(row, column);
+      }
+
+    // partial line (to end): |-|-|-|-|-|-|x| |
+    } else if (row === end.row) {
+      for (let column = 0 ; column <= end.column ; column++) {
+        apply(row, column);
+      }
+
+    // full line: |-|-|-|-|-|-|-|-|
+    } else {
+      for (let column = 0 ; column < columnLength ; column++) {
+        apply(row, column);
+      }
+    }
+  }
 }
 
 
@@ -45,42 +89,12 @@ export function isContinuous(start: Readonly<MatrixPosition>, end: Readonly<Matr
 
   if (isBefore(end, start)) return false;
 
+  let result = true;
+  applyToRange(start, end, stateMatrix[0].length, (row, column) => {
+    if (stateMatrix[row][column] !== 'avail') result = false;
+  });
 
-  // Checking if a range is continuous:
-  // Ex:
-  // | | |x|-|-|-|-|-|
-  // |-|-|-|-|-|-|-|-|
-  // |-|-|-|-|x| | | |
-
-  for (let row = start.row ; row <= end.row ; row++) {
-
-    // partial line: | | |x|-|-|-|x| |
-    if (row === start.row && row === end.row) {
-      for (let column = start.column ; column <= end.column ; column++) {
-        if (stateMatrix[row][column] !== 'avail') return false;
-      }
-
-    // partial line (from start): | | |x|-|-|-|-|-|
-    } else if (row === start.row) {
-      for (let column = start.column ; column < stateMatrix[0].length ; column++) {
-        if (stateMatrix[row][column] !== 'avail') return false;
-      }
-
-    // partial line (to end): |-|-|-|-|-|-|x| |
-    } else if (row === end.row) {
-      for (let column = 0 ; column <= end.column ; column++) {
-        if (stateMatrix[row][column] !== 'avail') return false;
-      }
-
-    // full line: |-|-|-|-|-|-|-|-|
-    } else {
-      for (let column = 0 ; column < stateMatrix[0].length ; column++) {
-        if (stateMatrix[row][column] !== 'avail') return false;
-      }
-    }
-  }
-
-  return true;
+  return result;
 }
 
 export function resetHighlight(state: Readonly<AvailCalendarState>): AvailCalendarState {
@@ -189,3 +203,33 @@ export function select(row: number, column: number, stateMatrix: readonly CellSt
 }
 
 
+export function dateToMatrixPosition(date: Date): MatrixPosition | undefined {
+
+  const currentYear = new Date().getFullYear(); // row 0 = current year
+
+  const row = date.getFullYear() - currentYear;
+
+  if (row < 0 || row > 9) return;
+
+  const column = date.getMonth(); // Jan = 0, Dec = 11
+
+  return { row, column };
+}
+
+
+export function markersToMatrix(markers: readonly DurationMarker[], stateMatrix: CellState[][], cellState: Readonly<CellState>): CellState[][] {
+
+  for (const marker of markers) {
+
+    const start = dateToMatrixPosition(marker.from) ?? { row: 0, column: 0 };
+
+    const end = dateToMatrixPosition(marker.to) ?? { row: stateMatrix.length - 1, column: stateMatrix[0].length - 1 };
+
+    applyToRange(start, end, stateMatrix[0].length, (row, column) => {
+      stateMatrix[row][column] = cellState;
+    });
+
+  }
+
+  return stateMatrix;
+}

@@ -29,10 +29,10 @@ describe('Test BucketForm behaviors', () => {
       exclusive: true
     });
 
-    const selected1 = toTerritoryMarker('germany', 'MandateA', [mandate], term);
+    const selected1 = toTerritoryMarker('germany', [mandate], term);
     bucketForm.addTerritory(availDetailsExclusive, selected1);
 
-    const selected2 = toTerritoryMarker('france', 'MandateA', [mandate], term);
+    const selected2 = toTerritoryMarker('france', [mandate], term);
     bucketForm.addTerritory(availDetailsExclusive, selected2);
 
     expect(bucketForm.value.contracts.length).toBe(1);
@@ -81,10 +81,10 @@ describe('Test BucketForm behaviors', () => {
       exclusive: true
     });
 
-    const selected1 = toTerritoryMarker('france', 'MandateA', [mandateA], termA);
+    const selected1 = toTerritoryMarker('france', [mandateA], termA);
     bucketForm.addTerritory(availDetailsExclusive, selected1);
 
-    const selected2 = toTerritoryMarker('germany', 'MandateB', [mandateB], termB);
+    const selected2 = toTerritoryMarker('germany', [mandateB], termB);
     bucketForm.addTerritory(availDetailsExclusive, selected2);
 
     expect(bucketForm.value.contracts.length).toBe(2);
@@ -119,10 +119,10 @@ describe('Test BucketForm behaviors', () => {
       exclusive: true
     });
 
-    const selected1 = toTerritoryMarker('germany', 'MandateA', [mandate], term);
+    const selected1 = toTerritoryMarker('germany', [mandate], term);
     bucketForm.addTerritory(availDetailsExclusive, selected1);
 
-    const selected2 = toTerritoryMarker('france', 'MandateA', [mandate], term);
+    const selected2 = toTerritoryMarker('france', [mandate], term);
     bucketForm.addTerritory(availDetailsExclusive, selected2);
 
     expect(bucketForm.isAlreadyInBucket(availDetailsExclusive, selected1)).toBe(true);
@@ -228,10 +228,10 @@ describe('Test BucketForm behaviors', () => {
       exclusive: true
     });
 
-    const selected1 = toTerritoryMarker('germany', 'MandateA', [mandate], term);
+    const selected1 = toTerritoryMarker('germany', [mandate], term);
     bucketForm.addTerritory(availDetails, selected1);
 
-    const selected2 = toTerritoryMarker('france', 'MandateA', [mandate], term);
+    const selected2 = toTerritoryMarker('france', [mandate], term);
     bucketForm.addTerritory(availDetails, selected2);
 
     const availFilter: AvailsFilter = {
@@ -273,7 +273,7 @@ describe('Test BucketForm behaviors', () => {
       exclusive: true
     });
 
-    const selected1 = toTerritoryMarker('germany', 'MandateA', [mandate], term);
+    const selected1 = toTerritoryMarker('germany', [mandate], term);
     bucketForm.addTerritory(availDetails, selected1);
 
     const availFilter: AvailsFilter = {
