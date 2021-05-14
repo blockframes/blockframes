@@ -1,11 +1,18 @@
 
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
 
+import {
+  getSoldTerms,
+  getTerritories,
+  TerritoryMarker,
+  toTerritoryMarker,
+  getTerritoryMarkers,
+  availableTerritories,
+} from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
-import { availableTerritories, getSoldTerms, getTerritories, TerritoryMarker, toTerritoryMarker } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
@@ -16,13 +23,13 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent implements OnDestroy {
+export class MarketplaceMovieAvailsMapComponent {
 
   public hoveredTerritory: {
     name: string;
     status: string;
   }
-  public territoryMarkers$ = new ReplaySubject<Record<string, TerritoryMarker>>();
+  public territoryMarkers$ = new Observable<Record<string, TerritoryMarker>>();
 
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
@@ -30,12 +37,10 @@ export class MarketplaceMovieAvailsMapComponent implements OnDestroy {
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
 
-  private sub: Subscription;
-
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.territoryMarkers$
+    this.territoryMarkers$,
   ]).pipe(
     map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'exact').map(t => markers[t])),
     startWith([]),
@@ -82,25 +87,12 @@ export class MarketplaceMovieAvailsMapComponent implements OnDestroy {
   constructor(
     private shell: MarketplaceMovieAvailsComponent,
   ) {
-    this.sub =  combineLatest([
+    this.territoryMarkers$ = combineLatest([
       this.mandates$,
       this.mandateTerms$,
-    ]).subscribe(([mandates, mandateTerms]) => {
-      const markers: Record<string, TerritoryMarker> = {};
-      for (const term of mandateTerms) {
-        for (const territory of term.territories) {
-          if (territory in territoriesISOA3) {
-            markers[territory] = toTerritoryMarker(territory, mandates, term);
-          }
-        }
-      }
-
-      this.territoryMarkers$.next(markers);
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    ]).pipe(
+      map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
+    );
   }
 
   public trackByTag<T>(tag: T) {

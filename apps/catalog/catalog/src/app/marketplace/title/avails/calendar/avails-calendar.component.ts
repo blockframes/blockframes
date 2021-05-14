@@ -1,13 +1,14 @@
 
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DurationMarker, toDurationMarker } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-movie-avails-calendar',
@@ -15,7 +16,7 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   styleUrls: ['./avails-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsCalendarComponent implements OnDestroy {
+export class MarketplaceMovieAvailsCalendarComponent {
 
   public availsForm = this.shell.avails.calendarForm;
 
@@ -25,10 +26,8 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnDestroy {
 
   private mandateTerms$ = this.shell.mandateTerms$;
 
-  private sub: Subscription;
-
   // TODO REMOVE BEHAVIOR-SUBJECT AND COMPUTE FROM TERMS
-  public availableMarkers$ = new BehaviorSubject<DurationMarker[]>([]); // available
+  public availableMarkers$ = new Observable<DurationMarker[]>(); // available
   public soldMarkers$ = new BehaviorSubject<DurationMarker[]>([]); // sold
   public inBucketMarkers$ = new BehaviorSubject<DurationMarker[]>([]); // already selected in the bucket
 
@@ -38,22 +37,20 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnDestroy {
     private shell: MarketplaceMovieAvailsComponent,
   ) {
 
-    this.sub = combineLatest([
+    this.availableMarkers$ = combineLatest([
       this.shell.mandates$,
       this.mandateTerms$,
-    ]).subscribe(([mandates, mandateTerms]) => {
-      for (const mandateTerm of mandateTerms) {
-        this.durationMarkers.push(toDurationMarker(mandates, mandateTerm));
-      }
+    ]).pipe(
+      map(([mandates, mandateTerms]) => {
+        for (const mandateTerm of mandateTerms) {
+          this.durationMarkers.push(toDurationMarker(mandates, mandateTerm));
+        }
 
-      // TODO available should be computed from DB & sold & avail filter form
-    this.availableMarkers$.next(this.durationMarkers); // TODO REMOVE THAT !
-    });
+        // TODO available should be computed from DB & sold & avail filter form
+        return this.durationMarkers; // TODO REMOVE THAT !
+      })
+    );
 
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   clear() {

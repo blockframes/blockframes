@@ -47,7 +47,6 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
 
   public mandates$ = new ReplaySubject<Mandate[]>();
   public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
-  public sales$ = new ReplaySubject<Sale[]>();
   public salesTerms$ = new ReplaySubject<Term<Date>[]>();
 
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
@@ -94,7 +93,6 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
 
     this.mandates$.next(mandates);
     this.mandateTerms$.next(mandateTerms);
-    this.sales$.next(sales);
     this.salesTerms$.next(salesTerms);
   }
 
