@@ -75,7 +75,7 @@ export class MarketplaceMovieAvailsMapComponent {
         .map(territory => toTerritoryMarker(territory, mandates, term))
       ).flat();
     })
-  )
+  );
 
   public available$ = combineLatest([
     this.mandates$,

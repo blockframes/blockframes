@@ -1,7 +1,7 @@
 import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from "@blockframes/utils/static-model";
 import { Bucket, BucketTerm } from "../bucket/+state";
-import { Mandate } from "../contract/+state/contract.model";
-import { Term } from "../term/+state/term.model";
+import { Mandate } from "../contract/+state/contract.model"
+import { Duration, Term } from "../term/+state/term.model";
 
 export interface AvailsFilter {
   medias: Media[],
@@ -247,4 +247,28 @@ export function toDurationMarker(mandates: Mandate[], term: Term<Date>): Duratio
     contract: mandates.find(m => m.id === term.contractId),
     term,
   }
+}
+
+export function getDurations(avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Duration[] {
+  return bucket.contracts
+    .map(c => c.terms).flat()
+    .filter(t => mode === 'exact' ? isSameTerm(t, avail) : isInTerm(t, avail))
+    .map(t => t.duration).flat();
+}
+
+export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>[]) {
+  return mandateTerms.map(term => toDurationMarker(mandates, term));
+}
+
+export function availableDurations(
+  selected: DurationMarker[],
+  sold: DurationMarker[],
+  inSelection: DurationMarker[],
+  mandates: Mandate[],
+  mandatesTerms: Term<Date>[],
+) {
+  const notAvailable = [...selected, ...sold, ...inSelection].flat();
+
+  const markers = getDurationMarkers(mandates, mandatesTerms);
+  return markers.filter(marker => !notAvailable.includes(marker));
 }
