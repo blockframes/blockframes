@@ -33,6 +33,7 @@ export class MarketplaceMovieAvailsMapComponent {
 
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
+  public status$ = this.availsForm.statusChanges.pipe(startWith('INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;

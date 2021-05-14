@@ -1,11 +1,11 @@
 
-<div fxLayout fxLayoutAlign="space-between center">
+<header fxLayout fxLayoutAlign="space-between center">
   <span>First time here? <button mat-button (click)="explain()">Learn how it works</button></span>
   <span>
     <a mat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
     <a mat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
   </span>
-</div>
+</header>
 
 <router-outlet></router-outlet>
 
@@ -75,9 +75,9 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <article class="expansion-panel-content">
-            <strong>Original Languages</strong>
+            <h5>Original Languages</h5>
             <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
-            <strong>Request Specific Versions</strong>
+            <h5>Request Specific Versions</h5>
 
             <languages-form [form]="control.controls.languages"></languages-form>
           </article>
