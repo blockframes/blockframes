@@ -69,17 +69,13 @@
   </mat-card-header>
   <mat-card-content>
     <world-map>
-      <ng-container *ngIf="availsForm.statusChanges | async as status; else invalid">
-        <ng-container *ngIf="status === 'VALID' else invalid">
-        </ng-container>
-      </ng-container>
-      <ng-template #invalid>
+      <ng-container *ngIf="(status$ | async) === 'INVALID'">
         <section class="overlay" fxLayoutAlign="center center">
           <article class="mat-body-2">
             Please fill in Avail Search Criteria section to show results on the Map.
           </article>
         </section>
-      </ng-template>
+      </ng-container>
 
       <!-- MAP LAYERS -->
       <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
