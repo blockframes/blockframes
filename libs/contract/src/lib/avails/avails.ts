@@ -222,6 +222,19 @@ export function availableTerritories(
 }
 
 
+export function getTerritoryMarkers(mandates: Mandate[], mandateTerms: Term<Date>[]) {
+  const markers: Record<string, TerritoryMarker> = {};
+  for (const term of mandateTerms) {
+    for (const territory of term.territories) {
+      if (territory in territoriesISOA3) {
+        markers[territory] = toTerritoryMarker(territory, mandates, term);
+      }
+    }
+  }
+
+  return markers;
+}
+
 // ----------------------------
 //         DURATIONS         //
 // ----------------------------

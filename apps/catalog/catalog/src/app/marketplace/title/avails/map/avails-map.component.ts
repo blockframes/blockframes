@@ -1,15 +1,18 @@
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { combineLatest, Observable } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
-import { combineLatest, ReplaySubject } from 'rxjs';
 
-import { Movie, MovieQuery } from '@blockframes/movie/+state';
-import { Term, TermService } from '@blockframes/contract/term/+state';
+import {
+  getSoldTerms,
+  getTerritories,
+  TerritoryMarker,
+  toTerritoryMarker,
+  getTerritoryMarkers,
+  availableTerritories,
+} from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
-import { availableTerritories, getSoldTerms, getTerritories, TerritoryMarker, toTerritoryMarker } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
@@ -20,29 +23,24 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent implements OnInit {
-
-  private mandates: Mandate[];
-  private mandateTerms$ = new ReplaySubject<Term<Date>[]>();
-  private sales: Sale[];
-  private salesTerms$ = new ReplaySubject<Term<Date>[]>();
-
-  public movie: Movie = this.movieQuery.getActive();
-
-  public org$ = this.orgService.valueChanges(this.movie.orgIds[0]);
+export class MarketplaceMovieAvailsMapComponent {
 
   public hoveredTerritory: {
     name: string;
     status: string;
   }
-  public territoryMarkers$ = new ReplaySubject<Record<string, TerritoryMarker>>();
+  public territoryMarkers$ = new Observable<Record<string, TerritoryMarker>>();
 
+  public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
+  private mandates$ = this.shell.mandates$;
+  private mandateTerms$ = this.shell.mandateTerms$;
+  private salesTerms$ = this.shell.salesTerms$;
 
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.territoryMarkers$
+    this.territoryMarkers$,
   ]).pipe(
     map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'exact').map(t => markers[t])),
     startWith([]),
@@ -58,65 +56,44 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit {
   );
 
   public sold$ = combineLatest([
+    this.mandates$,
     this.salesTerms$,
     this.availsForm.value$
   ]).pipe(
     filter(() => this.availsForm.valid),
-    map(([sales, avails]) => {
+    map(([mandates, sales, avails]) => {
       const soldTerms = getSoldTerms(avails, sales);
       return soldTerms.map(term => term.territories
         .filter(territory => !!territoriesISOA3[territory])
-        .map(territory => toTerritoryMarker(territory, this.mandates, term))
+        .map(territory => toTerritoryMarker(territory, mandates, term))
       ).flat();
     })
   )
 
   public available$ = combineLatest([
+    this.mandates$,
     this.selected$,
     this.sold$,
     this.inSelection$,
     this.mandateTerms$
   ]).pipe(
-    map(([selected, sold, inSelection, mandates]) => {
+    map(([mandates, selected, sold, inSelection, mandateTerms]) => {
       if (this.availsForm.invalid) return [];
-      return availableTerritories(selected, sold, inSelection, this.availsForm.value, this.mandates, mandates);
+      return availableTerritories(selected, sold, inSelection, this.availsForm.value, mandates, mandateTerms);
     }),
     shareReplay(1) // Multicast with replay
   );
 
   constructor(
-    private movieQuery: MovieQuery,
-    private termService: TermService,
-    private orgService: OrganizationService,
-    private contractService: ContractService,
     private shell: MarketplaceMovieAvailsComponent,
-  ) { }
-
-  public async ngOnInit() {
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
-
-    this.mandates = contracts.filter(isMandate);
-    this.sales = contracts.filter(isSale);
-
-    const [mandateTerms, salesTerms] = await Promise.all([
-      this.termService.getValue(this.mandates.map(mandate => mandate.termIds).flat()),
-      this.termService.getValue(this.sales.map(sale => sale.termIds).flat())
-    ]);
-
-    const markers: Record<string, TerritoryMarker> = {};
-    for (const term of mandateTerms) {
-      for (const territory of term.territories) {
-        if (territory in territoriesISOA3) {
-          markers[territory] = toTerritoryMarker(territory, this.mandates, term);
-        }
-      }
-    }
-
-    this.territoryMarkers$.next(markers);
-    this.mandateTerms$.next(mandateTerms);
-    this.salesTerms$.next(salesTerms);
+  ) {
+    this.territoryMarkers$ = combineLatest([
+      this.mandates$,
+      this.mandateTerms$,
+    ]).pipe(
+      map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
+    );
   }
-
 
   public trackByTag<T>(tag: T) {
     return tag;
