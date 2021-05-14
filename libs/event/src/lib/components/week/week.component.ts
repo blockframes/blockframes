@@ -14,7 +14,7 @@ import { createEvent } from '../../+state/event.model';
 import { EventTypes } from '../../+state/event.firestore';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
-import { map, tap, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationQuery } from '@blockframes/organization/+state';
