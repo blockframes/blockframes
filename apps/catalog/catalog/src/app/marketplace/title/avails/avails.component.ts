@@ -29,6 +29,7 @@ import { ExplanationComponent } from './explanation/explanation.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieAvailsComponent implements OnDestroy {
+  private sub: Subscription;
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -51,7 +52,6 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
 
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
-  private subs: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -64,21 +64,16 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     private contractService: ContractService,
     private snackbar: MatSnackBar,
     private router: Router,
-  ) { }
-
-  public async ngOnInit() {
-    const sub = this.bucketQuery.selectActive().subscribe(bucket => {
+  ) {
+    this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
-    this.subs.push(sub);
     this.init();
   }
 
-  public ngOnDestroy() {
-    for (const sub of this.subs) {
-      sub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   private async init() {
