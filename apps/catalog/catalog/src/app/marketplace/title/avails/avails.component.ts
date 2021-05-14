@@ -54,9 +54,7 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
   private subs: Subscription[] = [];
 
   constructor(
-    private router: Router,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
     private bucketQuery: BucketQuery,
     private termService: TermService,
@@ -64,7 +62,11 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
-  ) {
+    private snackbar: MatSnackBar,
+    private router: Router,
+  ) { }
+
+  public async ngOnInit() {
     const sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
@@ -96,12 +98,14 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     this.salesTerms$.next(salesTerms);
   }
 
-  public addToSelection() {
-    this.bucketService.update(this.orgId, this.bucketForm.value);
+  public async addToSelection() {
+    const contracts = this.bucketForm.value.contracts;
+    await this.bucketService.upsert({ id: this.orgId, contracts });
     this.bucketForm.markAsPristine();
-    const ref = this.snackbar.open(`${this.movie.title.international} Rights were added to your Selection`, 'GO TO SELECTION', { duration: 5000 });
-    const sub = ref.onAction().subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
-    this.subs.push(sub);
+    this.snackbar
+      .open(`${this.movie.title.international} Rights were added to your Selection`, 'GO TO SELECTION', { duration: 5000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
   }
 
   public explain() {
@@ -129,13 +133,8 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
       }
     });
     return dialogRef.afterClosed().pipe(
-      switchMap(exit => {
-        /* Undefined means user clicked on the backdrop, meaning just close the modal */
-        if (typeof exit === 'undefined') {
-          return of(false);
-        }
-        return of(exit);
-      })
+      /* Undefined means user clicked on the backdrop, meaning just close the modal */
+      switchMap(exit => of(exit ?? false))
     );
   }
 
