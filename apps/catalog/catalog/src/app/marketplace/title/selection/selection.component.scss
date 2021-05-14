@@ -17,6 +17,7 @@ section {
   img {
     max-width: 150px;
     max-height: 200px;
+    cursor: pointer;
   }
 }
 
@@ -31,4 +32,8 @@ section {
     width: 380px;
     margin: 24px 0;
   }
+}
+
+static-select {
+  width: 35%;
 }

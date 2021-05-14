@@ -23,6 +23,11 @@
         display: none;
       }
     }
+
+    mat-icon[matPrefix] {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
   }
 
   // OUTLINE
