@@ -48,10 +48,14 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
     ).subscribe(_ => this.checkboxes.forEach(box => box.checked = false))
   }
 
+  compare() {
+    return (a, b) => 1;
+  }
+
   isCheckedByDefault(key: string) {
     return this.form.value.includes(key);
   }
-  
+
   public handleChange({checked, source}: MatCheckboxChange) {
     if (checked) {
       this.form.add(source.value);
