@@ -3,7 +3,7 @@
     <header class="surface general">
       <h2>Notifications Settings</h2>
       <article fxLayout="row" fxLayoutAlign="space-between">
-        <p>Activate all notifications :</p>
+        <p>Activate all notifications:</p>
         <div fxLayout="row" fxLayoutGap="32px">
           <mat-slide-toggle color="primary" labelPosition="before" name="email" [checked]="form.value | everyChecked: 'email' : types" (change)="toogleAll($event, 'email')">By Email:</mat-slide-toggle>
           <mat-slide-toggle color="primary" labelPosition="before" name="app" [checked]="form.value | everyChecked: 'app' : types" (change)="toogleAll($event, 'app')">In App:</mat-slide-toggle>
@@ -22,7 +22,7 @@
                 [checked]="form.value | everyChecked: 'email':table.types"
                 [indeterminate]="form.value | someChecked: 'email': table.types"
                 (change)="setAll($event, 'email', table.types)">
-                By email
+                By Email
               </mat-checkbox>
             </th>
             <th>
