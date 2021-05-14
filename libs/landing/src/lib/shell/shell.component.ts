@@ -93,18 +93,6 @@ export class LandingShellComponent {
         information.test = true;
         information.testEmailTo = 'test@zjfwnf90.mailosaur.net'
       }
-      console.log(information);
-      // const information: RequestDemoInformations = {
-      //   app: currentApp,
-      //   firstName: 'Mano',
-      //   lastName: 'Ban',
-      //   email: 'mbangera+festival@cascade8.com',
-      //   phoneNumber: '123456',
-      //   companyName: 'Cascade8-Test',
-      //   role: 'buyer',
-      //   test: true,
-      //   testEmailTo: 'test@zjfwnf90.mailosaur.net'
-      // }
       this.sendDemoRequest(information);
       this.buttonText = 'Request Sent';
       this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
