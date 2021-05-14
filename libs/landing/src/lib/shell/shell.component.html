@@ -39,18 +39,18 @@
           Please fill out the form and we will get back to you to choose the best time.
         </p>
       </article>
-      <form fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
+      <form test-id="demo-form" fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
         <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
           <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
-            <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+            <input test-id="first-name" matInput type="text" placeholder="First Name" formControlName="firstName" required />
             <mat-error *ngIf="form.get('firstName').hasError('required')">
               First Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
-            <input matInput type="text" placeholder="Last Name" formControlName="lastName" required />
+            <input test-id="last-name" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
             <mat-error *ngIf="form.get('lastName').hasError('required')">
               Last Name is <strong>required</strong>
             </mat-error>
@@ -59,14 +59,14 @@
         <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
           <mat-form-field appearance="outline">
             <mat-label>Company Name</mat-label>
-            <input matInput type="text" placeholder="Company Name" formControlName="companyName" required />
+            <input test-id="comp-name" matInput type="text" placeholder="Company Name" formControlName="companyName" required />
             <mat-error *ngIf="form.get('companyName').hasError('required')">
               Company Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Role</mat-label>
-            <mat-select placeholder="Activity" formControlName="role" required>
+            <mat-select test-id="role" placeholder="Activity" formControlName="role" required>
               <mat-option *ngFor="let role of roles" [value]="role">{{ role | roleLabel }}</mat-option>
             </mat-select>
             <mat-error *ngIf="form.get('role').hasError('required')">
@@ -77,13 +77,13 @@
         <article fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap="24px">
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput type="email" placeholder="Email" formControlName="email" required />
+            <input test-id="email" matInput type="email" placeholder="Email" formControlName="email" required />
             <mat-error *ngIf="form.get('email').hasError('required')">
               Email is <strong>required</strong>
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <tel-input [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
+            <tel-input test-id="phone-no" [form]="form.get('phoneNumber')" placeholder="Phone number"></tel-input>
           </mat-form-field>
         </article>
         <button test-id="send-request" [disabled]="submitted" fxFlexAlign="center" mat-flat-button color="accent" type="submit">{{ buttonText }}</button>
