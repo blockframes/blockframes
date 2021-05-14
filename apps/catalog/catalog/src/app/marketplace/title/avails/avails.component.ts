@@ -1,23 +1,25 @@
 
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
-import { of, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { of, ReplaySubject, Subscription } from 'rxjs';
 
+import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { Term, TermService } from '@blockframes/contract/term/+state';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
+import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';
-import { switchMap } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { FormList } from '@blockframes/utils/form';
 
 
 @Component({
@@ -26,7 +28,8 @@ import { FormList } from '@blockframes/utils/form';
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieAvailsComponent implements OnDestroy {
+
   public movie: Movie = this.movieQuery.getActive();
 
   public orgId = this.orgQuery.getActiveId();
@@ -40,32 +43,59 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
     calendarForm: new AvailsForm({ territories: [] }, ['territories']),
   };
 
+  public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
+
+  public mandates$ = new ReplaySubject<Mandate[]>();
+  public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
+  public sales$ = new ReplaySubject<Sale[]>();
+  public salesTerms$ = new ReplaySubject<Term<Date>[]>();
+
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
   private subs: Subscription[] = [];
 
   constructor(
-    private movieQuery: MovieQuery,
-    private orgQuery: OrganizationQuery,
-    private bucketQuery: BucketQuery,
+    private router: Router,
     private dialog: MatDialog,
-    private bucketService: BucketService,
     private snackbar: MatSnackBar,
-    private router: Router
-  ) { }
-
-  public async ngOnInit() {
+    private movieQuery: MovieQuery,
+    private bucketQuery: BucketQuery,
+    private termService: TermService,
+    private orgQuery: OrganizationQuery,
+    private bucketService: BucketService,
+    private orgService: OrganizationService,
+    private contractService: ContractService,
+  ) {
     const sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
     this.subs.push(sub);
+    this.init();
   }
 
   public ngOnDestroy() {
     for (const sub of this.subs) {
       sub.unsubscribe();
     }
+  }
+
+  private async init() {
+
+    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
+
+    const mandates = contracts.filter(isMandate);
+    const sales = contracts.filter(isSale);
+
+    const [mandateTerms, salesTerms] = await Promise.all([
+      this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
+      this.termService.getValue(sales.map(sale => sale.termIds).flat())
+    ]);
+
+    this.mandates$.next(mandates);
+    this.mandateTerms$.next(mandateTerms);
+    this.sales$.next(sales);
+    this.salesTerms$.next(salesTerms);
   }
 
   public addToSelection() {
