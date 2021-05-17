@@ -57,7 +57,7 @@ export class MapFeature {
 @Component({
   selector: 'world-map',
   template: '<ng-content></ng-content>',
-  styles: [`:host { display: block; background-color: var(--background)}`],
+  styles: [`:host { display: block; background-color: var(--background-card)};`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements AfterViewInit, OnDestroy {

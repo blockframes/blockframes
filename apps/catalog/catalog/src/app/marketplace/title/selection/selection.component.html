@@ -48,7 +48,9 @@
             </ng-template>
             <ng-template colRef="territories" let-territories>
               <section (click)="openDetails(territories, 'territories')">
-                {{ territories | toLabel:'territories':3 }}
+                <p class="ellipsis">
+                  {{ territories | toLabel: 'territories' }}
+                </p>
               </section>
             </ng-template>
             <ng-template colRef="medias" let-medias>
