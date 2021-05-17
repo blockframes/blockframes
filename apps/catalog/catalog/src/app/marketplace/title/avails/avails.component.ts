@@ -1,23 +1,26 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MovieQuery, Movie, createMovieLanguageSpecification } from '@blockframes/movie/+state';
-import { TerritoryValue, territoriesISOA3, territories, Language } from '@blockframes/utils/static-model';
-import { Organization } from '@blockframes/organization/+state/organization.model';
-import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
-import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
-import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
-import { getMandateTerms, getSoldTerms, getTerritories } from '@blockframes/contract/avails/avails';
-import { Term, TermService } from '@blockframes/contract/term/+state';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
-import { BucketTermForm, BucketForm } from '@blockframes/contract/bucket/form';
-import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+
+import { switchMap } from 'rxjs/operators';
+import { of, ReplaySubject, Subscription } from 'rxjs';
+
+import { FormList } from '@blockframes/utils/form';
+import { Scope } from '@blockframes/utils/static-model';
+import { MovieQuery, Movie } from '@blockframes/movie/+state';
+import { Term, TermService } from '@blockframes/contract/term/+state';
+import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { map, switchMap } from 'rxjs/operators';
-import { TerritoryMarker } from '@blockframes/ui/map/map.component';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
+import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+
+import { ExplanationComponent } from './explanation/explanation.component';
+
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -25,74 +28,91 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
-  public movie: Movie = this.movieQuery.getActive();
-  public org$: Observable<Organization>;
-  public orgId = this.orgQuery.getActiveId();
-  public bucket$: Observable<Bucket>;
-  public periods = ['weeks', 'months', 'years'];
+export class MarketplaceMovieAvailsComponent implements OnDestroy {
   private sub: Subscription;
 
-  private mandates: Mandate[];
-  private sales: Sale[];
-  private mandateTerms: Term<Date>[];
-  private salesTerms: Term<Date>[];
+  public movie: Movie = this.movieQuery.getActive();
 
-  /** Languages Form */
-  public languageCtrl = new FormControl();
-  public showButtons = true;
-
-  public hoveredTerritory: {
-    name: string;
-    status: string;
-  }
+  public orgId = this.orgQuery.getActiveId();
+  public periods = ['weeks', 'months', 'years'];
+  public maxTerritories = 30;
 
   public bucketForm = new BucketForm();
-  public availsForm = new AvailsForm({ territories: [] }, ['duration']);
+
+  public avails = {
+    mapForm: new AvailsForm({ territories: [] }, ['duration']),
+    calendarForm: new AvailsForm({ territories: [] }, ['territories']),
+  };
+
+  public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
+
+  public mandates$ = new ReplaySubject<Mandate[]>();
+  public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
+  public salesTerms$ = new ReplaySubject<Term<Date>[]>();
+
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
-  /** List of world map territories */
-  available$ = new BehaviorSubject<TerritoryMarker[]>([]); // @TODO #5573 Transform into record<slug, TerritoryMarker> & clean TerritoryMarker for unused attr
-  available: TerritoryMarker[] = [];
-  sold$ = new BehaviorSubject<TerritoryMarker[]>([]);
-  selected$ = combineLatest([ // @TODO #5573 => display existing bucket
-    this.availsForm.value$,
-    this.bucketForm.value$,
-  ]).pipe(map(([avail, bucket]) => getTerritories(avail, bucket).map(t => this.available.find(m => m.slug === t))));
-
-  public isCalendar = false;
 
   constructor(
-    private movieQuery: MovieQuery,
-    private orgService: OrganizationService,
-    private orgQuery: OrganizationQuery,
-    private contractService: ContractService,
-    private termService: TermService,
-    private snackBar: MatSnackBar,
-    private bucketQuery: BucketQuery,
     private dialog: MatDialog,
-    private bucketService: BucketService
-  ) { }
-
-  public async ngOnInit() {
-    this.org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
-
+    private movieQuery: MovieQuery,
+    private bucketQuery: BucketQuery,
+    private termService: TermService,
+    private orgQuery: OrganizationQuery,
+    private bucketService: BucketService,
+    private orgService: OrganizationService,
+    private contractService: ContractService,
+    private snackbar: MatSnackBar,
+    private router: Router,
+  ) {
     this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
+    this.init();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  private async init() {
 
     const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', this.movie.id).where('status', '==', 'accepted'));
 
-    this.mandates = contracts.filter(isMandate);
-    this.sales = contracts.filter(isSale);
+    const mandates = contracts.filter(isMandate);
+    const sales = contracts.filter(isSale);
 
-    this.mandateTerms = await this.termService.getValue(this.mandates.map(m => m.termIds).flat());
-    this.salesTerms = await this.termService.getValue(this.sales.map(m => m.termIds).flat());
+    const [mandateTerms, salesTerms] = await Promise.all([
+      this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
+      this.termService.getValue(sales.map(sale => sale.termIds).flat())
+    ]);
+
+    this.mandates$.next(mandates);
+    this.mandateTerms$.next(mandateTerms);
+    this.salesTerms$.next(salesTerms);
   }
 
-  public ngOnDestroy() {
-    this.sub.unsubscribe();
+  public async addToSelection() {
+    const contracts = this.bucketForm.value.contracts;
+    await this.bucketService.upsert({ id: this.orgId, contracts });
+    this.bucketForm.markAsPristine();
+    this.snackbar
+      .open(`${this.movie.title.international} Rights were added to your Selection`, 'GO TO SELECTION', { duration: 5000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
+  }
+
+  public explain() {
+    this.dialog.open(ExplanationComponent, {
+      height: '80vh',
+      width: '80vw'
+    });
+  }
+
+  /** Open a modal to display the entire list of territories when this one is too long */
+  public openTerritoryModal(terms: string, scope: Scope) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
   }
 
   confirmExit() {
@@ -106,111 +126,29 @@ export class MarketplaceMovieAvailsComponent implements OnInit, OnDestroy {
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
         buttonName: 'Leave anyway'
       }
-    })
-    return dialogRef.afterClosed().pipe(
-      switchMap(exit => {
-        /* Undefined means user clicked on the backdrop, meaning just close the modal */
-        if (typeof exit === 'undefined') {
-          return of(false);
-        }
-        return of(exit)
-      })
-    )
-  }
-
-  applyFilters() {
-    if (this.availsForm.invalid) {
-      this.snackBar.open('Invalid form', '', { duration: 2000 });
-      return;
-    }
-
-    // Territories available after form filtering
-    const mandateTerms = getMandateTerms(this.availsForm.value, this.mandateTerms);
-    this.available = mandateTerms.map(term => term.territories
-      .filter(t => !!territoriesISOA3[t])
-      .map(territory => ({
-        slug: territory,
-        isoA3: territoriesISOA3[territory],
-        label: territories[territory],
-        contract: this.mandates.find(m => m.id === term.contractId)
-      }))
-    ).flat();
-    this.available$.next(this.available);
-
-    // Territories that are already sold after form filtering
-    const soldTerms = getSoldTerms(this.availsForm.value, this.salesTerms); // @TODO #5573 unit test getSoldTerms
-    const sold = soldTerms.map(term => term.territories
-      .filter(t => !!territoriesISOA3[t])
-      .map(territory => ({
-        slug: territory,
-        isoA3: territoriesISOA3[territory],
-        label: territories[territory],
-        contract: this.mandates.find(m => m.id === term.contractId)
-      }))
-    ).flat();
-    this.sold$.next(sold);
-
-  }
-
-  clear() {
-    this.availsForm.reset();
-    this.available$.next([]);
-  }
-
-  /** Whenever you click on a territory, add it to availsForm.territories. */
-  public select(territory: TerritoryMarker) {
-    const added = this.bucketForm.toggleTerritory(this.availsForm.value, territory);
-    const available = this.available$.getValue();
-    if (added) {
-      this.available$.next(available.filter(t => t.slug !== territory.slug));
-    } else {
-      this.available$.next([...available, territory]);
-    }
-  }
-
-  public selectAll() {
-    let available = this.available$.getValue();
-    available.forEach(t => {
-      const isAlreadyToggled = this.bucketForm.isAlreadyToggled(this.availsForm.value, t);
-      if (!isAlreadyToggled) {
-        this.bucketForm.toggleTerritory(this.availsForm.value, t);
-        available = available.filter(before => before.slug === t.slug);
-      }
     });
-
-    this.available$.next(available);
+    return dialogRef.afterClosed().pipe(
+      /* Undefined means user clicked on the backdrop, meaning just close the modal */
+      switchMap(exit => of(exit ?? false))
+    );
   }
 
-  public trackByTag(tag) {
-    return tag;
+  edit({ exclusive, duration, medias, territories }: BucketTerm) {
+    const mode = this.router.url.split('/').pop();
+
+    if (mode === 'map') {
+      this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
+    }
+
+    if (mode === 'calendar') {
+      this.avails.calendarForm.setValue({ exclusive, medias, territories });
+    }
   }
 
-  /** Display the territories information in the tooltip */
-  public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
-    this.hoveredTerritory = { name: territory, status }
-  }
-
-  /** Clear the territories information */
-  public clearTerritoryTooltip() {
-    this.hoveredTerritory = null;
-  }
-
-  addLanguage(term: BucketTermForm) {
-    const spec = createMovieLanguageSpecification({});
-    term.controls.languages.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
-    this.languageCtrl.reset();
-    this.showButtons = true;
-  }
-
-  deleteLanguage(term: BucketTermForm, language: Language) {
-    term.controls.languages.removeControl(language);
-  }
-
-  addToSelection() {
-    this.bucketService.update(this.orgId, this.bucketForm.value);
-  }
-
-  toggleCalendar(toggle: MatSlideToggleChange) {
-    this.isCalendar = toggle.checked;
+  remove(control: BucketTermForm) {
+    const terms = control.parent as FormList<BucketTermForm>;
+    const index = terms.controls.findIndex(c => c === control);
+    terms.removeAt(index);
+    this.bucketForm.change.next();
   }
 }

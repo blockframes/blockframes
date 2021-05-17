@@ -50,12 +50,6 @@ section {
       width: 100%;
     }
 
-    .email-input {
-      mat-icon {
-        margin-right: 8px;
-      }
-    }
-
     .privacy {
       text-align: start;
     }
@@ -72,7 +66,8 @@ section {
   align-items: center;
   margin-bottom: 8px;
   p {
-    margin: 0 6px;
+    margin: 0 8px;
+    // TODO #5770
     button {
       margin: 0;
       background: none;
