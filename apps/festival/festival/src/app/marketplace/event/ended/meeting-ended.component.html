@@ -12,7 +12,7 @@
     <h4 *ngIf="duration | duration: '' as pipedDuration">It lasted {{ pipedDuration }}.</h4>
 
     <ng-container *ngIf="attendees$ | async as attendees">
-      <h3>There were {{attendees.length}} attendee{attendees.length, plural, =0 {} =1 {} other {s}}</h3>
+      <h3>There were {{attendees.length}} attendee{attendees.length, plural, =1 {} other {s}}</h3>
       <p *ngFor="let user of attendees">{{user.firstName}} {{user.lastName}}</p>
     </ng-container>
   </section>
