@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
 
 import {
@@ -29,7 +29,6 @@ export class MarketplaceMovieAvailsMapComponent {
     name: string;
     status: string;
   }
-  public territoryMarkers$ = new Observable<Record<string, TerritoryMarker>>();
 
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
@@ -38,13 +37,20 @@ export class MarketplaceMovieAvailsMapComponent {
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
 
+  public territoryMarkers$ = combineLatest([
+    this.mandates$,
+    this.mandateTerms$,
+  ]).pipe(
+    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms))
+  );
+
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.territoryMarkers$,
+    this.territoryMarkers$
   ]).pipe(
     map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'exact').map(t => markers[t])),
-    startWith([]),
+    startWith([])
   );
 
   public inSelection$ = combineLatest([
@@ -85,16 +91,7 @@ export class MarketplaceMovieAvailsMapComponent {
     shareReplay(1) // Multicast with replay
   );
 
-  constructor(
-    private shell: MarketplaceMovieAvailsComponent,
-  ) {
-    this.territoryMarkers$ = combineLatest([
-      this.mandates$,
-      this.mandateTerms$,
-    ]).pipe(
-      map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
-    );
-  }
+  constructor(private shell: MarketplaceMovieAvailsComponent) {}
 
   public trackByTag<T>(tag: T) {
     return tag;
@@ -119,6 +116,7 @@ export class MarketplaceMovieAvailsMapComponent {
   }
 
   public async selectAll() {
+    if (this.availsForm.invalid) return;
     const available = await this.available$.pipe(take(1)).toPromise();
     for (const term of available) {
       const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(this.availsForm.value, term);

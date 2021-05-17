@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -18,7 +18,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent implements OnInit {
+export class MarketplaceSelectionComponent implements OnDestroy {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
   public currencyForm = new FormControl();
   columns = {
@@ -40,6 +40,8 @@ export class MarketplaceSelectionComponent implements OnInit {
 
   trackById = (i: number, doc: { id: string }) => doc.id;
 
+  private sub = this.currencyForm.valueChanges.pipe(distinctUntilChanged()).subscribe(value => this.updateCurrency(value));
+
   constructor(
     @Optional() private intercom: Intercom,
     private bucketQuery: BucketQuery,
@@ -50,14 +52,15 @@ export class MarketplaceSelectionComponent implements OnInit {
   ) {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
       tap(bucket => {
-        this.setTitle(bucket?.contracts.length)
-        bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price))
-      }),
+        this.setTitle(bucket?.contracts.length);
+        if (!!bucket?.currency) this.currencyForm.setValue(bucket.currency);
+        bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price));
+      })
     );
   }
 
-  ngOnInit() {
-    this.currencyForm.valueChanges.subscribe(value => this.updateCurrency(value));
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   private setTitle(amount: number) {

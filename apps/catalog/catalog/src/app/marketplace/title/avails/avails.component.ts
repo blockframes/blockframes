@@ -34,7 +34,7 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
   public movie: Movie = this.movieQuery.getActive();
 
   public orgId = this.orgQuery.getActiveId();
-  public periods = ['weeks', 'months', 'years'];
+  public periods = ['days', 'weeks', 'months', 'years'];
   public maxTerritories = 30;
 
   public bucketForm = new BucketForm();
