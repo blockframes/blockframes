@@ -2,11 +2,11 @@
   $background: map-get($theme, background);
   $warn: map-get($theme, warn);
 
-  .missing-control {
+  a.missing-control span {
     color: #F6A92C;
   }
 
-  .mandatory-control {
+  a.mandatory-control {
     color: mat-color($warn, 500);
   }
 }
