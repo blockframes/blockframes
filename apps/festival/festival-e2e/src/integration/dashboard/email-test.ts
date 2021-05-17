@@ -1,14 +1,12 @@
 /// <reference types="cypress" />
 
-import { setForm } from "@blockframes/e2e/utils";
+import { setForm, serverId, testEmail } from "@blockframes/e2e/utils";
 
 //Test if email is sent correctly.
 const SUBJECT_DEMO = 'A demo has been requested';
 
 describe('Check spinner wait until', () => {
   //death-pink@zjfwnf90.mailosaur.net
-  const serverId = 'zjfwnf90'; // Replace SERVER_ID with an actual Mailosaur Server ID
-  const testEmail = `test@${serverId}.mailosaur.net`;
   const demo_contact = {
     'first-name': 'Reed',
     'last-name': 'Hastings',
@@ -27,7 +25,7 @@ describe('Check spinner wait until', () => {
     })
   });
   
-  it.only('Wait for API to load', () => {
+  it('Wait for API to load', () => {
     cy.get('h1', {timeout: 10000})
       .contains("Want to learn more?");
 
