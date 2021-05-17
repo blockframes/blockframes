@@ -6,6 +6,7 @@ import { getCurrentApp, getAppName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
+import { testEmail } from "@blockframes/e2e/utils";
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -78,9 +79,8 @@ export class LandingShellComponent {
       let information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
       // @ts-ignore
       if (window.Cypress) {
-        console.log("=> In E2E mode..");
         information.test = true;
-        information.testEmailTo = 'test@zjfwnf90.mailosaur.net'
+        information.testEmailTo = testEmail;
       }
       this.sendDemoRequest(information);
       this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
