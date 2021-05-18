@@ -23,6 +23,17 @@ describe('Test isSameTerm pure function', () => {
     expect(isSameTerm(bucketTerm, availDetails)).toBe(false);
   });
 
+  it('if SameTerm then is not InTerm', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm(availDetails);
+    expect(isSameTerm(bucketTerm, availDetails)).toBe(true);
+    expect(isInTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
 })
 
 describe('Test isInTerm pure function', () => {
@@ -56,6 +67,30 @@ describe('Test isInTerm pure function', () => {
     const bucketTerm = createBucketTerm(availDetails);
     expect(isSameTerm(bucketTerm, availDetails)).toBe(true);
     expect(isInTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('If avail "from" is after bucket "from" but with same "to" : isInTerm is true', () => {
+    const to = new Date('06/30/2030');
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/02/2028'), to }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to } });
+    expect(isSameTerm(bucketTerm, availDetails)).toBe(false);
+    expect(isInTerm(bucketTerm, availDetails)).toBe(true);
+  });
+
+  it('If avail "to" is before bucket "to" but with same "from" : isInTerm is true', () => {
+    const from = new Date('01/01/2028')
+    const availDetails: AvailsFilter = {
+      duration: { from, to: new Date('06/29/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, duration: { from, to: new Date('06/30/2030') } });
+    expect(isSameTerm(bucketTerm, availDetails)).toBe(false);
+    expect(isInTerm(bucketTerm, availDetails)).toBe(true);
   });
 })
 
