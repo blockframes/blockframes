@@ -32,7 +32,7 @@ export class MarketplaceMovieAvailsMapComponent {
 
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
-  public status$ = this.availsForm.statusChanges.pipe(startWith('INVALID'));
+  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
@@ -91,7 +91,7 @@ export class MarketplaceMovieAvailsMapComponent {
     shareReplay(1) // Multicast with replay
   );
 
-  constructor(private shell: MarketplaceMovieAvailsComponent) {}
+  constructor(private shell: MarketplaceMovieAvailsComponent) { }
 
   public trackByTag<T>(tag: T) {
     return tag;

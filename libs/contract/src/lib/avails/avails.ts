@@ -163,7 +163,7 @@ export function isSameTerm(term: BucketTerm, avail: AvailsFilter) {
   if (term.exclusive !== avail.exclusive) return false;
   if (!avail.duration?.from || term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
   if (!avail.duration?.to || term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
-  if (term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
+  if (!avail.medias || term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
   return true;
 }
 
@@ -177,7 +177,7 @@ export function isInTerm(term: BucketTerm, avail: AvailsFilter) {
   if (term.exclusive !== avail.exclusive) return false;
   if (!avail.duration?.from || term.duration.from.getTime() >= avail.duration.from.getTime()) return false;
   if (!avail.duration?.to || term.duration.to.getTime() <= avail.duration.to.getTime()) return false;
-  if (term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
+  if (!avail.medias || term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
   return true;
 }
 
