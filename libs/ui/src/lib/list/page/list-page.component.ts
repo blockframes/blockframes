@@ -80,7 +80,7 @@ export class ListPageComponent implements AfterContentInit {
       <ng-content></ng-content>
       <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
       <button mat-stroked-button color="primary" (click)="loadMore.emit()">
-        LOAD MORE
+        Load More
       </button>
     </ng-container>
   `,
