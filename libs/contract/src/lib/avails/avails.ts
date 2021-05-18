@@ -89,21 +89,23 @@ export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
 export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   const result: Term<Date>[] = [];
   for (const term of terms) {
-    const startDuringDuration = avails.duration.from.getTime() >= term.duration.from.getTime() && avails.duration.from.getTime() <= term.duration.to.getTime();
-    const endDuringDuration = avails.duration.to.getTime() <= term.duration.to.getTime() && avails.duration.to.getTime() >= term.duration.from.getTime();
-    const inDuration = startDuringDuration || endDuringDuration;
-    const wrappedDuration = avails.duration.from.getTime() <= term.duration.from.getTime() && avails.duration.to.getTime() >= term.duration.to.getTime();
+    const durationUndetermined = !avails.duration.from && !avails.duration.to
+
+    const startDuringDuration = durationUndetermined ? false : avails.duration.from.getTime() >= term.duration.from.getTime() && avails.duration.from.getTime() <= term.duration.to.getTime();
+    const endDuringDuration = durationUndetermined ? false : avails.duration.to.getTime() <= term.duration.to.getTime() && avails.duration.to.getTime() >= term.duration.from.getTime();
+    const inDuration = durationUndetermined ? false :  startDuringDuration || endDuringDuration;
+    const wrappedDuration = durationUndetermined ? false : avails.duration.from.getTime() <= term.duration.from.getTime() && avails.duration.to.getTime() >= term.duration.to.getTime();
 
     if (avails.exclusive) {
 
       const intersectsMedia = avails.medias.some(medium => term.medias.includes(medium));
       const intersectsTerritories = !avails.territories.length || avails.territories.some(territory => term.territories.includes(territory));
 
-      if (intersectsMedia && intersectsTerritories && inDuration) {
+      if (durationUndetermined || (intersectsMedia && intersectsTerritories && inDuration)) {
         result.push(term);
       } else continue;
     } else if (term.exclusive) {
-      if (inDuration || wrappedDuration) {
+      if (durationUndetermined || inDuration || wrappedDuration) {
         if (!avails.medias.some(medium => term.medias.includes(medium)) || !avails.territories.some(territory => term.territories.includes(territory))) {
           continue;
         } else {

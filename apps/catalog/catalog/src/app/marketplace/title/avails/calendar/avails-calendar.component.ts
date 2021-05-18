@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -22,11 +22,16 @@ export class MarketplaceMovieAvailsCalendarComponent {
 
   public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
-  public durationMarkers$ = new Observable<DurationMarker[]>();
-
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
+
+  public durationMarkers$ = combineLatest([
+    this.shell.mandates$,
+    this.mandateTerms$,
+  ]).pipe(
+    map(([mandates, mandateTerms]) => getDurationMarkers(mandates, mandateTerms))
+  );
 
   public selected$ = combineLatest([
     this.availsForm.value$,
@@ -88,16 +93,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
-  ) {
-
-    this.durationMarkers$ = combineLatest([
-      this.shell.mandates$,
-      this.mandateTerms$,
-    ]).pipe(
-      map(([mandates, mandateTerms]) => getDurationMarkers(mandates, mandateTerms)),
-    );
-
-  }
+  ) { }
 
   clear() {
     this.availsForm.reset();

@@ -6,14 +6,13 @@ import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators
 
 
 function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('territories' | 'duration')[]) {
-  const durationRequired = required.includes('duration') ? [Validators.required] : []
   return {
     territories: new FormStaticValueArray<'territories'>(avail.territories, 'territories', required.includes('territories') ? [Validators.required] : []),
     medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required]),
     exclusive: new FormControl(avail.exclusive ?? true, Validators.required),
     duration: new FormGroup({
-      from: new FormControl(avail.duration?.from, [...[compareDates('from', 'to', 'from'), isDateInFuture], ...durationRequired]),
-      to: new FormControl(avail.duration?.to, [...[compareDates('from', 'to', 'to'), isDateInFuture], ...durationRequired])
+      from: new FormControl(avail.duration?.from, required.includes('duration') ? [compareDates('from', 'to', 'from'), isDateInFuture, Validators.required] : []),
+      to: new FormControl(avail.duration?.to, required.includes('duration') ? [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required] : [])
     })
   }
 }
