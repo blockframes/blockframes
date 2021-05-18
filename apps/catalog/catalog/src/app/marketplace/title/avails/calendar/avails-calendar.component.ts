@@ -5,11 +5,19 @@ import { combineLatest } from 'rxjs';
 
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, availableDurations } from '@blockframes/contract/avails/avails';
+import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, availableDurations, AvailsFilter } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { filter, map, shareReplay, startWith } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
+import { Bucket } from '@blockframes/contract/bucket/+state';
 
+function getSelected(avail: AvailsFilter, bucket: Bucket, markers: DurationMarker[], mode: 'exact' | 'in') {
+  const inDurations = getDurations(avail, bucket, mode);
+  return markers.filter(marker => inDurations.some(duration =>(
+    duration.from.getTime() === marker.from.getTime() &&
+    duration.to.getTime() === duration.from.getTime()
+  )));
+}
 @Component({
   selector: 'catalog-movie-avails-calendar',
   templateUrl: './avails-calendar.component.html',
@@ -38,13 +46,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
     this.shell.bucketForm.value$,
     this.durationMarkers$,
   ]).pipe(
-    map(([avail, bucket, markers]) => {
-      const exactDurations = getDurations(avail, bucket, 'exact');
-      return markers.filter(marker => exactDurations.some(duration =>(
-        duration.from.getTime() === marker.from.getTime() &&
-        duration.to.getTime() === duration.from.getTime()
-      )));
-    }),
+    map(([avail, bucket, markers]) => getSelected(avail, bucket, markers, 'exact')),
     startWith<DurationMarker[]>([]),
   );
 
@@ -53,13 +55,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
     this.shell.bucketForm.value$,
     this.durationMarkers$
   ]).pipe(
-    map(([avail, bucket, markers]) => {
-      const inDurations = getDurations(avail, bucket, 'in');
-      return markers.filter(marker => inDurations.some(duration =>(
-        duration.from.getTime() === marker.from.getTime() &&
-        duration.to.getTime() === duration.from.getTime()
-      )));
-    }),
+    map(([avail, bucket, markers]) => getSelected(avail, bucket, markers, 'in')),
     startWith<DurationMarker[]>([]),
   );
 
@@ -85,8 +81,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
     map(([mandates, selected, sold, inSelection, mandateTerms]) => {
       if (this.availsForm.invalid) return [];
       return availableDurations(selected, sold, inSelection, mandates, mandateTerms);
-    }),
-    shareReplay(1) // Multicast with replay
+    })
   );
 
   constructor(
