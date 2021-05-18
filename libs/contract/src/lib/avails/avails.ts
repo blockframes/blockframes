@@ -269,6 +269,7 @@ export function availableDurations(
   mandates: Mandate[],
   mandatesTerms: Term<Date>[],
 ) {
+  // TODO #5706 check if this function is needed and if it works
   const notAvailable = [...selected, ...sold, ...inSelection].flat();
 
   const markers = getDurationMarkers(mandates, mandatesTerms);
