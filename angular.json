@@ -431,7 +431,6 @@
             "main": "apps/catalog/catalog/src/main.ts",
             "polyfills": "apps/catalog/catalog/src/polyfills.ts",
             "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
-            "aot": true,
             "stylePreprocessorOptions": {
               "includePaths": [
                 "styles"
@@ -453,7 +452,13 @@
             ],
             "scripts": [
               "node_modules/apexcharts/dist/apexcharts.min.js"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -465,10 +470,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -496,10 +499,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -525,10 +526,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -664,7 +663,6 @@
             "main": "apps/festival/festival/src/main.ts",
             "polyfills": "apps/festival/festival/src/polyfills.ts",
             "tsConfig": "apps/festival/festival/tsconfig.app.json",
-            "aot": true,
             "sourceMap": true,
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -685,7 +683,12 @@
               "node_modules/angular-calendar/css/angular-calendar.css",
               "apps/festival/festival/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -816,7 +819,9 @@
             "tsConfig": "apps/festival/festival/tsconfig.server.json",
             "externalDependencies": [
               "@firebase/firestore"
-            ]
+            ],
+            "sourceMap": true,
+            "optimization": false
           },
           "configurations": {
             "production": {
@@ -1132,7 +1137,6 @@
             "main": "apps/crm/crm/src/main.ts",
             "polyfills": "apps/crm/crm/src/polyfills.ts",
             "tsConfig": "apps/crm/crm/tsconfig.app.json",
-            "aot": true,
             "stylePreprocessorOptions": {
               "includePaths": [
                 "styles"
@@ -1151,7 +1155,13 @@
             "styles": [
               "apps/crm/crm/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -1163,7 +1173,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -1191,10 +1200,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -1220,10 +1227,8 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -1449,7 +1454,6 @@
             "main": "apps/financiers/financiers/src/main.ts",
             "polyfills": "apps/financiers/financiers/src/polyfills.ts",
             "tsConfig": "apps/financiers/financiers/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "apps/financiers/financiers/src/favicon.ico",
               "apps/financiers/financiers/src/assets",
@@ -1471,7 +1475,13 @@
               "includePaths": [
                 "styles"
               ]
-            }
+            },
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -1483,7 +1493,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -1516,7 +1525,6 @@
             "staging": {
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -1683,7 +1691,6 @@
             "main": "apps/cms/src/main.ts",
             "polyfills": "apps/cms/src/polyfills.ts",
             "tsConfig": "apps/cms/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "apps/cms/src/favicon.ico",
               "apps/cms/src/assets",
@@ -1697,7 +1704,13 @@
             "styles": [
               "apps/cms/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -1850,15 +1863,20 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["libs/consents/tsconfig.lib.json", "libs/consents/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "!libs/consents/**/*"]
+            "tsConfig": [
+              "libs/consents/tsconfig.lib.json",
+              "libs/consents/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/consents/**/*"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/consents/jest.config.js",
-            "tsConfig": "libs/consents/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/consents/src/test-setup.ts"
           }
