@@ -261,11 +261,14 @@ describe('Test availableTerritories pure function', () => {
       exclusive: false
     });
 
-    const selectedA = toTerritoryMarker('france', [mandateA], termA);
+    const selectedA = toTerritoryMarker('france', [mandateA, mandateB], termA);
     expect(selectedA.contract.id).toEqual(mandateA.id);
 
-    const selectedB = toTerritoryMarker('france', [mandateB], termA);
-    expect(selectedB.contract).toBeUndefined();
+    const selectedB = toTerritoryMarker('germany', [mandateA, mandateB], termA);
+    expect(selectedB.contract.id).toEqual(mandateA.id);
+
+    const selectedC = toTerritoryMarker('france', [mandateB], termA);
+    expect(selectedC.contract).toBeUndefined();
   });
 })
 
