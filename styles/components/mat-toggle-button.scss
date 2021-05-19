@@ -3,7 +3,7 @@
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
-  $primary: map.get($theme, primary);
+  $primary: map.get($config, primary);
 
   .mat-button-toggle {
     color: mat.get-color-from-palette($primary, 500);

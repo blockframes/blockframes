@@ -55,7 +55,7 @@
 }
 
 
-@mixin typography($config) {
+@mixin typography($theme) {
   $config: mat.get-typography-config($theme);
   $font-family: mat.font-family($config);
 

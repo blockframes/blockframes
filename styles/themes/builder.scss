@@ -186,7 +186,7 @@
   @include form-field.color($theme);
   @include tabs.color($theme);
   @include toolbar.color($theme);
-  @include button-toggle.color($theme);
+  @include toggle-button.color($theme);
   @include sidenav.color($theme);
   @include icon.color($theme);
   @include dialog.color($theme);
