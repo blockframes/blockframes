@@ -47,12 +47,12 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     this.computeState();
     this.sub?.unsubscribe();
     this.sub = this.form.valueChanges.subscribe(storageFile => {
-      if (!!storageFile.storagePath) this.computeState();
+      if (storageFile.storagePath) this.computeState();
       const extra = this.getExtra();
-      if (!!extra) {
+      if (extra) {
         this.metadata = { ...this.metadata, ...extra }
         const task = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
-        if (!!task) {
+        if (task) {
           task.metadata = this.metadata;
           this.computeState();
         }

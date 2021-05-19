@@ -37,7 +37,7 @@ describe('Media Service Test Suite', () => {
             upload: jest.fn()
         })},
         { provide: Overlay, useFactory: () => ({
-            create: () => ({attach: _ => ({}), detach: _ => ({})}),
+            create: () => ({attach: () => ({}), detach: () => ({})}),
             position: () => ({ global: () => ({ bottom: () => ({ left: () => true }) }) })
         })},
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
