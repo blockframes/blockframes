@@ -11,11 +11,11 @@
       "parserOptions": { "project": ["libs/movie/tsconfig.*?.json"] },
       "rules": {
         "@angular-eslint/directive-selector": [
-          "error",
+          "warning",
           { "type": "attribute", "prefix": "movie", "style": "camelCase" }
         ],
         "@angular-eslint/component-selector": [
-          "error",
+          "warning",
           { "type": "element", "prefix": "movie", "style": "kebab-case" }
         ]
       }

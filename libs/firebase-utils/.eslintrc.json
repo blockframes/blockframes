@@ -11,11 +11,11 @@
       "parserOptions": { "project": ["libs/firebase-utils/tsconfig.*?.json"] },
       "rules": {
         "@angular-eslint/directive-selector": [
-          "error",
+          "warning",
           { "type": "attribute", "prefix": "app", "style": "camelCase" }
         ],
         "@angular-eslint/component-selector": [
-          "error",
+          "warning",
           { "type": "element", "prefix": "app", "style": "kebab-case" }
         ]
       }

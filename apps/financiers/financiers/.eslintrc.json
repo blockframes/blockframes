@@ -11,11 +11,11 @@
       "parserOptions": { "project": ["apps/financiers/financiers/tsconfig.*?.json"] },
       "rules": {
         "@angular-eslint/directive-selector": [
-          "error",
+          "warning",
           { "type": "attribute", "prefix": "financiers", "style": "camelCase" }
         ],
         "@angular-eslint/component-selector": [
-          "error",
+          "warning",
           { "type": "element", "prefix": "financiers", "style": "kebab-case" }
         ]
       }
