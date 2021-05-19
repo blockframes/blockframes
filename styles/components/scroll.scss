@@ -3,7 +3,7 @@
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
-  $foreground: map.get($config, foreground);
+  $foreground: map.get($config, 'foreground');
   $contrast: mat.get-color-from-palette($foreground, text);
 
   /* width */

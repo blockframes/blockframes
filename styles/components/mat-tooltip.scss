@@ -1,6 +1,7 @@
+@use '~@angular/material' as mat;
 
 // TYPOGRAPHY
-@mixin mtypography($config) {
+@mixin typography($config) {
 
   .mat-tooltip {
     line-height: 12px;
