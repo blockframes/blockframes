@@ -1,6 +1,10 @@
-@mixin scroll-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $contrast: mat-color($foreground, text);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map.get($config, foreground);
+  $contrast: mat.get-color-from-palette($foreground, text);
 
   /* width */
   ::-webkit-scrollbar {

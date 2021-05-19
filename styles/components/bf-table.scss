@@ -1,5 +1,7 @@
-@mixin bf-table-theme($theme) {
-  $background: map-get($theme, background);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
 
   bf-table-filter {
     mat-form-field .mat-form-field-wrapper {
