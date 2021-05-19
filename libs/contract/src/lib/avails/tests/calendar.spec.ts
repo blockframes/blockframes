@@ -1,7 +1,7 @@
 import { createMandate } from "../../contract/+state/contract.model";
-import { toDurationMarker } from "./../avails";
+import { DurationMarker, toDurationMarker } from "./../avails";
 import { createTerm } from "../../term/+state/term.model";
-import { CellState, dateToMatrixPosition, isBefore, isContinuous, MatrixPosition } from '../calendar/calendar.model';
+import { CellState, dateToMatrixPosition, isBefore, isContinuous, markersToMatrix, MatrixPosition } from '../calendar/calendar.model';
 
 describe('Test DurationMarker', () => {
 
@@ -38,27 +38,27 @@ describe('Test Matrix', () => {
   });
 
   it('Test dateToMatrixPosition', () => {
-    const dateA = new Date('01/04/2028')
+    const dateA = new Date('01/04/2028');
     const posA = dateToMatrixPosition(dateA);
 
     expect(posA.row).toEqual(7);
     expect(posA.column).toEqual(0);
 
-    const dateB = new Date('12/30/2025')
+    const dateB = new Date('12/30/2025');
     const posB = dateToMatrixPosition(dateB);
 
     expect(posB.row).toEqual(4);
     expect(posB.column).toEqual(11);
 
     // One month after posB but new year, should go to next row
-    const dateC = new Date('01/25/2026')
+    const dateC = new Date('01/25/2026');
     const posC = dateToMatrixPosition(dateC);
 
     expect(posC.row).toEqual(5);
     expect(posC.column).toEqual(0);
 
     // One month after posC but same year, should go to new column
-    const dateD = new Date('02/25/2026')
+    const dateD = new Date('02/25/2026');
     const posD = dateToMatrixPosition(dateD);
 
     expect(posD.row).toEqual(5);
@@ -97,13 +97,26 @@ describe('Test Matrix', () => {
     expect(isContinuous(posG, posH, stateMatrix)).toBeFalsy();
     expect(isContinuous(posH, posI, stateMatrix)).toBeFalsy();
   });
+
+  it('Test markersToMatrix', () => {
+    const columns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const rows = Array(10).fill(0).map((_, i) => 2020 + i);
+
+    const markers: DurationMarker[] = [];
+    markers.push({ from: new Date('12/30/2025'), to: new Date('12/30/2026') });
+
+    markers.push({ from: new Date('10/01/2028'), to: new Date('10/30/2028') });
+
+    let stateMatrix: CellState[][] = rows.map(() => columns.map(() => 'empty'));
+
+    stateMatrix = markersToMatrix(markers, stateMatrix, 'avail');
+
+    expect(stateMatrix[4][10]).toBe('empty');
+    expect(stateMatrix[4][11]).toBe('avail');
+    expect(stateMatrix[5].filter(s => s === 'avail').length).toBe(12);
+    expect(stateMatrix[6].filter(s => s === 'empty').length).toBe(12);
+
+    expect(stateMatrix[7].filter(s => s === 'empty').length).toBe(11);
+    expect(stateMatrix[7][9]).toBe('avail');
+  });
 });
-
-
-
-/**
- *
- * markersToMatrix
- *
-
- */
