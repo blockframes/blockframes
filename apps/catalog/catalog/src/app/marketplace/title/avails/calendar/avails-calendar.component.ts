@@ -1,15 +1,23 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { DurationMarker, toDurationMarker } from '@blockframes/contract/avails/avails';
+import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, availableDurations, AvailsFilter } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { map } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
+import { Bucket } from '@blockframes/contract/bucket/+state';
 
+function getSelected(avail: AvailsFilter, bucket: Bucket, markers: DurationMarker[], mode: 'exact' | 'in') {
+  const inDurations = getDurations(avail, bucket, mode);
+  return markers.filter(marker => inDurations.some(duration =>(
+    duration.from.getTime() === marker.from.getTime() &&
+    duration.to.getTime() === duration.from.getTime()
+  )));
+}
 @Component({
   selector: 'catalog-movie-avails-calendar',
   templateUrl: './avails-calendar.component.html',
@@ -22,36 +30,65 @@ export class MarketplaceMovieAvailsCalendarComponent {
 
   public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
-  public durationMarkers: DurationMarker[] = [];
-
+  private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
+  private salesTerms$ = this.shell.salesTerms$;
 
-  // TODO REMOVE BEHAVIOR-SUBJECT AND COMPUTE FROM TERMS
-  public availableMarkers$ = new Observable<DurationMarker[]>(); // available
-  public soldMarkers$ = new BehaviorSubject<DurationMarker[]>([]); // sold
-  public inBucketMarkers$ = new BehaviorSubject<DurationMarker[]>([]); // already selected in the bucket
+  public durationMarkers$ = combineLatest([
+    this.shell.mandates$,
+    this.mandateTerms$,
+  ]).pipe(
+    map(([mandates, mandateTerms]) => getDurationMarkers(mandates, mandateTerms))
+  );
+
+  public selected$ = combineLatest([
+    this.availsForm.value$,
+    this.shell.bucketForm.value$,
+    this.durationMarkers$,
+  ]).pipe(
+    map(([avail, bucket, markers]) => getSelected(avail, bucket, markers, 'exact')),
+    startWith<DurationMarker[]>([]),
+  );
+
+  public inSelection$ = combineLatest([
+    this.availsForm.value$,
+    this.shell.bucketForm.value$,
+    this.durationMarkers$
+  ]).pipe(
+    map(([avail, bucket, markers]) => getSelected(avail, bucket, markers, 'in')),
+    startWith<DurationMarker[]>([]),
+  );
+
+  public sold$ = combineLatest([
+    this.mandates$,
+    this.salesTerms$,
+    this.availsForm.value$
+  ]).pipe(
+    filter(() => this.availsForm.valid),
+    map(([mandates, sales, avails]) => {
+      const soldTerms = getSoldTerms(avails, sales);
+      return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
+    })
+  );
+
+  public available$ = combineLatest([
+    this.mandates$,
+    this.selected$,
+    this.sold$,
+    this.inSelection$,
+    this.mandateTerms$
+  ]).pipe(
+    map(([mandates, selected, sold, inSelection, mandateTerms]) => {
+      if (this.availsForm.invalid) return [];
+      return availableDurations(selected, sold, inSelection, mandates, mandateTerms);
+    })
+  );
 
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
-  ) {
-
-    this.availableMarkers$ = combineLatest([
-      this.shell.mandates$,
-      this.mandateTerms$,
-    ]).pipe(
-      map(([mandates, mandateTerms]) => {
-        for (const mandateTerm of mandateTerms) {
-          this.durationMarkers.push(toDurationMarker(mandates, mandateTerm));
-        }
-
-        // TODO available should be computed from DB & sold & avail filter form
-        return this.durationMarkers; // TODO REMOVE THAT !
-      })
-    );
-
-  }
+  ) { }
 
   clear() {
     this.availsForm.reset();
