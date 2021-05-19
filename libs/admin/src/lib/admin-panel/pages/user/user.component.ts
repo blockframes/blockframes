@@ -109,7 +109,7 @@ export class UserComponent implements OnInit {
       await new Promise((resolve) => {
         subscription = this.userService.valueChanges(this.userId).subscribe((res) => {
           if (!!res && res.orgId === '') {
-            resolve();
+            resolve(undefined);
           }
         })
       })
