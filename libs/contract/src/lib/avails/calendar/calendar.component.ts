@@ -37,13 +37,14 @@ export class AvailsCalendarComponent implements OnInit {
     highlightedRange: [],
   });
 
-  @Input() set availableMarkers(markers: DurationMarker[]) {
+  @Input() set availableMarkers(markers: DurationMarker[] | undefined) {
+    if (!markers) return;
     this.stateMatrix = markersToMatrix(markers, this.stateMatrix, 'avail');
   }
 
-  @Input() set soldMarkers(value: any) {
-    // TODO REMOVE FIXTURE AND CONVERT MARKERS INTO CELL-STATE
-    this.stateMatrix = calendarAvails as CellState[][];
+  @Input() set soldMarkers(markers: DurationMarker[] | undefined) {
+    if (!markers) return;
+    this.stateMatrix = markersToMatrix(markers, this.stateMatrix, 'sold');
   }
 
   ngOnInit() {
