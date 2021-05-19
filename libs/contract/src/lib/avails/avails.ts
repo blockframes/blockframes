@@ -77,11 +77,11 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
  * @returns
  */
 export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
-  return !!getSoldTerms({ medias: avails.medias, duration: avails.duration, territories: avails.territories, exclusive: avails.exclusive }, terms).length;
+  return !!getSoldTerms(avails, terms).length;
 }
 
 /**
- *
+ * Get all the salesTerms that overlap the avails filter
  * @param avails
  * @param terms Terms of all sales of the title
  * @returns
@@ -89,42 +89,27 @@ export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
 export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   const result: Term<Date>[] = [];
   for (const term of terms) {
-    const durationUndetermined = !avails.duration.from && !avails.duration.to;
 
-    if (durationUndetermined) {
-      if (avails.exclusive) {
-        const intersectsMedia = avails.medias.some(medium => term.medias.includes(medium));
-        const intersectsTerritories = avails.territories.some(territory => term.territories.includes(territory));
+    // If both of them are false, its available
+    if (!avails.exclusive && !term.exclusive) continue;
 
-        if (intersectsMedia && intersectsTerritories) {
-          result.push(term);
-        }
-      } else if (term.exclusive) {
-        if (avails.medias.some(medium => term.medias.includes(medium)) && avails.territories.some(territory => term.territories.includes(territory))) {
-          result.push(term);
-        }
-      }
-    } else {
-      const startDuringDuration = avails.duration.from.getTime() >= term.duration.from.getTime() && avails.duration.from.getTime() <= term.duration.to.getTime();
-      const endDuringDuration = avails.duration.to.getTime() <= term.duration.to.getTime() && avails.duration.to.getTime() >= term.duration.from.getTime();
-      const inDuration = startDuringDuration || endDuringDuration;
-      const wrappedDuration = avails.duration.from.getTime() <= term.duration.from.getTime() && avails.duration.to.getTime() >= term.duration.to.getTime();
+    // In case of non-required territories (e.g. map in Avails tab), there is no need to check them. 
+    if (!!avails.territories.length) {
+      // If none of the avails territories are in the term, its available
+      if (!term.territories.some(t => avails.territories.includes(t))) continue;
+    };
 
-      if (avails.exclusive) {
-        const intersectsMedia = avails.medias.some(medium => term.medias.includes(medium));
-        const intersectsTerritories = !avails.territories.length || avails.territories.some(territory => term.territories.includes(territory));
-
-        if (intersectsMedia && intersectsTerritories && inDuration) {
-          result.push(term);
-        }
-      } else if (term.exclusive) {
-        if (inDuration || wrappedDuration) {
-          if (avails.medias.some(medium => term.medias.includes(medium)) && avails.territories.some(territory => term.territories.includes(territory))) {
-            result.push(term);
-          }
-        }
-      }
+    if (!!avails.medias.length) {
+      // If none of the avails medias are in the term, its available
+      if (!term.medias.some(m => avails.medias.includes(m))) continue;
     }
+
+    if (!avails.duration.from || !avails.duration.to) continue;
+    if (avails.duration.to.getTime() < term.duration.from.getTime()) continue
+    if (avails.duration.from.getTime() > term.duration.to.getTime()) continue;
+    // if time is the same, its sold.
+
+    result.push(term);
   }
   return result;
 }
