@@ -1,17 +1,20 @@
-.mat-nav-list, .mat-list, .mat-selection-list {
-  border-radius: 10px;
-}
+@use 'sass:map';
+@use '~@angular/material' as mat;
 
-@mixin mat-bf-list-theme($theme) {
-  $primary: map-get($theme, primary);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme , foreground);
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $primary: map.get($config, 'primary');
+  $background: map.get($config, 'background');
+  $foreground: map.get($config , 'foreground');
 
+  .mat-nav-list, .mat-list, .mat-selection-list {
+    border-radius: 10px;
+  }
 
   .mat-list-base {
     padding-top: 0; // Used to glue several mat-list together
-    background-color: mat-color($background, app-bar);
-    border: 1px solid mat-color($foreground, divider);
+    background-color: mat.get-color-from-palette($background, app-bar);
+    border: 1px solid mat.get-color-from-palette($foreground, divider);
   }
 
   // Removed as it create weird behaviour with mat-selection-list (21/01/2020)
@@ -22,13 +25,13 @@
 
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
   .mat-nav-list a.active {
-    color: mat-color($primary, 500);
-    background-color: rgba(mat-color($primary, 500), 0.05);
+    color: mat.get-color-from-palette($primary, 500);
+    background-color: rgba(mat.get-color-from-palette($primary, 500), 0.05);
 
     // Mat icons inside active link should be colored too
     .mat-list-icon {
       path, g, polygon {
-        fill: mat-color($primary, 500);
+        fill: mat.get-color-from-palette($primary, 500);
       }
     }
   }
@@ -46,23 +49,24 @@
     min-width: 10px;
     padding: 32px 16px;
     &.mat-tab-label-active {
-      color:  mat-color($primary, 500);
+      color: mat.get-color-from-palette($primary, 500);
     }
   }
 }
 
 
-@mixin mat-bf-list-typography($config) {
-  $font-family: mat-font-family($config);
+@mixin typography($config) {
+  $config: mat.get-typography-config($theme);
+  $font-family: mat.font-family($config);
 
   // Default list
   .mat-list-base {
     .mat-list-item {
-      font-size: mat-font-size($config, body-2);
+      font-size: mat.font-size($config, body-2);
     }
 
     .mat-list-option {
-      font-size: mat-font-size($config, body-2);
+      font-size: mat.font-size($config, body-2);
     }
   }
 }

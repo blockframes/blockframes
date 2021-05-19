@@ -1,5 +1,9 @@
-@mixin anchor($theme) {
-  $warn: map-get($theme, warn);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $warn: map.get($config, 'warn');
 
   a:not(.mat-button-base),
   a:not(.mat-button-base):visited {
@@ -11,7 +15,7 @@
 
     // Used mainly for the missing-control component
     &.mandatory-control {
-      color: mat-color($warn, 500);
+      color: mat.get-color-from-palette($warn, 500);
     }
   }
 }

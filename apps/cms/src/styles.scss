@@ -6,13 +6,11 @@
 .dark-theme {
   $mat-theme: getTheme($dark-theme);
   @include mat-theme($mat-theme);
-  @include bf-calendar-theme($mat-theme);
   // Transform into contrast-theme
   .dark-contrast-theme {
     $contrast-theme: getContrast($dark-theme);
     $mat-contrast-theme: getTheme($contrast-theme);
     @include mat-theme($mat-contrast-theme);
-    @include bf-calendar-theme($mat-contrast-theme);
     scrollbar-color: dark;
   }
   
@@ -24,7 +22,6 @@
 .light-theme {
   $mat-theme: getTheme($light-theme);
   @include mat-theme($mat-theme);
-  @include bf-calendar-theme($mat-theme);
   
   // Not supported yet by browser. Here for future support
   scrollbar-color: light;
@@ -33,7 +30,6 @@
     $contrast-theme: getContrast($light-theme);
     $mat-contrast-theme: getTheme($contrast-theme);
     @include mat-theme($mat-contrast-theme);
-    @include bf-calendar-theme($mat-contrast-theme);
     scrollbar-color: dark;
   }
 }
