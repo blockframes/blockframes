@@ -1,7 +1,20 @@
 import { createMandate } from "../../contract/+state/contract.model";
 import { DurationMarker, toDurationMarker } from "./../avails";
 import { createTerm } from "../../term/+state/term.model";
-import { CellState, dateToMatrixPosition, isBefore, isContinuous, markersToMatrix, MatrixPosition } from '../calendar/calendar.model';
+import {
+  calendarColumns,
+  calendarRows,
+  CellState,
+  createAvailCalendarState,
+  dateToMatrixPosition,
+  hover,
+  isBefore,
+  isContinuous,
+  markersToMatrix,
+  MatrixPosition,
+  reset,
+  select
+} from '../calendar/calendar.model';
 
 describe('Test DurationMarker', () => {
 
@@ -99,15 +112,12 @@ describe('Test Matrix', () => {
   });
 
   it('Test markersToMatrix', () => {
-    const columns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const rows = Array(10).fill(0).map((_, i) => 2020 + i);
-
     const markers: DurationMarker[] = [];
     markers.push({ from: new Date('12/30/2025'), to: new Date('12/30/2026') });
 
     markers.push({ from: new Date('10/01/2028'), to: new Date('10/30/2028') });
 
-    let stateMatrix: CellState[][] = rows.map(() => columns.map(() => 'empty'));
+    let stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'empty'));
 
     stateMatrix = markersToMatrix(markers, stateMatrix, 'avail');
 
@@ -115,8 +125,44 @@ describe('Test Matrix', () => {
     expect(stateMatrix[4][11]).toBe('avail');
     expect(stateMatrix[5].filter(s => s === 'avail').length).toBe(12);
     expect(stateMatrix[6].filter(s => s === 'empty').length).toBe(12);
-
     expect(stateMatrix[7].filter(s => s === 'empty').length).toBe(11);
     expect(stateMatrix[7][9]).toBe('avail');
+  });
+
+  it('Test select', () => {
+    const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'avail'));
+
+    const newState = select(1, 11, stateMatrix, createAvailCalendarState());
+    expect(newState.start.row).toEqual(1);
+    expect(newState.start.column).toEqual(11);
+  });
+
+  it('Test hover', () => {
+    const markers: DurationMarker[] = [];
+    markers.push({ from: new Date('12/30/2025'), to: new Date('12/30/2026') });
+
+    markers.push({ from: new Date('10/01/2028'), to: new Date('10/30/2028') });
+
+    let stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'avail'));
+
+    const hoveredState = hover(1, 10, stateMatrix, createAvailCalendarState());
+
+    expect(hoveredState.hoverRow).toEqual(1);
+    expect(hoveredState.hoverColumn).toEqual(10);
+    expect(hoveredState.hoverStart.row).toEqual(1);
+    expect(hoveredState.hoverStart.column).toEqual(10);
+  });
+
+  it('Test reset', () => {
+    const dirtyState = createAvailCalendarState({
+      hoverColumn: 10,
+      hoverRow: 1,
+      highlightedRange: [[true], [true]]
+    });
+
+    const resetedState = reset(dirtyState);
+    expect(resetedState.hoverColumn).toBeUndefined();
+    expect(resetedState.hoverRow).toBeUndefined();
+    expect(resetedState.highlightedRange.flat().filter(r => !!r).length).toEqual(0);
   });
 });
