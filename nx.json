@@ -1,11 +1,23 @@
 {
-  "npmScope": "blockframes",
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",
     "tslint.json": "*",
     "nx.json": "*",
     "tsconfig.base.json": "*"
+  },
+  "affected": {
+    "defaultBase": "origin/develop"
+  },
+  "npmScope": "blockframes",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "cacheDirectory": ".cache/nx"
+      }
+    }
   },
   "projects": {
     "ui": {
@@ -107,17 +119,5 @@
     "rules": {
       "tags": ["shared security rules"]
     }
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "cacheDirectory": ".cache/nx"
-      }
-    }
-  },
-  "affected": {
-    "defaultBase": "origin/develop"
   }
 }

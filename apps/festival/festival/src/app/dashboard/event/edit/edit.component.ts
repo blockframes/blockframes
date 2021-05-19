@@ -86,7 +86,7 @@ export class EditComponent implements OnInit, OnDestroy {
       // FormArray (used in FormList) does not mark as dirty on push,
       // so we do it manually to enable the save button
       // more info : https://github.com/angular/angular/issues/16370
-      if (!!this.formSub) {
+      if (this.formSub) {
         this.formSub.unsubscribe();
         delete this.formSub;
       }

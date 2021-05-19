@@ -45,7 +45,7 @@ export class EventListComponent implements OnInit {
     ]).pipe(
       switchMap(([orgId, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', orgId))),
       tap(events => {
-        !!events.length ?
+        events.length ?
           this.dynTitle.setPageTitle('My events') :
           this.dynTitle.setPageTitle('My events', 'Empty');
       }),
