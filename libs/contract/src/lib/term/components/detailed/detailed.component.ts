@@ -15,10 +15,10 @@ export class DetailedTermsComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { terms: string[], scope: Scope },
     public dialogRef: MatDialogRef<DetailedTermsComponent>
-  ) {}
+  ) { }
 
   ngOnInit() {
-    const groups = staticGroups[this.data.scope];
+    const groups: StaticGroup[] = JSON.parse(JSON.stringify(staticGroups[this.data.scope]));
     if (!!groups) {
       for (const group of groups) {
         group.items = group.items.filter(item => this.data.terms.includes(item));
