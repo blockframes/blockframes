@@ -31,8 +31,9 @@ function getSupportEmail(app?: App) {
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
 
-export function userVerifyEmail(email: string, link: string): EmailTemplateRequest {
+export function userVerifyEmail(email: string, userFirstName: string, link: string): EmailTemplateRequest {
   const data = {
+    userFirstName,
     pageURL: link
   };
   return { to: email, templateId: templateIds.user.verifyEmail, data };

@@ -14,7 +14,7 @@ type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
 export const startVerifyEmailFlow = async (data: any) => {
-  const { email, app } = data;
+  const { email, app, firstName } = data;
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmailAddress()" function');
@@ -22,7 +22,7 @@ export const startVerifyEmailFlow = async (data: any) => {
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
   try {
-    const template = userVerifyEmail(email, verifyLink);
+    const template = userVerifyEmail(email, firstName, verifyLink);
     await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending email verification email : ${e.message}`);

@@ -13,7 +13,7 @@ import {
   toBucketTerm
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 //////////
 // TERM //
@@ -105,7 +105,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
       .map(terms => terms.controls)
       .flat();
 
-    return this.change.pipe(map(getTerm));
+    return this.change.pipe(startWith([]), map(getTerm));
   }
 
   /**
@@ -121,6 +121,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     // Contract is not registered
     if (contractIndex === -1) {
       this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }));
+      this.markAsDirty();
       this.change.next();
       return;
     }
@@ -130,6 +131,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
+      this.markAsDirty();
       this.change.next();
       return;
     }
@@ -140,6 +142,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     // Add territory
     if (!hasTerritory) {
       control.setValue([...territories, territory]);
+      this.markAsDirty();
     }
   }
 
@@ -179,7 +182,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker 
    * @returns boolean
    */
-  isAlreadyInBucket(avails: AvailsFilter, marker: TerritoryMarker) : boolean {
+  isAlreadyInBucket(avails: AvailsFilter, marker: TerritoryMarker): boolean {
     const { slug: territory, term } = marker;
 
     const bucket = this.value;

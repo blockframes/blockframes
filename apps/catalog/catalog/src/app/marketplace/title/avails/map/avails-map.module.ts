@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -44,6 +45,7 @@ import { MarketplaceMovieAvailsMapComponent } from './avails-map.component';
     MatButtonModule,
     MatSelectModule,
     MatDividerModule,
+    MatTooltipModule,
     MatCheckboxModule,
     MatFormFieldModule,
     MatDatepickerModule,

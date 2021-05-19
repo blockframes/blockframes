@@ -727,7 +727,7 @@ describe('Test isTermSold pure function', () => {
     Not available: Resurrected (sale),
     Available: Mother Schmuckers, 512 Hours With Marina Abramovic, Gaza mon amour, Bigfoot Family`, () => {
       const availDetails: AvailsFilter = {
-        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive:true,
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive:true,
         territories: ['argentina'], medias: ['payTv']
       }
       const gazaRights = getMandateTerms(
@@ -859,7 +859,7 @@ describe('Test isTermSold pure function', () => {
     Not available: 512 Hours With Marina Abramovic, Bigfoot Family (exclusive sales)
     Available: Mother Schmuckers, Gaza mon amour, Resurrected`, () => {
       const availDetails: AvailsFilter = {
-        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive: false,
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false,
         territories: ['germany'], medias: ['freeTv']
       }
       const gazaRights = getMandateTerms(

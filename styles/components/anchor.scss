@@ -1,6 +1,17 @@
 @mixin anchor($theme) {
+  $warn: map-get($theme, warn);
+
   a:not(.mat-button-base),
   a:not(.mat-button-base):visited {
     color: inherit;
+    // Used mainly for the missing-control component
+    &.missing-control span {
+      color: #F6A92C;
+    }
+
+    // Used mainly for the missing-control component
+    &.mandatory-control {
+      color: mat-color($warn, 500);
+    }
   }
 }

@@ -19,12 +19,12 @@ describe('Test availableTerritories pure function', () => {
         to: new Date('01/01/2030')
       },
       medias: ['theatrical'],
-      territories: ['france', 'germany','greece'],
+      territories: ['france', 'germany', 'greece'],
       exclusive: true
     });
 
-    const selected = toTerritoryMarker('germany', 'MandateA', [mandate], term);
-    const sold = toTerritoryMarker('greece', 'MandateA', [mandate], term);
+    const selected = toTerritoryMarker('germany', [mandate], term);
+    const sold = toTerritoryMarker('greece', [mandate], term);
     const available = availableTerritories([selected], [sold], [], availDetailsExclusive, [mandate], [term]);
 
     expect(available.length).toBe(1);
@@ -50,7 +50,7 @@ describe('Test availableTerritories pure function', () => {
       exclusive: true
     });
 
-    const selected = toTerritoryMarker('france', 'MandateA', [mandate], term);
+    const selected = toTerritoryMarker('france', [mandate], term);
     const available = availableTerritories([selected], [], [], availDetailsExclusive, [mandate], [term]);
 
     expect(available.length).toBe(0);
@@ -205,6 +205,70 @@ describe('Test availableTerritories pure function', () => {
 
     const mandateTerms = getMandateTerms(availDetailsNonExclusive, [termA, termB, termC, termD]);
     expect(mandateTerms.length).toBe(3);
+  });
+
+  it('Test available territories with two non-exlusives mandates on same scope', () => {
+    const mandateA = createMandate({
+      id: 'MandateA',
+      termIds: ['termA'],
+    });
+
+    const termA = createTerm({
+      id: 'termA',
+      contractId: mandateA.id,
+      duration: {
+        from: new Date('01/01/2020'),
+        to: new Date('01/01/2030')
+      },
+      medias: ['theatrical'],
+      territories: ['france', 'germany'],
+      exclusive: false
+    });
+
+    const mandateB = createMandate({
+      id: 'MandateB',
+      termIds: ['termB'],
+    });
+
+    const termB = createTerm({
+      id: 'termB',
+      contractId: mandateB.id,
+      duration: {
+        from: new Date('01/01/2020'),
+        to: new Date('01/01/2030')
+      },
+      medias: ['theatrical'],
+      territories: ['france', 'germany', 'greece'],
+      exclusive: false
+    });
+
+    const available = availableTerritories([], [], [], availDetailsExclusive, [mandateA, mandateB], [termA, termB]);
+
+    expect(available.length).toBe(5);
+    // @TODO #5760 may need update if we choose to return only one marker per territory
+    expect(available.filter(a => a.slug === 'france').length).toEqual(2);
+    expect(available.filter(a => a.slug === 'greece').length).toEqual(1);
+  });
+
+  it('Territory marker should contain good contract', () => {
+    const mandateA = createMandate({ id: 'MandateA', termIds: ['termA'] });
+    const mandateB = createMandate({ id: 'MandateB', termIds: ['termB'] });
+
+    const termA = createTerm({
+      id: 'termA',
+      contractId: mandateA.id,
+      territories: ['france', 'germany'],
+      exclusive: false
+    });
+
+    const selectedA = toTerritoryMarker('france', [mandateA, mandateB], termA);
+    expect(selectedA.contract.id).toEqual(mandateA.id);
+
+    const selectedB = toTerritoryMarker('germany', [mandateA, mandateB], termA);
+    expect(selectedB.contract.id).toEqual(mandateA.id);
+
+    const selectedC = toTerritoryMarker('france', [mandateB], termA);
+    expect(selectedC.contract).toBeUndefined();
   });
 })
 

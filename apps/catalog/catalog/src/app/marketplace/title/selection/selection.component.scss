@@ -9,7 +9,12 @@
 }
 section {
   margin: 24px;
+
 }
+.ellipsis {
+  max-width: 400px;
+}
+
 .contract {
   padding: 24px;
   margin-bottom: 72px;
@@ -17,6 +22,7 @@ section {
   img {
     max-width: 150px;
     max-height: 200px;
+    cursor: pointer;
   }
 }
 
@@ -31,4 +37,8 @@ section {
     width: 380px;
     margin: 24px 0;
   }
+}
+
+static-select {
+  width: 35%;
 }
