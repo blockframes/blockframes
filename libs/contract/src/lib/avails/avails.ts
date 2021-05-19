@@ -25,7 +25,6 @@ export interface DurationMarker {
   term?: Term<Date>,
 }
 
-
 /**
  *
  * @param avails
