@@ -144,7 +144,7 @@ describe('Test Matrix', () => {
 
     markers.push({ from: new Date('10/01/2028'), to: new Date('10/30/2028') });
 
-    let stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'avail'));
+    const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'avail'));
 
     const hoveredState = hover(1, 10, stateMatrix, createAvailCalendarState());
 
