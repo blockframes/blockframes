@@ -581,10 +581,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": ["apps/catalog/catalog-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/catalog/catalog-e2e/**/*"]
+            "lintFilePatterns": [
+              "apps/catalog/catalog-e2e/src/**/*.ts",
+              "apps/catalog/catalog-e2e/src/**/*.html"
+            ]
           }
         }
       }
@@ -844,10 +846,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": ["apps/festival/festival-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/festival/festival-e2e/**/*"]
+            "lintFilePatterns": [
+              "apps/festival/festival-e2e/src/**/*.ts",
+              "apps/festival/festival-e2e/src/**/*.html"
+            ]
           }
         }
       }
@@ -1211,10 +1215,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": ["apps/crm/crm-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/crm/crm-e2e/**/*"]
+            "lintFilePatterns": [
+              "apps/crm/crm-e2e/src/**/*.ts",
+              "apps/crm/crm-e2e/src/**/*.html"
+            ]
           }
         }
       }
@@ -1471,10 +1477,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": ["apps/financiers/financiers-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/financiers/financiers-e2e/**/*"]
+            "lintFilePatterns": [
+              "apps/financiers/financiers-e2e/src/**/*.ts",
+              "apps/financiers/financiers-e2e/src/**/*.html"
+            ]
           }
         }
       }
@@ -1659,10 +1667,9 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "tsConfig": ["apps/rules/tsconfig.app.json", "apps/rules/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": ["apps/rules/src/**/*.ts", "apps/rules/src/**/*.html"]
           }
         },
         "test": {
