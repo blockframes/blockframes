@@ -6,6 +6,7 @@ export type SelectionState = 'waiting' | 'started' | 'selected';
 
 export const calendarColumns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 export const calendarRows = Array(10).fill(0).map((_, i) => new Date().getFullYear() + i); // [ 2021, 2022, ... 2030 ]
+
 export interface MatrixPosition {
   row: number;
   column: number;
@@ -13,16 +14,12 @@ export interface MatrixPosition {
 
 export interface AvailCalendarState {
   selectionState: SelectionState;
-
   hoverColumn: number;
   hoverRow: number;
-
   hoverStart: MatrixPosition;
   hoverEnd: MatrixPosition;
-
   start: MatrixPosition;
   end: MatrixPosition;
-
   highlightedRange: boolean[][];
 }
 
