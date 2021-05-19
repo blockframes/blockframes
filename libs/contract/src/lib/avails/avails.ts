@@ -93,7 +93,7 @@ export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
     // If both of them are false, its available
     if (!avails.exclusive && !term.exclusive) continue;
 
-    // In case of non-required territories (e.g. map in Avails tab), there is no need to check them. 
+    // In case of non-required territories (e.g. map in Avails tab), there is no need to check the territories. 
     if (!!avails.territories.length) {
       // If none of the avails territories are in the term, its available
       if (!term.territories.some(t => avails.territories.includes(t))) continue;
@@ -104,10 +104,12 @@ export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
       if (!term.medias.some(m => avails.medias.includes(m))) continue;
     }
 
-    if (!avails.duration.from || !avails.duration.to) continue;
-    if (avails.duration.to.getTime() < term.duration.from.getTime()) continue
-    if (avails.duration.from.getTime() > term.duration.to.getTime()) continue;
-    // if time is the same, its sold.
+    // If duration is non-required (e.g. calendar on Avails tab), there is no need to check the duration.
+    if (avails.duration.from && avails.duration.to) {
+      if (avails.duration.to.getTime() < term.duration.from.getTime()) continue
+      if (avails.duration.from.getTime() > term.duration.to.getTime()) continue;
+      // if time is the same, its sold.
+    }
 
     result.push(term);
   }
