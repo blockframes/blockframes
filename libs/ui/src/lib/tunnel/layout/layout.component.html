@@ -1,5 +1,5 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
-  <ng-container *ngIf="ltMd$ | async">
+  <ng-container *ngIf="(mode$ | async) === 'over'">
     <button mat-icon-button (click)="sidenav.toggle()">
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
@@ -12,9 +12,11 @@
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <mat-sidenav #sidenav [opened]="!(ltMd$ | async)" [mode]="(ltMd$ | async) ? 'over' : 'side'">
-    <ng-content select="aside"></ng-content>
-  </mat-sidenav>
+  <ng-container *ngIf="mode$ | async as mode">
+    <mat-sidenav #sidenav [opened]="mode === 'over'" [mode]="mode">
+      <ng-content select="aside"></ng-content>
+    </mat-sidenav>
+  </ng-container>
 
   <mat-sidenav-content tunnelSpecificities>
     <!-- Skip to next -->

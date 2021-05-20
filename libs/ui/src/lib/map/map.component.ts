@@ -19,7 +19,7 @@ import { startWith, switchMap, map } from 'rxjs/operators';
 @Directive({
   selector: 'map-feature, [mapFeature]'
 })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line
 export class MapFeature {
 
   state$ = new BehaviorSubject<PathOptions>({});
@@ -49,8 +49,11 @@ export class MapFeature {
   get tag(): string {
     return this.tag$.getValue();
   }
+  // eslint-disable-next-line
   @Output() mouseover = new EventEmitter();
+  // eslint-disable-next-line
   @Output() mouseout = new EventEmitter();
+  // eslint-disable-next-line
   @Output() click = new EventEmitter();
 }
 
@@ -65,6 +68,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   layers: Record<string, Path> = {};
 
   @Input() featureTag = 'iso_a3';
+  // eslint-disable-next-line
   @Output() select = new EventEmitter();
   @ContentChildren(MapFeature, { descendants: true }) features: QueryList<MapFeature>
 
@@ -90,12 +94,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         // Reset all previous tags
         tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle(this.setStyle()));
         // Listen on changes of color & tag
-        return combineLatest(features.map(f => combineLatest([f.state$, f.tag$]).pipe(map(_ => f))))
+        return combineLatest(features.map(f => combineLatest([f.state$, f.tag$]).pipe(map(() => f))))
       })
     ).subscribe((features: MapFeature[]) => {
       // Add new style
       features.forEach(({ state, tag }) => {
-        if (!!this.layers[tag]) {
+        if (this.layers[tag]) {
           this.layers[tag].setStyle(state);
         }
       });
@@ -124,21 +128,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     })
     this.layers[feature.properties[this.featureTag]] = layer;
     layer.on({
-      mouseover: ({ target }) => {
+      mouseover: () => {
         const el = getFeature();
-        if (!!el) {
+        if (el) {
           el.mouseover.emit(feature.properties)
         }
       },
       mouseout: () => {
         const el = getFeature();
-        if (!!el) {
+        if (el) {
           el.mouseout.emit(feature.properties)
         }
       },
       click: () => {
         const el = getFeature();
-        !!el
+        el
           ? el.click.emit(feature.properties)
           : this.select.emit(feature.properties);
       }

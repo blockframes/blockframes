@@ -64,6 +64,7 @@ function getStepSnapshot(steps: TunnelStep[], url: string): TunnelStepSnapshot {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   animations: [fade, routeAnimation],
+  // eslint-disable-next-line
   host: {
     'class': 'tunnel-layout',
     '[@fade]': 'fade'
@@ -76,11 +77,13 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   public currentStep: TunnelStepSnapshot;
   public next: RouteDescription;
   public previous: RouteDescription;
-  public ltMd$ = this.breakpointsService.ltMd;
+  public mode$ = this.breakpointsService.ltMd.pipe(
+    map(ltMd => ltMd ? 'over' : 'side')
+  );
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
 
-  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<any>
+  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<unknown>
 
   @Input() steps: TunnelStep[];
 
@@ -88,12 +91,11 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   @Input() exitRedirect: string;
 
   private routeBeforeTunnel: string;
+  private sub: Subscription;
 
-  async redirect() {
+  redirect() {
     this.router.navigate([this.routeBeforeTunnel], { relativeTo: this.route });
   }
-
-  private sub: Subscription;
 
   constructor(
     private routerQuery: RouterQuery,
@@ -140,9 +142,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     return this.configs[name]?.form;
   }
 
-
   confirmExit() {
-    const isPristine = Object.values(this.configs).every((config: any) => config.form.pristine);
+    const isPristine = Object.values(this.configs).every(config => config.form.pristine);
     if (isPristine) {
       return of(true);
     }
@@ -164,7 +165,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   async update(options: FormSaveOptions) {
     if (options.publishing) {
       for (const name in this.configs) {
-        const form = this.getForm(name as any);
+        const form = this.getForm(name as keyof ShellConfig);
         if (form.invalid) {
           const fields = findInvalidControls(form);
           throw new Error(`Form "${name}" should be valid before publishing.Invalid fields are: ${fields.join()} `);

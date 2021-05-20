@@ -49,7 +49,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Input() withoutValues: string[] = []
   // The parent form to connect to
   @Input()
-  get form(): FormList<any> { return this._form }
+  get form(): FormList<unknown> { return this._form }
   set form(form) {
     this._form = form
     this.values$ = form.valueChanges.pipe(startWith(this.form.value));
@@ -63,11 +63,11 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   public ctrl = new FormControl();
 
   public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public filteredItems$: Observable<any[]>;
-  public values$: Observable<any[]>;
+  public filteredItems$: Observable<unknown[]>;
+  public values$: Observable<unknown[]>;
   private sub: Subscription;
 
-  private items: any[];
+  private items: string[];
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('chipList') chipList: MatChipList;
 

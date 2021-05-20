@@ -12,7 +12,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 export class PreviewModalComponent {
 
   @Input() ref: StorageFile;
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
 
   constructor(
     private dialog: MatDialog,
