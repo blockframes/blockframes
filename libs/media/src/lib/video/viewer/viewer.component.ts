@@ -12,7 +12,7 @@ import { BehaviorSubject } from "rxjs";
 import { toggleFullScreen  } from '../../file/viewers/utils';
 import { StorageVideo } from "@blockframes/media/+state/media.firestore";
 
-declare const jwplayer: unknown;
+declare const jwplayer: any;
 
 @Component({
   // ! Warning if you change the selector, be sure to also change it in the .scss
@@ -27,7 +27,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container') playerContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;
 
-  private player: unknown;
+  private player: typeof jwplayer;
   private timeout: number;
 
   private signalPlayerReady: () => void;

@@ -174,7 +174,8 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     // Hack around cypress issue with Files and events,
     // See https://github.com/cypress-io/cypress/issues/3613
     if (!(this.file instanceof File)) {
-      // eslint-disable-next-line
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.file.__proto__ = new File([], fileType);
     }
 

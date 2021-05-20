@@ -101,7 +101,7 @@ export class ImageDirective implements OnInit, OnDestroy {
     );
 
 
-    const obs$: Observable<unknown>[] = [this.asset$, this.parameters, theme$, this.ref$]
+    const obs$: Observable<any>[] = [this.asset$, this.parameters, theme$, this.ref$]
 
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
