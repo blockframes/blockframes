@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
@@ -10,17 +10,17 @@ import { OrganizationQuery, OrganizationService } from '@blockframes/organizatio
 
 @Directive({
   selector: 'wishlist-add-text [wishlistAddText]',
-  host: { class: 'wishlist-add-text' }
 })
-// tslint:disable-next-line: directive-class-suffix
-export class WishlistAddText { }
+export class WishlistAddTextDirective {
+  @HostBinding('host') class = 'wishlist-add-text';
+}
 
 @Directive({
   selector: 'wishlist-remove-text [wishlistRemoveText]',
-  host: { class: 'wishlist-remove-text' }
 })
-// tslint:disable-next-line: directive-class-suffix
-export class WishlistRemoveText { }
+export class WishlistRemoveTextDirective {
+  @HostBinding('host') class = 'wishlist-remove-text';
+}
 
 @Component({
   selector: '[movieId] wishlist-button',
