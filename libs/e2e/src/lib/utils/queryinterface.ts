@@ -1,8 +1,7 @@
-
 export interface QueryInferface {
   exist?: boolean;
   index?: number;
   key?: string;
-  value?: any;
+  value?;
   limit?: number;
 }

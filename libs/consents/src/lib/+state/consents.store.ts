@@ -4,7 +4,6 @@ import { Access } from './consents.firestore';
 
 export interface ConsentsState extends EntityState<Access<Date>, string>, ActiveState<string> {}
 
-const initialState: ConsentsState = { active: null };
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'consents' })
 export class ConsentsStore extends EntityStore<ConsentsState> {
