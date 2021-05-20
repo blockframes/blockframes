@@ -126,7 +126,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     }
   }
 
-  @Output() change = new EventEmitter()
+  @Output() timeChange = new EventEmitter()
 
   get empty() {
     const {value: {day, time}} = this.form;
@@ -160,7 +160,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     }
   }
 
-  onChange = (value: Date) => {};
+  onChange: (value: Date) => void = () => {};
   onTouched = () => {};
 
   ngOnDestroy() {
@@ -201,7 +201,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   setDate() {
     const value = createDate(this.form.getRawValue());
     this.onChange(value)
-    this.change.emit(value);
+    this.timeChange.emit(value);
   }
 
 }

@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const titles$ = this.allMoviesFromOrg$.pipe(
       map(movies => movies.filter(movie => movie.app[this.app].status === 'accepted')),
       tap(movies => {
-        !!movies.length ?
+        movies.length ?
           this.dynTitle.setPageTitle('Dashboard') :
           this.dynTitle.setPageTitle('Dashboard', 'Empty');
       }),
