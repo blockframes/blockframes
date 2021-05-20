@@ -1,5 +1,10 @@
 import { ElementRef } from "@angular/core";
 
+interface WebkitElement extends Element {
+  webkitRequestFullscreen();
+  webkitExitFullscreen();
+}
+
 /** Toggle the full screen mode depending on the current full screen state */
 export function toggleFullScreen(container: ElementRef<HTMLDivElement>, document: Document, fullScreen: boolean) {
 
@@ -9,7 +14,7 @@ export function toggleFullScreen(container: ElementRef<HTMLDivElement>, document
 
       // Safari Browser
     } else {
-      (container.nativeElement as any).webkitRequestFullscreen();
+      (container.nativeElement as unknown as WebkitElement).webkitRequestFullscreen();
     }
   } else {
     if (document.exitFullscreen) {
@@ -17,7 +22,7 @@ export function toggleFullScreen(container: ElementRef<HTMLDivElement>, document
 
       // Safari Browser
     } else {
-      (document as any).webkitExitFullscreen();
+      (document as unknown as WebkitElement).webkitExitFullscreen();
     }
   }
 }

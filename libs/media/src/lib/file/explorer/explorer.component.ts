@@ -105,7 +105,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     }
   }
 
-  keepOrder(...args) { return 0; }
+  keepOrder = () => 0;
 
   setPath(path: string) {
     this.path$.next(path);

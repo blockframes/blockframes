@@ -26,7 +26,7 @@ export class ReferencePipe implements PipeTransform {
       type: Type,
       key: keyof ReferencePath[Type]
   ): string {
-    const getRef = referencesPaths[type][key] as any;
-    return getRef(docId)
+    const getRef = referencesPaths[type as string][key];
+    return getRef(docId);
   }
 }
