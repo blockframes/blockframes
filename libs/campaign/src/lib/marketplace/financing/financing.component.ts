@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { formatCurrency, formatPercent } from '@angular/common';
-import { Budget, Campaign, CampaignQuery, CampaignService, Funding } from '../../+state';
+import { Budget, Campaign, CampaignService, Funding } from '../../+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';

@@ -62,7 +62,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     private uploaderService: FileUploaderService,
   ) { }
 
-  onInit(): Observable<any>[] {
+  onInit(): Observable<unknown>[] {
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
