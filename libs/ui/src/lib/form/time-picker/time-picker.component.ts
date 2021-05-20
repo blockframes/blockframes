@@ -23,7 +23,7 @@ function getTime(date: Date): string {
 const hours = (new Array(24)).fill('').map((_, i) => {
   const h = i < 10 ? `0${i}` : i;
   return [`${h}:00`, `${h}:30`];
-}).flat()
+}).flat();
 
 @Component({
   selector: 'time-picker',
