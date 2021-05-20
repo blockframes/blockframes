@@ -6,6 +6,8 @@ import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
+import { InvitationDocument } from './invitation.firestore';
+import { Invitation } from './invitation.model';
 
 describe('Invitations Test Suite', () => {
   let service: InvitationService;
@@ -44,7 +46,7 @@ describe('Invitations Test Suite', () => {
   it('Formats invitation from firestore', () => {
     const is = TestBed.inject(InvitationService);
     is.formatFromFirestore = jest.fn();
-    is.formatFromFirestore({} as any);
+    is.formatFromFirestore({} as InvitationDocument);
     expect(is.formatFromFirestore).toHaveBeenCalled();
     // TODO: issue#3415 test the output value
   });
@@ -52,7 +54,7 @@ describe('Invitations Test Suite', () => {
   it('Formats invitation to firestore', () => {
     const is = TestBed.inject(InvitationService);
     is.formatToFirestore = jest.fn();
-    is.formatToFirestore({} as any);
+    is.formatToFirestore({} as Invitation);
     expect(is.formatToFirestore).toHaveBeenCalled();
     // TODO: issue#3415 test the output value
   });
@@ -67,7 +69,7 @@ describe('Invitations Test Suite', () => {
       date: new Date()
     });
     const doc = await db.doc('invitations/1').ref.get();
-    expect((doc.data() as any).status).toBe('accepted');
+    expect((doc.data() as InvitationDocument).status).toBe('accepted');
   });
 
   it('Should invitation status become declined', async () => {
@@ -80,7 +82,7 @@ describe('Invitations Test Suite', () => {
       date: new Date()
     });
     const doc = await db.doc('invitations/2').ref.get();
-    expect((doc.data() as any).status).toBe('declined');
+    expect((doc.data() as InvitationDocument).status).toBe('declined');
   });
 
   // TODO: issue#3415 implements tests for others functions

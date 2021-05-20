@@ -14,7 +14,7 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class FormChipsAutocompleteComponent<T, O> implements OnInit {
   options$ = new BehaviorSubject(null);
-  @Input() form?: FormList<any, T>;
+  @Input() form?: FormList<MatMultiSelectSchema<T>, T>;
   @Input() displayLabel: (option: O) => string;
   @Input() getValue: (option: O) => T;
   @Input() 
@@ -28,8 +28,6 @@ export class FormChipsAutocompleteComponent<T, O> implements OnInit {
   filteredOptions: Observable<string[]>;
   chips: T[] = [];
   control = new FormControl();
-
-  constructor() { }
 
   get schema() {
     return this.form.schema as MatMultiSelectSchema<T>;

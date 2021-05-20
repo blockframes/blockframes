@@ -16,7 +16,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
-import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';

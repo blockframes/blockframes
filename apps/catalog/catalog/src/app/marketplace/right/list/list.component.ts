@@ -1,17 +1,12 @@
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractQuery, Contract } from '@blockframes/contract/contract/+state';
+import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { ContractStatus } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface Tab {
   name: string;
   statuses?: ContractStatus[];
-}
-
-interface ContractTab {
-  name: string;
-  contracts: Contract[]
 }
 
 const contractTabs: Tab[] = [

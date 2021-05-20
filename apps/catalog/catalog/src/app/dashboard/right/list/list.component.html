@@ -1,6 +1,6 @@
 <h1>Offers & Deals</h1>
 <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-  <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All Offers</button>
+  <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === (false || null || undefined)">All Offers</button>
   <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Offers</button>
   <button mat-tab-link (click)="applyFilter('submitted')" [active]="(filter$ | async) === 'submitted'">Ongoing
     Deals</button>

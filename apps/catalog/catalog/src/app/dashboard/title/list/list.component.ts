@@ -57,7 +57,7 @@ export class TitleListComponent {
   }
 
   /* index paramter is unused because it is a default paramter from the filter javascript function */
-  filterByMovie(movie: Movie, index: number, value: any): boolean {
+  filterByMovie(movie: Movie, index: number, value): boolean {
     return value ? movie.app.catalog.status === value : true;
   }
 

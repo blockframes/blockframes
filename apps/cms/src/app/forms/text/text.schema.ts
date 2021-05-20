@@ -1,8 +1,7 @@
 import { FormControlSchema } from 'ng-form-factory';
 import { MatFormFieldSchema } from '../schema';
 
-
-export interface MatTextSchema extends FormControlSchema, MatFormFieldSchema<string> {
+export interface MatTextSchema extends FormControlSchema, MatFormFieldSchema {
   size: 'short' | 'long';
 }
 

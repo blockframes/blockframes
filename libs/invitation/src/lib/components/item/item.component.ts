@@ -21,7 +21,7 @@ export class ItemComponent {
 
   @Input() set invitation(invitation: Invitation) {
     this._invitation = invitation;
-    if (!!invitation.fromUser) {
+    if (invitation.fromUser) {
       this.fromUser.value = invitation.fromUser;
 
       if (!invitation.fromUser.orgId) return;
@@ -29,7 +29,7 @@ export class ItemComponent {
         this.fromOrg.value = org
       })
 
-    } else if (!!invitation.fromOrg) {
+    } else if (invitation.fromOrg) {
       this.fromOrg.value = invitation.fromOrg
 
       if (invitation.type === 'attendEvent') {
@@ -49,7 +49,7 @@ export class ItemComponent {
 
   fromOrg = new BehaviorStore<PublicOrganization>(undefined);
   fromUser = new BehaviorStore<PublicUser>(undefined);
-  eventType: string = 'screening';
+  eventType = 'screening';
 
   constructor(
     private invitationService: InvitationService,
@@ -60,6 +60,7 @@ export class ItemComponent {
   ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (window.Cypress) {
       const host = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port: ' '}`;

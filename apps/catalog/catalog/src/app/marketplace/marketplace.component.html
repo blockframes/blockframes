@@ -39,7 +39,7 @@
     <a mat-icon-button routerLink="selection">
       <mat-icon svgIcon="shopping_basket"
         [matBadge]="contractCount$ | async"
-        [matBadgeHidden]="!(contractCount$ | async)"
+        [matBadgeHidden]="(contractCount$ | async) === (false || null || undefined)"
         matBadgeColor="accent"
         matBadgeSize="small">
       </mat-icon>
