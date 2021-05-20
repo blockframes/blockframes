@@ -7,7 +7,7 @@ import type { firestore, storage } from "firebase-admin";
 
 export async function healthCheck() {
   // tslint:disable-next-line: no-shadowed-variable
-  const { db, auth, storage, getCI } = loadAdminServices();
+  const { db, storage, getCI } = loadAdminServices();
   // * Do we have storage CRUD access to our own storage backup bucket?
   const backupStorageAccess = await checkBackupBucketAccess(storage)
   console.log(`Local Backup Bucket - CREATE FILE: ${backupStorageAccess.create ? 'ALLOW' : 'DENY'}`)
@@ -56,12 +56,12 @@ async function checkCIStorageBackupBucketAccess(gcs: storage.Storage) {
     const [files] = await bucket.getFiles()
     list = true
     file = files.pop().name;
-  } catch (e) { }
+  } catch (e) { void 0 }
 
   try {
     await bucket.file(file).download()
     get = true;
-  } catch (e) { }
+  } catch (e) { void 0 }
 
   return { list, get }
 }
@@ -86,13 +86,13 @@ async function checkBackupBucketAccess(gcs: storage.Storage) {
     get = true;
     await bucket.file(fileName).delete().catch()
     del = true;
-  } catch (e) { }
+  } catch (e) { void 0 }
 
   try {
     bucket = await getBackupBucket(gcs)
     await bucket.getFiles()
     list = true
-  } catch (e) { }
+  } catch (e) { void 0 }
 
   return { create, list, del, get }
 }
@@ -107,7 +107,7 @@ function checkDiskWriteAccess() {
     write = true;
     readFileSync(filePath, 'utf-8')
     read = true;
-  } catch (e) { }
+  } catch (e) { void 0 }
 
   unlinkSync(filePath)
 
@@ -122,12 +122,12 @@ async function checkCIBucketAccess(gcs: storage.Storage) {
   try {
     await bucket.file(latestAnonDbFilename).download()
     get = true;
-  } catch (e) { }
+  } catch (e) { void 0 }
 
   try {
     await bucket.getFiles()
     list = true
-  } catch (e) { }
+  } catch (e) { void 0 }
 
   return { list, get }
 }

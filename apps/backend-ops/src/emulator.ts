@@ -43,7 +43,7 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
-    await new Promise(() => { });
+    await new Promise(() => { void 0; });
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;
@@ -65,7 +65,7 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(emulatorPath);
-    await new Promise(() => { });
+    await new Promise(() => { void 0; });
   } catch (e) {
     await shutdownEmulator(proc)
     throw e;
@@ -150,8 +150,6 @@ export async function anonymizeLatestProdDb() {
   const proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
   try {
     await anonDbProcess();
-  } catch (e) {
-    throw e;
   } finally {
     await shutdownEmulator(proc, defaultEmulatorBackupPath);
   }
@@ -185,8 +183,6 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
     proc = await startFirestoreEmulatorWithImport(emulatorPath);
     const db = connectEmulator();
     startMaintenance(db);
-  } catch (e) {
-    throw e;
   } finally {
     await shutdownEmulator(proc);
   }
