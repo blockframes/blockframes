@@ -34,7 +34,7 @@ export class TitleListComponent {
   initialColumns = ['title.international', 'release.year', 'directors', 'views', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
   titles$: Observable<Movie[]>;
   filter = new FormControl();
-  filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
     map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
     map(movies => movies.filter(m => m.app.catalog.access)),
