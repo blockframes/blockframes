@@ -25,7 +25,7 @@ export class AvailsCalendarComponent implements OnInit {
   public columns = calendarColumns;
   public rows = calendarRows;
 
-  public stateMatrix: CellState[][] = this.rows.map(_ => this.columns.map(__ => 'empty'));
+  public stateMatrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
 
   public state$ = new BehaviorSubject<AvailCalendarState>(createAvailCalendarState());
 
@@ -41,7 +41,7 @@ export class AvailsCalendarComponent implements OnInit {
 
   ngOnInit() {
     const state = this.state$.getValue();
-    state.highlightedRange = this.rows.map(_ => this.columns.map(__ => false));
+    state.highlightedRange = this.rows.map(() => this.columns.map(() => false));
 
     this.state$.next(state);
   }

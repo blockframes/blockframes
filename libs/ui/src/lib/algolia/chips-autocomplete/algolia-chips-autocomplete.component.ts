@@ -11,7 +11,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 const Separators = {
   [COMMA]: ',',
   [SEMICOLON]: ';',
-  [SPACE]: ' \+'
+  [SPACE]: ` \+`
 };
 
 function splitValue(value: string, keycodes: number[]) {
@@ -29,8 +29,8 @@ function splitValue(value: string, keycodes: number[]) {
 export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
-  public algoliaSearchResults$: Observable<any[]>;
-  public values$: Observable<any[]>;
+  public algoliaSearchResults$: Observable<unknown[]>;
+  public values$: Observable<unknown[]>;
   private sub: Subscription;
   private addedFilters: string[] = [];
 
@@ -56,7 +56,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
    */
   @Input() facet: string;
 
-  @Input() form: FormList<any>;
+  @Input() form: FormList<unknown>;
 
   /** Set your own labe */
   @Input() label = 'Search...'
@@ -87,7 +87,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Input() @boolean customInput = false;
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  @ContentChild(TemplateRef) template: TemplateRef<unknown>;
 
   constructor(private algoliaService: AlgoliaService) { }
 
@@ -98,7 +98,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
       distinctUntilChanged()
     ).subscribe(isDirty => isDirty ? this.form.markAsDirty() : this.form.markAsPristine());
     // In case of facet search we know the result object will store the matched facets in the `value` field
-    if (!!this.facet?.trim()) {
+    if (this.facet?.trim()) {
       this.displayWithPath = 'value';
     }
 
@@ -113,7 +113,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
-      switchMap(text => (!!this.facet?.trim()) ? facetSearch(text) : regularSearch(text)),
+      switchMap(text => this.facet?.trim() ? facetSearch(text) : regularSearch(text)),
     );
   }
 
@@ -124,7 +124,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * @param replaceLastValue Set whether the last value in the form has to be replaced. This hides a bug caused by OnBlur adding the typed value when an autocomplete-option is selected.
    */
-  add(value: any, source: 'autocomplete' | 'input', replaceLastValue = false) {
+  add(value: unknown, source: 'autocomplete' | 'input', replaceLastValue = false) {
     if (source === 'input' && !this.customInput) return;
     if (replaceLastValue) this.form.removeAt(this.form.length - 1);
 

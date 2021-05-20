@@ -20,7 +20,7 @@ export class AuthWidgetComponent {
   theme$ = this.themeService.theme$;
   isBfAdmin = this.userService.isBlockframesAdmin(this.query.getValue().uid);
   appVersion$ = this.db.doc<IVersionDoc>(dbVersionDoc).valueChanges();
-  emulatorList = Object.entries(emulators).filter(([_, value]) => !!value).map(([key, _]) => key);
+  emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
 
   constructor(
