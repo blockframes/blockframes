@@ -1,7 +1,7 @@
 
 import { DurationMarker } from '../avails';
 
-export type CellState = 'empty' | 'avail' | 'sold';
+export type CellState = 'empty' | 'available' | 'sold';
 export type SelectionState = 'waiting' | 'started' | 'selected';
 
 export const calendarColumns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -102,14 +102,14 @@ export function isBefore(start: Readonly<MatrixPosition>, end: Readonly<MatrixPo
 
 export function isContinuous(start: Readonly<MatrixPosition>, end: Readonly<MatrixPosition>, stateMatrix: readonly CellState[][]) {
 
-  if (stateMatrix[start.row][start.column] !== 'avail') return false;
-  if (stateMatrix[end.row][end.column] !== 'avail') return false;
+  if (stateMatrix[start.row][start.column] !== 'available') return false;
+  if (stateMatrix[end.row][end.column] !== 'available') return false;
 
   if (isBefore(end, start)) return false;
 
   let result = true;
   applyToRange(start, end, stateMatrix[0].length, (row, column) => {
-    if (stateMatrix[row][column] !== 'avail') result = false;
+    if (stateMatrix[row][column] !== 'available') result = false;
   });
 
   return result;
@@ -160,7 +160,7 @@ export function hover(row: number, column: number, stateMatrix: readonly CellSta
 
   let localState = { ...state };
 
-  if (stateMatrix[row][column] === 'avail') {
+  if (stateMatrix[row][column] === 'available') {
 
     localState.hoverColumn = column;
     localState.hoverRow = row;
@@ -191,7 +191,7 @@ export function select(row: number, column: number, stateMatrix: readonly CellSt
 
   const localState = { ...state };
 
-  if (stateMatrix[row][column] !== 'avail') return localState;
+  if (stateMatrix[row][column] !== 'available') return localState;
 
   if (state.selectionState === 'waiting') {
     localState.selectionState = 'started';

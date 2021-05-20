@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { AvailsFilter, findSameTermIndex, TerritoryMarker } from '../avails/avails';
+import { AvailsFilter, DurationMarker, findSameTermIndex, TerritoryMarker } from '../avails/avails';
 import {
   Bucket,
   BucketContract,
@@ -127,7 +127,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails);
+    const termIndex = findSameTermIndex(contract.terms, avails, 'territories');
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
@@ -161,7 +161,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     if (contractIndex === -1) { return; }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails);
+    const termIndex = findSameTermIndex(contract.terms, avails, 'territories');
     if (termIndex === -1) { return; }
 
     const territories = contract.terms[termIndex].territories;
@@ -191,9 +191,51 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     if (contractIndex === -1) { return false; }
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails);
+    const termIndex = findSameTermIndex(contract.terms, avails, 'territories');
     if (termIndex === -1) { return false }
     const territories = contract.terms[termIndex].territories;
     return territories.includes(territory);
+  }
+
+  addDuration(avails: AvailsFilter, marker: DurationMarker) {
+    const { contract: mandate, term } = marker;
+    const bucket = this.value;
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
+
+    // Contract is not registered
+    if (contractIndex === -1) {
+      const bucketContract = toBucketContract(mandate, term, avails);
+      this.get('contracts').add(bucketContract);
+      this.markAsDirty();
+      this.change.next();
+      return;
+    }
+
+    const contract = bucket.contracts[contractIndex];
+    const termIndex = findSameTermIndex(contract.terms, avails, 'duration');
+    // New term
+    if (termIndex === -1) {
+      const bucketTerm = toBucketTerm(avails)
+      this.get('contracts').at(contractIndex).get('terms').add(bucketTerm);
+      this.markAsDirty();
+      this.change.next();
+    }
+  }
+
+  /**
+   * This function is based on Duration Marker
+   */
+  getFromBucket(avails: AvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
+    const { term } = marker;
+    const bucket = this.value;
+
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
+    if (contractIndex === -1) return undefined;
+
+    const contract = bucket.contracts[contractIndex];
+    const termIndex = findSameTermIndex(contract.terms, avails, 'duration');
+    if (termIndex === -1) return undefined;
+
+    return { contractIndex, termIndex };
   }
 }

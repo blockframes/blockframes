@@ -144,8 +144,8 @@ export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
 ///////////
 // utils //
 ///////////
-export function findSameTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
-  return terms.findIndex(t => isSameTerm(t, avail));
+export function findSameTermIndex(terms: BucketTerm[], avail: AvailsFilter, unrequired?: 'territories' | 'duration') {
+  return terms.findIndex(t => isSameTerm(t, avail, unrequired));
 }
 
 /**
@@ -154,10 +154,18 @@ export function findSameTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
  * @param avail
  * @returns
  */
-export function isSameTerm(term: BucketTerm, avail: AvailsFilter) {
+export function isSameTerm(term: BucketTerm, avail: AvailsFilter, unrequired?: 'territories' | 'duration') {
   if (term.exclusive !== avail.exclusive) return false;
-  if (!avail.duration?.from || term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
-  if (!avail.duration?.to || term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
+
+  if (unrequired !== 'duration') {
+    if (!avail.duration?.from || term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
+    if (!avail.duration?.to || term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
+  }
+
+  if (unrequired !== 'territories') {
+    if (!avail.territories || term.territories.length !== avail.territories.length || term.territories.some(territory => !avail.territories.includes(territory))) return false;
+  }
+
   if (!avail.medias || term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
   return true;
 }
