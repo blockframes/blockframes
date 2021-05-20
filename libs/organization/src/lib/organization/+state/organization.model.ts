@@ -15,8 +15,7 @@ export { OrganizationStatus } from '@blockframes/utils/static-model/types';
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
-export interface Organization extends OrganizationBase<Date> {
-};
+export type Organization = OrganizationBase<Date>;
 
 export interface OrganizationForm {
   name: string;
