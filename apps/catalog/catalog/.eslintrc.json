@@ -11,11 +11,11 @@
       "parserOptions": { "project": ["apps/catalog/catalog/tsconfig.*?.json"] },
       "rules": {
         "@angular-eslint/directive-selector": [
-          "warning",
+          "warn",
           { "type": "attribute", "prefix": "catalog", "style": "camelCase" }
         ],
         "@angular-eslint/component-selector": [
-          "warning",
+          "warn",
           { "type": "element", "prefix": "catalog", "style": "kebab-case" }
         ]
       }

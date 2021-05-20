@@ -11,11 +11,11 @@
       "parserOptions": { "project": ["apps/crm/crm/tsconfig.*?.json"] },
       "rules": {
         "@angular-eslint/directive-selector": [
-          "warning",
+          "warn",
           { "type": "attribute", "prefix": "crm", "style": "camelCase" }
         ],
         "@angular-eslint/component-selector": [
-          "warning",
+          "warn",
           { "type": "element", "prefix": "crm", "style": "kebab-case" }
         ]
       }
