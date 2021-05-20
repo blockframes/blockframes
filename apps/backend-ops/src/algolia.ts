@@ -12,7 +12,7 @@ import { algolia } from '@env';
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { PublicUser } from "@blockframes/user/types";
-import { App, app, getAllAppsExcept } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';
 

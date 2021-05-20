@@ -24,7 +24,7 @@ export function disableMaintenanceMode() {
 }
 
 export async function displayCredentials() {
-  let GAP: { [key: string]: any };
+  let GAP: { [key: string]: string };
   try {
     // If service account is a stringified json object
     GAP = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
