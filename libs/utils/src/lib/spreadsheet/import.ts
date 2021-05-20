@@ -1,12 +1,12 @@
 import { WorkBook, WorkSheet, utils, read}  from 'xlsx';
 
-type Matrix = any[][]; //@todo find better type
+type Matrix = unknown[][]; //@todo find better type
 
 export interface SheetTab {
   name: string;
   index: number;
-  headers: any[];
-  rows: any[][];
+  headers: unknown[];
+  rows: unknown[][];
 }
 
 export function importSpreadsheet(bytes: Uint8Array, range? :string) : SheetTab[] {
@@ -24,7 +24,7 @@ export function importSpreadsheet(bytes: Uint8Array, range? :string) : SheetTab[
     const worksheet: WorkSheet = workBook.Sheets[name];
     const rows = <Matrix>(utils.sheet_to_json(worksheet, { header: 1, range }));
     const headers = rows.shift();
-    
+
     return { name, index, headers, rows } as SheetTab;
   });
 

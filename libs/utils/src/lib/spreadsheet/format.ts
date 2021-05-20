@@ -12,7 +12,7 @@ import { createCredit, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
 import { Scope } from "../static-model/static-model";
 
-const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/;
+const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-](\d{4})$/;
 
 export function formatOriginalRelease(originalRelease: { date: string, country: string, media: string }[], state: MovieImportState) {
   return originalRelease.filter(r => !!r.date).map(r => {
@@ -25,7 +25,7 @@ export function formatOriginalRelease(originalRelease: { date: string, country: 
       date = new Date((parseInt(r.date, 10) - (25567 + 1)) * 86400 * 1000);
     }
 
-    if (!!date) {
+    if (date) {
       const originalRelease = createMovieOriginalRelease({ date });
       const country = getKeyIfExists('territories', r.country);
       if (country) {
@@ -254,14 +254,14 @@ export function formatCredits(credits: { lastName: string, firstName: string, ro
 
     if (scope && c.role) {
       const role = getKeyIfExists(scope, c.role);
-      if (!!role) {
+      if (role) {
         credit.role = role;
       }
     }
 
     if (scope && c.status) {
       const status = getKeyIfExists(scope, c.status);
-      if (!!status) {
+      if (status) {
         credit.status = status;
       }
     }
@@ -288,8 +288,8 @@ export function formatBoxOffice(boxoffice: { territory: string, unit: string, va
   return boxoffice.filter(b => b.territory).map(b => {
     const territory = getKeyIfExists('territories', b.territory);
     const unit = getKeyIfExists('unitBox', b.unit);
-    if (!!territory) {
-      if (!!unit) {
+    if (territory) {
+      if (unit) {
         const boxoffice = createBoxOffice(
           {
             unit,
@@ -323,7 +323,7 @@ export function formatBoxOffice(boxoffice: { territory: string, unit: string, va
 export function formatCertifications(certifications: string[], state: MovieImportState) {
   return certifications.filter(c => !!c).map(c => {
     const certification = getKeyIfExists('certifications', c);
-    if (!!certification) {
+    if (certification) {
       return certification;
     } else {
       state.errors.push({
@@ -341,7 +341,7 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
   return ratings.filter(r => !!r.value && !!r.country).map(r => {
     const country = getKeyIfExists('territories', r.country);
     const movieRating = createMovieRating({ value: r.value });
-    if (!!country) {
+    if (country) {
       movieRating.country = country;
       return movieRating;
     } else {
@@ -368,9 +368,9 @@ export function formatReview(reviews: { revue: string, link: string, quote: stri
 }
 
 export function formatSingleValue(value: string, scope: Scope, path: string, movie: Movie) {
-  if (!!value) {
+  if (value) {
     const key = getKeyIfExists(scope, value);
-    if (!!key) {
+    if (key) {
       const pathParts = path.split('.');
       if (pathParts.length === 1) {
         movie[pathParts[0]] = key;

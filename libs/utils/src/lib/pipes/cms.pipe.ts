@@ -24,7 +24,7 @@ function getQueryFn(section): QueryFn {
 @Pipe({ name: 'queryTitles' })
 export class HomeQueryTitlesPipe implements PipeTransform {
   constructor(private service: MovieService) {}
-  transform(section: any) {
+  transform(section: unknown) {
     if (section.query?.length) {
       return this.service.valueChanges(getQueryFn(section)).pipe(
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
@@ -40,7 +40,7 @@ export class HomeQueryTitlesPipe implements PipeTransform {
 @Pipe({ name: 'queryOrgs' })
 export class HomeQueryOrgsPipe implements PipeTransform {
   constructor(private service: OrganizationService) {}
-  transform(section: any) {
+  transform(section: unknown) {
     if (section.query?.length) {
       return this.service.valueChanges(getQueryFn(section)).pipe(
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))

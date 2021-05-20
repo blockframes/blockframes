@@ -1,6 +1,6 @@
 import { GetKeys, Scope } from './static-model';
 
-export interface StaticGroup<S extends Scope = any> {
+export interface StaticGroup<S extends Scope> {
   label: string;
   items: Extract<GetKeys<S>, string>[];
 }

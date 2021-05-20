@@ -21,7 +21,7 @@ export class DisplayNamePipe implements PipeTransform {
    */
   transform(value: Person | Person[] | string[]): string {
     if (Array.isArray(value)) {
-      return (value as any)
+      return (value as unknown)
         .map(person => typeof person === 'string' ? person : displayName(person))
         .join(', ');
     } else {

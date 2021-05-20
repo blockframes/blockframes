@@ -24,21 +24,21 @@ export function formatDocumentMetaFromFirestore(
   meta: DocumentMeta<Timestamp>
 ): DocumentMeta<Date> {
 
-  const m = { ...meta } as any;
+  const m = { ...meta } as DocumentMeta<unknown>;
 
-  if (!!meta) {
-    if (!!meta.createdAt) {
+  if (meta) {
+    if (meta.createdAt) {
       m.createdAt = meta.createdAt.toDate();
     }
 
-    if (!!meta.updatedAt) {
+    if (meta.updatedAt) {
       m.updatedAt = meta.updatedAt.toDate();
     }
 
-    if (!!meta.deletedAt) {
+    if (meta.deletedAt) {
       m.deletedAt = meta.deletedAt.toDate();
     }
   }
 
-  return m;
+  return m as DocumentMeta<Date>;
 }

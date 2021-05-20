@@ -2,8 +2,8 @@
  * @description this decorator helps you to transform a value into a boolean value.
  * @example <my-custom-html-tag autoplay></my-customhtml-tag> and in the component
  * @example @Input() @boolean autoplay = false will result into a true value
- * @param coerceFn 
- * @param afterFn 
+ * @param coerceFn
+ * @param afterFn
  */
 export function coerce<T extends { [key in P]: O } = any,
     P extends string | symbol = string | symbol,

@@ -3,7 +3,7 @@ import { Person } from './common-interfaces';
 
 export interface ErrorResultResponse {
   error: string;
-  result: any;
+  result: unknown;
 }
 
 export function titleCase(text: string) {

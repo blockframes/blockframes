@@ -15,7 +15,7 @@ export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
-export function isObject(item: any) {
+export function isObject(item: unknown) {
   return (item && typeof item === 'object' && !Array.isArray(item) && item !== null);
 }
 
@@ -73,7 +73,7 @@ export function toDate(date: firebase.firestore.Timestamp | Date): Date {
  * Get the value of an item based on a path
  * @example item = movie, key = 'budget.totalBudget'
  */
-export function getValue(item: any, key: string) {
+export function getValue(item: unknown, key: string) {
   const path = key.split('.');
   for (let i = 0; i < path.length; i++) {
     item = item?.[path[i]];
@@ -133,10 +133,10 @@ export async function delay(ms: number) {
 }
 
 
-export function downloadCsvFromJson(data: any[], fileName = 'my-file') {
-  const replacer = (_: any, value: any) => value === null ? '' : value;
+export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
+  const replacer = (_: unknown, value: unknown) => value === null ? '' : value;
   const header = Object.keys(data[0]);
-  const csv = data.map((row: any) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
+  const csv = data.map((row: unknown) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
   csv.unshift(header.join(','));
   const csvArray = csv.join('\r\n');
 
@@ -160,7 +160,7 @@ export function downloadCsvFromJson(data: any[], fileName = 'my-file') {
  * @param func the function to debounce
  * @param wait the debounce duration in ms
  */
-export function debounceFactory(func: (...params) => any, wait: number) {
+export function debounceFactory(func: (...params) => unknown, wait: number) {
   let timeout: number;
 
   return function executedFunction(...args) {
@@ -178,7 +178,7 @@ export function debounceFactory(func: (...params) => any, wait: number) {
  * Remove all undefined fields
  * @param value anything
  */
-export function removeUndefined(value: any) {
+export function removeUndefined(value: unknown) {
   if (Array.isArray(value)) {
     return value.map(removeUndefined);
   } else if (value === null) {

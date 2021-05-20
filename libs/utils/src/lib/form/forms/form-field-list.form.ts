@@ -20,7 +20,7 @@ export class FormFieldList extends FormGroup {
     return this.get('list') as FormArray;
   }
 
-  
+
   get value() {
     if (!this.isDefault(this.first.value)) {
       return [ this.first.value, ...this.list.value ]
@@ -77,8 +77,8 @@ export class FormFieldList extends FormGroup {
     } else {
       this.list.removeAt(index - 1);
     }
-  }  
-  
+  }
+
   setControl(index: number, control: AbstractControl): void {
     if (index === 0) {
       this.first.setValue(control.value);
@@ -87,22 +87,22 @@ export class FormFieldList extends FormGroup {
     }
   }
 
-  setValue(value: any[]) {
+  setValue(value: unknown[]) {
     this.first.setValue(value.shift());
     this.list.setValue(value);
   }
 
-  patchValue(value: any[]): void {
+  patchValue(value: unknown[]): void {
     this.first.patchValue(value.shift());
     this.list.patchValue(value);
   }
 
-  reset(value: any = []): void {
+  reset(value: unknown[] = []): void {
     this.first.reset(value.shift());
     this.list.reset(value);
   }
 
-  getRawValue(): any[] {
+  getRawValue(): unknown[] {
     if (!this.isDefault(this.first.value)) {
       return [ this.first.value, ...this.list.value ]
     } else {

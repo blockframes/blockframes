@@ -1,6 +1,6 @@
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
 
-export function createControlForm(value: any) {
+export function createControlForm(value: unknown) {
   if (Array.isArray(value)) {
     const controls = value.map(v => createControlForm(v));
     return new FormArray(controls);

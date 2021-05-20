@@ -6,14 +6,14 @@ import { Directive, TemplateRef, Input, NgModule } from '@angular/core'
  */
 @Directive({ selector: '[colRef]' })
 // tslint:disable-next-line: directive-class-suffix
-export class ColRef {
+export class ColRefDirective {
   /** This should be the name of the column this template will be used into. */
   @Input() colRef: string;
-  constructor(public template: TemplateRef<any>) { }
+  constructor(public template: TemplateRef<unknown>) { }
 }
 
 @NgModule({
-  exports: [ColRef],
-  declarations: [ColRef]
+  exports: [ColRefDirective],
+  declarations: [ColRefDirective]
 })
-export class ColRefModule {} 
+export class ColRefModule {}
