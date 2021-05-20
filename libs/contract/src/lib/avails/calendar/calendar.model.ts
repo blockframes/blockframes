@@ -118,7 +118,7 @@ export function isContinuous(start: Readonly<MatrixPosition>, end: Readonly<Matr
 export function resetHighlight(state: Readonly<AvailCalendarState>): AvailCalendarState {
   return {
     ...state,
-    highlightedRange: state.highlightedRange.map(highlightedRow => highlightedRow.map(_ => false)),
+    highlightedRange: state.highlightedRange.map(highlightedRow => highlightedRow.map(() => false)),
   };
 }
 
