@@ -58,8 +58,8 @@ export class TwilioService {
     this.twilioStore.upsert(local.id, local);
 
     const [ video, audio ] = await Promise.all([
-      createLocalVideoTrack().catch(e => null),
-      createLocalAudioTrack().catch(e => null)
+      createLocalVideoTrack().catch(() => null),
+      createLocalAudioTrack().catch(() => null)
     ]) as [ LocalVideoTrack | null, LocalAudioTrack | null ];
 
     // check user preference and disable tracks accordingly
@@ -98,7 +98,7 @@ export class TwilioService {
   }
 
   async connect(eventId: string) {
-    if (!!this.room) return;
+    if (this.room) return;
 
     // Get Twilio token & ensure that there is no error
     const response = await this.getToken(eventId);
@@ -114,8 +114,8 @@ export class TwilioService {
     const localTracks = this.twilioQuery.localAttendee.tracks;
 
     const tracks: (LocalVideoTrack | LocalAudioTrack)[] = [];
-    if (!!localTracks.audio) tracks.push(localTracks.audio);
-    if (!!localTracks.video) tracks.push(localTracks.video);
+    if (localTracks.audio) tracks.push(localTracks.audio);
+    if (localTracks.video) tracks.push(localTracks.video);
 
     // Connect to Twilio room and register event listeners
     this.room = await connect(token, { name: eventId, tracks });

@@ -54,7 +54,7 @@ export class CalendarWeekComponent {
   @Input() viewDate: Date = new Date();
   @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
   @Input()
-  set events(events: CalendarEvent<any>[]) {
+  set events(events: CalendarEvent<unknown>[]) {
     this.baseEvents = events || [];
     this.refresh(events || []);
   }

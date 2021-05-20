@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormList } from '@blockframes/utils/form';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { Screening } from '@blockframes/event/+state/event.firestore';
 
 @Component({
   selector: 'festival-event-list',
@@ -16,7 +17,7 @@ import { AlgoliaOrganization } from '@blockframes/utils/algolia';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  public events$: Observable<Event[]>;
+  public events$: Observable<Event<Screening>[]>;
   public searchForm = FormList.factory<AlgoliaOrganization>([]);
 
   trackById = (i: number, doc: { id: string }) => doc.id;
@@ -30,7 +31,7 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     const orgIds$ = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value));
     const query = ref => ref.where('type', '==', 'screening').where('isSecret', '==', false).orderBy('end').startAt(new Date());
-    const events$ = this.service.valueChanges(query)
+    const events$ = this.service.valueChanges(query) as Observable<Event<Screening>[]>;
 
     this.events$ = combineLatest([events$, orgIds$]).pipe(
       map(([ events, orgs ]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
@@ -40,7 +41,7 @@ export class ListComponent implements OnInit {
     )
   }
 
-  filterByOrgIds(events: Event[], orgIds: string[]) {
+  filterByOrgIds(events: Event<Screening>[], orgIds: string[]) {
     if (!orgIds.length) return events;
     return events.filter(event => orgIds.includes(event.org.id));
   }

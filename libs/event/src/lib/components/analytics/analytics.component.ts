@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, ChangeDetectorRef } from '@angular/core';;
 import { EventService } from '@blockframes/event/+state/event.service';
-import { EventAnalytics } from '@blockframes/event/+state/event.firestore';
-import { Event, EventQuery } from '@blockframes/event/+state';
+import { EventAnalytics, EventMeta } from '@blockframes/event/+state/event.firestore';
+import { Event } from '@blockframes/event/+state';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 
 const columns = {
@@ -22,7 +22,7 @@ export class EventAnalyticsComponent implements OnInit {
 
   analytics: EventAnalytics[];
 
-  @Input() event: Event<any>;
+  @Input() event: Event<EventMeta>;
 
   public columns: Record<string, string> = columns;
   public initialColumns = Object.keys(columns);
