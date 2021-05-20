@@ -59,7 +59,7 @@ export class InvitationsComponent implements OnInit {
       ...invitations.map(invitation => getHost(invitation, 'org').id),
       ...invitations.map(invitation => getGuest(invitation, 'user').orgId).filter(id => !!id)
     ]));
-    const movieIds = events.map(event => isScreening(event) ? event.meta.titleId : undefined).filter(id => !!id);
+    const movieIds = events.filter(isScreening).map(event => event.meta.titleId).filter(id => !!id);
 
     const [orgs, movies] = await Promise.all([
       this.orgService.getValue(orgIds),

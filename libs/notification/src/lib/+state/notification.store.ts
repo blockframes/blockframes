@@ -258,7 +258,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     return subject;
   }
 
-  public getPoster(id: string) {
+  public getPoster(id?: string) {
     const movie = this.movieQuery.getEntity(id);
     return movie?.poster ?? createStorageFile({
       privacy: 'public',

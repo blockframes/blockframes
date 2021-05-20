@@ -4,9 +4,7 @@ import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
-import { EventService } from '@blockframes/event/+state';
-import { Screening } from '@blockframes/event/+state/event.firestore';
-import { Event } from '@blockframes/event/+state';
+import { EventService, isScreening } from '@blockframes/event/+state';
 
 @Component({
   selector: 'admin-movies',
@@ -50,12 +48,12 @@ export class MoviesComponent implements OnInit {
 
     const [orgs, screenings] = await Promise.all([
       this.orgService.getValue(orgIds),
-      this.eventService.getValue(ref => ref.where('type', '==', 'screening'))
+      this.eventService.getValue(ref => ref.where('type', '==', 'screening')).then(screenings => screenings.filter(isScreening))
     ])
 
     this.rows = movies.map(movie => {
       const org = orgs.find(o => o.id === movie.orgIds[0]);
-      const screeningCount = screenings.filter((e: Event<Screening>) => e.meta?.titleId === movie.id).length.toString();
+      const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length.toString();
       return { org, ...movie, screeningCount };
     })
     this.cdRef.markForCheck();
