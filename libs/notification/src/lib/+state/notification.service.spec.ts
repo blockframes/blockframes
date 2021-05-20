@@ -65,7 +65,7 @@ describe('Notifications Test Suite', () => {
   it('Formats notification', () => {
     const notificationStore = TestBed.inject(NotificationStore)
     notificationStore.formatNotification = jest.fn();
-    service.formatFromFirestore({} as any);
+    service.formatFromFirestore({} as Notification);
     expect(notificationStore.formatNotification).toHaveBeenCalled();
   });
 });

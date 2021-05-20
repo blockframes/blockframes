@@ -126,10 +126,10 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
-      case 'orgAppAccessChanged':
-        const msg = !!notification.appAccess
+      case 'orgAppAccessChanged': {
+        const msg = notification.appAccess
           ? `Your organization has now access to ${appName[notification.appAccess]}`
-          : 'Your organization\'s app access have changed.'
+          : 'Your organization\'s app access have changed.';
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: msg,
@@ -137,6 +137,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`
         }
+      }
       case 'eventIsAboutToStart':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
@@ -236,7 +237,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     let subject = 'Unknown subject';
 
     // Adding user data to the notification of meeting events
-    if (!!event && event.type === 'meeting' && !!notification.organization) {
+    if (event && event.type === 'meeting' && notification.organization) {
       const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerUid}`);
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
