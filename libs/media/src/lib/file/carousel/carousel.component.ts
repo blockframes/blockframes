@@ -18,7 +18,7 @@ export class FileCarouselComponent {
   @Input() files: StorageFile[];
 
   /** Emit the file path that has been selected by the user */
-  @Output() selectedPath = new EventEmitter<string>();
+  @Output() selectPath = new EventEmitter<string>();
 
   /** Emit the new files list (array) that has been picked by the user */
   @Output() picked = new EventEmitter<string[]>();
@@ -35,7 +35,7 @@ export class FileCarouselComponent {
 
   selectFile(file: string) {
     this.selectedFile = file;
-    this.selectedPath.emit(file);
+    this.selectPath.emit(file);
   }
 
   openFileSelector() {
