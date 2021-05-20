@@ -31,14 +31,14 @@ const errorsMap: {[key in errorCodes]: SpreadsheetImportError} = {
   'no-seller-id': {
     type: 'warning',
     field: 'contract.sellerId',
-    reason: `Couldn\'t find Licensor with the provided name.`,
+    reason: `Couldn't find Licensor with the provided name.`,
     name: 'Seller ID',
     hint: 'Edit corresponding sheet field.'
   },
   'no-buyer-id': {
     type: 'warning',
     field: 'contract.buyerId',
-    reason: `Couldn\'t find Licensee with the provided name.`,
+    reason: `Couldn't find Licensee with the provided name.`,
     name: 'Buyer ID',
     hint: 'Edit corresponding sheet field.'
   },
@@ -201,7 +201,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (!buyerId) errors.push(errorsMap['no-buyer-id']);
 
       // STAKEHOLDER
-      const getStakeholders = !!_stakeholdersList ? split(_stakeholdersList).map(orgName => this.getOrgId(orgName)) : [];
+      const getStakeholders = _stakeholdersList ? split(_stakeholdersList).map(orgName => this.getOrgId(orgName)) : [];
       const stakeholders = (await Promise.all(getStakeholders)).filter(s => !!s);
       if (!stakeholders.length) errors.push(errorsMap['no-stakeholders']);
 
