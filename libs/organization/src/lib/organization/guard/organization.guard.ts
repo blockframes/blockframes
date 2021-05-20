@@ -32,8 +32,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
           return of('/auth/identity');
         } else {
           return this.service.syncActive({ id: user.orgId }).pipe(
-            // eslint-disable-next-line
-            map(_ => this.query.getActive()),
+            map(() => this.query.getActive()),
             map(org => {
               if (!org) {
                 return '/auth/identity';
