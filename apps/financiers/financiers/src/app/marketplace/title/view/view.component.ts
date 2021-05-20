@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CollectionReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
