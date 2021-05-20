@@ -79,7 +79,7 @@ export class OrganizationsComponent implements OnInit {
         country: r && r.addresses.main.country ? r.addresses.main.country : '--',
         email: r.email,
         memberCount: r.userIds.length,
-        activity: !!r.activity ? r.activity : '--',
+        activity: r.activity ? r.activity : '--',
       }
 
       for (const a of this.app) {

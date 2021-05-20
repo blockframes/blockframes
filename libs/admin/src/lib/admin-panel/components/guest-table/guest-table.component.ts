@@ -50,7 +50,7 @@ export class GuestTableComponent {
     }
   }
 
-  filterPredicateMovies(data: any, filter) {
+  filterPredicateMovies(data, filter) {
     const columnsToFilter = [
       'id',
       'org.denomination.full',

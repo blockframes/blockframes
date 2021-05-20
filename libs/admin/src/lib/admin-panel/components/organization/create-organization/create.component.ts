@@ -55,7 +55,7 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    const baseUser = !!existingSuperAdmin
+    const baseUser = existingSuperAdmin
       ? existingSuperAdmin
       : await this.authService.createUser(
         superAdminEmail,
