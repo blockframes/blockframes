@@ -87,8 +87,8 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   public allowedTypes: string[] = [];
   public types: string[] = [];
 
-  @ContentChild('onReady') onReadyTemplate: TemplateRef<any>;
-  @ContentChild('onFile') onFileTemplate: TemplateRef<any>;
+  @ContentChild('onReady') onReadyTemplate: TemplateRef<unknown>;
+  @ContentChild('onFile') onFileTemplate: TemplateRef<unknown>;
   @ViewChild('fileExplorer') fileExplorer: ElementRef<HTMLInputElement>;
 
   public state$ = new BehaviorSubject<UploadState>('waiting');
@@ -110,7 +110,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
-        if (!!media) {
+        if (media) {
           this.form.patchValue(media);
         }
       })
@@ -146,7 +146,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     if ('item' in files) { // FileList
       if (!files.item(0)) {
         this.snackBar.open('No file found', 'close', { duration: 1000 });
-        if (!!this.file) {
+        if (this.file) {
           this.state$.next('file');
         } else {
           this.state$.next('waiting');
@@ -158,7 +158,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
 
     } else if (!files) { // No files
         this.snackBar.open('No file found', 'close', { duration: 1000 });
-        if (!!this.file) {
+        if (this.file) {
           this.state$.next('file');
         } else {
           this.state$.next('waiting');
@@ -174,7 +174,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     // Hack around cypress issue with Files and events,
     // See https://github.com/cypress-io/cypress/issues/3613
     if (!(this.file instanceof File)) {
-      // @ts-ignore
+      // eslint-disable-next-line
       this.file.__proto__ = new File([], fileType);
     }
 
@@ -209,12 +209,12 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   }
 
   private computeState() {
-    if (!!this.form.get('storagePath').value) {
+    if (this.form.get('storagePath').value) {
       this.state$.next('file');
       this.fileName = this.form.get('storagePath').value;
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
-      if (!!retrieved) {
+      if (retrieved) {
         this.state$.next('ready');
         this.fileName = retrieved.fileName;
       } else {
@@ -225,7 +225,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
 
   private getExtra() {
     const extraKeys = Object.keys(this.form.value).filter(key => !['privacy', 'collection', 'docId', 'field', 'storagePath'].includes(key));
-    if (!!extraKeys.length) {
+    if (extraKeys.length) {
       const extra = {};
       for (const key of extraKeys) {
         extra[key] = this.form.value[key];

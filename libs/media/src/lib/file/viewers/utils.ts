@@ -4,7 +4,7 @@ import { ElementRef } from "@angular/core";
 export function toggleFullScreen(container: ElementRef<HTMLDivElement>, document: Document, fullScreen: boolean) {
 
   if (!fullScreen) {
-    if (!!container.nativeElement.requestFullscreen) {
+    if (container.nativeElement.requestFullscreen) {
       container.nativeElement.requestFullscreen();
 
       // Safari Browser
@@ -12,7 +12,7 @@ export function toggleFullScreen(container: ElementRef<HTMLDivElement>, document
       (container.nativeElement as any).webkitRequestFullscreen();
     }
   } else {
-    if (!!document.exitFullscreen) {
+    if (document.exitFullscreen) {
       document.exitFullscreen();
 
       // Safari Browser

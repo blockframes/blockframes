@@ -36,7 +36,7 @@ export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: bo
   return true;
 }
 
-export function isFile(object: any) {
+export function isFile(object: unknown) {
   return typeof object === 'object'
     && 'privacy' in object
     && 'collection' in object
@@ -47,7 +47,7 @@ export function isFile(object: any) {
     ;
 }
 
-export function recursivelyListFiles(document: any): StorageFile[] {
+export function recursivelyListFiles(document: unknown): StorageFile[] {
 
   if (!document) {
     return [];

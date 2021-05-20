@@ -49,7 +49,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   root$: Observable<Directory>;
   path$ = new BehaviorSubject<string>('org');
   crumbs$ = this.path$.pipe(map(getCrumbs));
-  templates: Record<string, TemplateRef<any>> = {};
+  templates: Record<string, TemplateRef<unknown>> = {};
 
   org$ = new BehaviorSubject<Organization>(undefined);
   @Input()
@@ -61,11 +61,11 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   }
 
 
-  @ViewChild('image') image?: TemplateRef<any>;
-  @ViewChild('file') file?: TemplateRef<any>;
-  @ViewChild('fileList') fileList?: TemplateRef<any>;
-  @ViewChild('imageList') imageList?: TemplateRef<any>;
-  @ViewChild('directory') directory?: TemplateRef<any>;
+  @ViewChild('image') image?: TemplateRef<unknown>;
+  @ViewChild('file') file?: TemplateRef<unknown>;
+  @ViewChild('fileList') fileList?: TemplateRef<unknown>;
+  @ViewChild('imageList') imageList?: TemplateRef<unknown>;
+  @ViewChild('directory') directory?: TemplateRef<unknown>;
 
   constructor(
     private db: AngularFirestore,
@@ -125,7 +125,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
   openView(item: Partial<StorageFile>, event: Event) {
     event.stopPropagation();
-    if (!!item) {
+    if (item) {
       this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh' });
     }
   }

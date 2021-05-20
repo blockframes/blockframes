@@ -18,7 +18,7 @@ import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
 export class FileUploaderService {
 
   private tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
-  private tasksState = new BehaviorStore<any[]>([]);
+  private tasksState = new BehaviorStore<unknown[]>([]);
 
   private queue: Record<string, UploadData[] | null> = {};
 
@@ -121,7 +121,7 @@ export class FileUploaderService {
         const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata });
 
         // clean on success
-        if (!!afTask) {
+        if (afTask) {
           afTask.task.then(() => {
             this.removeFromQueue(storagePath, upload.fileName);
           });

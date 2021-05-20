@@ -1,8 +1,7 @@
 ﻿import { TestBed } from '@angular/core/testing';
 import { MediaService } from './media.service';
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireStorage } from "@angular/fire/storage";
-import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
+import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/testing';
 import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
@@ -11,8 +10,6 @@ import { createStorageFile } from './media.firestore';
 
 describe('Media Service Test Suite', () => {
   let service: MediaService;
-  let db: AngularFirestore;
-  let storage: AngularFireStorage;
 
   const TESTDATA: UploadData = {
     file: undefined, // insert blob or file
@@ -37,8 +34,6 @@ describe('Media Service Test Suite', () => {
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
-    db = TestBed.inject(AngularFirestore);
-    storage = TestBed.inject(AngularFireStorage);
     service = TestBed.inject(MediaService);
   });
 

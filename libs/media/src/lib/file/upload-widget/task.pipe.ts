@@ -34,7 +34,7 @@ export function getTaskStateObservable(task: AngularFireUploadTask): Observable<
 export class TaskProgressPipe implements PipeTransform {
   transform(task: AngularFireUploadTask): Observable<number> {
     return task.percentageChanges().pipe(
-      catchError(err => of(0))
+      catchError(() => of(0))
     );
   }
 }

@@ -1,6 +1,6 @@
 
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { MediaService } from '../../+state/media.service';
@@ -62,7 +62,7 @@ export class PdfViewerComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    if (!!this.control) {
+    if (this.control) {
 
       // The parent passed a control in the Inputs.
       // It means that the component is a puppet (i.e. it should display the pdf as is)
