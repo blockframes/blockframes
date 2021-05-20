@@ -56,7 +56,7 @@ export class OrganizationsComponent implements OnInit {
     this.router.navigate([`/c/o/admin/panel/organization/${org.id}`]);
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'id',
       'denomination.full',
