@@ -36,7 +36,7 @@ export class MovieService extends CollectionService<MovieState> {
     super(store);
   }
 
-  formatFromFirestore(movie: any) {
+  formatFromFirestore(movie) {
     return createMovie(movie);
   }
 

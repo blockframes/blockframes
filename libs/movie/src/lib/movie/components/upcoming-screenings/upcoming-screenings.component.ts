@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
@@ -17,12 +17,10 @@ import { combineLatest, Observable } from 'rxjs';
   selector: 'movie-screening',
   templateUrl: 'upcoming-screenings.component.html',
   styleUrls: ['./upcoming-screenings.component.scss'],
-  host: {
-    class: 'dark-contrast-theme'
-  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UpcomingScreeningsComponent {
+  @HostBinding('class') class = 'dark-contrast-theme';
 
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
