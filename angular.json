@@ -327,30 +327,6 @@
         }
       }
     },
-    "financial-report": {
-      "projectType": "library",
-      "root": "libs/financial-report",
-      "sourceRoot": "libs/financial-report/src",
-      "prefix": "financial-report",
-      "architect": {
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/financial-report/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/financial-report/src/**/*.ts",
-              "libs/financial-report/src/**/*.html"
-            ]
-          }
-        }
-      }
-    },
     "admin": {
       "projectType": "library",
       "root": "libs/admin",
@@ -1217,10 +1193,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/crm/crm-e2e/src/**/*.ts",
-              "apps/crm/crm-e2e/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/crm/crm-e2e/src/**/*.ts", "apps/crm/crm-e2e/src/**/*.html"]
           }
         }
       }
