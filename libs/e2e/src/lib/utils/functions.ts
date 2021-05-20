@@ -97,13 +97,8 @@ let currentID = 0;
 export const randomID = (): string => (`${new Date().getTime()}-${currentID++}`);
 export const createFakeScript = (title: string) => cy.task('random:pdf', title);
 
-export function getTomorrowDay(date: Date) {
-  const tomorrowDay = date.getDay() === 6 ? 0 : date.getDay() + 1;
-  return tomorrowDay;
-}
-
-export interface FormOptions {
-  inputValue;
+interface FormOptions {
+  inputValue: string;
   specialIds?: string[];
   fieldHandler?<E extends HTMLElement>($formEl: JQuery<E>, key: string): [boolean, string]
 }
