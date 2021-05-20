@@ -5,8 +5,7 @@ import { setForm, serverId, testEmail } from "@blockframes/e2e/utils";
 //Test if email is sent correctly.
 const SUBJECT_DEMO = 'A demo has been requested';
 
-describe('Check spinner wait until', () => {
-  //death-pink@zjfwnf90.mailosaur.net
+describe('Demo Request Email', () => {
   const demo_contact = {
     'first-name': 'Reed',
     'last-name': 'Hastings',
@@ -45,7 +44,7 @@ describe('Check spinner wait until', () => {
     cy.mailosaurGetMessage(serverId, {
       sentTo: testEmail
     }).then(email => {
-      expect(email.subject).to.equal('A demo has been requested');
+      expect(email.subject).to.equal(SUBJECT_DEMO);
       cy.log(email.text.body);
       cy.mailosaurDeleteMessage(email.id);
     })
