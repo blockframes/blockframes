@@ -49,7 +49,7 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
     }
 
     // If terms has some territories of avails: available
-    if (!!avails.territories?.length && term.territories.every(territory => !avails.territories.includes(territory))) {
+    if (avails.territories?.length && term.territories.every(territory => !avails.territories.includes(territory))) {
       continue;
     }
 
@@ -61,7 +61,7 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
   if (avails.medias.some(media => !resultMedias.includes(media))) return [];
 
   // If more territories are selected than there are in the mandates: not available
-  if (!!avails.territories?.length) {
+  if (avails.territories?.length) {
     const resultTerritories = result.map(term => term.territories).flat();
     if (avails.territories.some(territory => !resultTerritories.includes(territory))) return [];
   }
@@ -93,12 +93,12 @@ export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
     if (!avails.exclusive && !term.exclusive) continue;
 
     // In case of non-required territories (e.g. map in Avails tab), there is no need to check the territories. 
-    if (!!avails.territories.length) {
+    if (avails.territories.length) {
       // If none of the avails territories are in the term, its available
       if (!term.territories.some(t => avails.territories.includes(t))) continue;
     };
 
-    if (!!avails.medias.length) {
+    if (avails.medias.length) {
       // If none of the avails medias are in the term, its available
       if (!term.medias.some(m => avails.medias.includes(m))) continue;
     }

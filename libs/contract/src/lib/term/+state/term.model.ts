@@ -24,7 +24,7 @@ export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
   exclusive: boolean;
   duration: Duration<T>;
   languages: Record<string, MovieLanguageSpecification>;
-  criteria: any[];
+  criteria: unknown[];
 }
 
 export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {

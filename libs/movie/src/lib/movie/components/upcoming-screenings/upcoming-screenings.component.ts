@@ -47,7 +47,7 @@ export class UpcomingScreeningsComponent {
       .startAt(new Date())
 
     this.screenings$ = this.eventService.queryByType(['screening'], q).pipe(
-      map(screenings => screenings.sort(this.sortByDate).slice(0, 5))
+      map((screenings: Event<Screening>[]) => screenings.sort(this.sortByDate).slice(0, 5))
     )
 
     this.checkInvitationStatus();
