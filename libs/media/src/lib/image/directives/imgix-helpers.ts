@@ -51,9 +51,9 @@ export function getImgSize(ref?: string) {
  */
 export function formatParameters(parameters: ImageParameters): string {
 
-  const query = Object.entries(parameters)
-    .filter(([value]) => !!value)
-    .map(([key, value]) => `${key}=${value}`)
+  const query = Object.keys(parameters)
+    .filter(key => parameters[key])
+    .map(key => `${key}=${parameters[key]}`)
     .join('&');
 
   return query;
