@@ -1,5 +1,4 @@
 ﻿import { TestBed } from '@angular/core/testing';
-import firebase from 'firebase';
 import { InvitationService } from './invitation.service';
 import { InvitationStore } from './invitation.store';
 import { AngularFireModule } from '@angular/fire';
@@ -45,7 +44,7 @@ describe('Invitations Test Suite', () => {
   it('Formats invitation from firestore', () => {
     const is = TestBed.inject(InvitationService);
     is.formatFromFirestore = jest.fn();
-    is.formatFromFirestore({ ...createInvitation(), date: new firebase.firestore.Timestamp(new Date().getTime(), 1) });
+    is.formatFromFirestore({} as InvitationDocument);
     expect(is.formatFromFirestore).toHaveBeenCalled();
     // TODO: issue#3415 test the output value
   });
