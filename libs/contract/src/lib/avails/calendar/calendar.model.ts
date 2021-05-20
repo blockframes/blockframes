@@ -3,6 +3,10 @@ import { DurationMarker } from '../avails';
 
 export type CellState = 'empty' | 'avail' | 'sold';
 export type SelectionState = 'waiting' | 'started' | 'selected';
+
+export const calendarColumns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+export const calendarRows = Array(10).fill(0).map((_, i) => new Date().getFullYear() + i); // [ 2021, 2022, ... 2030 ]
+
 export interface MatrixPosition {
   row: number;
   column: number;
@@ -10,17 +14,31 @@ export interface MatrixPosition {
 
 export interface AvailCalendarState {
   selectionState: SelectionState;
-
   hoverColumn: number;
   hoverRow: number;
-
   hoverStart: MatrixPosition;
   hoverEnd: MatrixPosition;
-
   start: MatrixPosition;
   end: MatrixPosition;
-
   highlightedRange: boolean[][];
+}
+
+export function createAvailCalendarState(params: Partial<AvailCalendarState> = {}): AvailCalendarState {
+  return {
+    selectionState: 'waiting',
+
+    hoverColumn: undefined,
+    hoverRow: undefined,
+
+    hoverStart: { row: undefined, column: undefined },
+    hoverEnd: { row: undefined, column: undefined },
+
+    start: { row: undefined, column: undefined },
+    end: { row: undefined, column: undefined },
+
+    highlightedRange: [],
+    ...params
+  }
 }
 
 /** Apply a given function to each cell of a range */
@@ -36,29 +54,29 @@ export function applyToRange(start: MatrixPosition, end: MatrixPosition, columnL
   // |-|-|-|-|-|-|-|-|  <- (optional) full-line
   // |-|-|-|-|x| | | |  <- partial-line (to end)
 
-  for (let row = start.row ; row <= end.row ; row++) {
+  for (let row = start.row; row <= end.row; row++) {
 
     // partial line: | | |x|-|-|-|x| |
     if (row === start.row && row === end.row) {
-      for (let column = start.column ; column <= end.column ; column++) {
+      for (let column = start.column; column <= end.column; column++) {
         apply(row, column);
       }
 
-    // partial line (from start): | | |x|-|-|-|-|-|
+      // partial line (from start): | | |x|-|-|-|-|-|
     } else if (row === start.row) {
-      for (let column = start.column ; column < columnLength ; column++) {
+      for (let column = start.column; column < columnLength; column++) {
         apply(row, column);
       }
 
-    // partial line (to end): |-|-|-|-|-|-|x| |
+      // partial line (to end): |-|-|-|-|-|-|x| |
     } else if (row === end.row) {
-      for (let column = 0 ; column <= end.column ; column++) {
+      for (let column = 0; column <= end.column; column++) {
         apply(row, column);
       }
 
-    // full line: |-|-|-|-|-|-|-|-|
+      // full line: |-|-|-|-|-|-|-|-|
     } else {
-      for (let column = 0 ; column < columnLength ; column++) {
+      for (let column = 0; column < columnLength; column++) {
         apply(row, column);
       }
     }
@@ -107,8 +125,8 @@ export function resetHighlight(state: Readonly<AvailCalendarState>): AvailCalend
 export function highlightRange(start: Readonly<MatrixPosition>, end: Readonly<MatrixPosition>, stateMatrix: readonly CellState[][], state: Readonly<AvailCalendarState>): AvailCalendarState {
   const localState = resetHighlight(state);
 
-  for (let row = start.row ; row <= end.row ; row++) {
-    for (let column = 0 ; column < stateMatrix[0].length ; column++) {
+  for (let row = start.row; row <= end.row; row++) {
+    for (let column = 0; column < stateMatrix[0].length; column++) {
       if (
         (row === start.row && row === end.row && column >= start.column && column <= end.column) || // same line range
         (row === start.row && row !== end.row && column >= start.column) || // multi-line start-line

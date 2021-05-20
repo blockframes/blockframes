@@ -1,12 +1,9 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-
 import { combineLatest } from 'rxjs';
-
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, availableDurations, AvailsFilter } from '@blockframes/contract/avails/avails';
-
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { filter, map, startWith } from 'rxjs/operators';
 import { Bucket } from '@blockframes/contract/bucket/+state';
