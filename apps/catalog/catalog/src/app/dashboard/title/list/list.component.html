@@ -15,7 +15,7 @@
     </header>
 
     <div mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === (false || null || undefined)">All</button>
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === (null || undefined || '')">All</button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
       <button mat-tab-link (click)="applyFilter('submitted')"
         [active]="(filter$ | async) === 'submitted'">Submitted</button>

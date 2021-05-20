@@ -1,13 +1,12 @@
 ﻿import { TestBed } from '@angular/core/testing';
-
+import firebase from 'firebase';
 import { InvitationService } from './invitation.service';
 import { InvitationStore } from './invitation.store';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
-import { InvitationDocument } from './invitation.firestore';
-import { Invitation } from './invitation.model';
+import { createInvitation, InvitationDocument } from './invitation.firestore';
 
 describe('Invitations Test Suite', () => {
   let service: InvitationService;
@@ -46,7 +45,7 @@ describe('Invitations Test Suite', () => {
   it('Formats invitation from firestore', () => {
     const is = TestBed.inject(InvitationService);
     is.formatFromFirestore = jest.fn();
-    is.formatFromFirestore({} as InvitationDocument);
+    is.formatFromFirestore({ ...createInvitation(), date: new firebase.firestore.Timestamp(new Date().getTime(), 1) });
     expect(is.formatFromFirestore).toHaveBeenCalled();
     // TODO: issue#3415 test the output value
   });
@@ -54,7 +53,7 @@ describe('Invitations Test Suite', () => {
   it('Formats invitation to firestore', () => {
     const is = TestBed.inject(InvitationService);
     is.formatToFirestore = jest.fn();
-    is.formatToFirestore({} as Invitation);
+    is.formatToFirestore(createInvitation());
     expect(is.formatToFirestore).toHaveBeenCalled();
     // TODO: issue#3415 test the output value
   });
