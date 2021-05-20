@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { EventService, Event, EventQuery } from '@blockframes/event/+state';
+import { EventService, Event, EventQuery, isScreening } from '@blockframes/event/+state';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -82,7 +82,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.sub = this.event$.subscribe(async event => {
 
       // SCREENING
-      if (event.type === 'screening') {
+      if (isScreening(event)) {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         if (!!(event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
@@ -262,13 +262,13 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   select(selectedFile: string) {
-    const event: Event<Meeting> = this.eventQuery.getActive();
+    const event: Event<Meeting> = this.eventQuery.getActive() as Event<Meeting>;
     const meta = { ...event.meta, selectedFile };
     this.service.update(event.id, { meta });
   }
 
   picked(files: string[]) {
-    const event: Event<Meeting> = this.eventQuery.getActive();
+    const event: Event<Meeting> = this.eventQuery.getActive() as Event<Meeting>;
     const meta = { ...event.meta, files };
     this.service.update(event.id, { meta })
   }

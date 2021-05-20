@@ -12,7 +12,7 @@ import { TwilioService } from '../components/meeting/+state/twilio.service';
 
 
 @Injectable({ providedIn: 'root' })
-export class EventGuard implements CanActivate, CanDeactivate<any> {
+export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
   constructor(
     private authQuery: AuthQuery,
@@ -59,7 +59,7 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
   }
 
   canDeactivate(
-    component: any,
+    component: unknown,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot

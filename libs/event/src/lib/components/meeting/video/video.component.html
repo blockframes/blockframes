@@ -1,8 +1,8 @@
 
-<video #video [ngClass]="{ hidden: !(remoteTrackState$.video | async) || !(localTrackState$.video | async), mirrored: local }"></video>
+<video #video [ngClass]="{ hidden: (remoteTrackState$.video | async) === (false || null || undefined) || (localTrackState$.video | async) === (false || null || undefined), mirrored: local }"></video>
 <audio #audio></audio>
 
-<svg *ngIf="!(remoteTrackState$.video | async) || !(localTrackState$.video | async)" viewBox="0 0 100 100">
+<svg *ngIf="(remoteTrackState$.video | async) === (false || null || undefined) || (localTrackState$.video | async) === (false || null || undefined)" viewBox="0 0 100 100">
   <circle cx="50" cy="50" r="32" />
   <text x="50" y="64" text-anchor="middle">{{userInitials}}</text>
 </svg>
@@ -10,13 +10,13 @@
 <span class="name">{{name}}</span>
 
 <div class="controls" *ngIf="!local">
-  <button mat-icon-button (click)="toggleLocalState('audio')" [disabled]="!(remoteTrackState$.audio | async)">
+  <button mat-icon-button (click)="toggleLocalState('audio')" [disabled]="(remoteTrackState$.audio | async) === (false || null || undefined)">
     <mat-icon *ngIf="localTrackState$.audio | async" svgIcon="volume_up"></mat-icon>
-    <mat-icon *ngIf="!(localTrackState$.audio | async)" svgIcon="volume_off"></mat-icon>
+    <mat-icon *ngIf="(localTrackState$.audio | async) === (false || null || undefined)" svgIcon="volume_off"></mat-icon>
   </button>
-  <button mat-icon-button (click)="toggleLocalState('video')" [disabled]="!(remoteTrackState$.video | async)">
+  <button mat-icon-button (click)="toggleLocalState('video')" [disabled]="(remoteTrackState$.video | async) === (false || null || undefined)">
     <mat-icon *ngIf="localTrackState$.video | async" svgIcon="visibility"></mat-icon>
-    <mat-icon *ngIf="!(localTrackState$.video | async)" svgIcon="visibility_off"></mat-icon>
+    <mat-icon *ngIf="(localTrackState$.video | async) === (false || null || undefined)" svgIcon="visibility_off"></mat-icon>
   </button>
 </div>
 

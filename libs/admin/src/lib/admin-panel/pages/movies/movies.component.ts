@@ -5,6 +5,8 @@ import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 import { EventService } from '@blockframes/event/+state';
+import { Screening } from '@blockframes/event/+state/event.firestore';
+import { Event } from '@blockframes/event/+state';
 
 @Component({
   selector: 'admin-movies',
@@ -53,7 +55,7 @@ export class MoviesComponent implements OnInit {
 
     this.rows = movies.map(movie => {
       const org = orgs.find(o => o.id === movie.orgIds[0]);
-      const screeningCount = screenings.filter(e => e.meta?.titleId === movie.id).length.toString();
+      const screeningCount = screenings.filter((e: Event<Screening>) => e.meta?.titleId === movie.id).length.toString();
       return { org, ...movie, screeningCount };
     })
     this.cdRef.markForCheck();

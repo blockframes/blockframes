@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { InvitationService, InvitationDetailed } from '@blockframes/invitation/+state';
 import { OrganizationService, Organization, orgName } from '@blockframes/organization/+state';
-import { EventService, Event } from '@blockframes/event/+state/';
+import { EventService, Event, isScreening } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
@@ -59,7 +59,7 @@ export class InvitationsComponent implements OnInit {
       ...invitations.map(invitation => getHost(invitation, 'org').id),
       ...invitations.map(invitation => getGuest(invitation, 'user').orgId).filter(id => !!id)
     ]));
-    const movieIds = events.map(event => event.type === 'screening' ? event.meta.titleId as string : undefined).filter(id => !!id);
+    const movieIds = events.map(event => isScreening(event) ? event.meta.titleId : undefined).filter(id => !!id);
 
     const [orgs, movies] = await Promise.all([
       this.orgService.getValue(orgIds),
@@ -71,8 +71,8 @@ export class InvitationsComponent implements OnInit {
       invitation.org = orgs.find(org => org.id === getHost(invitation, 'org').id);
       invitation.guestOrg = orgs.find(org => org.id === getGuest(invitation, 'user').orgId);
 
-      if (invitation.event.type === 'screening') {
-        const titleId = invitation.event.meta.titleId as string;
+      if (isScreening(invitation.event)) {
+        const titleId = invitation.event.meta.titleId;
         if (titleId) {
           try {
             invitation.movie = movies.find(movie => movie.id === titleId);
