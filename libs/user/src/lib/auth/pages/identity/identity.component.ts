@@ -25,7 +25,7 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent implements OnInit {
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
+  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.query.user$;
   public creating = false;
   public app: App;
@@ -76,9 +76,9 @@ export class IdentityComponent implements OnInit {
     }
 
     // Listen to changes on input email to check if there is an existing invitation
-    if (!!this.form.get('email').value) this.searchForInvitation();
+    if (this.form.get('email').value) this.searchForInvitation();
 
-    this.form.get('email').valueChanges.pipe(debounceTime(500)).subscribe(_ => {
+    this.form.get('email').valueChanges.pipe(debounceTime(500)).subscribe(() => {
       if (this.form.get('email').valid) this.searchForInvitation();
     });
   }
@@ -167,7 +167,7 @@ export class IdentityComponent implements OnInit {
       uid: credentials.user.uid
     });
 
-    if (!!this.existingOrgId) {
+    if (this.existingOrgId) {
       await this.invitationService.request(this.existingOrgId, user).to('joinOrganization');
       this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
       return this.router.navigate(['c/organization/join-congratulations']);
@@ -228,14 +228,14 @@ export class IdentityComponent implements OnInit {
       .where('type', '==', 'joinOrganization')
       .where('toUser.uid', '==', this.query.userId));
     const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
-    if (!!pendingInvitation) {
+    if (pendingInvitation) {
       // Accept the invitation from the organization.
       await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
       this.router.navigate(['/c/o']);
-    } else if (!!this.query.user.orgId) {
+    } else if (this.query.user.orgId) {
       // User already have an orgId (created from CRM)
       this.router.navigate(['/c/o']);
-    } else if (!!this.existingOrgId) {
+    } else if (this.existingOrgId) {
       // User selected an existing org, make a request to be accepted and is redirected to waiting room
       await this.invitationService.request(this.existingOrgId, this.query.user).to('joinOrganization');
       this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: this.snackbarDuration });
@@ -266,7 +266,7 @@ export class IdentityComponent implements OnInit {
 
   public async searchForInvitation() {
     const event = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value).toPromise<AlgoliaOrganization | boolean>();
-    if (!!event) {
+    if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();
       this.form.get('email').disable();

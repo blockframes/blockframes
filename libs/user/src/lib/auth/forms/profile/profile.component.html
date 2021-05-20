@@ -26,7 +26,7 @@
         <mat-label>Email Address</mat-label>
         <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
       </mat-form-field>
-      <div *ngIf="!(this.authQuery.hasVerifiedEmail$ | async)" fxLayoutAlign="start center">
+      <div *ngIf="(authQuery.hasVerifiedEmail$ | async) === (false || null || undefined)" fxLayoutAlign="start center">
         <button mat-flat-button color="accent" (click)="sendEmailVerification()" [disabled]="emailSent">{{ emailSent ? 'Email Sent' : 'Verify Email' }}</button>
       </div>
     </section>

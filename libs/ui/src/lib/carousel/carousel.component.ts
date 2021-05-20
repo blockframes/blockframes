@@ -73,7 +73,7 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
 
   ngAfterContentInit() {
     this.amount$ = this.items.changes.pipe(startWith(this.items), map(items => items.length));
-    this.itemsSub = this.items.changes.subscribe(_ => this.showForward = !!this.scrollable.measureScrollOffset('right'));
+    this.itemsSub = this.items.changes.subscribe(() => this.showForward = !!this.scrollable.measureScrollOffset('right'));
   }
 
   scrollTo(direction: 'left' | 'right') {
@@ -91,8 +91,8 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
       distinctUntilChanged(),
       startWith(direction === 'right'),
       // offset can have tiny numbers when visually it is 0 - therefore we check if the offset is small enough to hide buttons
-      map(_ => this.scrollable.measureScrollOffset(direction) > 3),
-      tap(_ => this.ngZone.run(() => this.cdr.detectChanges())))
+      map(() => this.scrollable.measureScrollOffset(direction) > 3),
+      tap(() => this.ngZone.run(() => this.cdr.detectChanges())))
   }
 
   ngOnDestroy() {

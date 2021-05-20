@@ -11,11 +11,11 @@
       "parserOptions": { "project": ["libs/media/tsconfig.*?.json"] },
       "rules": {
         "@angular-eslint/directive-selector": [
-          1,
+          "warn",
           { "type": "attribute", "prefix": "blockframes", "style": "camelCase" }
         ],
         "@angular-eslint/component-selector": [
-          1,
+          "warn",
           { "type": "element", "prefix": "blockframes", "style": "kebab-case" }
         ]
       }

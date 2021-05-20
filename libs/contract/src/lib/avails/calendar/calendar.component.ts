@@ -1,41 +1,33 @@
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs';
-
 import { DurationMarker } from '../avails';
-import { calendarAvails } from '../fixtures/calendar';
-import { AvailCalendarState, CellState, hover, markersToMatrix, reset, select } from './calendar.model';
-
-
+import {
+  AvailCalendarState,
+  calendarColumns,
+  calendarRows,
+  CellState,
+  createAvailCalendarState,
+  hover,
+  markersToMatrix,
+  reset,
+  select
+} from './calendar.model';
 
 @Component({
   selector: 'avails-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: [ './calendar.component.scss' ],
+  styleUrls: ['./calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvailsCalendarComponent implements OnInit {
 
-  public columns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  public rows = Array(10).fill(0).map((_,i) => new Date().getFullYear() + i); // [ 2021, 2022, ... 2030 ]
+  public columns = calendarColumns;
+  public rows = calendarRows;
 
-  public stateMatrix: CellState[][] = this.rows.map(_ => this.columns.map(__ => 'empty'));
+  public stateMatrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
 
-  public state$ = new BehaviorSubject<AvailCalendarState>({
-    selectionState: 'waiting',
-
-    hoverColumn: undefined,
-    hoverRow: undefined,
-
-    hoverStart: { row: undefined, column: undefined },
-    hoverEnd: { row: undefined, column: undefined },
-
-    start: { row: undefined, column: undefined },
-    end: { row: undefined, column: undefined },
-
-    highlightedRange: [],
-  });
+  public state$ = new BehaviorSubject<AvailCalendarState>(createAvailCalendarState());
 
   @Input() set availableMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
@@ -49,7 +41,7 @@ export class AvailsCalendarComponent implements OnInit {
 
   ngOnInit() {
     const state = this.state$.getValue();
-    state.highlightedRange = this.rows.map(_ => this.columns.map(__ => false));
+    state.highlightedRange = this.rows.map(() => this.columns.map(() => false));
 
     this.state$.next(state);
   }

@@ -35,7 +35,7 @@ export class OrganizationCreateComponent {
     private router: Router,
   ) { }
 
-  async emailValidator(control: AbstractControl): Promise<{ [key: string]: any } | null> {
+  async emailValidator(control: AbstractControl): Promise<{ [key: string]: unknown } | null> {
     const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', control.value));
     return (!!existingSuperAdmin && !!existingSuperAdmin.orgId) ? { taken: true } : null;
   }
@@ -55,7 +55,7 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    const baseUser = !!existingSuperAdmin
+    const baseUser = existingSuperAdmin
       ? existingSuperAdmin
       : await this.authService.createUser(
         superAdminEmail,
