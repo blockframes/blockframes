@@ -41,7 +41,7 @@ export {
   MovieReview
 } from './movie.firestore';
 
-export interface Movie extends MovieBase<Date> {}
+export type Movie = MovieBase<Date>
 
 export interface SyncMovieAnalyticsOptions {
   filterBy: (movie: Movie) => boolean

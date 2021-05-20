@@ -30,7 +30,7 @@ export class MoviesComponent implements OnInit {
     'storeConfig.status',
     'screeningCount'
   ];
-  public rows: any[] = [];
+  public rows = [];
   public exporting = new BehaviorStore(false);
 
   constructor(
@@ -63,7 +63,7 @@ export class MoviesComponent implements OnInit {
     this.router.navigate([`/c/o/admin/panel/movie/${movie.id}`])
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'id',
       'internalRef',

@@ -30,7 +30,7 @@ export class OrganizationComponent implements OnInit {
   public org: Organization;
   public orgForm: OrganizationAdminForm;
   public movies: Movie[];
-  public members: any[];
+  public members;
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
 
@@ -151,7 +151,7 @@ export class OrganizationComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
-  filterPredicateMovies(data: any, filter) {
+  filterPredicateMovies(data, filter) {
     const columnsToFilter = [
       'id',
       'internalRef',

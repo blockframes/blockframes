@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state/movie.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 
