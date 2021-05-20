@@ -35,6 +35,7 @@ export class RequestAccessGuard extends CollectionGuard<OrganizationState> {
           return of('/auth/identity');
         } else {
           return this.service.syncActive({ id: user.orgId }).pipe(
+            // eslint-disable-next-line
             map(_ => this.query.getActive()),
             map(org => {
               if (org.status === 'accepted') {
