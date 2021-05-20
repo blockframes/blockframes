@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { ConsentsService } from './consents.service';
-import { Consents } from './consents.firestore';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { clearFirestoreData, loadFirestoreRules } from '@firebase/testing';
