@@ -174,12 +174,14 @@ export class ViewExtractedContractsComponent implements OnInit {
         isExclusive,    // Ok
         durationFrom,   // Ok
         durationTo,     // Ok
-        originalLanguageLicensed,
+        //originalLanguageLicensed, ignored lint fix
+        ,
         dubbed,
         subtitle,
         closedCaptioning,
         _contractId,      // Ok
-        _parentTermId,
+        //_parentTermId,            ignored lint fix
+        ,
         _titleId,         // Ok
         _stakeholdersList, // Ok
       ] = row;
