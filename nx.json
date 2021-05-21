@@ -32,9 +32,6 @@
     "admin": {
       "tags": []
     },
-    "ethers": {
-      "tags": ["ethereum", "smart-contract"]
-    },
     "movie": {
       "tags": ["movie"]
     },
