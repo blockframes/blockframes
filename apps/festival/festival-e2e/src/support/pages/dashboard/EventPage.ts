@@ -8,7 +8,7 @@ export default class EventPage {
   }
 
   waitNewUrl() {
-    return new Cypress.Promise((resolve) => {
+    return new Cypress.Promise(resolve => {
       cy.on('url:changed', (url) => {
         resolve(url);
       })

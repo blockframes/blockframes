@@ -12,7 +12,7 @@ import { SEC } from '@blockframes/e2e/utils';
  */
 const debug_mode = false;
 
-const getStepsToSkip = (movie:any) => {
+const getStepsToSkip = (movie: Record<string, any>) => {
   if (movie.productionStatus.status5) {
     return ['Shooting Information', 'Notes & Statements'];
   }
@@ -21,7 +21,6 @@ const getStepsToSkip = (movie:any) => {
 }
 const userFixture = new User();
 const users = [ userFixture.getByUID(USER.Jean) ];
-let movieURL: string;
 
 const Movie = {
   productionStatus: {
@@ -152,7 +151,7 @@ const Movie = {
   }
 }
 
-let val:any = Movie.mainInfo;
+let val: Record<string, any> = Movie.mainInfo;
 val['info-runtime'] = `${val['run-time']} min (${val['status']})`;
 val['dir-info1'] = `${val['first-name']} ${val['last-name']} (${val['director-category']}) ${val['director-desc']}`;
 
@@ -227,6 +226,7 @@ const debugMovieId = '';
  *    Within any test call it like this: debugMovieTitle(titleId, 'summary')
  * @param id : movie doc ID
  * @param loc : tunnel path (main / summary / etc) to debug.
+ * Note : Retain the function as well as eslint override
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const debugMovieTitle = (id: string, loc: string) => {
@@ -255,8 +255,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
-      movieURL = url;
-      console.log("movie :", movieURL);
+      console.log("movie :", url);
     });
 
     const skipSteps = getStepsToSkip(Movie);
