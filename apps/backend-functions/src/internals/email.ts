@@ -44,7 +44,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<[ClientResponse, {}]> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<[ClientResponse, unknown]> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -63,7 +63,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   return send(msg);
 }
 
-async function send(msg: MailDataRequired): Promise<[ClientResponse, {}]> {
+async function send(msg: MailDataRequired): Promise<[ClientResponse, unknown]> {
   if (sendgridAPIKey === '') {
     throw new Error(emailErrorCodes.missingKey.code);
   }
