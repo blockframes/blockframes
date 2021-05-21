@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 
 type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
-type GetPartial<T> = T extends any ? Partial<T> : T;
+type GetPartial<T> = T extends Record<string, infer I> ? Partial<T> : T;
 
 /** Check form content has a value given by the user */
 function hasValue(value: any): boolean {
@@ -22,7 +22,7 @@ function hasValue(value: any): boolean {
   } else if (typeof value === 'number') {
     return true;
   } else {
-    return value
+    return !!value
   }
 }
 
@@ -51,7 +51,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   /** Get value of item that has value */
   // Error: Error: 'value' is defined as a property in class 'FormArray', but is overridden here in 'FormList<T, Control>' as an accessor.
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //  @ts-ignore
+  // @ts-ignore
   get value() {
     return this._value.filter((value: T) => hasValue(value));
   }
