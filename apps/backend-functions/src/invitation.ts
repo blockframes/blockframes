@@ -124,7 +124,7 @@ export async function onInvitationWrite(
 
 interface UserInvitation {
   emails: string[];
-  invitation: Partial<InvitationBase<any>>;
+  invitation: Partial<InvitationBase<Date>>;
   app?: App;
 }
 
@@ -132,7 +132,7 @@ interface UserInvitation {
  * Invite a list of user by email.
  * @dev this function polyfills the Promise.allSettled
  */
-export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<any> => {
+export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<ErrorResultResponse[]> => {
   const db = admin.firestore();
   return new Promise(async (res) => {
 
