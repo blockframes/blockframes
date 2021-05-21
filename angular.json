@@ -48,28 +48,6 @@
         }
       }
     },
-    "ethers": {
-      "root": "libs/ethers",
-      "sourceRoot": "libs/ethers/src",
-      "projectType": "library",
-      "prefix": "wallet",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/ethers/tsconfig.lib.json", "libs/ethers/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ethers/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "movie": {
       "root": "libs/movie",
       "sourceRoot": "libs/movie/src",
