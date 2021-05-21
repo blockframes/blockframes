@@ -13,7 +13,7 @@ import { cleanUserMedias } from './media';
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-export const startVerifyEmailFlow = async (data: any) => {
+export const startVerifyEmailFlow = async (data) => {
   const { email, app, firstName } = data;
 
   if (!email) {
@@ -29,7 +29,7 @@ export const startVerifyEmailFlow = async (data: any) => {
   }
 };
 
-export const startAccountCreationEmailFlow = async (data: any) => {
+export const startAccountCreationEmailFlow = async (data) => {
   const { email, app, firstName } = data;
 
   if (!email) {
@@ -46,7 +46,7 @@ export const startAccountCreationEmailFlow = async (data: any) => {
 
 };
 
-export const startResetPasswordEmail = async (data: any) => {
+export const startResetPasswordEmail = async (data) => {
   const { email, app } = data;
 
   if (!email) {
@@ -98,13 +98,13 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
-export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
+export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot) {
   const after = snap.data() as PublicUser;
-  if (!!after.firstName) { await sendFirstConnexionEmail(after) }
+  if (after.firstName) { await sendFirstConnexionEmail(after) }
   return true;
 }
 
-export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
+export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>)  {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
 
@@ -115,7 +115,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   await cleanUserMedias(before, after);
 
-  const promises: Promise<any>[] = [];
+  const promises = [];
 
   // if name, email, avatar or orgId has changed : update algolia record
   if (
@@ -140,9 +140,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   return Promise.all(promises);
 }
 
-export async function onUserDelete(
-  userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
-): Promise<any> {
+export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>) {
 
   const user = userSnapshot.data() as PublicUser;
 
@@ -155,7 +153,7 @@ export async function onUserDelete(
   await cleanUserMedias(user);
 
   // remove id from org array
-  if (!!user.orgId) {
+  if (user.orgId) {
     const orgRef = db.doc(`orgs/${user.orgId}`);
     const orgDoc = await orgRef.get();
     const org = orgDoc.data() as OrganizationDocument
@@ -164,7 +162,7 @@ export async function onUserDelete(
   }
 
   // remove permissions
-  if (!!user.orgId) {
+  if (user.orgId) {
     const permissionsRef = db.doc(`permissions/${user.orgId}`);
     const permissionsDoc = await permissionsRef.get();
     const permissions = permissionsDoc.data() as PermissionsDocument;
@@ -195,7 +193,7 @@ export const sendDemoRequest = async (data: RequestDemoInformations): Promise<Re
   return data;
 }
 
-export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext): Promise<any> => {
+export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext) => {
   const { subject, message, app } = data;
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }

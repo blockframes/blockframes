@@ -11,13 +11,14 @@ import { format } from "date-fns";
 import { User } from '@blockframes/user/types';
 import { createNotification, triggerNotifications } from './notification';
 import { templateIds } from './templates/ids';
+import type { Bucket } from '@blockframes/contract/bucket/+state';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
   const orgId = offer.buyerId;
   const [ org, bucket ] = await Promise.all([
     getDocument<OrganizationDocument>(`orgs/${orgId}`),
-    getDocument<any>(`buckets/${orgId}`)
+    getDocument<any | Bucket>(`buckets/${orgId}`)
   ]);
   const user = await getDocument<User>(`users/${bucket.uid}`);
 
@@ -28,7 +29,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
   for (const contract of bucket.contracts) {
     const movie = await getDocument<Movie>(`movies/${contract.titleId}`);
     contract['title'] = movie.title.international;
-    
+
     for (const term of contract.terms) {
       term.exclusive = term.exclusive ? 'Yes' : 'No';
       term.medias = term.medias.map(media => staticModel['medias'][media]);
@@ -38,7 +39,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
     }
   }
 
-  // Send copy of offer to user who created the offer 
+  // Send copy of offer to user who created the offer
   const notification = createNotification({
     toUserId: user.uid,
     type: 'offerCreatedConfirmation',

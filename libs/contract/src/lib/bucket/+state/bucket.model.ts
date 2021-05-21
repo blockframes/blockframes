@@ -3,11 +3,11 @@ import { Mandate } from '@blockframes/contract/contract/+state';
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
-import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
+import { Media, movieCurrencies, MovieCurrency, Territory } from '@blockframes/utils/static-model';
 
 export interface Bucket {
   id: string;
-  currency: MovieCurrency;
+  currency: (typeof movieCurrencies)[MovieCurrency] | MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: BucketContract[];
   specificity: string;

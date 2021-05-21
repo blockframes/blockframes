@@ -18,7 +18,7 @@ import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './envir
 
 
 // No typing
-const JWPlayerApi = require('jwplatform');
+import JWPlayerApi from 'jwplatform';
 
 interface ReadVideoParams {
 
@@ -90,7 +90,7 @@ export const getPrivateVideoUrl = async (
 
   // if we have a ref we should assert that it points to an existing file
   const { privacy, storagePath } = user.watermark;
-  if (!!user.watermark.storagePath) {
+  if (user.watermark.storagePath) {
     const file = admin.storage().bucket(bucketName).file(`${privacy}/${storagePath}`);
     [fileExists] = await file.exists();
   }
@@ -106,7 +106,7 @@ export const getPrivateVideoUrl = async (
       const unsubscribe = userRef.onSnapshot(snap => {
         const userData = snap.data() as PublicUser;
 
-        if (!!userData.watermark) {
+        if (userData.watermark) {
           unsubscribe();
           resolve(true);
         }
@@ -145,7 +145,7 @@ export const getPrivateVideoUrl = async (
   const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
   const response = await jw.videos.show({video_key: jwPlayerId});
 
-  let info: any;
+  let info;
   if (response.status === 'ok') {
     info = response.video;
   }

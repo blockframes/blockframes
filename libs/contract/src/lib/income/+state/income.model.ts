@@ -1,4 +1,4 @@
-import { MovieCurrency } from "@blockframes/utils/static-model";
+import type { Bucket } from "@blockframes/contract/bucket/+state";
 
 export interface Income {
   id: string;
@@ -7,5 +7,5 @@ export interface Income {
   /** The contract (sale in this case) that created this income */
   contractId: string;
   price: number;
-  currency: MovieCurrency;
+  currency: Bucket['currency'];
 }

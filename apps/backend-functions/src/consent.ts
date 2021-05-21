@@ -47,9 +47,9 @@ export const createConsent = async (
     });
 
     const consentSnap = await tx.get(db.doc(`consents/${consent.id}`));
-    const consentData = consentSnap.data() as any;
+    const consentData = consentSnap.data();
 
-    if (!!consentData) {
+    if (consentData) {
       consent = _createConsent(consentData);
     }
 

@@ -10,7 +10,7 @@ const queryMovieAnalytics = `
     event_name,
     event_date,
     COUNT(*) AS hits,
-    CASE 
+    CASE
       WHEN event_name = 'pageView'
       THEN REGEXP_EXTRACT(value.string_value, '.*/marketplace/title/([^/]+)/main')
       ELSE value.string_value
@@ -58,20 +58,20 @@ async function executeQueryMovieAnalytics(daysPerRange: number): Promise<MovieEv
     }
   };
 
-  return bigQueryClient.query(query) as any;
+  return await bigQueryClient.query(query) as MovieEventAnalytics[][] ;
 }
 
 /**
- * 
+ *
  */
 export async function importAnalytics() {
   const db = admin.firestore();
   const deleteBatch = db.batch();
   const setBatch = db.batch();
   const daysPerRange = 28;
-  
+
   const [rows] = await executeQueryMovieAnalytics(daysPerRange);
-  
+
   const movieAnalytics: Record<string, MovieAnalytics> = {}
   rows.forEach(row => {
     if (!movieAnalytics[row.movieId]) {
@@ -91,7 +91,7 @@ export async function importAnalytics() {
   for await (const analytics of analyticsIterator) {
     for (const analytic of analytics) {
       const ref = db.doc(`analytics/${analytic.id}`)
-      deleteBatch.delete(ref); 
+      deleteBatch.delete(ref);
     }
   }
   await deleteBatch.commit();
