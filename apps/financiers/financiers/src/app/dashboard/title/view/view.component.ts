@@ -49,9 +49,9 @@ const links: RouteDescription[] = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleViewComponent implements OnInit, OnDestroy {
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
-  private dialogRef: MatDialogRef<any, any>;
+  private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
   public campaign$: Observable<Campaign>;
   public loading$: Observable<boolean>;
