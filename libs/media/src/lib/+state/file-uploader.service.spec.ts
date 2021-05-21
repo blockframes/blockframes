@@ -2,13 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { Overlay } from '@angular/cdk/overlay';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorage } from "@angular/fire/storage";
-import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
+import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/testing';
 import { FileUploaderService } from './file-uploader.service';
 import { UploadData } from './media.model';
 
 describe('Media Service Test Suite', () => {
-  let db: AngularFirestore;
   let storage: AngularFireStorage;
   let service: FileUploaderService;
 
@@ -43,7 +42,6 @@ describe('Media Service Test Suite', () => {
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
-    db = TestBed.inject(AngularFirestore);
     storage = TestBed.inject(AngularFireStorage);
     service = TestBed.inject(FileUploaderService);
   });
