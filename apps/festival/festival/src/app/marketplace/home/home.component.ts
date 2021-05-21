@@ -16,16 +16,16 @@ import { CmsPage } from '@blockframes/admin/cms/template';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  @ViewChild('banner') banner?: TemplateRef<any>;
-  @ViewChild('hero') hero?: TemplateRef<any>;
-  @ViewChild('titles') titles?: TemplateRef<any>;
-  @ViewChild('slider') slider?: TemplateRef<any>;
-  @ViewChild('orgs') orgs?: TemplateRef<any>;
-  @ViewChild('orgTitles') orgTitles?: TemplateRef<any>;
+  @ViewChild('banner') banner?: TemplateRef<unknown>;
+  @ViewChild('hero') hero?: TemplateRef<unknown>;
+  @ViewChild('titles') titles?: TemplateRef<unknown>;
+  @ViewChild('slider') slider?: TemplateRef<unknown>;
+  @ViewChild('orgs') orgs?: TemplateRef<unknown>;
+  @ViewChild('orgTitles') orgTitles?: TemplateRef<unknown>;
 
   @HostBinding('test-id="content"') testId
   public page$: Observable<CmsPage>;
-  public templates: Record<string, TemplateRef<any>> = {};
+  public templates: Record<string, TemplateRef<unknown>> = {};
 
 
   constructor(
