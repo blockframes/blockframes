@@ -32,8 +32,8 @@ interface EmailData {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieViewComponent implements OnInit {
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
-  private dialogRef: MatDialogRef<any, any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
+  private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public campaign$: Observable<Campaign>;
