@@ -228,6 +228,7 @@ const debugMovieId = '';
  * @param id : movie doc ID
  * @param loc : tunnel path (main / summary / etc) to debug.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const debugMovieTitle = (id: string, loc: string) => {
   cy.log('Check movie:', id);
 
@@ -255,7 +256,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
       movieURL = url;
-      console.log("movie :", url);
+      console.log("movie :", movieURL);
     });
 
     const skipSteps = getStepsToSkip(Movie);
