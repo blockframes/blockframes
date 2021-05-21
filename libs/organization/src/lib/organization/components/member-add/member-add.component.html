@@ -21,7 +21,7 @@
   <p class="mat-caption text-warn" *ngIf="error"><i>{{ error }}</i></p>
 
   <div fxLayout="row" fxLayoutAlign="center">
-    <ng-container *ngIf="(isSending$ | async) === (false || null || undefined); else sendingInvitations">
+    <ng-container *ngIf="(isSending$ | async) === false; else sendingInvitations">
       <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="error || (isSending$ | async)" (click)="sendInvitations()">
         <mat-icon svgIcon="send"></mat-icon>
         <span i18n>Send invitation{ form.controls.length, plural, =0 {} =1 {} other {s} }</span>
