@@ -58,8 +58,7 @@ export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin
 }
 
 export async function copyFirestoreExportFromCiBucket() {
-  // @ts-ignore
-  if (ciBucketName === backupBucket) return;
+  if (ciBucketName as unknown === backupBucket) return;
 
   const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
   const localBucketURL = `gs://${backupBucket}/${latestAnonDbDir}`;
