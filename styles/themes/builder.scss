@@ -33,15 +33,10 @@
 
 
 @include mat.core(typography.$bf-typography);
-
-
-// COMPONENT TYPOGRAPHY : TODO: apply on setTheme
-// @include mat-bf-expansion-panel-typography($bf-typography);
-// @include mat-bf-list-typography($bf-typography);
-// @include mat-bf-button-typography($bf-typography);
-// @include mat-bf-toolbar-typography($bf-typography);
-// @include mat-bf-tooltip-typography($bf-typography);
-// @include mat-native-control($bf-typography);
+// While density is private we need to set it here to avoid duplicated themes
+@include mat.all-component-themes((
+  density: maximum
+));
 
 
 // THEME
