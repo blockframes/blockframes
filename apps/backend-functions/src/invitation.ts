@@ -146,7 +146,7 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
     // Ensure that we are not violating invitations limit
     if (invitation.type === 'attendEvent') {
       const eventId = invitation.eventId;
-      if (!!eventId) {
+      if (eventId) {
 
         const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
 
@@ -217,7 +217,7 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
     const user = userRef.docs[0].data();
 
     if (!user.firstName && !user.lastName) {
-      if (!!user.orgId) {
+      if (user.orgId) {
         // If user was created along with org in CRM (without invitation)
         const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
         return createAlgoliaOrganization(org);

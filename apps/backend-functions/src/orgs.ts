@@ -61,7 +61,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
       .where('toUser.uid', '==', userAddedId)
       .where('type', '==', 'joinOrganization')
       .where('fromOrg.id', '==', after.id).get();
-    if (!!invitationsSnapshot.docs.length) {
+    if (invitationsSnapshot.docs.length) {
       const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
       return triggerNotifications(notifications);
     }

@@ -4,7 +4,7 @@ import { logger } from 'firebase-functions';
 import { firebaseRegion } from './utils';
 
 
-if (!!sentryDsn) {
+if (sentryDsn) {
   sentryInit({ dsn: sentryDsn, environment: sentryEnv });
 }
 
@@ -36,8 +36,8 @@ export function logErrors(f: any): any {
       }
 
       // Even if sentry logger is enabled we display error into firebase console
-      if (!!err.message) {
-        const code = !!err.code ? `[${err.code}] ` : '';
+      if (err.message) {
+        const code = err.code ? `[${err.code}] ` : '';
         logger.error(`${code}${err.message}`);
       } else {
         logger.error(err);

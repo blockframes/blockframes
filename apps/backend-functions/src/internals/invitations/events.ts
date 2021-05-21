@@ -30,7 +30,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
 
   // Retreive notification recipient
   const recipients: string[] = [];
-  if (!!invitation.toUser) {
+  if (invitation.toUser) {
     /**
      * @dev We wants to send this email only if user have an orgId and a validated account. If not, this means that he already received an
      * email inviting him along with his credentials.
@@ -43,7 +43,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
     }
 
     recipients.push(invitation.toUser.uid);
-  } else if (!!invitation.toOrg) {
+  } else if (invitation.toOrg) {
     const adminIds = await getAdminIds(invitation.toOrg.id);
     const admins = await Promise.all(adminIds.map(i => getUser(i)));
     admins.forEach(a => recipients.push(a.uid));

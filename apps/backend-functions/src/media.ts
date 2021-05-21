@@ -241,7 +241,7 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
     let toSign = `${imgixToken}${encodeURI(storagePath)}`;
 
     const params = formatParameters(p);
-    if (!!params) {
+    if (params) {
       toSign = `${toSign}?${params}`;
     }
 
@@ -263,7 +263,7 @@ export const deleteMedia = async (file: StorageFile): Promise<any> => {
 
     // if the file has a jwPlayerId, we need to delete the video from JWPlayer's CDN
     // to avoid orphaned videos taking storage space
-    if (!!file.jwPlayerId) {
+    if (file.jwPlayerId) {
       const deleted = await deleteFromJWPlayer(file.jwPlayerId);
       if (!deleted.success) {
         logger.warn(`WARNING: file was delete from our system, but we failed to also delete it from JWPlayer! ${file}`);
@@ -289,17 +289,17 @@ function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] |
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
   const mediaToDelete: StorageFile[] = [];
-  if (!!after) { // Updating
+  if (after) { // Updating
     // Check if avatar have been changed/removed
     if (needsToBeCleaned(before.avatar, after.avatar)) {
       mediaToDelete.push(before.avatar);
     }
   } else { // Deleting
-    if (!!before.avatar) {
+    if (before.avatar) {
       mediaToDelete.push(before.avatar);
     }
 
-    if (!!before.watermark) {
+    if (before.watermark) {
       mediaToDelete.push(before.watermark);
     }
   }
@@ -309,7 +309,7 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
 
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
   const mediaToDelete: StorageFile[] = [];
-  if (!!after) { // Updating
+  if (after) { // Updating
     if (needsToBeCleaned(before.logo, after.logo)) {
       mediaToDelete.push(before.logo);
     }
@@ -323,7 +323,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
     }
 
   } else { // Deleting
-    if (!!before.logo) {
+    if (before.logo) {
       mediaToDelete.push(before.logo);
     }
 
@@ -338,7 +338,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
 
   const mediaToDelete: StorageFile[] = [];
-  if (!!after) { // Updating
+  if (after) { // Updating
 
     // SINGLE FILE
 
@@ -389,27 +389,27 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
   } else { // Deleting
 
-    if (!!before.banner) {
+    if (before.banner) {
       mediaToDelete.push(before.banner);
     }
 
-    if (!!before.poster) {
+    if (before.poster) {
       mediaToDelete.push(before.poster);
     }
 
-    if (!!before.promotional.presentation_deck) {
+    if (before.promotional.presentation_deck) {
       mediaToDelete.push(before.promotional.presentation_deck);
     }
 
-    if (!!before.promotional.scenario) {
+    if (before.promotional.scenario) {
       mediaToDelete.push(before.promotional.scenario);
     }
 
-    if (!!before.promotional.moodboard) {
+    if (before.promotional.moodboard) {
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (!!before.promotional.videos?.screener?.storagePath) {
+    if (before.promotional.videos?.screener?.storagePath) {
       mediaToDelete.push(before.promotional.videos.screener);
     }
 

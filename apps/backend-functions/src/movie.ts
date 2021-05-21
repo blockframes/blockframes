@@ -77,7 +77,7 @@ export async function onMovieDelete(
   const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
   contracts.docs.forEach(c => {
     const contract = c.data();
-    if (!!contract.lastVersion?.titles[movie.id]) {
+    if (contract.lastVersion?.titles[movie.id]) {
       delete contract.lastVersion.titles[movie.id];
     }
     batch.update(c.ref, contract);

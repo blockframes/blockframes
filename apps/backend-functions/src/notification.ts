@@ -279,7 +279,7 @@ async function sendReminderEmails(recipient: User, notification: NotificationDoc
 async function sendRequestToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
   const invitation = await getDocument<InvitationDocument>(`invitations/${notification.invitation.id}`);
 
-  if (!!invitation.toOrg) {
+  if (invitation.toOrg) {
     const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
     const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
     const eventData = getEventEmailData(event);
@@ -300,7 +300,7 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
 /** Send an email when an invitation to access an event is updated */
 async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
   const invitation = await getDocument<InvitationDocument>(`invitations/${notification.invitation.id}`);
-  if (!!invitation.fromOrg) {
+  if (invitation.fromOrg) {
     const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
     const eventData = getEventEmailData(event);
     const user = await getDocument<User>(`users/${notification.user.uid}`);

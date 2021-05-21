@@ -100,7 +100,7 @@ export const onUserCreate = async (user: UserRecord) => {
 
 export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const after = snap.data() as PublicUser;
-  if (!!after.firstName) { await sendFirstConnexionEmail(after) }
+  if (after.firstName) { await sendFirstConnexionEmail(after) }
   return true;
 }
 
@@ -155,7 +155,7 @@ export async function onUserDelete(
   await cleanUserMedias(user);
 
   // remove id from org array
-  if (!!user.orgId) {
+  if (user.orgId) {
     const orgRef = db.doc(`orgs/${user.orgId}`);
     const orgDoc = await orgRef.get();
     const org = orgDoc.data() as OrganizationDocument
@@ -164,7 +164,7 @@ export async function onUserDelete(
   }
 
   // remove permissions
-  if (!!user.orgId) {
+  if (user.orgId) {
     const permissionsRef = db.doc(`permissions/${user.orgId}`);
     const permissionsDoc = await permissionsRef.get();
     const permissions = permissionsDoc.data() as PermissionsDocument;

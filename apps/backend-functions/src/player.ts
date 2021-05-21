@@ -90,7 +90,7 @@ export const getPrivateVideoUrl = async (
 
   // if we have a ref we should assert that it points to an existing file
   const { privacy, storagePath } = user.watermark;
-  if (!!user.watermark.storagePath) {
+  if (user.watermark.storagePath) {
     const file = admin.storage().bucket(bucketName).file(`${privacy}/${storagePath}`);
     [fileExists] = await file.exists();
   }
@@ -106,7 +106,7 @@ export const getPrivateVideoUrl = async (
       const unsubscribe = userRef.onSnapshot(snap => {
         const userData = snap.data() as PublicUser;
 
-        if (!!userData.watermark) {
+        if (userData.watermark) {
           unsubscribe();
           resolve(true);
         }
