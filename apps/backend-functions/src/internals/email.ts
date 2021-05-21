@@ -1,4 +1,5 @@
 import SendGrid from '@sendgrid/mail';
+import { ClientResponse } from "@sendgrid/client/src/response";
 import { sendgridAPIKey } from '../environments/environment';
 import { unsubscribeGroupIds } from '../templates/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
@@ -43,7 +44,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<any> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<[ClientResponse, {}]> {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -62,7 +63,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   return send(msg);
 }
 
-async function send(msg: MailDataRequired): Promise<any> {
+async function send(msg: MailDataRequired): Promise<[ClientResponse, {}]> {
   if (sendgridAPIKey === '') {
     throw new Error(emailErrorCodes.missingKey.code);
   }
