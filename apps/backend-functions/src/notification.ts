@@ -215,11 +215,11 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
   // Send an email to org's admin to let them know they have a request to join their org
   const template = userRequestedToJoinYourOrg({
     adminEmail: recipient.email,
-    adminName: recipient.firstName!,
+    adminName: recipient.firstName ?? '',
     organizationName: orgName(org),
     organizationId: notification.organization.id,
-    userFirstname: notification.user!.firstName,
-    userLastname: notification.user!.lastName
+    userFirstname: notification.user?.firstName ?? '',
+    userLastname: notification.user?.lastName ?? ''
   }, urlToUse);
 
   const appKey = notification._meta.createdFrom;

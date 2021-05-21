@@ -80,7 +80,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
     if (eventSnap.exists) {
 
-      const eventData = eventSnap.data()!;
+      const eventData = eventSnap.data();
 
       const now = admin.firestore.Timestamp.now();
 
