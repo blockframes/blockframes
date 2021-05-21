@@ -1,11 +1,5 @@
 import { appName } from '@blockframes/utils/apps';
-import {
-  Territory,
-  TerritoryISOA2,
-  TerritoryISOA2Value,
-  TerritoryISOA3,
-  TerritoryISOA3Value
-} from './types'
+import { Territory } from './types'
 
 export const contractStatus = {
   accepted: 'Accepted',
