@@ -64,7 +64,7 @@ describe('Organization Rules Tests', () => {
 
     describe('Update Org', () => {
       const existingOrg = 'O005';
-      const fields: unknown[] = [
+      const fields: [string, unknown][] = [
         ['id', 'O004'],
         ['userIds', ['uid-sAdmin']],
         ['_meta', { createdBy: '' }],
@@ -73,7 +73,7 @@ describe('Organization Rules Tests', () => {
         ['email', 'adming@O003.org'],
         ['status', 'dissolved'],
       ];
-      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key: string, value) => {
+      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const orgRef = db.doc(`orgs/${existingOrg}`);
         const details = {};
         details[key] = value;
@@ -106,14 +106,14 @@ describe('Organization Rules Tests', () => {
 
     describe('Update Org', () => {
       const existingOrg = 'O004';
-      const fields: unknown[] = [
+      const fields: [string, unknown][] = [
         ['id', 'O005'],
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],
         ['appAccess', { festival: true }],
         ['status', 'dissolved'],
       ];
-      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key: string, value) => {
+      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const orgRef = db.doc(`orgs/${existingOrg}`);
         const details = {};
         details[key] = value;

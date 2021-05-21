@@ -71,7 +71,7 @@ describe('Invitation Rules Tests', () => {
 
     describe('Update Invitation', () => {
       const existInviteId = 'I001';
-      const fields: unknown[] = [
+      const fields: [string, unknown][] = [
         ['id', 'MI-0xx'],
         ['mode', { createdBy: '' }],
         ['fromOrg', {id: 'O007'}],
@@ -80,7 +80,7 @@ describe('Invitation Rules Tests', () => {
         ['toUser', { uid: 'uid-sAdmin' }],
         ['docId', 'I002'],
       ];
-      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key: string, value) => {
+      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const inviteRef = db.doc(`invitations/${existInviteId}`);
         const details = {};
         details[key] = value;

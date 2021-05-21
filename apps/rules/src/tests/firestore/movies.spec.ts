@@ -101,7 +101,7 @@ describe('Movies Rules Tests', () => {
     });
 
     describe('Update Movie', () => {
-      const fields: unknown[] = [
+      const fields: [string, unknown][] = [
         ['id', 'MI-0xx'],
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],
@@ -110,7 +110,7 @@ describe('Movies Rules Tests', () => {
         ['app', { catalog: { status: 'rejected' }}],
         ['app', { festival: { access: {} }}],
       ];
-      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key: string, value) => {
+      test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const movieRef = db.doc(`movies/${existMovieInDraft}`);
         const details = {};
         details[key] = value;
