@@ -38,7 +38,7 @@ function fakeFiscalNumber() {
   return start + " " + randomNumber() + "-" + randomNumber() + "-" + randomNumber() + "-" + randomNumber();
 }
 
-function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T {
+function hasKeys<T extends Record<string, any>>(doc: Record<string, any>, ...keys: (keyof T)[]): doc is T {
   return keys.every((key) => key in doc);
 }
 
