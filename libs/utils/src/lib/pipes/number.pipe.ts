@@ -48,8 +48,8 @@ export class BigNumberPipe implements PipeTransform {
 @Pipe({ name: 'sum' })
 export class SumPipe implements PipeTransform {
   transform(source: number[])
-  transform(source: unknown[], key: string)
-  transform(source: number[] | unknown[], key?: string) {
+  transform(source: any[], key: string)
+  transform(source: number[] | any[], key?: string) {
     if (key) {
       return source.reduce((sum, item) => {
         const value = key.split('.').reduce((result, k) => result[k], item);

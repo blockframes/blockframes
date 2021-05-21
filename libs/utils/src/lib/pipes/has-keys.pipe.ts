@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
-export function hasValue(value: string | number | any[] | unknown) {
+export function hasValue(value: string | number | any[] | any) {
   if (!value) return false;
   if (Array.isArray(value)) {
     return !!value.length;
