@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore, QueryDocumentSnapshot, QuerySnapshot, Transaction } from '../types';
 import { pickBy, identity } from 'lodash';
 import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.firestore';

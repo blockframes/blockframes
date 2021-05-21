@@ -92,8 +92,7 @@ function updateUser(user: User | PublicUser | Partial<User>) {
   }
   if (!hasKeys<User>(user, 'uid')) {
     console.warn('WARNING - user does not have UID!', user)
-    // @ts-ignore
-    return processUser(user);
+    return processUser(user as User);
   }
   throw Error(`Unable to process user: ${JSON.stringify(user, null, 4)}`);
 }

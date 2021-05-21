@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { File as GFile } from '@google-cloud/storage';
 import { getDocument, runChunks } from '../firebase-utils';
@@ -317,7 +316,7 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`movies/${docId}/promotionalElements.still_photo`)) {
       oldRef = ref;
       const regex = /(\.|\[)(?<value>[0-9]{1})\]?\./gi;
-      const [_, __, index] = regex.exec(ref);
+      const [,, index] = regex.exec(ref);
       newRef = `movies/${docId}/promotional.still_photo/${index}/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
     } else if (ref.includes(`users/${docId}/avatar`)) {
       oldRef = ref;

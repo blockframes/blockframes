@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
