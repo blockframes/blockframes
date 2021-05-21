@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 
 type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
-type GetPartial<T> = T extends unknown ? Partial<T> : T;
+type GetPartial<T> = T extends any ? Partial<T> : T;
 
 /** Check form content has a value given by the user */
 function hasValue(value: any): boolean {
