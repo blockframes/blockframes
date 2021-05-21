@@ -24,11 +24,11 @@ export class EventListComponent implements OnInit {
   typesLabel = typesLabel;
   types: EventTypes[] = ['screening', 'meeting'];
   filter = new FormControl(this.types);
-  editDialog: MatDialogRef<any>
+  editDialog: MatDialogRef<unknown>
   events$: Observable<Event[]>;
   viewDate = new Date();
 
-  @ViewChild('editTemplate', { read: TemplateRef }) editTemplate: TemplateRef<any>;
+  @ViewChild('editTemplate', { read: TemplateRef }) editTemplate: TemplateRef<unknown>;
 
   constructor(
     private service: EventService,
