@@ -22,7 +22,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { getValue } from '@blockframes/utils/helpers';
 import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
-import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
+import { ColRefDirective } from '@blockframes/utils/directives/col-ref.directive';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: '[colAction]' })
@@ -78,7 +78,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   public noData = false;
 
   /** References to template to apply for specific columns */
-  @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
+  @ContentChildren(ColRefDirective, { descendants: false }) cols: QueryList<ColRefDirective>;
   @ContentChild(ColAction) colAction?: ColAction;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

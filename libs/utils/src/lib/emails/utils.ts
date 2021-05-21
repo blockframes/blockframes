@@ -68,7 +68,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
 export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): EventEmailData {
   let eventStart = '';
   let eventEnd = '';
-  if (!!event) {
+  if (event) {
     const eventStartDate = new Date(event.start.toDate());
     const eventEndDate = new Date(event.end.toDate());
 
@@ -86,7 +86,7 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}` : '',
-    sessionUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
+    viewUrl: event?.id ? `/c/o/marketplace/event/${event.id}` : '',
+    sessionUrl: event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
   }
 }

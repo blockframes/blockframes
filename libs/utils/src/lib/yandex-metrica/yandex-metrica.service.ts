@@ -8,7 +8,7 @@ import { App } from '../apps';
 export class YandexMetricaService {
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: unknown
   ) {}
 
   public insertMetrika(app: App) {
