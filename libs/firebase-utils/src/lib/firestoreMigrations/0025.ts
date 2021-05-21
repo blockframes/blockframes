@@ -178,7 +178,7 @@ const updateImgRef = async (
           // create a write stream to save the image in google cloud storage
           const saveImage = to.createWriteStream({contentType: 'image/jpeg'})
             .on('error', (err) => {console.log('save error', err); reject(err)})
-            .once('finish', () => resolve());
+            .once('finish', () => resolve(true));
 
           // download the image and save it
           get(url, result => {
