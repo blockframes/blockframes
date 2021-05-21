@@ -1,5 +1,5 @@
 import { Firestore, QueryDocumentSnapshot, QuerySnapshot, Transaction } from '../types';
-import { pickBy, identity } from 'lodash';
+import { pickBy } from 'lodash';
 import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.firestore';
 
 export const withoutUndefined = x => pickBy(x, value => value !== undefined);
@@ -36,52 +36,6 @@ function upgradeUser(user: QueryDocumentSnapshot, orgRights: any, tx: Transactio
   // TODO: trash org rights
 }
 
-function upgradeMovie(
-  movie: QueryDocumentSnapshot,
-  orgIds: string[],
-  tx: Transaction
-) {
-  const data = movie.data();
-
-  const defaultValues = {
-    // organization: data.org,
-    main: withoutUndefined({
-      // isan: data.isan,
-      title: data.title,
-      poster: data.poster,
-      productionYear: data.productionYear,
-      genres: data.genres,
-      originCountries: [data.originCountry, ...data.coProducerCountries].filter(identity),
-      status: data.status
-    }),
-    story: withoutUndefined({
-      logline: data.logline,
-      synopsis: data.synopsis
-    }),
-    promotionalElements: withoutUndefined({
-      images: data.images,
-      promotionalElements: data.promotionalElements
-    }),
-    promotionalDescription: withoutUndefined({
-      keyAssets: [],
-      keywords: data.keywords
-    }),
-    salesCast: {},
-    salesInfo: {},
-    versionInfo: {},
-    festivalPrizes: {},
-    salesAgentDeal: {},
-    sales: [],
-    distributionRights: []
-  };
-
-  const newData = selectAndMergeValues(data, defaultValues);
-
-  console.log('update with:', newData);
-
-  tx.update(movie.ref, { ...newData });
-}
-
 function upgradeOrg(org: QueryDocumentSnapshot, tx: Transaction) {
   const defaultValues = {
     status: 'pending',
@@ -104,24 +58,6 @@ async function gatherOrgRights(users: QuerySnapshot, tx: Transaction) {
   );
 
   return orgRights;
-}
-
-function gatherMovieIdMapping(orgs) {
-  const movieToOrgs = {};
-
-  orgs.docs.forEach(org => {
-    const data = org.data();
-    const movieIds = data.movieIds;
-
-    movieIds.forEach(movieId => {
-      if (movieToOrgs[movieId] === undefined) {
-        movieToOrgs[movieId] = [];
-      }
-      movieToOrgs[movieId] = [...movieToOrgs[movieId], org.id];
-    });
-  });
-
-  return movieToOrgs;
 }
 
 export async function upgrade(db: Firestore) {
