@@ -1,5 +1,4 @@
 import SendGrid from '@sendgrid/mail';
-import { ClientResponse } from "@sendgrid/client/src/response";
 import { sendgridAPIKey } from '../environments/environment';
 import { unsubscribeGroupIds } from '../templates/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
