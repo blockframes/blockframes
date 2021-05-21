@@ -16,7 +16,7 @@ import { TunnelStep, TunnelStepSnapshot } from '../tunnel.model';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
-import { MatSidenavContent } from '@angular/material/sidenav';
+import { MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
 import { Router, NavigationEnd, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
@@ -82,6 +82,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   );
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
+  @ViewChild(MatSidenav) sidenav: MatSidenav;
 
   @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<unknown>
 
