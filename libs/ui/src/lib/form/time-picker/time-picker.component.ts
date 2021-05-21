@@ -160,8 +160,8 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     }
   }
 
-  onChange: (value: Date) => void = () => {};
-  onTouched = () => {};
+  onChange: (value: Date) => void = () => null;
+  onTouched: () => void = () => null;
 
   ngOnDestroy() {
     this.stateChanges.complete();
@@ -186,7 +186,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

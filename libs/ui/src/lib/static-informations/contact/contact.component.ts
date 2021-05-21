@@ -18,7 +18,7 @@ export class ContactComponent implements OnInit {
     message: new FormControl('', Validators.required)
   });
   public center: google.maps.LatLngLiteral;
-  public markerLabel: {};
+  public markerLabel: Record<string, string>;
 
   constructor(
     private functions: AngularFireFunctions,
@@ -44,7 +44,7 @@ export class ContactComponent implements OnInit {
     const userSubject = this.form.get('subject').value;
     const userMessage = this.form.get('message').value;
 
-    if (!!this.form.valid) {
+    if (this.form.valid) {
       const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
       this.snackBar.open('Message sent.', 'close', { duration: 2000 });
       this.form.reset();

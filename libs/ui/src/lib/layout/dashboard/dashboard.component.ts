@@ -30,7 +30,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length)
   )
 
-  public ltMd$ = this.breakpointsService.ltMd;
+  public mode$ = this.breakpointsService.ltMd.pipe(
+    map(ltMd => ltMd ? 'over' : 'side')
+  );
 
   public movieIndex: string;
 

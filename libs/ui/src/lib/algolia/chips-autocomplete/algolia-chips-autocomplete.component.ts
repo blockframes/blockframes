@@ -11,7 +11,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 const Separators = {
   [COMMA]: ',',
   [SEMICOLON]: ';',
-  [SPACE]: ` \+`
+  [SPACE]: '\\+'
 };
 
 function splitValue(value: string, keycodes: number[]) {
