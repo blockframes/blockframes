@@ -182,7 +182,7 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
           const id = db.collection('invitations').doc().id;
           invitation.id = id;
         })
-        .then(_ => db.collection('invitations').doc(invitation.id).set(invitation))
+        .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
         .then(result => promises.push({ result, error: '' }))
         .catch(error => promises.push({ result: undefined, error }))
         .then(lastIndex => {
