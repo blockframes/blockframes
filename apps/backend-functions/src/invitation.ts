@@ -1,6 +1,6 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
+import { db } from './internals/firebase'
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
@@ -17,6 +17,7 @@ import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
+
 /**
  * Handles firestore updates on an invitation object,
  *
@@ -26,7 +27,6 @@ export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 export async function onInvitationWrite(
   change: Change<FirebaseFirestore.DocumentSnapshot>
 ) {
-  const db = admin.firestore();
   const before = change.before;
   const after = change.after;
 
@@ -132,9 +132,7 @@ interface UserInvitation {
  * Invite a list of user by email.
  * @dev this function polyfills the Promise.allSettled
  */
-export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<ErrorResultResponse[]> => {
-  const db = admin.firestore();
-  return new Promise(async (res) => {
+export const inviteUsers = async (data: UserInvitation, context: CallableContext) => {
 
     if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
     const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
@@ -175,7 +173,8 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
     }
 
     for (const email of data.emails) {
-      getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
+      let end = false;
+      await getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;
@@ -187,15 +186,15 @@ That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NU
         .catch(error => promises.push({ result: undefined, error }))
         .then(lastIndex => {
           if (lastIndex === data.emails.length) {
-            res(promises)
+            end = true;
           }
         });
+      if (end) break;
     }
-  })
+  return promises;
 }
 
 export async function getInvitationLinkedToEmail(email: string): Promise<boolean | AlgoliaOrganization> {
-  const db = admin.firestore();
   const invitationRef = await db.collection('invitations')
     .where('toUser.email', '==', email)
     .where('status', '==', 'pending')

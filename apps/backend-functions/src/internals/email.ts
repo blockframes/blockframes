@@ -31,7 +31,7 @@ const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId): Promise<any> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId) {
   const msg: MailDataRequired = {
     from,
     to,
@@ -44,7 +44,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<[ClientResponse, unknown]> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId) {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -63,7 +63,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   return send(msg);
 }
 
-async function send(msg: MailDataRequired): Promise<[ClientResponse, unknown]> {
+async function send(msg: MailDataRequired) {
   if (sendgridAPIKey === '') {
     throw new Error(emailErrorCodes.missingKey.code);
   }
@@ -146,7 +146,8 @@ export const sendMailWithTemplate = async (
  * @param templateId
  * @param uid
  */
-function isAllowedToUseTemplate(templateId: string, uid: string) {
+function isAllowedToUseTemplate( templateId: string, uid: string) {
+  templateId = uid; //! Fix linter error, delete this once updated.
   // @TODO #4085
   return true;
 }

@@ -1,5 +1,4 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
-import * as admin from 'firebase-admin';
 import { getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
@@ -27,6 +26,7 @@ import {
 import { templateIds, unsubscribeGroupIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { App, applicationUrl } from '@blockframes/utils/apps';
+import { db } from './internals/firebase';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -34,8 +34,7 @@ const eventAppKey: App = 'festival';
 const unsubscribeId = unsubscribeGroupIds.allExceptCriticals;
 
 /** Takes one or more notifications and add them on the notifications collection */
-export async function triggerNotifications(notifications: NotificationDocument[]): Promise<unknown> {
-  const db = admin.firestore();
+export async function triggerNotifications(notifications: NotificationDocument[]) {
   const batch = db.batch();
 
   for (const n of notifications) {
@@ -86,7 +85,6 @@ async function appendNotificationSettings(notification: NotificationDocument) {
 
 /** Create a Notification with required and generic information. */
 export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
-  const db = admin.firestore();
   return {
     _meta: createDocumentMeta(),
     type: 'movieAccepted', // We need a default value for backend-function strict mode
@@ -96,7 +94,7 @@ export function createNotification(notification: Partial<NotificationDocument> =
   };
 }
 
-export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
+export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   const notification = snap.data() as NotificationDocument;
 
   if (notification.email?.isSent === false) {
@@ -203,7 +201,6 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
     }
 
-    const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
 }
@@ -234,7 +231,7 @@ async function sendPendingRequestToJoinOrgEmail(recipient: User, notification: N
   const templateRequest = userJoinOrgPendingRequest(
     recipient.email,
     notification.organization.denomination.full,
-    notification.user.firstName!
+    notification.user.firstName
   );
 
   return sendMailFromTemplate(templateRequest, appKey, unsubscribeId);
@@ -345,7 +342,7 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const userName = `${notification.user.firstName} ${notification.user.lastName}`;
 
   console.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user} to : ${recipient.email}`);
-  const templateRequest = requestToAttendEventFromUser(userName!, orgName(org), recipient, eventData, link, urlToUse);
+  const templateRequest = requestToAttendEventFromUser(userName, orgName(org), recipient, eventData, link, urlToUse);
   return sendMailFromTemplate(templateRequest, eventAppKey, unsubscribeId).catch(e => console.warn(e.message));
 }
 

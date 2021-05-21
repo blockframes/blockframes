@@ -60,13 +60,14 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
     case 'orgs':
       canAccess = file.docId === userDoc.orgId;
       break;
-    case 'movies': {
-      const movieSnap = await db.collection('movies').doc(file.docId).get();
-      if (!movieSnap.exists) { return false; }
-      const movie = movieSnap.data() as MovieDocument;
-      canAccess = movie.orgIds.some(id => userDoc.orgId === id);
-      break;
-    }
+    case 'movies':
+      {
+        const movieSnap = await db.collection('movies').doc(file.docId).get();
+        if (!movieSnap.exists) { return false; }
+        const movie = movieSnap.data() as MovieDocument;
+        canAccess = movie.orgIds.some(id => userDoc.orgId === id);
+        break;
+      }
     default:
       canAccess = false;
       break;

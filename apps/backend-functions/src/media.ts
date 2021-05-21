@@ -65,7 +65,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
       const docRef = db.collection(metadata.collection).doc(metadata.docId);
       const docSnap = await transaction.get(docRef);
       await assertFile(docSnap.exists, `Document ${metadata.collection}/${metadata.docId} does not exists`);
-      const doc = docSnap.data()!;
+      const doc = docSnap.data();
 
       // (1) Security checks
 
@@ -183,7 +183,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
         const docRef = db.collection(metadata.collection).doc(metadata.docId);
         const docSnap = await transaction.get(docRef);
         if (!docSnap.exists) return false;
-        const doc = docSnap.data()!;
+        const doc = docSnap.data();
 
         const fieldValue: StorageVideo | StorageVideo[] = get(doc, metadata.field);
         if (Array.isArray(fieldValue)) {
@@ -250,7 +250,7 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 
 }
 
-export const deleteMedia = async (file: StorageFile): Promise<any> => {
+export const deleteMedia = async (file: StorageFile) => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
   const filePath = `${file.privacy}/${file.storagePath}`;

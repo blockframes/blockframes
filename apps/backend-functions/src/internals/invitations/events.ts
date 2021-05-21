@@ -146,10 +146,10 @@ export async function onInvitationToAnEventUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
-): Promise<any> {
+) {
   if (wasCreated(before, after)) {
     return onInvitationToAnEventCreate(invitation);
-  } else if (wasAccepted(before!, after) || wasDeclined(before!, after)) {
+  } else if (wasAccepted(before, after) || wasDeclined(before, after)) {
     return onInvitationToAnEventAcceptedOrRejected(invitation);
   }
 }

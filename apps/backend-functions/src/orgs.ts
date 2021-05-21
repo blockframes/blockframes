@@ -79,7 +79,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
+export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   const org = snap.data() as OrganizationDocument;
 
   if (!org?.denomination?.full) {
@@ -97,7 +97,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   ]);
 }
 
-export async function onOrganizationUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
+export async function onOrganizationUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
@@ -155,7 +155,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 export async function onOrganizationDelete(
   orgSnapshot: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>,
   context: EventContext
-): Promise<any> {
+) {
 
   const org = orgSnapshot.data() as OrganizationDocument;
 

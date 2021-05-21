@@ -153,7 +153,7 @@ async function onRequestFromUserToJoinOrgAccept({
   await addUserToOrg(fromUser.uid, toOrg.id);
   const app = await getOrgAppKey(toOrg.id);
   const urlToUse = applicationUrl[app];
-  const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
+  const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName);
   return sendMailFromTemplate(template, app, unsubscribeGroupIds.allExceptCriticals);
 }
 
@@ -188,10 +188,10 @@ export async function onInvitationToJoinOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
-): Promise<any> {
-  if (wasAccepted(before!, after)) {
+) {
+  if (wasAccepted(before, after)) {
     return onInvitationToOrgAccept(invitation);
-  } else if (wasDeclined(before!, after)) {
+  } else if (wasDeclined(before, after)) {
     return onInvitationToOrgDecline(invitation);
   }
 }
@@ -205,12 +205,12 @@ export async function onRequestToJoinOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
-): Promise<any> {
+) {
   if (wasCreated(before, after)) {
     return onRequestFromUserToJoinOrgCreate(invitation);
-  } else if (wasAccepted(before!, after)) {
+  } else if (wasAccepted(before, after)) {
     return onRequestFromUserToJoinOrgAccept(invitation);
-  } else if (wasDeclined(before!, after)) {
+  } else if (wasDeclined(before, after)) {
     return onRequestFromUserToJoinOrgDecline(invitation);
   }
   return;

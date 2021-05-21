@@ -13,6 +13,7 @@ import { cleanUserMedias } from './media';
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
+
 interface EmailFlowData { email: string, app: App, firstName?: string }
 
 export const startVerifyEmailFlow = async (data: EmailFlowData) => {
@@ -100,13 +101,13 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
-export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot): Promise<boolean> {
+export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot) {
   const after = snap.data() as PublicUser;
   if (after.firstName) { await sendFirstConnexionEmail(after) }
   return true;
 }
 
-export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<unknown> {
+export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>)  {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
 
@@ -117,7 +118,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   await cleanUserMedias(before, after);
 
-  const promises: Promise<unknown>[] = [];
+  const promises = [];
 
   // if name, email, avatar or orgId has changed : update algolia record
   if (
@@ -142,9 +143,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   return Promise.all(promises);
 }
 
-export async function onUserDelete(
-  userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
-): Promise<void> {
+export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>) {
 
   const user = userSnapshot.data() as PublicUser;
 
@@ -197,7 +196,7 @@ export const sendDemoRequest = async (data: RequestDemoInformations): Promise<Re
   return data;
 }
 
-export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext): Promise<void> => {
+export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext) => {
   const { subject, message, app } = data;
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
