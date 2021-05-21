@@ -70,7 +70,7 @@ async function updateMovies(
       const keys = ['banner', 'poster', 'still_photo'];
 
       for (const key of keys) {
-        if (!!movie.promotionalElements[key]) {
+        if (movie.promotionalElements[key]) {
           const value: OldPromotionalElement | OldPromotionalElement[] = movie.promotionalElements[key];
           if (Array.isArray(value)) {
             for (let i = 0; i < value.length; i++) {
@@ -153,7 +153,7 @@ const updateImgRef = async (
     const fileName = ref.split('/').pop();
     const to = bucket.file(ref.replace(fileName, sanitizeFileName(ref)));
     // we try to download it directly from it's original url
-    if (!!urls.original) {
+    if (urls.original) {
 
       console.log(`downloading ${ref}`);
 

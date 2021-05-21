@@ -149,7 +149,7 @@ async function updateMovies(
       movie.main.poster = '';
     }
 
-    if (!!movie.promotionalElements.still_photo) {
+    if (movie.promotionalElements.still_photo) {
       for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
         const still = movie.promotionalElements.still_photo[stillKey];
         movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media, storage, movie.id);
@@ -161,7 +161,7 @@ async function updateMovies(
     const keys = ['presentation_deck', 'scenario'];
     // We search for pdf that are not in the good directory
     for (const key of keys) {
-      if (!!movie.promotionalElements[key]) {
+      if (movie.promotionalElements[key]) {
         const value: PromotionalHostedMedia = movie.promotionalElements[key];
         movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
       } else {

@@ -55,7 +55,7 @@ function processOrg<T extends Organization | PublicOrganization>(o: T): T {
   const denomination = { full: companyName, public: companyName };
   const email = fakeEmail(companyName);
   const org = { ...o, denomination, email } as any;
-  if (!!org.fiscalNumber) {
+  if (org.fiscalNumber) {
     org.fiscalNumber = fakeFiscalNumber();
   };
   return org;

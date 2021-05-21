@@ -131,7 +131,7 @@ async function updateMovies(
     const keys = ['banner', 'poster', 'still_photo'];
 
     for (const key of keys) {
-      if (!!movie.promotionalElements[key]) {
+      if (movie.promotionalElements[key]) {
         const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
         if (Array.isArray(value)) {
           for (let i = 0; i < value.length; i++) {

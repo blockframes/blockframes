@@ -70,7 +70,7 @@ async function updateMovies(
       const keys = ['banner', 'poster', 'still_photo'];
 
       for (const key of keys) {
-        if (!!movie.promotionalElements[key]) {
+        if (movie.promotionalElements[key]) {
           const value: OldPromotionalElement | OldPromotionalElement[] = movie.promotionalElements[key];
           if (Array.isArray(value)) {
             for (let i = 0 ; i < value.length ; i++) {
@@ -171,7 +171,7 @@ const updateImgRef = async (
     if (! exists) {
 
       // we try to download it directly from it's url (prod, staging, vincent's storage, ...)
-      if (!!url) {
+      if (url) {
 
         console.log(`downloading ${destinationFolder}`);
 
