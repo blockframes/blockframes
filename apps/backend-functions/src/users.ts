@@ -13,7 +13,10 @@ import { cleanUserMedias } from './media';
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-export const startVerifyEmailFlow = async (data) => {
+
+interface EmailFlowData { email: string, app: App, firstName?: string }
+
+export const startVerifyEmailFlow = async (data: EmailFlowData) => {
   const { email, app, firstName } = data;
 
   if (!email) {
@@ -29,7 +32,7 @@ export const startVerifyEmailFlow = async (data) => {
   }
 };
 
-export const startAccountCreationEmailFlow = async (data) => {
+export const startAccountCreationEmailFlow = async (data: EmailFlowData) => {
   const { email, app, firstName } = data;
 
   if (!email) {
@@ -46,7 +49,7 @@ export const startAccountCreationEmailFlow = async (data) => {
 
 };
 
-export const startResetPasswordEmail = async (data) => {
+export const startResetPasswordEmail = async (data: EmailFlowData) => {
   const { email, app } = data;
 
   if (!email) {

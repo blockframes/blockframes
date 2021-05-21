@@ -212,11 +212,11 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
   // Send an email to org's admin to let them know they have a request to join their org
   const template = userRequestedToJoinYourOrg({
     adminEmail: recipient.email,
-    adminName: recipient.firstName,
+    adminName: recipient.firstName ?? '',
     organizationName: orgName(org),
     organizationId: notification.organization.id,
-    userFirstname: notification.user.firstName,
-    userLastname: notification.user.lastName
+    userFirstname: notification.user?.firstName ?? '',
+    userLastname: notification.user?.lastName ?? ''
   }, urlToUse);
 
   const appKey = notification._meta.createdFrom;
@@ -428,7 +428,7 @@ async function sendRequestToJoinOrgDeclined(recipient: User, notification: Notif
 
 /** Send copy of offer that recipient has created */
 async function sendOfferCreatedConfirmation(recipient: User, notification: NotificationDocument) {
-  const org =  await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const app: App = 'catalog';
   const template = offerCreatedConfirmationEmail(org, notification.bucket, recipient);
   await sendMailFromTemplate(template, app, unsubscribeId);

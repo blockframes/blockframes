@@ -35,7 +35,6 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
      * @dev We wants to send this email only if user have an orgId and a validated account. If not, this means that he already received an
      * email inviting him along with his credentials.
     */
-    // const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([invitation.toUser.email]);
     if (!hasOrgOrOrgInvitation) {
       console.log('Invitation have already been sent along with user credentials');

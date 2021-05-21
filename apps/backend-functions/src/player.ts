@@ -18,7 +18,8 @@ import { jwplayerSecret, jwplayerKey, enableDailyFirestoreBackup } from './envir
 
 
 // No typing
-import JWPlayerApi from 'jwplatform';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const JWPlayerApi = require('jwplatform');
 
 interface ReadVideoParams {
 
