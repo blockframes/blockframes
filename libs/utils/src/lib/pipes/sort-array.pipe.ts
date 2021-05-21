@@ -1,7 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 
 const sortFn = {
-  random: (a, b) => Math.random() - .5
+  random: () => Math.random() - .5
 }
 export type SortingOptions = 'default' | keyof typeof sortFn;
 export const sortingOptions: SortingOptions[] = ['default', 'random'];
