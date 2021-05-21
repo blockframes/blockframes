@@ -34,7 +34,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   total$ = this.priceChanges.pipe(
     startWith(0),
     debounceTime(100),
-    map(_ => this.getTotal(this.prices)),
+    map(() => this.getTotal(this.prices)),
     distinctUntilChanged()
   );
 
@@ -53,7 +53,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
       tap(bucket => {
         this.setTitle(bucket?.contracts.length);
-        if (!!bucket?.currency) this.currencyForm.setValue(bucket.currency);
+        if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
         bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price));
       })
     );
