@@ -8,6 +8,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { isMeeting } from '@blockframes/event/+state';
 
 @Component({
   selector: 'invitation-item',
@@ -34,7 +35,7 @@ export class ItemComponent {
 
       if (invitation.type === 'attendEvent') {
         this.eventService.getValue(invitation.eventId).then(event => {
-          if (event.type === 'meeting') {
+          if (isMeeting(event)) {
             this.eventType = 'meeting';
             this.userService.getValue(event.meta.organizerUid as string).then(user => {
               this.fromUser.value = user;

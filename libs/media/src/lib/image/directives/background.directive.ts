@@ -33,7 +33,7 @@ export class BackgroundDirective implements OnInit, OnDestroy {
     } else {
       this.mediaService.generateBackgroundImageUrl(file, this.parameters)
         .then(url => this.ref$.next(url))
-        .catch(_ => this.ref$.next(''));
+        .catch(() => this.ref$.next(''));
     }
   }
 
@@ -70,7 +70,7 @@ export class BackgroundDirective implements OnInit, OnDestroy {
       theme$,
       this.asset$
     ]).pipe(
-      map(([theme, asset]) => !!asset ? getAssetPath(asset, theme, 'images') : '')
+      map(([theme, asset]) => asset ? getAssetPath(asset, theme, 'images') : '')
     );
 
     this.sub = combineLatest([

@@ -108,7 +108,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   get form() { return this._form; }
   @Input() set form(value: StorageFileForm) {
     this._form = value;
-    if (!!this.form.storagePath.value) {
+    if (this.form.storagePath.value) {
       this.mediaService.generateImgIxUrl({
         ...this.metadata,
         storagePath: this.form.storagePath.value,
@@ -118,7 +118,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       });
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
-      if (!!retrieved) {
+      if (retrieved) {
         const blobUrl = URL.createObjectURL(retrieved.file);
         const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
         this.previewUrl$.next(previewUrl);
@@ -167,7 +167,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
-        if (!!media) {
+        if (media) {
           this.form.setValue(media);
         }
       })
@@ -175,13 +175,13 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (!!this.docSub) this.docSub.unsubscribe()
+    if (this.docSub) this.docSub.unsubscribe()
   }
 
   @HostListener('drop', ['$event'])
   onDrop($event: DragEvent) {
     $event.preventDefault();
-    if (!!$event.dataTransfer.files.length) {
+    if ($event.dataTransfer.files.length) {
       this.filesSelected($event.dataTransfer.files);
     } else {
       this.resetState();
@@ -201,7 +201,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   }
 
   private resetState() {
-    if (!!this.form.storagePath.value) {
+    if (this.form.storagePath.value) {
       this.mediaService.generateImgIxUrl({
         ...this.metadata,
         storagePath: this.form.storagePath.value,
@@ -211,7 +211,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
       });
     } else {
       const retrieved = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
-      if (!!retrieved) {
+      if (retrieved) {
         this.nextStep('show');
       } else {
         this.nextStep('drop');
@@ -243,6 +243,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     // Hack around cypress issue with Files and events,
     // See https://github.com/cypress-io/cypress/issues/3613
     if (!(this.file instanceof File)) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       this.file.__proto__ = new File([], fileType);
     }
