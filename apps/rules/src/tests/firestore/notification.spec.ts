@@ -28,14 +28,14 @@ describe('Notification Rules Tests', () => {
       await assertFails(notifRef.set({ note: 'A notification' }));
     });
 
-    const fields: any = [
+    const fields: unknown[] = [
       ['id', '001'],
       ['toUserId', 'uid-002'],
       ['app.isRead', true],
     ];
     test.each(fields)(
       "updating restricted '%s' field shouldn't be able to update notification",
-      async (key, value) => {
+      async (key: string, value) => {
         const notifRef = db.doc(existingNotif);
         const details = {};
         details[key] = value;
@@ -61,7 +61,7 @@ describe('Notification Rules Tests', () => {
       await assertFails(notifRef.set({ note: 'A notification', toUserId: 'uid-c8' }));
     });
 
-    const fields: any = [
+    const fields: unknown[] = [
       ['id', '002'],
       ['_meta.createdAt', new Date()],
       ['toUserId', 'uid-002'],
@@ -73,7 +73,7 @@ describe('Notification Rules Tests', () => {
     ];
     test.each(fields)(
       "updating restricted '%s' field shouldn't be able to update notification",
-      async (key, value) => {
+      async (key: string, value) => {
         const notifRef = db.doc(existingNotif);
         const details = {};
         details[key] = value;
