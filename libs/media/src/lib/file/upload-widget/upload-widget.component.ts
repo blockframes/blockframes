@@ -59,7 +59,7 @@ export class UploadWidgetComponent {
 
     const snapshot = await this.db.doc(docPath).get().toPromise();
     const data = snapshot.data();
-    const media: StorageFile[] | MovieVideo[] | MovieNote[] | string | MovieVideo = getDeepValue(data, field);
+    const media = getDeepValue(data, field) as StorageFile[] | MovieVideo[] | MovieNote[] | string | MovieVideo;
 
     if (Array.isArray(media)) {
       // Still Photos (string[]), Documents (HostedMediaWithMetadata[]), Notes & Statements (MovieNote) or OtherVideos (HostedVideo[])

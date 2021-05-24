@@ -45,7 +45,7 @@ export class FileListUploaderComponent {
       return;
     }
     const doc = docSnap.data();
-    const files: StorageFile[] = getDeepValue(doc, file.field);
+    const files = getDeepValue(doc, file.field) as StorageFile[];
 
     files.splice(index, 1); // remove element at index
     docRef.update({ [file.field]: files });
