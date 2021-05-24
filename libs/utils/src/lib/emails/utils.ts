@@ -12,7 +12,7 @@ export interface EmailRequest {
 export interface EmailTemplateRequest {
   to: string;
   templateId: string;
-  data: { [key: string]: any };
+  data: { [key: string]: unknown };
 }
 
 export interface EmailParameters {
