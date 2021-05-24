@@ -1,12 +1,12 @@
-import { Term } from '../term/+state/term.model';
-import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './avails';
-import { mandates } from './fixtures/mandates';
-import { sales } from './fixtures/sales';
-import { mandateTerms as acTerms } from './fixtures/mandateTerms';
-import { saleTerms as acSaleTerms } from './fixtures/saleTerms';
-import { BucketTerm, createBucketTerm } from '../bucket/+state';
+import { Term } from '../../term/+state/term.model';
+import { AvailsFilter, getMandateTerms, isInBucket, isSold } from './../avails';
+import { mandates } from './../fixtures/mandates';
+import { sales } from './../fixtures/sales';
+import { mandateTerms as acTerms } from './../fixtures/mandateTerms';
+import { saleTerms as acSaleTerms } from './../fixtures/saleTerms';
+import { BucketTerm, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 
-describe('isTermSold', () => {
+describe('Test isTermSold pure function', () => {
     const Resurrected = 'Cr3NYe9RXaMwP98LQMyD';
     const GazaMonAmour = 'cXHN9C9GftkMhYmu7CV1';
     const MarinaAbramovic = 'HgU5WygrYoon1QnFqEpe';
@@ -727,7 +727,7 @@ describe('isTermSold', () => {
     Not available: Resurrected (sale),
     Available: Mother Schmuckers, 512 Hours With Marina Abramovic, Gaza mon amour, Bigfoot Family`, () => {
       const availDetails: AvailsFilter = {
-        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive:true,
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive:true,
         territories: ['argentina'], medias: ['payTv']
       }
       const gazaRights = getMandateTerms(
@@ -859,7 +859,7 @@ describe('isTermSold', () => {
     Not available: 512 Hours With Marina Abramovic, Bigfoot Family (exclusive sales)
     Available: Mother Schmuckers, Gaza mon amour, Resurrected`, () => {
       const availDetails: AvailsFilter = {
-        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive: false,
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false,
         territories: ['germany'], medias: ['freeTv']
       }
       const gazaRights = getMandateTerms(

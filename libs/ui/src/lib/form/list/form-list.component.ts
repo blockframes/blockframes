@@ -129,7 +129,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       this.activeIndex--;
     }
     if (this.isFormEmpty) {
-      this.formItem = this.form.createControl({});
+      this.formItem = this.form.createControl();
     }
   }
 

@@ -3,7 +3,7 @@ import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { TunnelStep } from '@blockframes/ui/tunnel';
 
-const disclaimer = `We kindly remind you that all the following elements will appear on the marketplace once you submit your project. 
+const disclaimer = `We kindly remind you that all the following elements will appear on the marketplace once you submit your project.
 Please make sure that you have the right to share this information with potential future investors.`
 
 const appSteps: TunnelStep[] = [{
@@ -59,24 +59,24 @@ export const titleTunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/production/production.module').then(m => m.MovieFormProductionModule),
       },
       {
-        path: 'artistic',
+        path: 'shooting-information',
         data: { animation: 4 },
+        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule),
+      },
+      {
+        path: 'artistic',
+        data: { animation: 5 },
         loadChildren: () => import('@blockframes/movie/form/artistic/artistic.module').then(m => m.MovieFormArtisticModule),
       },
       {
         path: 'reviews',
-        data: { animation: 5 },
+        data: { animation: 6 },
         loadChildren: () => import('@blockframes/movie/form/reviews/reviews.module').then(m => m.MovieFormReviewsModule),
       },
       {
         path: 'additional-information',
-        data: { animation: 6 },
-        loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule),
-      },
-      {
-        path: 'shooting-information',
         data: { animation: 7 },
-        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule),
+        loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule),
       },
       {
         path: 'technical-spec',

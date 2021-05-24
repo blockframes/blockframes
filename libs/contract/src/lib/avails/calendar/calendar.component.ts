@@ -1,44 +1,42 @@
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs';
-
-import { calendarAvails } from '../fixtures/calendar';
-import { AvailCalendarState, CellState, hover, reset, select } from './calendar.model';
-
-
+import { DurationMarker } from '../avails';
+import {
+  AvailCalendarState,
+  calendarColumns,
+  calendarRows,
+  CellState,
+  createAvailCalendarState,
+  hover,
+  markersToMatrix,
+  reset,
+  select
+} from './calendar.model';
 
 @Component({
-  selector: '[durationMarkers] avails-calendar',
+  selector: 'avails-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: [ './calendar.component.scss' ],
+  styleUrls: ['./calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvailsCalendarComponent implements OnInit {
 
-  public columns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  public rows = Array(10).fill(0).map((_,i) => new Date().getFullYear() + i); // [ 2021, 2022, ... 2030 ]
+  public columns = calendarColumns;
+  public rows = calendarRows;
 
-  public stateMatrix: CellState[][] = [];
+  public stateMatrix: CellState[][] = this.rows.map(_ => this.columns.map(__ => 'empty'));
 
-  public state$ = new BehaviorSubject<AvailCalendarState>({
-    selectionState: 'waiting',
+  public state$ = new BehaviorSubject<AvailCalendarState>(createAvailCalendarState());
 
-    hoverColumn: undefined,
-    hoverRow: undefined,
+  @Input() set availableMarkers(markers: DurationMarker[] | undefined) {
+    if (!markers) return;
+    this.stateMatrix = markersToMatrix(markers, this.stateMatrix, 'avail');
+  }
 
-    hoverStart: { row: undefined, column: undefined },
-    hoverEnd: { row: undefined, column: undefined },
-
-    start: { row: undefined, column: undefined },
-    end: { row: undefined, column: undefined },
-
-    highlightedRange: [],
-  });
-
-  @Input() set durationMarkers(value: any) {
-    // TODO REMOVE FIXTURE AND CONVERT MARKERS INTO CELL-STATE
-    this.stateMatrix = calendarAvails as CellState[][];
+  @Input() set soldMarkers(markers: DurationMarker[] | undefined) {
+    if (!markers) return;
+    this.stateMatrix = markersToMatrix(markers, this.stateMatrix, 'sold');
   }
 
   ngOnInit() {

@@ -21,8 +21,6 @@
 @import '../components/bf-tunnel.scss';
 @import '../components/bf-table.scss';
 @import '../components/bf-font-color.scss';
-@import '../components/bf-missing-control.scss';
-@import '../components/bf-world-map.scss';
 @import '../components/bf-calendar.scss';
 @import '../components/mat-native-control.scss';
 @import '../components/mat-datepicker.scss';
@@ -159,7 +157,6 @@
   @include bf-widget-theme($theme);
   @include bf-color-font($theme);
   @include bf-table-theme($theme);
-  @include bf-missing-control-theme($theme);
   @include bf-tunnel-theme($theme);
   @include apex-chart-theme($theme);
 

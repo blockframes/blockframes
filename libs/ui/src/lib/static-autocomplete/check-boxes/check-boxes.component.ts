@@ -40,6 +40,7 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
   @Output() removed = new EventEmitter<number>();
 
   public items: any;
+  public keepOrder = () => 1;
 
   ngOnInit() {
     this.items = staticModel[this.scope];
@@ -51,7 +52,7 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
   isCheckedByDefault(key: string) {
     return this.form.value.includes(key);
   }
-  
+
   public handleChange({checked, source}: MatCheckboxChange) {
     if (checked) {
       this.form.add(source.value);

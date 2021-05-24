@@ -1,95 +1,17 @@
-@import '~@angular/flex-layout/mq';
 
 :host {
   display: block;
-  padding: 25px;
+  padding: 24px;
 }
 
-div {
+header {
   margin-bottom: 24px;
-}
-
-aside {
-  position: sticky;
-  top: calc(var(--toolbarHeight) + 20px);
-  width: 30%;
-  mat-card {
-    mat-card-subtitle {
-      margin-top: 20px;
-    }
-
-    mat-form-field {
-      width: 100%;
-
-      mat-icon {
-        margin-left: 12px;
-        margin-right: 12px;
-      }
-    }
-  }
-}
-
-.avails-card {
-  flex: 1;
-
-  mat-card-subtitle {
-    a {
-      text-decoration: underline;
-    }
-  }
-
-  world-map {
-    height: 500px;
-    z-index: 0;
-  }
-}
-
-.colors-card {
-  position: absolute;
-  bottom: 30px;
-  left: 15px;
-  z-index: 2;
-
-  svg {
-    margin-right: 10px;
-  }
-}
-
-.hovered-territory-card {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 2;
 }
 
 mat-card {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
-form article.expansion-panel-content {
-  padding: 0 16px;
-}
-
-button.spacing {
-  margin-top: 16px;
-}
-
-@include layout-bp(lt-lg) {
-  section aside {
-    position: static;
-    width: 100%;
-  }
-}
-
-@include layout-bp(xs) {
-  section {
-    padding: 10px 10px;
-    aside {
-      width: 100%;
-      position: static;
-      mat-card {
-        height: 100%;
-      }
-    }
-  }
+.expansion-panel-content {
+  margin-left: 32px;
 }

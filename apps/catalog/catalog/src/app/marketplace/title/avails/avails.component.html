@@ -1,172 +1,30 @@
 
-<div fxLayout fxLayoutAlign="end center">
-  <span>Multiple Territory</span>
-  <mat-slide-toggle (change)="toggleCalendar($event)">Single Territory</mat-slide-toggle>
-</div>
+<header fxLayout fxLayoutAlign="space-between center">
+  <span>First time here? <button mat-button (click)="explain()">Learn how it works</button></span>
+  <span>
+    <a mat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
+    <a mat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
+  </span>
+</header>
 
-<section fxLayout fxLayout="space-between center" fxLayoutGap="24px">
+<router-outlet></router-outlet>
 
-  <aside>
-    First time here? <button mat-button (click)="explain()">Learn how it works</button>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Avail Search Criteria</mat-card-title>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-header>
-        <mat-card-subtitle>
-          <span>Fill in the following fields to know where, when and in which conditions this title is available</span>
-          <span>
-            Search results use an "and" logic for multiple conditions, not an "or" logic.
-            <mat-icon matTooltip="If you check TV and VOD media, you will get territories where both media are available (not either of them)" svgIcon="info"></mat-icon>
-          </span>
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <form [formGroup]="availsForm">
-          <static-group formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
-            <mat-label>Media</mat-label>
-          </static-group>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Exlusivity</mat-label>
-            <mat-select formControlName="exclusive">
-              <mat-option [value]="true">Exclusive</mat-option>
-              <mat-option [value]="false">Non exclusive</mat-option>
-            </mat-select>
-            <mat-icon matPrefix svgIcon="star"></mat-icon>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" formGroupName="duration">
-            <mat-label>Start Date</mat-label>
-            <input matInput [matDatepicker]="datepickerFrom" formControlName="from">
-            <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
-            <mat-datepicker #datepickerFrom> </mat-datepicker>
-            <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
-            <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" formGroupName="duration">
-            <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="datepickerTo" formControlName="to">
-            <mat-datepicker-toggle matPrefix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
-            <mat-datepicker #datepickerTo> </mat-datepicker>
-            <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
-            <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
-          </mat-form-field>
-        </form>
-        <article fxLayout fxLayoutAlign="space-between">
-          <button mat-stroked-button (click)="clear()">Clear</button>
-          <button mat-flat-button color="primary" (click)="applyFilters()">Apply Filters</button>
-        </article>
-      </mat-card-content>
-    </mat-card>
-  </aside>
-
-  <ng-container *ngIf="!isCalendar; else calendar">
-    <mat-card class="avails-card">
-      <mat-card-header>
-        <mat-card-title>Available territories</mat-card-title>
-        <mat-card-subtitle *ngIf="org$ | async as org">
-          Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to
-          <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <world-map>
-
-          <!-- MAP LAYERS -->
-          <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
-            <map-feature [tag]="tag.isoA3" color="color-1" (click)="addTerritory(tag)"
-              (mouseover)="displayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
-            </map-feature>
-          </ng-container>
-          <ng-container *ngFor="let tag of (sold$ | async); trackBy: trackByTag">
-            <map-feature [tag]="tag.isoA3" color="color-2"
-              (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')" (mouseout)="clearTerritoryTooltip()">
-            </map-feature>
-          </ng-container>
-          <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
-            <map-feature [tag]="tag.isoA3" color="color-4" (click)="removeTerritory(tag)"
-              (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')" (mouseout)="clearTerritoryTooltip()">
-            </map-feature>
-          </ng-container>
-          <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
-            <map-feature [tag]="tag.isoA3" color="color-4"
-              (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')" (mouseout)="clearTerritoryTooltip()">
-            </map-feature>
-          </ng-container>
-
-          <!-- TOOLTIP ON HOVERING-->
-          <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
-            <ul>
-              <li> {{ hoveredTerritory.name }} </li>
-              <li class="mat-caption"> {{ hoveredTerritory.status }} </li>
-            </ul>
-          </mat-card>
-
-          <!-- MAP LEGEND -->
-          <mat-card class="colors-card">
-            <mat-list>
-              <mat-list-item>
-                <svg viewBox="0 0 100 100" width="10px" height="10px">
-                  <rect fill="var(--color-1)" x="0" y="0" width="100" height="100" />
-                </svg>
-                <span class="mat-caption">Available</span>
-              </mat-list-item>
-              <mat-list-item>
-                <svg viewBox="0 0 100 100" width="10px" height="10px">
-                  <rect fill="var(--color-2)" x="0" y="0" width="100" height="100" />
-                </svg>
-                <span class="mat-caption">Rights Sold</span>
-              </mat-list-item>
-              <mat-list-item>
-                <svg viewBox="0 0 100 100" width="10px" height="10px">
-                  <rect fill="var(--color-3)" x="0" y="0" width="100" height="100" />
-                </svg>
-                <span class="mat-caption">
-                  Not Licensed
-                  <mat-icon matTooltip="You can contact the seller directly for more information." svgIcon="info"></mat-icon>
-                </span>
-              </mat-list-item>
-            </mat-list>
-          </mat-card>
-        </world-map>
-        <article fxLayout fxLayoutAlign="end">
-          <button mat-button color="primary" (click)="selectAll()">
-            <mat-icon svgIcon="add"></mat-icon>
-            Select all available territories
-          </button>
-        </article>
-      </mat-card-content>
-
-    </mat-card>
-  </ng-container>
-
-  <ng-template #calendar>
-    <mat-card class="avails-card">
-      <mat-card-header>
-        <mat-card-title>Available Dates</mat-card-title>
-        <mat-card-subtitle *ngIf="org$ | async as org">
-          Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel free to
-          <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <!-- TODO USE DURATION MARKERS -->
-        <avails-calendar [durationMarkers]="'TODO'"></avails-calendar>
-      </mat-card-content>
-    </mat-card>
-  </ng-template>
-</section>
-
+<ng-container *ngIf="(terms$ | async).length">
   <h2>Preselected Rights</h2>
   <mat-card *ngFor="let control of terms$ | async">
-    <form [formGroup]="control">
-      <mat-card-header *ngIf="control.value as term">
+    <form [formGroup]="control" *ngIf="control.value as term">
+      <mat-card-header fxLayout fxLayoutAlign="space-between center">
         <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <section fxLayoutGap="12px">
+          <button mat-icon-button (click)="edit(term)">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="remove(control)">
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
+        </section>
       </mat-card-header>
-      <mat-card-content *ngIf="control.value as term">
+      <mat-card-content>
         <mat-accordion>
           <!-- TERRITORIES -->
           <mat-expansion-panel>
@@ -218,9 +76,9 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
-              <strong>Original Languages</strong>
+              <h5>Original Languages</h5>
               <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
-              <strong>Request Specific Versions</strong>
+              <h5>Request Specific Versions</h5>
 
               <languages-form [form]="control.controls.languages"></languages-form>
             </article>
@@ -273,3 +131,4 @@
     <span>Add to Selection</span>
     <mat-icon svgIcon="arrow_forward"></mat-icon>
   </button>
+</ng-container>

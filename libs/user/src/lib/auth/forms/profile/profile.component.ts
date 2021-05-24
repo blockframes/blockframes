@@ -25,11 +25,11 @@ export class ProfileFormComponent {
   ) {}
   
   async sendEmailVerification() {
-    const { email } = this.authQuery.user;
+    const { email, firstName } = this.authQuery.user;
     const app = getCurrentApp(this.routerQuery);
     
     const sendVerifyEmail = this.functions.httpsCallable('sendVerifyEmailAddress');
-    await sendVerifyEmail({ email, app }).toPromise();
+    await sendVerifyEmail({ email, firstName, app }).toPromise();
     this.emailSent = true;
     this.cdr.markForCheck();
   }

@@ -333,7 +333,7 @@ export const producerRoles = {
 } as const
 
 export const productionStatus = {
-  development: 'In development',
+  development: 'In Development',
   shooting: 'In Production',
   post_production: 'In Post-production',
   finished: 'Completed',

@@ -26,6 +26,12 @@ ul {
   padding-left: 0;
 }
 
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 // Apply space of 8px between span & icon everywhere
 .mat-icon + span,
 span + .mat-icon {
