@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
-export function hasValue(value: string | number | any[] | any) {
+export function hasValue(value: string | number | unknown[] | unknown) {
   if (!value) return false;
   if (Array.isArray(value)) {
     return !!value.length;
@@ -14,7 +14,7 @@ export function hasValue(value: string | number | any[] | any) {
 
 @Pipe({ name: 'hasKeys' })
 export class HasKeysPipe implements PipeTransform {
-  transform(base: Record<string, any>, keys: string | string[], filter: 'every' | 'some' = 'some'): boolean {
+  transform(base: Record<string, unknown>, keys: string | string[], filter: 'every' | 'some' = 'some'): boolean {
     if (!base) {
       return false;
     }

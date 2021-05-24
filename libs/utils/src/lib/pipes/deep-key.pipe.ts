@@ -14,7 +14,7 @@ export const getDeepValue = (object: any, path: string) => path.split('.').reduc
 
 @Pipe({ name: 'deepKey' })
 export class DeepKeyPipe implements PipeTransform {
-  transform(value: any, deepKey: string) {
+  transform(value: unknown, deepKey: string) {
 
     try {
       if (!value || !deepKey) return value;
