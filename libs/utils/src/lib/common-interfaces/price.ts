@@ -76,11 +76,9 @@ export interface PriceRaw<D> {
   mg?: PriceRaw<D>;
 }
 
-export interface Price extends PriceRaw<Date> {
-}
+export type Price = PriceRaw<Date>;
 
-export interface PriceDocument extends PriceRaw<Timestamp> {
-}
+export type PriceDocument = PriceRaw<Timestamp>;
 
 interface ExpenseRaw<D> {
   label: string;
@@ -112,11 +110,9 @@ interface ExpenseRaw<D> {
   expenseId?: string;
 }
 
-export interface Expense extends ExpenseRaw<Date> {
-}
+export type Expense = ExpenseRaw<Date>;
 
-export interface ExpenseDocument extends ExpenseRaw<Timestamp> {
-}
+export type ExpenseDocument = ExpenseRaw<Timestamp>;
 
 export interface PaymentRaw<D> {
   id: string;
@@ -125,9 +121,9 @@ export interface PaymentRaw<D> {
   price: PriceRaw<D>;
 }
 
-export interface Payment extends PaymentRaw<Date> { }
+export type Payment = PaymentRaw<Date>;
 
-export interface PaymentDocument extends PaymentRaw<Timestamp> { }
+export type PaymentDocument = PaymentRaw<Timestamp>;
 
 /**
  * A factory function that creates Price

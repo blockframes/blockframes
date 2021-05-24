@@ -53,7 +53,7 @@ function filterByDate(value: any[], timeFrame: TimeFrame, key: string = 'date', 
   const fromDate = add({ [type]: from }, now);
   const toDate = add({ [type]: to }, now);
   return value.filter(v => {
-    if (!!keyFinish) {
+    if (keyFinish) {
       return getValue(v, key) < toDate && getValue(v, keyFinish) >= fromDate;
     }
     return getValue(v, key) >= fromDate && getValue(v, key) < toDate;
@@ -65,7 +65,7 @@ export class FilterByDatePipe implements PipeTransform {
   /**
    * Get only the sublist
    * @param value A list to order by date
-   * @param timeFrame 
+   * @param timeFrame
    * @param key The key where to find the date value
    * @param keyFinish The key where to find the end date value. If used, date found at key is used as starting date.
    */
@@ -86,7 +86,6 @@ export class LabelByDatePipe implements PipeTransform {
     switch (type) {
       case 'days': return formatDate(fromDate, 'EEEE', 'en');
       case 'weeks': return formatDate(fromDate, 'MMMM d', 'en');
-      case 'days': return formatDate(fromDate, 'MMMM', 'en');
       case 'years': return formatDate(fromDate, 'longDate', 'en');
     }
   }
@@ -100,7 +99,7 @@ export class EventsToTimeFramePipe implements PipeTransform {
     return timeFrames.map(timeFrame => {
       timeFrame['events'] = filterByDate(events, timeFrame, 'start', 'end');
       return timeFrame;
-    }).filter(timeFrame => !!timeFrame['events']?.length);
+    }).filter(timeFrame => timeFrame['events']?.length);
   }
 }
 
