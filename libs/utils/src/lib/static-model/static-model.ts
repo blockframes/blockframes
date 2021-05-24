@@ -1857,6 +1857,6 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
   }
 }
 
-export function parseToAll(scope: Scope, allKey: string): any[] {
+export function parseToAll(scope: Scope, allKey: string): unknown[] {
   return Object.keys(staticModel[scope]).filter(key => key !== allKey)
 }
