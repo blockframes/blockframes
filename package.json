@@ -151,7 +151,6 @@
     "@types/twilio-video": "^2.7.1",
     "@typescript-eslint/eslint-plugin": "4.19.0",
     "@typescript-eslint/parser": "4.19.0",
-    "angular-prerender": "^5.4.0",
     "babel-loader": "8.0.6",
     "bundlesize": "^0.18.0",
     "camelcase": "^6.1.0",
