@@ -11,14 +11,13 @@ import { format } from "date-fns";
 import { User } from '@blockframes/user/types';
 import { createNotification, triggerNotifications } from './notification';
 import { templateIds } from './templates/ids';
-import type { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;
   const orgId = offer.buyerId;
   const [ org, bucket ] = await Promise.all([
     getDocument<OrganizationDocument>(`orgs/${orgId}`),
-    getDocument<any | Bucket>(`buckets/${orgId}`)
+    getDocument<any>(`buckets/${orgId}`)
   ]);
   const user = await getDocument<User>(`users/${bucket.uid}`);
 
