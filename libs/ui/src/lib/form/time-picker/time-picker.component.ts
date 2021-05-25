@@ -53,7 +53,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   id = `time-picker_${TimePickerComponent.nextId++}`;
   describedBy = '';
   isAllDay: boolean;
-  
+
   // PLACEHOLDER
 
   @Input()
@@ -99,6 +99,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     const time = getTime(day);
     this.form.setValue({ time, day });
     this.stateChanges.next();
+    this.hours = [time].concat(hours);
   }
 
   // Error State
@@ -203,5 +204,4 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     this.onChange(value)
     this.timeChange.emit(value);
   }
-
 }
