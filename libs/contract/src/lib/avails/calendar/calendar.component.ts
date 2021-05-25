@@ -47,7 +47,7 @@ export class AvailsCalendarComponent implements OnInit {
     this.updateMatrix();
   }
 
-  @Output() select = new EventEmitter<Duration<Date>>();
+  @Output() selected = new EventEmitter<Duration<Date>>();
 
   ngOnInit() {
     const state = this.state$.getValue();
@@ -83,7 +83,7 @@ export class AvailsCalendarComponent implements OnInit {
       const year = new Date().getFullYear();
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
-      this.select.emit({ from, to });
+      this.selected.emit({ from, to });
     }
   }
 }

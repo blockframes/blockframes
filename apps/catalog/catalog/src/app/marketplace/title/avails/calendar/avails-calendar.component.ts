@@ -97,7 +97,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
     const avails = { ...this.availsForm.value, duration };
 
     for (const marker of licensed) {
-      const result = this.shell.bucketForm.getFromBucket(avails, marker);
+      const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
       if (result) {
         const contract = this.shell.bucketForm.get('contracts').get(result.contractIndex.toString());
         const term = contract.get('terms').get(result.termIndex.toString());

@@ -144,44 +144,47 @@ export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
 ///////////
 // utils //
 ///////////
-export function findSameTerritoriesTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
-  return terms.findIndex(t => isSameTerritoriesTerm(t, avail) && isSameMediaTerm(t, avail));
+export function findSameMapTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
+  const isSameTerm = (term: BucketTerm) => {
+    isSameExclusivityTerm(term, avail) &&
+    isSameTerritoriesTerm(term, avail) &&
+    isSameMediaTerm(term, avail)
+  };
+  return terms.findIndex(isSameTerm);
 }
 
-export function findSameDurationTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
-  return terms.findIndex(t => isSameTerritoriesTerm(t, avail) && isSameMediaTerm(t, avail));
+export function findSameCalendarTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
+  const isSameTerm = (term: BucketTerm) => {
+    isSameExclusivityTerm(term, avail) &&
+    isSameDurationTerm(term, avail) &&
+    isSameMediaTerm(term, avail)
+  };
+  return terms.findIndex(isSameTerm);
+}
+
+export function isSameExclusivityTerm(term: BucketTerm, avail: AvailsFilter) {
+  return term.exclusive === avail.exclusive
 }
 
 export function isSameMediaTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (term.exclusive !== avail.exclusive) return false;
-
-  if (
-    !avail.medias
-    || term.medias.length !== avail.medias.length
-    || term.medias.some(medium => !avail.medias.includes(medium))
-  ) return false;
-
+  if (!avail.medias) return false;
+  if (term.medias.length !== avail.medias.length) return false;
+  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
   return true;
 }
 
 export function isSameTerritoriesTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (term.exclusive !== avail.exclusive) return false;
-
-  if (
-    !avail.territories
-    || term.territories.length !== avail.territories.length
-    || term.territories.some(territory => !avail.territories.includes(territory))
-  ) return false;
-
+  if (!avail.territories) return false;
+  if (term.territories.length !== avail.territories.length) return false;
+  if (term.territories.some(territory => !avail.territories.includes(territory))) return false;
   return true;
 }
 
 export function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (term.exclusive !== avail.exclusive) return false;
-
-  if (!avail.duration?.from || term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
-  if (!avail.duration?.to || term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
-
+  if (!avail.duration?.from) return false;
+  if (term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
+  if (!avail.duration?.to) return false;
+  if (term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
   return true;
 }
 
@@ -192,7 +195,8 @@ export function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
  * @returns
  */
  export function isSameTerm(term: BucketTerm, avail: AvailsFilter) {
-  return isSameDurationTerm(term, avail)
+  return isSameExclusivityTerm(term, avail)
+    && isSameDurationTerm(term, avail)
     && isSameTerritoriesTerm(term, avail)
     && isSameMediaTerm(term, avail);
 }
