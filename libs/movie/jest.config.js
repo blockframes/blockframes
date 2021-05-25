@@ -3,8 +3,8 @@
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
-      tsConfig: '<rootDir>/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.(html|svg)$',
+      tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
   transform: {

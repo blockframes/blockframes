@@ -18,7 +18,7 @@ import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { PromotionalLinksModule } from '@blockframes/movie/form/links/promotional-links.module';
 
 // Blockframes Media
-import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe.ts';
+import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 

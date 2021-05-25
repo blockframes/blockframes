@@ -49,7 +49,7 @@ const queryAnalyticsActiveUsers = `
   LIMIT 1000
 `
 
-async function executeQueryEventAnalytics(query: any, eventIds: string[]) {
+async function executeQueryEventAnalytics(query, eventIds: string[]) {
   const bigqueryClient = new BigQuery();
 
   const options = {
@@ -65,7 +65,7 @@ async function executeQueryEventAnalytics(query: any, eventIds: string[]) {
   return bigqueryClient.query(options);
 }
 
-async function executeQuery(query: any) {
+async function executeQuery(query) {
   const bigqueryClient = new BigQuery();
 
   const options = {
@@ -84,7 +84,7 @@ const findByOrgId = (orgs: OrganizationDocument[], orgId: string) => {
   return orgs.find(org => !!org && org.id === orgId);
 };
 
-const createEventAnalytics = (result: any, user: PublicUser | undefined, org: OrganizationDocument | undefined): EventAnalytics => {
+const createEventAnalytics = (result, user: PublicUser | undefined, org: OrganizationDocument | undefined): EventAnalytics => {
   return {
     ...result,
     email: user?.email,
@@ -105,7 +105,7 @@ export const requestEventAnalytics = async (
   if (!eventIds) {
     return [];
   }
-  const uid = context.auth!.uid;
+  const uid = context.auth.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
@@ -153,9 +153,9 @@ export const requestEventAnalytics = async (
 };
 
 export const getAnalyticsActiveUsers = async (
-  _: any,
+  _,
   context: CallableContext
-): Promise<any[]> => {
+) => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CookiesConsentForm } from '../cookie-form/cookie.form';
 import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
@@ -10,16 +10,14 @@ import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-pol
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CookieDialogComponent implements OnInit {
+export class CookieDialogComponent {
 
   form = new CookiesConsentForm();
-  
+
   constructor(
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<CookieDialogComponent>,
   ) { }
-
-  ngOnInit() { }
 
   save() {
     this.dialogRef.close(this.form.value);

@@ -10,6 +10,4 @@ import { AddressForm } from '@blockframes/organization/forms/organization.form';
 export class OrganizationFormAddressComponent {
   @Input() form: AddressForm;
 
-  constructor() { }
-
 }

@@ -1,8 +1,12 @@
-@mixin mat-bf-expansion-panel-theme($theme) {
-  $foreground: map-get($theme, foreground);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map.get($config, 'foreground');
 
   .mat-expansion-panel {
-    @include mat-private-theme-overridable-elevation(0, $theme);
+    @include mat.overridable-elevation(0);
     // HEADER
     .mat-expansion-panel-header {
       padding: 0 16px;
@@ -24,7 +28,7 @@
 
 
   .mat-accordion .mat-expansion-panel {
-    border-bottom: solid 1px mat-color($foreground, divider);
+    border-bottom: solid 1px mat.get-color-from-palette($foreground, divider);
     &:last-of-type {
       border-bottom: none;
     }
@@ -34,15 +38,17 @@
 
 }
 
-@mixin mat-bf-expansion-panel-typography($config) {
+@mixin typography($theme) {
+  $config: mat.get-typography-config($theme);
+  
   .mat-expansion-panel-header-title {
     font: {
-      size: mat-font-size($config, body-2);
-      weight: mat-font-weight($config, button);
+      size: mat.font-size($config, 'body-2');
+      weight: mat.font-weight($config, 'button');
     }
   }
 
   .mat-expansion-panel-content {
-    @include mat-typography-level-to-styles($config, body-2);
+    @include mat.typography-level($config, body-2);
   }
 }

@@ -6,7 +6,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, availableDurations, AvailsFilter } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { filter, map, startWith } from 'rxjs/operators';
-import { Bucket } from '@blockframes/contract/bucket/+state';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 
 function getSelected(avail: AvailsFilter, bucket: Bucket, markers: DurationMarker[], mode: 'exact' | 'in') {
   const inDurations = getDurations(avail, bucket, mode);

@@ -25,7 +25,7 @@ export class AuthGuard extends CollectionGuard<AuthState> {
         }
         return this.service.sync().pipe(
           catchError(() => this.router.navigate(['/'])),
-          map(_ => this.query.user),
+          map(() => this.query.user),
           map(user => (hasDisplayName(user)) ? true : 'auth/identity'),
         );
       })

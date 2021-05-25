@@ -18,7 +18,7 @@ export interface UserConfig {
   email: string;
   password: string;
 
-  [key: string]: any;
+  [key: string]: string | number;
 }
 
 export const USER_FIXTURES_PASSWORD = 'blockframes';
@@ -45,7 +45,7 @@ async function createUserIfNonexistent(auth: Auth, userConfig: UserConfig): Prom
  * @param users The list of users to create if they do not exists.
  * @param auth  Firestore Admin Auth object
  */
-async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
+async function createAllUsers(users: UserConfig[], auth: Auth) {
   const ps = users.map((user) => createUserIfNonexistent(auth, user));
   return Promise.all(ps);
 }
@@ -56,7 +56,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
  * @param expectedUsers
  * @param auth
  */
-export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
+export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth) {
   let pageToken;
 
   do {
@@ -108,18 +108,14 @@ async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
  * If `jsonl` param is not provided, the function will read users from local Firestore
  * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
  */
-export async function syncUsers(
-  jsonl?: DbRecord[],
-  db = loadAdminServices().db,
-  auth = loadAdminServices().auth
-): Promise<any> {
+export async function syncUsers( jsonl?: DbRecord[], db = loadAdminServices().db, auth = loadAdminServices().auth) {
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   await deleteAllUsers(auth);
   const createResult = await importAllUsers(auth, expectedUsers);
   console.log(createResult);
 }
 
-export async function printUsers(): Promise<any> {
+export async function printUsers() {
   const { auth } = loadAdminServices();
 
   let pageToken;
@@ -135,7 +131,7 @@ export async function printUsers(): Promise<any> {
   } while (pageToken);
 }
 
-export async function clearUsers(): Promise<any> {
+export async function clearUsers() {
   const { auth } = loadAdminServices();
 
   // clear users is equivalent to "we expect no users", we can reuse the code.
@@ -183,7 +179,7 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
   });
 }
 
-export async function createUsers(): Promise<any> {
+export async function createUsers() {
   const { auth } = loadAdminServices();
   const users = await readUsersFromSTDIN();
   return createAllUsers(users, auth);

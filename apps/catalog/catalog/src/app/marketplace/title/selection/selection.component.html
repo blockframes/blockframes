@@ -9,7 +9,7 @@
       </div>
       <div fxLayout="column" fxLayoutAlign="center center">
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
-          {{ (titles | deepKey:'title.international').join(', ') }}
+          {{ (titles | deepKey:'title.international') }}
         </p>
         <button mat-flat-button color="primary" (click)="createOffer(bucket)">Create Offer</button>
       </div>

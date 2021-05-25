@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, App, getCurrentApp } from '../apps';
-
-type PageKey = App | 'crm' | 'cms' | 'blockframes';
+import { appName, getCurrentApp } from '../apps';
 
 function displaySection(section: string, showAppName: boolean, _appName: string) {
   const suffix = showAppName ? `- ${_appName}` : '';
@@ -20,8 +18,8 @@ export class DynamicTitleService {
   private app = getCurrentApp(this.routerQuery);
 
   /**
-   * This variable holds the value that this service gets when 
-   * he gets initialized. This is useful as a fallback option 
+   * This variable holds the value that this service gets when
+   * he gets initialized. This is useful as a fallback option
    */
   private initTitle = '';
 

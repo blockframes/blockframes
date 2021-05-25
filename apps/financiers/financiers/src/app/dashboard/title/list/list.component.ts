@@ -63,7 +63,7 @@ export class ListComponent implements OnInit {
       map(movies => movies.filter(movie => movie.app.financiers.access)),
       switchMap(movies => this.filter$.pipe(map(filter => filterMovieCampaign(movies, filter)))),
       tap(movies => {
-        !!movies.length ?
+        movies.length ?
           this.dynTitle.setPageTitle('My titles') :
           this.dynTitle.setPageTitle('My titles', 'Empty');
       })

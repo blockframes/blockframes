@@ -6,7 +6,7 @@ type Timestamp = firebase.firestore.Timestamp;
 
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
-export type EventMeta = Meeting | Screening | {};
+export type EventMeta = Meeting | Screening | unknown;
 
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
 
@@ -43,7 +43,7 @@ export interface Screening {
   description: string;
 }
 
-export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = any> {
+export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = Record<string, unknown>> {
   id: string;
   ownerOrgId: string;
   isPrivate: boolean;

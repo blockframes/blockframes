@@ -1,10 +1,14 @@
-@mixin mat-native-control($config) {
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin typography($theme) {
+  $config: mat.get-typography-config($theme);
 
   .mat-input-element {
     border-color: transparent;
     outline: none;
-    font-family: mat-font-family($config);
-    font-size: mat-font-size($config, button);
+    font-family: mat.font-family($config);
+    font-size: mat.font-size($config, button);
     background-color: inherit
   }
 }

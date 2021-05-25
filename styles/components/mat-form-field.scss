@@ -1,6 +1,10 @@
-@mixin mat-bf-form-field-theme($theme) {
-  $primary: map-get($theme, primary);
-  $foreground: map-get($theme, foreground);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $primary: map.get($config, 'primary');
+  $foreground: map.get($config, 'foreground');
 
 
   .mat-form-field {
@@ -33,11 +37,11 @@
   // OUTLINE
   .mat-form-field-appearance-outline {
     .mat-form-field-outline {
-      color: mat-color($foreground, divider);
+      color: mat.get-color-from-palette($foreground, divider);
     }
     // This one is when mat-form-field is hovered
     .mat-form-field-outline-thick {
-      color: mat-color($primary);
+      color: mat.get-color-from-palette($primary);
 
       .mat-form-field-outline-start,
       .mat-form-field-outline-end,

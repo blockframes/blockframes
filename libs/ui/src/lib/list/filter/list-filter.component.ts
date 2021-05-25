@@ -18,7 +18,7 @@ export class FilterDirective implements OnInit {
   @Input() form: AbstractControl;
   private active$ = new BehaviorSubject(false);
   public color$: Observable<'primary' | ''>;
-  constructor(public template: TemplateRef<any>) { }
+  constructor(public template: TemplateRef<unknown>) { }
 
   set active(isActive: boolean) {
     this.active$.next(isActive);

@@ -100,7 +100,7 @@ async function updateMovies(
       movie.main.poster = EMPTY_REF;
     }
 
-    if (!!movie.promotionalElements.still_photo) {
+    if (movie.promotionalElements.still_photo) {
       for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
         if(movie.promotionalElements.still_photo[stillKey].media?.original?.ref){
           const still = movie.promotionalElements.still_photo[stillKey].media.original;

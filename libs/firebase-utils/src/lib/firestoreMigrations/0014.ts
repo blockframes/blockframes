@@ -1,6 +1,4 @@
-// @ts-nocheck
 import { Firestore } from '../types';
-
 
 /**
  * Update name and surname in user documents

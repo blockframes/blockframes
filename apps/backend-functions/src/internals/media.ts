@@ -61,11 +61,13 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
       canAccess = file.docId === userDoc.orgId;
       break;
     case 'movies':
-      const movieSnap = await db.collection('movies').doc(file.docId).get();
-      if (!movieSnap.exists) { return false; }
-      const movie = movieSnap.data() as MovieDocument;
-      canAccess = movie.orgIds.some(id => userDoc.orgId === id);
-      break;
+      {
+        const movieSnap = await db.collection('movies').doc(file.docId).get();
+        if (!movieSnap.exists) { return false; }
+        const movie = movieSnap.data() as MovieDocument;
+        canAccess = movie.orgIds.some(id => userDoc.orgId === id);
+        break;
+      }
     default:
       canAccess = false;
       break;
@@ -79,7 +81,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
     if (eventSnap.exists) {
 
-      const eventData = eventSnap.data()!;
+      const eventData = eventSnap.data();
 
       const now = admin.firestore.Timestamp.now();
 

@@ -5,7 +5,7 @@ import { TunnelRoot } from './tunnel.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class TunnelGuard implements CanActivate, CanDeactivate<any> {
+export class TunnelGuard implements CanActivate, CanDeactivate<unknown> {
   constructor(private service: TunnelService) { }
 
   canActivate() {

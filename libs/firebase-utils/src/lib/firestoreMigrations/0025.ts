@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
@@ -70,7 +69,7 @@ async function updateMovies(
       const keys = ['banner', 'poster', 'still_photo'];
 
       for (const key of keys) {
-        if (!!movie.promotionalElements[key]) {
+        if (movie.promotionalElements[key]) {
           const value: OldPromotionalElement | OldPromotionalElement[] = movie.promotionalElements[key];
           if (Array.isArray(value)) {
             for (let i = 0 ; i < value.length ; i++) {
@@ -171,7 +170,7 @@ const updateImgRef = async (
     if (! exists) {
 
       // we try to download it directly from it's url (prod, staging, vincent's storage, ...)
-      if (!!url) {
+      if (url) {
 
         console.log(`downloading ${destinationFolder}`);
 
@@ -179,7 +178,7 @@ const updateImgRef = async (
           // create a write stream to save the image in google cloud storage
           const saveImage = to.createWriteStream({contentType: 'image/jpeg'})
             .on('error', (err) => {console.log('save error', err); reject(err)})
-            .once('finish', () => resolve());
+            .once('finish', () => resolve(true));
 
           // download the image and save it
           get(url, result => {

@@ -29,7 +29,9 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
   try {
     // tslint:disable-next-line: no-eval
     runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
-  } catch (e) { }
+  } catch (e) { 
+    console.log(e);
+  }
   if (emulator) { // ** Connect to emulator
     const firebaseTest: FirebaseTestConfig = firebaseFunctionsTest();
     testIndex++;
@@ -61,7 +63,7 @@ export type Firestore = ExtractPromise<PromiseFirestore>;
 export async function initFirestoreApp(
   projectId: string,
   rulePath: string,
-  data: Record<string, Object> = {},
+  data: Record<string, unknown> = {},
   auth?: TokenOptions
 ) {
   //Define these env vars to avoid getting console warnings
@@ -74,7 +76,7 @@ export async function initFirestoreApp(
   return app.firestore();
 }
 
-function setData(projectId: string, dataDB: Record<string, Object>) {
+function setData(projectId: string, dataDB: Record<string, unknown>) {
   const app = initializeAdminApp({ projectId });
   const db = app.firestore();
   // Write data to firestore app

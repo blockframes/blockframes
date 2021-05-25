@@ -55,12 +55,15 @@ export class TypedFieldComponent implements ControlValueAccessor, OnInit, OnDest
       this.form.reset({ type, value })
     }
   }
-  registerOnChange(fn: any): void {
+
+  registerOnChange(fn: () => void): void {
     this.onChange = fn;
   }
-  registerOnTouched(fn: any): void {
-    this.onTouched = this.onTouched;
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
   }
+
   setDisabledState(isDisabled: boolean): void {
     isDisabled ? this.form.disable() : this.form.enable();
   }

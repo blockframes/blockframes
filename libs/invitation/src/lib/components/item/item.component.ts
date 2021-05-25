@@ -8,6 +8,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { isMeeting } from '@blockframes/event/+state';
 
 @Component({
   selector: 'invitation-item',
@@ -21,7 +22,7 @@ export class ItemComponent {
 
   @Input() set invitation(invitation: Invitation) {
     this._invitation = invitation;
-    if (!!invitation.fromUser) {
+    if (invitation.fromUser) {
       this.fromUser.value = invitation.fromUser;
 
       if (!invitation.fromUser.orgId) return;
@@ -29,12 +30,12 @@ export class ItemComponent {
         this.fromOrg.value = org
       })
 
-    } else if (!!invitation.fromOrg) {
+    } else if (invitation.fromOrg) {
       this.fromOrg.value = invitation.fromOrg
 
       if (invitation.type === 'attendEvent') {
         this.eventService.getValue(invitation.eventId).then(event => {
-          if (event.type === 'meeting') {
+          if (isMeeting(event)) {
             this.eventType = 'meeting';
             this.userService.getValue(event.meta.organizerUid as string).then(user => {
               this.fromUser.value = user;
@@ -49,7 +50,7 @@ export class ItemComponent {
 
   fromOrg = new BehaviorStore<PublicOrganization>(undefined);
   fromUser = new BehaviorStore<PublicUser>(undefined);
-  eventType: string = 'screening';
+  eventType = 'screening';
 
   constructor(
     private invitationService: InvitationService,
@@ -60,6 +61,7 @@ export class ItemComponent {
   ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (window.Cypress) {
       const host = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port: ' '}`;

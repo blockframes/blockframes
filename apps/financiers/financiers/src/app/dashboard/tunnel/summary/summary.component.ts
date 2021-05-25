@@ -11,7 +11,6 @@ import { Subscription } from 'rxjs';
 
 import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -67,7 +66,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
             await this.consentsService.createConsent('share', movieId);
             const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
             const ref = this.snackBar.open(text, '', { duration: 1000 });
-            ref.afterDismissed().subscribe(_ => this.router.navigate(['../end'], { relativeTo: this.route }))
+            ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))
           } catch (err) {
             console.error(err);
             // Log the invalid forms

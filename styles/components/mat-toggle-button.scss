@@ -1,28 +1,30 @@
-@mixin mat-bf-button-toggle-theme($theme) {
-  $primary: map-get($theme, primary);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $primary: map.get($config, primary);
 
   .mat-button-toggle {
-    color: mat-color($primary, 500);
+    color: mat.get-color-from-palette($primary, 500);
   }
 
   .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
-    border-left: solid 1px mat-color($primary, 500);
+    border-left: solid 1px mat.get-color-from-palette($primary, 500);
   }
 
   [dir="rtl"] .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
     border-left: none;
-    border-right: solid 1px mat-color($primary, 500);
+    border-right: solid 1px mat.get-color-from-palette($primary, 500);
   }
 
   .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
   .mat-button-toggle-group-appearance-standard {
-    border: solid 1px mat-color($primary, 500);
+    border: solid 1px mat.get-color-from-palette($primary, 500);
   }
 
   .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
-    background-color: mat-color($primary, 800);
-    color: mat-color($primary, default-contrast);
+    background-color: mat.get-color-from-palette($primary, 800);
+    color: mat.get-color-from-palette($primary, default-contrast);
   }
 }
