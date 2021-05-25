@@ -78,7 +78,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   public next: RouteDescription;
   public previous: RouteDescription;
   public mode$ = this.breakpointsService.ltMd.pipe(
-    map(ltMd => ltMd ? 'over' : 'side')
+    map(ltMd => ltMd ? 'over' : 'side'),
+    shareReplay(1)
   );
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
