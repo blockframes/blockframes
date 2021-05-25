@@ -8,8 +8,7 @@ import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { slideUp } from '@blockframes/utils/animations/fade';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { deconstructFilePath } from '@blockframes/utils/file-sanitizer';
-import { MovieVideo, MovieNote } from '@blockframes/movie/+state/movie.firestore';
-import { StorageFile } from '../../+state/media.firestore';
+import { MediaOutput } from '../../+state/media.firestore';
 
 @Component({
   selector: 'file-upload-widget',
@@ -59,7 +58,7 @@ export class UploadWidgetComponent {
 
     const snapshot = await this.db.doc(docPath).get().toPromise();
     const data = snapshot.data();
-    const media = getDeepValue(data, field) as StorageFile[] | MovieVideo[] | MovieNote[] | string | MovieVideo;
+    const media: MediaOutput = getDeepValue(data, field);
 
     if (Array.isArray(media)) {
       // Still Photos (string[]), Documents (HostedMediaWithMetadata[]), Notes & Statements (MovieNote) or OtherVideos (HostedVideo[])

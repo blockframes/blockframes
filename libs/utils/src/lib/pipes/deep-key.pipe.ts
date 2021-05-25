@@ -10,7 +10,11 @@ import { NgModule } from '@angular/core';
  * const path = 'main.nested.name';
  * this.resolve(result); // 'Joe'
  */
-export const getDeepValue = (object: unknown, path: string) => path.split('.').reduce((result, key) => result?.[key], object);
+export function getDeepValue<T>(object: unknown, path: string): T {
+  if (typeof object === 'object') {
+    return path.split('.').reduce((result, key) => result?.[key], object);
+  }
+}
 
 @Pipe({ name: 'deepKey' })
 export class DeepKeyPipe implements PipeTransform {
@@ -22,11 +26,8 @@ export class DeepKeyPipe implements PipeTransform {
       const conditions = deepKey.split('||').map(p => p.trim());
 
       if (Array.isArray(value)) {
-        console.log('coucou array')
         return value.map(obj => {
           const condition = conditions.find(c => getDeepValue(obj, c) !== undefined);
-          console.log('!!!!!!!!!! condition array', condition)
-          console.log(getDeepValue(obj, condition))
           return condition ? getDeepValue(obj, condition) : undefined;
         });
       } else {

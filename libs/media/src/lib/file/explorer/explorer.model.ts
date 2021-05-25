@@ -81,22 +81,22 @@ function titlesDirectory(titles: Movie[]) {
 }
 
 function getFormStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field) as Partial<StorageFile>;
+  const value: Partial<StorageFile> = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return new StorageFileForm(value);
 }
 
 function getFormListStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field) as StorageFile[];
+  const value: StorageFile[] = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return FormList.factory<StorageFile>(value, file => new StorageFileForm(file));
 }
 
 function getFormStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field) as Partial<MovieVideo>;
+  const value: Partial<MovieVideo> = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return new MovieVideoForm(value);
 }
 
 function getFormListStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field) as StorageVideo[];
+  const value: StorageVideo[] = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return FormList.factory<StorageVideo>(value, file => new MovieVideoForm(file));
 }
 

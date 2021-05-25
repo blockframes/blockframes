@@ -39,7 +39,7 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.movie.valueChanges(this.movieId).subscribe(title => {
       const metadata = getFileMetadata('movies', 'notes', this.movieId);
-      const mediaArray = getDeepValue(title, metadata.field) as Partial<MovieNote>[];
+      const mediaArray: Partial<MovieNote>[] = getDeepValue(title, metadata.field);
       this.form.promotional.get('notes').patchValue(mediaArray);
     });
   }

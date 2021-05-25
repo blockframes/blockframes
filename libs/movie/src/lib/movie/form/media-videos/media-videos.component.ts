@@ -34,7 +34,7 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
     this.sub = this.movie.valueChanges(this.movieId).subscribe(title => {
       const metadata = getFileMetadata('movies', 'otherVideos', this.movieId);
-      const mediaArray = getDeepValue(title, metadata.field) as Partial<MovieVideo>[];
+      const mediaArray: Partial<MovieVideo>[] = getDeepValue(title, metadata.field);
       this.videoList.patchValue(mediaArray);
     })
   }
