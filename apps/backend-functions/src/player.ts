@@ -146,16 +146,11 @@ export const getPrivateVideoUrl = async (
   const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
   const response = await jw.videos.show({video_key: jwPlayerId});
 
-  let info;
-  if (response.status === 'ok') {
-    info = response.video;
-  }
-
   return {
     error: '',
     result: {
       signedUrl,
-      info
+      info: response.status === 'ok' ? response.video : undefined
     }
   };
 }
