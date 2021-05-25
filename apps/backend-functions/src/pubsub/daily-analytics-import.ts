@@ -58,7 +58,8 @@ async function executeQueryMovieAnalytics(daysPerRange: number): Promise<MovieEv
     }
   };
 
-  return await bigQueryClient.query(query) as MovieEventAnalytics[][] ;
+  const analytics = await bigQueryClient.query(query) as MovieEventAnalytics[][];
+  return analytics;
 }
 
 /**

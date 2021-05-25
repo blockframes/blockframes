@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { User } from '@blockframes/user/types';
 import { createNotification, triggerNotifications } from './notification';
 import { templateIds } from './templates/ids';
-import type { Bucket } from '@blockframes/contract/bucket/+state';
+import type { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 
 export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
   const offer = snap.data() as Offer;

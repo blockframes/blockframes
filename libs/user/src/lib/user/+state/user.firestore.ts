@@ -32,7 +32,7 @@ export type NotificationSettings = Record<NotificationTypesBase, NotificationSet
 
 /** A user interface with public information */
 export interface PublicUser {
-  _meta?: DocumentMeta<Date | FirebaseFirestore.Timestamp>;
+  _meta?: DocumentMeta<Date>;
   uid: string;
   email: string;
   avatar?: StorageFile;

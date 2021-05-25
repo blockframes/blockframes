@@ -134,63 +134,58 @@ interface UserInvitation {
  */
 export const inviteUsers = async (data: UserInvitation, context: CallableContext) => {
 
-    if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
-    const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
-    if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+  if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
 
-    const promises: ErrorResultResponse[] = [];
-    const invitation = createInvitation(data.invitation);
+  const promises: ErrorResultResponse[] = [];
+  const invitation = createInvitation(data.invitation);
 
-    // Ensure that we are not violating invitations limit
-    if (invitation.type === 'attendEvent') {
-      const eventId = invitation.eventId;
-      if (eventId) {
+  // Ensure that we are not violating invitations limit
+  if (invitation.type === 'attendEvent') {
+    const eventId = invitation.eventId;
+    if (eventId) {
 
-        const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
 
-        // for now only meetings have a limitation
-        if (event.type === 'meeting') {
+      // for now only meetings have a limitation
+      if (event.type === 'meeting') {
 
-          // count the number of already existing invitations
-          const query = db.collection('invitations').where('eventId', '==', eventId);
-          const querySnap = await query.get();
+        // count the number of already existing invitations
+        const query = db.collection('invitations').where('eventId', '==', eventId);
+        const querySnap = await query.get();
 
-          // assert that we don"t go over the limit
-          if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
-            throw new Error(
-              `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
+        // assert that we don"t go over the limit
+        if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
+          throw new Error(
+            `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
 and user ${user.uid} tried to add ${data.emails.length} new invitations.
 That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
-          }
         }
       }
     }
+  }
 
-    let eventData: EventEmailData = getEventEmailData();
-    if (invitation.type === 'attendEvent' && !!invitation.eventId) {
-      const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-      eventData = getEventEmailData(event);
-    }
+  let eventData: EventEmailData = getEventEmailData();
+  if (invitation.type === 'attendEvent' && !!invitation.eventId) {
+    const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+    eventData = getEventEmailData(event);
+  }
 
-    for (const email of data.emails) {
-      let end = false;
-      await getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
-        .then(u => createPublicUser(u))
-        .then(toUser => {
-          invitation.toUser = toUser;
-          const id = db.collection('invitations').doc().id;
-          invitation.id = id;
-        })
-        .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
-        .then(result => promises.push({ result, error: '' }))
-        .catch(error => promises.push({ result: undefined, error }))
-        .then(lastIndex => {
-          if (lastIndex === data.emails.length) {
-            end = true;
-          }
-        });
-      if (end) break;
-    }
+  for (const email of data.emails) {
+    const isLastIndex = await getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
+      .then(u => createPublicUser(u))
+      .then(toUser => {
+        invitation.toUser = toUser;
+        const id = db.collection('invitations').doc().id;
+        invitation.id = id;
+      })
+      .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
+      .then(result => promises.push({ result, error: '' }))
+      .catch(error => promises.push({ result: undefined, error }))
+      .then(lastIndex => lastIndex === data.emails.length);
+    if (isLastIndex) break;
+  }
   return promises;
 }
 

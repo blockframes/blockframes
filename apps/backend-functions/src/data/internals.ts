@@ -12,7 +12,7 @@ import { getDocument } from '@blockframes/firebase-utils';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
-import type { PublicUser } from '@blockframes/user/+state';
+import type { PublicUser } from '@blockframes/user/+state/user.firestore';
 
 export { getDocument };
 

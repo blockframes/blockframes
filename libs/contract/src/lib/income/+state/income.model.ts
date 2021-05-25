@@ -1,5 +1,3 @@
-import type { Bucket } from "@blockframes/contract/bucket/+state";
-
 export interface Income {
   id: string;
   /** TermsId of the mandate contract on which it applies first */
@@ -7,5 +5,4 @@ export interface Income {
   /** The contract (sale in this case) that created this income */
   contractId: string;
   price: number;
-  currency: Bucket['currency'];
 }
