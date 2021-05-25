@@ -123,11 +123,11 @@ describe('Test Matrix', () => {
     stateMatrix = markersToMatrix(markers, stateMatrix, 'available');
 
     expect(stateMatrix[4][10]).toBe('empty');
-    expect(stateMatrix[4][11]).toBe('avail');
+    expect(stateMatrix[4][11]).toBe('available');
     expect(stateMatrix[5].filter(s => s === 'available').length).toBe(12);
     expect(stateMatrix[6].filter(s => s === 'empty').length).toBe(12);
     expect(stateMatrix[7].filter(s => s === 'empty').length).toBe(11);
-    expect(stateMatrix[7][9]).toBe('avail');
+    expect(stateMatrix[7][9]).toBe('available');
   });
 
   it('Test select', () => {
