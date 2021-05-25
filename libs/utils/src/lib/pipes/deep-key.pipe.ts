@@ -10,7 +10,11 @@ import { NgModule } from '@angular/core';
  * const path = 'main.nested.name';
  * this.resolve(result); // 'Joe'
  */
-export const getDeepValue = (object: any, path: string) => path.split('.').reduce((result, key) => result?.[key], object);
+export function getDeepValue<T>(object: unknown, path: string): T {
+  if (typeof object === 'object') {
+    return path.split('.').reduce((result, key) => result?.[key], object);
+  }
+}
 
 @Pipe({ name: 'deepKey' })
 export class DeepKeyPipe implements PipeTransform {
