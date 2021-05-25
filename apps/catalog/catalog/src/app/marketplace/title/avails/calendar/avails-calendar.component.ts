@@ -6,7 +6,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, AvailsFilter } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { filter, map, startWith, take } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
 import { Bucket } from '@blockframes/contract/bucket/+state';
 import { Duration } from '@blockframes/contract/term/+state/term.model';
 
@@ -78,7 +78,8 @@ export class MarketplaceMovieAvailsCalendarComponent {
     map(([mandates, mandateTerms]) => {
       if (this.availsForm.invalid) return [];
       return getDurationMarkers(mandates, mandateTerms);
-    })
+    }),
+    shareReplay(1),
   );
 
   constructor(

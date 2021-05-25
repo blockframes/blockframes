@@ -1,7 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { AvailsFilter, DurationMarker, findSameTermIndex, TerritoryMarker } from '../avails/avails';
+import { AvailsFilter, DurationMarker, findSameDurationTermIndex, findSameTerritoriesTermIndex, TerritoryMarker } from '../avails/avails';
 import {
   Bucket,
   BucketContract,
@@ -110,9 +110,9 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
 
   /**
    * Adds a territory to bucket if not already in it
-   * @param avails 
-   * @param marker 
-   * @returns 
+   * @param avails
+   * @param marker
+   * @returns
    */
   addTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
     const { contract: mandate, slug: territory, term } = marker;
@@ -127,7 +127,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails, 'territories');
+    const termIndex = findSameTerritoriesTermIndex(contract.terms, avails);
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
@@ -150,9 +150,9 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
 
   /**
    * Removes a territory from Bucket and entire term if empty
-   * @param avails 
-   * @param marker 
-   * @returns 
+   * @param avails
+   * @param marker
+   * @returns
    */
   removeTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
     const { slug: territory, term } = marker;
@@ -161,7 +161,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     if (contractIndex === -1) { return; }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails, 'territories');
+    const termIndex = findSameTerritoriesTermIndex(contract.terms, avails);
     if (termIndex === -1) { return; }
 
     const territories = contract.terms[termIndex].territories;
@@ -180,8 +180,8 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
 
   /**
    * Checks if a territory is already in bucket
-   * @param avails 
-   * @param marker 
+   * @param avails
+   * @param marker
    * @returns boolean
    */
   isAlreadyInBucket(avails: AvailsFilter, marker: TerritoryMarker): boolean {
@@ -191,7 +191,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     if (contractIndex === -1) { return false; }
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails, 'territories');
+    const termIndex = findSameTerritoriesTermIndex(contract.terms, avails);
     if (termIndex === -1) { return false }
     const territories = contract.terms[termIndex].territories;
     return territories.includes(territory);
@@ -212,7 +212,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     }
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails, 'duration');
+    const termIndex = findSameDurationTermIndex(contract.terms, avails);
     // New term
     if (termIndex === -1) {
       const bucketTerm = toBucketTerm(avails)
@@ -230,11 +230,11 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     const bucket = this.value;
 
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
-    if (contractIndex === -1) return undefined;
+    if (contractIndex === -1) return;
 
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails, 'duration');
-    if (termIndex === -1) return undefined;
+    const termIndex = findSameDurationTermIndex(contract.terms, avails);
+    if (termIndex === -1) return;
 
     return { contractIndex, termIndex };
   }

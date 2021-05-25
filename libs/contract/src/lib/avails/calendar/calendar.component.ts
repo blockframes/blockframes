@@ -47,7 +47,7 @@ export class AvailsCalendarComponent implements OnInit {
     this.updateMatrix();
   }
 
-  @Output() selected = new EventEmitter<Duration<Date>>();
+  @Output() select = new EventEmitter<Duration<Date>>();
 
   ngOnInit() {
     const state = this.state$.getValue();
@@ -57,9 +57,10 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   updateMatrix() {
-    this.stateMatrix = this.rows.map(_ => this.columns.map(__ => 'empty'));
-    if (this._licensedMarkers.length) this.stateMatrix = markersToMatrix(this._licensedMarkers, this.stateMatrix, 'available');
-    if (this._soldMarkers.length) this.stateMatrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
+    let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
+    if (this._licensedMarkers.length) matrix = markersToMatrix(this._licensedMarkers, this.stateMatrix, 'available');
+    if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
+    this.stateMatrix = matrix;
   }
 
   onHover(row: number, column: number) {
@@ -82,7 +83,7 @@ export class AvailsCalendarComponent implements OnInit {
       const year = new Date().getFullYear();
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
-      this.selected.emit({ from, to });
+      this.select.emit({ from, to });
     }
   }
 }

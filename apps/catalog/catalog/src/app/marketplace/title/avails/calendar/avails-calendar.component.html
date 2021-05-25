@@ -50,6 +50,6 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <avails-calendar [licensedMarkers]="licensed$ | async" [soldMarkers]="sold$ | async" (selected)="selected($event)"></avails-calendar>
+      <avails-calendar [licensedMarkers]="licensed$ | async" [soldMarkers]="sold$ | async" (select)="selected($event)"></avails-calendar>
     </mat-card-content>
   </mat-card>

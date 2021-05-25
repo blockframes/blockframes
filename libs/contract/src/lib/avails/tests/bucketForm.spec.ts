@@ -1,5 +1,5 @@
 import { createMandate } from "../../contract/+state/contract.model";
-import { AvailsFilter, findSameTermIndex, getTerritories, toTerritoryMarker } from "./../avails";
+import { AvailsFilter, findSameTerritoriesTermIndex, getTerritories, toTerritoryMarker } from "./../avails";
 import { BucketForm } from '@blockframes/contract/bucket/form'
 import { createTerm } from "../../term/+state/term.model";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
@@ -170,7 +170,7 @@ describe('Test BucketForm behaviors', () => {
     });
 
     const terms = [bucketTermA, bucketTermB, bucketTermC];
-    const termIndex = findSameTermIndex(terms, availDetailsExclusive);
+    const termIndex = findSameTerritoriesTermIndex(terms, availDetailsExclusive);
     expect(termIndex).toBe(2);
   });
 
@@ -197,7 +197,7 @@ describe('Test BucketForm behaviors', () => {
     });
 
     const terms = [bucketTermA, bucketTermB];
-    const termIndex = findSameTermIndex(terms, availDetailsExclusive);
+    const termIndex = findSameTerritoriesTermIndex(terms, availDetailsExclusive);
     expect(termIndex).toBe(-1);
   });
 
