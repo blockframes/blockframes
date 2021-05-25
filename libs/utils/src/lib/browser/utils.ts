@@ -10,6 +10,7 @@ export function isSafari() {
         return p.toString() === "[object SafariRemoteNotification]";
       }
     )(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       !window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)
     );

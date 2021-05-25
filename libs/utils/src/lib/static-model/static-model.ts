@@ -1,11 +1,5 @@
 import { appName } from '@blockframes/utils/apps';
-import {
-  Territory,
-  TerritoryISOA2,
-  TerritoryISOA2Value,
-  TerritoryISOA3,
-  TerritoryISOA3Value
-} from './types'
+import { Territory } from './types'
 
 export const contractStatus = {
   accepted: 'Accepted',
@@ -1863,6 +1857,6 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
   }
 }
 
-export function parseToAll(scope: Scope, allKey: string): any[] {
+export function parseToAll(scope: Scope, allKey: string): unknown[] {
   return Object.keys(staticModel[scope]).filter(key => key !== allKey)
 }

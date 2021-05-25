@@ -18,7 +18,7 @@ export class RepeatPasswordStateMatcher implements ErrorStateMatcher {
     this.confirm = confirm;
   }
 
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: FormControl | null): boolean {
     return (control && control.parent.get(this.password).value !== control.parent.get(this.confirm).value && control.dirty)
   }
 }
@@ -33,7 +33,7 @@ export class XorControlsStateMatcher implements ErrorStateMatcher {
     this.second = second;
   }
 
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: FormControl | null): boolean {
     return (control && !!control.parent.get(this.first).value === true && !!control.parent.get(this.first).value === !!control.parent.get(this.second).value && control.dirty)
       || (control.dirty && control.parent.get(this.first).invalid || control.dirty && control.parent.get(this.second).invalid)
   }

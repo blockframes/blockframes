@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { File as GFile } from '@google-cloud/storage';
 import { getDocument, runChunks } from '../firebase-utils';
@@ -149,7 +148,7 @@ async function updateMovies(
       movie.main.poster = '';
     }
 
-    if (!!movie.promotionalElements.still_photo) {
+    if (movie.promotionalElements.still_photo) {
       for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
         const still = movie.promotionalElements.still_photo[stillKey];
         movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media, storage, movie.id);
@@ -161,7 +160,7 @@ async function updateMovies(
     const keys = ['presentation_deck', 'scenario'];
     // We search for pdf that are not in the good directory
     for (const key of keys) {
-      if (!!movie.promotionalElements[key]) {
+      if (movie.promotionalElements[key]) {
         const value: PromotionalHostedMedia = movie.promotionalElements[key];
         movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
       } else {
@@ -317,7 +316,7 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`movies/${docId}/promotionalElements.still_photo`)) {
       oldRef = ref;
       const regex = /(\.|\[)(?<value>[0-9]{1})\]?\./gi;
-      const [_, __, index] = regex.exec(ref);
+      const [,, index] = regex.exec(ref);
       newRef = `movies/${docId}/promotional.still_photo/${index}/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
     } else if (ref.includes(`users/${docId}/avatar`)) {
       oldRef = ref;
