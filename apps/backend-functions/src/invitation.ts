@@ -1,6 +1,6 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import * as admin from 'firebase-admin';
 import { getUser } from "./internals/utils";
+import { db } from './internals/firebase'
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
@@ -17,6 +17,7 @@ import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
+
 /**
  * Handles firestore updates on an invitation object,
  *
@@ -26,7 +27,6 @@ export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 export async function onInvitationWrite(
   change: Change<FirebaseFirestore.DocumentSnapshot>
 ) {
-  const db = admin.firestore();
   const before = change.before;
   const after = change.after;
 
@@ -124,7 +124,7 @@ export async function onInvitationWrite(
 
 interface UserInvitation {
   emails: string[];
-  invitation: Partial<InvitationBase<any>>;
+  invitation: Partial<InvitationBase<Date>>;
   app?: App;
 }
 
@@ -132,70 +132,64 @@ interface UserInvitation {
  * Invite a list of user by email.
  * @dev this function polyfills the Promise.allSettled
  */
-export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<any> => {
-  const db = admin.firestore();
-  return new Promise(async (res) => {
+export const inviteUsers = async (data: UserInvitation, context: CallableContext) => {
 
-    if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
-    const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
-    if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+  if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
 
-    const promises: ErrorResultResponse[] = [];
-    const invitation = createInvitation(data.invitation);
+  const promises: ErrorResultResponse[] = [];
+  const invitation = createInvitation(data.invitation);
 
-    // Ensure that we are not violating invitations limit
-    if (invitation.type === 'attendEvent') {
-      const eventId = invitation.eventId;
-      if (!!eventId) {
+  // Ensure that we are not violating invitations limit
+  if (invitation.type === 'attendEvent') {
+    const eventId = invitation.eventId;
+    if (eventId) {
 
-        const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
 
-        // for now only meetings have a limitation
-        if (event.type === 'meeting') {
+      // for now only meetings have a limitation
+      if (event.type === 'meeting') {
 
-          // count the number of already existing invitations
-          const query = db.collection('invitations').where('eventId', '==', eventId);
-          const querySnap = await query.get();
+        // count the number of already existing invitations
+        const query = db.collection('invitations').where('eventId', '==', eventId);
+        const querySnap = await query.get();
 
-          // assert that we don"t go over the limit
-          if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
-            throw new Error(
-              `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
+        // assert that we don"t go over the limit
+        if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
+          throw new Error(
+            `MEETING MAX INVITATIONS EXCEEDED : Meeting ${eventId} has already ${querySnap.size} invitations
 and user ${user.uid} tried to add ${data.emails.length} new invitations.
 That would have exceeded the current limit which is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
-          }
         }
       }
     }
+  }
 
-    let eventData: EventEmailData = getEventEmailData();
-    if (invitation.type === 'attendEvent' && !!invitation.eventId) {
-      const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
-      eventData = getEventEmailData(event);
-    }
+  let eventData: EventEmailData = getEventEmailData();
+  if (invitation.type === 'attendEvent' && !!invitation.eventId) {
+    const event = await getDocument<EventDocument<EventMeta>>(`events/${invitation.eventId}`);
+    eventData = getEventEmailData(event);
+  }
 
-    for (const email of data.emails) {
-      getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
-        .then(u => createPublicUser(u))
-        .then(toUser => {
-          invitation.toUser = toUser;
-          const id = db.collection('invitations').doc().id;
-          invitation.id = id;
-        })
-        .then(_ => db.collection('invitations').doc(invitation.id).set(invitation))
-        .then(result => promises.push({ result, error: '' }))
-        .catch(error => promises.push({ result: undefined, error }))
-        .then(lastIndex => {
-          if (lastIndex === data.emails.length) {
-            res(promises)
-          }
-        });
-    }
-  })
+  for (const email of data.emails) {
+    const isLastIndex = await getOrInviteUserByMail(email, invitation.fromOrg.id, invitation.type, data.app, eventData)
+      .then(u => createPublicUser(u))
+      .then(toUser => {
+        invitation.toUser = toUser;
+        const id = db.collection('invitations').doc().id;
+        invitation.id = id;
+      })
+      .then(() => db.collection('invitations').doc(invitation.id).set(invitation))
+      .then(result => promises.push({ result, error: '' }))
+      .catch(error => promises.push({ result: undefined, error }))
+      .then(lastIndex => lastIndex === data.emails.length);
+    if (isLastIndex) break;
+  }
+  return promises;
 }
 
 export async function getInvitationLinkedToEmail(email: string): Promise<boolean | AlgoliaOrganization> {
-  const db = admin.firestore();
   const invitationRef = await db.collection('invitations')
     .where('toUser.email', '==', email)
     .where('status', '==', 'pending')
@@ -217,7 +211,7 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
     const user = userRef.docs[0].data();
 
     if (!user.firstName && !user.lastName) {
-      if (!!user.orgId) {
+      if (user.orgId) {
         // If user was created along with org in CRM (without invitation)
         const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
         return createAlgoliaOrganization(org);
