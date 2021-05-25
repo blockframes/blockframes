@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
@@ -78,7 +77,7 @@ export async function updateMovies(
     const keys = ['banner', 'poster', 'still_photo'];
 
     for (const key of keys) {
-      if (!!movieData.promotionalElements[key]) {
+      if (movieData.promotionalElements[key]) {
         const value: OldPromotionalElement | OldPromotionalElement[] = movieData.promotionalElements[key];
         if (Array.isArray(value)) {
           for (let i = 0; i < value.length; i++) {
@@ -141,11 +140,11 @@ async function updateImgRef(
   // get the current ref
   const media = element[key]; // get old ImgRef format
 
-  if (!!media) {
+  if (media) {
     // get the old file
     const { ref } = media as { ref: string, url: string };
 
-    if (!!ref) {
+    if (ref) {
       const fileName = ref.split('/').pop();
       const fileNameParts = fileName.split('.');
       const extension = fileNameParts[fileNameParts.length - 1];

@@ -185,18 +185,16 @@
 // TYPOGRAPHY
 @mixin typography($theme) {
   $config: mat.get-typography-config($theme);
-  // need to wrap around something to win the battle against Material CSS priority
-  body {
-    // note: mat-icon-button is not here on purpose
-    .mat-button,
-    .mat-raised-button,
-    .mat-stroked-button,
-    .mat-flat-button,
-    .mat-fab,
-    .mat-mini-fab {
-      letter-spacing: mat.letter-spacing($config, button);
-      line-height: mat.line-height($config, button);
-    }
+
+  // note: mat-icon-button is not here on purpose
+  .mat-button,
+  .mat-raised-button,
+  .mat-stroked-button,
+  .mat-flat-button,
+  .mat-fab,
+  .mat-mini-fab {
+    letter-spacing: mat.letter-spacing($config, button);
+    line-height: mat.line-height($config, button);
   }
 
   .mat-button-toggle-label-content {

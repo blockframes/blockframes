@@ -115,27 +115,27 @@ export function storeSearchableMovie(
         international: movie.title.international || '',
         original: movie.title.original,
       },
-      directors: !!movie.directors ?
+      directors: movie.directors ?
         movie.directors.map((director) => `${director.firstName} ${director.lastName}`) :
         [],
-      keywords: !!movie.keywords ? movie.keywords : [],
+      keywords: movie.keywords ? movie.keywords : [],
 
       // facets
-      genres: !!movie.genres ? movie.genres : [],
-      originCountries: !!movie.originCountries ? movie.originCountries : [],
+      genres: movie.genres ? movie.genres : [],
+      originCountries: movie.originCountries ? movie.originCountries : [],
       languages: {
-        original: !!movie.originalLanguages ? movie.originalLanguages : [],
-        dubbed: !!movie.languages ?
+        original: movie.originalLanguages ? movie.originalLanguages : [],
+        dubbed: movie.languages ?
           Object.keys(movie.languages).filter(lang => movie.languages[lang]?.dubbed) as Language[] :
           [],
-        subtitle: !!movie.languages ?
+        subtitle: movie.languages ?
           Object.keys(movie.languages).filter(lang => movie.languages[lang]?.subtitle) as Language[] :
           [],
-        caption: !!movie.languages ?
+        caption: movie.languages ?
           Object.keys(movie.languages).filter(lang => movie.languages[lang]?.caption) as Language[] :
           [],
       },
-      status: !!movie.productionStatus ? movie.productionStatus : '',
+      status: movie.productionStatus ? movie.productionStatus : '',
       storeStatus: '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
@@ -189,7 +189,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
 
   try {
     let orgData;
-    if (!!user.orgId) {
+    if (user.orgId) {
       const db = admin.firestore();
       const org = await db.doc(`orgs/${user.orgId}`).get();
       orgData = org.data();

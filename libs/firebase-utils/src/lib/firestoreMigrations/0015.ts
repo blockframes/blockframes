@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore } from '../types';
 import { omit } from 'lodash';
 /**

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Firestore } from '../types';
 
 export async function updateOrgAppAccess(db: Firestore) {

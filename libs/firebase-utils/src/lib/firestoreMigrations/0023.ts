@@ -1,6 +1,4 @@
-// @ts-nocheck
 import { Firestore } from '../types';
-
 
 export async function upgrade(db: Firestore) {
   const invitations = await db.collection('invitations').get();

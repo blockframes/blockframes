@@ -12,11 +12,9 @@
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <ng-container *ngIf="mode$ | async as mode">
-    <mat-sidenav #sidenav [opened]="mode === 'over'" [mode]="mode">
-      <ng-content select="aside"></ng-content>
-    </mat-sidenav>
-  </ng-container>
+  <mat-sidenav #sidenav [opened]="(mode$ | async) === 'side'" [mode]="mode$ | async">
+    <ng-content select="aside"></ng-content>
+  </mat-sidenav>
 
   <mat-sidenav-content tunnelSpecificities>
     <!-- Skip to next -->

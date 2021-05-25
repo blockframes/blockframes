@@ -69,21 +69,13 @@ import '@angular/localize/init';
  /***************************************************************************************************
  * ALGOLIA CONFIG
  */
-(window as any).process = {
-  env: { DEBUG: undefined },
-};
-
-/***************************************************************************************************
-* ETHERS
-*/
-(window as any).global = window;
-
+window.process.env = { DEBUG: undefined };
 
 /***************************************************************************************************
 * allSettled
 */
-if (!(Promise as any).allSettled) {
-  (Promise as any).allSettled = (promises: Promise<any>[]) =>
+if (!Promise.allSettled) {
+  (Promise as any).allSettled = (promises: Promise<unknown>[]) =>
     Promise.all(
       promises.map(promise =>
         promise
