@@ -1,15 +1,18 @@
+import { MovieGoalsAudience } from "@blockframes/movie/+state/movie.firestore";
 import {
   createBoxOffice,
   createMovieOriginalRelease,
   createMovieRating,
   createMovieReview,
   createPrize,
+  createAudienceGoals,
   Movie,
   populateMovieLanguageSpecification
 } from "@blockframes/movie/+state/movie.model";
 import { MovieImportState } from "libs/import/src/lib/import-utils";
 import { createCredit, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
+import { SocialGoal } from "../static-model";
 import { Scope } from "../static-model/static-model";
 
 const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/;
@@ -357,15 +360,40 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
 
 }
 
-export function formatReview(reviews: { revue: string, link: string, quote: string }[]) {
+export function formatAudienceGoals(audience: {goals: string, targets: string[]}[], state: MovieImportState) {
+  return audience.filter(a => !!a.targets && !!a.goals).map(a => {
+    const goals = getKeyIfExists('socialGoals', a.goals);
+    const movieGoals= createAudienceGoals();
+    const test = createAudienceGoals({targets: a.targets})
+    if (!!goals) {
+      test.goals = goals;
+      console.log(test);
+      return movieGoals;
+    } else {
+      state.errors.push({
+        type: 'warning',
+        field: 'goals',
+        name: 'Positioning',
+        reason: `Could not parse social responsability goals : ${a.goals}`,
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+  }).filter(b => !!b);
+
+}
+
+export function formatReview(reviews: { filmCriticName: string, revue: string, link: string, quote: string }[]) {
   return reviews.filter(r => !!r.revue).map(r => {
     return createMovieReview({
+      criticName: r.filmCriticName,
       journalName: r.revue,
       revueLink: r.link,
       criticQuote: r.quote
     })
   }).filter(r => !!r);
 }
+
+// export function formatPositioning(position: { targetAudience: string })
 
 export function formatSingleValue(value: string, scope: Scope, path: string, movie: Movie) {
   if (!!value) {

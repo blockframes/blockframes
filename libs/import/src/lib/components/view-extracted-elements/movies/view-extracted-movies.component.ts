@@ -6,6 +6,7 @@ import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
+  formatAudienceGoals,
   formatAvailableLanguages,
   formatBoxOffice,
   formatCertifications,
@@ -188,6 +189,7 @@ const fields = {
   reviews: {
     multiLine: true,
     fields: {
+      filmCriticName: index++,
       revue: index++,
       link: index++,
       quote: index++,
@@ -220,6 +222,17 @@ const fields = {
       dubbed: index++,
       subtitle: index++,
       caption: index++,
+    }
+  },
+  logline: {
+    multiLine: false,
+    index: index++
+  },
+  positioning: {
+    multiLine: false,
+    fields: {
+      goals: index++,
+      targets: index++
     }
   },
   //////////////////
@@ -412,6 +425,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // LANGUAGES (Available versions(s))
       formatAvailableLanguages(this.mapping.languages, movie, importErrors);
 
+      // LOGLINE (Logline)
+      movie.logline = this.mapping.logline;
+
+      // POSITIONING (Positioning)
+      movie.audience = formatAudienceGoals(this.mapping.positioning, importErrors);
+      // movie.audience = formatSingleValue(this.mapping.positioning, 'socialGoals', 'audience', movie);
+      // movie.audience.goals  = this.mapping.positioning;
+      // movie.audience.targets = this.mapping.positioning;
+      // movie.audience = this.mapping.positioning;
       //////////////////
       // ADMIN FIELDS
       //////////////////
@@ -483,8 +505,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
     //////////////////
     // REQUIRED FIELDS
     //////////////////
-
-
 
     if (!movie.title.original) {
       errors.push({
@@ -612,7 +632,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (!movie.synopsis) {
+    if (movie.synopsis.length === 0) {
       errors.push({
         type: 'warning',
         field: 'movie.synopsis',
@@ -677,6 +697,36 @@ export class ViewExtractedMoviesComponent implements OnInit {
         type: 'warning',
         field: 'movie.languages',
         name: 'Dubbings | Subtitles | Captions ',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.logline) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.logline',
+        name: 'Logline',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (movie.review.length === 0) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.review',
+        name: 'Review',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.audience) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.audience',
+        name: 'Positioning',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
