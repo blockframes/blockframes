@@ -24,7 +24,7 @@ $bf-typography: mat.define-typography-config(
   $body-2: mat.define-typography-level(16px, 26px, 400, $letter-spacing: 0.5px),
   $body-1: mat.define-typography-level(18px, 28px, 400, $letter-spacing: 0.5px),
   $caption: mat.define-typography-level(13px, 21px, 400),
-  $button: mat.define-typography-level(16px, 25px, 600, $letter-spacing: 1.25px),
+  $button: mat.define-typography-level(16px, 24px, 600, $letter-spacing: 1.25px),
   $input: mat.define-typography-level(inherit, 1.125, 400)
 );
 

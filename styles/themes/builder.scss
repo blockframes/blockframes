@@ -35,7 +35,7 @@
 @include mat.core(typography.$bf-typography);
 // While density is private we need to set it here to avoid duplicated themes
 @include mat.all-component-themes((
-  density: maximum
+  density: maximum  // options: minimum, default, maximum
 ));
 
 
