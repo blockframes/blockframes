@@ -12,6 +12,7 @@ import {
   hover,
   markersToMatrix,
   reset,
+  resetHighlight,
   select
 } from './calendar.model';
 import { Duration } from '../../term/+state/term.model';
@@ -57,8 +58,10 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   updateMatrix() {
-    const highlightedRange = this.rows.map(() => this.columns.map(() => false));
-    this.state$.next(createAvailCalendarState({ highlightedRange }));
+    const currentState = this.state$.getValue();
+    const resetedHighlight = resetHighlight(currentState);
+    const newState = createAvailCalendarState({ highlightedRange: resetedHighlight.highlightedRange })
+    this.state$.next(newState);
 
     let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
     if (this._licensedMarkers.length) matrix = markersToMatrix(this._licensedMarkers, this.stateMatrix, 'available');
