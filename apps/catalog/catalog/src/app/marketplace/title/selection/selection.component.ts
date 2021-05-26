@@ -11,7 +11,6 @@ import { SpecificTermsComponent } from './specific-terms/specific-terms.componen
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'catalog-selection',
@@ -49,8 +48,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     private bucketService: BucketService,
     private dialog: MatDialog,
     private dynTitle: DynamicTitleService,
-    private snackBar: MatSnackBar,
-    private router: Router
+    private snackBar: MatSnackBar
   ) {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
       tap(bucket => {
@@ -85,18 +83,13 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
 
-  async updatePrice(index: number, event: Event) {
-    if (event.target['value'] === '') event.target['value'] = '0';
+  async updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
     await this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
-      contracts[index].price = +event.target['value'];
+      contracts[index].price = +price;
       return { contracts };
     });
-  }
-
-  addRights(titleId: string) {
-    this.router.navigate(['/c/o/marketplace/title', titleId, 'avails']);
   }
 
   removeContract(index: number, title: Movie) {
