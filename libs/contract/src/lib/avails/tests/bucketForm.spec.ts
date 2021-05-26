@@ -497,12 +497,11 @@ describe('Test BucketForm behaviors for durations', () => {
     bucketForm.addDuration(availDetails, markerA);
     bucketForm.addDuration(availDetails, markerB);
 
-    const index = bucketForm.getTermIndexForCalendar(availDetails , markerB)
+    const index = bucketForm.getTermIndexForCalendar(availDetails, markerB);
 
     expect(index.contractIndex).toBe(1);
     expect(index.termIndex).toBe(0);
   });
-
 
   it('Should return undefined if index not found in contract bucket', () => {
     const bucketForm = new BucketForm();
@@ -528,7 +527,7 @@ describe('Test BucketForm behaviors for durations', () => {
     };
 
     bucketForm.addDuration(availDetails, markerA);
-    const index = bucketForm.getTermIndexForCalendar(availDetails , markerB)
+    const index = bucketForm.getTermIndexForCalendar(availDetails, markerB);
     expect(index).toBeUndefined;
   });
 });

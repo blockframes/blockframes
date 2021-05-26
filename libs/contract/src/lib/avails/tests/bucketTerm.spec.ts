@@ -94,7 +94,6 @@ describe('Test isInTerm pure function', () => {
   });
 })
 
-
 describe('Test isSameCalendarTerm pure function', () => {
 
   it('Checks if two terms are the same', () => {
