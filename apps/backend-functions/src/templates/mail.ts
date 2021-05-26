@@ -161,13 +161,13 @@ export function userLeftYourOrganization (admin: PublicUser, userRemoved: Public
     userFirstName: userRemoved.firstName,
     userLastName: userRemoved.lastName,
     userEmail: userRemoved.email,
-    org: org,
+    org,
     pageURL: `${ORG_HOME}${org.id}/view/members`
   };
   return { to: admin.email, templateId: templateIds.org.memberRemoved, data };
 }
 
-// TODO this one needs a small refactoring. It will be done mainly with the user email object creation.
+// TODO #5186 this one needs a small refactoring. It will be done mainly with the user email object creation.
 /** Generates a transactional email to let an admin knows that an user requested to join his/her org */
 export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, org: OrgEmailData, url: string = appUrl.market): EmailTemplateRequest {
   const data = {

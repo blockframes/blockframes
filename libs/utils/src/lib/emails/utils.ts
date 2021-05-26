@@ -2,7 +2,7 @@ import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { App } from "../apps";
 import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
-import { OrganizationDocument } from "@blockframes/organization/+state";
+import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
 
 export interface EmailRequest {
   to: string;
@@ -98,7 +98,7 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
   }
 }
 
-export function getOrgEmailData(org: Partial<OrganizationDocument>) {
+export function getOrgEmailData(org: Partial<OrganizationDocument | Organization>): OrgEmailData {
   return {
     id: org.id,
     denomination: org.denomination.full ?? org.denomination.public,

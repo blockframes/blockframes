@@ -9,7 +9,7 @@ import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
-import { getOrgEmailData } from '@blockframes/utils/emails/utils';
+import { OrgEmailData } from '@blockframes/utils/emails/utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -219,13 +219,8 @@ export const sendUserMail = async (data: { subject: string, message: string, app
  * @param data
  * @param context
  */
-export const createUser = async (data: { email: string, orgName: string, app: App }, context: CallableContext): Promise<PublicUser> => {
-  const { email, orgName, app } = data;
-
-  const orgRef = await db.collection('orgs').where('denomination.full', '==', orgName).get();
-  const orgDoc = orgRef.docs;
-  const org = orgDoc[0].data()
-  const orgEmailData = getOrgEmailData(org);
+export const createUser = async (data: { email: string, orgEmailData: OrgEmailData, app: App }, context: CallableContext): Promise<PublicUser> => {
+  const { email, orgEmailData, app } = data;
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
