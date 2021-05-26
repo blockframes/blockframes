@@ -78,7 +78,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   async ngAfterViewInit() {
-    const world = toMap(this.el.nativeElement, { zoomSnap: 0.5, attributionControl: false }).setView([40, 40], 1.5);
+    const world = toMap(this.el.nativeElement, {
+      zoomSnap: 0.5,
+      attributionControl: false,
+      scrollWheelZoom: false
+    }).setView([40, 40], 1.5);
     const countries = await this.http.get<GeoJSON.GeoJsonObject>('assets/maps/world.geo.json').toPromise();
     const geojson = geoJSON(countries, {
       style: this.setStyle.bind(this),
