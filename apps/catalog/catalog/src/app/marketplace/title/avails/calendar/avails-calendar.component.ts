@@ -29,7 +29,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
 
   public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
-  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
+  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
