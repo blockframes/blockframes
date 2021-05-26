@@ -34,7 +34,7 @@ export class AvailsCalendarComponent implements OnInit {
 
   private _licensedMarkers: DurationMarker[] = [];
   private _soldMarkers: DurationMarker[] = [];
-  /** Includes available, sold, selected, and inselection markers */
+  /** Includes available, sold, selected, and in selection markers */
   @Input() set licensedMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
     this._licensedMarkers = markers;
@@ -57,6 +57,9 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   updateMatrix() {
+    const highlightedRange = this.rows.map(() => this.columns.map(() => false));
+    this.state$.next(createAvailCalendarState({ highlightedRange }));
+
     let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
     if (this._licensedMarkers.length) matrix = markersToMatrix(this._licensedMarkers, this.stateMatrix, 'available');
     if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
