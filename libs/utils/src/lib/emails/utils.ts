@@ -2,6 +2,7 @@ import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { App } from "../apps";
 import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
+import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
 
 export interface EmailRequest {
   to: string;
@@ -12,7 +13,7 @@ export interface EmailRequest {
 export interface EmailTemplateRequest {
   to: string;
   templateId: string;
-  data: { [key: string]: any };
+  data: { [key: string]: unknown };
 }
 
 export interface EmailParameters {
@@ -33,6 +34,12 @@ export interface EventEmailData {
   type: EventTypes,
   viewUrl: string,
   sessionUrl: string
+}
+
+export interface OrgEmailData {
+  denomination: string,
+  email: string,
+  id: string
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -68,7 +75,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
 export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): EventEmailData {
   let eventStart = '';
   let eventEnd = '';
-  if (!!event) {
+  if (event) {
     const eventStartDate = new Date(event.start.toDate());
     const eventEndDate = new Date(event.end.toDate());
 
@@ -86,7 +93,15 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}` : '',
-    sessionUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
+    viewUrl: event?.id ? `/c/o/marketplace/event/${event.id}` : '',
+    sessionUrl: event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
+  }
+}
+
+export function getOrgEmailData(org: Partial<OrganizationDocument | Organization>): OrgEmailData {
+  return {
+    id: org.id,
+    denomination: org.denomination.full ?? org.denomination.public,
+    email: org.email || ''
   }
 }

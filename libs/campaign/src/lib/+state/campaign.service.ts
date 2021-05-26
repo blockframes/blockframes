@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { OrganizationQuery } from "@blockframes/organization/+state";
-import { CollectionService, CollectionConfig, queryChanges, Query } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { Campaign } from "./campaign.model";
 import { CampaignState, CampaignStore } from "./campaign.store";
 import { removeUndefined } from '@blockframes/utils/helpers';

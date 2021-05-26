@@ -47,7 +47,7 @@ export class CookieBannerComponent implements OnInit {
   public changePreferences() {
     const dialogRef = this.dialog.open(CookieDialogComponent, { maxHeight: '80vh', maxWidth: '80vw' });
     dialogRef.afterClosed().subscribe(settings => {
-      if (!!settings) {
+      if (settings) {
         this.confirmCookies();
         this.gdpr.enableIntercom(settings.intercom);
         this.gdpr.enableYandex(settings.yandex);

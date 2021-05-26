@@ -452,15 +452,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
        */
         // CATALOG STATUS
         formatSingleValue(this.mapping.catalogStatus, 'storeStatus', `app.catalog.status`, movie);
-        if (!!this.mapping.catalogStatus) movie.app.catalog.access = true;
+        if (this.mapping.catalogStatus) movie.app.catalog.access = true;
 
         // FESTIVAL STATUS
         formatSingleValue(this.mapping.festivalStatus, 'storeStatus', `app.festival.status`, movie);
-        if (!!this.mapping.festivalStatus) movie.app.festival.access = true;
+        if (this.mapping.festivalStatus) movie.app.festival.access = true;
 
         // FINANCIERS STATUS
         formatSingleValue(this.mapping.financiersStatus, 'storeStatus', `app.financiers.status`, movie);
-        if (!!this.mapping.financiersStatus) movie.app.financiers.access = true;
+        if (this.mapping.financiersStatus) movie.app.financiers.access = true;
 
         // USER ID (to override who is creating this title)
         if (this.mapping.ownerId) {

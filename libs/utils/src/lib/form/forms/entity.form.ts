@@ -47,7 +47,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
     const controls = this['createControl'] ? this.createControl(value) : {};
     for (const name in controls) {
       if (this.controls[name]) {
-        if (!!this.controls[name]['patchAllValue']) {
+        if (this.controls[name]['patchAllValue']) {
           this.controls[name]['patchAllValue'](value[name]);
         } else {
           this.controls[name].patchValue(value[name]);

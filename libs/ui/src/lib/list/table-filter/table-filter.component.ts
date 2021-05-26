@@ -12,6 +12,7 @@ import {
   EventEmitter,
   Output,
   ContentChild,
+  HostBinding,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,27 +22,27 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { getValue } from '@blockframes/utils/helpers';
 import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
-import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
+import { ColRefDirective } from '@blockframes/utils/directives/col-ref.directive';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: '[colAction]' })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line
 export class ColAction {
   @Input() label: string;
   @Input('colAction') ref: string;
 
-  constructor(public template: TemplateRef<any>) {}
+  constructor(public template: TemplateRef<unknown>) {}
 }
 
 @Component({
   selector: 'bf-table-filter',
   templateUrl: './table-filter.component.html',
   styleUrls: ['./table-filter.component.scss'],
-  host: { class: 'bf-table' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilterComponent implements OnInit, AfterViewInit {
 
+  @HostBinding('class') class = 'bf-table';
   @Input() @boolean showFilter: boolean;
   @Input() @boolean showPaginator: boolean;
   @Input() @boolean clickable: boolean;
@@ -52,8 +53,8 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   @Input() link: string;
   @Input() showLoader = false;
   @Input() pageSize = 10;
-  @Input() filterPredicate: any;
-  @Input() set source(data: any[]) {
+  @Input() filterPredicate: (data: unknown, filter: string) => boolean;
+  @Input() set source(data: unknown[]) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     if (this.filterPredicate) {
@@ -69,7 +70,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
 
   // Column & rows
   displayedColumns$: Observable<string[]>;
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<unknown>;
 
   // Filters
   columnFilter = new FormControl([]);
@@ -77,7 +78,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   public noData = false;
 
   /** References to template to apply for specific columns */
-  @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
+  @ContentChildren(ColRefDirective, { descendants: false }) cols: QueryList<ColRefDirective>;
   @ContentChild(ColAction) colAction?: ColAction;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -86,7 +87,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     this.columnFilter.patchValue(this.initialColumns);
     this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
       map(filter => {
-        if (!!this.colAction) filter.push(this.colAction.ref)
+        if (this.colAction) filter.push(this.colAction.ref)
         return filter
       }),
       startWith(this.columnFilter.value)

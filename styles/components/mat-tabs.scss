@@ -1,14 +1,14 @@
-@mixin mat-bf-tabs-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map-get($config, foreground);
 
   .mat-tab-label:hover {
     .mat-icon {
       path, g, polygon {
-        fill: mat-color($foreground, base);
+        fill: mat.get-color-from-palette($foreground, base);
       }
     }
   }

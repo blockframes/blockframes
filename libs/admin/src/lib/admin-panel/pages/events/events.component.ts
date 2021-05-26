@@ -39,7 +39,7 @@ export class EventsComponent implements OnInit {
     'privacyStatus',
     'isSecret'
   ];
-  public rows: any[] = [];
+  public rows = [];
   public eventListLoaded = false;
 
   constructor(
@@ -63,7 +63,7 @@ export class EventsComponent implements OnInit {
       const row = { ...event } as any;
       const invitations = invites.filter(inv => inv.eventId === event.id);
       const org = orgs.find(o => o.id === event.ownerOrgId);
-      row.hostedBy = !!org ? orgName(org) : '--';
+      row.hostedBy = org ? orgName(org) : '--';
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
@@ -80,7 +80,7 @@ export class EventsComponent implements OnInit {
     this.router.navigate([`/c/o/admin/panel/event/${event.id}`])
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'id',
       'title',

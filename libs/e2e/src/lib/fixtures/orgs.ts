@@ -2,11 +2,6 @@
 import { QueryInferface } from "../utils/queryinterface";
 import orgsFixture from 'tools/fixtures/orgs.json';
 
-export enum ORG {
-  Xara = 'sLchj1Ib4Cxhwr0ZBW4m',
-  GG = 'emaVtLWE8YFK3AQo2CaS',
-}
-
 export class Orgs {
   get(query: QueryInferface) : Partial<Organization>[] {
     const orgSet: Partial<Organization>[] =

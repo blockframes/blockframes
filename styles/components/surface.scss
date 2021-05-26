@@ -1,7 +1,11 @@
-@mixin surface-theme($theme) {
-  $background: map-get($theme, background);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $background: map-get($config, 'background');
   .surface {
-    background-color: mat-color($background, card);
+    background-color: mat.get-color-from-palette($background, card);
     padding: 8px;
     border-radius: 4px;
   }

@@ -18,6 +18,7 @@ import { Subject } from 'rxjs';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
+import { OrgEmailData } from '@blockframes/utils/emails/utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -142,9 +143,9 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param orgName
    * @param app
    */
-  public async createUser(email: string, orgName: string, app: App = getCurrentApp(this.routerQuery)): Promise<PublicUser> {
+  public async createUser(email: string, orgEmailData: OrgEmailData, app: App = getCurrentApp(this.routerQuery)): Promise<PublicUser> {
     const f = this.functions.httpsCallable('createUser');
-    const user: PublicUser = await f({ email, orgName, app }).toPromise();
+    const user: PublicUser = await f({ email, orgEmailData, app }).toPromise();
 
     return createUser(user);
   }

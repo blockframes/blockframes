@@ -15,7 +15,7 @@ import { Invitation } from '../../+state';
 export class ListComponent {
 
   @Input() invitations: Invitation[];
-  @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
+  @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
   timeFrames = descTimeFrames;
 

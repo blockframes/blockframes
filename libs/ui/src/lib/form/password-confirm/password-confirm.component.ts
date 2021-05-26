@@ -41,17 +41,15 @@ export class PasswordConfirmComponent implements OnInit, OnDestroy, ControlValue
     this.form.patchValue({ password });
   }
 
-  public registerOnChange(fn: (value: string) => any): void {
+  public registerOnChange(fn: (value: string) => unknown): void {
     let isValid = false;
     this.subscription = this.form.valueChanges.pipe(
       distinctUntilChanged(() => this.form.valid === isValid),
-      tap(_ => isValid = this.form.valid),
-    ).subscribe(value => {
-      isValid ? fn(value.password) : fn('');
-    });
+      tap(() => isValid = this.form.valid),
+    ).subscribe(value => isValid ? fn(value.password) : fn(''));
   }
 
-  public registerOnTouched(fn: any) {
-    fn(true)
+  public registerOnTouched(fn: (touched: boolean) => void) {
+    fn(true);
   }
 }

@@ -39,7 +39,7 @@ export interface OrganizationBase<D> extends PublicOrganization {
   documents?: OrgMedias;
 }
 
-export interface OrganizationDocument extends OrganizationBase<Timestamp> { };
+export type OrganizationDocument = OrganizationBase<Timestamp>;
 
 export interface AddressSet {
   main: Location;
@@ -57,7 +57,7 @@ export function createOrganizationBase(
   params: Partial<OrganizationBase<Timestamp | Date>> = {}
 ): OrganizationBase<Timestamp | Date> {
   return {
-    id: !!params.id ? params.id : '',
+    id: params.id ? params.id : '',
     description: '',
     email: '',
     fiscalNumber: '',
@@ -99,7 +99,7 @@ export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
 }
 
 export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'public') {
-  if (!!org) {
+  if (org) {
     return org.denomination[type] || org.denomination.full;
   } else {
     return '';
@@ -110,8 +110,8 @@ export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'publ
  * This check if org have access to a specific module in at least one app
  * @param org
  */
-export function canAccessModule(module: Module, org: OrganizationBase<any>, _app?: App): boolean {
-  if (!!_app) {
+export function canAccessModule(module: Module, org: OrganizationBase<unknown>, _app?: App): boolean {
+  if (_app) {
     return org.appAccess[_app]?.[module];
   } else {
     return getAllAppsExcept(['crm']).some(a => org.appAccess[a]?.[module]);

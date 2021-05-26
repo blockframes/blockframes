@@ -11,7 +11,7 @@ import { descTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
 export class ListComponent {
 
   @Input() notifications: Notification[];
-  @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
+  @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
   timeFrames = descTimeFrames;
 }

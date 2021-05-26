@@ -91,7 +91,7 @@ export class NotificationsFormComponent {
   setAll(event: MatCheckboxChange, mode: 'email' | 'app', types: NotificationTypesBase[]) {
     const checked = event.checked;
     for (const type of types) {
-      const c = this.form.get(type as any).get(mode);
+      const c = this.form.get(type).get(mode);
       if(!c.disabled) c.setValue(checked);
     }
   }

@@ -15,9 +15,9 @@ export class PromotionalLinksPipe implements PipeTransform {
 
   async transform(links: string[], movie: Movie): Promise<any[]> {
     const _links = await Promise.all(links.map(async link => {
-      if (!!movie.promotional[link].storagePath) {
+      if (movie.promotional[link].storagePath) {
         const url = await this.mediaService.generateImgIxUrl(movie.promotional[link]);
-        if (!!url) {
+        if (url) {
           const linkLabel = promotionalElementTypes[link];
           const icon = documents.includes(link) ? 'document' : 'play_arrow';
           const label = `View ${linkLabel}`;

@@ -25,7 +25,7 @@ export async function onMovieCreate(
     throw new Error('movie update function got invalid movie data');
   }
 
-  const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
+  const user = await getDocument<PublicUser>(`users/${movie._meta.createdBy}`);
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
   if (checkMovieStatus(movie, 'accepted')) {
@@ -77,7 +77,7 @@ export async function onMovieDelete(
   const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
   contracts.docs.forEach(c => {
     const contract = c.data();
-    if (!!contract.lastVersion?.titles[movie.id]) {
+    if (contract.lastVersion?.titles[movie.id]) {
       delete contract.lastVersion.titles[movie.id];
     }
     batch.update(c.ref, contract);
@@ -95,7 +95,7 @@ export async function onMovieDelete(
 
 export async function onMovieUpdate(
   change: Change<FirebaseFirestore.DocumentSnapshot>
-): Promise<any> {
+) {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
   if (!after) { return; }
@@ -143,8 +143,8 @@ export async function onMovieUpdate(
   }
 
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
-  const creator = await getDocument<PublicUser>(`users/${after._meta!.createdBy}`);
-  const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
+  const creator = await getDocument<PublicUser>(`users/${after._meta.createdBy}`);
+  const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator.orgId}`);
 
   if (creatorOrg.denomination?.full) {
     await storeSearchableOrg(creatorOrg);
@@ -185,7 +185,7 @@ function isAccepted(
 async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {
   const collection = db.collection('orgs');
   const orgsWithWishlists = await collection.where('wishlist', 'array-contains', movie.id).get();
-  const updates: Promise<any>[] = [];
+  const updates: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const o of orgsWithWishlists.docs) {
     const org = o.data();
     org.wishlist = org.wishlist.filter(movieId => movieId !== movie.id);
@@ -197,6 +197,6 @@ async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFi
     }
   }
   if (updates.length) {
-    await (Promise as any).allSettled(updates);
+    await Promise.allSettled(updates);
   }
 }

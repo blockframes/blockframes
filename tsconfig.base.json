@@ -12,7 +12,7 @@
     "module": "esNext",
     "target": "es5",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "es2019", "dom"],
+    "lib": ["es2017", "es2019", "ES2020.Promise", "dom"],
     "baseUrl": ".",
     "strictBindCallApply": true,
     "paths": {

@@ -75,5 +75,4 @@ export interface NotificationBase<D> {
 
 type Timestamp = firestore.Timestamp;
 
-export interface NotificationDocument extends NotificationBase<Timestamp> {
-}
+export type NotificationDocument = NotificationBase<Timestamp>

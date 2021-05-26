@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { EventService, Event, EventQuery } from '@blockframes/event/+state';
-import { BehaviorSubject, defer, interval, Observable, Subscription } from 'rxjs';
+import { EventService, Event, EventQuery, isScreening } from '@blockframes/event/+state';
+import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { Meeting, MeetingPdfControl, MeetingVideoControl, Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -47,7 +47,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private dialogSub: Subscription;
 
-  private confirmDialog: MatDialogRef<any>
+  private confirmDialog: MatDialogRef<unknown>
   private isAutoPlayEnabled = false;
   @ViewChild('autotester') autoPlayTester: ElementRef<HTMLVideoElement>;
 
@@ -82,9 +82,9 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.sub = this.event$.subscribe(async event => {
 
       // SCREENING
-      if (event.type === 'screening') {
+      if (isScreening(event)) {
         this.dynTitle.setPageTitle(event.title, 'Screening');
-        if (!!(event.meta as Screening).titleId) {
+        if ((event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.screeningFileRef = movie.promotional.videos?.screener;
 
@@ -170,12 +170,12 @@ export class SessionComponent implements OnInit, OnDestroy {
 
           const requestUids = Object.keys(attendees).filter(userId => attendees[userId] === 'requesting');
           const requests = await this.userService.getValue(requestUids);
-          if (!!requests.length) {
+          if (requests.length) {
             this.bottomSheet.open(DoorbellBottomSheetComponent, { data: { eventId: event.id, requests}, hasBackdrop: false });
           }
 
           // If the current selected file hasn't any controls yet we should create them
-          if (!!event.meta.selectedFile) {
+          if (event.meta.selectedFile) {
             const selectedFile = event.meta.files.find(file =>
               file.storagePath === event.meta.selectedFile
             );
@@ -248,7 +248,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   autoLeave() {
-    if (!!this.countdownId) this.twilioService.disconnect();
+    if (this.countdownId) this.twilioService.disconnect();
     this.deleteCountDown();
     this.watchTimeInterval?.unsubscribe();
   }
@@ -262,13 +262,13 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   select(selectedFile: string) {
-    const event: Event<Meeting> = this.eventQuery.getActive();
+    const event: Event<Meeting> = this.eventQuery.getActive() as Event<Meeting>;
     const meta = { ...event.meta, selectedFile };
     this.service.update(event.id, { meta });
   }
 
   picked(files: string[]) {
-    const event: Event<Meeting> = this.eventQuery.getActive();
+    const event: Event<Meeting> = this.eventQuery.getActive() as Event<Meeting>;
     const meta = { ...event.meta, files };
     this.service.update(event.id, { meta })
   }
@@ -288,7 +288,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     const getVideoInfo = this.functions.httpsCallable('privateVideo');
 
     const { error, result} = await getVideoInfo({ video, eventId }).toPromise();
-    if (!!error) {
+    if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);
     }

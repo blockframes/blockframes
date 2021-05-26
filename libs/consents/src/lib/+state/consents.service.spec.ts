@@ -1,19 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { ConsentsService } from './consents.service';
-import { Consents } from './consents.firestore';
 import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { clearFirestoreData, loadFirestoreRules } from '@firebase/testing';
 import { readFileSync } from 'fs';
 import { IpService } from '@blockframes/utils/ip';
-import { AngularFireFunctions, REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
+import { REGION, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { firebaseRegion } from '@env';
 
 const projectIdUT = 'test-consents-ut';
 
 class MockIpService {
   public get(): Promise<string> {
-    return new Promise(async (res) => {
+    return new Promise((res) => {
       res('127.0.0.1');
     })
   }

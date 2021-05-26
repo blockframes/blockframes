@@ -1,0 +1,25 @@
+{
+  "extends": ["../../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": [
+        "plugin:@nrwl/nx/angular",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "parserOptions": { "project": ["apps/crm/crm/tsconfig.*?.json"] },
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "warn",
+          { "type": "attribute", "prefix": "crm", "style": "camelCase" }
+        ],
+        "@angular-eslint/component-selector": [
+          "warn",
+          { "type": "element", "prefix": "crm", "style": "kebab-case" }
+        ]
+      }
+    },
+    { "files": ["*.html"], "extends": ["plugin:@nrwl/nx/angular-template"], "rules": {} }
+  ]
+}

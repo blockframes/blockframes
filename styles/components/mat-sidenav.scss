@@ -1,5 +1,9 @@
-@mixin mat-bf-sidenav-theme($theme) {
-  $background: map-get($theme, background);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $background: map.get($config, 'background');
 
   mat-sidenav {
     width: 260px;
@@ -11,6 +15,6 @@
   }
 
   mat-sidenav-content[tunnelSpecificities] {
-    background-color: mat-color($background, app-bar);
+    background-color: mat.get-color-from-palette($background, app-bar);
   }
 }

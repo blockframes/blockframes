@@ -10,6 +10,7 @@ import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/
 import { StorageFileForm } from "@blockframes/media/form/media.form";
 import { FormList } from "@blockframes/utils/form";
 import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
+import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 
 interface DirectoryBase {
   type: 'directory' | 'file' | 'image' | 'fileList' | 'imageList';
@@ -80,22 +81,22 @@ function titlesDirectory(titles: Movie[]) {
 }
 
 function getFormStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  const value: Partial<StorageFile> = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return new StorageFileForm(value);
 }
 
 function getFormListStorage(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  const value: StorageFile[] = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return FormList.factory<StorageFile>(value, file => new StorageFileForm(file));
 }
 
 function getFormStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  const value: Partial<MovieVideo> = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return new MovieVideoForm(value);
 }
 
 function getFormListStorageVideo(object: { id: string }, collection: CollectionHoldingFile, label: FileLabel) {
-  const value = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
+  const value: StorageVideo[] = getDeepValue(object, getFileMetadata(collection, label, object.id).field);
   return FormList.factory<StorageVideo>(value, file => new MovieVideoForm(file));
 }
 

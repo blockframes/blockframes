@@ -17,7 +17,7 @@ export class MaintenanceService {
     return this.isInMaintenance$.pipe(
       filter(isMaintenance => !!isMaintenance),
       first(),  // Change on maintenance can only happen once during the session
-      tap(_ => window.location.reload())
+      tap(() => window.location.reload())
     )
   }
 }
