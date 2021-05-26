@@ -37,8 +37,8 @@
             </section>
             <mat-form-field appearance="outline">
               <mat-label>Price</mat-label>
-              <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
-                (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
+              <input matInput type="number" min="0" onfocus="if (this.value == 0) this.value = ''" [value]="contract.price" [attr.test-id]="'price-' + i"
+                (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event)" />
               <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
             </mat-form-field>
           </header>
@@ -65,9 +65,12 @@
               </button>
             </ng-template>
           </bf-table-filter>
-          <footer>
+          <footer fxLayout fxLayoutAlign="space-between">
             <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
               Delete all rights for this title
+            </button>
+            <button mat-flat-button (click)="addRights(title.id)" color="primary">
+              Add Rights
             </button>
           </footer>
         </section>
