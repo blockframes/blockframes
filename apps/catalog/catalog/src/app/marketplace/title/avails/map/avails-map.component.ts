@@ -15,6 +15,8 @@ import {
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -24,7 +26,6 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceMovieAvailsMapComponent {
-
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -91,7 +92,10 @@ export class MarketplaceMovieAvailsMapComponent {
     shareReplay(1) // Multicast with replay
   );
 
-  constructor(private shell: MarketplaceMovieAvailsComponent) { }
+  constructor(
+    private shell: MarketplaceMovieAvailsComponent,
+    private snackbar: MatSnackBar
+  ) { }
 
   public trackByTag<T>(tag: T) {
     return tag;
@@ -108,7 +112,14 @@ export class MarketplaceMovieAvailsMapComponent {
   }
 
   public addTerritory(territory: TerritoryMarker) {
-    this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
+    const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
+    if (added) {
+      this.snackbar.open(`Rights added`, 'Show', { duration: 5000 })
+        .onAction()
+        .subscribe(() => {
+          document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+        })
+    }
   }
 
   public removeTerritory(territory: TerritoryMarker) {
