@@ -2,7 +2,7 @@ import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDo
 import { getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
-import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
   reminderEventToUser,
@@ -211,6 +211,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
 async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification: NotificationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const urlToUse = applicationUrl[notification._meta.createdFrom];
+  const orgData = getOrgEmailData(org);
 
   // Send an email to org's admin to let them know they have a request to join their org
   const template = userRequestedToJoinYourOrg({
@@ -220,7 +221,7 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
     organizationId: notification.organization.id,
     userFirstname: notification.user?.firstName ?? '',
     userLastname: notification.user?.lastName ?? ''
-  }, urlToUse);
+  }, orgData, urlToUse);
 
   const appKey = notification._meta.createdFrom;
 
@@ -229,11 +230,12 @@ async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification
 
 async function sendPendingRequestToJoinOrgEmail(recipient: User, notification: NotificationDocument) {
   const appKey = notification._meta.createdFrom;
+  const org = getOrgEmailData(notification.organization);
 
   // Send an email to the user who did the request to let him know its request has been sent
   const templateRequest = userJoinOrgPendingRequest(
     recipient.email,
-    notification.organization.denomination.full,
+    org,
     notification.user.firstName
   );
 
@@ -245,9 +247,10 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
 
   if (org.userIds.includes(notification.user.uid)) {
     const memberAdded = createPublicUserDocument(notification.user);
+    const orgData = getOrgEmailData(org);
     const template = userJoinedYourOrganization(
       recipient,
-      orgName(org),
+      orgData,
       memberAdded
     );
 
@@ -257,8 +260,8 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     // Member left/removed from org
     const userRemoved = createPublicUserDocument(notification.user);
     const app = notification._meta.createdFrom;
-    const publicOrg = createPublicOrganizationDocument(org);
-    const template = userLeftYourOrganization(recipient, userRemoved, publicOrg);
+    const orgData = getOrgEmailData(org);
+    const template = userLeftYourOrganization(recipient, userRemoved, orgData);
     await sendMailFromTemplate(template, app, unsubscribeId);
   }
 
@@ -268,9 +271,10 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
 async function sendReminderEmails(recipient: User, notification: NotificationDocument, template: string) {
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
+  const orgData = getOrgEmailData(org);
   const eventData = getEventEmailData(event);
 
-  const email = reminderEventToUser(recipient, orgName(org), eventData, template);
+  const email = reminderEventToUser(recipient, orgData, eventData, template);
   return await sendMailFromTemplate(email, eventAppKey, unsubscribeId);
 }
 
@@ -280,13 +284,14 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
 
   if (invitation.toOrg) {
     const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+    const organizerOrgData = getOrgEmailData(organizerOrg);
     const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
     const eventData = getEventEmailData(event);
     if (notification.invitation.status === 'accepted') {
-      const template = requestToAttendEventFromUserAccepted(recipient, orgName(organizerOrg), eventData);
+      const template = requestToAttendEventFromUserAccepted(recipient, organizerOrgData, eventData);
       await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
-      const template = requestToAttendEventFromUserRefused(recipient, orgName(organizerOrg), eventData, notification.organization.id);
+      const template = requestToAttendEventFromUserRefused(recipient, organizerOrgData, eventData, notification.organization.id);
       await sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {
@@ -304,14 +309,14 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
     const eventData = getEventEmailData(event);
     const user = await getDocument<User>(`users/${notification.user.uid}`);
     const userOrg = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
-    const userOrgName = orgName(userOrg);
+    const userOrgData = getOrgEmailData(userOrg);
     if (notification.invitation.status === 'accepted') {
       const templateId = templateIds.invitation.attendEvent.accepted;
-      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, invitation.fromOrg.id, templateId);
+      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgData, eventData, invitation.fromOrg.id, templateId);
       return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     } else {
       const templateId = templateIds.invitation.attendEvent.declined;
-      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgName, eventData, invitation.fromOrg.id, templateId);
+      const template = invitationToEventFromOrgUpdated(recipient, user, userOrgData, eventData, invitation.fromOrg.id, templateId);
       return sendMailFromTemplate(template, eventAppKey, unsubscribeId);
     }
   } else {
@@ -340,12 +345,13 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
   const eventDoc = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
   const eventData: EventEmailData = getEventEmailData(eventDoc);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
+  const userOrg = getOrgEmailData(org);
   const link = getEventLink(org);
   const urlToUse = applicationUrl[eventAppKey];
   const userName = `${notification.user.firstName} ${notification.user.lastName}`;
 
   console.log(`Sending request email to attend an event (${notification.docId}) from ${notification.user} to : ${recipient.email}`);
-  const templateRequest = requestToAttendEventFromUser(userName, orgName(org), recipient, eventData, link, urlToUse);
+  const templateRequest = requestToAttendEventFromUser(userName, userOrg, recipient, eventData, link, urlToUse);
   return sendMailFromTemplate(templateRequest, eventAppKey, unsubscribeId).catch(e => console.warn(e.message));
 }
 
@@ -355,11 +361,11 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
   const eventEmailData: EventEmailData = getEventEmailData(event);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const urlToUse = applicationUrl[eventAppKey];
-  const senderName = orgName(org);
+  const orgData = getOrgEmailData(org);
   const link = getEventLink(org);
 
-  console.log(`Sending invitation email for an event (${notification.docId}) from ${senderName} to : ${recipient.email}`);
-  const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
+  console.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${recipient.email}`);
+  const templateInvitation = invitationToEventFromOrg(recipient, orgData, eventEmailData, link, urlToUse);
   return sendMailFromTemplate(templateInvitation, eventAppKey, unsubscribeId).catch(e => console.warn(e.message));
 }
 
@@ -404,10 +410,10 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
   const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
   const eventEmailData: EventEmailData = getEventEmailData(event);
   const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
-  const organizerOrgName = orgName(org);
+  const organizerOrg = getOrgEmailData(org);
 
   const app = notification._meta.createdFrom;
-  const template = requestToAttendEventFromUserSent(recipient, eventEmailData, organizerOrgName);
+  const template = requestToAttendEventFromUserSent(recipient, eventEmailData, organizerOrg);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
@@ -423,9 +429,10 @@ async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notificatio
 /** Let user knows that his request to join an org has been declined */
 async function sendRequestToJoinOrgDeclined(recipient: User, notification: NotificationDocument) {
   const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
+  const orgData = getOrgEmailData(org);
   const user = createPublicUserDocument(notification.user);
   const app = notification._meta.createdFrom;
-  const template = requestToJoinOrgDeclined(user, orgName(org));
+  const template = requestToJoinOrgDeclined(user, orgData);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
 
