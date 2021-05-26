@@ -228,8 +228,8 @@ const fields = {
     multiLine: false,
     index: index++
   },
-  positioning: {
-    multiLine: false,
+  audience: {
+    multiLine: true,
     fields: {
       goals: index++,
       targets: index++
@@ -429,11 +429,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
       movie.logline = this.mapping.logline;
 
       // POSITIONING (Positioning)
-      movie.audience = formatAudienceGoals(this.mapping.positioning, importErrors);
-      // movie.audience = formatSingleValue(this.mapping.positioning, 'socialGoals', 'audience', movie);
-      // movie.audience.goals  = this.mapping.positioning;
-      // movie.audience.targets = this.mapping.positioning;
-      // movie.audience = this.mapping.positioning;
+      movie.audience = formatAudienceGoals(this.mapping.audience, importErrors);
+
       //////////////////
       // ADMIN FIELDS
       //////////////////

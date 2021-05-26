@@ -361,25 +361,23 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
 }
 
 export function formatAudienceGoals(audience: {goals: string, targets: string[]}[], state: MovieImportState) {
-  return audience.filter(a => !!a.targets && !!a.goals).map(a => {
-    const goals = getKeyIfExists('socialGoals', a.goals);
-    const movieGoals= createAudienceGoals();
-    const test = createAudienceGoals({targets: a.targets})
-    if (!!goals) {
-      test.goals = goals;
-      console.log(test);
-      return movieGoals;
-    } else {
-      state.errors.push({
-        type: 'warning',
-        field: 'goals',
-        name: 'Positioning',
-        reason: `Could not parse social responsability goals : ${a.goals}`,
-        hint: 'Edit corresponding sheet field.'
-      });
+  const movieGoals = [];
+  const movieTargets = [];
+  audience.map(a => {
+    let goalKey;
+    if (a.goals) {
+      goalKey = getKeyIfExists('socialGoals', a.goals);
+      movieGoals.push(goalKey);
     }
-  }).filter(b => !!b);
-
+    if (a.targets) movieTargets.push(a.targets);
+  })
+  const movieAudience = createAudienceGoals({ targets: movieTargets});
+  console.log(movieTargets);
+  if (movieGoals.length) {
+    movieAudience.goals = movieGoals;
+    console.log(movieAudience);
+    return movieAudience;
+  }
 }
 
 export function formatReview(reviews: { filmCriticName: string, revue: string, link: string, quote: string }[]) {
@@ -392,8 +390,6 @@ export function formatReview(reviews: { filmCriticName: string, revue: string, l
     })
   }).filter(r => !!r);
 }
-
-// export function formatPositioning(position: { targetAudience: string })
 
 export function formatSingleValue(value: string, scope: Scope, path: string, movie: Movie) {
   if (!!value) {
