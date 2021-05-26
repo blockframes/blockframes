@@ -235,6 +235,10 @@ const fields = {
       targets: index++
     }
   },
+  salesPitch: {
+    multiLine: false,
+    index: index++
+  },
   //////////////////
   // ADMIN FIELDS
   //////////////////
@@ -427,9 +431,14 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
       // LOGLINE (Logline)
       movie.logline = this.mapping.logline;
+      console.log(movie.logline);
+      console.log(this.mapping.logline);
 
       // POSITIONING (Positioning)
       movie.audience = formatAudienceGoals(this.mapping.audience, importErrors);
+
+      // SALES PITCH (Description)
+      movie.promotional.salesPitch.description = this.mapping.salesPitch;
 
       //////////////////
       // ADMIN FIELDS
@@ -724,6 +733,16 @@ export class ViewExtractedMoviesComponent implements OnInit {
         type: 'warning',
         field: 'movie.audience',
         name: 'Positioning',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.promotional.salesPitch.description) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.promotional.salesPitch',
+        name: 'Sales Pitch',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });

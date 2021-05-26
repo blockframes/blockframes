@@ -370,7 +370,6 @@ export function formatAudienceGoals(audience: {goals: string, targets: string[]}
     if (a.targets) movieTargets.push(a.targets);
   })
   const movieAudience = createAudienceGoals({ targets: movieTargets});
-  console.log(movieTargets);
   if (movieGoals.length) {
     movieAudience.goals = movieGoals;
     return movieAudience;
