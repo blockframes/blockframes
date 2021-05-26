@@ -69,7 +69,9 @@ import '@angular/localize/init';
  /***************************************************************************************************
  * ALGOLIA CONFIG
  */
-window.process.env = { DEBUG: undefined };
+(window as any).process = {
+  env: { DEBUG: undefined },
+};
 
 /***************************************************************************************************
 * allSettled
