@@ -141,46 +141,31 @@ export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
   return false;
 }
 
-///////////
-// utils //
-///////////
-export function findSameMapTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
-  const isSameTerm = (term: BucketTerm) => {
-    isSameExclusivityTerm(term, avail) &&
-    isSameTerritoriesTerm(term, avail) &&
-    isSameMediaTerm(term, avail)
-  };
-  return terms.findIndex(isSameTerm);
+// ----------------------------
+//          SAME TERM        //
+// ----------------------------
+
+
+function isSameExclusivityTerm(term: BucketTerm, avail: AvailsFilter) {
+  if (term.exclusive !== avail.exclusive) return false;
+  return true;
 }
 
-export function findSameCalendarTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
-  const isSameTerm = (term: BucketTerm) => {
-    isSameExclusivityTerm(term, avail) &&
-    isSameDurationTerm(term, avail) &&
-    isSameMediaTerm(term, avail)
-  };
-  return terms.findIndex(isSameTerm);
-}
-
-export function isSameExclusivityTerm(term: BucketTerm, avail: AvailsFilter) {
-  return term.exclusive === avail.exclusive
-}
-
-export function isSameMediaTerm(term: BucketTerm, avail: AvailsFilter) {
+function isSameMediaTerm(term: BucketTerm, avail: AvailsFilter) {
   if (!avail.medias) return false;
   if (term.medias.length !== avail.medias.length) return false;
   if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
   return true;
 }
 
-export function isSameTerritoriesTerm(term: BucketTerm, avail: AvailsFilter) {
+function isSameTerritoriesTerm(term: BucketTerm, avail: AvailsFilter) {
   if (!avail.territories) return false;
   if (term.territories.length !== avail.territories.length) return false;
   if (term.territories.some(territory => !avail.territories.includes(territory))) return false;
   return true;
 }
 
-export function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
+function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
   if (!avail.duration?.from) return false;
   if (term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
   if (!avail.duration?.to) return false;
@@ -188,18 +173,24 @@ export function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
   return true;
 }
 
-/**
- * Avail is matching exactly the bucketTerm
- * @param term
- * @param avail
- * @returns
- */
- export function isSameTerm(term: BucketTerm, avail: AvailsFilter) {
-  return isSameExclusivityTerm(term, avail)
-    && isSameDurationTerm(term, avail)
-    && isSameTerritoriesTerm(term, avail)
-    && isSameMediaTerm(term, avail);
-}
+/** Check if a term is exactly the same as asked in the AvailFilter of the world map */
+export function isSameMapTerm(term: BucketTerm, avail: AvailsFilter)  {
+  return isSameExclusivityTerm(term, avail) &&
+  isSameDurationTerm(term, avail) &&
+  isSameMediaTerm(term, avail);
+};
+
+/** Check if a term is exactly the same as asked in the AvailFilter of the calendar */
+export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter)  {
+  return isSameExclusivityTerm(term, avail) &&
+  isSameTerritoriesTerm(term, avail) &&
+  isSameMediaTerm(term, avail);
+};
+
+
+// ----------------------------
+//            IN TERM        //
+// ----------------------------
 
 /**
  * Avail is included in bucketTerm
@@ -208,7 +199,7 @@ export function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
  * @returns
  */
 export function isInTerm(term: BucketTerm, avail: AvailsFilter) {
-  if (isSameTerm(term, avail)) return false;
+  if (isSameMapTerm(term, avail)) return false;
   if (term.exclusive !== avail.exclusive) return false;
   if (!avail.duration?.from || term.duration.from.getTime() > avail.duration.from.getTime()) return false;
   if (!avail.duration?.to || term.duration.to.getTime() < avail.duration.to.getTime()) return false;
@@ -235,7 +226,7 @@ export function toTerritoryMarker(territory: Territory, mandates: Mandate[], ter
 export function getTerritories(avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Territory[] {
   return bucket.contracts
     .map(c => c.terms).flat()
-    .filter(t => mode === 'exact' ? isSameTerm(t, avail) : isInTerm(t, avail))
+    .filter(t => mode === 'exact' ? isSameMapTerm(t, avail) : isInTerm(t, avail))
     .map(t => t.territories).flat();
 }
 
@@ -286,7 +277,7 @@ export function toDurationMarker(mandates: Mandate[], term: Term<Date>): Duratio
 export function getDurations(avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Duration[] {
   return bucket.contracts
     .map(c => c.terms).flat()
-    .filter(t => mode === 'exact' ? isSameTerm(t, avail) : isInTerm(t, avail))
+    .filter(t => mode === 'exact' ? isSameMapTerm(t, avail) : isInTerm(t, avail))
     .map(t => t.duration).flat();
 }
 

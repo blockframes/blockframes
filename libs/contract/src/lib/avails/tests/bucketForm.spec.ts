@@ -1,5 +1,5 @@
 import { createMandate } from "../../contract/+state/contract.model";
-import { AvailsFilter, findSameMapTermIndex, getTerritories, toTerritoryMarker } from "./../avails";
+import { AvailsFilter, isSameMapTerm, getTerritories, toTerritoryMarker } from "./../avails";
 import { BucketForm } from '@blockframes/contract/bucket/form'
 import { createTerm } from "../../term/+state/term.model";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
@@ -30,9 +30,9 @@ describe('Test BucketForm behaviors', () => {
     });
 
     const selected1 = toTerritoryMarker('germany', [mandate], term);
-    bucketForm.addTerritory(availDetailsExclusive, selected1);
-
     const selected2 = toTerritoryMarker('france', [mandate], term);
+
+    bucketForm.addTerritory(availDetailsExclusive, selected1);
     bucketForm.addTerritory(availDetailsExclusive, selected2);
 
     expect(bucketForm.value.contracts.length).toBe(1);
@@ -170,7 +170,7 @@ describe('Test BucketForm behaviors', () => {
     });
 
     const terms = [bucketTermA, bucketTermB, bucketTermC];
-    const termIndex = findSameMapTermIndex(terms, availDetailsExclusive);
+    const termIndex = terms.findIndex(t => isSameMapTerm(t, availDetailsExclusive));
     expect(termIndex).toBe(2);
   });
 
@@ -197,7 +197,7 @@ describe('Test BucketForm behaviors', () => {
     });
 
     const terms = [bucketTermA, bucketTermB];
-    const termIndex = findSameMapTermIndex(terms, availDetailsExclusive);
+    const termIndex = terms.findIndex(t => isSameMapTerm(t, availDetailsExclusive));
     expect(termIndex).toBe(-1);
   });
 
