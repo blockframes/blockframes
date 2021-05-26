@@ -143,8 +143,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
       })
     })) {
       this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
-    } else if (bucket.contracts.some(contract => !contract.price || contract.price < 0)) {
-      this.snackBar.open('Missing price information.', '', { duration: 2000 });
     } else {
       this.dialog.open(SpecificTermsComponent);
     }
