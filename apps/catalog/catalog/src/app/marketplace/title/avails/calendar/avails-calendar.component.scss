@@ -24,4 +24,19 @@ aside {
 
 mat-card {
   margin-bottom: 24px;
+
+  .overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+
+    article {
+      padding: 48px;
+      border-radius: 8px;
+      background-color: var(--background-disabled-button);
+      max-width: 80%;
+      text-align: center;
+    }
+  }
 }
