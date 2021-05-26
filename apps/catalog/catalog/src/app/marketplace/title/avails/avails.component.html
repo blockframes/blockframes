@@ -10,8 +10,8 @@
 <router-outlet></router-outlet>
 
 <ng-container *ngIf="(terms$ | async).length">
-  <h2>Preselected Rights</h2>
-  <mat-card *ngFor="let control of terms$ | async">
+  <h2 id="rights">Preselected Rights</h2>
+  <mat-card *ngFor="let control of terms$ | async | reverse">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
         <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>

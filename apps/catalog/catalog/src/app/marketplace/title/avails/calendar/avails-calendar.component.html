@@ -35,7 +35,7 @@
 
         </form>
         <article fxLayout fxLayoutAlign="space-between">
-          <button mat-stroked-button (click)="clear()">Search for new rights</button>
+          <button mat-stroked-button (click)="clear()">Clear</button>
         </article>
       </mat-card-content>
     </mat-card>
@@ -50,6 +50,11 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <avails-calendar [availableMarkers]="available$ | async" [soldMarkers]="sold$ | async"></avails-calendar>
+      <avails-calendar [licensedMarkers]="licensed$ | async" [soldMarkers]="sold$ | async" (selected)="selected($event)"></avails-calendar>
+      <section *ngIf="(status$ | async) === 'INVALID'" class="overlay" fxLayoutAlign="center center">
+        <article class="mat-body-2">
+          Please fill in Avail Search Criteria section to show results on the Calendar.
+        </article>
+      </section>
     </mat-card-content>
   </mat-card>
