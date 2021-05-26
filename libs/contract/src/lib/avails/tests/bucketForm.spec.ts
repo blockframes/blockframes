@@ -470,4 +470,66 @@ describe('Test BucketForm behaviors for durations', () => {
 
     expect(bucketForm.value.contracts.length).toBe(2);
   });
+
+  it('Should return contract & term index in contract bucket', () => {
+    const bucketForm = new BucketForm();
+
+    const mandate = createMandate({ id: 'MandateA', termIds: ['termA', 'termB'] });
+
+    const termA = createTerm({ id: 'termA', contractId: mandate.id });
+    const termB = createTerm({ id: 'termB', contractId: mandate.id });
+
+    const markerA = toDurationMarker([mandate], termA);
+    const markerB = toDurationMarker([mandate], termB);
+
+    const availDetails: AvailsFilter = {
+      // Set from calendar view
+      duration: {
+        from: new Date('05/05/2020'),
+        to: new Date('05/05/2030'),
+      },
+      // Set from form
+      exclusive: true,
+      territories: ['france', 'germany'],
+      medias: ['theatrical']
+    };
+
+    bucketForm.addDuration(availDetails, markerA);
+    bucketForm.addDuration(availDetails, markerB);
+
+    const index = bucketForm.getTermIndexForCalendar(availDetails , markerB)
+
+    expect(index.contractIndex).toBe(1);
+    expect(index.termIndex).toBe(0);
+  });
+
+
+  it('Should return undefined if index not found in contract bucket', () => {
+    const bucketForm = new BucketForm();
+
+    const mandate = createMandate({ id: 'MandateA', termIds: ['termA', 'termB'] });
+
+    const termA = createTerm({ id: 'termA', contractId: mandate.id });
+    const termB = createTerm({ id: 'termB', contractId: mandate.id });
+
+    const markerA = toDurationMarker([mandate], termA);
+    const markerB = toDurationMarker([mandate], termB);
+
+    const availDetails: AvailsFilter = {
+      // Set from calendar view
+      duration: {
+        from: new Date('05/05/2020'),
+        to: new Date('05/05/2030'),
+      },
+      // Set from form
+      exclusive: true,
+      territories: ['france', 'germany'],
+      medias: ['theatrical']
+    };
+
+    bucketForm.addDuration(availDetails, markerA);
+    const index = bucketForm.getTermIndexForCalendar(availDetails , markerB)
+    expect(index).toBeUndefined;
+  });
 });
+
