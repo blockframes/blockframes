@@ -375,7 +375,6 @@ export function formatAudienceGoals(audience: {goals: string, targets: string[]}
   console.log(movieTargets);
   if (movieGoals.length) {
     movieAudience.goals = movieGoals;
-    console.log(movieAudience);
     return movieAudience;
   }
 }
