@@ -114,7 +114,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker 
    * @returns 
    */
-  addTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
+  addTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
     const { contract: mandate, slug: territory, term } = marker;
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
@@ -123,7 +123,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
       this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }));
       this.markAsDirty();
       this.change.next();
-      return;
+      return true;
     }
 
     const contract = bucket.contracts[contractIndex];
@@ -133,7 +133,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
       this.markAsDirty();
       this.change.next();
-      return;
+      return true;
     }
 
     const territories = contract.terms[termIndex].territories;
@@ -143,7 +143,9 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     if (!hasTerritory) {
       control.setValue([...territories, territory]);
       this.markAsDirty();
+      return true;
     }
+    return false;
   }
 
   /**

@@ -5,7 +5,7 @@ import {
   OnInit,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
@@ -64,7 +64,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private bucketQuery: BucketQuery,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private router: Router
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -229,7 +230,9 @@ export class ListComponent implements OnInit, OnDestroy {
       })
       this.bucketService.add(bucket);
     }
-    this.snackbar.open(`${title.title.international} was added to your Selection`, 'close', { duration: 4000 });
+    this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
   }
 
   ngOnDestroy() {

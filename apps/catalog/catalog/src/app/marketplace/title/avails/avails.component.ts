@@ -97,10 +97,7 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const contracts = this.bucketForm.value.contracts;
     await this.bucketService.upsert({ id: this.orgId, contracts });
     this.bucketForm.markAsPristine();
-    this.snackbar
-      .open(`${this.movie.title.international} Rights were added to your Selection`, 'GO TO SELECTION', { duration: 5000 })
-      .onAction()
-      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
+    this.router.navigate(['/c/o/marketplace/selection']);
   }
 
   public explain() {
@@ -143,6 +140,8 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     if (mode === 'calendar') {
       this.avails.calendarForm.setValue({ exclusive, medias, territories });
     }
+
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
   }
 
   remove(control: BucketTermForm) {
