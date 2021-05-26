@@ -123,6 +123,9 @@
         ],
         "financiers": [
           "financiers-blockframes-bruce"
+        ],
+        "cms": [
+          "cms-blockframes-bruce"
         ]
       }
     },

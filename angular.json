@@ -706,52 +706,6 @@
             "passWithNoTests": true
           }
         },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/apps/festival/server",
-            "main": "apps/festival/festival/src/main.server.ts",
-            "tsConfig": "apps/festival/festival/tsconfig.server.json",
-            "externalDependencies": ["@firebase/firestore"],
-            "sourceMap": true,
-            "optimization": false
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
-              "sourceMap": false,
-              "optimization": true
-            },
-            "ci": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                }
-              ],
-              "sourceMap": false,
-              "optimization": true
-            },
-            "staging": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ],
-              "sourceMap": false,
-              "optimization": true
-            }
-          }
-        },
         "deploy": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {
