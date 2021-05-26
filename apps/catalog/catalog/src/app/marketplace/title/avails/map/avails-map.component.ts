@@ -114,7 +114,7 @@ export class MarketplaceMovieAvailsMapComponent {
   public addTerritory(territory: TerritoryMarker) {
     const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
     if (added) {
-      this.snackbar.open(`Rights added`, 'Show', { duration: 5000 })
+      this.snackbar.open(`Rights added`, 'Show 👇', { duration: 5000 })
         .onAction()
         .subscribe(() => {
           document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
