@@ -24,6 +24,7 @@ import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages
 import { AvailsGuard } from './avails.guard';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { ExplanationModule } from './explanation/explanation.module';
+import { ReverseModule } from '@blockframes/utils/pipes/reverse.pipe';
 
 
 const routes: Routes = [
@@ -54,6 +55,7 @@ const routes: Routes = [
     ToLabelModule,
     LanguagesFormModule,
     ExplanationModule,
+    ReverseModule,
 
     // Material
     MatCardModule,
