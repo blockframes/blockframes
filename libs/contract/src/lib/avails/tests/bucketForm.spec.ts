@@ -528,7 +528,7 @@ describe('Test BucketForm behaviors for durations', () => {
 
     bucketForm.addDuration(availDetails, markerA);
     const index = bucketForm.getTermIndexForCalendar(availDetails, markerB);
-    expect(index).toBeUndefined;
+    expect(index).toBeUndefined();
   });
 });
 
