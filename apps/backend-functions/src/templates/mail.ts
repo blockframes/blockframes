@@ -6,7 +6,7 @@ import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
 import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
-import { EventEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
@@ -65,7 +65,7 @@ export function userResetPassword(email: string, link: string): EmailTemplateReq
 export function userInvite(
   email: string,
   password: string,
-  orgName: string,
+  org: OrgEmailData,
   pageURL: string = appUrl.market,
   templateId: string = templateIds.user.credentials.joinOrganization,
   event?: EventEmailData
@@ -73,7 +73,7 @@ export function userInvite(
   const data = {
     userEmail: email,
     userPassword: password,
-    orgName,
+    org,
     pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`,
     event: event,
   };
@@ -182,15 +182,15 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, u
 /** Generates an email for user invited by an organization to an event. */
 export function invitationToEventFromOrg(
   recipient: User,
-  orgDenomination: string,
+  org: OrgEmailData,
   event: EventEmailData,
   link: string,
   url: string = appUrl.market,
 ): EmailTemplateRequest {
   const data = {
     userFirstName: recipient.firstName,
-    orgName: orgDenomination,
-    event: event,
+    org,
+    event,
     pageURL: `${url}/${link}`,
   };
   return { to: recipient.email, templateId: templateIds.invitation.attendEvent.created, data };

@@ -2,7 +2,7 @@ import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDo
 import { getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
-import { emailErrorCodes, EventEmailData, getEventEmailData } from '@blockframes/utils/emails/utils';
+import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData } from '@blockframes/utils/emails/utils';
 import { EventDocument, EventMeta, Screening } from '@blockframes/event/+state/event.firestore';
 import {
   reminderEventToUser,
@@ -355,11 +355,11 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
   const eventEmailData: EventEmailData = getEventEmailData(event);
   const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
   const urlToUse = applicationUrl[eventAppKey];
-  const senderName = orgName(org);
+  const orgData = getOrgEmailData(org);
   const link = getEventLink(org);
 
-  console.log(`Sending invitation email for an event (${notification.docId}) from ${senderName} to : ${recipient.email}`);
-  const templateInvitation = invitationToEventFromOrg(recipient, senderName, eventEmailData, link, urlToUse);
+  console.log(`Sending invitation email for an event (${notification.docId}) from ${orgData.denomination} to : ${recipient.email}`);
+  const templateInvitation = invitationToEventFromOrg(recipient, orgData, eventEmailData, link, urlToUse);
   return sendMailFromTemplate(templateInvitation, eventAppKey, unsubscribeId).catch(e => console.warn(e.message));
 }
 
