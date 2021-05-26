@@ -91,14 +91,14 @@ describe('Test Matrix', () => {
     const posI = { row: 5, column: 4 } as MatrixPosition;
 
     const stateMatrix = [[], [], [], [], [], []] as CellState[][];
-    stateMatrix[posA.row][posA.column] = 'avail';
-    stateMatrix[posB.row][posB.column] = 'avail';
-    stateMatrix[posC.row][posC.column] = 'avail';
-    stateMatrix[posD.row][posD.column] = 'avail';
-    stateMatrix[posE.row][posE.column] = 'avail';
-    stateMatrix[posF.row][posF.column] = 'avail';
-    stateMatrix[posG.row][posG.column] = 'avail';
-    stateMatrix[posH.row][posH.column] = 'avail';
+    stateMatrix[posA.row][posA.column] = 'available';
+    stateMatrix[posB.row][posB.column] = 'available';
+    stateMatrix[posC.row][posC.column] = 'available';
+    stateMatrix[posD.row][posD.column] = 'available';
+    stateMatrix[posE.row][posE.column] = 'available';
+    stateMatrix[posF.row][posF.column] = 'available';
+    stateMatrix[posG.row][posG.column] = 'available';
+    stateMatrix[posH.row][posH.column] = 'available';
     stateMatrix[posI.row][posI.column] = 'sold';
 
     expect(isContinuous(posA, posB, stateMatrix)).toBeTruthy();
@@ -120,18 +120,18 @@ describe('Test Matrix', () => {
 
     let stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'empty'));
 
-    stateMatrix = markersToMatrix(markers, stateMatrix, 'avail');
+    stateMatrix = markersToMatrix(markers, stateMatrix, 'available');
 
     expect(stateMatrix[4][10]).toBe('empty');
-    expect(stateMatrix[4][11]).toBe('avail');
-    expect(stateMatrix[5].filter(s => s === 'avail').length).toBe(12);
+    expect(stateMatrix[4][11]).toBe('available');
+    expect(stateMatrix[5].filter(s => s === 'available').length).toBe(12);
     expect(stateMatrix[6].filter(s => s === 'empty').length).toBe(12);
     expect(stateMatrix[7].filter(s => s === 'empty').length).toBe(11);
-    expect(stateMatrix[7][9]).toBe('avail');
+    expect(stateMatrix[7][9]).toBe('available');
   });
 
   it('Test select', () => {
-    const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'avail'));
+    const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'available'));
 
     const newState = select(1, 11, stateMatrix, createAvailCalendarState());
     expect(newState.start.row).toEqual(1);
@@ -144,7 +144,7 @@ describe('Test Matrix', () => {
 
     markers.push({ from: new Date('10/01/2028'), to: new Date('10/30/2028') });
 
-    const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'avail'));
+    const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'available'));
 
     const hoveredState = hover(1, 10, stateMatrix, createAvailCalendarState());
 
