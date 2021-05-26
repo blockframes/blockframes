@@ -1,4 +1,3 @@
-import { MovieGoalsAudience } from "@blockframes/movie/+state/movie.firestore";
 import {
   createBoxOffice,
   createMovieOriginalRelease,
@@ -12,7 +11,6 @@ import {
 import { MovieImportState } from "libs/import/src/lib/import-utils";
 import { createCredit, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
-import { SocialGoal } from "../static-model";
 import { Scope } from "../static-model/static-model";
 
 const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/;
