@@ -40,7 +40,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
       const orgEmailData = getOrgEmailData(fromOrg);
       const urlToUse = applicationUrl[app];
 
-      const templateId = templateIds.test;
+      const templateId = templateIds.user.credentials[invitationType];
 
       const template = userInvite(email, newUser.password, orgEmailData, urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
