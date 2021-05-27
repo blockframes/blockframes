@@ -70,67 +70,69 @@
   <mat-card-content>
     <world-map>
       <ng-container *ngIf="(status$ | async) === 'INVALID'">
-        <section class="overlay" fxLayoutAlign="center center">
-          <article class="mat-body-2">
-            Please fill in Avail Search Criteria section to show results on the Map.
+        <section class="overlay" fxLayout="column" fxLayoutAlign="center center">
+          <article fxLayout="column" fxLayoutAlign="center center">
+            <h3>
+              Please fill in Avail Search Criteria section <br/> to show results on the Map.
+            </h3>
           </article>
         </section>
       </ng-container>
 
       <!-- MAP LAYERS -->
       <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="primary-lighter"
+        <map-feature [tag]="tag.isoA3" color="#7795ff"
           (click)="addTerritory(tag)"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Available')"
           (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
       <ng-container *ngFor="let tag of (sold$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="background-disabled-button"
+        <map-feature [tag]="tag.isoA3" color="#9ca3c4"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')"
           (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
       <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="primary" weight="2"
+        <map-feature [tag]="tag.isoA3" color="#1a49f5"
           (click)="removeTerritory(tag)"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')"
           (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
       <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="primary" weight="2"
+        <map-feature [tag]="tag.isoA3" color="#1a49f5"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')"
           (mouseout)="clearTerritoryTooltip()">
         </map-feature>
       </ng-container>
 
       <!-- TOOLTIP ON HOVERING-->
-      <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
+      <article *ngIf="hoveredTerritory" class="hovered-territory-card">
         <ul>
-          <li> {{ hoveredTerritory.name }} </li>
-          <li class="mat-caption"> {{ hoveredTerritory.status }} </li>
+          <li><b>{{ hoveredTerritory.name }}</b></li>
+          <li class="mat-caption">{{ hoveredTerritory.status }}</li>
         </ul>
-      </mat-card>
+      </article>
 
       <!-- MAP LEGEND -->
-      <mat-card class="colors-card">
+      <article class="colors-card">
         <mat-list>
           <mat-list-item>
             <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100" />
+              <rect fill="#7795ff" x="0" y="0" width="100" height="100" rx="10" />
             </svg>
             <span class="mat-caption">Available</span>
           </mat-list-item>
           <mat-list-item>
             <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--background-disabled-button)" x="0" y="0" width="100" height="100" />
+              <rect fill="#9ca3c4" x="0" y="0" width="100" height="100" rx="10" />
             </svg>
             <span class="mat-caption">Rights Sold</span>
           </mat-list-item>
           <mat-list-item>
             <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--background)" x="0" y="0" width="100" height="100" />
+              <rect fill="#d3ddff" x="0" y="0" width="100" height="100" rx="10" />
             </svg>
             <span class="mat-caption" fxLayout fxLayoutAlign="start center">
               Not Licensed
@@ -138,12 +140,12 @@
             </span>
           </mat-list-item>
         </mat-list>
-      </mat-card>
+      </article>
     </world-map>
     <article fxLayout fxLayoutAlign="end">
       <button mat-button color="primary" (click)="selectAll()">
         <mat-icon svgIcon="add"></mat-icon>
-        Select all available territories
+        <span>Select all available territories</span>
       </button>
     </article>
   </mat-card-content>
