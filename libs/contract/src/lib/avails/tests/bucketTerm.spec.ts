@@ -1,4 +1,4 @@
-import { AvailsFilter, isInTerm, isSameCalendarTerm, isSameMapTerm } from "./../avails";
+import { AvailsFilter, isInCalendarTerm, isInTerm, isSameCalendarTerm, isSameMapTerm } from "./../avails";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 
 describe('Test isSameMapTerm pure function', () => {
@@ -46,6 +46,8 @@ describe('Test isInTerm pure function', () => {
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') } });
     expect(isInTerm(bucketTerm, availDetails)).toBe(true);
+    // Should also not be sameMapTerm
+    expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
   });
 
   it('Checks if one term is outside the other', () => {
@@ -56,6 +58,8 @@ describe('Test isInTerm pure function', () => {
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') } });
     expect(isInTerm(bucketTerm, availDetails)).toBe(false);
+    // Should also not be sameMapTerm
+    expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
   });
 
   it('If is SameMapTerm then is not InTerm', () => {
@@ -144,6 +148,94 @@ describe('Test isSameCalendarTerm pure function', () => {
 
     const bucketTerm = createBucketTerm({ ...availDetails, exclusive: true });
     expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+})
+
+describe('Test isInCalendarTerm pure function', () => {
+
+  it('Checks if one term is included in the other: territories and medias', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/04/2028'), to: new Date('06/29/2030') }, exclusive: false,
+      territories: ['france', 'italy'], medias: ['planes', 'educational']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, territories: ['france', 'italy', 'spain'], medias: ['planes', 'educational', 'est'] });
+    expect(isInCalendarTerm(bucketTerm, availDetails)).toBe(true);
+    // Should also not be sameCalendarTerm
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('Checks if one term is included in the other: territories only', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/04/2028'), to: new Date('06/29/2030') }, exclusive: false,
+      territories: ['france', 'italy'], medias: ['planes', 'educational']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, territories: ['france', 'italy', 'spain'] });
+    expect(isInCalendarTerm(bucketTerm, availDetails)).toBe(true);
+    // Should also not be sameCalendarTerm
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+
+  it('Checks if one term is included in the other: medias only', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/04/2028'), to: new Date('06/29/2030') }, exclusive: false,
+      territories: ['france', 'italy'], medias: ['planes', 'educational']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, medias: ['planes', 'educational', 'est'] });
+    expect(isInCalendarTerm(bucketTerm, availDetails)).toBe(true);
+    // Should also not be sameCalendarTerm
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('Neither all territories nor all medias are in term', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/04/2028'), to: new Date('06/29/2030') }, exclusive: false,
+      territories: ['france', 'italy', 'spain'], medias: ['planes', 'educational', 'est']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, medias: ['planes', 'educational'], territories: ['france', 'italy'] });
+    expect(isInCalendarTerm(bucketTerm, availDetails)).toBe(false);
+    // Should also not be sameCalendarTerm
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('All medias are in term, but not territories', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/04/2028'), to: new Date('06/29/2030') }, exclusive: false,
+      territories: ['france', 'italy', 'spain'], medias: ['planes', 'educational']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, medias: ['planes', 'educational'], territories: ['france', 'italy'] });
+    expect(isInCalendarTerm(bucketTerm, availDetails)).toBe(false);
+    // Should also not be sameCalendarTerm
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('All territories are in term, but not medias', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/04/2028'), to: new Date('06/29/2030') }, exclusive: false,
+      territories: ['france', 'italy'], medias: ['planes', 'educational', 'est']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, medias: ['planes', 'educational'], territories: ['france', 'italy', 'spain'] });
+    expect(isInCalendarTerm(bucketTerm, availDetails)).toBe(false);
+    // Should also not be sameCalendarTerm
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('If is sameMapTerm then is not isInCalendarTerm', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm(availDetails);
+    expect(isSameMapTerm(bucketTerm, availDetails)).toBe(true);
+    expect(isInCalendarTerm(bucketTerm, availDetails)).toBe(false);
   });
 
 })
