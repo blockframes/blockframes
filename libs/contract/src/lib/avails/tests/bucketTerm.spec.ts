@@ -1,7 +1,7 @@
-import { AvailsFilter, isInTerm, isSameMapTerm } from "./../avails";
+import { AvailsFilter, isInTerm, isSameCalendarTerm, isSameMapTerm } from "./../avails";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 
-describe('Test isSameTerm pure function', () => {
+describe('Test isSameMapTerm pure function', () => {
 
   it('Checks if two terms are the same', () => {
     const availDetails: AvailsFilter = {
@@ -23,7 +23,7 @@ describe('Test isSameTerm pure function', () => {
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
   });
 
-  it('if SameTerm then is not InTerm', () => {
+  it('if is SameMapTerm then is not InTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
@@ -58,7 +58,7 @@ describe('Test isInTerm pure function', () => {
     expect(isInTerm(bucketTerm, availDetails)).toBe(false);
   });
 
-  it('If is SameTerm then is not InTerm', () => {
+  it('If is SameMapTerm then is not InTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
@@ -94,3 +94,56 @@ describe('Test isInTerm pure function', () => {
   });
 })
 
+describe('Test isSameCalendarTerm pure function', () => {
+
+  it('Checks if two terms are the same', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm(availDetails);
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(true);
+  });
+
+  it('Even with different durations, terms are the same', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2029'), to: new Date('06/30/2035') } });
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(true);
+  });
+
+  it('Not same territories, the two terms are not the same', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, territories: ['germany'] });
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('Not same medias, the two terms are not the same', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, medias: ['educational'] });
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+  it('Not same exclusivity, the two terms are not the same', () => {
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
+      territories: ['france'], medias: ['planes']
+    };
+
+    const bucketTerm = createBucketTerm({ ...availDetails, exclusive: true });
+    expect(isSameCalendarTerm(bucketTerm, availDetails)).toBe(false);
+  });
+
+})

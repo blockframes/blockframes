@@ -172,6 +172,18 @@ jobs:
       - build_deploy_prepare
       - slack/notify:
           message: 'PFT complete for << pipeline.git.branch >>'
+  build-deploy-upgrade:
+    executor: blockframes-ci
+    environment:
+      NG_CONFIG: ''
+    steps:
+      - prepare_environment
+      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
+      - fail_on_production
+      - select_environment
+      - build_deploy_upgrade
+      - slack/notify:
+          message: 'UPGRADE complete for << pipeline.git.branch >>'
   prepare-for-testing:
     executor: blockframes-ci
     environment:
@@ -318,6 +330,13 @@ workflows:
             branches:
               only:
                 - /deploy\/.*/
+  build-deploy-upgrade:
+    jobs:
+      - build-deploy-upgrade:
+          filters:
+            branches:
+              only:
+                - /upgrade\/.*/
   prepare-for-testing:
     jobs:
       - prepare-for-testing:
