@@ -34,7 +34,12 @@ export class MapFeature {
 
   @Input()
   set color(color: string) {
-    this.state = color ? { fillColor: `var(--${color})`, fillOpacity: 1 } : { fillOpacity: 0 };
+    if (!color) this.state = { fillOpacity: 0 };
+    if (color.startsWith('#')) {
+      this.state = { fillColor: color, fillOpacity: 1 };
+    } else {
+      this.state = { fillColor: `var(--${color})`, fillOpacity: 1 };
+    }
   }
   @Input()
   set weight(value: string | number) {
@@ -122,7 +127,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       fillOpacity: 0,
       stroke: true,
       weight: 1,
-      color: 'var(--foreground-text)'
+      color: '#06081c'
     };
   }
 

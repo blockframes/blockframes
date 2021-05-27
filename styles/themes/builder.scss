@@ -207,6 +207,7 @@
   --background-disabled-button: #{mat.get-color-from-palette($background, 'disabled-button')};
   --background-slider: #{mat.get-color-from-palette($foreground, 'slider-min')};
   --background-hover: #{mat.get-color-from-palette($background, 'hover')};
+  --background-tooltip: #{mat.get-color-from-palette($background, 'tooltip')};
   --background-card: #{mat.get-color-from-palette($background, 'card')};
   --background: #{mat.get-color-from-palette($background, 'background', 0.5)};
   // Foreground

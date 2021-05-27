@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 
 :host {
   display: flex;
@@ -18,18 +19,24 @@ p {
   world-map {
     height: 500px;
     z-index: 0;
+    background-color: #d3ddff;
+    border-radius: 4px;
 
     .overlay {
       position: absolute;
-      height: 100%;
-      width: 100%;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 3;
+      background-color: rgba(62, 62, 93, 0.72);
 
       article {
         padding: 48px;
         border-radius: 8px;
-        background-color: var(--background-disabled-button);
-        max-width: 80%;
+        background-color: var(--background-tooltip);
+        width: 80%;
+        height: 80%;
         text-align: center;
       }
     }
@@ -39,6 +46,14 @@ p {
       top: 16px;
       right: 16px;
       z-index: 2;
+      padding: 12px;
+      background-color: #ffffff;
+      color: #434773;
+      border-radius: 4px;
+      @include mat.elevation(1);
+      ul {
+        margin: 0;
+      }
     }
 
     .colors-card {
@@ -46,7 +61,11 @@ p {
       bottom: 32px;
       left: 16px;
       z-index: 2;
-      padding: 16px;
+      padding: 8px;
+      border-radius: 4px;
+      background-color: #ffffff;
+      color: #434773;
+      @include mat.elevation(1);
 
       mat-list-item {
         height: 32px;
@@ -54,6 +73,8 @@ p {
 
       svg {
         margin-right: 12px;
+        width: 16px;
+        height: 16px;
       }
     }
   }
