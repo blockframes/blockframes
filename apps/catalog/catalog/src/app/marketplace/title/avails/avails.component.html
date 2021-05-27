@@ -14,7 +14,7 @@
   <mat-card *ngFor="let control of terms$ | async | reverse">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
-        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
         <section fxLayoutGap="12px">
           <button mat-icon-button (click)="edit(term)">
             <mat-icon svgIcon="edit"></mat-icon>
@@ -27,7 +27,7 @@
       <mat-card-content>
         <mat-accordion>
           <!-- TERRITORIES -->
-          <mat-expansion-panel>
+          <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Territories
