@@ -1,4 +1,4 @@
-import { AvailsFilter, isInCalendarTerm, isInTerm, isSameCalendarTerm, isSameMapTerm } from "./../avails";
+import { AvailsFilter, isInCalendarTerm, isInMapTerm, isSameCalendarTerm, isSameMapTerm } from "./../avails";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
 
 describe('Test isSameMapTerm pure function', () => {
@@ -23,7 +23,7 @@ describe('Test isSameMapTerm pure function', () => {
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
   });
 
-  it('if is SameMapTerm then is not InTerm', () => {
+  it('if is SameMapTerm then is not InMapTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
@@ -31,12 +31,12 @@ describe('Test isSameMapTerm pure function', () => {
 
     const bucketTerm = createBucketTerm(availDetails);
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(true);
-    expect(isInTerm(bucketTerm, availDetails)).toBe(false);
+    expect(isInMapTerm(bucketTerm, availDetails)).toBe(false);
   });
 
 })
 
-describe('Test isInTerm pure function', () => {
+describe('Test isInMapTerm pure function', () => {
 
   it('Checks if one term is included in the other', () => {
     const availDetails: AvailsFilter = {
@@ -45,7 +45,7 @@ describe('Test isInTerm pure function', () => {
     };
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') } });
-    expect(isInTerm(bucketTerm, availDetails)).toBe(true);
+    expect(isInMapTerm(bucketTerm, availDetails)).toBe(true);
     // Should also not be sameMapTerm
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
   });
@@ -57,12 +57,12 @@ describe('Test isInTerm pure function', () => {
     };
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') } });
-    expect(isInTerm(bucketTerm, availDetails)).toBe(false);
+    expect(isInMapTerm(bucketTerm, availDetails)).toBe(false);
     // Should also not be sameMapTerm
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
   });
 
-  it('If is SameMapTerm then is not InTerm', () => {
+  it('If is SameMapTerm then is not InMapTerm', () => {
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/01/2028'), to: new Date('06/30/2030') }, exclusive: false,
       territories: ['france'], medias: ['planes']
@@ -70,10 +70,10 @@ describe('Test isInTerm pure function', () => {
 
     const bucketTerm = createBucketTerm(availDetails);
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(true);
-    expect(isInTerm(bucketTerm, availDetails)).toBe(false);
+    expect(isInMapTerm(bucketTerm, availDetails)).toBe(false);
   });
 
-  it('If avail "from" is after bucket "from" but with same "to" : isInTerm is true', () => {
+  it('If avail "from" is after bucket "from" but with same "to" : isInMapTerm is true', () => {
     const to = new Date('06/30/2030');
     const availDetails: AvailsFilter = {
       duration: { from: new Date('01/02/2028'), to }, exclusive: false,
@@ -82,10 +82,10 @@ describe('Test isInTerm pure function', () => {
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from: new Date('01/01/2028'), to } });
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
-    expect(isInTerm(bucketTerm, availDetails)).toBe(true);
+    expect(isInMapTerm(bucketTerm, availDetails)).toBe(true);
   });
 
-  it('If avail "to" is before bucket "to" but with same "from" : isInTerm is true', () => {
+  it('If avail "to" is before bucket "to" but with same "from" : isInMapTerm is true', () => {
     const from = new Date('01/01/2028')
     const availDetails: AvailsFilter = {
       duration: { from, to: new Date('06/29/2030') }, exclusive: false,
@@ -94,7 +94,7 @@ describe('Test isInTerm pure function', () => {
 
     const bucketTerm = createBucketTerm({ ...availDetails, duration: { from, to: new Date('06/30/2030') } });
     expect(isSameMapTerm(bucketTerm, availDetails)).toBe(false);
-    expect(isInTerm(bucketTerm, availDetails)).toBe(true);
+    expect(isInMapTerm(bucketTerm, availDetails)).toBe(true);
   });
 })
 
