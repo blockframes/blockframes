@@ -1,55 +1,32 @@
+<form [formGroup]="availsForm" fxLayout fxLayoutAlign="space-evenly" fxLayoutGap="12px" id="avails">
+  <static-group fxFlex formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
+    <mat-label>Media</mat-label>
+  </static-group>
 
-<aside id="avails">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Avail Search Criteria</mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
-    <mat-card-header>
-      <mat-card-subtitle>
-        <p>Fill in the following fields to know where, when and in which conditions this title is available.</p>
-        <p>
-          Search results use an "and" logic for multiple conditions, not an "or" logic.
-          <mat-icon matTooltip="If you check TV and VOD media, you will get territories where both media are available (not either of them)" svgIcon="info"></mat-icon>
-        </p>
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="availsForm">
-        <static-group formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
-          <mat-label>Media</mat-label>
-        </static-group>
+  <mat-form-field fxFlex appearance="outline">
+    <mat-label>Exlusivity</mat-label>
+    <mat-select formControlName="exclusive" required>
+      <mat-option [value]="true">Exclusive</mat-option>
+      <mat-option [value]="false">Non exclusive</mat-option>
+    </mat-select>
+    <mat-icon matPrefix svgIcon="star"></mat-icon>
+  </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Exlusivity</mat-label>
-          <mat-select formControlName="exclusive" required>
-            <mat-option [value]="true">Exclusive</mat-option>
-            <mat-option [value]="false">Non exclusive</mat-option>
-          </mat-select>
-          <mat-icon matPrefix svgIcon="star"></mat-icon>
-        </mat-form-field>
+  <static-group fxFlex formControlName="territories" scope="territories" displayAll="World" placeholder="Specify territory to filter" required test-id="territories" icon="world">
+    <mat-label>Territories</mat-label>
+  </static-group>
 
-        <static-group formControlName="territories" scope="territories" displayAll="World" placeholder="Specify territory to filter" required test-id="territories" icon="world">
-          <mat-label>Territories</mat-label>
-        </static-group>
+</form>
 
-      </form>
-      <article fxLayout fxLayoutAlign="space-between">
-        <button mat-stroked-button (click)="clear()">Clear</button>
-      </article>
-    </mat-card-content>
-  </mat-card>
-</aside>
-
-<mat-card class="avails-card">
-  <mat-card-header>
-    <mat-card-title>Available Dates</mat-card-title>
-    <mat-card-subtitle *ngIf="org$ | async as org">
-      Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel free to
-      <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
-    </mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
+<h2>Available Dates</h2>
+<ng-container *ngIf="org$ | async as org">
+  <p>
+    Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel free to
+    <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.  
+  </p>
+</ng-container>
+<mat-card>
+  <mat-card-content fxLayout fxLayoutAlign="center">
     <avails-calendar [licensedMarkers]="licensed$ | async" [soldMarkers]="sold$ | async" (selected)="selected($event)"></avails-calendar>
     <section *ngIf="(status$ | async) === 'INVALID'" class="overlay" fxLayoutAlign="center center">
       <article class="mat-body-2">
