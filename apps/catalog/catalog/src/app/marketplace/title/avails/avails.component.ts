@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { of, ReplaySubject, Subscription } from 'rxjs';
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
@@ -70,10 +70,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-    this.fragSub = this.route.fragment.subscribe(fragment => {
-      if (fragment === 'avails') {
-        document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
-      }
+    this.fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
+      document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
     })
   }
 
