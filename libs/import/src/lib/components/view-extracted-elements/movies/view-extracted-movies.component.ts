@@ -431,8 +431,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
       // LOGLINE (Logline)
       movie.logline = this.mapping.logline;
-      console.log(movie.logline);
-      console.log(this.mapping.logline);
 
       // POSITIONING (Positioning)
       movie.audience = formatAudienceGoals(this.mapping.audience, importErrors);
@@ -638,7 +636,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.synopsis.length === 0) {
+    if (!movie.synopsis) {
       errors.push({
         type: 'warning',
         field: 'movie.synopsis',
