@@ -1,12 +1,9 @@
 
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-
 import { switchMap } from 'rxjs/operators';
 import { of, ReplaySubject, Subscription } from 'rxjs';
-
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
@@ -18,9 +15,7 @@ import { OrganizationQuery, OrganizationService } from '@blockframes/organizatio
 import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
 import { ContractService, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-
 import { ExplanationComponent } from './explanation/explanation.component';
-
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -62,7 +57,6 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
-    private snackbar: MatSnackBar,
     private router: Router,
   ) {
     this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
@@ -134,11 +128,12 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const mode = this.router.url.split('/').pop();
 
     if (mode === 'map') {
+      this.bucketForm.patchValue({}); // Force observable to reload
       this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
     }
 
     if (mode === 'calendar') {
-      this.avails.calendarForm.setValue({ exclusive, medias, territories });
+      this.avails.calendarForm.setValue({ exclusive, medias, territories, duration: { from: '', to: '' } });
     }
 
     document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });

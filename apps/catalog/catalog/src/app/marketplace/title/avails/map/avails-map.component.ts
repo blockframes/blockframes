@@ -1,9 +1,7 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-
 import { combineLatest } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
-
 import {
   getSoldTerms,
   getTerritories,
@@ -13,11 +11,8 @@ import {
   availableTerritories,
 } from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
-
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'catalog-movie-avails-map',
