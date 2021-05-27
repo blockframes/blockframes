@@ -133,7 +133,7 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     }
 
     if (mode === 'calendar') {
-      this.avails.calendarForm.setValue({ exclusive, medias, territories, duration });
+      this.avails.calendarForm.setValue({ exclusive, medias, territories, duration: { from: '', to: '' } });
     }
 
     document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
