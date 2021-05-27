@@ -127,8 +127,13 @@
       </mat-card-content>
     </form>
   </mat-card>
-  <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()">
-    <span>Add to Selection</span>
-    <mat-icon svgIcon="arrow_forward"></mat-icon>
-  </button>
+  <section fxLayout fxLayoutAlign="space-between">
+    <button mat-stroked-button color="primary" class="mat-body-2" (click)="clear()">
+      Search for new terms and rights
+    </button>
+    <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()">
+      <span>Add to Selection</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+  </section>
 </ng-container>

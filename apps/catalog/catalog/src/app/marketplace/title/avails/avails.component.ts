@@ -145,4 +145,10 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     terms.removeAt(index);
     this.bucketForm.change.next();
   }
+
+  clear() {
+    this.avails.mapForm.reset();
+    this.avails.calendarForm.reset();
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
+  }
 }
