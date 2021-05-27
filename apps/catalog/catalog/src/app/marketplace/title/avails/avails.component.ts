@@ -1,7 +1,8 @@
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
+
 import { switchMap } from 'rxjs/operators';
 import { of, ReplaySubject, Subscription } from 'rxjs';
 import { FormList } from '@blockframes/utils/form';
@@ -23,8 +24,9 @@ import { ExplanationComponent } from './explanation/explanation.component';
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent implements OnDestroy {
+export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
+  private fragSub: Subscription;
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -58,6 +60,7 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     private orgService: OrganizationService,
     private contractService: ContractService,
     private router: Router,
+    private route: ActivatedRoute
   ) {
     this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
@@ -66,8 +69,17 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     this.init();
   }
 
+  ngAfterViewInit() {
+    this.fragSub = this.route.fragment.subscribe(fragment => {
+      if (fragment === 'avails') {
+        document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
+      }
+    })
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.fragSub.unsubscribe();
   }
 
   private async init() {

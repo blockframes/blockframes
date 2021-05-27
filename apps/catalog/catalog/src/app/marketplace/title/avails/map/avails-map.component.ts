@@ -108,7 +108,7 @@ export class MarketplaceMovieAvailsMapComponent {
 
   public addTerritory(territory: TerritoryMarker) {
     const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
-    if (added) this.openRightsAddedSnackbar()
+    if (added) this.onNewRight()
   }
 
   public removeTerritory(territory: TerritoryMarker) {
@@ -124,14 +124,14 @@ export class MarketplaceMovieAvailsMapComponent {
         this.shell.bucketForm.addTerritory(this.availsForm.value, term);
       }
     }
-    this.openRightsAddedSnackbar();
+    this.onNewRight();
   }
 
   clear() {
     this.shell.avails.mapForm.reset();
   }
 
-  openRightsAddedSnackbar() {
+  onNewRight() {
     this.snackbar.open(`Rights added`, 'Show ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
