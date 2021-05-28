@@ -12,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -44,6 +45,7 @@ import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/cale
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    MatTooltipModule,
     MatDividerModule,
     MatCheckboxModule,
     MatFormFieldModule,
