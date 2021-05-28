@@ -2,20 +2,22 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
-import { DurationMarker } from '../avails';
+
 import {
-  AvailCalendarState,
-  calendarColumns,
-  calendarRows,
-  CellState,
-  createAvailCalendarState,
   hover,
-  markersToMatrix,
   reset,
+  select,
+  CellState,
+  calendarRows,
+  highlightRange,
   resetHighlight,
-  select
+  calendarColumns,
+  markersToMatrix,
+  AvailCalendarState,
+  dateToMatrixPosition,
+  createAvailCalendarState,
 } from './calendar.model';
-import { Duration } from '../../term/+state/term.model';
+import { DurationMarker } from '../avails';
 
 
 @Component({
@@ -35,6 +37,7 @@ export class AvailsCalendarComponent implements OnInit {
 
   private _licensedMarkers: DurationMarker[] = [];
   private _soldMarkers: DurationMarker[] = [];
+
   /** Includes available, sold, selected, and in selection markers */
   @Input() set licensedMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
@@ -48,7 +51,30 @@ export class AvailsCalendarComponent implements OnInit {
     this.updateMatrix();
   }
 
-  @Output() selected = new EventEmitter<Duration<Date>>();
+  @Input() set selectedMarker(marker: DurationMarker| undefined) {
+    const state = this.state$.getValue();
+
+    if (!marker) {
+      state.selectionState = 'waiting';
+      state.start = { row: undefined, column: undefined };
+      state.end = { row: undefined, column: undefined };
+      const resetState = reset(state);
+      this.state$.next(resetState);
+      return;
+    }
+
+    const selectionStart = dateToMatrixPosition(marker.from);
+    const selectionEnd = dateToMatrixPosition(marker.to);
+
+
+    state.selectionState = 'waiting';
+    const newStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, state);
+    const newStateEnd = select(selectionEnd.row, selectionEnd.column, this.stateMatrix, newStateStart);
+    const newState = highlightRange(selectionStart, selectionEnd, this.stateMatrix, newStateEnd);
+    this.state$.next(newState);
+  }
+
+  @Output() selected = new EventEmitter<DurationMarker>();
 
   ngOnInit() {
     const state = this.state$.getValue();
@@ -89,7 +115,12 @@ export class AvailsCalendarComponent implements OnInit {
       const year = new Date().getFullYear();
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
-      this.selected.emit({ from, to });
+
+      let parentMarker = this._licensedMarkers.find(marker => marker.from <= from && marker.to >= to);
+
+      if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
+
+      this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract });
     }
   }
 }
