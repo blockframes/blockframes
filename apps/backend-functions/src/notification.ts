@@ -1,5 +1,5 @@
 import { InvitationDocument, MovieDocument, NotificationDocument, OrganizationDocument, NotificationTypes } from './data/types';
-import { getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta, createPublicOrganizationDocument } from './data/internals';
+import { getDocument, getOrgAppKey, createPublicUserDocument, createDocumentMeta } from './data/internals';
 import { NotificationSettingsTemplate, User } from '@blockframes/user/types';
 import { sendMailFromTemplate, sendMail, substitutions } from './internals/email';
 import { emailErrorCodes, EventEmailData, getEventEmailData, getOrgEmailData } from '@blockframes/utils/emails/utils';
@@ -21,7 +21,8 @@ import {
   requestToJoinOrgDeclined,
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest,
-  offerCreatedConfirmationEmail
+  offerCreatedConfirmationEmail,
+  appAccessEmail
 } from './templates/mail';
 import { templateIds, unsubscribeGroupIds } from './templates/ids';
 import { canAccessModule, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -195,6 +196,11 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'offerCreatedConfirmation':
         await sendOfferCreatedConfirmation(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
+        break;
+      case "userRequestAppAccess":
+        await requestAccessAppEmail(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -441,5 +447,13 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   const org = await getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`);
   const app: App = 'catalog';
   const template = offerCreatedConfirmationEmail(org, notification.bucket, recipient);
+  await sendMailFromTemplate(template, app, unsubscribeId);
+}
+
+/** User receive a notification and an email to confirm his request access has been sent*/
+async function requestAccessAppEmail(recipient: User, notification: NotificationDocument) {
+  const user = await getDocument<User>(`users/${notification.toUserId}`);
+  const app = notification._meta.createdFrom;
+  const template = appAccessEmail(recipient.email, user);
   await sendMailFromTemplate(template, app, unsubscribeId);
 }
