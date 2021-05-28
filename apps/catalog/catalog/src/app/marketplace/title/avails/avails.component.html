@@ -17,10 +17,10 @@
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
         <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
         <section fxLayoutGap="12px">
-          <button mat-icon-button (click)="edit(term)">
+          <button mat-icon-button (click)="edit(term)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button mat-icon-button (click)="remove(control)">
+          <button mat-icon-button (click)="remove(control)" matTooltip="Delete">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </section>
