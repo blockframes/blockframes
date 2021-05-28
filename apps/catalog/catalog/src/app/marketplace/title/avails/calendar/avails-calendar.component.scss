@@ -1,23 +1,24 @@
-mat-card {
+section {
+  position: relative;
   margin-bottom: 24px;
 
-  mat-card-content {
-    padding: 32px 0;
+  avails-calendar {
+    margin: 32px 0;
+  }
 
-    .overlay {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-  
-      article {
-        padding: 48px;
-        border-radius: 8px;
-        background-color: var(--background-disabled-button);
-        max-width: 80%;
-        text-align: center;
-      }
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    article {
+      padding: 48px;
+      border-radius: 8px;
+      background-color: var(--background-disabled-button);
+      max-width: 80%;
+      text-align: center;
     }
   }
 }

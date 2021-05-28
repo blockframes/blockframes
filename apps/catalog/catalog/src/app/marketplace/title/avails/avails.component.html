@@ -3,9 +3,9 @@
   <h2>Search & buy Rights</h2>
   <button mat-button (click)="explain()"><span><mat-icon svgIcon="info"></mat-icon> Learn how it works</span></button>
 </header>
-<nav fxLayout fxLayoutAlign="center center">
-  <a mat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
-  <a mat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
+<nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
+  <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
+  <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
 </nav>
 
 <router-outlet></router-outlet>
