@@ -200,7 +200,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .catch(e => notification.email.error = e.message);
         break;
       case "userRequestAppAccess":
-        await requestAccessAppEmail(recipient, notification)
+        await requestAppAccessEmail(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
@@ -451,7 +451,7 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
 }
 
 /** User receive a notification and an email to confirm his request access has been sent*/
-async function requestAccessAppEmail(recipient: User, notification: NotificationDocument) {
+async function requestAppAccessEmail(recipient: User, notification: NotificationDocument) {
   const user = await getDocument<User>(`users/${notification.toUserId}`);
   const app = notification._meta.createdFrom;
   const template = appAccessEmail(recipient.email, user);
