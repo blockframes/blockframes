@@ -116,7 +116,7 @@ export class AvailsCalendarComponent implements OnInit {
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
 
-      let parentMarker = this._licensedMarkers.find(marker => marker.from <= from && marker.to >= to);
+      const parentMarker = this._licensedMarkers.find(marker => marker.from <= from && marker.to >= to);
 
       if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
 
