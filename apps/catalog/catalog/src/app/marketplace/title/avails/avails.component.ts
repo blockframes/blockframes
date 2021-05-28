@@ -1,12 +1,10 @@
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { of, ReplaySubject, Subscription } from 'rxjs';
-
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
@@ -16,11 +14,9 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
-import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-
 import { ExplanationComponent } from './explanation/explanation.component';
-
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -28,8 +24,9 @@ import { ExplanationComponent } from './explanation/explanation.component';
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent implements OnDestroy {
+export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
+  private fragSub: Subscription;
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -62,8 +59,8 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
-    private snackbar: MatSnackBar,
     private router: Router,
+    private route: ActivatedRoute
   ) {
     this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
@@ -72,8 +69,15 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     this.init();
   }
 
+  ngAfterViewInit() {
+    this.fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
+      document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
+    })
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.fragSub.unsubscribe();
   }
 
   private async init() {
@@ -97,10 +101,7 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const contracts = this.bucketForm.value.contracts;
     await this.bucketService.upsert({ id: this.orgId, contracts });
     this.bucketForm.markAsPristine();
-    this.snackbar
-      .open(`${this.movie.title.international} Rights were added to your Selection`, 'GO TO SELECTION', { duration: 5000 })
-      .onAction()
-      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
+    this.router.navigate(['/c/o/marketplace/selection']);
   }
 
   public explain() {
@@ -137,12 +138,15 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const mode = this.router.url.split('/').pop();
 
     if (mode === 'map') {
+      this.bucketForm.patchValue({}); // Force observable to reload
       this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
     }
 
     if (mode === 'calendar') {
-      this.avails.calendarForm.setValue({ exclusive, medias, territories });
+      this.avails.calendarForm.setValue({ exclusive, medias, territories, duration: { from: '', to: '' } });
     }
+
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
   }
 
   remove(control: BucketTermForm) {
@@ -150,5 +154,11 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const index = terms.controls.findIndex(c => c === control);
     terms.removeAt(index);
     this.bucketForm.change.next();
+  }
+
+  clear() {
+    this.avails.mapForm.reset();
+    this.avails.calendarForm.reset();
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
   }
 }

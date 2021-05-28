@@ -1,15 +1,14 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-
 import { combineLatest } from 'rxjs';
-
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, availableDurations, AvailsFilter } from '@blockframes/contract/avails/avails';
+import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, AvailsFilter } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
 import { Bucket } from '@blockframes/contract/bucket/+state';
+import { Duration } from '@blockframes/contract/term/+state/term.model';
 
 function getSelected(avail: AvailsFilter, bucket: Bucket, markers: DurationMarker[], mode: 'exact' | 'in') {
   const inDurations = getDurations(avail, bucket, mode);
@@ -29,6 +28,8 @@ export class MarketplaceMovieAvailsCalendarComponent {
   public availsForm = this.shell.avails.calendarForm;
 
   public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
+
+  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
@@ -71,17 +72,16 @@ export class MarketplaceMovieAvailsCalendarComponent {
     })
   );
 
-  public available$ = combineLatest([
+  public licensed$ = combineLatest([
     this.mandates$,
-    this.selected$,
-    this.sold$,
-    this.inSelection$,
-    this.mandateTerms$
+    this.mandateTerms$,
+    this.availsForm.value$
   ]).pipe(
-    map(([mandates, selected, sold, inSelection, mandateTerms]) => {
+    map(([mandates, mandateTerms]) => {
       if (this.availsForm.invalid) return [];
-      return availableDurations(selected, sold, inSelection, mandates, mandateTerms);
-    })
+      return getDurationMarkers(mandates, mandateTerms);
+    }),
+    shareReplay(1),
   );
 
   constructor(
@@ -92,5 +92,21 @@ export class MarketplaceMovieAvailsCalendarComponent {
 
   clear() {
     this.availsForm.reset();
+  }
+
+  async selected(duration: Duration<Date>) {
+    const licensed = await this.licensed$.pipe(take(1)).toPromise();
+    const avails = { ...this.availsForm.value, duration };
+
+    for (const marker of licensed) {
+      const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
+      if (result) {
+        const contract = this.shell.bucketForm.get('contracts').get(result.contractIndex.toString());
+        const term = contract.get('terms').get(result.termIndex.toString());
+        term.setValue({ ...term.value, ...avails });
+      } else {
+        this.shell.bucketForm.addDuration(avails, { ...marker, ...duration });
+      }
+    }
   }
 }

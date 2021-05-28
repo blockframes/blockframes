@@ -8,7 +8,7 @@ import { App } from '../apps';
 export class YandexMetricaService {
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: unknown
   ) {}
 
   public insertMetrika(app: App) {
@@ -40,7 +40,7 @@ export class YandexMetricaService {
     // Append script tag into the head
     const insetScriptTag = () => head.appendChild(script);
     // Fix for Opera browser
-    if ((window as any).opera === '[object Opera]') {
+    if (window['opera'] === '[object Opera]') {
       this.document.addEventListener('DOMContentLoaded', insetScriptTag, false);
     } else {
       insetScriptTag();

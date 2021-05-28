@@ -1,4 +1,8 @@
-@mixin mat-bf-datepicker-theme($theme) {
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
 
   .mat-datepicker-content .mat-calendar {
     min-height: 380px;

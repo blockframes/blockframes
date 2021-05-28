@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -9,9 +9,10 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
-  host: { class: 'dark-contrast-theme' },
 })
-export class LandingHeaderDirective { }
+export class LandingHeaderDirective {
+  @HostBinding('class') theme = 'dark-contrast-theme'
+}
 
 @Directive({selector: 'landing-content, [landingContent]'})
 export class LandingContentDirective { }

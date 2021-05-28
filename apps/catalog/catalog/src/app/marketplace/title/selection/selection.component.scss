@@ -10,9 +10,13 @@
 section {
   margin: 24px;
 
+  footer {
+    margin-top: 12px;
+  }
 }
 .ellipsis {
   max-width: 400px;
+  cursor: pointer;
 }
 
 .contract {

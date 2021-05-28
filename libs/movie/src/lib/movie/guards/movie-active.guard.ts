@@ -18,7 +18,7 @@ export class MovieActiveGuard extends CollectionGuard<MovieState> {
   sync(next: ActivatedRouteSnapshot) {
     return this.service.syncActive({ id: next.params.movieId }).pipe(
       map(movie => {
-        if (!!movie) {
+        if (movie) {
           const appName = this.routerQuery.getValue().state.root.data.app;
           const hasAccess = movie.app[appName].access;
           if (hasAccess) {

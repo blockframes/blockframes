@@ -15,11 +15,11 @@ const SAKKeyName = 'GOOGLE_APPLICATION_CREDENTIALS';
  * Will return true if SAK project corresponds to given project.
  */
 function SAKIsCorrect(projectId: string) {
-  let key: any;
+  let key;
   try {
     key = getServiceAccountObj(process.env[SAKKeyName]);
     console.log('Current SAK projectId:', key.project_id);
-  } catch (e) {}
+  } catch (e) { void 0; }
   return projectId === key.project_id;
 }
 
@@ -41,7 +41,7 @@ async function updateSAKPathInDotenv(projectId: string) {
   console.log('Attempting to find and set correct service account key.');
 
   const GAPKey = `GAP_${camelcase(projectId)}`;
-  if (process.env.hasOwnProperty(GAPKey)) {
+  if (GAPKey in process.env) {
     console.log(`GAP key found in env: ${GAPKey}`);
     if (isJSON(process.env[GAPKey])) {
       // * Is an object, write to disk

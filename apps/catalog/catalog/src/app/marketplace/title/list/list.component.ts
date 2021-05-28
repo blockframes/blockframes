@@ -5,7 +5,7 @@ import {
   OnInit,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
@@ -64,7 +64,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private bucketQuery: BucketQuery,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private router: Router
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -158,13 +159,13 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     const orgId = this.orgQuery.getActiveId();
-    if (!!this.bucketQuery.getActive()) {
+    if (this.bucketQuery.getActive()) {
       this.bucketService.update(orgId, bucket => {
         const contracts = bucket.contracts || [];
         for (const newContract of newContracts) {
           // Check if there is already a contract that apply on the same parentTermId
           const contract = contracts.find(c => c.parentTermId === newContract.parentTermId);
-          if (!!contract) { // If yes, append its terms with the new one.
+          if (contract) { // If yes, append its terms with the new one.
 
             // Valid terms
             const terms: AvailsFilter[] = [];
@@ -181,14 +182,14 @@ export class ListComponent implements OnInit, OnDestroy {
               }
             }
 
-            if (!!conflictingTerms.length) {
+            if (conflictingTerms.length) {
               conflictingTerms.push(newTerm);
 
               // Countries with media
               const territoryRecord: { [territories: string]: Media[] } = {};
               for (const term of conflictingTerms) {
                 for (const territory of term.territories) {
-                  if (!!territoryRecord[territory]) {
+                  if (territoryRecord[territory]) {
                     // only add medias that are not in the array yet
                     const medias = term.medias.filter(media => territoryRecord[territory].every(m => m !== media))
                     territoryRecord[territory] = territoryRecord[territory].concat(medias);
@@ -202,7 +203,7 @@ export class ListComponent implements OnInit, OnDestroy {
               const mediaRecord: { [medias: string]: Territory[] } = {};
               for (const [territory, medias] of Object.entries(territoryRecord)) {
                 const key = medias.sort().join(';');
-                !!mediaRecord[key] ? mediaRecord[key].push(territory as Territory) : mediaRecord[key] = [territory as Territory];
+                mediaRecord[key] ? mediaRecord[key].push(territory as Territory) : mediaRecord[key] = [territory as Territory];
               }
 
               // Create new terms
@@ -229,7 +230,9 @@ export class ListComponent implements OnInit, OnDestroy {
       })
       this.bucketService.add(bucket);
     }
-    this.snackbar.open(`${title.title.international} was added to your Selection`, 'close', { duration: 4000 });
+    this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
   }
 
   ngOnDestroy() {

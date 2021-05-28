@@ -4,8 +4,8 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 
 function createStorageFile(data: StorageFile) {
-  if (!!data.ref) delete data.ref;
-  if (!!data.storagePath) {
+  if (data.ref) delete data.ref;
+  if (data.storagePath) {
     // Removing privacy prefix
     const elements = data.storagePath.split('/');
     if (privacies.some(privacy => privacy === elements[0])) {
@@ -30,7 +30,7 @@ export async function upgrade(db: Firestore) {
     const data = orgDoc.data();
 
     // documents.notes
-    if (!!data.documents) {
+    if (data.documents) {
       data.documents.notes = data.documents.notes.map(note => {
         return createStorageFile({
           storagePath: note.ref,
@@ -91,7 +91,7 @@ export async function upgrade(db: Firestore) {
     }));
 
     // promotional.salesPitch
-    if (!!data.promotional.salesPitch) {
+    if (data.promotional.salesPitch) {
       data.promotional.salesPitch = createStorageFile({
         storagePath: data.promotional.salesPitch.ref,
         privacy: 'public',
@@ -102,9 +102,9 @@ export async function upgrade(db: Firestore) {
       })
     }
   
-    if (!!data.promotional.videos) {
+    if (data.promotional.videos) {
       // promotional.videos.screener
-      if (!!data.promotional.videos.screener) {
+      if (data.promotional.videos.screener) {
         data.promotional.videos.screener = createStorageFile({
           storagePath: data.promotional.videos.screener.ref,
           privacy: 'protected',
@@ -116,7 +116,7 @@ export async function upgrade(db: Firestore) {
       }
 
       // promotional.videos.otherVideos
-      if (!!data.promotional.videos.otherVideos) {
+      if (data.promotional.videos.otherVideos) {
         data.promotional.videos.otherVideos = data.promotional.videos.otherVideos.map(video => createStorageFile({
           storagePath: video.ref,
           privacy: 'public',
@@ -129,7 +129,7 @@ export async function upgrade(db: Firestore) {
     }
 
     // promotional.notes
-    if (!!data.promotional.notes) {
+    if (data.promotional.notes) {
       data.promotional.notes = data.promotional.notes.map(note => createStorageFile({
         storagePath: note.ref,
         privacy: 'public',
@@ -188,7 +188,7 @@ export async function upgrade(db: Firestore) {
 
     const orgFields = ['fromOrg', 'toOrg'];
     orgFields.forEach(field => {
-      if (!!data[field]) {
+      if (data[field]) {
         data[field].logo = createStorageFile({
           storagePath: data[field].logo,
           privacy: 'public',
@@ -203,7 +203,7 @@ export async function upgrade(db: Firestore) {
     const userMediaFields = ['avatar', 'watermark'];
     userFields.forEach(field => {
 
-      if (!!data[field]) {
+      if (data[field]) {
         userMediaFields.forEach(mediaField => {
 
           data[field][mediaField] = createStorageFile({

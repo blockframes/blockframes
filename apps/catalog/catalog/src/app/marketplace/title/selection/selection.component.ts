@@ -34,7 +34,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   total$ = this.priceChanges.pipe(
     startWith(0),
     debounceTime(100),
-    map(_ => this.getTotal(this.prices)),
+    map(() => this.getTotal(this.prices)),
     distinctUntilChanged()
   );
 
@@ -53,7 +53,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.bucket$ = this.bucketQuery.selectActive().pipe(
       tap(bucket => {
         this.setTitle(bucket?.contracts.length);
-        if (!!bucket?.currency) this.currencyForm.setValue(bucket.currency);
+        if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
         bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price));
       })
     );
@@ -143,8 +143,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
       })
     })) {
       this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
-    } else if (bucket.contracts.some(contract => !contract.price || contract.price < 0)) {
-      this.snackBar.open('Missing price information.', '', { duration: 2000 });
     } else {
       this.dialog.open(SpecificTermsComponent);
     }

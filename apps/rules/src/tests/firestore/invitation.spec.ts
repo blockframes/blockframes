@@ -71,7 +71,7 @@ describe('Invitation Rules Tests', () => {
 
     describe('Update Invitation', () => {
       const existInviteId = 'I001';
-      const fields: any = [
+      const fields: [string, unknown][] = [
         ['id', 'MI-0xx'],
         ['mode', { createdBy: '' }],
         ['fromOrg', {id: 'O007'}],

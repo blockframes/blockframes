@@ -118,7 +118,7 @@ export class MovieComponent implements OnInit {
     return this.movie.app;
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'id',
       'status',

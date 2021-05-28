@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { Firestore } from '../types';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { OldImgRef, OldPromotionalElement, createOldImgRef, createOldPromotionalElement } from './old-types';
+import { createOldImgRef, createOldPromotionalElement } from './old-types';
 
 /**
  * Update stakeholders in movie documents.

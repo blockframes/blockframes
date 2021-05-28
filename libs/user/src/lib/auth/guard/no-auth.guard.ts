@@ -7,9 +7,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { getOrgModuleAccess, getCurrentApp, App } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class NoAuthGuard extends CollectionGuard<AuthState> {
   constructor(
@@ -28,7 +26,7 @@ export class NoAuthGuard extends CollectionGuard<AuthState> {
         if (!userAuth) { return Promise.resolve(true); }
         return this.service.sync().pipe(
           catchError(() => Promise.resolve(true)),
-          map(_ => this.query.orgId),
+          map(() => this.query.orgId),
           switchMap(orgId => orgId ? this.orgService.getValue(orgId) : new Promise<false>(r => r(false))),
           map(org => {
             if (!org) { return '/auth/identity'; }

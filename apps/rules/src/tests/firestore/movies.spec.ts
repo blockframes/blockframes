@@ -101,7 +101,7 @@ describe('Movies Rules Tests', () => {
     });
 
     describe('Update Movie', () => {
-      const fields: any = [
+      const fields: [string, unknown][] = [
         ['id', 'MI-0xx'],
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],

@@ -24,11 +24,11 @@ export class EventListComponent implements OnInit {
   typesLabel = typesLabel;
   types: EventTypes[] = ['screening', 'meeting'];
   filter = new FormControl(this.types);
-  editDialog: MatDialogRef<any>
+  editDialog: MatDialogRef<unknown>
   events$: Observable<Event[]>;
   viewDate = new Date();
 
-  @ViewChild('editTemplate', { read: TemplateRef }) editTemplate: TemplateRef<any>;
+  @ViewChild('editTemplate', { read: TemplateRef }) editTemplate: TemplateRef<unknown>;
 
   constructor(
     private service: EventService,
@@ -45,7 +45,7 @@ export class EventListComponent implements OnInit {
     ]).pipe(
       switchMap(([orgId, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', orgId))),
       tap(events => {
-        !!events.length ?
+        events.length ?
           this.dynTitle.setPageTitle('My events') :
           this.dynTitle.setPageTitle('My events', 'Empty');
       }),

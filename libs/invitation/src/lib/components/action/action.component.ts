@@ -24,7 +24,7 @@ export class ActionComponent {
     }
   }
 
-  private requestPending: boolean = false;
+  private requestPending = false;
 
   constructor(
     private router: Router,

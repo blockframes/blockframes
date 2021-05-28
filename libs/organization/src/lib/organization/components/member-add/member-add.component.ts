@@ -4,7 +4,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 import { BehaviorSubject } from 'rxjs';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { Organization } from '@blockframes/organization/+state';
-import { FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 
@@ -35,7 +35,7 @@ export class MemberAddComponent {
     this.error = '';
     if (this.emailForm.value) {
       const emails: string[] = this.emailForm.value.split(',');
-      const invalid = emails.filter(value => Validators.email({ value } as any));
+      const invalid = emails.filter(value => Validators.email({value} as AbstractControl));
       if (invalid.length) {
         this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
       } else {

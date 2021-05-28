@@ -69,7 +69,7 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   return {
     titleId: '',
     orgId: '',
-    price: 0,
+    price: null ,
     parentTermId: '',
     specificity: '',
     ...params,

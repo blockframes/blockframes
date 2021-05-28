@@ -2,11 +2,11 @@
 import { Pipe, PipeTransform, QueryList, NgModule } from '@angular/core';
 
 // Blockframes
-import { ColRef } from '../directives/col-ref.directive'
+import { ColRefDirective } from '../directives/col-ref.directive'
 
 @Pipe({ name: 'findColRef' })
 export class QueryListFindPipe implements PipeTransform {
-  transform(queryList: QueryList<ColRef>, key: string) {
+  transform(queryList: QueryList<ColRefDirective>, key: string) {
     return queryList.find(query => query.colRef === key);
   }
 }

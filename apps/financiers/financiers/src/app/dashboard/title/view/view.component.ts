@@ -49,9 +49,9 @@ const links: RouteDescription[] = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleViewComponent implements OnInit, OnDestroy {
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
-  private dialogRef: MatDialogRef<any, any>;
+  private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
   public campaign$: Observable<Campaign>;
   public loading$: Observable<boolean>;
@@ -95,7 +95,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
 
   async save() {
     this.dialogRef.close();
-    await this.shell.getConfig('campaign').onSave({ publishing: false });
+    await this.shell.getConfig('campaign').onSave();
     this.snackbar.open('The funding status has been updated.', null, { duration: 1000 });
   }
 }

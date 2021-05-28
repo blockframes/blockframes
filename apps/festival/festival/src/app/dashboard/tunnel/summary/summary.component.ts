@@ -47,7 +47,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       await this.shell.layout.update({ publishing: true });
       const text = `${this.form.get('title').get('international').value} successfully published.`;
       const ref = this.snackBar.open(text, '', { duration: 1000 });
-      ref.afterDismissed().subscribe(_ => {
+      ref.afterDismissed().subscribe(() => {
         this.router.navigate(['c/o/dashboard/title', this.query.getActiveId()])
       })
     } else {

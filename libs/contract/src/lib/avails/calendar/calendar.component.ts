@@ -1,57 +1,72 @@
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
-
 import { DurationMarker } from '../avails';
-import { calendarAvails } from '../fixtures/calendar';
-import { AvailCalendarState, CellState, hover, markersToMatrix, reset, select } from './calendar.model';
-
+import {
+  AvailCalendarState,
+  calendarColumns,
+  calendarRows,
+  CellState,
+  createAvailCalendarState,
+  hover,
+  markersToMatrix,
+  reset,
+  resetHighlight,
+  select
+} from './calendar.model';
+import { Duration } from '../../term/+state/term.model';
 
 
 @Component({
   selector: 'avails-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: [ './calendar.component.scss' ],
+  styleUrls: ['./calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvailsCalendarComponent implements OnInit {
 
-  public columns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  public rows = Array(10).fill(0).map((_,i) => new Date().getFullYear() + i); // [ 2021, 2022, ... 2030 ]
+  public columns = calendarColumns;
+  public rows = calendarRows;
 
-  public stateMatrix: CellState[][] = this.rows.map(_ => this.columns.map(__ => 'empty'));
+  public stateMatrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
 
-  public state$ = new BehaviorSubject<AvailCalendarState>({
-    selectionState: 'waiting',
+  public state$ = new BehaviorSubject<AvailCalendarState>(createAvailCalendarState());
 
-    hoverColumn: undefined,
-    hoverRow: undefined,
-
-    hoverStart: { row: undefined, column: undefined },
-    hoverEnd: { row: undefined, column: undefined },
-
-    start: { row: undefined, column: undefined },
-    end: { row: undefined, column: undefined },
-
-    highlightedRange: [],
-  });
-
-  @Input() set availableMarkers(markers: DurationMarker[] | undefined) {
+  private _licensedMarkers: DurationMarker[] = [];
+  private _soldMarkers: DurationMarker[] = [];
+  /** Includes available, sold, selected, and in selection markers */
+  @Input() set licensedMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
-    this.stateMatrix = markersToMatrix(markers, this.stateMatrix, 'avail');
+    this._licensedMarkers = markers;
+    this.updateMatrix();
   }
 
   @Input() set soldMarkers(markers: DurationMarker[] | undefined) {
     if (!markers) return;
-    this.stateMatrix = markersToMatrix(markers, this.stateMatrix, 'sold');
+    this._soldMarkers = markers;
+    this.updateMatrix();
   }
+
+  @Output() selected = new EventEmitter<Duration<Date>>();
 
   ngOnInit() {
     const state = this.state$.getValue();
-    state.highlightedRange = this.rows.map(_ => this.columns.map(__ => false));
+    state.highlightedRange = this.rows.map(() => this.columns.map(() => false));
 
     this.state$.next(state);
+  }
+
+  updateMatrix() {
+    const currentState = this.state$.getValue();
+    const resetedHighlight = resetHighlight(currentState);
+    const newState = createAvailCalendarState({ highlightedRange: resetedHighlight.highlightedRange })
+    this.state$.next(newState);
+
+    let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
+    if (this._licensedMarkers.length) matrix = markersToMatrix(this._licensedMarkers, this.stateMatrix, 'available');
+    if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
+    this.stateMatrix = matrix;
   }
 
   onHover(row: number, column: number) {
@@ -69,7 +84,12 @@ export class AvailsCalendarComponent implements OnInit {
   onSelect(row: number, column: number) {
     const state = this.state$.getValue();
     const newState = select(row, column, this.stateMatrix, state);
-    // TODO EMIT OUTPUT IF NEW SELECTION STATE IS 'SELECTED'
     this.state$.next(newState);
+    if (newState.selectionState === 'selected') {
+      const year = new Date().getFullYear();
+      const from = new Date(year + newState.start.row, newState.start.column);
+      const to = new Date(year + newState.end.row, newState.end.column);
+      this.selected.emit({ from, to });
+    }
   }
 }

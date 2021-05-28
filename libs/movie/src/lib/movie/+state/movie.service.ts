@@ -36,14 +36,14 @@ export class MovieService extends CollectionService<MovieState> {
     super(store);
   }
 
-  formatFromFirestore(movie: any) {
+  formatFromFirestore(movie) {
     return createMovie(movie);
   }
 
   async create(movieImported?: Partial<Movie>): Promise<Movie> {
     const createdBy = this.authQuery.userId;
     let orgIds = [];
-    if (!!movieImported?.orgIds?.length) {
+    if (movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
     } else {
       const orgId = this.orgQuery.getActiveId();
@@ -98,7 +98,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param internalRef
    */
   public async getFromInternalRef(internalRef: string, orgId?: string): Promise<Movie> {
-    const query = !!orgId ? fromOrgAndInternalRef(orgId, internalRef) : fromInternalRef(internalRef)
+    const query = orgId ? fromOrgAndInternalRef(orgId, internalRef) : fromInternalRef(internalRef)
     const movies = await this.getValue(query);
     return movies.length ? createMovie(movies[0]) : undefined;
   }

@@ -14,7 +14,7 @@ export async function upgrade(db: Firestore) {
     async (userSnapshot): Promise<any> => {
       const userData = userSnapshot.data() as PublicUser;
 
-      if (!!userData) {
+      if (userData) {
         // create watermark file & update user's firestore doc
         try {
           await upsertWatermark(userData, storageBucket);

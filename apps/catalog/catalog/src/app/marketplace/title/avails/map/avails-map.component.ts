@@ -1,9 +1,7 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-
 import { combineLatest } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
-
 import {
   getSoldTerms,
   getTerritories,
@@ -13,9 +11,8 @@ import {
   availableTerritories,
 } from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
-
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -24,7 +21,6 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceMovieAvailsMapComponent {
-
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -91,7 +87,10 @@ export class MarketplaceMovieAvailsMapComponent {
     shareReplay(1) // Multicast with replay
   );
 
-  constructor(private shell: MarketplaceMovieAvailsComponent) { }
+  constructor(
+    private shell: MarketplaceMovieAvailsComponent,
+    private snackbar: MatSnackBar
+  ) { }
 
   public trackByTag<T>(tag: T) {
     return tag;
@@ -108,7 +107,8 @@ export class MarketplaceMovieAvailsMapComponent {
   }
 
   public addTerritory(territory: TerritoryMarker) {
-    this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
+    const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
+    if (added) this.onNewRight()
   }
 
   public removeTerritory(territory: TerritoryMarker) {
@@ -124,9 +124,18 @@ export class MarketplaceMovieAvailsMapComponent {
         this.shell.bucketForm.addTerritory(this.availsForm.value, term);
       }
     }
+    this.onNewRight();
   }
 
   clear() {
     this.shell.avails.mapForm.reset();
+  }
+
+  onNewRight() {
+    this.snackbar.open(`Rights added`, 'Show ⇩', { duration: 5000 })
+      .onAction()
+      .subscribe(() => {
+        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+      });
   }
 }

@@ -39,7 +39,7 @@ export class SearchWidgetComponent implements AfterViewInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private routerQuery: RouterQuery) { }
 
   ngAfterViewInit() {
-    this.sub = this.routerQuery.select('navigationId').subscribe(_ => {
+    this.sub = this.routerQuery.select('navigationId').subscribe(() => {
       if (this.searchWidget) {
         this.searchWidget.close();
       }

@@ -24,7 +24,7 @@ export class SlideComponent implements ListKeyManagerOption, Slide {
   // Implements ListKeyManagerOption otherwise it will throw an Error
   @Input() disabled = false;
 
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef) templateRef: TemplateRef<unknown>;
 
   private _overlayColor: Slide['overlayColor'];
 

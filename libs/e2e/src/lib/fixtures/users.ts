@@ -21,9 +21,6 @@ const newUsers: Partial<UserType>[] = [
 ]
 
 export class User {
-  constructor() {
-
-  }
 
   get(query: QueryInferface) : Partial<UserType>[] {
     const userSet: Partial<UserType>[]  = (query.exist) ?

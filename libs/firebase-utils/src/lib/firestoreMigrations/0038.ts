@@ -20,7 +20,7 @@ export async function upgrade(db: Firestore) {
 
     const newCast = data.cast.map(person => {
       delete person.role;
-      person.status = !!person.status ? updateMemberStatus(person.status) : '';
+      person.status = person.status ? updateMemberStatus(person.status) : '';
       return person;
     })
 
@@ -65,7 +65,7 @@ export async function upgrade(db: Firestore) {
 // Update the status of directors and crew
 function updateMembers(members: Credit[]) {
   return members.map(person => {
-    person.status = !!person.status ? updateMemberStatus(person.status) : '';
+    person.status = person.status ? updateMemberStatus(person.status) : '';
     return person;
   })
 }

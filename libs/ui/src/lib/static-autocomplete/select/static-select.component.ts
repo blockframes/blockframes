@@ -13,8 +13,8 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StaticSelectComponent implements OnInit {
-  public staticValue: any[];
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  public staticValue: string[];
+  @ContentChild(TemplateRef) template: TemplateRef<unknown>;
   @Input() scope: Scope
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';

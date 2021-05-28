@@ -6,6 +6,7 @@ import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
+  formatAudienceGoals,
   formatAvailableLanguages,
   formatBoxOffice,
   formatCertifications,
@@ -188,6 +189,7 @@ const fields = {
   reviews: {
     multiLine: true,
     fields: {
+      filmCriticName: index++,
       revue: index++,
       link: index++,
       quote: index++,
@@ -221,6 +223,21 @@ const fields = {
       subtitle: index++,
       caption: index++,
     }
+  },
+  logline: {
+    multiLine: false,
+    index: index++
+  },
+  audience: {
+    multiLine: true,
+    fields: {
+      goals: index++,
+      targets: index++
+    }
+  },
+  salesPitch: {
+    multiLine: false,
+    index: index++
   },
   //////////////////
   // ADMIN FIELDS
@@ -412,6 +429,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // LANGUAGES (Available versions(s))
       formatAvailableLanguages(this.mapping.languages, movie, importErrors);
 
+      // LOGLINE (Logline)
+      movie.logline = this.mapping.logline;
+
+      // POSITIONING (Positioning)
+      movie.audience = formatAudienceGoals(this.mapping.audience, importErrors);
+
+      // SALES PITCH (Description)
+      movie.promotional.salesPitch.description = this.mapping.salesPitch;
+
       //////////////////
       // ADMIN FIELDS
       //////////////////
@@ -424,15 +450,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
        */
         // CATALOG STATUS
         formatSingleValue(this.mapping.catalogStatus, 'storeStatus', `app.catalog.status`, movie);
-        if (!!this.mapping.catalogStatus) movie.app.catalog.access = true;
+        if (this.mapping.catalogStatus) movie.app.catalog.access = true;
 
         // FESTIVAL STATUS
         formatSingleValue(this.mapping.festivalStatus, 'storeStatus', `app.festival.status`, movie);
-        if (!!this.mapping.festivalStatus) movie.app.festival.access = true;
+        if (this.mapping.festivalStatus) movie.app.festival.access = true;
 
         // FINANCIERS STATUS
         formatSingleValue(this.mapping.financiersStatus, 'storeStatus', `app.financiers.status`, movie);
-        if (!!this.mapping.financiersStatus) movie.app.financiers.access = true;
+        if (this.mapping.financiersStatus) movie.app.financiers.access = true;
 
         // USER ID (to override who is creating this title)
         if (this.mapping.ownerId) {
@@ -483,8 +509,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
     //////////////////
     // REQUIRED FIELDS
     //////////////////
-
-
 
     if (!movie.title.original) {
       errors.push({
@@ -677,6 +701,46 @@ export class ViewExtractedMoviesComponent implements OnInit {
         type: 'warning',
         field: 'movie.languages',
         name: 'Dubbings | Subtitles | Captions ',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.logline) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.logline',
+        name: 'Logline',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (movie.review.length === 0) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.review',
+        name: 'Review',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.audience) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.audience',
+        name: 'Positioning',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.promotional.salesPitch.description) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.promotional.salesPitch',
+        name: 'Sales Pitch',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });

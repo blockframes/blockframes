@@ -55,7 +55,7 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone'; // Included with Angular CLI.
+import 'zone.js'; // Included with Angular CLI.
 
 /***************************************************************************************************
  * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
@@ -74,16 +74,10 @@ import '@angular/localize/init';
 };
 
 /***************************************************************************************************
-* ETHERS
-*/
-(window as any).global = window;
-
-
-/***************************************************************************************************
 * allSettled
 */
-if (!(Promise as any).allSettled) {
-  (Promise as any).allSettled = (promises: Promise<any>[]) =>
+if (!Promise.allSettled) {
+  (Promise as any).allSettled = (promises: Promise<unknown>[]) =>
     Promise.all(
       promises.map(promise =>
         promise

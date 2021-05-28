@@ -12,20 +12,20 @@ export async function upgrade(db: Firestore) {
 
     data.isSecret = false;
 
-    if (!!data.ownerId) {
+    if (data.ownerId) {
       data.ownerOrgId = data.ownerId;
       delete data.ownerId;
     }
 
-    if (!!data.meta?.organizerId) {
+    if (data.meta?.organizerId) {
       data.meta.organizerUid = data.meta.organizerId;
       delete data.meta.organizerId;
     }
 
     // Cleaning fields that should not be here CF formatToFirestore in event.service
-    if (!!data.movie) delete data.movie;
-    if (!!data.organizedBy) delete data.organizedBy;
-    if (!!data.org) delete data.org;
+    if (data.movie) delete data.movie;
+    if (data.organizedBy) delete data.organizedBy;
+    if (data.org) delete data.org;
 
     await eventDoc.ref.set(data);
   });

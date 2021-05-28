@@ -9,7 +9,7 @@
   <div formGroupName="duration" fxLayout fxLayoutAlign="space-between" fxLayoutGap="16px">
     <mat-form-field appearance="outline">
       <mat-label>Licence Start Date</mat-label>
-      <input matInput [matDatepicker]="datepickerFrom" formControlName="from">
+      <input matInput [matDatepicker]="datepickerFrom" formControlName="from" placeholder="MM/DD/YYYY">
       <mat-datepicker-toggle matSuffix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
       <mat-datepicker #datepickerFrom> </mat-datepicker>
       <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
@@ -17,7 +17,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Licence End Date</mat-label>
-      <input matInput [matDatepicker]="datepickerTo" formControlName="to">
+      <input matInput [matDatepicker]="datepickerTo" formControlName="to" placeholder="MM/DD/YYYY">
       <mat-datepicker-toggle matSuffix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
       <mat-datepicker #datepickerTo> </mat-datepicker>
       <mat-error *ngIf="form.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>

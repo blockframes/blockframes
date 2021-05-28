@@ -4,7 +4,7 @@ table {
   border-collapse: collapse;
 
   th {
-    padding: 4px 14px;
+    padding: 4px 10px;
   }
   th, td {
     text-align: center;
@@ -21,7 +21,7 @@ table {
     cursor: default;
   }
 
-  .avail {
+  .available {
     cursor: pointer;
     background-color: var(--primary);
   }
