@@ -215,7 +215,6 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     }
 
     const bucketTerm = toBucketTerm(avails);
-    console.log('add term', bucketTerm);
     this.get('contracts').at(contractIndex).get('terms').add(bucketTerm);
     this.markAsDirty();
     this.change.next();

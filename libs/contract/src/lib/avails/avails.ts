@@ -218,17 +218,17 @@ export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
 
 export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
 
-  if (isSameCalendarTerm(term, avail)) {console.log('exact same'); return false;}
+  if (isSameCalendarTerm(term, avail)) return false;
 
-  if (term.exclusive !== avail.exclusive) {console.log('exclusive'); return false;}
+  if (term.exclusive !== avail.exclusive) return false;
 
-  if (!avail.medias) {console.log('no medias'); return false;}
-  if (term.medias.length < avail.medias.length) {console.log('medias length'); return false;}
-  if (avail.medias.some(medium => !term.medias.includes(medium))) {console.log(''); return false;}
+  if (!avail.medias) return false;
+  if (term.medias.length < avail.medias.length) return false;
+  if (avail.medias.some(medium => !term.medias.includes(medium))) return false;
 
-  if (!avail.territories) {console.log('no territories'); return false;}
-  if (term.territories.length < avail.territories.length) {console.log('territories length'); return false;}
-  if (avail.territories.some(territory => !term.territories.includes(territory))) {console.log('territory match'); return false;}
+  if (!avail.territories) return false;
+  if (term.territories.length < avail.territories.length) return false;
+  if (avail.territories.some(territory => !term.territories.includes(territory)))return false;
 
   return true;
 }
