@@ -3,6 +3,7 @@ import { App } from "../apps";
 import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
 import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
+import { User } from "@blockframes/auth/+state";
 
 export interface EmailRequest {
   to: string;
@@ -40,6 +41,20 @@ export interface OrgEmailData {
   denomination: string,
   email: string,
   id: string
+}
+
+/**
+ * This interface is used mainly for the user that will received its email.
+ * @dev In the backend-function/templates/mail.ts, it will refer to the `user` variable.
+ * @dev An other variable `mailTo` can be used also but it will be a subject of the email
+ * @example An email is sent to admins of org to let them know a new member has joined :
+ * `hi user.firstName, we let you know that mailTo.firstName has joined your org today`
+ */
+export interface UserEmailData {
+  firstName?: string,
+  lastName?: string,
+  email: string,
+  password?: string
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -103,5 +118,14 @@ export function getOrgEmailData(org: Partial<OrganizationDocument | Organization
     id: org.id,
     denomination: org.denomination.full ?? org.denomination.public,
     email: org.email || ''
+  }
+}
+
+export function getUserEmailData(user: Partial<User>, password?: string): UserEmailData {
+  return {
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    email: user.email || '',
+    password
   }
 }

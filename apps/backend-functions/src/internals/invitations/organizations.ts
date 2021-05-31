@@ -12,7 +12,7 @@ import { getAdminIds, getDocument, getOrgAppKey, createPublicOrganizationDocumen
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { unsubscribeGroupIds } from '../../templates/ids';
 import { applicationUrl } from '@blockframes/utils/apps';
-import { getOrgEmailData } from '@blockframes/utils/emails/utils';
+import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -155,7 +155,8 @@ async function onRequestFromUserToJoinOrgAccept({
   const app = await getOrgAppKey(toOrg.id);
   const urlToUse = applicationUrl[app];
   const org = getOrgEmailData(toOrg);
-  const template = userJoinedAnOrganization(fromUser.email, urlToUse, org, fromUser.firstName);
+  const toUser = getUserEmailData(fromUser);
+  const template = userJoinedAnOrganization(toUser, urlToUse, org);
   return sendMailFromTemplate(template, app, unsubscribeGroupIds.allExceptCriticals);
 }
 
