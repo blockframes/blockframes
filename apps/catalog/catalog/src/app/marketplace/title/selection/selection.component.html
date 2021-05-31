@@ -60,7 +60,10 @@
               {{ exclusive ? 'Yes' : 'No' }}
             </ng-template>
             <ng-template colAction="action" label="Actions" let-termIndex="index">
-              <button mat-icon-button (click)="removeTerm(i, termIndex)">
+              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" matTooltip="Edit">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+              <button mat-icon-button (click)="removeTerm(i, termIndex)" matTooltip="Delete">
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </ng-template>

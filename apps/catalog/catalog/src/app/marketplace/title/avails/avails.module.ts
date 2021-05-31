@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 import { ToLabelModule } from '@blockframes/utils/pipes';
@@ -25,7 +25,7 @@ import { AvailsGuard } from './avails.guard';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { ExplanationModule } from './explanation/explanation.module';
 import { ReverseModule } from '@blockframes/utils/pipes/reverse.pipe';
-
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 const routes: Routes = [
   {
@@ -56,6 +56,7 @@ const routes: Routes = [
     LanguagesFormModule,
     ExplanationModule,
     ReverseModule,
+    ConfirmModule,
 
     // Material
     MatCardModule,
@@ -67,6 +68,7 @@ const routes: Routes = [
     MatDatepickerModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatTooltipModule,
 
     RouterModule.forChild(routes)
   ]

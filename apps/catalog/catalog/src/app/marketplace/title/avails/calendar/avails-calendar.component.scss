@@ -1,29 +1,10 @@
-
-:host {
-  display: flex;
-
-}
-
-aside {
-  width: 30%;
-  margin-right: 24px;
-  mat-card {
-    mat-card-subtitle {
-      margin-top: 20px;
-    }
-
-    mat-form-field {
-      width: 100%;
-    }
-  }
-}
-
-.avails-card {
-  flex: 1;
-}
-
-mat-card {
+section {
+  position: relative;
   margin-bottom: 24px;
+
+  avails-calendar {
+    margin: 32px 0;
+  }
 
   .overlay {
     position: absolute;

@@ -4,6 +4,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -38,12 +39,19 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds);
+  }
+
+  navigateToAvails(titleId: string) {
+    this.router.navigate(['/c/o/marketplace/title', titleId, 'avails']).then(() => {
+      document.querySelector('#avails')?.scrollIntoView({ behavior: 'smooth' });
+    })
   }
 
 }
