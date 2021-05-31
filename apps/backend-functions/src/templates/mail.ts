@@ -92,7 +92,7 @@ export function organizationWasAccepted(toUser: UserEmailData, url: string = app
     user: toUser,
     pageURL: `${url}/c/o`
   };
-  return { to: toUser.email, templateId: templateIds.test, data };
+  return { to: toUser.email, templateId: templateIds.org.accepted, data };
 }
 
 /** Generates a transactional email to let user knows its request has been sent */
