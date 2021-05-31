@@ -1,13 +1,19 @@
+
+li {
+  display: inline-block;
+  margin-left: 16px;
+
+  svg {
+    margin-right: 4px;
+  }
+}
+
 section {
   position: relative;
   margin-bottom: 24px;
 
   avails-calendar {
     margin: 32px 0;
-  }
-
-  .mat-caption {
-    margin-left: 4px;
   }
 
   .overlay {

@@ -30,24 +30,26 @@
   </p>
 
   <!-- CALENDAR LEGEND -->
-  <div fxLayout="row" fxLayoutGap="32px">
-    <div>
+  <ul>
+    <li>
       <svg viewBox="0 0 100 100" width="10px" height="10px">
-        <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100" />
+        <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
       </svg>
       <span class="mat-caption">Available</span>
-    </div>
-    <div>
+    </li>
+    <li>
       <svg viewBox="0 0 100 100" width="10px" height="10px">
-        <rect fill="var(--background-disabled-button)" x="0" y="0" width="100" height="100" />
+        <rect fill="var(--background-disabled-button)" x="0" y="0" width="100" height="100" rx="10" ry="10" />
       </svg>
       <span class="mat-caption">Not Licensed</span>
-    </div>
-  </div>
+    </li>
+  </ul>
 
 </ng-container>
+
 <section class="surface" fxLayout fxLayoutAlign="center">
-  <avails-calendar [licensedMarkers]="licensed$ | async" [soldMarkers]="sold$ | async" (selected)="selected($event)"></avails-calendar>
+  <avails-calendar [licensedMarkers]="licensed$ | async" [soldMarkers]="sold$ | async" [selectedMarker]="selected$ | async" (selected)="selected($event)"></avails-calendar>
+
   <div *ngIf="(status$ | async) === 'INVALID'" class="overlay" fxLayoutAlign="center center">
     <article class="mat-body-2">
       Please fill in Avail Search Criteria section to show results on the Calendar.

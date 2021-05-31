@@ -81,12 +81,14 @@ export class MarketplaceMovieAvailsCalendarComponent {
   }
 
   async selected(marker: DurationMarker) {
-    const avails = { ...this.availsForm.value, duration: { from: marker.from, to: marker.to } };
+    const duration = { from: marker.from, to: marker.to };
+    const avails = { ...this.availsForm.value, duration };
 
     const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
     if (result) {
-      const contract = this.shell.bucketForm.get('contracts').get(result.contractIndex.toString());
-      const term = contract.get('terms').get(result.termIndex.toString());
+      const { contractIndex, termIndex } = result;
+      const contract = this.shell.bucketForm.get('contracts').at(contractIndex);
+      const term = contract.get('terms').at(termIndex);
       term.setValue({ ...term.value, ...avails });
     } else {
       this.shell.bucketForm.addDuration(avails, marker);

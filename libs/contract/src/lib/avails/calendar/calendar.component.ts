@@ -53,9 +53,9 @@ export class AvailsCalendarComponent implements OnInit {
 
   @Input() set selectedMarker(marker: DurationMarker| undefined) {
     const state = this.state$.getValue();
+    state.selectionState = 'waiting';
 
     if (!marker) {
-      state.selectionState = 'waiting';
       state.start = { row: undefined, column: undefined };
       state.end = { row: undefined, column: undefined };
       const resetState = reset(state);
@@ -66,8 +66,6 @@ export class AvailsCalendarComponent implements OnInit {
     const selectionStart = dateToMatrixPosition(marker.from);
     const selectionEnd = dateToMatrixPosition(marker.to);
 
-
-    state.selectionState = 'waiting';
     const newStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, state);
     const newStateEnd = select(selectionEnd.row, selectionEnd.column, this.stateMatrix, newStateStart);
     const newState = highlightRange(selectionStart, selectionEnd, this.stateMatrix, newStateEnd);
