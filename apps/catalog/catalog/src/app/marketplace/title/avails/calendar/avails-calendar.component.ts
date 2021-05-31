@@ -54,7 +54,6 @@ export class MarketplaceMovieAvailsCalendarComponent {
     filter(() => this.availsForm.valid),
     map(([mandates, salesTerms, avails, bucket]) => {
       const alreadySelected = getDurations(this.shell.movie.id, avails, bucket, 'in');
-      // console.log(salesTerms, alreadySelected);
       const soldTerms = getSoldTerms(avails, salesTerms);
       const flattenTerms = soldTerms.map(term => toDurationMarker(mandates, term)).flat();
       return [ ...alreadySelected, ...flattenTerms ];
