@@ -290,7 +290,7 @@ describe('Test BucketForm behaviors for territories', () => {
 
 describe('Test BucketForm behaviors for durations', () => {
 
-  it('Adding two duration with same territories and medias goes to same term in same contract bucket', () => {
+  it('Adding two duration with same territories and medias goes to two different terms in same contract bucket', () => {
     const bucketForm = new BucketForm();
 
     const mandate = createMandate({ id: 'MandateA', termIds: ['termA'] });
@@ -324,7 +324,7 @@ describe('Test BucketForm behaviors for durations', () => {
     bucketForm.addDuration(availDetailsB, marker);
 
     expect(bucketForm.value.contracts.length).toBe(1);
-    expect(bucketForm.value.contracts[0].terms.length).toBe(1);
+    expect(bucketForm.value.contracts[0].terms.length).toBe(2);
     expect(bucketForm.value.contracts[0].terms[0].territories.length).toBe(2);
   });
 

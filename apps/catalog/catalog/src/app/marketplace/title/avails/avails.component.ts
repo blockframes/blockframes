@@ -1,10 +1,11 @@
 
-import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { filter, switchMap } from 'rxjs/operators';
 import { of, ReplaySubject, Subscription } from 'rxjs';
+
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
@@ -16,6 +17,7 @@ import { OrganizationQuery, OrganizationService } from '@blockframes/organizatio
 import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
 import { ContractService, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+
 import { ExplanationComponent } from './explanation/explanation.component';
 
 @Component({
@@ -43,15 +45,32 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
 
+  /** Raw mandates, straight from the db
+   *
+   * _(mandates = available contracts)_
+  */
   public mandates$ = new ReplaySubject<Mandate[]>();
+
+  /** Raw mandate **(available)** terms, straight from the db
+   *
+   * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
+  */
   public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
+
+  /** Raw **sold** terms, straight from the db
+   *
+   * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
+  */
   public salesTerms$ = new ReplaySubject<Term<Date>[]>();
 
+  /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
 
   constructor(
+    private router: Router,
     private dialog: MatDialog,
+    private route: ActivatedRoute,
     private movieQuery: MovieQuery,
     private bucketQuery: BucketQuery,
     private termService: TermService,
@@ -59,8 +78,6 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
-    private router: Router,
-    private route: ActivatedRoute
   ) {
     this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
@@ -143,7 +160,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     }
 
     if (mode === 'calendar') {
-      this.avails.calendarForm.setValue({ exclusive, medias, territories, duration: { from: '', to: '' } });
+      this.avails.calendarForm.patchValue({ exclusive, medias, territories });
     }
 
     document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });

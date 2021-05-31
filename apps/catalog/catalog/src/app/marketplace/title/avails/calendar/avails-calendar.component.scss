@@ -1,3 +1,13 @@
+
+li {
+  display: inline-block;
+  margin-left: 16px;
+
+  svg {
+    margin-right: 4px;
+  }
+}
+
 section {
   position: relative;
   margin-bottom: 24px;
