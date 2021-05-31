@@ -41,7 +41,7 @@ describe('User create a screening', () => {
     p1.clickLogin();
   });
 
-  it('Organiser logs in, creates 4 screening events', () => {
+  it.only('Organiser logs in, creates 4 screening events', () => {
 
     signIn(users[0], true);
     acceptCookie();

@@ -40,6 +40,8 @@ import { cleanStorage } from './storage-cleaning';
 export async function importEmulatorFromBucket(_exportUrl: string) {
   const bucketUrl = _exportUrl || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
+  console.log("Start the emulators now..");
+  /*
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
@@ -48,6 +50,7 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
     await shutdownEmulator(proc);
     throw e;
   }
+  */
 }
 
 export interface StartEmulatorOptions {

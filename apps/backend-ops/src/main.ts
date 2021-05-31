@@ -36,6 +36,7 @@ async function runCommand() {
       await loadEmulator({ importFrom: arg1 });
       break;
     case 'importEmulator':
+      console.log("Importing: ", arg1);
       await importEmulatorFromBucket(arg1);
       break;
     case 'anonProdDb':

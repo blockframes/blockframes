@@ -61,7 +61,8 @@ export async function importFirestoreEmulatorBackup(gcsPath: string, emulatorBac
  * @param emuPath path to the root Firebase emulator export
  */
 export async function startFirestoreEmulatorWithImport(emuPath: string) {
-  const cmd = `firebase emulators:start --only firestore --import ${emuPath} --export-on-exit`;
+  //const cmd = `firebase emulators:start --only firestore --import ${emuPath} --export-on-exit`;
+  const cmd = `firebase emulators:start --only firestore, auth --import ${emuPath}`;
   console.log('Running command:', cmd);
   const { proc, procPromise } = runShellCommandUntil(cmd, 'All emulators ready');
   process.on('SIGINT', async () => await shutdownEmulator(proc));
