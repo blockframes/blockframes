@@ -42,22 +42,26 @@ export class MarketplaceMovieAvailsCalendarComponent {
     this.availsForm.value$,
     this.shell.bucketForm.value$,
   ]).pipe(
-    map(([avail, bucket]) => getDurations(this.shell.movie.id, avail, bucket, 'exact')[0]),
+    map(([avails, bucket]) => getDurations(this.shell.movie.id, avails, bucket, 'exact')[0]),
   );
 
-  public sold$ = combineLatest([
+  public notAvailable$ = combineLatest([
     this.mandates$,
     this.salesTerms$,
-    this.availsForm.value$
+    this.availsForm.value$,
+    this.shell.bucketForm.value$,
   ]).pipe(
     filter(() => this.availsForm.valid),
-    map(([mandates, sales, avails]) => {
-      const soldTerms = getSoldTerms(avails, sales);
-      return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
+    map(([mandates, salesTerms, avails, bucket]) => {
+      const alreadySelected = getDurations(this.shell.movie.id, avails, bucket, 'in');
+      // console.log(salesTerms, alreadySelected);
+      const soldTerms = getSoldTerms(avails, salesTerms);
+      const flattenTerms = soldTerms.map(term => toDurationMarker(mandates, term)).flat();
+      return [ ...alreadySelected, ...flattenTerms ];
     })
   );
 
-  public licensed$ = combineLatest([
+  public available$ = combineLatest([
     this.mandates$,
     this.mandateTerms$,
     this.availsForm.value$
