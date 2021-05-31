@@ -1,7 +1,10 @@
 
 <header fxLayout fxLayoutAlign="space-between center" id="avails">
   <h2>Search & buy Rights</h2>
-  <button mat-button (click)="explain()"><span><mat-icon svgIcon="info"></mat-icon> Learn how it works</span></button>
+  <button mat-button (click)="explain()" fxLayout="row" fxLayoutAlign="center center">
+    <mat-icon svgIcon="info"></mat-icon>
+    <span>Learn how it works</span>
+  </button>
 </header>
 <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
   <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
