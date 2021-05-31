@@ -198,12 +198,38 @@ export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter)  {
  * @param avail
  * @returns
  */
-export function isInTerm(term: BucketTerm, avail: AvailsFilter) {
+export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
   if (isSameMapTerm(term, avail)) return false;
+
   if (term.exclusive !== avail.exclusive) return false;
-  if (!avail.duration?.from || term.duration.from.getTime() > avail.duration.from.getTime()) return false;
-  if (!avail.duration?.to || term.duration.to.getTime() < avail.duration.to.getTime()) return false;
-  if (!avail.medias || term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
+
+  if (!avail.duration?.from) return false;
+  if (term.duration.from.getTime() > avail.duration.from.getTime()) return false;
+
+  if (!avail.duration?.to) return false;
+  if (term.duration.to.getTime() < avail.duration.to.getTime()) return false;
+
+  if (!avail.medias) return false;
+  if (term.medias.length !== avail.medias.length) return false;
+  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
+
+  return true;
+}
+
+export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
+
+  if (isSameCalendarTerm(term, avail)) return false;
+
+  if (term.exclusive !== avail.exclusive) return false;
+
+  if (!avail.medias) return false;
+  if (term.medias.length < avail.medias.length) return false;
+  if (avail.medias.some(medium => !term.medias.includes(medium))) return false;
+
+  if (!avail.territories) return false;
+  if (term.territories.length < avail.territories.length) return false;
+  if (avail.territories.some(territory => !term.territories.includes(territory)))return false;
+
   return true;
 }
 
@@ -226,7 +252,7 @@ export function toTerritoryMarker(territory: Territory, mandates: Mandate[], ter
 export function getTerritories(avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Territory[] {
   return bucket.contracts
     .map(c => c.terms).flat()
-    .filter(t => mode === 'exact' ? isSameMapTerm(t, avail) : isInTerm(t, avail))
+    .filter(t => mode === 'exact' ? isSameMapTerm(t, avail) : isInMapTerm(t, avail))
     .map(t => t.territories).flat();
 }
 
@@ -274,27 +300,14 @@ export function toDurationMarker(mandates: Mandate[], term: Term<Date>): Duratio
   }
 }
 
-export function getDurations(avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Duration[] {
+export function getDurations(movieId: string, avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Duration[] {
   return bucket.contracts
+    .filter(contract => contract.titleId === movieId)
     .map(c => c.terms).flat()
-    .filter(t => mode === 'exact' ? isSameMapTerm(t, avail) : isInTerm(t, avail))
+    .filter(t => mode === 'exact' ? isSameCalendarTerm(t, avail) : isInCalendarTerm(t, avail))
     .map(t => t.duration).flat();
 }
 
 export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>[]) {
   return mandateTerms.map(term => toDurationMarker(mandates, term));
-}
-
-export function availableDurations(
-  selected: DurationMarker[],
-  sold: DurationMarker[],
-  inSelection: DurationMarker[],
-  mandates: Mandate[],
-  mandatesTerms: Term<Date>[],
-) {
-  // TODO #5706 check if this function is needed and if it works
-  const notAvailable = [...selected, ...sold, ...inSelection];
-
-  const markers = getDurationMarkers(mandates, mandatesTerms);
-  return markers.filter(marker => !notAvailable.includes(marker));
 }

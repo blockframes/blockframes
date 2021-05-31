@@ -4,7 +4,7 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-stroked-button color="primary" routerLink="avails">
+          <a mat-stroked-button color="primary" routerLink="avails" fragment="avails">
             <span>Search & Buy Rights</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>

@@ -1,10 +1,9 @@
 
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
@@ -21,15 +20,15 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 
 import { ExplanationComponent } from './explanation/explanation.component';
 
-
 @Component({
   selector: 'catalog-movie-avails',
   templateUrl: './avails.component.html',
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent implements OnDestroy {
+export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
+  private fragSub: Subscription;
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -46,15 +45,32 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
 
   public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
 
+  /** Raw mandates, straight from the db
+   *
+   * _(mandates = available contracts)_
+  */
   public mandates$ = new ReplaySubject<Mandate[]>();
+
+  /** Raw mandate **(available)** terms, straight from the db
+   *
+   * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
+  */
   public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
+
+  /** Raw **sold** terms, straight from the db
+   *
+   * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
+  */
   public salesTerms$ = new ReplaySubject<Term<Date>[]>();
 
+  /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
 
   constructor(
+    private router: Router,
     private dialog: MatDialog,
+    private route: ActivatedRoute,
     private movieQuery: MovieQuery,
     private bucketQuery: BucketQuery,
     private termService: TermService,
@@ -62,8 +78,6 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
-    private snackbar: MatSnackBar,
-    private router: Router,
   ) {
     this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
@@ -72,8 +86,15 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     this.init();
   }
 
+  ngAfterViewInit() {
+    this.fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
+      document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
+    })
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.fragSub.unsubscribe();
   }
 
   private async init() {
@@ -134,11 +155,12 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const mode = this.router.url.split('/').pop();
 
     if (mode === 'map') {
+      this.bucketForm.patchValue({}); // Force observable to reload
       this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
     }
 
     if (mode === 'calendar') {
-      this.avails.calendarForm.setValue({ exclusive, medias, territories });
+      this.avails.calendarForm.patchValue({ exclusive, medias, territories });
     }
 
     document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
@@ -149,5 +171,11 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const index = terms.controls.findIndex(c => c === control);
     terms.removeAt(index);
     this.bucketForm.change.next();
+  }
+
+  clear() {
+    this.avails.mapForm.reset();
+    this.avails.calendarForm.reset();
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
   }
 }

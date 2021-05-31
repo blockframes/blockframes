@@ -214,15 +214,10 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
       return;
     }
 
-    const contract = bucket.contracts[contractIndex];
-    const termIndex = contract.terms.findIndex(t => isSameCalendarTerm(t, avails));
-    // New term
-    if (termIndex === -1) {
-      const bucketTerm = toBucketTerm(avails)
-      this.get('contracts').at(contractIndex).get('terms').add(bucketTerm);
-      this.markAsDirty();
-      this.change.next();
-    }
+    const bucketTerm = toBucketTerm(avails);
+    this.get('contracts').at(contractIndex).get('terms').add(bucketTerm);
+    this.markAsDirty();
+    this.change.next();
   }
 
   /**

@@ -4,6 +4,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import {
   getSoldTerms,
   getTerritories,
@@ -15,9 +17,6 @@ import {
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -93,8 +92,8 @@ export class MarketplaceMovieAvailsMapComponent {
   );
 
   constructor(
+    private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
-    private snackbar: MatSnackBar
   ) { }
 
   public trackByTag<T>(tag: T) {
@@ -113,13 +112,7 @@ export class MarketplaceMovieAvailsMapComponent {
 
   public addTerritory(territory: TerritoryMarker) {
     const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
-    if (added) {
-      this.snackbar.open(`Rights added`, 'Show ⇩', { duration: 5000 })
-        .onAction()
-        .subscribe(() => {
-          document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
-        })
-    }
+    if (added) this.onNewRight()
   }
 
   public removeTerritory(territory: TerritoryMarker) {
@@ -135,9 +128,18 @@ export class MarketplaceMovieAvailsMapComponent {
         this.shell.bucketForm.addTerritory(this.availsForm.value, term);
       }
     }
+    this.onNewRight();
   }
 
   clear() {
     this.shell.avails.mapForm.reset();
+  }
+
+  onNewRight() {
+    this.snackbar.open(`Rights added`, 'Show ⇩', { duration: 5000 })
+      .onAction()
+      .subscribe(() => {
+        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+      });
   }
 }

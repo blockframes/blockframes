@@ -1,11 +1,15 @@
 
-<header fxLayout fxLayoutAlign="space-between center">
-  <span>First time here? <button mat-button (click)="explain()">Learn how it works</button></span>
-  <span>
-    <a mat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
-    <a mat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
-  </span>
+<header fxLayout fxLayoutAlign="space-between center" id="avails">
+  <h2>Search & buy Rights</h2>
+  <button mat-button (click)="explain()" fxLayout="row" fxLayoutAlign="center center">
+    <mat-icon svgIcon="info"></mat-icon>
+    <span>Learn how it works</span>
+  </button>
 </header>
+<nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
+  <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
+  <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
+</nav>
 
 <router-outlet></router-outlet>
 
@@ -14,12 +18,12 @@
   <mat-card *ngFor="let control of terms$ | async | reverse">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
-        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
         <section fxLayoutGap="12px">
-          <button mat-icon-button (click)="edit(term)">
+          <button mat-icon-button (click)="edit(term)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button mat-icon-button (click)="remove(control)">
+          <button mat-icon-button (click)="remove(control)" matTooltip="Delete">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </section>
@@ -27,7 +31,7 @@
       <mat-card-content>
         <mat-accordion>
           <!-- TERRITORIES -->
-          <mat-expansion-panel>
+          <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Territories
@@ -127,8 +131,13 @@
       </mat-card-content>
     </form>
   </mat-card>
-  <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()">
-    <span>Add to Selection</span>
-    <mat-icon svgIcon="arrow_forward"></mat-icon>
-  </button>
+  <section fxLayout fxLayoutAlign="space-between">
+    <button mat-stroked-button color="primary" class="mat-body-2" (click)="clear()">
+      Search for new terms and rights
+    </button>
+    <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()">
+      <span>Add to Selection</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+  </section>
 </ng-container>

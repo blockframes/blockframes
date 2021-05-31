@@ -1,151 +1,129 @@
+<form [formGroup]="availsForm" fxLayout fxLayout.lt-md="column" fxLayoutAlign="start center" fxLayoutGap="12px">
+  <section fxLayoutGap="12px" fxFlex>
+    <static-group fxFlex formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
+      <mat-label>Media</mat-label>
+    </static-group>
 
-<aside id="avails">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Avail Search Criteria</mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
-    <mat-card-header>
-      <mat-card-subtitle>
-        <p>Fill in the following fields to know where, when and in which conditions this title is available.</p>
-        <p>
-          Search results use an "and" logic for multiple conditions, not an "or" logic.
-          <mat-icon matTooltip="If you check TV and VOD media, you will get territories where both media are available (not either of them)" svgIcon="info"></mat-icon>
-        </p>
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="availsForm">
-        <static-group formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias" icon="play_arrow">
-          <mat-label>Media</mat-label>
-        </static-group>
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Exlusivity</mat-label>
+      <mat-select formControlName="exclusive" required>
+        <mat-option [value]="true">Exclusive</mat-option>
+        <mat-option [value]="false">Non exclusive</mat-option>
+      </mat-select>
+      <mat-icon matPrefix svgIcon="star"></mat-icon>
+    </mat-form-field>
+  </section>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Exlusivity</mat-label>
-          <mat-select formControlName="exclusive" required>
-            <mat-option [value]="true">Exclusive</mat-option>
-            <mat-option [value]="false">Non exclusive</mat-option>
-          </mat-select>
-          <mat-icon matPrefix svgIcon="star"></mat-icon>
-        </mat-form-field>
+  <section fxLayoutGap="12px" fxFlex>
+    <mat-form-field fxFlex appearance="outline" formGroupName="duration">
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="datepickerFrom" formControlName="from" placeholder="MM/DD/YYYY" required>
+      <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
+      <mat-datepicker #datepickerFrom> </mat-datepicker>
+      <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
+      <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" formGroupName="duration">
-          <mat-label>Start Date</mat-label>
-          <input matInput [matDatepicker]="datepickerFrom" formControlName="from" placeholder="MM/DD/YYYY" required>
-          <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
-          <mat-datepicker #datepickerFrom> </mat-datepicker>
-          <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date</mat-error>
-          <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
-        </mat-form-field>
+    <mat-form-field fxFlex appearance="outline" formGroupName="duration">
+      <mat-label>End Date</mat-label>
+      <input matInput [matDatepicker]="datepickerTo" formControlName="to" placeholder="MM/DD/YYYY" required>
+      <mat-datepicker-toggle matPrefix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
+      <mat-datepicker #datepickerTo> </mat-datepicker>
+      <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
+      <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+    </mat-form-field>
+  </section>
 
-        <mat-form-field appearance="outline" formGroupName="duration">
-          <mat-label>End Date</mat-label>
-          <input matInput [matDatepicker]="datepickerTo" formControlName="to" placeholder="MM/DD/YYYY" required>
-          <mat-datepicker-toggle matPrefix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
-          <mat-datepicker #datepickerTo> </mat-datepicker>
-          <mat-error *ngIf="availsForm.hasError('startOverEnd', 'duration.to')">End date must not be earlier than start date</mat-error>
-          <mat-error *ngIf="availsForm.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
-        </mat-form-field>
-      </form>
-      <article fxLayout fxLayoutAlign="space-between">
-        <button mat-stroked-button (click)="clear()">Clear</button>
+  <button mat-icon-button (click)="clear()" matTooltip="Clear fields">
+    <mat-icon svgIcon="refresh_filters"></mat-icon>
+  </button>
+</form>
+
+<h2>Available Territories</h2>
+
+<ng-container *ngIf="org$ | async as org">
+  <p>
+    Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to
+    <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
+  </p>
+</ng-container>
+<world-map>
+  <ng-container *ngIf="(status$ | async) === 'INVALID'">
+    <section class="overlay" fxLayout="column" fxLayoutAlign="center center">
+      <article fxLayout="column" fxLayoutAlign="center center">
+        <h3>
+          Please fill in Avail Search Criteria section <br/> to show results on the Map.
+        </h3>
       </article>
-    </mat-card-content>
-  </mat-card>
-</aside>
+    </section>
+  </ng-container>
 
-<mat-card class="avails-card">
-  <mat-card-header>
-    <mat-card-title>Available Territories</mat-card-title>
-  </mat-card-header>
-  <mat-divider></mat-divider>
-  <mat-card-header>
-    <mat-card-subtitle *ngIf="org$ | async as org">
-      <p>
-        Click on the territories you're interested in to add them to your Selection. For territories that are not licensed, feel free to
-        <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
-      </p>
-    </mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <world-map>
-      <ng-container *ngIf="(status$ | async) === 'INVALID'">
-        <section class="overlay" fxLayoutAlign="center center">
-          <article class="mat-body-2">
-            Please fill in Avail Search Criteria section to show results on the Map.
-          </article>
-        </section>
-      </ng-container>
+  <!-- MAP LAYERS -->
+  <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
+    <map-feature [tag]="tag.isoA3" color="#7795ff"
+      (click)="addTerritory(tag)"
+      (mouseover)="displayTerritoryTooltip(tag.label, 'Available')"
+      (mouseout)="clearTerritoryTooltip()">
+    </map-feature>
+  </ng-container>
+  <ng-container *ngFor="let tag of (sold$ | async); trackBy: trackByTag">
+    <map-feature [tag]="tag.isoA3" color="#9ca3c4"
+      (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')"
+      (mouseout)="clearTerritoryTooltip()">
+    </map-feature>
+  </ng-container>
+  <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
+    <map-feature [tag]="tag.isoA3" color="#1a49f5"
+      (click)="removeTerritory(tag)"
+      (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')"
+      (mouseout)="clearTerritoryTooltip()">
+    </map-feature>
+  </ng-container>
+  <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
+    <map-feature [tag]="tag.isoA3" color="#1a49f5"
+      (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')"
+      (mouseout)="clearTerritoryTooltip()">
+    </map-feature>
+  </ng-container>
 
-      <!-- MAP LAYERS -->
-      <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="primary-lighter"
-          (click)="addTerritory(tag)"
-          (mouseover)="displayTerritoryTooltip(tag.label, 'Available')"
-          (mouseout)="clearTerritoryTooltip()">
-        </map-feature>
-      </ng-container>
-      <ng-container *ngFor="let tag of (sold$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="background-disabled-button"
-          (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')"
-          (mouseout)="clearTerritoryTooltip()">
-        </map-feature>
-      </ng-container>
-      <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="primary" weight="2"
-          (click)="removeTerritory(tag)"
-          (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')"
-          (mouseout)="clearTerritoryTooltip()">
-        </map-feature>
-      </ng-container>
-      <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
-        <map-feature [tag]="tag.isoA3" color="primary" weight="2"
-          (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')"
-          (mouseout)="clearTerritoryTooltip()">
-        </map-feature>
-      </ng-container>
+  <!-- TOOLTIP ON HOVERING-->
+  <article *ngIf="hoveredTerritory" class="hovered-territory-card">
+    <ul>
+      <li><b>{{ hoveredTerritory.name }}</b></li>
+      <li class="mat-caption">{{ hoveredTerritory.status }}</li>
+    </ul>
+  </article>
 
-      <!-- TOOLTIP ON HOVERING-->
-      <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
-        <ul>
-          <li> {{ hoveredTerritory.name }} </li>
-          <li class="mat-caption"> {{ hoveredTerritory.status }} </li>
-        </ul>
-      </mat-card>
-
-      <!-- MAP LEGEND -->
-      <mat-card class="colors-card">
-        <mat-list>
-          <mat-list-item>
-            <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100" />
-            </svg>
-            <span class="mat-caption">Available</span>
-          </mat-list-item>
-          <mat-list-item>
-            <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--background-disabled-button)" x="0" y="0" width="100" height="100" />
-            </svg>
-            <span class="mat-caption">Rights Sold</span>
-          </mat-list-item>
-          <mat-list-item>
-            <svg viewBox="0 0 100 100" width="10px" height="10px">
-              <rect fill="var(--background)" x="0" y="0" width="100" height="100" />
-            </svg>
-            <span class="mat-caption" fxLayout fxLayoutAlign="start center">
-              Not Licensed
-              <mat-icon matTooltip="You can contact the seller directly for more information." svgIcon="info"></mat-icon>
-            </span>
-          </mat-list-item>
-        </mat-list>
-      </mat-card>
-    </world-map>
-    <article fxLayout fxLayoutAlign="end">
-      <button mat-button color="primary" (click)="selectAll()">
-        <mat-icon svgIcon="add"></mat-icon>
-        Select all available territories
-      </button>
-    </article>
-  </mat-card-content>
-
-</mat-card>
+  <!-- MAP LEGEND -->
+  <article class="colors-card">
+    <mat-list>
+      <mat-list-item>
+        <svg viewBox="0 0 100 100" width="10px" height="10px">
+          <rect fill="#7795ff" x="0" y="0" width="100" height="100" rx="10" />
+        </svg>
+        <span class="mat-caption">Available</span>
+      </mat-list-item>
+      <mat-list-item>
+        <svg viewBox="0 0 100 100" width="10px" height="10px">
+          <rect fill="#9ca3c4" x="0" y="0" width="100" height="100" rx="10" />
+        </svg>
+        <span class="mat-caption">Rights Sold</span>
+      </mat-list-item>
+      <mat-list-item>
+        <svg viewBox="0 0 100 100" width="10px" height="10px">
+          <rect fill="#d3ddff" x="0" y="0" width="100" height="100" rx="10" />
+        </svg>
+        <span class="mat-caption" fxLayout fxLayoutAlign="start center">
+          Not Licensed
+          <mat-icon matTooltip="You can contact the seller directly for more information." svgIcon="info"></mat-icon>
+        </span>
+      </mat-list-item>
+    </mat-list>
+  </article>
+</world-map>
+<article fxLayout fxLayoutAlign="end">
+  <button mat-button color="primary" (click)="selectAll()">
+    <mat-icon svgIcon="add"></mat-icon>
+    <span>Select all available territories</span>
+  </button>
+</article>

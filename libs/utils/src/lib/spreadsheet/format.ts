@@ -4,6 +4,7 @@ import {
   createMovieRating,
   createMovieReview,
   createPrize,
+  createAudienceGoals,
   Movie,
   populateMovieLanguageSpecification
 } from "@blockframes/movie/+state/movie.model";
@@ -357,9 +358,28 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
 
 }
 
-export function formatReview(reviews: { revue: string, link: string, quote: string }[]) {
-  return reviews.filter(r => r.revue).map(r => {
+export function formatAudienceGoals(audience: {goals: string, targets: string[]}[], state: MovieImportState) {
+  const movieGoals = [];
+  const movieTargets = [];
+  audience.map(a => {
+    let goalKey;
+    if (a.goals) {
+      goalKey = getKeyIfExists('socialGoals', a.goals);
+      movieGoals.push(goalKey);
+    }
+    if (a.targets) movieTargets.push(a.targets);
+  })
+  const movieAudience = createAudienceGoals({ targets: movieTargets});
+  if (movieGoals.length) {
+    movieAudience.goals = movieGoals;
+    return movieAudience;
+  }
+}
+
+export function formatReview(reviews: { filmCriticName: string, revue: string, link: string, quote: string }[]) {
+  return reviews.filter(r => !!r.revue).map(r => {
     return createMovieReview({
+      criticName: r.filmCriticName,
       journalName: r.revue,
       revueLink: r.link,
       criticQuote: r.quote

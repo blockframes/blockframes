@@ -1,22 +1,24 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { combineLatest } from 'rxjs';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { combineLatest, Observable } from 'rxjs';
+import { filter, map, shareReplay, startWith } from 'rxjs/operators';
+
+import {
+  getDurations,
+  getSoldTerms,
+  DurationMarker,
+  toDurationMarker,
+  getDurationMarkers,
+} from '@blockframes/contract/avails/avails';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { DurationMarker, getDurations, getSoldTerms, getDurationMarkers, toDurationMarker, AvailsFilter } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
-import { Bucket } from '@blockframes/contract/bucket/+state';
-import { Duration } from '@blockframes/contract/term/+state/term.model';
 
-function getSelected(avail: AvailsFilter, bucket: Bucket, markers: DurationMarker[], mode: 'exact' | 'in') {
-  const inDurations = getDurations(avail, bucket, mode);
-  return markers.filter(marker => inDurations.some(duration =>(
-    duration.from.getTime() === marker.from.getTime() &&
-    duration.to.getTime() === duration.from.getTime()
-  )));
-}
+
 @Component({
   selector: 'catalog-movie-avails-calendar',
   templateUrl: './avails-calendar.component.html',
@@ -32,32 +34,15 @@ export class MarketplaceMovieAvailsCalendarComponent {
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
   private mandates$ = this.shell.mandates$;
+
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
 
-  public durationMarkers$ = combineLatest([
-    this.shell.mandates$,
-    this.mandateTerms$,
-  ]).pipe(
-    map(([mandates, mandateTerms]) => getDurationMarkers(mandates, mandateTerms))
-  );
-
-  public selected$ = combineLatest([
+  public selected$: Observable<DurationMarker> = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.durationMarkers$,
   ]).pipe(
-    map(([avail, bucket, markers]) => getSelected(avail, bucket, markers, 'exact')),
-    startWith<DurationMarker[]>([]),
-  );
-
-  public inSelection$ = combineLatest([
-    this.availsForm.value$,
-    this.shell.bucketForm.value$,
-    this.durationMarkers$
-  ]).pipe(
-    map(([avail, bucket, markers]) => getSelected(avail, bucket, markers, 'in')),
-    startWith<DurationMarker[]>([]),
+    map(([avail, bucket]) => getDurations(this.shell.movie.id, avail, bucket, 'exact')[0]),
   );
 
   public sold$ = combineLatest([
@@ -85,6 +70,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
   );
 
   constructor(
+    private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
@@ -94,19 +80,24 @@ export class MarketplaceMovieAvailsCalendarComponent {
     this.availsForm.reset();
   }
 
-  async selected(duration: Duration<Date>) {
-    const licensed = await this.licensed$.pipe(take(1)).toPromise();
+  async selected(marker: DurationMarker) {
+    const duration = { from: marker.from, to: marker.to };
     const avails = { ...this.availsForm.value, duration };
 
-    for (const marker of licensed) {
-      const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
-      if (result) {
-        const contract = this.shell.bucketForm.get('contracts').get(result.contractIndex.toString());
-        const term = contract.get('terms').get(result.termIndex.toString());
-        term.setValue({ ...term.value, ...avails });
-      } else {
-        this.shell.bucketForm.addDuration(avails, { ...marker, ...duration });
-      }
+    const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
+    if (result) {
+      const { contractIndex, termIndex } = result;
+      const contract = this.shell.bucketForm.get('contracts').at(contractIndex);
+      const term = contract.get('terms').at(termIndex);
+      term.setValue({ ...term.value, ...avails });
+    } else {
+      this.shell.bucketForm.addDuration(avails, marker);
     }
+
+    this.snackbar.open(`Rights ${ result ? 'updated' : 'added' }`, 'Show ⇩', { duration: 5000 })
+      .onAction()
+      .subscribe(() => {
+        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+      });
   }
 }
