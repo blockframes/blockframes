@@ -64,7 +64,8 @@ export const templateIds = {
   },
   offer: {
     created: 'd-94a20b20085842f68fb2d64fe325638a'
-  }
+  },
+  test : 'd-641861f06ba94f89a8172667381ec7d2'
 }
 
 /**
