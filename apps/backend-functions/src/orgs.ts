@@ -18,6 +18,7 @@ import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { User } from '@blockframes/user/+state';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -267,6 +268,16 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: strin
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
     const mailRequest = await organizationRequestedAccessToApp(organization, data.app);
     const from = getSendgridFrom(data.app);
+    const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
+
+    const notification = createNotification({
+      toUserId: context.auth.uid,
+      organization: createPublicOrganizationDocument(organization),
+      user: createPublicUserDocument(userDocument),
+      _meta: createDocumentMeta({ createdFrom: data.app }),
+      type: 'userRequestAppAccess'
+    });
+    await triggerNotifications([notification]);
     return sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
   return;

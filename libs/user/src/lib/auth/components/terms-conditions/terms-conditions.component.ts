@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { Location } from "@angular/common";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
 import { getAppLocation } from "@blockframes/utils/helpers";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'auth-terms-conditions',
@@ -18,8 +18,8 @@ export class TermsConditionsComponent implements OnInit {
   appName: string;
 
   constructor(
-    private location: Location,
     private routerQuery: RouterQuery,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -29,6 +29,6 @@ export class TermsConditionsComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.dialog.closeAll();
   }
 }
