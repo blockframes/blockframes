@@ -5,7 +5,7 @@ import { getCurrentApp, appName, getOrgModuleAccess } from '@blockframes/utils/a
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { delay, hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
+import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -17,17 +17,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AuthDataValidationComponent implements OnInit {
   @Input() set organization(org: Organization) {
-    if (hasDenomination(org)) {
-      this.orgData = true;
-    }
-
+    this.orgData = hasDenomination(org);
     const isUserInOrg = org.userIds.includes(this.user.uid);
     const isOrgAccepted = org.status === "accepted";
-    const orgHaveAccesToAtLeastOneModule = getOrgModuleAccess(org, this.app).length ? true : false;
-
-    if (isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg) {
-      this.orgApproval = true;
-    }
+    const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
+    this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
   };
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];

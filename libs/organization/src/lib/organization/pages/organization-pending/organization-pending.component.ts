@@ -28,6 +28,7 @@ export class OrganizationPendingComponent {
   public orgActive$ = this.authQuery.user$.pipe(
     filter(user => !!user),
     switchMap(user => this.getOrgId(user)),
+    filter(orgId => !!orgId),
     switchMap(orgId => this.service.valueChanges(orgId))
   );
 
