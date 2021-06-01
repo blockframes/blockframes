@@ -48,7 +48,7 @@
 </ng-container>
 
 <section class="surface" fxLayout fxLayoutAlign="center">
-  <avails-calendar [licensedMarkers]="licensed$ | async" [soldMarkers]="sold$ | async" [selectedMarker]="selected$ | async" (selected)="selected($event)"></avails-calendar>
+  <avails-calendar [licensedMarkers]="available$ | async" [soldMarkers]="notAvailable$ | async" [selectedMarker]="selected$ | async" (selected)="selected($event)"></avails-calendar>
 
   <div *ngIf="(status$ | async) === 'INVALID'" class="overlay" fxLayoutAlign="center center">
     <article class="mat-body-2">
