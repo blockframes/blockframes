@@ -7,12 +7,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'auth-password-reset',
-  templateUrl: './password-reset.component.html',
-  styleUrls: ['./password-reset.component.scss'],
+  selector: 'auth-change-password',
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PasswordResetComponent implements OnInit, OnDestroy {
+export class ChangePasswordComponent implements OnInit, OnDestroy {
 
   public passwordForm: FormGroup;
   public actionCode: string;
