@@ -1,16 +1,6 @@
-:host-context(.light-theme) {
+.background {
   display: block;
   height: 100%;
-  background-image: url("/assets/images/light/background_404.webp");
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-:host-context(.dark-theme) {
-  display: block;
-  height: 100%;
-  background-image: url("/assets/images/dark/background_404.webp");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
