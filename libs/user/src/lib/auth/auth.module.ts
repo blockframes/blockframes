@@ -37,7 +37,7 @@ import { IdentityGuard } from './guard/identity.guard';
 import { NoAuthGuard } from './guard/no-auth.guard';
 
 export const AuthRoutes: Routes = [
-  { path: '', redirectTo: 'connexion', pathMatch: 'full' }, // @TODO (#2825) remove if not used
+  { path: '', redirectTo: 'connexion', pathMatch: 'full' },
   {
     path: 'connexion',
     canActivate: [NoAuthGuard],
@@ -48,9 +48,7 @@ export const AuthRoutes: Routes = [
     canActivate: [IdentityGuard],
     loadChildren: () => import('./pages/identity/identity.module').then(m => m.IdentityModule)
   },
-  // @TODO (#2875) rename to password-reset
   { path: 'reset-password', component: ResetPasswordComponent },
-  // @TODO (#2875) should be removed, google is doing this for us
   { path: 'change-password', component: ChangePasswordComponent }
 ];
 
