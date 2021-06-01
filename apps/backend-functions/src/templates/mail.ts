@@ -308,7 +308,7 @@ export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, mo
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
 }
 
-/** ???? */
+/** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
 export function offerCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMMM, yyyy');
   const data = { org, bucket, user: toUser, baseUrl: appUrl.content, date };
