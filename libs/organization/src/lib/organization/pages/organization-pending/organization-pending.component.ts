@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Optional } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { getCurrentApp, appName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { map, switchMap } from 'rxjs/operators';
+import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
+import { User } from '@blockframes/user/+state';
 
 const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   .where('type', '==', 'joinOrganization')
@@ -19,30 +20,30 @@ const queryFn = (uid: string) => ref => ref.where('mode', '==', 'request')
   styleUrls: ['./organization-pending.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationPendingComponent implements OnInit {
+export class OrganizationPendingComponent {
   public invitations: Invitation[];
   public org$: Observable<Organization>;
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  public user = this.authQuery.user;
-  public orgActive = this.query.getActive();
+  public orgActive$ = this.authQuery.user$.pipe(
+    filter(user => !!user),
+    switchMap(user => this.getOrgId(user)),
+    filter(orgId => !!orgId),
+    switchMap(orgId => this.service.valueChanges(orgId))
+  );
 
   constructor(
     private service: OrganizationService,
     private invitationService: InvitationService,
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
-    private query: OrganizationQuery,
     @Optional() private intercom: Intercom
   ) { }
 
-  ngOnInit() {
-    if(!this.orgActive) {
-      this.org$ = this.invitationService.valueChanges(queryFn(this.authQuery.userId)).pipe(
-        map(invitations => invitations[0].toOrg.id),
-        switchMap(orgId => this.service.valueChanges(orgId))
-      )
-    }
+  private async getOrgId(user: User) {
+    if (user.orgId) return user.orgId;
+    const invitations = await this.invitationService.getValue(queryFn(user.uid));
+    return invitations[0]?.toOrg.id;
   }
 
   public openIntercom(): void {
