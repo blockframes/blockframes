@@ -15,5 +15,11 @@
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
+    <section bgAsset="hero.png">
+      <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
+        <h2>Any questions on this Title?</h2>
+        <button mat-flat-button color="accent" (click)="openIntercom()">Contact us</button>        
+      </div>
+    </section>
   </title-marketplace-shell>
 </ng-container>
