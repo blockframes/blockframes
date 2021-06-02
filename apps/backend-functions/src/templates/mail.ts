@@ -6,7 +6,7 @@
 import { supportEmails, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from './ids';
-import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
+import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
 import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName } from '@blockframes/utils/apps';
@@ -128,25 +128,21 @@ export function userJoinedAnOrganization(toUser: UserEmailData, url: string = ap
 export function userJoinedYourOrganization(
   toUser: UserEmailData,
   org: OrgEmailData,
-  memberAdded: PublicUser):
+  userSubject: UserEmailData):
 EmailTemplateRequest {
   const data = {
     user: toUser,
     org,
-    memberAddedFirstName: memberAdded.firstName,
-    memberAddedLastName: memberAdded.lastName,
-    memberAddedEmail: memberAdded.email
+    userSubject,
   };
   return { to: toUser.email, templateId: templateIds.org.memberAdded, data };
 }
 
 /** Send email to org admins to inform them that an user declined their invitation to join his org */
-export function invitationToJoinOrgDeclined(toAdmin: UserEmailData, user: PublicUser): EmailTemplateRequest {
+export function invitationToJoinOrgDeclined(toAdmin: UserEmailData, userSubject: UserEmailData): EmailTemplateRequest {
   const data = {
     user: toAdmin,
-    userFirstName: user.firstName,
-    userLastName: user.lastName,
-    userEmail: user.email
+    userSubject,
   };
   return { to: toAdmin.email, templateId: templateIds.invitation.organization.declined, data };
 }
@@ -161,27 +157,23 @@ export function requestToJoinOrgDeclined(toUser: UserEmailData, org: OrgEmailDat
 }
 
 /** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization (toAdmin: UserEmailData, userRemoved: PublicUser, org: OrgEmailData): EmailTemplateRequest {
+export function userLeftYourOrganization (toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
   const data = {
     user: toAdmin,
-    userFirstName: userRemoved.firstName,
-    userLastName: userRemoved.lastName,
-    userEmail: userRemoved.email,
+    userSubject,
     org,
     pageURL: `${ORG_HOME}${org.id}/view/members`
   };
   return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
 }
 
-// TODO #5186 this one needs a small refactoring. It will be done mainly with the user email object creation.
 /** Generates a transactional email to let an admin knows that an user requested to join his/her org */
-export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, toAdmin: UserEmailData, org: OrgEmailData, url: string = appUrl.market): EmailTemplateRequest {
+export function userRequestedToJoinYourOrg(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData, url: string = appUrl.market): EmailTemplateRequest {
   const data = {
     user: toAdmin,
-    userFirstName: request.userFirstname,
-    userLastName: request.userLastname,
+    userSubject,
     org,
-    pageURL: `${url}${ORG_HOME}${request.organizationId}/view/members`
+    pageURL: `${url}${ORG_HOME}${org.id}/view/members`
   };
   return { to: toAdmin.email, templateId: templateIds.request.joinOrganization.created, data };
 }
@@ -206,7 +198,7 @@ export function invitationToEventFromOrg(
 /** Generate an email for org's admin when an user accepted/declined their invitation to attend one of their events */
 export function invitationToEventFromOrgUpdated(
   toAdmin: UserEmailData,
-  user: User,
+  userSubject: UserEmailData,
   userOrg: OrgEmailData,
   event: EventEmailData,
   orgId: string,
@@ -214,8 +206,7 @@ export function invitationToEventFromOrgUpdated(
 ): EmailTemplateRequest {
   const data = {
     user: toAdmin,
-    userFirstName: user.firstName,
-    userLastName: user.lastName,
+    userSubject,
     userOrg,
     event,
     eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`,
@@ -227,7 +218,7 @@ export function invitationToEventFromOrgUpdated(
 /** Generates an email for user requesting to attend an event. */
 export function requestToAttendEventFromUser(
   toAdmin: UserEmailData,
-  fromUserFirstname: string,
+  userSubject: UserEmailData,
   userOrg: OrgEmailData,
   event: EventEmailData,
   link: string,
@@ -235,7 +226,7 @@ export function requestToAttendEventFromUser(
 ): EmailTemplateRequest {
   const data = {
     user: toAdmin,
-    userFirstName: fromUserFirstname,
+    userSubject,
     org: userOrg,
     event,
     pageURL: `${url}/${link}`
