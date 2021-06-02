@@ -23,8 +23,8 @@ import { MatCardModule } from '@angular/material/card';
 
 // Component
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
-import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
 import { PrivacyPolicyModule } from './components/privacy-policy/privacy-policy.module';
@@ -37,7 +37,7 @@ import { IdentityGuard } from './guard/identity.guard';
 import { NoAuthGuard } from './guard/no-auth.guard';
 
 export const AuthRoutes: Routes = [
-  { path: '', redirectTo: 'connexion', pathMatch: 'full' }, // @TODO (#2825) remove if not used
+  { path: '', redirectTo: 'connexion', pathMatch: 'full' },
   {
     path: 'connexion',
     canActivate: [NoAuthGuard],
@@ -48,10 +48,8 @@ export const AuthRoutes: Routes = [
     canActivate: [IdentityGuard],
     loadChildren: () => import('./pages/identity/identity.module').then(m => m.IdentityModule)
   },
-  // @TODO (#2875) rename to password-reset
-  { path: 'email-verification', component: EmailVerificationComponent },
-  // @TODO (#2875) should be removed, google is doing this for us
-  { path: 'password-reset', component: PasswordResetComponent }
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'change-password', component: ChangePasswordComponent }
 ];
 
 @NgModule({
@@ -86,8 +84,8 @@ export const AuthRoutes: Routes = [
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [
-    EmailVerificationComponent,
-    PasswordResetComponent
+    ResetPasswordComponent,
+    ChangePasswordComponent
   ],
 })
 export class AuthModule { }

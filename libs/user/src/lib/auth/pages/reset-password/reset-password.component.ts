@@ -4,12 +4,12 @@ import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'auth-email-verification',
-  templateUrl: './email-verification.component.html',
-  styleUrls: ['./email-verification.component.scss'],
+  selector: 'auth-reset-password',
+  templateUrl: './reset-password.component.html',
+  styleUrls: ['./reset-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmailVerificationComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit {
   public emailForm: FormGroup;
   public submitted = false;
 
