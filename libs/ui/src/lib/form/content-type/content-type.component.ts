@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 import { contentType, ContentType } from '@blockframes/utils/static-model';
 
 @Component({
-  selector: '[form] form-format',
-  templateUrl: './format.component.html',
-  styleUrls: ['./format.component.scss'],
+  selector: '[form] form-content-type',
+  templateUrl: './content-type.component.html',
+  styleUrls: ['./content-type.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFormatComponent implements OnInit {
+export class FormContentTypeComponent implements OnInit {
   @Input() form: FormStaticValue<'contentType'>;
 
   contentType = contentType;
@@ -34,8 +34,8 @@ export class FormFormatComponent implements OnInit {
     }
   }
 
-  private _filter(format: string) {
-    const filterValue = format.toLowerCase();
+  private _filter(type: string) {
+    const filterValue = type.toLowerCase();
     return this.contentTypes.filter(contentType => contentType.toLowerCase().indexOf(filterValue) === 0) as ContentType[]
   }
 }
