@@ -7,13 +7,15 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
-import { copyFirestoreExportFromCiBucket, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI } from "@blockframes/firebase-utils";
+import { awaitProcessExit, copyFirestoreExportFromCiBucket, defaultEmulatorBackupPath, firebaseEmulatorExec, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode } from './tools';
+import { startEmulators } from './emulator';
+import { resolve } from 'path';
 const { storageBucket } = firebase();
 
 export async function prepareForTesting() {
@@ -50,6 +52,57 @@ export async function prepareForTesting() {
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
 
+  insurance(); // Switch off maintenance insurance
+}
+export async function prepareEmulators() {
+  const proc = await firebaseEmulatorExec({
+    emulators: ['auth', 'functions', 'firestore', 'storage'],
+    importPath: defaultEmulatorBackupPath,
+    exportData: true
+  })
+  console.log('here')
+  const { storage, db, auth } = loadAdminServices({emulator: true});
+  const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
+
+  try {
+    await db.collection('_META').doc('_MAINTENANCE').set({ random: 'data' });
+    // await auth.createUser({ email: 'hello@hello.com', password: 'testtetetet' });
+    // await storage.bucket('default').create();
+    await storage.bucket('default-bucket').upload(resolve('./.env'), { destination: '/txt.env' });
+  } catch (e) {
+    console.log(e)
+  }
+  // console.log('Copying AnonDb from CI...');
+  // await copyFirestoreExportFromCiBucket();
+  // console.log('Copied!');
+
+  // console.log('Clearing Firestore db and importing latest anonymized db...');
+  // await importFirestore(latestAnonDbDir);
+  // console.log('DB imported!');
+
+  // console.info('Syncing users from db...');
+  // await syncUsers(null, db, auth);
+  // console.info('Users synced!');
+
+  // console.info('Syncing storage with blockframes-ci...');
+  // await restoreAnonStorageFromCI();
+  // console.info('Storage synced!');
+
+  // console.info('Preparing database & storage by running migrations...');
+  // await migrate({ db, storage, withBackup: false });
+  // console.info('Migrations complete!');
+
+  // console.info('Generating fixtures...');
+  // await generateFixtures();
+  // console.info('Fixtures generated in: tools/fixtures/*.json');
+
+  // console.info('Preparing Algolia...');
+  // await upgradeAlgoliaOrgs();
+  // await upgradeAlgoliaMovies();
+  // await upgradeAlgoliaUsers();
+  // console.info('Algolia ready for testing!');
+
+  await awaitProcessExit(proc);
   insurance(); // Switch off maintenance insurance
 }
 

@@ -24,6 +24,8 @@ import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
 
+console.log('Function instance loaded');
+
 
 //--------------------------------
 //    Users Management          //

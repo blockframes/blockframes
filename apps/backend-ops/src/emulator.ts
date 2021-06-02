@@ -1,8 +1,6 @@
 import {
   shutdownEmulator,
   importFirestoreEmulatorBackup,
-  startFirestoreEmulatorWithImport,
-  connectEmulator,
   defaultEmulatorBackupPath,
   runAnonymization,
   getLatestFolderURL,
@@ -16,7 +14,9 @@ import {
   getBackupBucket,
   CI_STORAGE_BACKUP,
   latestAnonStorageDir,
-  gsutilTransfer
+  gsutilTransfer,
+  awaitProcessExit,
+  firebaseEmulatorExec
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
 import { join } from 'path';
@@ -27,6 +27,7 @@ import { migrate } from './migrations';
 import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
+import { resolve } from 'path';
 
 /**
  * This function will download the Firestore backup from specified bucket, import it into
@@ -42,8 +43,12 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
-    proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
-    await new Promise(() => { void 0; });
+    proc = await firebaseEmulatorExec({
+      emulators: 'firestore',
+      importPath: defaultEmulatorBackupPath,
+      exportData: true,
+    });
+    await awaitProcessExit(proc);
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;
@@ -64,8 +69,24 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
   let proc: ChildProcess;
   try {
-    proc = await startFirestoreEmulatorWithImport(emulatorPath);
-    await new Promise(() => { void 0; });
+    proc = await firebaseEmulatorExec({ emulators: 'firestore', importPath: emulatorPath, exportData: true });
+    await awaitProcessExit(proc);
+  } catch (e) {
+    await shutdownEmulator(proc)
+    throw e;
+  }
+}
+
+export async function startEmulators({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom :'defaultImport' }) {
+  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
+  let proc: ChildProcess;
+  try {
+    proc = await firebaseEmulatorExec({
+      emulators: ['auth', 'functions', 'firestore', 'storage'],
+      importPath: emulatorPath,
+      exportData: true
+    })
+    await awaitProcessExit(proc);
   } catch (e) {
     await shutdownEmulator(proc)
     throw e;
@@ -103,7 +124,7 @@ export async function downloadProdDbBackup(localPath?: string) {
  * This function will run db anonymization on a locally running Firestore emulator database
  */
 export async function anonDbProcess() {
-  const db = connectEmulator();
+  const db = loadAdminServices({ emulator: true }).db;
   const { getCI, storage, auth } = loadAdminServices();
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
@@ -147,7 +168,11 @@ export async function anonDbProcess() {
  */
 export async function anonymizeLatestProdDb() {
   await downloadProdDbBackup(defaultEmulatorBackupPath);
-  const proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
+  const proc = await firebaseEmulatorExec({
+    emulators: 'firestore',
+    importPath: defaultEmulatorBackupPath,
+    exportData: true,
+  });
   try {
     await anonDbProcess();
   } finally {
@@ -178,12 +203,16 @@ export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?:
  */
 export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
-  let proc: ChildProcess;
+  let emulatorProcess: ChildProcess;
   try {
-    proc = await startFirestoreEmulatorWithImport(emulatorPath);
-    const db = connectEmulator();
+    emulatorProcess = await firebaseEmulatorExec({
+      emulators: 'firestore',
+      importPath: emulatorPath,
+      exportData: true,
+    });
+    const db = loadAdminServices({ emulator: true }).db;
     startMaintenance(db);
   } finally {
-    await shutdownEmulator(proc);
+    await shutdownEmulator(emulatorProcess);
   }
 }
