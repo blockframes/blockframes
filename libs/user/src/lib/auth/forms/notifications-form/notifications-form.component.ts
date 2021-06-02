@@ -22,7 +22,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   oneDayReminder: { text: 'REMINDER - An event you\'re attending will start in 24 hours. (RECOMMENDED)', tooltip: false },
   invitationToAttendEventUpdated: { text: 'A user answers your invitation to an event you\'re organizing.', tooltip: false },
   requestToAttendEventUpdated: { text: 'Your request to join an event gets accepted or declined.', tooltip: false },
-  requestToAttendEventCreated: { text: 'An user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
+  requestToAttendEventCreated: { text: 'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
   offerCreatedConfirmation: { text: 'You send an offer', tooltip: false }
