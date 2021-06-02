@@ -74,32 +74,40 @@ export class AvailsCalendarComponent implements OnInit {
   }
 
   updateMatrix() {
+
+    // set available/sold/selected blocks into the stateMatrix (this will display the colored rectangles)
     let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
     if (this._availableMarkers.length) matrix = markersToMatrix(this._availableMarkers, this.stateMatrix, 'available');
     if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
     if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
     this.stateMatrix = matrix;
 
+    // update inner state (hover/highlight/etc...)
     const currentState = this.state$.getValue();
-    const resetedHighlight = resetHighlight(currentState);
-    const newState = createAvailCalendarState({ highlightedRange: resetedHighlight.highlightedRange });
+    const { highlightedRange } = resetHighlight(currentState);
+    const newState = createAvailCalendarState({ highlightedRange });
     newState.selectionState = 'waiting';
 
+    // if no current selection: reset the selection
     if (!this._selectedMarker) {
       newState.start = { row: undefined, column: undefined };
       newState.end = { row: undefined, column: undefined };
       const resetState = reset(newState);
       this.state$.next(resetState);
-      return;
+
+    // if there is a current selection: set the selection into the calendar inner state
+    } else {
+      // compute selection start & end position
+      const selectionStart = dateToMatrixPosition(this._selectedMarker.from);
+      const selectionEnd = dateToMatrixPosition(this._selectedMarker.to);
+
+      // "simulate" user click
+      const newSelectStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, newState);
+      const newSelectStateEnd = select(selectionEnd.row, selectionEnd.column, this.stateMatrix, newSelectStateStart);
+      const newSelectState = highlightRange(selectionStart, selectionEnd, this.stateMatrix, newSelectStateEnd);
+
+      this.state$.next(newSelectState);
     }
-
-    const selectionStart = dateToMatrixPosition(this._selectedMarker.from);
-    const selectionEnd = dateToMatrixPosition(this._selectedMarker.to);
-
-    const newSelectStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, newState);
-    const newSelectStateEnd = select(selectionEnd.row, selectionEnd.column, this.stateMatrix, newSelectStateStart);
-    const newSelectState = highlightRange(selectionStart, selectionEnd, this.stateMatrix, newSelectStateEnd);
-    this.state$.next(newSelectState);
   }
 
   onHover(row: number, column: number) {
