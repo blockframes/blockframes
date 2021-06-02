@@ -217,7 +217,7 @@
                 "command": "npx nx build backend-functions --watch"
               },
               {
-                "command": "npx cross-env firebase -P $PROJECT_ID functions:config:get > .runtimeconfig.json && npm run backend-ops startEmulators"
+                "command": "npm run backend-ops startEmulators"
               }
             ],
             "parallel": true,
