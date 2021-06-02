@@ -9,7 +9,7 @@ import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
-import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -232,10 +232,10 @@ export const createUser = async (data: { email: string, orgEmailData: OrgEmailDa
 
   try {
     const newUser = await createUserFromEmail(email, app);
-
+    const toUser = getUserEmailData(newUser.user, newUser.password);
     const urlToUse = applicationUrl[app];
 
-    const template = userInvite(email, newUser.password, orgEmailData, urlToUse);
+    const template = userInvite(toUser, orgEmailData, urlToUse);
     await sendMailFromTemplate(template, app);
 
     return newUser.user;

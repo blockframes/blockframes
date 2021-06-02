@@ -8,7 +8,7 @@ import { templateIds } from '../templates/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
-import { EventEmailData, getOrgEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 
 interface UserProposal {
@@ -34,6 +34,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
   } catch {
     try {
       const newUser = await createUserFromEmail(email, app);
+      const toUser = getUserEmailData(newUser.user, newUser.password);
 
       // User does not exists, send him an email.
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
@@ -42,7 +43,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
 
       const templateId = templateIds.user.credentials[invitationType];
 
-      const template = userInvite(email, newUser.password, orgEmailData, urlToUse, templateId, eventData);
+      const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
       return newUser.user;
     } catch (e) {
