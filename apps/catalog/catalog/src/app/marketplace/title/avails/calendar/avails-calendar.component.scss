@@ -11,9 +11,12 @@ li {
 section {
   position: relative;
   margin-bottom: 24px;
+  max-width: 760px;
+  overflow: auto;
 
   avails-calendar {
-    margin: 32px 0;
+    width: 100%;
+    margin: 32px 24px;
   }
 
   .overlay {

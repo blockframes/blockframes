@@ -45,18 +45,22 @@ export class MarketplaceMovieAvailsCalendarComponent {
     map(([avails, bucket]) => getDurations(this.shell.movie.id, avails, bucket, 'exact')[0]),
   );
 
-  public notAvailable$ = combineLatest([
-    this.mandates$,
-    this.salesTerms$,
+  public inSelection$: Observable<DurationMarker[]> = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
   ]).pipe(
+    map(([avails, bucket]) => getDurations(this.shell.movie.id, avails, bucket, 'in')),
+  );
+
+  public sold$ = combineLatest([
+    this.mandates$,
+    this.salesTerms$,
+    this.availsForm.value$,
+  ]).pipe(
     filter(() => this.availsForm.valid),
-    map(([mandates, salesTerms, avails, bucket]) => {
-      const alreadySelected = getDurations(this.shell.movie.id, avails, bucket, 'in');
+    map(([mandates, salesTerms, avails]) => {
       const soldTerms = getSoldTerms(avails, salesTerms);
-      const flattenTerms = soldTerms.map(term => toDurationMarker(mandates, term)).flat();
-      return [ ...alreadySelected, ...flattenTerms ];
+      return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
     })
   );
 
