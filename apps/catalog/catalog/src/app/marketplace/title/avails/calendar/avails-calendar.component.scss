@@ -1,9 +1,22 @@
+
+li {
+  display: inline-block;
+  margin-left: 16px;
+
+  svg {
+    margin-right: 4px;
+  }
+}
+
 section {
   position: relative;
   margin-bottom: 24px;
+  overflow-x: auto;
 
   avails-calendar {
-    margin: 32px 0;
+    display: block;
+    width: 760px;
+    margin: 32px 24px;
   }
 
   .overlay {

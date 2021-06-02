@@ -6,6 +6,9 @@ export const templateIds = {
     // Template for welcome message when user created his account by himself
     welcomeMessage: 'd-fc05a8cf5b1548ebae9ca44247a6c256',
 
+    // Template for informing user who request access app
+    appAccessRequest: 'd-a740796b97bf403292b3940804977bbe',
+
     // Template for sending the verify email
     verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
     resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
