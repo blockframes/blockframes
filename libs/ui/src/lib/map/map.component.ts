@@ -59,7 +59,7 @@ export class MapFeature {
   // eslint-disable-next-line
   @Output() mouseout = new EventEmitter();
   // eslint-disable-next-line
-  @Output() click = new EventEmitter();
+  @Output() click = new EventEmitter(true);
 }
 
 @Component({

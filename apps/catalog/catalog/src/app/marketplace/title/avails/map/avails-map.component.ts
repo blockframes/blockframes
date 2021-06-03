@@ -96,10 +96,6 @@ export class MarketplaceMovieAvailsMapComponent {
     private shell: MarketplaceMovieAvailsComponent,
   ) { }
 
-  public trackByTag<T>(tag: T) {
-    return tag;
-  }
-
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
     this.hoveredTerritory = { name: territory, status }
