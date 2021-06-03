@@ -33,6 +33,9 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 
 let index = 0;
+/**
+ * Comments "// LETTER(S)" refers to the column index in the spreadsheet file
+ */
 const fields = {
   internationalTitle: { // A
     multiLine: false,
