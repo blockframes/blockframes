@@ -23,6 +23,10 @@
       align-items: start;
       margin: 8px;
 
+      button.mat-icon-button {
+        margin-right: 8px;
+      }
+
       div {
         span {
           font-weight: bold;
