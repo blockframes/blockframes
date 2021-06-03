@@ -5,7 +5,7 @@
 
   <mat-card>
     <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
-      <ng-container *ngIf="orgActive">
+      <ng-container *ngIf="orgActive$ | async as active">
         <p class="mat-body-2">
           We care about security on the Cascade8 applications.
           Please validate your email to help us authenticate you.
@@ -14,18 +14,7 @@
         </p>
         <p class="mat-body-2">Feel free to <a [routerLink]="['./']" (click)="openIntercom()"
             class="text-primary">contact us</a> if you have any questions.</p>
-        <auth-data-validation [organization]="orgActive"></auth-data-validation>
-      </ng-container>
-
-      <ng-container *ngIf="(org$ | async) as org">
-        <p class="mat-body-2">
-          We care about security on the Cascade8 applications.
-          Please validate your email to help us authenticate you and wait for the {{ org.denomination.full }} team
-          to answer your request to join their activity on {{ appName }}.
-        </p>
-        <p class="mat-body-2">Feel free to <a [routerLink]="['./']" (click)="openIntercom()"
-            class="text-primary">contact us</a> if you have any questions.</p>
-        <auth-data-validation [organization]="org"></auth-data-validation>
+        <auth-data-validation [organization]="active"></auth-data-validation>
       </ng-container>
 
     </mat-card-content>

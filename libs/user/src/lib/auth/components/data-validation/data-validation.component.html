@@ -34,11 +34,11 @@
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Click the link provided in your verification email.">
       </mat-icon>
     </div>
-    <ng-container *ngIf="emailValidate$ | async notValid">
+    <ng-container *ngIf="emailValidate$ | async; else notValid">
       <mat-icon svgIcon="check_circle" color="primary"></mat-icon>
     </ng-container>
     <ng-template #notValid>
-      <mat-icon class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page."></mat-icon>
+      <mat-icon class="refresh-icon" color="primary" (click)="resendEmailVerification()" svgIcon="resend_email" matTooltip="Resend verification email."></mat-icon>
     </ng-template>
   </article>
 

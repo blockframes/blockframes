@@ -1,9 +1,9 @@
 <mat-form-field appearance="outline">
-  <mat-label>Format</mat-label>
+  <mat-label>Content Type</mat-label>
   <input type="text" matInput [formControl]="form" [matAutocomplete]="auto"
     name="contentType">
   <mat-error *ngIf="form.hasError('invalidValue')">
-    Please select one of suggested formats.
+    Please select one of suggested content types.
   </mat-error>
   <mat-hint>
     <ng-content select="mat-hint"></ng-content>
@@ -12,7 +12,7 @@
 
 
 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-  <mat-option *ngFor="let format of filteredTypes$ | async" [value]="format">
-    {{ contentType[format] }}
+  <mat-option *ngFor="let type of filteredTypes$ | async" [value]="type">
+    {{ contentType[type] }}
   </mat-option>
 </mat-autocomplete>
