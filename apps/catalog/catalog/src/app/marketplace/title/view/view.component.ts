@@ -50,10 +50,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.orgs$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds);
   }
 
-  navigateToAvails(titleId: string) {
-    this.router.navigate(['/c/o/marketplace/title', titleId, 'avails']);
-  }
-
   public openIntercom(): void {
     return this.intercom.show();
   }
