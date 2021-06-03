@@ -1,13 +1,25 @@
 section {
   display: block;
   height: 100%;
-  background-position: center;
-  background-size: contain;
+  background-position: center center;
+  background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-mat-card {
-  max-width: 400px;
+article {
+  max-width: 600px;
   margin-left:auto;
   margin-right:auto;
+  position: relative;
+  top: 120px;
+  span {
+      margin-bottom: 0;
+      font-size: 20px;
+      color: #666b81;
+      font-weight: bold;
+    }
+  p {
+    margin: 0;
+  }
 }
