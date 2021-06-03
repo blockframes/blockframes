@@ -51,9 +51,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   navigateToAvails(titleId: string) {
-    this.router.navigate(['/c/o/marketplace/title', titleId, 'avails']).then(() => {
-      document.querySelector('#avails')?.scrollIntoView({ behavior: 'smooth' });
-    })
+    this.router.navigate(['/c/o/marketplace/title', titleId, 'avails']);
   }
 
   public openIntercom(): void {
