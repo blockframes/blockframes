@@ -134,8 +134,10 @@ service cloud.firestore {
         && isRequestFieldValueEqualToOrNotSetted(['id'], invitationId)
         && notInMaintenance();
     	allow update: if  (
-      	isOnlyChangingInvitationWatchTime()
-        || isOnlyChangingInvitationStatus()
+        isNotUpdatingCommonInvitationFields() && (
+          isOnlyChangingInvitationWatchTime()
+          || isOnlyChangingInvitationStatus()
+        )
       ) && notInMaintenance();
       allow delete: if isInvitationSender()
         && notInMaintenance();
@@ -178,32 +180,30 @@ service cloud.firestore {
     }
 
     function isOnlyChangingInvitationStatus() {
-      return isInvitationRecepient()
-        &&
-        (
-          isNotUpdatingId('id', existingData().id)
-          && isNotUpdatingField(['mode'])
-          && isNotUpdatingField(['fromOrg', 'id'])
-          && isNotUpdatingField(['fromUser', 'uid'])
-          && isNotUpdatingField(['toOrg', 'id'])
-          && isNotUpdatingField(['toUser', 'uid'])
-          && isNotUpdatingField(['docId'])
-        );
+      return (
+        isInvitationRecepient()
+        && isNotUpdatingField(['watchTime'])
+      );
     }
 
     function isOnlyChangingInvitationWatchTime() {
       return (
         existingData().type == 'attendEvent'
-        && isNotUpdatingId('id', existingData().id)
+        && isNotUpdatingField(['status'])
+    	);
+    }
+
+    function isNotUpdatingCommonInvitationFields() {
+      return ( 
+        isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['mode'])
         && isNotUpdatingField(['fromOrg', 'id'])
         && isNotUpdatingField(['fromUser', 'uid'])
         && isNotUpdatingField(['toOrg', 'id'])
         && isNotUpdatingField(['toUser', 'uid'])
-        && isNotUpdatingField(['docId'])
-        && isNotUpdatingField(['status'])
+        && isNotUpdatingField(['eventId'])
         && isNotUpdatingField(['type'])
-    	);
+      );
     }
 
 
