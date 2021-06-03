@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Optional } from "@angular/core";
+import { Location } from '@angular/common';
 import { getCurrentApp } from "@blockframes/utils/apps";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'auth-privacy-policy',
@@ -11,12 +12,18 @@ import { MatDialog } from "@angular/material/dialog";
 })
 
 export class PrivacyPolicyComponent {
-  appName: string;
-  constructor(private routerQuery: RouterQuery, private dialog: MatDialog) {
-    this.appName = getCurrentApp(this.routerQuery);
-  }
+  appName = getCurrentApp(this.routerQuery);
+  constructor(
+    private routerQuery: RouterQuery,
+    private location: Location,
+    @Optional() private ref?: MatDialogRef<unknown>
+  ) {}
 
   goBack() {
-    this.dialog.closeAll();
+    if (this.ref) {
+      this.ref.close();
+    } else {
+      this.location.back();
+    }
   }
 }
