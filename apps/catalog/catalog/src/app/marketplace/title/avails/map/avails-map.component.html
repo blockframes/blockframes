@@ -59,27 +59,27 @@
   </ng-container>
 
   <!-- MAP LAYERS -->
-  <ng-container *ngFor="let tag of (available$ | async); trackBy: trackByTag">
+  <ng-container *ngFor="let tag of (available$ | async);">
     <map-feature [tag]="tag.isoA3" color="#7795ff"
       (click)="addTerritory(tag)"
       (mouseover)="displayTerritoryTooltip(tag.label, 'Available')"
       (mouseout)="clearTerritoryTooltip()">
     </map-feature>
   </ng-container>
-  <ng-container *ngFor="let tag of (sold$ | async); trackBy: trackByTag">
+  <ng-container *ngFor="let tag of (sold$ | async); ">
     <map-feature [tag]="tag.isoA3" color="#9ca3c4"
       (mouseover)="displayTerritoryTooltip(tag.label, 'Rights sold')"
       (mouseout)="clearTerritoryTooltip()">
     </map-feature>
   </ng-container>
-  <ng-container *ngFor="let tag of (selected$ | async); trackBy: trackByTag">
+  <ng-container *ngFor="let tag of (selected$ | async);">
     <map-feature [tag]="tag.isoA3" color="#1a49f5"
       (click)="removeTerritory(tag)"
       (mouseover)="displayTerritoryTooltip(tag.label, 'Selected')"
       (mouseout)="clearTerritoryTooltip()">
     </map-feature>
   </ng-container>
-  <ng-container *ngFor="let tag of (inSelection$ | async); trackBy: trackByTag">
+  <ng-container *ngFor="let tag of (inSelection$ | async);">
     <map-feature [tag]="tag.isoA3" color="#1a49f5"
       (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')"
       (mouseout)="clearTerritoryTooltip()">
