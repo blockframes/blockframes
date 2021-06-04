@@ -1,3 +1,5 @@
+@import '~@angular/flex-layout/mq';
+
 section {
   display: block;
   height: 100%;
@@ -8,18 +10,22 @@ section {
 }
 
 article {
-  max-width: 600px;
-  margin-left:auto;
-  margin-right:auto;
-  position: relative;
-  top: 120px;
-  span {
-      margin-bottom: 0;
-      font-size: 20px;
-      color: #666b81;
-      font-weight: bold;
-    }
-  p {
-    margin: 0;
+  max-width: 400px;
+  margin: auto;
+  position: sticky;
+  top: 5%;
+  right: 50%;
+  h3 {
+    margin-bottom: 0;
+  }
+}
+
+@include layout-bp(lt-md) {
+  section {
+    display: block;
+    height: 100%;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }
