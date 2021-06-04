@@ -78,7 +78,7 @@ describe('Invitation Rules Tests', () => {
         ['fromUser', { uid: 'uid-user3' }],
         ['toOrg', { id: 'O008' }],
         ['toUser', { uid: 'uid-sAdmin' }],
-        ['docId', 'I002'],
+        ['eventId', 'I002'],
       ];
       test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const inviteRef = db.doc(`invitations/${existInviteId}`);
