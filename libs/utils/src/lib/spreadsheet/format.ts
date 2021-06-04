@@ -359,18 +359,8 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
 }
 
 export function formatAudienceGoals(audience: { goals: string, targets: string }[]) {
-  const goals = [];
-  const targets = [];
-  audience.forEach(a => {
-    if (a.goals) {
-      const goalKey = getKeyIfExists('socialGoals', a.goals);
-      if (goalKey) {
-        goals.push(goalKey);
-      }
-    }
-    if (a.targets) targets.push(a.targets);
-  });
-
+  const goals = audience.filter(a => a.goals).map(a => getKeyIfExists('socialGoals', a.goals)).filter(g => !!g);
+  const targets = audience.filter(a => a.targets).map(a => a.targets);
   return createAudienceGoals({ targets, goals });
 }
 
