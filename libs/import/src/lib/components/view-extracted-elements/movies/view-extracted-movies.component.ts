@@ -151,7 +151,7 @@ const fields = {
     index: index++
   },
   keywords: { // AI
-    multiLine: false,
+    multiLine: true,
     index: index++
   },
   producers: {
@@ -436,7 +436,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       movie.logline = this.mapping.logline;
 
       // POSITIONING (Positioning)
-      movie.audience = formatAudienceGoals(this.mapping.audience, importErrors);
+      movie.audience = formatAudienceGoals(this.mapping.audience);
 
       // SALES PITCH (Description)
       movie.promotional.salesPitch.description = this.mapping.salesPitch;
@@ -741,7 +741,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (!movie.audience) {
+    if (movie.audience.goals.length === 0 && movie.audience.targets.length === 0) {
       errors.push({
         type: 'warning',
         field: 'movie.audience',

@@ -358,22 +358,10 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
 
 }
 
-export function formatAudienceGoals(audience: {goals: string, targets: string[]}[], state: MovieImportState) {
-  const movieGoals = [];
-  const movieTargets = [];
-  audience.map(a => {
-    let goalKey;
-    if (a.goals) {
-      goalKey = getKeyIfExists('socialGoals', a.goals);
-      movieGoals.push(goalKey);
-    }
-    if (a.targets) movieTargets.push(a.targets);
-  })
-  const movieAudience = createAudienceGoals({ targets: movieTargets});
-  if (movieGoals.length) {
-    movieAudience.goals = movieGoals;
-    return movieAudience;
-  }
+export function formatAudienceGoals(audience: { goals: string, targets: string }[]) {
+  const goals = audience.filter(a => a.goals).map(a => getKeyIfExists('socialGoals', a.goals)).filter(g => !!g);
+  const targets = audience.filter(a => a.targets).map(a => a.targets);
+  return createAudienceGoals({ targets, goals });
 }
 
 export function formatReview(reviews: { filmCriticName: string, revue: string, link: string, quote: string }[]) {

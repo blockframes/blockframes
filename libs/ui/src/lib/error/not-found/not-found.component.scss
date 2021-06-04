@@ -1,13 +1,14 @@
-section {
-  display: block;
+@import '~@angular/flex-layout/mq';
+:host {
   height: 100%;
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
 }
 
-mat-card {
-  max-width: 400px;
-  margin-left:auto;
-  margin-right:auto;
+section {
+  height: 100%;
+  background-position: left;
+  background-size: cover;
+}
+
+article {
+  margin-top: 72px;
 }
