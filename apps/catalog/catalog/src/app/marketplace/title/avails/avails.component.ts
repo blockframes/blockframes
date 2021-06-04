@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { filter, switchMap } from 'rxjs/operators';
-import { of, ReplaySubject, Subscription } from 'rxjs';
+import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
@@ -29,6 +29,7 @@ import { ExplanationComponent } from './explanation/explanation.component';
 export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
   private fragSub: Subscription;
+  private paramsSub: Subscription;
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -89,12 +90,21 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   ngAfterViewInit() {
     this.fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
       document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
-    })
+    });
+
+    this.paramsSub = combineLatest([
+      this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
+      this.bucketQuery.selectActive().pipe(filter(bucket => !!bucket))
+    ]).subscribe(([ params, bucket ]) => {
+      const term = bucket.contracts[params.contract].terms[params.term];
+      this.edit(term);
+    });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
     this.fragSub.unsubscribe();
+    this.paramsSub.unsubscribe();
   }
 
   private async init() {
@@ -154,12 +164,12 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   edit({ exclusive, duration, medias, territories }: BucketTerm) {
     const mode = this.router.url.split('/').pop();
 
-    if (mode === 'map') {
+    if (mode.includes('map')) {
       this.bucketForm.patchValue({}); // Force observable to reload
       this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
     }
 
-    if (mode === 'calendar') {
+    if (mode.includes('calendar')) {
       this.avails.calendarForm.patchValue({ exclusive, medias, territories });
     }
 
