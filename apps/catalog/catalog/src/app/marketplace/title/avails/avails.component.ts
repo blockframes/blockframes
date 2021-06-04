@@ -27,9 +27,7 @@ import { ExplanationComponent } from './explanation/explanation.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
-  private sub: Subscription;
-  private fragSub: Subscription;
-  private paramsSub: Subscription;
+  private subs: Subscription[] = [];
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -80,31 +78,31 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private orgService: OrganizationService,
     private contractService: ContractService,
   ) {
-    this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
+    const sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
+    this.subs.push(sub);
     this.init();
   }
 
   ngAfterViewInit() {
-    this.fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
+    const fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
       document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
     });
 
-    this.paramsSub = combineLatest([
+    const paramsSub = combineLatest([
       this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
       this.bucketQuery.selectActive().pipe(filter(bucket => !!bucket))
     ]).subscribe(([ params, bucket ]) => {
       const term = bucket.contracts[params.contract].terms[params.term];
       this.edit(term);
     });
+    this.subs.push(fragSub, paramsSub)
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
-    this.fragSub.unsubscribe();
-    this.paramsSub.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   private async init() {
