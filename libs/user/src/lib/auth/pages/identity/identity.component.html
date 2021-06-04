@@ -5,9 +5,9 @@
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>Create your account</h1>
     <p>Please fill in the form below to join the {{ appName }} platform</p>
-    <ng-container *ngIf="(user$ | async) === (null || undefined)">
+    <ng-container *ngIf="(user$ | async) === null">
       <p class="mat-body-2 text-primary">
-        Already have an account? <a routerLink="/auth/connexion">Log in here</a>
+        Already have an account? <a class="login-link" routerLink="/auth/connexion">Log in here</a>
       </p>
     </ng-container>
     <mat-card fxLayout="column" fxLayoutAlign="center center">
