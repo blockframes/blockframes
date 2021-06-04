@@ -436,7 +436,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       movie.logline = this.mapping.logline;
 
       // POSITIONING (Positioning)
-      movie.audience = formatAudienceGoals(this.mapping.audience, importErrors);
+      movie.audience = formatAudienceGoals(this.mapping.audience);
 
       // SALES PITCH (Description)
       movie.promotional.salesPitch.description = this.mapping.salesPitch;
