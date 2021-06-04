@@ -361,7 +361,7 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
 export function formatAudienceGoals(audience: { goals: string, targets: string }[]) {
   const goals = [];
   const targets = [];
-  audience.map(a => {
+  audience.forEach(a => {
     if (a.goals) {
       const goalKey = getKeyIfExists('socialGoals', a.goals);
       if (goalKey) {
