@@ -31,6 +31,11 @@ table {
     background-color: var(--foreground-disabled-text);
   }
 
+  .selected {
+    cursor: default;
+    background-color: var(--primary-lighter);
+  }
+
   .highlighted {
     position: absolute;
     top: 0;

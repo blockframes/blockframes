@@ -17,7 +17,9 @@
 
     <section>
       <h2>Please select a currency</h2>
-      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies"></static-select>
+      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies">
+        <mat-label>Currency</mat-label>
+      </static-select>
     </section>
 
     <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
@@ -60,7 +62,7 @@
               {{ exclusive ? 'Yes' : 'No' }}
             </ng-template>
             <ng-template colAction="action" label="Actions" let-termIndex="index">
-              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" matTooltip="Edit">
+              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: termIndex }" matTooltip="Edit">
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
               <button mat-icon-button (click)="removeTerm(i, termIndex)" matTooltip="Delete">
