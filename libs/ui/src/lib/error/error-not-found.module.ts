@@ -4,6 +4,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { Routes, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 export const errorRoutes: Routes = [
   { path: '', component: NotFoundComponent},
@@ -14,6 +15,7 @@ export const errorRoutes: Routes = [
     CommonModule,
     MatCardModule,
     ImageModule,
+    FlexLayoutModule,
     RouterModule.forChild(errorRoutes)
   ],
   declarations: [NotFoundComponent],

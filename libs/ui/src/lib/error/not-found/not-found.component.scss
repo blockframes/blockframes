@@ -1,31 +1,14 @@
 @import '~@angular/flex-layout/mq';
+:host {
+  height: 100%;
+}
 
 section {
-  display: block;
   height: 100%;
-  background-position: center center;
+  background-position: left;
   background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
 article {
-  max-width: 400px;
-  margin: auto;
-  position: sticky;
-  top: 5%;
-  right: 50%;
-  h3 {
-    margin-bottom: 0;
-  }
-}
-
-@include layout-bp(lt-md) {
-  section {
-    display: block;
-    height: 100%;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
+  margin-top: 72px;
 }
