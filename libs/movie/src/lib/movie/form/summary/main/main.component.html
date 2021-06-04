@@ -8,6 +8,10 @@
   </h6>
   <ul>
     <li>
+      <strong>Production Status </strong>
+      <missing-control test-id="production-status" [control]="movie.get('productionStatus')" [link]="productionLink"></missing-control>
+    </li>
+    <li>
       <strong>International Title </strong>
       <missing-control test-id="international-title" [control]="title.get('international')" [link]="link"
         fragment="reference"></missing-control>
@@ -45,7 +49,7 @@
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [ref]="movie.poster.value"><strong> Poster Image </strong></bf-preview-modal>
       <!-- test-id="poster-image" -->
-      <missing-control [control]="movie.poster.storagePath" [link]="link">
+      <missing-control [control]="movie.poster.storagePath" [link]="link" fragment="images">
         <ng-template let-poster>
           {{poster | fileName | maxLength: 30 }}
         </ng-template>
@@ -54,7 +58,7 @@
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [ref]="movie.banner.value"><strong> Film Page Banner Image </strong></bf-preview-modal>
       <!-- test-id="banner-image" -->
-      <missing-control [control]="movie.banner.storagePath" [link]="link" fragments="images">
+      <missing-control [control]="movie.banner.storagePath" [link]="link" fragment="images">
         <ng-template let-banner>
           {{ banner | fileName | maxLength: 30 }}
         </ng-template>
