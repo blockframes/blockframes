@@ -151,7 +151,7 @@ const fields = {
     index: index++
   },
   keywords: { // AI
-    multiLine: false,
+    multiLine: true,
     index: index++
   },
   producers: {
@@ -741,7 +741,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (!movie.audience) {
+    if (movie.audience.goals.length === 0 && movie.audience.targets.length === 0) {
       errors.push({
         type: 'warning',
         field: 'movie.audience',
