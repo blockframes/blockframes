@@ -16,6 +16,7 @@ export class ConfirmComponent {
           title: string,
           question: string,
           buttonName: string,
+          cancelButtonName: string,
           onConfirm?: () => void
         },
       public dialogRef: MatDialogRef<ConfirmComponent>,

@@ -1,12 +1,18 @@
-<section fxFlex fxLayout="column" fxLayoutAlign="center" fxLayoutGap="24px">
+<div fxLayout fxLayoutAlign="end">
+  <button mat-icon-button (click)="close()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</div>
+
+<section fxLayout="column" fxLayoutGap="24px">
   <div mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
     <h3>{{ data.title || "Confirm" }}</h3>
     <p>{{ data.question || "Do you confirm ?" }}</p>
   </div>
-  <div mat-dialog-actions fxLayoutAlign="center" fxLayoutGap="16px">
-    <button mat-stroked-button color="primary" (click)="close()">Cancel</button>
+  <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
     <button test-id="confirm" mat-flat-button color="primary" (click)="confirm()">
       {{ data.buttonName || "Confirm" }}
     </button>
+    <button mat-button color="primary" (click)="close()">{{ data.cancelButtonName || "Cancel" }}</button>
   </div>
 </section>
