@@ -43,7 +43,7 @@ export class ListComponent implements OnInit {
 
   filterByOrgIds(events: Event<Screening>[], orgIds: string[]) {
     if (!orgIds.length) return events;
-    return events.filter(event => orgIds.includes(event.org.id));
+    return events.filter(event => orgIds.includes(event.ownerOrgId));
   }
 
   setTitle(amount: number) {
