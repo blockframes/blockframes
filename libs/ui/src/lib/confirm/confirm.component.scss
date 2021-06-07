@@ -20,3 +20,7 @@ p {
 button {
   width: fit-content;
 }
+
+button.close {
+  aspect-ratio: 1;
+}

@@ -11,16 +11,15 @@ export class ConfirmComponent {
 
     constructor(
       @Inject(MAT_DIALOG_DATA)
-      public data:
-        {
-          title: string,
-          question: string,
-          buttonName: string,
-          cancelButtonName: string,
-          onConfirm?: () => void
-        },
+      public data: {
+        title: string,
+        question: string,
+        confirm: string,
+        cancel: string,
+        onConfirm?: () => void
+      },
       public dialogRef: MatDialogRef<ConfirmComponent>,
-      ) {}
+    ) { }
 
     public confirm() {
       if (this.data.onConfirm) {

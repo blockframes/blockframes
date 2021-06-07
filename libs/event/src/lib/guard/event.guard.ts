@@ -89,9 +89,10 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         data: {
           title: `You are about to leave this ${event.type}.`,
           question: `You might not be able to come back as its access is time-limited.`,
-          buttonName: 'Leave anyway',
-          cancelButtonName: 'Stay'
-        }
+          confirm: 'Leave anyway',
+          cancel: 'Stay',
+        },
+        autoFocus: false,
       })
       return dialogRef.afterClosed();
     }

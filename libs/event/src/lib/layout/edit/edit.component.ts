@@ -61,12 +61,13 @@ export class EventEditComponent implements OnInit {
       data: {
         title: 'Are you sure you want to delete this event ?',
         question: 'All of the invitations and requests associated to it will be deleted.',
-        buttonName: 'Delete',
+        confirm: 'Delete',
         onConfirm: () => {
           this.service.remove(this.form.value.id);
           this.router.navigate(['../..'], { relativeTo: this.route })
-        }
-      }
+        },
+      },
+      autoFocus: false,
     })
   }
 

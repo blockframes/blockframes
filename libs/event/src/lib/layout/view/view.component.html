@@ -38,7 +38,7 @@
           <ng-template #notOwner>
             <div @fade *ngIf="invitation !== undefined" fxLayout="column" fxLayoutAlign="center center">
               <invitation-action [invitation]="invitation" [event]="event"></invitation-action>
-              <ng-container *ngIf="invitation.status === 'accepted'">
+              <ng-container *ngIf="invitation?.status === 'accepted'">
                 <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
               </ng-container>
             </div>
