@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FilePreviewComponent } from './preview.component';
 
@@ -9,17 +10,22 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { ImageModule } from '../../image/directives/image.module';
 
 // Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
     CommonModule,
+    FlexLayoutModule,
 
     PdfViewerModule,
     VideoViewerModule,
     FileNameModule,
     ImageModule,
 
+    MatIconModule,
+    MatButtonModule,
     MatDialogModule
   ],
   exports: [FilePreviewComponent],
