@@ -1,5 +1,11 @@
 @use '~@angular/material' as mat;
 
+form {
+  button {
+    margin-top: 16px;
+  }
+}
+
 p {
   line-height: 24px;
 }

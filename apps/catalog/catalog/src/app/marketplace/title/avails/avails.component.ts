@@ -114,7 +114,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
     const [mandateTerms, salesTerms] = await Promise.all([
       this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
-      this.termService.getValue(sales.map(sale => sale.termIds).flat())
+      this.termService.getValue(sales.map(sale => sale.termIds).flat()),
     ]);
 
     this.mandates$.next(mandates);
@@ -150,8 +150,10 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       data: {
         title: 'You are about to leave the page',
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
-        buttonName: 'Leave anyway'
-      }
+        confirm: 'Leave anyway',
+        cancel: 'Stay',
+      },
+      autoFocus: false,
     });
     return dialogRef.afterClosed().pipe(
       /* Undefined means user clicked on the backdrop, meaning just close the modal */

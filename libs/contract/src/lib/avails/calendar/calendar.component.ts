@@ -59,7 +59,7 @@ export class AvailsCalendarComponent implements OnInit {
     this.updateMatrix();
   }
 
-  @Input() set selectedMarker(marker: DurationMarker| undefined) {
+  @Input() set selectedMarker(marker: DurationMarker | undefined) {
     this._selectedMarker = marker;
     this.updateMatrix();
   }
@@ -68,7 +68,6 @@ export class AvailsCalendarComponent implements OnInit {
 
   ngOnInit() {
     const state = this.state$.getValue();
-    state.highlightedRange = this.rows.map(() => this.columns.map(() => false));
 
     this.state$.next(state);
   }
@@ -82,27 +81,23 @@ export class AvailsCalendarComponent implements OnInit {
     if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
     this.stateMatrix = matrix;
 
-    // update inner state (hover/highlight/etc...)
     const currentState = this.state$.getValue();
-    const { highlightedRange } = resetHighlight(currentState);
-    const newState = createAvailCalendarState({ highlightedRange });
-    newState.selectionState = 'waiting';
+    currentState.selectionState = 'waiting';
+    const resetState = reset(currentState, this.stateMatrix);
 
     // if no current selection: reset the selection
     if (!this._selectedMarker) {
-      newState.start = { row: undefined, column: undefined };
-      newState.end = { row: undefined, column: undefined };
-      const resetState = reset(newState);
       this.state$.next(resetState);
 
     // if there is a current selection: set the selection into the calendar inner state
     } else {
+
       // compute selection start & end position
       const selectionStart = dateToMatrixPosition(this._selectedMarker.from);
       const selectionEnd = dateToMatrixPosition(this._selectedMarker.to);
 
       // "simulate" user click
-      const newSelectStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, newState);
+      const newSelectStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, resetState);
       const newSelectStateEnd = select(selectionEnd.row, selectionEnd.column, this.stateMatrix, newSelectStateStart);
       const newSelectState = highlightRange(selectionStart, selectionEnd, this.stateMatrix, newSelectStateEnd);
 
@@ -118,7 +113,7 @@ export class AvailsCalendarComponent implements OnInit {
 
   onExit() {
     const state = this.state$.getValue();
-    const newState = reset(state);
+    const newState = reset(state, this.stateMatrix);
     this.state$.next(newState);
   }
 
