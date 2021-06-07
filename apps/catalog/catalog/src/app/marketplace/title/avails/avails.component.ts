@@ -114,7 +114,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
     const [mandateTerms, salesTerms] = await Promise.all([
       this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
-      this.termService.getValue(sales.map(sale => sale.termIds).flat())
+      this.termService.getValue(sales.map(sale => sale.termIds).flat()),
     ]);
 
     this.mandates$.next(mandates);
