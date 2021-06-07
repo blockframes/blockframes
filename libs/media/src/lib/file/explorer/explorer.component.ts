@@ -126,7 +126,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   openView(item: Partial<StorageFile>, event: Event) {
     event.stopPropagation();
     if (item) {
-      this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh' });
+      this.dialog.open(FilePreviewComponent, { data: { ref: item }, width: '80vw', height: '80vh', autoFocus: false });
     }
   }
 
