@@ -132,13 +132,14 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public explain() {
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
-      width: '80vw'
+      width: '80vw',
+      autoFocus: false
     });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 
   confirmExit() {
