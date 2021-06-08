@@ -11,6 +11,7 @@ import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
 import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus } from '@blockframes/utils/apps';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -73,15 +74,23 @@ export async function onMovieDelete(
     batch.delete(doc.ref);
   }
 
-  // Update contracts
-  const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
-  contracts.docs.forEach(c => {
-    const contract = c.data();
-    if (contract.lastVersion?.titles[movie.id]) {
-      delete contract.lastVersion.titles[movie.id];
+  // Delete contracts
+  const contractsCollectionRef = await db.collection('contracts').where('titleId', '==', movie.id).get();
+  for (const doc of contractsCollectionRef.docs) {
+    batch.delete(doc.ref);
+  }
+
+  // Update Buckets
+  const bucketsCollectionRef = await db.collection('buckets').get();
+  for (const doc of bucketsCollectionRef.docs) {
+    const bucket = doc.data() as Bucket;
+
+    if (bucket.contracts.some(c => c.titleId === movie.id)) {
+      bucket.contracts = bucket.contracts.filter(c => c.titleId !== movie.id);
+      batch.update(doc.ref, bucket);
     }
-    batch.update(c.ref, contract);
-  });
+
+  }
 
   // Update algolia's index
   const movieAppAccess = getMovieAppAccess(movie);
@@ -159,9 +168,8 @@ export async function onMovieUpdate(
 
 /** Checks if the store status is going from draft to submitted. */
 function isSubmitted(
-  beforeApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>,
-  afterApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>)
-{
+  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
+  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
   return apps.some(app => {
     return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
   })
@@ -169,9 +177,8 @@ function isSubmitted(
 
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(
-  beforeApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>,
-  afterApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>)
-{
+  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
+  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
   return apps.some(app => {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
