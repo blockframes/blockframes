@@ -161,7 +161,9 @@ describe('Test Matrix', () => {
       highlightedRange: [[true], [true]]
     });
 
-    const resetedState = reset(dirtyState);
+    const stateMatrix: CellState[][] = calendarRows.map(() => calendarColumns.map(() => 'available'));
+
+    const resetedState = reset(dirtyState, stateMatrix);
     expect(resetedState.hoverColumn).toBeUndefined();
     expect(resetedState.hoverRow).toBeUndefined();
     expect(resetedState.highlightedRange.flat().filter(r => !!r).length).toEqual(0);

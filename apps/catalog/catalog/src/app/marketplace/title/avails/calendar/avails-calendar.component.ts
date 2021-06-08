@@ -67,7 +67,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
   public available$ = combineLatest([
     this.mandates$,
     this.mandateTerms$,
-    this.availsForm.value$
+    this.availsForm.value$,
   ]).pipe(
     map(([mandates, mandateTerms]) => {
       if (this.availsForm.invalid) return [];
