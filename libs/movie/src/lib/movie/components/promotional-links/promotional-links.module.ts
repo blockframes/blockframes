@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 // Component
 import { PromotionalLinksComponent } from './promotional-links.component';
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [PromotionalLinksComponent],
   imports: [
     CommonModule,
+    RouterModule,
     FlexLayoutModule,
     PromotionalLinksPipeModule,
     MatButtonModule,
