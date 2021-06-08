@@ -471,6 +471,7 @@ export const festival = {
   venice: 'Venice International Film Festival',
 } as const
 
+// Please keep it in an alphabetic order !
 export const territories = {
   world: 'World',
   "aland-islands": "Åland Islands",
@@ -501,7 +502,6 @@ export const territories = {
   bhutan: "Bhutan",
   bolivia: "Bolivia",
   bonaire: "Bonaire",
-  "sint-eustatius-and-saba": "Sint Eustatius and Saba",
   "bosnia-and-herzegovina": "Bosnia and Herzegovina",
   botswana: "Botswana",
   "bouvet-island": "Bouvet Island",
@@ -532,9 +532,7 @@ export const territories = {
   cuba: "Cuba",
   curacao: "Curaçao",
   cyprus: "Cyprus",
-  "northern-cyprus": "Northern Cyprus",
   czech: "Czech Republic (Czechia)",
-  "ivory-coast-cote-d-ivoire": "Ivory Coast (Côte d’Ivoire)",
   denmark: "Denmark",
   djibouti: "Djibouti",
   dominica: "Dominica",
@@ -586,6 +584,7 @@ export const territories = {
   "isle-of-man": "Isle of Man",
   israel: "Israel",
   italy: "Italy",
+  "ivory-coast-cote-d-ivoire": "Ivory Coast (Côte d’Ivoire)",
   jamaica: "Jamaica",
   japan: "Japan",
   jersey: "Jersey",
@@ -642,6 +641,7 @@ export const territories = {
   niue: "Niue",
   "norfolk-island": "Norfolk Island",
   "north-macedonia": "North Macedonia",
+  "northern-cyprus": "Northern Cyprus",
   "northern-mariana-islands": "Northern Mariana Islands",
   norway: "Norway",
   "oman": "Oman",
@@ -678,6 +678,7 @@ export const territories = {
   seychelles: "Seychelles",
   "sierra-leone": "Sierra Leone",
   singapore: "Singapore",
+  "sint-eustatius-and-saba": "Sint Eustatius and Saba",
   "saint-martin-dutch": "Sint Maarten (Dutch part)",
   slovakia: "Slovakia",
   slovenia: "Slovenia",
@@ -726,8 +727,8 @@ export const territories = {
   "wallis-and-futuna": "Wallis and Futuna",
   "western-sahara": "Western Sahara",
   yemen: "Yemen",
+  zambia: "Zambia",
   zimbabwe: "Zimbabwe",
-  zambia: "Zambia"
 } as const
 
 export const territoriesISOA2 = {
