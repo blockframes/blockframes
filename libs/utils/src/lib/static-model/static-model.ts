@@ -471,7 +471,7 @@ export const festival = {
   venice: 'Venice International Film Festival',
 } as const
 
-// Please keep it in an alphabetic order !
+// Please keep territories' values in an alphabetic order !
 export const territories = {
   world: 'World',
   "aland-islands": "Åland Islands",
@@ -532,6 +532,7 @@ export const territories = {
   cuba: "Cuba",
   curacao: "Curaçao",
   cyprus: "Cyprus",
+  "northern-cyprus": "Northern Cyprus",
   czech: "Czech Republic (Czechia)",
   denmark: "Denmark",
   djibouti: "Djibouti",
@@ -641,7 +642,6 @@ export const territories = {
   niue: "Niue",
   "norfolk-island": "Norfolk Island",
   "north-macedonia": "North Macedonia",
-  "northern-cyprus": "Northern Cyprus",
   "northern-mariana-islands": "Northern Mariana Islands",
   norway: "Norway",
   "oman": "Oman",
