@@ -63,6 +63,17 @@ const routes: Routes = [{
       data: { animation: 'wishlist' }
     },
     {
+      path: 'deals',
+      children: [{
+        path: '',
+        canActivate: [CatalogDealsGuard],
+        loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
+      }, {
+        path: ':contractId',
+        loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
+      }]
+    },
+    {
       path: 'title',
       children: [{
         path: '',
