@@ -9,7 +9,11 @@
   <ul>
     <li>
       <strong>Production Status </strong>
-      <missing-control test-id="production-status" [control]="movie.get('productionStatus')" [link]="productionLink"></missing-control>
+      <missing-control [control]="movie.get('productionStatus')" [link]="productionLink">
+        <ng-template let-status>
+          {{ status | toLabel: 'productionStatus' }}
+        </ng-template>
+      </missing-control>
     </li>
     <li>
       <strong>International Title </strong>
