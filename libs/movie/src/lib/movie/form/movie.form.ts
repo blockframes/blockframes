@@ -694,7 +694,7 @@ function createMovieReviewControl(review: Partial<MovieReview> = {}) {
     criticName: new FormControl(criticName),
     journalName: new FormControl(journalName, [Validators.required]),
     criticQuote: new FormControl(criticQuote),
-    revueLink: new FormControl(revueLink.trim(), urlValidators),
+    revueLink: new FormControl(revueLink, urlValidators),
   }
 }
 
