@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { languages, isInKeys, Scope, staticModel } from '@blockframes/utils/static-model';
 
-export const urlValidators = Validators.pattern(/^(http(s)?:\/\/www\.|http(s)?:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/);
+export const urlValidators = Validators.pattern(/^(http(s)?:\/\/www\.|http(s)?:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/);
 
 export function yearValidators(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
