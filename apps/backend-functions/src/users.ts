@@ -244,3 +244,21 @@ export const createUser = async (data: { email: string, orgEmailData: OrgEmailDa
   }
 
 }
+
+export const verifyEmail = async (data: { uid: string }, context: CallableContext) => {
+  const { uid } = data;
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
+  if (!blockframesAdmin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
+
+  if (!uid) {
+    throw new Error('uid is mandatory for verifying email');
+  }
+
+  try {
+    admin.auth().updateUser(uid, { emailVerified: true});
+  } catch (e) {
+    throw new Error(`There was an error while verifying email : ${e.message}`);
+  }
+}

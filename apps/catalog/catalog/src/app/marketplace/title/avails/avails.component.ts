@@ -114,7 +114,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
     const [mandateTerms, salesTerms] = await Promise.all([
       this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
-      this.termService.getValue(sales.map(sale => sale.termIds).flat())
+      this.termService.getValue(sales.map(sale => sale.termIds).flat()),
     ]);
 
     this.mandates$.next(mandates);
@@ -132,13 +132,14 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public explain() {
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
-      width: '80vw'
+      width: '80vw',
+      autoFocus: false
     });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 
   confirmExit() {
@@ -150,8 +151,10 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       data: {
         title: 'You are about to leave the page',
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
-        buttonName: 'Leave anyway'
-      }
+        confirm: 'Leave anyway',
+        cancel: 'Stay',
+      },
+      autoFocus: false,
     });
     return dialogRef.afterClosed().pipe(
       /* Undefined means user clicked on the backdrop, meaning just close the modal */

@@ -26,4 +26,8 @@ export class DetailedTermsComponent implements OnInit {
       this.groups$.next(groups);
     }
   }
+
+  close() {
+    this.dialogRef.close()
+  }
 }

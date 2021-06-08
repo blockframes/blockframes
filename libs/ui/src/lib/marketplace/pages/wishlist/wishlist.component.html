@@ -1,6 +1,6 @@
 <section *ngIf="isDataLoaded; else loading">
   <ng-container *ngIf="hasWishlist; else noWishlist">
-    <h1>Wishlist</h1>
+    <h1>Company's Wishlist</h1>
     <table mat-table [dataSource]="dataSource">
       <!-- Movie -->
       <ng-container matColumnDef="movie">
@@ -62,7 +62,7 @@
 </ng-template>
 <ng-template #noWishlist>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <h1>Your Wishlist is empty.</h1>
+    <h1>Your Company's Wishlist is empty.</h1>
     <img asset="empty_wishlist.svg" alt="No wishlist">
     <button mat-flat-button color="accent" routerLink="../title">Discover Titles</button>
   </article>

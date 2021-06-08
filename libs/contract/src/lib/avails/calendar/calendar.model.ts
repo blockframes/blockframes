@@ -115,15 +115,16 @@ export function isContinuous(start: Readonly<MatrixPosition>, end: Readonly<Matr
   return result;
 }
 
-export function resetHighlight(state: Readonly<AvailCalendarState>): AvailCalendarState {
+export function resetHighlight(state: Readonly<AvailCalendarState>, stateMatrix: readonly CellState[][]): AvailCalendarState {
   return {
     ...state,
-    highlightedRange: state.highlightedRange.map(highlightedRow => highlightedRow.map(() => false)),
+    highlightedRange: stateMatrix.map(row => row.map(() => false)),
   };
 }
 
 export function highlightRange(start: Readonly<MatrixPosition>, end: Readonly<MatrixPosition>, stateMatrix: readonly CellState[][], state: Readonly<AvailCalendarState>): AvailCalendarState {
-  const localState = resetHighlight(state);
+
+  const localState = resetHighlight(state, stateMatrix);
 
   for (let row = start.row; row <= end.row; row++) {
     for (let column = 0; column < stateMatrix[0].length; column++) {
@@ -141,7 +142,7 @@ export function highlightRange(start: Readonly<MatrixPosition>, end: Readonly<Ma
   return localState;
 }
 
-export function reset(state: Readonly<AvailCalendarState>): AvailCalendarState {
+export function reset(state: Readonly<AvailCalendarState>, stateMatrix: readonly CellState[][]): AvailCalendarState {
 
   let localState = {
     ...state,
@@ -151,7 +152,7 @@ export function reset(state: Readonly<AvailCalendarState>): AvailCalendarState {
     hoverEnd: { row: undefined, column: undefined },
   };
 
-  if (state.selectionState !== 'selected') localState = resetHighlight(localState);
+  if (state.selectionState !== 'selected') localState = resetHighlight(localState, stateMatrix);
 
   return localState;
 }

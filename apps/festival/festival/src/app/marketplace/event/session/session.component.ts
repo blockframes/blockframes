@@ -146,12 +146,13 @@ export class SessionComponent implements OnInit, OnDestroy {
               data: {
                 title: 'Your browser might be blocking autoplay',
                 question: 'This can result in poor viewing experience during your meeting.\nYou can try to unblock autoplay by clicking the following button. If it doesn\'t work, please change your browser settings to allow autoplay.',
-                buttonName: 'Unblock autoplay',
+                confirm: 'Unblock autoplay',
                 onConfirm: () => {
                   this.autoPlayTester.nativeElement.play();
                   this.autoPlayTester.nativeElement.pause();
                 },
               },
+              autoFocus: false,
             });
             this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
               this.isAutoPlayEnabled = !!confirmed;
