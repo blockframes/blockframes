@@ -18,8 +18,7 @@ export class PromotionalLinksComponent implements OnInit {
   }
 
   scrollToFooter() {
-    const footer = document.getElementsByTagName('footer');
-    footer[0].scrollIntoView({ behavior: 'smooth' });
-    return;
+    const footer = document.getElementById('videoFooter');
+    footer.scrollIntoView({ behavior: 'smooth' });
   }
 }
