@@ -6,7 +6,7 @@
   <list-filter fxLayout fxLayoutAlign="center">
     <ng-template filter label="Sales Agents" [form]="searchForm">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
-        [filters]="['appModule:dashboard']" [form]="searchForm"
+        [filters]="['appModule:dashboard',' hasAcceptedMovies:true']" [form]="searchForm"
         label="Search for a Sales Agent" placeholder="Sales Agent"></algolia-chips-autocomplete>
     </ng-template>
   </list-filter>
