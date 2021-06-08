@@ -15,7 +15,7 @@
       </a>
       <a mat-list-item routerLink="wishlist" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
-        <span mat-line><b>My Wishlist</b></span>
+        <span mat-line><b>Wishlist</b></span>
       </a>
       <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'financiers'">
         <mat-divider></mat-divider>
