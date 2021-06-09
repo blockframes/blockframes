@@ -24,6 +24,7 @@ export class ImageDirective implements OnInit, OnDestroy {
   private ref$ = new BehaviorSubject<StorageFile>(undefined);
 
   @HostBinding('srcset') srcset: string;
+  @HostBinding('style') style: string;
   @HostBinding('src') src: string;
   @HostBinding('alt') alt: string;
   @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy';
@@ -35,6 +36,22 @@ export class ImageDirective implements OnInit, OnDestroy {
   /** the image to display */
   @Input() set ref(file: StorageFile) {
     this.ref$.next(file);
+  }
+
+  /** Set the aspect ratio of the image */
+  @Input() set size(_size: 'poster' | 'banner' | 'avatar') {
+    let value = '3/4';
+    if (_size === 'banner') {
+      value = '16/9';
+    } else if (_size === 'avatar') {
+      value = '1/1';
+    }
+    // If this.style is undefined, the appended text will be `undefined aspect-ratio...`
+    if (this.style) {
+      this.style += ` aspect-ratio: ${value};`;
+    } else {
+      this.style = ` aspect-ratio: ${value};`;
+    }
   }
 
   @Input() set loading(strategy: 'lazy' | 'eager') {
