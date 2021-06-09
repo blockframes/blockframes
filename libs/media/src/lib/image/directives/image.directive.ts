@@ -24,6 +24,8 @@ export class ImageDirective implements OnInit, OnDestroy {
   private ref$ = new BehaviorSubject<StorageFile>(undefined);
 
   @HostBinding('srcset') srcset: string;
+  @HostBinding('width') width: number;
+  @HostBinding('height') height: number;
   @HostBinding('style') style: string;
   @HostBinding('src') src: string;
   @HostBinding('alt') alt: string;
@@ -38,19 +40,20 @@ export class ImageDirective implements OnInit, OnDestroy {
     this.ref$.next(file);
   }
 
-  /** Set the aspect ratio of the image */
-  @Input() set size(_size: 'poster' | 'banner' | 'avatar') {
-    let value = '3/4';
-    if (_size === 'banner') {
-      value = '16/9';
-    } else if (_size === 'avatar') {
-      value = '1/1';
-    }
-    // If this.style is undefined, the appended text will be `undefined aspect-ratio...`
+  aspectRatios = {
+    poster: { w: 3, h: 4 },
+    banner: { w: 16, h: 9 },
+    avatar: { w: 1, h: 1 },
+  };
+  @Input() set aspectRatio(ratio: 'poster' | 'banner' | 'avatar') {
+    const { w, h } = this.aspectRatios[ratio];
+    this.width = w;
+    this.height = h;
+    /** Set the aspect ratio of the image */
     if (this.style) {
-      this.style += ` aspect-ratio: ${value};`;
+      this.style += ` aspect-ration: ${w}/${h}; height: auto;`
     } else {
-      this.style = ` aspect-ratio: ${value};`;
+      this.style = ` aspect-ration: ${w}/${h}; height: auto;`
     }
   }
 
