@@ -14,7 +14,7 @@ export class InvitationComponent {
   // Invitation that require an action
   invitations$ = this.service.myInvitations$.pipe(
     tap(invitations => {
-      !!invitations.length ?
+      invitations.length ?
         this.dynTitle.setPageTitle('Invitations List') :
         this.dynTitle.setPageTitle('Invitations List', 'Empty');
     })

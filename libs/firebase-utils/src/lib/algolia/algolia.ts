@@ -9,6 +9,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
+import { getMovieAppAccess } from '@blockframes/utils/apps';
 
 export const algolia = {
   ...algoliaClient,
@@ -114,31 +115,30 @@ export function storeSearchableMovie(
         international: movie.title.international || '',
         original: movie.title.original,
       },
-      directors: !!movie.directors ?
+      directors: movie.directors ?
         movie.directors.map((director) => `${director.firstName} ${director.lastName}`) :
         [],
-      keywords: !!movie.keywords ? movie.keywords : [],
+      keywords: movie.keywords ? movie.keywords : [],
 
       // facets
-      genres: !!movie.genres ? movie.genres : [],
-      originCountries: !!movie.originCountries ? movie.originCountries : [],
+      genres: movie.genres ? movie.genres : [],
+      originCountries: movie.originCountries ? movie.originCountries : [],
       languages: {
-        original: !!movie.originalLanguages ? movie.originalLanguages : [],
-        dubbed: !!movie.languages ?
+        original: movie.originalLanguages ? movie.originalLanguages : [],
+        dubbed: movie.languages ?
           Object.keys(movie.languages).filter(lang => movie.languages[lang]?.dubbed) as Language[] :
           [],
-        subtitle: !!movie.languages ?
+        subtitle: movie.languages ?
           Object.keys(movie.languages).filter(lang => movie.languages[lang]?.subtitle) as Language[] :
           [],
-        caption: !!movie.languages ?
+        caption: movie.languages ?
           Object.keys(movie.languages).filter(lang => movie.languages[lang]?.caption) as Language[] :
           [],
       },
-      status: !!movie.productionStatus ? movie.productionStatus : '',
-      storeConfig: movie.storeConfig?.status || '',
+      status: movie.productionStatus ? movie.productionStatus : '',
+      storeStatus: '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
-      storeType: movie.storeConfig?.storeType || '',
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,
@@ -154,14 +154,19 @@ export function storeSearchableMovie(
     };
 
     /* App specific properties */
-    if (movie.storeConfig.appAccess.financiers) {
+    if (movie.app.financiers.access) {
       movieRecord['socialGoals'] = movie?.audience?.goals;
       movieRecord['minPledge'] = movie['minPledge'];
     }
 
-    const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+    const movieAppAccess = getMovieAppAccess(movie);
 
-    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord));
+    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(
+      {
+        ...movieRecord,
+        storeStatus: movie.app[appName]?.status || '',
+      }
+    ));
 
     return Promise.all(promises)
 
@@ -184,7 +189,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
 
   try {
     let orgData;
-    if (!!user.orgId) {
+    if (user.orgId) {
       const db = admin.firestore();
       const org = await db.doc(`orgs/${user.orgId}`).get();
       orgData = org.data();

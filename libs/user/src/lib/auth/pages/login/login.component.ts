@@ -12,10 +12,10 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
+  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   private snackbarDuration = 8000;
 
-  public buttonText = 'Log In';
+  public buttonText = 'Log in';
 
   constructor(
     private service: AuthService,
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['c']);
       }
     } catch (err) {
-      this.buttonText = 'Log In';
+      this.buttonText = 'Log in';
       console.error(err); // let the devs see what happened
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
         this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: this.snackbarDuration });

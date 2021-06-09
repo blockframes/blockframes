@@ -12,14 +12,14 @@ import { algolia } from '@env';
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { PublicUser } from "@blockframes/user/types";
-import { App, app } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
 
 export async function upgradeAlgoliaOrgs(appConfig?: App) {
   if (!appConfig) {
-    const promises = app.map(upgradeAlgoliaOrgs);
+    const promises = getAllAppsExcept(['crm']).map(upgradeAlgoliaOrgs);
     await Promise.all(promises);
   } else {
 
@@ -57,7 +57,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
 export async function upgradeAlgoliaMovies(appConfig?: App) {
 
   if (!appConfig) {
-    const promises = app.filter(a => a !== 'crm').map(upgradeAlgoliaMovies);
+    const promises = getAllAppsExcept(['crm']).map(upgradeAlgoliaMovies);
     await Promise.all(promises);
   } else {
 
@@ -169,8 +169,7 @@ const baseConfig: AlgoliaConfig = {
     'languages.caption',
     'originCountries',
     'status',
-    'storeConfig',
-    'storeType',
+    'storeStatus',
     'contentType'
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)']

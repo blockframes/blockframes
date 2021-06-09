@@ -10,7 +10,7 @@ export class OrgAddressPipe implements PipeTransform {
       const countryLabel = territories[country];
       return `${street}, ${zipCode} ${city}, ${countryLabel}`;
     }
-    if (!!country) {
+    if (country) {
       return territories[country];
     }
   }

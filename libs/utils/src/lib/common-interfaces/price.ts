@@ -76,11 +76,9 @@ export interface PriceRaw<D> {
   mg?: PriceRaw<D>;
 }
 
-export interface Price extends PriceRaw<Date> {
-}
+export type Price = PriceRaw<Date>;
 
-export interface PriceDocument extends PriceRaw<Timestamp> {
-}
+export type PriceDocument = PriceRaw<Timestamp>;
 
 interface ExpenseRaw<D> {
   label: string;
@@ -112,11 +110,9 @@ interface ExpenseRaw<D> {
   expenseId?: string;
 }
 
-export interface Expense extends ExpenseRaw<Date> {
-}
+export type Expense = ExpenseRaw<Date>;
 
-export interface ExpenseDocument extends ExpenseRaw<Timestamp> {
-}
+export type ExpenseDocument = ExpenseRaw<Timestamp>;
 
 export interface PaymentRaw<D> {
   id: string;
@@ -125,9 +121,9 @@ export interface PaymentRaw<D> {
   price: PriceRaw<D>;
 }
 
-export interface Payment extends PaymentRaw<Date> { }
+export type Payment = PaymentRaw<Date>;
 
-export interface PaymentDocument extends PaymentRaw<Timestamp> { }
+export type PaymentDocument = PaymentRaw<Timestamp>;
 
 /**
  * A factory function that creates Price
@@ -147,7 +143,7 @@ export function formatPrice(price: Price): Price {
   }
 
   if (price.recoupableExpenses) {
-    p.recoupableExpenses = price.recoupableExpenses.map((r: any) => formatExpense(r))
+    p.recoupableExpenses = price.recoupableExpenses.map((r: unknown) => formatExpense(r))
   }
 
   if (price.mg) {
@@ -173,12 +169,13 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
   }
 }
 
-export function formatExpense(expense: any): Expense {
+export function formatExpense(value: unknown): Expense {
+  const expense = createExpense(value)
   return {
     ...expense,
     price: formatPrice(expense.price),
     collected: formatPrice(expense.collected),
-    payments: expense.payments.map((p: any) => formatPayment(p)),
+    payments: expense.payments.map((p: unknown) => formatPayment(p)),
   }
 }
 
@@ -195,7 +192,8 @@ export function createPayment(params: Partial<Payment> = {}): Payment {
   }
 }
 
-export function formatPayment(payment: any): Payment {
+export function formatPayment(value: unknown): Payment {
+  const payment = createPayment(value);
   return {
     ...payment,
     date: toDate(payment.date),

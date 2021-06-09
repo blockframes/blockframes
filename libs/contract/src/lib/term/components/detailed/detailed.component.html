@@ -1,5 +1,22 @@
-<button mat-icon-button class="mat-dialog-close" (click)="dialogRef.close()">
-  <mat-icon svgIcon="close"></mat-icon>
-</button>
-<h3>{{ data.scope | titlecase }}</h3>
-<p>{{ data.terms | toLabel:data.scope }}</p>
+<div fxLayout fxLayoutAlign="end">
+  <button mat-icon-button (click)="close()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</div>
+
+<section fxLayout="column" fxLayoutGap="24px">
+  <h2>{{ data.scope | titlecase }}</h2>
+  <ng-container *ngIf="!!(groups$ | async).length; else default">
+    <ng-container *ngFor="let group of groups$ | async">
+      <ng-container *ngIf="group.items.length">
+        <p class="mat-body-2">{{ group.label }}</p>
+        <mat-chip-list>
+          <mat-chip *ngFor="let item of group.items">{{ item | toLabel: data.scope }}</mat-chip>
+        </mat-chip-list>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  <ng-template #default>
+    <p>{{ data.terms | toLabel:data.scope }}</p>
+  </ng-template>
+</section>

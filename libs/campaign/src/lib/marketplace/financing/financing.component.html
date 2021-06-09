@@ -6,14 +6,13 @@
     <section id="budget" *ngIf="campaign.budget | apexBudget as options">
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Budget</h2>
-        <ng-container *ngIf="campaign.files.budget | getUrl | async as file">
-          <a mat-button [href]="file" target="_blank">
+        <ng-container *ngIf="(campaign.files.budget) | getUrl | async as file">
+          <a *ngIf="campaign.files.budget.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download Budget</span>
           </a>
         </ng-container>
       </header>
-
       <article>
         <table>
           <ng-container *ngFor="let row of options.data; let i = index">
@@ -63,7 +62,7 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Financing Plan</h2>
         <ng-container *ngIf="campaign.files.financingPlan | getUrl | async as file">
-          <a mat-button [href]="file" target="_blank">
+          <a *ngIf="campaign.files.financingPlan.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download Financing Plan</span>
           </a>
@@ -120,7 +119,7 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Return on Investment</h2>
         <ng-container *ngIf="campaign.files.waterfall | getUrl | async as file">
-          <a mat-button [href]="file" target="_blank">
+          <a *ngIf="campaign.files.waterfall.storagePath" mat-button (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
             <span>Download distributed Waterfall</span>
           </a>

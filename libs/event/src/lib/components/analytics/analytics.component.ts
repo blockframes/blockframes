@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, ChangeDetectorRef } from '@angular/core';;
 import { EventService } from '@blockframes/event/+state/event.service';
-import { EventAnalytics } from '@blockframes/event/+state/event.firestore';
-import { Event, EventQuery } from '@blockframes/event/+state';
+import { EventAnalytics, EventMeta } from '@blockframes/event/+state/event.firestore';
+import { Event } from '@blockframes/event/+state';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 
 const columns = {
@@ -22,7 +22,7 @@ export class EventAnalyticsComponent implements OnInit {
 
   analytics: EventAnalytics[];
 
-  @Input() event: Event<any>;
+  @Input() event: Event<EventMeta>;
 
   public columns: Record<string, string> = columns;
   public initialColumns = Object.keys(columns);
@@ -50,7 +50,11 @@ export class EventAnalyticsComponent implements OnInit {
         // retrieve watch time from invitation
         const [invitation] = this.invitationQuery.getAll({
           // we are looking for invitation between this event and this user id
-          filterBy: invit => invit.toUser.uid === analytic.userId && invit.eventId === analytic.eventId
+          filterBy: invit => invit.eventId === analytic.eventId &&
+          (
+            invit.toUser?.uid === analytic.userId ||
+            invit.fromUser?.uid === analytic.userId
+          )
         });
         transformedAnalytic.watchTime = invitation?.watchTime ?? 0;
       }
@@ -62,7 +66,7 @@ export class EventAnalyticsComponent implements OnInit {
     // and we compute the average watch time
     if (this.event.type === 'screening') {
       this.columns.watchTime = 'Watch Time';
-      this.initialColumns.push('watchTime');
+      if (!this.initialColumns.includes('watchTime')) this.initialColumns.push('watchTime');
       const totalWatchTime = this.analytics.reduce((acc, curr) => acc + curr.watchTime, 0);
       this.averageWatchTime = totalWatchTime / this.analytics.length;
     }

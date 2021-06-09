@@ -1,6 +1,8 @@
-@mixin mat-bf-dialog-theme($theme) {
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
 
   .mat-dialog-container {
     position: relative;

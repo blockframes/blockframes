@@ -26,7 +26,7 @@ const predefinedTitleConfig: Record<App, any> = {
 })
 export class MovieFormStartTunnelComponent {
   public loadingTunnel = new BehaviorSubject(false);
-  public app = getCurrentApp(this.routerQuery);
+  public currentApp = getCurrentApp(this.routerQuery);
 
   constructor(
     private movieService: MovieService,
@@ -37,7 +37,8 @@ export class MovieFormStartTunnelComponent {
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
     try {
-      const { id } = await this.movieService.create(predefinedTitleConfig[this.app]);
+      const app = { [this.currentApp]: { access: true} };
+      const { id } = await this.movieService.create({...predefinedTitleConfig[this.currentApp], app });
 
       this.router.navigate(['/c/o/dashboard/tunnel/movie/', id]);
     } catch (err) {

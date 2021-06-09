@@ -1,0 +1,21 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $warn: map.get($config, 'warn');
+
+  a:not(.mat-button-base),
+  a:not(.mat-button-base):visited {
+    color: inherit;
+    // Used mainly for the missing-control component
+    &.missing-control span {
+      color: #F6A92C;
+    }
+
+    // Used mainly for the missing-control component
+    &.mandatory-control {
+      color: mat.get-color-from-palette($warn, 500);
+    }
+  }
+}

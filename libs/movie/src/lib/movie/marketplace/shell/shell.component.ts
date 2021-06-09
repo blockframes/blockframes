@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Observable, } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -17,7 +17,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleMarketplaceShellComponent {
+export class TitleMarketplaceShellComponent implements OnInit {
   public movie$: Observable<Movie>;
   public navClicked = false;
 
@@ -47,6 +47,6 @@ export class TitleMarketplaceShellComponent {
   }
 
   fullscreen(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh' })
+    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh', autoFocus: false })
   }
 }

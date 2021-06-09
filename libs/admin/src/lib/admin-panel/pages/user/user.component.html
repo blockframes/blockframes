@@ -96,9 +96,12 @@
         <mat-label>Position</mat-label>
         <input matInput type="text" placeholder="Position" formControlName="position" />
       </mat-form-field>
-      <mat-card-actions align="end" fxLayoutGap="24px">
-        <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
-        <button type="submit" mat-flat-button color="warn" (click)="deleteUser()">Delete</button>
+      <mat-card-actions fxLayoutAlign="space-between">
+        <button mat-button color="primary" (click)="verifyEmail()">Verify email</button>
+        <div fxLayoutGap="24px">
+          <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+          <button type="submit" mat-flat-button color="warn" (click)="deleteUser()">Delete</button>
+        </div>
       </mat-card-actions>
     </form>
   </mat-card>

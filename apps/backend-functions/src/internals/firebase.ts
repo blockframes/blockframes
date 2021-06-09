@@ -29,6 +29,7 @@ export async function getUserMail(userId: string): Promise<string | undefined> {
   return user.email;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
   // return a new function that is the old function + a check that early exits when we are restoring.
   return async (...args: Parameters<T>) => {

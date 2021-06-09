@@ -1,6 +1,7 @@
 import { Validator } from './types';
 import { FormGroup, AbstractControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { defer, Observable } from 'rxjs';
+import { shareReplay, startWith } from 'rxjs/operators';
 
 /** Generic EntityControl */
 export type EntityControl<E = any> = {
@@ -12,6 +13,11 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
   value: T;
   valueChanges: Observable<T>;
   controls: C;
+  // defer the startWith value with subscription happens to get first value
+  value$ = defer(() => this.valueChanges.pipe(
+    startWith(this.value),
+    shareReplay(1)
+  ));
 
   createControl?: (value?: Partial<T>) => C
   static factory<E, Control extends EntityControl = any>(
@@ -45,7 +51,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
     const controls = this['createControl'] ? this.createControl(value) : {};
     for (const name in controls) {
       if (this.controls[name]) {
-        if (!!this.controls[name]['patchAllValue']) {
+        if (this.controls[name]['patchAllValue']) {
           this.controls[name]['patchAllValue'](value[name]);
         } else {
           this.controls[name].patchValue(value[name]);

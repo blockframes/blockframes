@@ -54,7 +54,7 @@ export class CalendarWeekComponent {
   @Input() viewDate: Date = new Date();
   @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
   @Input()
-  set events(events: CalendarEvent<any>[]) {
+  set events(events: CalendarEvent<unknown>[]) {
     this.baseEvents = events || [];
     this.refresh(events || []);
   }
@@ -106,9 +106,10 @@ export class CalendarWeekComponent {
       .pipe(
         finalize(() => this.createEvent(localEvent)),
         takeUntil(fromEvent(this.document, 'mouseup')),
-        map((mouseMoveEvent: MouseEvent) => {
-          const min = ceilToNearest(mouseMoveEvent.clientY - segmentPosition.top, 30);
-          const days = floorToNearest(mouseMoveEvent.clientX - segmentPosition.left, segmentPosition.width) / segmentPosition.width;
+        map((event: MouseEvent) => {
+          const min = ceilToNearest(event.clientY - segmentPosition.top, 30);
+          const days = floorToNearest(event.clientX - segmentPosition.left, segmentPosition.width) / segmentPosition.width;
+          event.preventDefault();
           return addDays(addMinutes(segment.date, min), days);
         }),
         distinctUntilChanged((a, b) => a.getTime() === b.getTime())

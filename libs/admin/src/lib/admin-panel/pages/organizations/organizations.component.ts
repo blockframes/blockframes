@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { Organization } from '@blockframes/organization/+state';
-import { app, appName, modules } from '@blockframes/utils/apps';
+import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organizations',
@@ -37,7 +37,7 @@ export class OrganizationsComponent implements OnInit {
   ];
   public rows: Organization[] = [];
   public orgListLoaded = false;
-  public app = app.filter(a => !['crm', 'cms'].includes(a));
+  public app = getAllAppsExcept(['crm']);
 
   constructor(
     private organizationService: OrganizationService,
@@ -56,7 +56,7 @@ export class OrganizationsComponent implements OnInit {
     this.router.navigate([`/c/o/admin/panel/organization/${org.id}`]);
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'id',
       'denomination.full',
@@ -79,7 +79,7 @@ export class OrganizationsComponent implements OnInit {
         country: r && r.addresses.main.country ? r.addresses.main.country : '--',
         email: r.email,
         memberCount: r.userIds.length,
-        activity: !!r.activity ? r.activity : '--',
+        activity: r.activity ? r.activity : '--',
       }
 
       for (const a of this.app) {

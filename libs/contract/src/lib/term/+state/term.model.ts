@@ -2,6 +2,11 @@ import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.fire
 import { Media, Territory } from "@blockframes/utils/static-model";
 import type firebase from 'firebase'
 
+export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> {
+  from: T,
+  to: T,
+}
+
 /**
  * Continue term that describe a contract
  * Discontinuity criteria are :
@@ -11,22 +16,20 @@ import type firebase from 'firebase'
  */
 export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
   id: string;
-  titleId: string;
   orgId: string;
   contractId: string;
   territories: Territory[];
   medias: Media[];
   licensedOriginal: boolean;
   exclusive: boolean;
-  duration: { from: T, to: T };
+  duration: Duration<T>;
   languages: Record<string, MovieLanguageSpecification>;
-  criteria: any[];
+  criteria: unknown[];
 }
 
 export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
   return {
     id: '',
-    titleId: '',
     orgId: '',
     contractId: '',
     territories: [],

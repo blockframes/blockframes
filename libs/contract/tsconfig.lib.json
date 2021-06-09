@@ -11,8 +11,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "types": [],
-    "lib": ["dom", "es2018"]
+    "types": []
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
@@ -22,5 +21,6 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
+  "include": ["src/lib"],
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
 }

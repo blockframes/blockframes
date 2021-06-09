@@ -1,88 +1,92 @@
-@mixin bf-color-font($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $foreground: map-get($theme, foreground);
-  $color-font: map-get($theme, font);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $primary: map.get($config, 'primary');
+  $accent: map.get($config, 'accent');
+  $warn: map.get($config, 'warn');
+  $foreground: map.get($config, 'foreground');
+  $color-font: map.get($config, 'font');
 
   .mat-display-4 {
-    color: mat-color($color-font, display-4);
+    color: map.get($color-font, 'display-4');
   }
   .mat-display-3 {
-    color: mat-color($color-font, display-3);
+    color: map.get($color-font, 'display-3');
   }
   .mat-display-2 {
-    color: mat-color($color-font, display-2);
+    color: map.get($color-font, 'display-2');
     margin: unset;
   }
   .mat-display-1 {
-    color: mat-color($color-font, display-1);
+    color: map.get($color-font, 'display-1');
   }
   h1,
   .mat-h1,
   .mat-headline {
-    color: mat-color($color-font, h1);
+    color: map.get($color-font, 'h1');
   }
   h2,
   .mat-h2,
   .mat-title {
-    color: mat-color($color-font, h2);
+    color: map.get($color-font, 'h2');
   }
   h3,
   .mat-h3,
   .mat-subheading-2 {
-    color: mat-color($color-font, h3);
+    color: map.get($color-font, 'h3');
   }
   h4,
   .mat-h4,
   .mat-subhheading-1 {
-    color: mat-color($color-font, h4);
+    color: map.get($color-font, 'h4');
   }
   h5 {
     font-size: 16px;
-    line-height: 26px;
-    font-weight: 700;
+    line-height: 24px;
+    font-weight: 600;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
-    color: mat-color($color-font, h5)
+    color: map.get($color-font, 'h5')
   }
   h6 {
     font-size: 18px;
     line-height: 28px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    color: mat-color($color-font, h6)
+    color: map.get($color-font, 'h6')
   }
   p,
   .mat-body-1,
   .mat-body {
-    color: mat-color($color-font, mat-body-1);
+    color: map.get($color-font, 'mat-body-1');
   }
   .mat-body-2,
   .mat-body-strong {
-    color: mat-color($color-font, mat-body-2);
+    color: map.get($color-font, 'mat-body-2');
   }
   .mat-caption,
   .mat-small {
-    color: mat-color($color-font, mat-caption);
+    color: map.get($color-font, 'mat-caption');
   }
   input, td {
-    color: mat-color($foreground, text);
+    color: map.get($foreground, 'text');
   }
 
   .text-primary {
-    color: mat-color($primary);
+    color: mat.get-color-from-palette($primary);
   }
 
   .text-accent {
-    color: mat-color($accent);
+    color: mat.get-color-from-palette($accent);
   }
-  
+
   .text-warn {
-    color: mat-color($warn);
+    color: mat.get-color-from-palette($warn);
   }
 
   .text-disabled {
-    color: mat-color($foreground, disabled);
+    color: map.get($foreground, 'disabled');
   }
 }

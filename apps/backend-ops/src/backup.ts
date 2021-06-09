@@ -1,6 +1,6 @@
 import { backupBucket, firebase } from '@env'
 import { enableMaintenanceInEmulator } from "./emulator";
-import { clearDbCLI, defaultEmulatorBackupPath, getLatestDirName, gsutilTransfer, importFirestoreEmulatorBackup, loadAdminServices, runShellCommandExec, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
+import { clearDb, defaultEmulatorBackupPath, getLatestDirName, gsutilTransfer, importFirestoreEmulatorBackup, loadAdminServices, runShellCommandExec, uploadDbBackupToBucket } from "@blockframes/firebase-utils";
 import { deleteAllUsers } from "@blockframes/testing/firebase";
 import { ensureMaintenanceMode } from "./tools";
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from "./algolia";
@@ -54,7 +54,7 @@ export async function restoreEnv(dirName?: string) {
   const maintenanceInsurance = await ensureMaintenanceMode(db)
 
   console.log('Clearing Firestore...')
-  await clearDbCLI(db);
+  await clearDb(db);
 
   console.log('Clearing auth...');
   await deleteAllUsers(auth);

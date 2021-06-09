@@ -38,9 +38,6 @@ section {
     &.mat-body-2 {
       margin-bottom: 24px;
     }
-    a {
-      font-weight: 600;
-    }
   }
 
   mat-card {
@@ -50,18 +47,32 @@ section {
       width: 100%;
     }
 
-    .email-input {
-      mat-icon {
-        margin-right: 8px;
-      }
-    }
-
     .privacy {
       text-align: start;
     }
 
     button {
       margin-top: 40px;
+    }
+  }
+}
+
+.pass-info {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  p {
+    margin: 0 8px;
+    // TODO #5770
+    button {
+      margin: 0;
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: underline;
     }
   }
 }

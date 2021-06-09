@@ -1,8 +1,15 @@
-@mixin mat-bf-snack-bar-theme($theme) {
-  $is-dark-theme: map-get($theme, is-dark);
-  $primary: map-get($theme, primary);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map.get($config, 'foreground');
 
   .mat-simple-snackbar-action {
-    color: if($is-dark-theme, inherit, mat-color($primary, text));
+    .mat-button {
+      .mat-button-wrapper {
+        color: mat.get-color-from-palette($foreground, divider);
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
 import { getAssetPath } from '../../+state/media.model';
@@ -106,7 +106,7 @@ export class ImageDirective implements OnInit, OnDestroy {
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
 
-      if (!!ref) {
+      if (ref) {
         // ref
         this.srcset = await this.mediaService.generateImageSrcset(ref, params);
         this.src = this.srcset.split(' ')[0];

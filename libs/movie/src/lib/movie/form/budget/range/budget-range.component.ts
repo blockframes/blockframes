@@ -13,7 +13,7 @@ import { budgetRange } from '@blockframes/utils/static-model/static-model';
 })
 export class MovieFormBudgetRangeComponent {
   @Input() form: FormControl;
-  @Input() placeholder?: String;
+  @Input() placeholder?: string;
   @Input() appearance = 'outline'
 
   /* Need to transform it into an array otherwise the order is messed up for the values */

@@ -16,9 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
       <ng-template [cdkPortalOutlet]="pageView"></ng-template>
     </ng-template>
   `,
-  host: {
-    class: 'mat-toolbar mat-toolbar-single-row'
-  },
   animations: [
     trigger('isApp', [
       transition('true => false', [
@@ -40,8 +37,9 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class AppBarComponent {
   private _isApp = true;
-  public pageView: TemplatePortal<any>;
+  public pageView: TemplatePortal<unknown>;
 
+  @HostBinding('class') _classes = 'mat-toolbar mat-toolbar-single-row';
   @HostBinding('@isApp')
   set isApp(isApp: boolean) {
     this._isApp = isApp;
@@ -56,7 +54,7 @@ export class AppBarComponent {
     private cdr: ChangeDetectorRef,
   ) {}
 
-  attach(pageTemplate: TemplateRef<any>) {
+  attach(pageTemplate: TemplateRef<unknown>) {
     this.pageView = new TemplatePortal(pageTemplate, this.containerRef);
   }
 
@@ -134,7 +132,7 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
   @Input() targetId: string;
   constructor(
     private appContainer: AppContainerDirective,
-    private template: TemplateRef<any>,
+    private template: TemplateRef<unknown>,
   ) {}
 
   async ngAfterViewInit() {

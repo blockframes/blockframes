@@ -17,7 +17,7 @@ export class DisplayUserPipe implements PipeTransform {
 
   async transform(users: PublicUser | PublicUser[]) {
     const getUserName = async (user: PublicUser) => {
-      if (!!user.orgId) {
+      if (user.orgId) {
         const org = await this.orgService.getValue(user.orgId);
         return `${displayName(user)} (${orgName(org)})`;
       } else {

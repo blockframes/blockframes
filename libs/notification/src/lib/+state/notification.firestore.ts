@@ -41,7 +41,8 @@ export const notificationTypesPlus = [
   // Other notifications
   'movieSubmitted', // (catalog only)
   'organizationAcceptedByArchipelContent',
-  'orgAppAccessChanged'
+  'orgAppAccessChanged',
+  'userRequestAppAccess'
 ] as const;
 
 export type NotificationTypesBase = typeof notificationTypesBase[number];
@@ -75,5 +76,4 @@ export interface NotificationBase<D> {
 
 type Timestamp = firestore.Timestamp;
 
-export interface NotificationDocument extends NotificationBase<Timestamp> {
-}
+export type NotificationDocument = NotificationBase<Timestamp>

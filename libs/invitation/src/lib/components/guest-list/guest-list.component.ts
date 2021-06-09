@@ -35,7 +35,7 @@ export class GuestListComponent implements OnInit {
   searchControl = new FormControl();
   search$: Observable<Invitation[]>;
 
-  @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
+  @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
   @Input()
   set invitations(invitations: Invitation[]) {

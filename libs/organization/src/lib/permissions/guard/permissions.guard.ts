@@ -28,7 +28,7 @@ export class PermissionsGuard extends CollectionGuard<PermissionsState> {
           return of('c/organization');
         } else {
           return this.service.syncActive({ id: user.orgId }).pipe(
-            map(_ => this.query.getActive()),
+            map(() => this.query.getActive()),
             map(permissions => {
               if (!permissions) {
                 return 'c/organization';

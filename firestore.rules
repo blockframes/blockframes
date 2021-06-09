@@ -133,8 +133,12 @@ service cloud.firestore {
         )
         && isRequestFieldValueEqualToOrNotSetted(['id'], invitationId)
         && notInMaintenance();
-    	allow update: if isOnlyChangingInvitationStatus()
-      && notInMaintenance();
+    	allow update: if  (
+        isNotUpdatingCommonInvitationFields() && (
+          isOnlyChangingInvitationWatchTime()
+          || isOnlyChangingInvitationStatus()
+        )
+      ) && notInMaintenance();
       allow delete: if isInvitationSender()
         && notInMaintenance();
     }
@@ -176,20 +180,30 @@ service cloud.firestore {
     }
 
     function isOnlyChangingInvitationStatus() {
-      // Update is used to change status only. Allowed to recepients only
-      // @TODO (#2500) should be handled by a backend function to prevent ugly rules
-      // Only "status" can be updated.
-      return isInvitationRecepient()
-        &&
-        (
-          isNotUpdatingId('id', existingData().id)
-          && isNotUpdatingField(['mode'])
-          && isNotUpdatingField(['fromOrg', 'id'])
-          && isNotUpdatingField(['fromUser', 'uid'])
-          && isNotUpdatingField(['toOrg', 'id'])
-          && isNotUpdatingField(['toUser', 'uid'])
-          && isNotUpdatingField(['docId'])
-        );
+      return (
+        isInvitationRecepient()
+        && isNotUpdatingField(['watchTime'])
+      );
+    }
+
+    function isOnlyChangingInvitationWatchTime() {
+      return (
+        existingData().type == 'attendEvent'
+        && isNotUpdatingField(['status'])
+    	);
+    }
+
+    function isNotUpdatingCommonInvitationFields() {
+      return ( 
+        isNotUpdatingId('id', existingData().id)
+        && isNotUpdatingField(['mode'])
+        && isNotUpdatingField(['fromOrg', 'id'])
+        && isNotUpdatingField(['fromUser', 'uid'])
+        && isNotUpdatingField(['toOrg', 'id'])
+        && isNotUpdatingField(['toUser', 'uid'])
+        && isNotUpdatingField(['eventId'])
+        && isNotUpdatingField(['type'])
+      );
     }
 
 
@@ -280,12 +294,12 @@ service cloud.firestore {
     	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
       allow read: if userHasValidOrg()
         && notInMaintenance()
-        && ( existingData().storeConfig.status == 'accepted'
-         || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
+        && ( checkStatus(existingData(), 'accepted')
+        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
         )
       allow create: if userHasValidOrg()
-        && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
-      	&& isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
+        && checkAllStatusAreEqual(incomingData(), 'draft')
+        && isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
         && canCreateNewPermissions(userOrgId(), movieId)
         && notInMaintenance();
       allow update: if isAllowedToUpdateMovie() && notInMaintenance();
@@ -300,16 +314,27 @@ service cloud.firestore {
         && isNotUpdatingField(['_meta', 'createdBy'])
         && isNotUpdatingField(['_meta', 'createdAt'])
         && isNotUpdatingField(['_type'])
-        && ( isNotUpdatingField(['storeConfig','status'])
-          || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'draft', 'accepted'] )
-          || ( existingData().storeConfig.appAccess.catalog == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
-          || ( existingData().storeConfig.appAccess.financiers == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
+        && ( isNotUpdatingField(['app'])
+          || ( existingData().app.festival.access == true && incomingData().app.festival.status in ['submitted', 'draft', 'accepted'] )
+          || ( existingData().app.catalog.access == true && incomingData().app.catalog.status in ['submitted', 'draft'] )
+          || ( existingData().app.financiers.access == true && incomingData().app.financiers.status in ['submitted', 'draft'] )
         )
-        && isNotUpdatingField(['storeConfig','storeType'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
-        && isNotUpdatingField(['storeConfig','appAccess', 'financiers'])
+        && isNotUpdatingField(['app','catalog', 'access'])
+        && isNotUpdatingField(['app','festival', 'access'])
+        && isNotUpdatingField(['app','financiers', 'access'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
+    }
+
+    function checkStatus(data, status) {
+      return data.app.catalog.status == status
+        || data.app.festival.status == status
+        || data.app.financiers.status == status;
+    }
+
+    function checkAllStatusAreEqual(data, status) {
+      return data.app.catalog.status == status
+        && data.app.festival.status == status
+        && data.app.financiers.status == status
     }
 
     ////////////////////////////////
@@ -601,4 +626,3 @@ service cloud.firestore {
 
   }
 }
-

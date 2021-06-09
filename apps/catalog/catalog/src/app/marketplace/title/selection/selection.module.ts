@@ -13,6 +13,7 @@ import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [MarketplaceSelectionComponent],
@@ -38,6 +40,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MovieFeatureModule,
     ToLabelModule,
     DetailedTermsModule,
+    StaticSelectModule,
 
     // Material
     MatButtonModule,
@@ -46,6 +49,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatTooltipModule,
 
     RouterModule.forChild([
       {

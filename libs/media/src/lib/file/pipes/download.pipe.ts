@@ -27,7 +27,6 @@ export class ToBlobPipe implements PipeTransform {
 
 @Pipe({ name: 'fileSize' })
 export class FileSizePipe implements PipeTransform {
-  constructor() {}
   /** Take size in Bytes and parse it into a human readable string */
   transform(fileSize: number) {
     return fileSizeToString(fileSize)

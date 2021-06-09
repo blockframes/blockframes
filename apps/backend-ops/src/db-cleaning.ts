@@ -7,6 +7,7 @@ import { removeUnexpectedUsers, UserConfig } from './users';
 import { Auth, Firestore, QueryDocumentSnapshot, getDocument, runChunks } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
+import { getAllAppsExcept } from '@blockframes/utils/apps';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -160,12 +161,12 @@ export async function cleanUsers(
   // Check if auth users have their record on DB
   await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
-  return runChunks(users.docs, async (userDoc) => {
-    const user = userDoc.data() as any;
+  return runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
+    const user = userDoc.data();
 
     // Check if a DB user have a record in Auth.
-    const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
-    if (!!authUserId) {
+    const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(() => undefined);
+    if (authUserId) {
       // Check if ids are the same
       if (authUserId !== user.uid) {
         console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
@@ -204,7 +205,7 @@ export async function cleanUsers(
         await orgDoc.ref.update({ userIds });
         const permDoc = await db.doc(`permissions/${user.orgId}`).get();
         const permission = permDoc.data() as PermissionsDocument;
-        if (!!permission) {
+        if (permission) {
           delete permission.roles[user.uid];
           await permDoc.ref.update({ roles: permission.roles });
         }
@@ -242,7 +243,7 @@ export function cleanOrganizations(
 
     const existingAndValidMovieIds = existingMovies.docs.filter(m => {
       const movie = m.data();
-      return movie.storeConfig.status === 'accepted'
+      return getAllAppsExcept(['crm']).some(a => movie.app[a].status === 'accepted');
     }).map(m => m.id);
 
     const validMovieIds = Array.from(new Set(wishlist.filter(movieId => existingAndValidMovieIds.includes(movieId))));
@@ -269,7 +270,7 @@ export function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
-    const movie = movieDoc.data() as any;
+    const movie = movieDoc.data();
 
     let updateDoc = false;
 
@@ -360,15 +361,17 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
           existingIds.includes(invitation.eventId))
       );
     case 'joinOrganization':
-      // Cleaning not pending invitations older than n days
-      const invitationTimestamp = invitation.date.toMillis();
-      if (invitation.status !== 'pending' && invitationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
-        return false;
+      {
+        // Cleaning not pending invitations older than n days
+        const invitationTimestamp = invitation.date.toMillis();
+        if (invitation.status !== 'pending' && invitationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
+          return false;
+        }
+        return (
+          (existingIds.includes(invitation.fromOrg?.id) && existingIds.includes(invitation.toUser?.uid)) ||
+          (existingIds.includes(invitation.fromUser?.uid) && existingIds.includes(invitation.toOrg?.id))
+        );
       }
-      return (
-        (existingIds.includes(invitation.fromOrg?.id) && existingIds.includes(invitation.toUser?.uid)) ||
-        (existingIds.includes(invitation.fromUser?.uid) && existingIds.includes(invitation.toOrg?.id))
-      );
     default:
       return false;
   }

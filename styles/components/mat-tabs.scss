@@ -1,0 +1,15 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map-get($config, foreground);
+
+  .mat-tab-label:hover {
+    .mat-icon {
+      path, g, polygon {
+        fill: mat.get-color-from-palette($foreground, base);
+      }
+    }
+  }
+}

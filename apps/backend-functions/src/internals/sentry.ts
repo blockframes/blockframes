@@ -4,7 +4,7 @@ import { logger } from 'firebase-functions';
 import { firebaseRegion } from './utils';
 
 
-if (!!sentryDsn) {
+if (sentryDsn) {
   sentryInit({ dsn: sentryDsn, environment: sentryEnv });
 }
 
@@ -16,8 +16,8 @@ if (!!sentryDsn) {
  * logger: firebase functions do not allow for error handler override
  * as of today (2019-07-02).
  */
-export function logErrors(f: any): any {
-  return (...args: any[]) => {
+export function logErrors(f) {
+  return (...args) => {
     return Promise.resolve(f(...args)).catch(async err => {
 
       // Send the exception to sentry IF we have a configuration.
@@ -29,15 +29,15 @@ export function logErrors(f: any): any {
             firebaseRegion,
             location: 'backend-functions',
           },
-        }); 
+        });
         // the function runtime we are in might get killed immediately,
         // flush events.
         await sentryFlush();
       }
 
       // Even if sentry logger is enabled we display error into firebase console
-      if (!!err.message) {
-        const code = !!err.code ? `[${err.code}] ` : '';
+      if (err.message) {
+        const code = err.code ? `[${err.code}] ` : '';
         logger.error(`${code}${err.message}`);
       } else {
         logger.error(err);

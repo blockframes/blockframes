@@ -14,11 +14,11 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 
 const columns = {
-  'title.international': 'TITLE',
-  'release.year': 'RELEASE YEAR',
-  directors: 'DIRECTOR(S)',
-  views: { value: '# VIEWS', disableSort: true },
-  'storeConfig.status': 'STATUS'
+  'title.international': 'Title',
+  'release.year': 'Release Year',
+  directors: 'Director(s)',
+  views: { value: '# Views', disableSort: true },
+  'app.catalog.status': 'Status'
 };
 
 @Component({
@@ -31,13 +31,13 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'storeConfig.status']; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
   titles$: Observable<Movie[]>;
   filter = new FormControl();
-  filter$: Observable<StoreStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
     map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
-    map(movies => movies.filter(m => m.storeConfig.appAccess.catalog)),
+    map(movies => movies.filter(m => m.app.catalog.access)),
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
 
   constructor(
@@ -57,8 +57,8 @@ export class TitleListComponent {
   }
 
   /* index paramter is unused because it is a default paramter from the filter javascript function */
-  filterByMovie(movie: Movie, index: number, value: any): boolean {
-    return value ? movie.storeConfig.status === value : true;
+  filterByMovie(movie: Movie, index: number, value): boolean {
+    return value ? movie.app.catalog.status === value : true;
   }
 
   resetFilter() {

@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     this.hasAcceptedMovies$ = this.allMoviesFromOrg$.pipe(
-      map(movies => movies.some(movie => movie.storeConfig.status === 'accepted'))
+      map(movies => movies.some(movie => movie.app[this.app].status === 'accepted'))
     );
 
     this.hasMovies$ = this.allMoviesFromOrg$.pipe(
@@ -55,9 +55,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
 
     const titles$ = this.allMoviesFromOrg$.pipe(
-      map(movies => movies.filter(movie => movie.storeConfig.status === 'accepted')),
+      map(movies => movies.filter(movie => movie.app[this.app].status === 'accepted')),
       tap(movies => {
-        !!movies.length ?
+        movies.length ?
           this.dynTitle.setPageTitle('Dashboard') :
           this.dynTitle.setPageTitle('Dashboard', 'Empty');
       }),

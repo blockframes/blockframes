@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Blockframes
 import { MovieFormShootingInformationComponent } from './shooting-information.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
@@ -28,8 +28,8 @@ import { MatChipsModule } from '@angular/material/chips';
     FlexLayoutModule,
     // Blockframes
     TunnelPageModule,
-    StaticSelectModule,
     FormListModule,
+    InputAutocompleteModule,
     ToLabelModule,
     // Material
     MatFormFieldModule,

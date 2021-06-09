@@ -5,9 +5,9 @@ import { ClearFirestoreDataOptions } from '@firebase/rules-unit-testing/dist/src
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
-import { runShellCommand, runShellCommandUntil, awaitProcOutput, runInBackground, gsutilTransfer } from '../commands';
+import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer } from '../commands';
 import { getFirestoreExportDirname } from './export';
-import { catchErrors, sleep } from '../util';
+import { sleep } from '../util';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 

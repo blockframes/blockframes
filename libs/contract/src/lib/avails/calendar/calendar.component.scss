@@ -1,0 +1,87 @@
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    padding: 4px 10px;
+  }
+  th, td {
+    text-align: center;
+    font-weight: normal;
+    border-bottom: solid 1px var(--foreground-divider);
+    position: relative;
+  }
+
+  .hover {
+    background-color: var(--active);
+  }
+
+  .empty {
+    cursor: default;
+  }
+
+  .available {
+    cursor: pointer;
+    background-color: var(--primary);
+  }
+
+  .sold {
+    cursor: default;
+    background-color: var(--foreground-disabled-text);
+  }
+
+  .selected {
+    cursor: default;
+    background-color: var(--primary-lighter);
+  }
+
+  .highlighted {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--primary-lighter);
+  }
+  .highlightedStart {
+    border-radius: 32px 0 0 32px;
+  }
+  .highlightedEnd {
+    border-radius: 0 32px 32px 0;
+  }
+
+  .selection-chip {
+    font-size: small;
+    font-weight: 500;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+  }
+
+  .hover-start, .hover-end {
+    color: var(--primary-contrast);
+    border: solid 2px var(--primary-contrast);
+
+    border-radius: 32px;
+    padding-top: 3px;
+  }
+
+  .start {
+    color: var(--primary);
+    background-color: var(--primary-contrast);
+
+    border-radius: 32px 0 0 32px;
+    padding-top: 4px;
+  }
+  .end {
+    color: var(--primary);
+    background-color: var(--primary-contrast);
+
+    border-radius: 0 32px 32px 0;
+    padding-top: 4px;
+  }
+}

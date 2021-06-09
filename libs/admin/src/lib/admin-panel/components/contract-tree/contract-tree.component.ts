@@ -21,7 +21,7 @@ interface ContractNode {
 })
 export class ContractTreeComponent implements OnInit {
   @Input() contract: Contract;
-  private tree: any = {};
+  private tree = {};
   public loaded = false;
   public treeControl = new NestedTreeControl<ContractNode>(node => this.getItems(node.id));
   public dataSource = new MatTreeNestedDataSource<ContractNode>();

@@ -8,9 +8,7 @@ import { hasDisplayName } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class IdentityGuard extends CollectionGuard<AuthState> {
   constructor(
@@ -34,10 +32,10 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
         }
         return this.service.sync().pipe(
           catchError(() => Promise.resolve(true)),
-          map(_ => this.query.user),
+          map(() => this.query.user),
           map(async user => {
             if (!hasDisplayName(user)) { return true; }
-            if (!!user.orgId) {
+            if (user.orgId) {
               const org = await this.orgService.getValue(user.orgId);
               if (!org) {
                 return true;
@@ -51,7 +49,7 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
             } else {
               const requests = await this.invitationService.getValue(ref => ref.where('mode', '==', 'request')
                 .where('type', '==', 'joinOrganization')
-                .where('fromUser.uid', '==', user.uid)) as any;
+                .where('fromUser.uid', '==', user.uid));
               if (requests.find(request => request.status === 'pending')) {
                 return this.router.navigate(['c/organization/join-congratulations']);
               } else if (requests.find(invitation => invitation.status === 'accepted')) {
@@ -59,7 +57,7 @@ export class IdentityGuard extends CollectionGuard<AuthState> {
               } else {
                 const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
                   .where('type', '==', 'joinOrganization')
-                  .where('toUser.uid', '==', user.uid)) as any;
+                  .where('toUser.uid', '==', user.uid));
 
                 if (invitations.find(invitation => invitation.status === 'accepted')) {
                   return 'c/o';

@@ -18,21 +18,21 @@ export async function upgrade(db: Firestore) {
     const data = movieDoc.data();
 
     const newCrew = data.crew.map(person => {
-      if (!!person.role) {
+      if (person.role) {
         person.role = updateCrewRole(person.role)
       }
       return person;
     });
 
     const newProducers = data.producers.map(person => {
-      if (!!person.role) {
+      if (person.role) {
         person.role = updateProducerRole(person.role)
       }
       return person;
     });
 
     const newDirectors = data.directors.map(person => {
-      if (!!person.category) {
+      if (person.category) {
         person.category = updateDirectorCategory(person.category)
       }
       return person;

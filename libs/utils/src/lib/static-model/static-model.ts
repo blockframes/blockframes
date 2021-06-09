@@ -1,11 +1,5 @@
 import { appName } from '@blockframes/utils/apps';
-import {
-  Territory,
-  TerritoryISOA2,
-  TerritoryISOA2Value,
-  TerritoryISOA3,
-  TerritoryISOA3Value
-} from './types'
+import { Territory } from './types'
 
 export const contractStatus = {
   accepted: 'Accepted',
@@ -327,14 +321,13 @@ export const premiereType = {
 } as const
 
 export const producerRoles = {
+  producer: 'Producer',
   executiveProducer: 'Executive Producer',
-  lineProducer: 'Line Producer',
-  associateProducer: 'Associate Producer',
-  productionManager: 'Production Manager'
+  associateProducer: 'Associate Producer'
 } as const
 
 export const productionStatus = {
-  development: 'In development',
+  development: 'In Development',
   shooting: 'In Production',
   post_production: 'In Post-production',
   finished: 'Completed',
@@ -423,11 +416,6 @@ export const storeStatus = {
   refused: 'Refused',
 } as const
 
-export const storeType = {
-  library: 'Library',
-  line_up: 'Line-Up',
-} as const;
-
 export const unitBox = {
   usd: 'USD',
   eur: 'EUR',
@@ -483,6 +471,7 @@ export const festival = {
   venice: 'Venice International Film Festival',
 } as const
 
+// Please keep territories' values in an alphabetic order !
 export const territories = {
   world: 'World',
   "aland-islands": "Åland Islands",
@@ -513,7 +502,6 @@ export const territories = {
   bhutan: "Bhutan",
   bolivia: "Bolivia",
   bonaire: "Bonaire",
-  "sint-eustatius-and-saba": "Sint Eustatius and Saba",
   "bosnia-and-herzegovina": "Bosnia and Herzegovina",
   botswana: "Botswana",
   "bouvet-island": "Bouvet Island",
@@ -546,7 +534,6 @@ export const territories = {
   cyprus: "Cyprus",
   "northern-cyprus": "Northern Cyprus",
   czech: "Czech Republic (Czechia)",
-  "ivory-coast-cote-d-ivoire": "Ivory Coast (Côte d’Ivoire)",
   denmark: "Denmark",
   djibouti: "Djibouti",
   dominica: "Dominica",
@@ -598,6 +585,7 @@ export const territories = {
   "isle-of-man": "Isle of Man",
   israel: "Israel",
   italy: "Italy",
+  "ivory-coast-cote-d-ivoire": "Ivory Coast (Côte d’Ivoire)",
   jamaica: "Jamaica",
   japan: "Japan",
   jersey: "Jersey",
@@ -690,6 +678,7 @@ export const territories = {
   seychelles: "Seychelles",
   "sierra-leone": "Sierra Leone",
   singapore: "Singapore",
+  "sint-eustatius-and-saba": "Sint Eustatius and Saba",
   "saint-martin-dutch": "Sint Maarten (Dutch part)",
   slovakia: "Slovakia",
   slovenia: "Slovenia",
@@ -738,8 +727,8 @@ export const territories = {
   "wallis-and-futuna": "Wallis and Futuna",
   "western-sahara": "Western Sahara",
   yemen: "Yemen",
+  zambia: "Zambia",
   zimbabwe: "Zimbabwe",
-  zambia: "Zambia"
 } as const
 
 export const territoriesISOA2 = {
@@ -1826,7 +1815,6 @@ export const staticModel = {
   soundFormat,
   stakeholderRoles,
   storeStatus,
-  storeType,
   unitBox,
   organizationStatus,
   festival,
@@ -1854,46 +1842,6 @@ export const isInKeys = (scope: Scope, givenValue: string) => {
 }
 
 /**
- * @param code
- * @param system
- */
-export function getTerritoryFromGeoJson(
-  code: string,
-  system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
-  const territory = system === 'iso_a3'
-    ? Object.keys(territoriesISOA3).find(i => i[system] === code.toUpperCase())
-    : Object.keys(territoriesISOA2).find(i => i[system] === code.toUpperCase())
-  if (!territory) {
-    throw new Error(`Failed to retreive: ${code}.`);
-  }
-  return territory;;
-}
-
-/**
- * @param code
- * @param system
- */
-export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
-  const territory = getTerritoryFromGeoJson(code, system);
-  if (!territory) {
-    throw new Error(`Failed to territory: ${code}.`);
-  }
-  return system === 'iso_a3' ? territory as TerritoryISOA3 : territory as TerritoryISOA2;
-}
-
-/**
- * @param code
- * @param system
- */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
-  const territory = getTerritoryFromGeoJson(code, system);
-  if (!territory) {
-    throw new Error(`Failed to territory: ${code}.`);
-  }
-  return system === 'iso_a3' ? territoriesISOA3[territory] as TerritoryISOA3Value : territoriesISOA2[territory] as TerritoryISOA2Value;
-}
-
-/**
  * @param slug
  */
 export function getISO3166TerritoryFromSlug(slug: Territory) {
@@ -1910,6 +1858,6 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
   }
 }
 
-export function parseToAll(scope: Scope, allKey: string): any[] {
+export function parseToAll(scope: Scope, allKey: string): unknown[] {
   return Object.keys(staticModel[scope]).filter(key => key !== allKey)
 }

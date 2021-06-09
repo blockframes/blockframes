@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation, ViewContainerRef, OnDestroy, ElementRef, Output, EventEmitter, Input } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation, ViewContainerRef, OnDestroy, ElementRef, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -53,7 +53,7 @@ const fade = trigger('fade', [
   animations: [fade]
 })
 export class OverlayWidgetComponent implements OnDestroy {
-  @ViewChild('ref') public ref: TemplateRef<any>;
+  @ViewChild('ref') public ref: TemplateRef<unknown>;
   @Output() openedChanged = new EventEmitter<boolean>();
   // Toggle scrolling ability. if set to auto, border-box may be invisible.
   @Input() overflow: 'auto' | 'unset' = 'unset';
@@ -116,28 +116,25 @@ export class OverlayWidgetComponent implements OnDestroy {
 // CARD
 @Directive({
   selector: `widget-card, [widgetCard]`,
-  host: {
-    'class': 'widget-card',
-  }
 })
-export class WidgetCardDirective {}
+export class WidgetCardDirective {
+  @HostBinding('class') class = 'widget-card';
+}
 
 // HEADER
 @Directive({
   selector: `widget-header, [widgetHeader]`,
-  host: {
-    'class': 'widget-header'
-  }
 })
-export class WidgetHeaderDirective {}
+export class WidgetHeaderDirective {
+  @HostBinding('class') class = 'widget-header';
+}
 
 
 // FOOTER
 @Directive({
   selector: `widget-footer, [widgetFooter]`,
-  host: {
-    'class': 'widget-footer'
-  }
 })
-export class WidgetFooterDirective {}
+export class WidgetFooterDirective {
+  @HostBinding('class') class = 'widget-footer';
+}
 

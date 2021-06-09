@@ -3,22 +3,21 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import {
   createMovie,
   Movie,
-  createStoreConfig,
+  createMovieAppConfig,
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { UserService } from '@blockframes/user/+state/user.service';
 import type firebase from 'firebase';
-import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
+import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
-export const fromOrgAndAccepted = (orgId: string): QueryFn => ref => ref.where('storeConfig.status', '==', 'accepted').where('orgIds', 'array-contains', orgId);
+export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
 export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
 export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.where('internalRef', '==', internalRef);
 
@@ -31,22 +30,20 @@ export class MovieService extends CollectionService<MovieState> {
     private authQuery: AuthQuery,
     private permissionsService: PermissionsService,
     private userService: UserService,
-    private routerQuery: RouterQuery,
     protected store: MovieStore,
     private orgQuery: OrganizationQuery
   ) {
     super(store);
   }
 
-  formatFromFirestore(movie: any) {
+  formatFromFirestore(movie) {
     return createMovie(movie);
   }
 
   async create(movieImported?: Partial<Movie>): Promise<Movie> {
     const createdBy = this.authQuery.userId;
-    const appName = getCurrentApp(this.routerQuery);
     let orgIds = [];
-    if (!!movieImported?.orgIds?.length) {
+    if (movieImported?.orgIds?.length) {
       orgIds = movieImported.orgIds;
     } else {
       const orgId = this.orgQuery.getActiveId();
@@ -58,9 +55,8 @@ export class MovieService extends CollectionService<MovieState> {
       ...movieImported,
       orgIds
     });
-    movie.storeConfig = {
-      ...createStoreConfig(movieImported?.storeConfig),
-      appAccess: createMovieAppAccess({ [appName]: true })
+    movie.app = {
+      ...createMovieAppConfig(movieImported?.app)
     };
     await this.runTransaction(async (tx) => {
       movie.id = await this.add(cleanModel(movie), { write: tx });
@@ -74,7 +70,7 @@ export class MovieService extends CollectionService<MovieState> {
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
     const ref = this.getRef(movie.id);
-    write.update(ref, { '_meta.createdAt': new Date() });
+    write.update(ref, { '_meta.createdAt': new Date()});
     return this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, user.orgId);
   }
 
@@ -102,7 +98,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param internalRef
    */
   public async getFromInternalRef(internalRef: string, orgId?: string): Promise<Movie> {
-    const query = !!orgId ? fromOrgAndInternalRef(orgId, internalRef) : fromInternalRef(internalRef)
+    const query = orgId ? fromOrgAndInternalRef(orgId, internalRef) : fromInternalRef(internalRef)
     const movies = await this.getValue(query);
     return movies.length ? createMovie(movies[0]) : undefined;
   }

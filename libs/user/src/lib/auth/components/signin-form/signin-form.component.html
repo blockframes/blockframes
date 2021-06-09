@@ -3,7 +3,7 @@
   <mat-card>
     <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
       <mat-form-field appearance="outline">
-        <mat-label>Email address</mat-label>
+        <mat-label>Email Address</mat-label>
         <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />
         <mat-error *ngIf="signinForm.get('email').hasError('email') && !signinForm.get('email').hasError('required')">
           Please enter a <strong>valid</strong> email address.
@@ -26,7 +26,7 @@
           Password is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-      <a type="button" mat-button routerLink="../email-verification" class="forgot-password">Forgot your password ?</a>
+      <a type="button" mat-button routerLink="../reset-password" class="forgot-password">Forgot your password?</a>
       <div fxLayout="column" fxLayoutAlign="center center">
         <button class="submit" type="submit" mat-flat-button color="accent"><ng-content select="[buttonText]"></ng-content></button>
         <a id="tosignup" type="button" color="accent" mat-button routerLink="/auth/identity">I don't have an account</a>

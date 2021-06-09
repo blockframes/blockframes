@@ -1,5 +1,6 @@
 .main-header {
   padding: 48px;
+  background-size: cover;
   .main-title {
     margin-bottom: 32px;
     p {
@@ -9,13 +10,24 @@
 }
 section {
   margin: 24px;
+
+  footer {
+    margin-top: 12px;
+  }
 }
+.ellipsis {
+  max-width: 400px;
+  cursor: pointer;
+}
+
 .contract {
   padding: 24px;
   margin-bottom: 72px;
 
   img {
     max-width: 150px;
+    max-height: 200px;
+    cursor: pointer;
   }
 }
 
@@ -30,4 +42,8 @@ section {
     width: 380px;
     margin: 24px 0;
   }
+}
+
+static-select {
+  width: 35%;
 }

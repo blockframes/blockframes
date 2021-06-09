@@ -7,6 +7,7 @@ import { MovieService } from '../../+state';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
+import { MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -33,7 +34,7 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
     this.sub = this.movie.valueChanges(this.movieId).subscribe(title => {
       const metadata = getFileMetadata('movies', 'otherVideos', this.movieId);
-      const mediaArray = getDeepValue(title, metadata.field);
+      const mediaArray: Partial<MovieVideo>[] = getDeepValue(title, metadata.field);
       this.videoList.patchValue(mediaArray);
     })
   }

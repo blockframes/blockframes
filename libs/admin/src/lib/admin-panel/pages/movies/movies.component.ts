@@ -4,7 +4,7 @@ import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
-import { EventService } from '@blockframes/event/+state';
+import { EventService, isScreening } from '@blockframes/event/+state';
 
 @Component({
   selector: 'admin-movies',
@@ -30,7 +30,7 @@ export class MoviesComponent implements OnInit {
     'storeConfig.status',
     'screeningCount'
   ];
-  public rows: any[] = [];
+  public rows = [];
   public exporting = new BehaviorStore(false);
 
   constructor(
@@ -48,7 +48,7 @@ export class MoviesComponent implements OnInit {
 
     const [orgs, screenings] = await Promise.all([
       this.orgService.getValue(orgIds),
-      this.eventService.getValue(ref => ref.where('type', '==', 'screening'))
+      this.eventService.getValue(ref => ref.where('type', '==', 'screening')).then(screenings => screenings.filter(isScreening))
     ])
 
     this.rows = movies.map(movie => {
@@ -63,12 +63,11 @@ export class MoviesComponent implements OnInit {
     this.router.navigate([`/c/o/admin/panel/movie/${movie.id}`])
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'id',
       'internalRef',
       'title.international',
-      'storeConfig.status',
       'org.denomination.full',
       'org.denomination.public'
     ];

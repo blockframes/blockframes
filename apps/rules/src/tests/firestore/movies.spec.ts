@@ -6,8 +6,7 @@
 import { testFixture } from './fixtures/data';
 import { Firestore, initFirestoreApp } from '@blockframes/testing/firebase/functions';
 import { Movie } from '@blockframes/movie/+state';
-import { MovieAppAccess } from '@blockframes/utils/apps';
-import { StoreStatus, StoreType } from '@blockframes/utils/static-model';
+import { StoreStatus } from '@blockframes/utils/static-model';
 
 describe('Movies Rules Tests', () => {
   const projectId = `movrules-spec-${Date.now()}`;
@@ -17,10 +16,25 @@ describe('Movies Rules Tests', () => {
     const newMovieId = 'MI-007';
     const existMovieInDraft = 'MI-077';
     const existMovieAccepted = 'M001';
-    const storeConfig = {
-      status: <StoreStatus>'draft',
-      storeType: <StoreType>'Library',
-      appAccess: <MovieAppAccess>{ festival: true },
+    const appConfig = {
+      catalog: {
+        status: <StoreStatus>'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      festival: {
+        status: <StoreStatus>'draft',
+        access: true,
+        refusedAt: null,
+        acceptedAt: null
+      },
+      financiers: {
+        status: <StoreStatus>'draft',
+        access: false,
+        refusedAt: null,
+        acceptedAt: null
+      }
     };
 
     beforeAll(async () => {
@@ -46,9 +60,13 @@ describe('Movies Rules Tests', () => {
         const movieRef = db.doc(`movies/${newMovieId}`);
         const createdMovie: Partial<Movie> = {
           id: newMovieId,
-          storeConfig,
+          app: {
+            ...appConfig,
+            festival: {
+              ...appConfig.festival, status: 'accepted'
+            }
+          },
         };
-        createdMovie.storeConfig['status'] = 'accepted';
         await assertFails(movieRef.set(createdMovie));
       });
 
@@ -57,7 +75,7 @@ describe('Movies Rules Tests', () => {
         const movieRef = db.doc(`movies/${newMovieTitleUnavailableId}`);
         const createdMovie: Partial<Movie> = {
           id: newMovieTitleUnavailableId,
-          storeConfig,
+          app: appConfig,
         };
         await assertFails(movieRef.set(createdMovie));
       });
@@ -67,7 +85,7 @@ describe('Movies Rules Tests', () => {
         const movieRef = db.doc(`movies/${newMovieId}`);
         const createdMovie: Partial<Movie> = {
           id: newMovieTitleUnavailableId,
-          storeConfig,
+          app: appConfig,
         };
         await assertFails(movieRef.set(createdMovie));
       });
@@ -75,7 +93,7 @@ describe('Movies Rules Tests', () => {
       test('with create permission for org should be able', async () => {
         const createdMovie: Partial<Movie> = {
           id: newMovieId,
-          storeConfig: { status: <StoreStatus>'draft' } as any,
+          app: appConfig,
         };
         const movieDoc = db.collection('movies').doc(newMovieId).set(createdMovie);
         await assertSucceeds(movieDoc);
@@ -83,15 +101,14 @@ describe('Movies Rules Tests', () => {
     });
 
     describe('Update Movie', () => {
-      const fields: any = [
+      const fields: [string, unknown][] = [
         ['id', 'MI-0xx'],
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],
         ['_type', 'drama'],
-        ['storeConfig', { appAccess: { catalog: true } }],
-        ['storeConfig', { status: 'rejected' }],
-        ['storeConfig', { storeType: 'blah' }],
-        ['storeConfig', { appAccess: { festival: {} } }],
+        ['app', { catalog: { access: true }}],
+        ['app', { catalog: { status: 'rejected' }}],
+        ['app', { festival: { access: {} }}],
       ];
       test.each(fields)("updating restricted '%s' field shouldn't be able", async (key, value) => {
         const movieRef = db.doc(`movies/${existMovieInDraft}`);
@@ -156,7 +173,7 @@ describe('Movies Rules Tests', () => {
   describe('User not belonging to organization in movies.orgIds', () => {
     const draftMovieId = 'MI-077';
     const acceptedMovieId = 'M001';
-    
+
     beforeAll(async () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
         uid: 'uid-user3'

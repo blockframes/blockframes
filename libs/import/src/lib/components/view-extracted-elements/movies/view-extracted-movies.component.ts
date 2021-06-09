@@ -6,6 +6,7 @@ import { Crew, Producer } from '@blockframes/utils/common-interfaces/identity';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
+  formatAudienceGoals,
   formatAvailableLanguages,
   formatBoxOffice,
   formatCertifications,
@@ -28,210 +29,235 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MovieImportState } from '../../../import-utils';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 import { UserService } from '@blockframes/user/+state';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 let index = 0;
+/**
+ * Comments "// LETTER(S)" refers to the column index in the spreadsheet file
+ */
 const fields = {
-  internationalTitle: {
+  internationalTitle: { // A
     multiLine: false,
     index: index++
   },
-  originalTitle: {
+  originalTitle: { // B
     multiLine: false,
     index: index++
   },
-  internalRef: {
+  internalRef: { // C
     multiLine: false,
     index: index++
   },
-  contentType: {
+  contentType: { // D
     multiLine: false,
     index: index++
   },
-  series: {
+  series: { // E
     multiLine: false,
     index: index++
   },
-  episodeCount: {
+  episodeCount: { // F
     multiLine: false,
     index: index++
   },
-  productionStatus: {
+  productionStatus: { // G
     multiLine: false,
     index: index++
   },
-  releaseYear: {
+  releaseYear: { // H
     multiLine: false,
     index: index++
   },
-  releaseYearStatus: {
+  releaseYearStatus: { // I
     multiLine: false,
     index: index++
   },
   directors: {
     multiLine: true,
     fields: {
-      firstName: index++,
-      lastName: index++,
-      description: index++,
+      firstName: index++, // J
+      lastName: index++, // K
+      description: index++, // L
     }
   },
-  originCountries: {
+  originCountries: { // M
     multiLine: true,
     index: index++
   },
   stakeholders: {
     multiLine: true,
     fields: {
-      displayName: index++,
-      role: index++,
-      country: index++,
+      displayName: index++, // N
+      role: index++, // O
+      country: index++, // P
     }
   },
   originalRelease: {
     multiLine: true,
     fields: {
-      country: index++,
-      media: index++,
-      date: index++,
+      country: index++, // Q
+      media: index++, // R
+      date: index++, // S
     }
   },
-  originalLanguages: {
+  originalLanguages: { // T
     multiLine: true,
     index: index++
   },
-  genres: {
+  genres: { // U
     multiLine: true,
     index: index++
   },
-  customGenres: {
+  customGenres: { // V
     multiLine: true,
     index: index++
   },
-  runningTime: {
+  runningTime: { // W
     multiLine: false,
     index: index++
   },
-  runningTimeStatus: {
+  runningTimeStatus: { // X
     multiLine: false,
     index: index++
   },
   cast: {
     multiLine: true,
     fields: {
-      firstName: index++,
-      lastName: index++,
-      status: index++,
+      firstName: index++, // Y
+      lastName: index++, // A
+      status: index++, // AA
     }
   },
   prizes: {
     multiLine: true,
     fields: {
-      name: index++,
-      year: index++,
-      prize: index++,
-      premiere: index++,
+      name: index++, // AB
+      year: index++, // AC
+      prize: index++, // AD
+      premiere: index++, // AE
     }
   },
-  synopsis: {
+  logline: { // AF
     multiLine: false,
     index: index++
   },
-  keyAssets: {
+  synopsis: { // AG
     multiLine: false,
     index: index++
   },
-  keywords: {
+  keyAssets: { // AH
     multiLine: false,
+    index: index++
+  },
+  keywords: { // AI
+    multiLine: true,
     index: index++
   },
   producers: {
     multiLine: true,
     fields: {
-      firstName: index++,
-      lastName: index++,
-      role: index++,
+      firstName: index++, // AJ
+      lastName: index++, // AK
+      role: index++, // AL
     }
   },
   crew: {
     multiLine: true,
     fields: {
-      firstName: index++,
-      lastName: index++,
-      role: index++,
+      firstName: index++, // AM
+      lastName: index++, // AN
+      role: index++, // AO
     }
   },
-  budgetRange: {
+  budgetRange: { // AP
     multiLine: false,
     index: index++
   },
   boxoffice: {
     multiLine: true,
     fields: {
-      territory: index++,
-      unit: index++,
-      value: index++,
+      territory: index++, // AQ
+      unit: index++, // AR
+      value: index++, // AS
     }
   },
-  certifications: {
+  certifications: { // AT
     multiLine: true,
     index: index++
   },
   ratings: {
     multiLine: true,
     fields: {
-      country: index++,
-      value: index++,
+      country: index++, // AU
+      value: index++, // AV
+    }
+  },
+  audience: {
+    multiLine: true,
+    fields: {
+      targets: index++, // AW
+      goals: index++ // AX
     }
   },
   reviews: {
     multiLine: true,
     fields: {
-      revue: index++,
-      link: index++,
-      quote: index++,
+      filmCriticName: index++, // AY
+      revue: index++, // AZ
+      link: index++, // BA
+      quote: index++, // BB
     }
   },
-  color: {
+  color: { // BC
     multiLine: false,
     index: index++
   },
-  format: {
+  format: { // BD
     multiLine: false,
     index: index++
   },
-  formatQuality: {
+  formatQuality: { // BE
     multiLine: false,
     index: index++
   },
-  soundFormat: {
+  soundFormat: { // BF
     multiLine: false,
     index: index++
   },
-  isOriginalVersionAvailable: {
+  isOriginalVersionAvailable: { // BG
     multiLine: false,
     index: index++
   },
   languages: {
     multiLine: true,
     fields: {
-      language: index++,
-      dubbed: index++,
-      subtitle: index++,
-      caption: index++,
+      language: index++, // BH
+      dubbed: index++, // BI
+      subtitle: index++, // BJ
+      caption: index++, // BK
     }
+  },
+  salesPitch: { // BL
+    multiLine: false,
+    index: index++
   },
   //////////////////
   // ADMIN FIELDS
   //////////////////
-  storeType: {
+  catalogStatus: { // BM
     multiLine: false,
     index: index++
   },
-  storeStatus: {
+  festivalStatus: { // BN
     multiLine: false,
     index: index++
   },
-  ownerId: {
+  financiersStatus: { // BO
+    multiLine: false,
+    index: index++
+  },
+  ownerId: { // BP
     multiLine: false,
     index: index++
   },
@@ -265,6 +291,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService,
     private userService: UserService,
+    private router: RouterQuery
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
@@ -330,7 +357,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
       formatProductionStatus(this.mapping.productionStatus, movie, importErrors);
 
       // RELEASE YEAR
-      formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie);
+      if (!isNaN(this.mapping.releaseYear)) {
+        formatReleaseYear(this.mapping.releaseYear, this.mapping.releaseYearStatus, movie);
+      } else {
+        formatSingleValue(this.mapping.releaseYearStatus, 'screeningStatus', 'movie.release.status', movie);
+      }
 
       // PRODUCTION COMPANIES (Production Companie(s))
       formatStakeholders(this.mapping.stakeholders, movie, importErrors);
@@ -377,7 +408,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // QUALIFICATIONS (certifications)
       movie.certifications = formatCertifications(this.mapping.certifications, importErrors);
 
-      // RATINS
+      // RATINGS
       movie.rating = formatRatings(this.mapping.ratings, importErrors);
 
       // FILM REVIEW
@@ -401,17 +432,46 @@ export class ViewExtractedMoviesComponent implements OnInit {
       // LANGUAGES (Available versions(s))
       formatAvailableLanguages(this.mapping.languages, movie, importErrors);
 
+      // LOGLINE (Logline)
+      movie.logline = this.mapping.logline;
+
+      // POSITIONING (Positioning)
+      movie.audience = formatAudienceGoals(this.mapping.audience);
+
+      // SALES PITCH (Description)
+      movie.promotional.salesPitch.description = this.mapping.salesPitch;
+
       //////////////////
       // ADMIN FIELDS
       //////////////////
 
+      let statusSetAsBlockframesAdmin = false;
       if (this.isUserBlockframesAdmin) {
 
-        // STORE TYPE
-        formatSingleValue(this.mapping.storeType, 'storeType', 'storeConfig.storeType', movie);
+        /**
+       * MOVIE APP ACCESS
+       * For each app, we set a status. If there is no status registered, it will be draft by default.
+       */
+        // CATALOG STATUS
+        formatSingleValue(this.mapping.catalogStatus, 'storeStatus', `app.catalog.status`, movie);
+        if (this.mapping.catalogStatus) {
+          movie.app.catalog.access = true;
+          statusSetAsBlockframesAdmin = true;
+        }
 
-        // MOVIE STATUS
-        formatSingleValue(this.mapping.storeStatus, 'storeStatus', 'storeConfig.status', movie);
+        // FESTIVAL STATUS
+        formatSingleValue(this.mapping.festivalStatus, 'storeStatus', `app.festival.status`, movie);
+        if (this.mapping.festivalStatus) {
+          movie.app.festival.access = true;
+          statusSetAsBlockframesAdmin = true;
+        }
+
+        // FINANCIERS STATUS
+        formatSingleValue(this.mapping.financiersStatus, 'storeStatus', `app.financiers.status`, movie);
+        if (this.mapping.financiersStatus) {
+          movie.app.financiers.access = true;
+          statusSetAsBlockframesAdmin = true;
+        }
 
         // USER ID (to override who is creating this title)
         if (this.mapping.ownerId) {
@@ -430,6 +490,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
             });
           }
         }
+      }
+
+      if (!statusSetAsBlockframesAdmin) {
+        const currentApp = getCurrentApp(this.router);
+        movie.app[currentApp].access = true;
       }
 
       ///////////////
@@ -459,8 +524,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
     //////////////////
     // REQUIRED FIELDS
     //////////////////
-
-
 
     if (!movie.title.original) {
       errors.push({
@@ -653,6 +716,46 @@ export class ViewExtractedMoviesComponent implements OnInit {
         type: 'warning',
         field: 'movie.languages',
         name: 'Dubbings | Subtitles | Captions ',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.logline) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.logline',
+        name: 'Logline',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (movie.review.length === 0) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.review',
+        name: 'Review',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (movie.audience.goals.length === 0 && movie.audience.targets.length === 0) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.audience',
+        name: 'Positioning',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    if (!movie.promotional.salesPitch.description) {
+      errors.push({
+        type: 'warning',
+        field: 'movie.promotional.salesPitch',
+        name: 'Sales Pitch',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });

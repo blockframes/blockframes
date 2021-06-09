@@ -23,7 +23,7 @@ import { join } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket, firebase } from '@env'
-import { migrateBeta } from './migrations';
+import { migrate } from './migrations';
 import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
@@ -43,7 +43,7 @@ export async function importEmulatorFromBucket(_exportUrl: string) {
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
-    await new Promise(() => { });
+    await new Promise(() => { void 0; });
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;
@@ -65,7 +65,7 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   let proc: ChildProcess;
   try {
     proc = await startFirestoreEmulatorWithImport(emulatorPath);
-    await new Promise(() => { });
+    await new Promise(() => { void 0; });
   } catch (e) {
     await shutdownEmulator(proc)
     throw e;
@@ -110,7 +110,7 @@ export async function anonDbProcess() {
   console.log(o.map((snap) => snap.id));
 
   console.info('Preparing database & storage by running migrations...');
-  await migrateBeta({ withBackup: false, db, storage }); // run the migration, do not trigger a backup before, since we already have it!
+  await migrate({ withBackup: false, db, storage }); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Migrations complete!');
 
   console.log('Running anonymization...');
@@ -150,8 +150,6 @@ export async function anonymizeLatestProdDb() {
   const proc = await startFirestoreEmulatorWithImport(defaultEmulatorBackupPath);
   try {
     await anonDbProcess();
-  } catch (e) {
-    throw e;
   } finally {
     await shutdownEmulator(proc, defaultEmulatorBackupPath);
   }
@@ -185,8 +183,6 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
     proc = await startFirestoreEmulatorWithImport(emulatorPath);
     const db = connectEmulator();
     startMaintenance(db);
-  } catch (e) {
-    throw e;
   } finally {
     await shutdownEmulator(proc);
   }

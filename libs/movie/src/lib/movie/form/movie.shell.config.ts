@@ -62,7 +62,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     private uploaderService: FileUploaderService,
   ) { }
 
-  onInit(): Observable<any>[] {
+  onInit(): Observable<unknown>[] {
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
@@ -106,7 +106,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   }
 
   // TODO issue#4002
-  async onSave(options: FormSaveOptions): Promise<any> {
+  async onSave(options: FormSaveOptions): Promise<void> {
 
     const base = this.query.getActive();
     const movie = mergeDeep(base, this.form.value);
@@ -131,8 +131,8 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     // Specific update if publishing
     if (options.publishing) {
       const currentApp: App = this.route.getData('app');
-      movie.storeConfig.status = getMoviePublishStatus(currentApp);
-      movie.storeConfig.appAccess[currentApp] = true;
+      movie.app[currentApp].status = getMoviePublishStatus(currentApp);
+      if (currentApp === 'festival') movie.app[currentApp].acceptedAt = new Date();
     }
 
     // -- Update movie & media -- //

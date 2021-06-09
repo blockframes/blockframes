@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <mat-sidenav class="dark-theme" id="dashboard-navbar" mode="over">
     <mat-toolbar fxLayout fxLayoutAlign="space-between center">
-      <a routerLink=".">
+      <a class="outline-logo" routerLink=".">
         <app-logo></app-logo>
       </a>
       <button mat-icon-button (click)="sidenav.close()">
@@ -23,8 +23,11 @@
         </a>
         <ng-content select="header"></ng-content>
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-          <mat-icon svgIcon="favorite" [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)"
-            matBadgeColor="accent" matBadgeSize="small">
+          <mat-icon svgIcon="favorite"
+            [matBadge]="wishlistCount$ | async"
+            [matBadgeHidden]="(wishlistCount$ | async) === 0"
+            matBadgeColor="accent"
+            matBadgeSize="small">
           </mat-icon>
         </a>
         <div fxLayout="row" fxLayoutGap="24px">

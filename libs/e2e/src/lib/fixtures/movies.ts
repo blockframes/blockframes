@@ -2,11 +2,6 @@
 import { QueryInferface } from "../utils/queryinterface";
 import moviesFixture from 'tools/fixtures/movies.json';
 
-export enum MOVIE {
-  Felicità = '1J5uLFThLziaj2j0xPPP',
-  Hunted = 'KUFRFI3VQ5HLOdymnEX5',
-}
-
 export class Orgs {
   get(query: QueryInferface) : Partial<Movie>[] {
     const orgSet: Partial<Movie>[] = (query.exist) ? moviesFixture : null;

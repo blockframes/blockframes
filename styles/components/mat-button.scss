@@ -1,9 +1,13 @@
-@mixin mat-bf-button-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map.get($config, 'foreground');
+  $background: map.get($config, 'background');
+  $primary: map.get($config, 'primary');
+  $accent: map.get($config, 'accent');
+  $warn: map.get($config, 'warn');
 
   ///////////////////////
   // BUTTON WITH ICONS //
@@ -14,33 +18,35 @@
   .mat-stroked-button,
   .mat-button,
   .mat-icon-button {
-    color: mat-color($foreground, text);
+    color: mat.get-color-from-palette($foreground, text);
     &.mat-primary {
       svg g,
       svg polygon,
       svg path {
-        fill: mat-color($primary);
+        fill: mat.get-color-from-palette($primary);
       }
     }
     &.mat-accent {
       svg g,
       svg polygon,
       svg path {
-        fill: mat-color($accent);
+        fill: mat.get-color-from-palette($accent);
       }
     }
     &.mat-warn {
       svg g,
       svg polygon,
       svg path {
-        fill: mat-color($warn);
+        fill: mat.get-color-from-palette($warn);
       }
     }
 
     &.mat-button-disabled {
-      color: mat-color($foreground, disabled-text);
-      svg g, svg polygon, svg path {
-        fill: mat-color($foreground, disabled-text);
+      color: mat.get-color-from-palette($foreground, disabled-text);
+      svg g,
+      svg polygon,
+      svg path {
+        fill: mat.get-color-from-palette($foreground, disabled-text);
       }
     }
   }
@@ -55,67 +61,65 @@
       svg g,
       svg polygon,
       svg path {
-        fill: mat-color($primary, default-contrast);
+        fill: mat.get-color-from-palette($primary, 'default-contrast');
       }
       &:hover {
-        background-color: mat-color($primary, 800);
+        background-color: mat.get-color-from-palette($primary, 800);
       }
     }
     &.mat-accent {
       svg g,
       svg polygon,
       svg path {
-        fill: mat-color($accent, default-contrast);
+        fill: mat.get-color-from-palette($accent, 'default-contrast');
       }
       &:hover {
-        background-color: mat-color($accent, 800);
+        background-color: mat.get-color-from-palette($accent, 800);
       }
     }
     &.mat-warn {
       svg g,
       svg polygon,
       svg path {
-        fill: mat-color($warn, default-contrast);
+        fill: mat.get-color-from-palette($warn, 'default-contrast');
       }
       &:hover {
-        background-color: mat-color($warn, 800);
+        background-color: mat.get-color-from-palette($warn, 800);
       }
     }
     // Used only in the upload component, remove it when the component will be reworked
     &.mat-divider {
-      background-color: mat-color($foreground, divider);
+      background-color: mat.get-color-from-palette($foreground, 'divider');
       svg g,
       svg polygon,
       svg path {
-        fill: mat-color($primary, default-contrast);
+        fill: mat.get-color-from-palette($primary, 'default-contrast');
       }
     }
 
     &.mat-button-disabled {
-      background-color: mat-color($background, disabled-button);
+      background-color: mat.get-color-from-palette($background, disabled-button);
       // Prevent override from above style
       &:hover {
-        background-color: mat-color($background, disabled-button);
+        background-color: mat.get-color-from-palette($background, disabled-button);
       }
-      svg g, svg polygon, svg path {
-        fill: mat-color($foreground, disabled-button);
+      svg g,
+      svg polygon,
+      svg path {
+        fill: mat.get-color-from-palette($foreground, disabled-button);
       }
     }
   }
 
-  .mat-button {
-    padding: 12px 8px;
-    margin: 0 24px;
-  }
-
+  .mat-button,
   .mat-flat-button,
   .mat-raised-button,
   .mat-stroked-button {
-    padding: 14px 32px;
+    padding: 14px 24px;
   }
 
   .mat-button.mat-button-disabled {
-    background-color: mat-color($background, disabled-button);
+    background-color: mat.get-color-from-palette($background, disabled-button);
   }
 
   // Center close button
@@ -125,23 +129,23 @@
 
   .mat-stroked-button:not(.mat-button-disabled) {
     border-radius: 26px;
-    border-color: mat-color($foreground, divider);
+    border-color: mat.get-color-from-palette($foreground, divider);
     &.mat-primary {
-      border-color: mat-color($primary);
+      border-color: mat.get-color-from-palette($primary);
       &:hover {
-        border-color: mat-color($primary, 800);
+        border-color: mat.get-color-from-palette($primary, 800);
       }
     }
     &.mat-accent {
-      border-color: mat-color($accent);
+      border-color: mat.get-color-from-palette($accent);
       &:hover {
-        border-color: mat-color($accent, 800);
+        border-color: mat.get-color-from-palette($accent, 800);
       }
     }
     &.mat-warn {
-      border-color: mat-color($warn);
+      border-color: mat.get-color-from-palette($warn);
       &:hover {
-        border-color: mat-color($warn, 800);
+        border-color: mat.get-color-from-palette($warn, 800);
       }
     }
   }
@@ -157,7 +161,7 @@
 
   .mat-fab,
   .mat-mini-fab {
-    @include mat-private-theme-overridable-elevation(0, $theme);
+    @include mat.overridable-elevation(0);
   }
 
   .mat-fab {
@@ -168,7 +172,7 @@
 
   // Add a border around the avatar of the user in the toolbar
   auth-widget button[mat-icon-button] img {
-    border: 1px solid mat-color($foreground, divider);
+    border: 1px solid mat.get-color-from-palette($foreground, divider);
   }
 
   // Override the padding of the button wrapper to get icon vertical aligned in the mini fab button
@@ -179,22 +183,21 @@
 }
 
 // TYPOGRAPHY
-@mixin mat-bf-button-typography($config) {
-  // need to wrap around something to win the battle against Material CSS priority
-  body {
-    // note: mat-icon-button is not here on purpose
-    .mat-button,
-    .mat-raised-button,
-    .mat-stroked-button,
-    .mat-flat-button,
-    .mat-fab,
-    .mat-mini-fab {
-      letter-spacing: mat-letter-spacing($config, button);
-      line-height: mat-line-height($config, button);
-    }
+@mixin typography($theme) {
+  $config: mat.get-typography-config($theme);
+
+  // note: mat-icon-button is not here on purpose
+  .mat-button,
+  .mat-raised-button,
+  .mat-stroked-button,
+  .mat-flat-button,
+  .mat-fab,
+  .mat-mini-fab {
+    letter-spacing: mat.letter-spacing($config, button);
+    line-height: mat.line-height($config, button);
   }
 
   .mat-button-toggle-label-content {
-    font-size: mat-font-size($config, button);
+    font-size: mat.font-size($config, button);
   }
 }

@@ -7,7 +7,7 @@ header, section {
 header {
   height: 300px;
   padding-top: 30px;
-  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
+  background: linear-gradient(to bottom, var(--background-disabled-button), var(--background));
 }
 
 .user-info {

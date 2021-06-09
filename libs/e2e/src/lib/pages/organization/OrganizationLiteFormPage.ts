@@ -3,8 +3,6 @@ import { Organization } from '@blockframes/e2e/utils/type';
 import { ORGANIZATION } from '../../fixtures/orgs';
 
 export default class OrganizationLiteFormPage {
-  constructor() {
-  }
 
   // SINGLE FIELD
   public createNewOrg(org: Partial<Organization> = ORGANIZATION) {

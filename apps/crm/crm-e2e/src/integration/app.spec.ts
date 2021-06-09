@@ -1,5 +1,13 @@
-describe('crm-crm', () => {
-  beforeEach(() => cy.visit('/'));
+﻿import { SEC } from '@blockframes/e2e/utils';
 
-  it.skip('should display welcome message', () => {});
+describe('crm-crm', () => {
+  beforeEach(() => {
+    cy.wait(10 * SEC);
+    cy.visit('/');
+    cy.wait(20 * SEC);
+  });
+
+  it('TBD Test', () => {
+    cy.wait(300 * SEC);
+  });
 });

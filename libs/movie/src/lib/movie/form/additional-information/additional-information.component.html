@@ -66,25 +66,23 @@
             </span>
           </ng-template>
           <ng-template formView let-boxOfficeForm>
-            <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">
+            <article [formGroup]="boxOfficeForm" fxLayout fxLayoutGap="24px">
 
-              <div fxLayout fxLayoutGap="24px">
-                <static-select test-id="boxoffice-territory" scope="territories" [control]="boxOfficeForm.get('territory')">
-                  <mat-label>Country</mat-label>
-                </static-select>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Metrics</mat-label>
-                  <mat-select test-id="boxoffice-unit" formControlName="unit">
-                    <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
-                      {{ unit.value }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-hint>Please select applying metrics.</mat-hint>
-                </mat-form-field>
-              </div>
+              <static-select test-id="boxoffice-territory" scope="territories" [control]="boxOfficeForm.get('territory')" fxFlex>
+                <mat-label>Country</mat-label>
+              </static-select>
 
               <mat-form-field appearance="outline">
+                <mat-label>Metrics</mat-label>
+                <mat-select test-id="boxoffice-unit" formControlName="unit">
+                  <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
+                    {{ unit.value }}
+                  </mat-option>
+                </mat-select>
+                <mat-hint>Please select applying metrics.</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Figures</mat-label>
                 <input test-id="boxoffice-earnings" matInput type="number" formControlName="value" min="0"
                   placeholder="Figures">
@@ -126,7 +124,7 @@
                 <mat-hint>Please specify your title's rating, if existing.</mat-hint>
               </mat-form-field>
 
-              <static-select test-id="rating-country" [control]="ratingForm.get('country')" scope="territories">
+              <static-select test-id="rating-country" [control]="ratingForm.get('country')" scope="territories" fxFlex>
                 <mat-label>Country</mat-label>
                 <mat-hint>Please specify country applying rating system.</mat-hint>
               </static-select>

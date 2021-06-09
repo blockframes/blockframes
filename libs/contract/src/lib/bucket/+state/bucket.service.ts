@@ -32,7 +32,7 @@ export class BucketService extends CollectionService<BucketState> {
     for (const contract of bucket.contracts) {
       for (const term of contract.terms) {
         term.duration.from = term.duration.from.toDate();
-        term.duration.to = term.duration.to.toDate();        
+        term.duration.to = term.duration.to.toDate();
       }
     }
     return bucket;
@@ -45,7 +45,7 @@ export class BucketService extends CollectionService<BucketState> {
     await this.update(this.query.getActiveId(), {
       specificity,
       delivery,
-      uid: this.authQuery.userId  // Specify who is updating the 
+      uid: this.authQuery.userId  // Specify who is updating the
     });
 
     // Create offer
@@ -88,7 +88,7 @@ export class BucketService extends CollectionService<BucketState> {
         currency: bucket.currency,
         contractId,
       });
-    
+
     });
     return Promise.all(promises);
   }

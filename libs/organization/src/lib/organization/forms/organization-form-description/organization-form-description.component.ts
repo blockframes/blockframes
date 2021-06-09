@@ -14,6 +14,4 @@ export class OrganizationFormDescriptionComponent {
   @Input() activity: FormControl;
   @Input() description: FormControl;
 
-  constructor() { }
-
 }

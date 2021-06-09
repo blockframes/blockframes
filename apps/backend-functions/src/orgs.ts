@@ -18,6 +18,7 @@ import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { User } from '@blockframes/user/+state';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
@@ -61,7 +62,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
       .where('toUser.uid', '==', userAddedId)
       .where('type', '==', 'joinOrganization')
       .where('fromOrg.id', '==', after.id).get();
-    if (!!invitationsSnapshot.docs.length) {
+    if (invitationsSnapshot.docs.length) {
       const notifications = after.userIds.filter(userId => userId !== userAdded.uid).map(userId => notifyUser(userId, 'orgMemberUpdated', after, userAdded));
       return triggerNotifications(notifications);
     }
@@ -79,7 +80,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
+export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   const org = snap.data() as OrganizationDocument;
 
   if (!org?.denomination?.full) {
@@ -97,7 +98,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   ]);
 }
 
-export async function onOrganizationUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
+export async function onOrganizationUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
@@ -155,7 +156,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 export async function onOrganizationDelete(
   orgSnapshot: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>,
   context: EventContext
-): Promise<any> {
+) {
 
   const org = orgSnapshot.data() as OrganizationDocument;
 
@@ -267,6 +268,16 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: strin
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
     const mailRequest = await organizationRequestedAccessToApp(organization, data.app);
     const from = getSendgridFrom(data.app);
+    const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
+
+    const notification = createNotification({
+      toUserId: context.auth.uid,
+      organization: createPublicOrganizationDocument(organization),
+      user: createPublicUserDocument(userDocument),
+      _meta: createDocumentMeta({ createdFrom: data.app }),
+      type: 'userRequestAppAccess'
+    });
+    await triggerNotifications([notification]);
     return sendMail(mailRequest, from).catch(e => console.warn(e.message));
   }
   return;

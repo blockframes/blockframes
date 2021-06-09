@@ -4,6 +4,7 @@ import {
   createMovieRating,
   createMovieReview,
   createPrize,
+  createAudienceGoals,
   Movie,
   populateMovieLanguageSpecification
 } from "@blockframes/movie/+state/movie.model";
@@ -12,10 +13,10 @@ import { createCredit, createStakeholder } from "../common-interfaces/identity";
 import { getKeyIfExists } from "../helpers";
 import { Scope } from "../static-model/static-model";
 
-const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/;
+const datesRegex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-](\d{4})$/;
 
 export function formatOriginalRelease(originalRelease: { date: string, country: string, media: string }[], state: MovieImportState) {
-  return originalRelease.filter(r => !!r.date).map(r => {
+  return originalRelease.filter(r => r.date).map(r => {
     const dateParts = r.date.match(datesRegex);
     let date: Date;
     if (dateParts && dateParts.length === 4) {
@@ -25,7 +26,7 @@ export function formatOriginalRelease(originalRelease: { date: string, country: 
       date = new Date((parseInt(r.date, 10) - (25567 + 1)) * 86400 * 1000);
     }
 
-    if (!!date) {
+    if (date) {
       const originalRelease = createMovieOriginalRelease({ date });
       const country = getKeyIfExists('territories', r.country);
       if (country) {
@@ -47,11 +48,11 @@ export function formatOriginalRelease(originalRelease: { date: string, country: 
         hint: 'Edit corresponding sheet field.'
       });
     }
-  }).filter(r => !!r);
+  }).filter(r => r);
 }
 
 export function formatStakeholders(stakeholders: { displayName: string, country: string, role: string }[], movie: Movie, state: MovieImportState) {
-  stakeholders.filter(s => !!s.displayName).forEach(s => {
+  stakeholders.filter(s => s.displayName).forEach(s => {
     const stakeHolder = createStakeholder({ displayName: s.displayName });
 
     const country = getKeyIfExists('territories', s.country);
@@ -209,7 +210,7 @@ export function formatOriginCountries(originCountries: string[], state: MovieImp
         hint: 'Edit corresponding sheet field.'
       });
     }
-  }).filter(c => !!c);
+  }).filter(c => c);
 }
 
 export function formatOriginalLanguages(originalLanguages: string[], state: MovieImportState) {
@@ -226,7 +227,7 @@ export function formatOriginalLanguages(originalLanguages: string[], state: Movi
         hint: 'Edit corresponding sheet field.'
       });
     }
-  }).filter(l => !!l);
+  }).filter(l => l);
 }
 
 export function formatGenres(genres: string[], customGenres: string[], movie: Movie, state: MovieImportState) {
@@ -243,25 +244,25 @@ export function formatGenres(genres: string[], customGenres: string[], movie: Mo
         hint: 'Edit corresponding sheet field.'
       });
     }
-  }).filter(g => !!g);
+  }).filter(g => g);
 
   movie.customGenres = customGenres;
 }
 
 export function formatCredits(credits: { lastName: string, firstName: string, role?: string, description?: string, status?: string }[], scope?: Scope) {
-  return credits.filter(c => !!c.firstName).map(c => {
+  return credits.filter(c => c.firstName).map(c => {
     const credit = createCredit({ firstName: c.firstName, lastName: c.lastName });
 
     if (scope && c.role) {
       const role = getKeyIfExists(scope, c.role);
-      if (!!role) {
+      if (role) {
         credit.role = role;
       }
     }
 
     if (scope && c.status) {
       const status = getKeyIfExists(scope, c.status);
-      if (!!status) {
+      if (status) {
         credit.status = status;
       }
     }
@@ -288,8 +289,8 @@ export function formatBoxOffice(boxoffice: { territory: string, unit: string, va
   return boxoffice.filter(b => b.territory).map(b => {
     const territory = getKeyIfExists('territories', b.territory);
     const unit = getKeyIfExists('unitBox', b.unit);
-    if (!!territory) {
-      if (!!unit) {
+    if (territory) {
+      if (unit) {
         const boxoffice = createBoxOffice(
           {
             unit,
@@ -316,14 +317,14 @@ export function formatBoxOffice(boxoffice: { territory: string, unit: string, va
         hint: 'Edit corresponding sheet field.'
       });
     }
-  }).filter(b => !!b);
+  }).filter(b => b);
 
 }
 
 export function formatCertifications(certifications: string[], state: MovieImportState) {
-  return certifications.filter(c => !!c).map(c => {
+  return certifications.filter(c => c).map(c => {
     const certification = getKeyIfExists('certifications', c);
-    if (!!certification) {
+    if (certification) {
       return certification;
     } else {
       state.errors.push({
@@ -334,14 +335,14 @@ export function formatCertifications(certifications: string[], state: MovieImpor
         hint: 'Edit corresponding sheet field.'
       });
     }
-  }).filter(b => !!b);
+  }).filter(b => b);
 }
 
 export function formatRatings(ratings: { country: string, value: string }[], state: MovieImportState) {
-  return ratings.filter(r => !!r.value && !!r.country).map(r => {
+  return ratings.filter(r => r.value && r.country).map(r => {
     const country = getKeyIfExists('territories', r.country);
     const movieRating = createMovieRating({ value: r.value });
-    if (!!country) {
+    if (country) {
       movieRating.country = country;
       return movieRating;
     } else {
@@ -353,36 +354,45 @@ export function formatRatings(ratings: { country: string, value: string }[], sta
         hint: 'Edit corresponding sheet field.'
       });
     }
-  }).filter(b => !!b);
+  }).filter(b => b);
 
 }
 
-export function formatReview(reviews: { revue: string, link: string, quote: string }[]) {
+export function formatAudienceGoals(audience: { goals: string, targets: string }[]) {
+  const goals = audience.filter(a => a.goals).map(a => getKeyIfExists('socialGoals', a.goals)).filter(g => !!g);
+  const targets = audience.filter(a => a.targets).map(a => a.targets);
+  return createAudienceGoals({ targets, goals });
+}
+
+export function formatReview(reviews: { filmCriticName: string, revue: string, link: string, quote: string }[]) {
   return reviews.filter(r => !!r.revue).map(r => {
     return createMovieReview({
+      criticName: r.filmCriticName,
       journalName: r.revue,
       revueLink: r.link,
       criticQuote: r.quote
     })
-  }).filter(r => !!r);
+  }).filter(r => r);
 }
 
 export function formatSingleValue(value: string, scope: Scope, path: string, movie: Movie) {
-  if (!!value) {
+  if (value) {
     const key = getKeyIfExists(scope, value);
-    if (!!key) {
+    if (key) {
       const pathParts = path.split('.');
       if (pathParts.length === 1) {
         movie[pathParts[0]] = key;
       } else if (pathParts.length === 2) {
         movie[pathParts[0]][pathParts[1]] = key;
+      } else if (pathParts.length === 3) {
+        movie[pathParts[0]][pathParts[1]][pathParts[2]] = key;
       }
     }
   }
 }
 
 export function formatAvailableLanguages(versions: { language: string, dubbed: string, subtitle: string, caption: string }[], movie: Movie, state: MovieImportState) {
-  versions.filter(v => !!v.language).forEach(v => {
+  versions.filter(v => v.language).forEach(v => {
     const language = getKeyIfExists('languages', v.language);
     if (language) {
       populateMovieLanguageSpecification(movie.languages, language, 'dubbed', v.dubbed.toLowerCase() === 'yes' ? true : false);

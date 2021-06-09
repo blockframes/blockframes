@@ -49,12 +49,13 @@ export const onUserUpdate = functions.runWith(heavyConfig) // user update can po
 export const onUserDelete = onDocumentDelete('/users/{userID}', users.onUserDelete);
 
 /** Trigger: REST call to send a verify email to a user. */
-// @TODO (#2821)
-/*export const sendVerifyEmail = functions.https
-  .onCall(users.startVerifyEmailFlow);*/
+export const sendVerifyEmailAddress = functions.https.onCall(skipInMaintenance(logErrors(users.startVerifyEmailFlow)));
 
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https.onCall(skipInMaintenance(users.startResetPasswordEmail));
+
+/** Trigger: REST call to manually verify email. */
+export const verifyEmail = functions.https.onCall(skipInMaintenance(users.verifyEmail));
 
 //--------------------------------
 //        Misc Management       //
@@ -131,7 +132,7 @@ export const twilioWebhook = functions.https.onRequest(_twilioWebhook);
  * Creates notifications when an event is about to start
  */
 export const scheduledNotifications = functions.pubsub.schedule('*/30 * * * *') // every 30 minutes
-  .onRun(skipInMaintenance(_ => createNotificationsForEventsToStart()));
+  .onRun(skipInMaintenance(createNotificationsForEventsToStart));
 
 //--------------------------------
 //       Movies Management      //

@@ -12,7 +12,7 @@ import { TwilioService } from '../components/meeting/+state/twilio.service';
 
 
 @Injectable({ providedIn: 'root' })
-export class EventGuard implements CanActivate, CanDeactivate<any> {
+export class EventGuard implements CanActivate, CanDeactivate<unknown> {
 
   constructor(
     private authQuery: AuthQuery,
@@ -59,7 +59,7 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
   }
 
   canDeactivate(
-    component: any,
+    component: unknown,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot
@@ -87,10 +87,12 @@ export class EventGuard implements CanActivate, CanDeactivate<any> {
       }
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: {
-          title: 'Are you sure ?',
-          question: `You might not be able to come back to this ${event.type} as its access is time-limited.`,
-          buttonName: 'Yes',
-        }
+          title: `You are about to leave this ${event.type}.`,
+          question: `You might not be able to come back as its access is time-limited.`,
+          confirm: 'Leave anyway',
+          cancel: 'Stay',
+        },
+        autoFocus: false,
       })
       return dialogRef.afterClosed();
     }

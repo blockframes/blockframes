@@ -10,9 +10,10 @@
     scrollbar-color: rgba(255, 255, 255, 0.5) var(--primary);
   }
 }
-
+ /* overflow-y: hidden is used to remove the vertical scrollbar on Safari */
 section {
   overflow: auto;
+  overflow-y: hidden;
   white-space: nowrap;
   padding-bottom: 24px;
 }

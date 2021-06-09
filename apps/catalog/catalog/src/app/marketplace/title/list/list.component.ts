@@ -5,7 +5,7 @@ import {
   OnInit,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
@@ -26,7 +26,7 @@ import { SearchResponse } from '@algolia/client-search';
 import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgId } from '@env';
-import { BucketContract, createBucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
+import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
@@ -45,7 +45,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('catalog', this.storeStatus);
-  public availsForm = new AvailsForm()
+  public availsForm = new AvailsForm({}, ['duration', 'territories'])
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -64,7 +64,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private bucketQuery: BucketQuery,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private router: Router
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -114,7 +115,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ storeConfig: [this.storeStatus], hitsPerPage: 1000 });
+    const initial = createMovieSearch({ storeStatus: [this.storeStatus], hitsPerPage: 1000 });
     this.searchForm.reset(initial);
     this.availsForm.reset();
     this.cdr.markForCheck();
@@ -152,18 +153,19 @@ export class ListComponent implements OnInit, OnDestroy {
       // contract should only contain media and territories which are on the parentTerm
       newTerm.medias = parentTerm.medias.filter(media => newTerm.medias.includes(media));
       newTerm.territories = parentTerm.territories.filter(territory => newTerm.territories.includes(territory));
-      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms: [newTerm] });
+      const terms = [createBucketTerm(newTerm)];
+      const contract = createBucketContract({ titleId, parentTermId: parentTerm.id, terms });
       newContracts.push(contract);
     }
 
     const orgId = this.orgQuery.getActiveId();
-    if (!!this.bucketQuery.getActive()) {
+    if (this.bucketQuery.getActive()) {
       this.bucketService.update(orgId, bucket => {
         const contracts = bucket.contracts || [];
         for (const newContract of newContracts) {
           // Check if there is already a contract that apply on the same parentTermId
           const contract = contracts.find(c => c.parentTermId === newContract.parentTermId);
-          if (!!contract) { // If yes, append its terms with the new one.
+          if (contract) { // If yes, append its terms with the new one.
 
             // Valid terms
             const terms: AvailsFilter[] = [];
@@ -180,14 +182,14 @@ export class ListComponent implements OnInit, OnDestroy {
               }
             }
 
-            if (!!conflictingTerms.length) {
+            if (conflictingTerms.length) {
               conflictingTerms.push(newTerm);
 
               // Countries with media
               const territoryRecord: { [territories: string]: Media[] } = {};
               for (const term of conflictingTerms) {
                 for (const territory of term.territories) {
-                  if (!!territoryRecord[territory]) {
+                  if (territoryRecord[territory]) {
                     // only add medias that are not in the array yet
                     const medias = term.medias.filter(media => territoryRecord[territory].every(m => m !== media))
                     territoryRecord[territory] = territoryRecord[territory].concat(medias);
@@ -201,7 +203,7 @@ export class ListComponent implements OnInit, OnDestroy {
               const mediaRecord: { [medias: string]: Territory[] } = {};
               for (const [territory, medias] of Object.entries(territoryRecord)) {
                 const key = medias.sort().join(';');
-                !!mediaRecord[key] ? mediaRecord[key].push(territory as Territory) : mediaRecord[key] = [territory as Territory];
+                mediaRecord[key] ? mediaRecord[key].push(territory as Territory) : mediaRecord[key] = [territory as Territory];
               }
 
               // Create new terms
@@ -210,9 +212,9 @@ export class ListComponent implements OnInit, OnDestroy {
                 const recreatedTerm: AvailsFilter = { duration: newTerm.duration, exclusive: newTerm.exclusive, medias, territories }
                 terms.push(recreatedTerm);
               }
-              contract.terms = terms;
+              contract.terms = terms.map(createBucketTerm);
             } else {
-              contract.terms.push(newTerm);
+              contract.terms.push(createBucketTerm(newTerm));
             }
 
           } else { // Else add new contract
@@ -228,7 +230,9 @@ export class ListComponent implements OnInit, OnDestroy {
       })
       this.bucketService.add(bucket);
     }
-    this.snackbar.open(`${title.title.international} was added to your Selection`, 'close', { duration: 4000 });
+    this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
   }
 
   ngOnDestroy() {

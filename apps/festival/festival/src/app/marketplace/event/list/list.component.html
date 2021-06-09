@@ -6,7 +6,7 @@
   <list-filter fxLayout fxLayoutAlign="center">
     <ng-template filter label="Sales Agents" [form]="searchForm">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
-        [filters]="['appModule:dashboard']" [form]="searchForm"
+        [filters]="['appModule:dashboard',' hasAcceptedMovies:true']" [form]="searchForm"
         label="Search for a Sales Agent" placeholder="Sales Agent"></algolia-chips-autocomplete>
     </ng-template>
   </list-filter>
@@ -20,6 +20,13 @@
       <event-screening-item [event]="event"></event-screening-item>
       <mat-divider *ngIf="!last"></mat-divider>
     </ng-container>
+  </ng-template>
+
+  <ng-template listPageEmpty>
+    <div class="no-screenings" fxLayout="column" fxLayoutAlign="start center">
+      <h6>Sorry, we didn't find Screenings.</h6>
+      <img asset="empty_upcoming_screening.svg" alt="No titles">
+    </div>
   </ng-template>
 
 </list-page>

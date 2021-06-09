@@ -20,6 +20,7 @@ class TelephoneClass {
   templateUrl: './tel-input.component.html',
   styleUrls: ['./tel-input.component.scss'],
   providers: [{ provide: MatFormFieldControl, useExisting: TelInputComponent }],
+  // eslint-disable-next-line
   host: {
     '[class.example-floating]': 'shouldLabelFloat',
     '[id]': 'id',
@@ -84,8 +85,8 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
     this.stateChanges.next();
   }
 
-  onChange = (_: any) => { };
-  onTouched = () => { };
+  onChange: (tel: TelephoneClass) => void = () => void 0;
+  onTouched = () => void 0;
 
   constructor(
     formBuilder: FormBuilder,
@@ -136,11 +137,11 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
     this.form.setValue(`${tel.nation}${tel.phoneNumber}`)
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (tel: TelephoneClass) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 

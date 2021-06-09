@@ -1,22 +1,50 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { MarketplaceMovieAvailsComponent } from './avails.component';
-import { MapModule } from '@blockframes/ui/map';
-import { RegionChipsAutocompleteModule } from '@blockframes/ui/form/region-chips-autocomplete/region-chips-autocomplete.module';
-import {  ToLabelModule } from '@blockframes/utils/pipes';
-import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
+
+import { ToLabelModule } from '@blockframes/utils/pipes';
+import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
+
+import { AvailsGuard } from './avails.guard';
+import { MarketplaceMovieAvailsComponent } from './avails.component';
+import { ExplanationModule } from './explanation/explanation.module';
+import { ReverseModule } from '@blockframes/utils/pipes/reverse.pipe';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: MarketplaceMovieAvailsComponent,
+    canDeactivate: [AvailsGuard],
+    children: [
+      { path: '', redirectTo: 'map', pathMatch: 'full' },
+      {
+        path: 'map',
+        loadChildren: () => import('./map/avails-map.module').then(m => m.MarketplaceMovieAvailsMapModule),
+      },
+      {
+        path: 'calendar',
+        loadChildren: () => import('./calendar/avails-calendar.module').then(m => m.MarketplaceMovieAvailsCalendarModule),
+      },
+    ],
+  },
+];
 
 @NgModule({
   declarations: [MarketplaceMovieAvailsComponent],
@@ -24,20 +52,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    MapModule,
-    RegionChipsAutocompleteModule,
     ToLabelModule,
-    OverlayWidgetModule,
+    LanguagesFormModule,
+    ExplanationModule,
+    ReverseModule,
+    ConfirmModule,
 
     // Material
     MatCardModule,
     MatExpansionModule,
-    MatListModule,
     MatIconModule,
     MatButtonModule,
+    MatChipsModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatFormFieldModule,
     MatTooltipModule,
 
-    RouterModule.forChild([{ path: '', component: MarketplaceMovieAvailsComponent }])
+    RouterModule.forChild(routes)
   ]
 })
 export class MarketplaceMovieAvailsModule { }

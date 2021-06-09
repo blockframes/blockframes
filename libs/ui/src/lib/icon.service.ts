@@ -60,6 +60,7 @@ export const icons = [
   { name: 'expand_more', url: 'assets/icons/expand_more.svg' },
   { name: 'facebook', url: 'assets/icons/facebook.svg' },
   { name: 'favorite', url: 'assets/icons/favorite.svg' },
+  { name: 'favorite_filled', url: 'assets/icons/favorite_filled.svg' },
   { name: 'favorite_border', url: 'assets/icons/favorite_border.svg' },
   { name: 'file_copy', url: 'assets/icons/file_copy.svg' },
   { name: 'filter_list', url: 'assets/icons/filter_list.svg' },
@@ -116,6 +117,7 @@ export const icons = [
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
   { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
+  { name: 'resend_email', url: 'assets/icons/resend_email.svg' },
   { name: 'save', url: 'assets/icons/save.svg' },
   { name: 'screening', url: 'assets/icons/screening.svg' },
   { name: 'search', url: 'assets/icons/search.svg' },
@@ -173,7 +175,7 @@ export class IconService {
   constructor(
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId
   ) { }
 
   init() {
