@@ -122,7 +122,6 @@ toggleFullScreen() {
     if (this.document.exitFullscreen) {
       console.log(this.escapePressed);
       this.document.exitFullscreen();
-      console.log('chrome only');
       this.fullScreen = false;
     } else if (this.document['webkitExitFullscreen']) {
       this.document['webkitExitFullscreen']();
