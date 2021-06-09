@@ -50,7 +50,6 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   // Name of the column headers
   @Input() columns: Record<string, string | { value: string, disableSort: boolean }>;
   @Input() initialColumns: string[];
-  @Input() lastColumn: string;
   @Input() link: string;
   @Input() showLoader = false;
   @Input() pageSize = 10;
@@ -92,12 +91,10 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
         return filter
       }),
       map(col => {
-        const hasStatus = col.some(c => c === this.lastColumn);
-        if (this.lastColumn && hasStatus) {
-          const index = col.findIndex(c => c === this.lastColumn);
-          col.splice(index, 1);
-          col.push(this.lastColumn);
-        }
+        const initial = this.initialColumns;
+        col.sort(function(a, b) {
+          return initial.indexOf(a) - initial.indexOf(b);
+        });
         return col;
       }),
       startWith(this.columnFilter.value)
