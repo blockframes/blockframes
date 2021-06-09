@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
   getSoldTerms,
-  getTerritories,
+  getSelectedTerritories,
   TerritoryMarker,
   toTerritoryMarker,
   getTerritoryMarkers,
@@ -17,6 +17,7 @@ import {
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { MovieQuery } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -48,8 +49,9 @@ export class MarketplaceMovieAvailsMapComponent {
     this.availsForm.value$,
     this.shell.bucketForm.value$,
     this.territoryMarkers$,
+    this.movieQuery.selectActiveId()
   ]).pipe(
-    map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'exact').map(t => markers[t])),
+    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'exact').filter(t => !!t).map(t => markers[t])),
     startWith([]),
   );
 
@@ -57,8 +59,10 @@ export class MarketplaceMovieAvailsMapComponent {
     this.availsForm.value$,
     this.shell.bucketForm.value$,
     this.territoryMarkers$,
+    this.movieQuery.selectActiveId()
+    // + add unit test 
   ]).pipe(
-    map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'in').map(t => markers[t])),
+    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'in').filter(t => !!t).map(t => markers[t])),
     startWith([]),
   );
 
@@ -94,6 +98,7 @@ export class MarketplaceMovieAvailsMapComponent {
   constructor(
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
+    private movieQuery: MovieQuery,
   ) { }
 
   /** Display the territories information in the tooltip */
