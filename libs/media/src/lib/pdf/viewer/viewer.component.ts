@@ -52,27 +52,8 @@ export class PdfViewerComponent implements OnInit {
    * full screen can be exited without our button (Escape key, etc...)
    */
   @HostListener('fullscreenchange')
-  trackFullScreenMode() {
+  trackFullScreenMode(event: KeyboardEvent) {
     this.fullScreen = !this.fullScreen;
-  }
-
-  // @HostListener('document:keydown.escape', ['$event'])
-  // handleKeyboardEvent(event: KeyboardEvent) {
-  //   console.log(event);
-  //   const keyPressed = event.keyCode;
-  //   if (keyPressed === 27) {
-  //     console.log('Escape!');
-  //   }
-  //   this.escapePressed = !this.escapePressed;
-  // }
-  @HostListener('window:keydown', ['$event'])
-  escapeHandler(event: KeyboardEvent) {
-    console.log(event.code);
-    if (this.fullScreen && event.code === 'Escape') {
-      console.log(event.code);
-      // this.document.exitFullscreen();
-      this.fullScreen = false;
-    }
   }
 
   constructor(
@@ -108,133 +89,47 @@ export class PdfViewerComponent implements OnInit {
     }
   }
 
-  async generatePdfUrl() {
+async generatePdfUrl() {
 
-    const isLoading = !this.ref || !this.control || this.control.type !== 'pdf';
-    if (isLoading) {
-      this.pdfUrl$.next('');
-      this.loading$.next(true);
-      return;
-    }
-
-    this.fetching$.next(true);
-    const param: ImageParameters = {
-      page: this.control.currentPage,
-      auto: 'compress,format'
-    }
-    const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
-    this.pdfUrl$.next(url);
-    this.fetching$.next(false);
-    this.loading$.next(false);
+  const isLoading = !this.ref || !this.control || this.control.type !== 'pdf';
+  if (isLoading) {
+    this.pdfUrl$.next('');
+    this.loading$.next(true);
+    return;
   }
 
-closeFullScreen() {
-  // if (this.fullScreen) {
-    if (this.document.exitFullscreen) {
-      this.document.exitFullscreen();
-      console.log('chrome only');
-      this.fullScreen = false;
-    }
-  // }
-  // Safari Browser
-  else if (this.document['webkitExitFullscreen']) {
-    console.log('pour l\'amour du ciel');
-    // this.el.nativeElement.webkitRequestFullscreen();
-    this.document['webkitExitFullscreen']();
-    this.fullScreen = false;
-    // this.el.nativeElement.webkitRequestFullscreen() == !this.el.nativeElement.webkitRequestFullscreen();
+  this.fetching$.next(true);
+  const param: ImageParameters = {
+    page: this.control.currentPage,
+    auto: 'compress,format'
   }
+  const url = await this.mediaService.generateImgIxUrl(this.ref, param, this.eventId);
+  this.pdfUrl$.next(url);
+  this.fetching$.next(false);
+  this.loading$.next(false);
 }
 
 toggleFullScreen() {
-  // toggleFullScreen(this.el, this.document, this.fullScreen);
-  console.log('cc');
-
-  // if(!this.fullScreen) {
-    // console.log('pourquoi tu rentres dans le !this.fullscreen?!');
-    // this.el.nativeElement.webkitRequestFullscreen();
-    // this.fullScreen = true;
-  // }
-
-
   if(!this.fullScreen) {
     if(this.document['requestFullscreen']) {
       this.document['requestFullscreen']();
-      console.log('Fullscreen OPEN');
       this.fullScreen = true;
     } else if (this.el.nativeElement.webkitRequestFullscreen) {
       this.el.nativeElement.webkitRequestFullscreen();
-      console.log('Fullscreen webkit SAFARI OPEN');
       this.fullScreen = true;
     }
-
   } else {
-    const event = new KeyboardEvent("keydown",{
-      'key': 'Escape'
-      });
-
-      if(event.defaultPrevented) {
-        return;
-      }
-      this.document.dispatchEvent(event);
-      console.log(event.key);
     if (this.document.exitFullscreen) {
       console.log(this.escapePressed);
       this.document.exitFullscreen();
       console.log('chrome only');
       this.fullScreen = false;
     } else if (this.document['webkitExitFullscreen']) {
-      console.log('pour l\'amour du ciel');
-      // this.el.nativeElement.webkitRequestFullscreen();
       this.document['webkitExitFullscreen']();
       this.fullScreen = false;
-      // this.el.nativeElement.webkitRequestFullscreen() == !this.el.nativeElement.webkitRequestFullscreen();
     }
   }
-
-
-
-
-
-
-
-  // if (!this.document.fullscreenEnabled && !undefined) {
-  // // if (this.isWebkit(this.el.nativeElement)) {
-  //   if(!this.fullScreen) {
-  //     console.log('coucou2!!');
-  //     //  this.document.fullscreenElement.requestFullscreen();
-  //   //  if (!this.document.fullscreenEnabled && !undefined)
-  //   //  this.el = test;
-  //   this.el.nativeElement.webkitRequestFullscreen();
-  //   //  toggleFullScreen(this.el.nativeElement.webkitRequestFullscreen(), this.document, this.fullScreen);
-  //   }
-  //   // terner:  ? !this.fullScreen : this.el.nativeElement.webKitExitFullscreen()
-  //   // à garder si jamais: this.el.nativeElement.ALLOW_KEYBOARD_INPUT
-  // } else if (this.isWebkit(this.document)) {
-  //   console.log('affiche toi wsh');
-  //   this.el.nativeElement.webkitExitFullscreen();
-  // }
-  // if (this.fullScreen){
-  //   {
-  //     console.log('COUCOU 3 !');
-  //    /* !!this.document == this.isWebkit(this.document);*/
-  //     toggleFullScreen(this.el.nativeElement.webkitExitFullscreen(), this.document, this.fullScreen);
-  //   }
-  // }
-
-
-
-  // if (this.document.activeElement.onfullscreenchange(this.el.nativeElement.webkitExitFullscreen)) {
-  //   if (this.fullScreen) { L'UN OU L'AUTRE, SOIT IF AU DESSUS SOIT CELUI LA A GAUCHE DE CE TEXTE
-  //   console.log('ET ICI OH');
-  //   this.el.nativeElement.webkitExitFullscreen();
-  // }
-
-
 }
-  // isWebkit(el: Node): el is WebkitElement {
-  //   return 'webkitRequestFullscreen' in this.el && 'webkitExitFullscreen' in this.el;
-  // }
 
   handleControlChange(control: MeetingPdfControl) {
     // this function is called only in standalone mode
