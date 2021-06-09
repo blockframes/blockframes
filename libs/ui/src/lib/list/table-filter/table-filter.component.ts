@@ -19,7 +19,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { getValue } from '@blockframes/utils/helpers';
 import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
 import { ColRefDirective } from '@blockframes/utils/directives/col-ref.directive';
