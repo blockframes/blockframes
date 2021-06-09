@@ -222,9 +222,7 @@ export async function onOrganizationDelete(
   }
 
   // Remove bucket belonging to org, if any
-  const bucketDoc = db.doc(`buckets/${org.id}`);
-  const bucketSnap = await bucketDoc.get();
-  await bucketSnap.ref.delete();
+  await db.doc(`buckets/${org.id}`).delete();
 
   // Clean all media for the organization
   await cleanOrgMedias(org);

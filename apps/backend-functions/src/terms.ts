@@ -13,7 +13,6 @@ export async function onTermDelete(termSnapshot: FirebaseFirestore.DocumentSnaps
     await contract.ref.delete();
   }
 
-
   // Update Buckets documents
   const bucketsCollectionRef = await db.collection('buckets').get();
   for (const doc of bucketsCollectionRef.docs) {
@@ -23,6 +22,13 @@ export async function onTermDelete(termSnapshot: FirebaseFirestore.DocumentSnaps
       bucket.contracts = bucket.contracts.filter(c => c.parentTermId !== term.id);
       doc.ref.update(bucket);
     }
+  }
+
+  // Delete incomes documents, if any
+  const incomesCollectionRef = db.collection('incomes').where('termId', '==', term.id);
+  const incomesSnap = await incomesCollectionRef.get();
+  for (const income of incomesSnap.docs) {
+    await income.ref.delete();
   }
 
   console.log(`Term ${term.id} removed`);
