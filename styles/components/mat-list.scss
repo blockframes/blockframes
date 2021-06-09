@@ -44,6 +44,7 @@
 
   // Color the tab that is active and set the size of the ink-bar to the text' size
   nav[mat-tab-nav-bar] a[mat-tab-link],
+  nav[mat-tab-nav-bar] button[mat-tab-link],
   .mat-tab-label {
     opacity: 1;
     min-width: 10px;

@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'admin-user',
@@ -58,7 +59,8 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private functions: AngularFireFunctions
   ) { }
 
   async ngOnInit() {
@@ -194,6 +196,11 @@ export class UserComponent implements OnInit {
         }
       }
     });
+  }
+
+  verifyEmail() {
+    const f = this.functions.httpsCallable('verifyEmail');
+    return f({ uid: this.userId }).toPromise();
   }
 
   /** Simulate how many document will be deleted if we delete this user */

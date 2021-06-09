@@ -10,7 +10,6 @@ import {
   CellState,
   calendarRows,
   highlightRange,
-  resetHighlight,
   calendarColumns,
   markersToMatrix,
   AvailCalendarState,
@@ -59,7 +58,7 @@ export class AvailsCalendarComponent implements OnInit {
     this.updateMatrix();
   }
 
-  @Input() set selectedMarker(marker: DurationMarker| undefined) {
+  @Input() set selectedMarker(marker: DurationMarker | undefined) {
     this._selectedMarker = marker;
     this.updateMatrix();
   }
@@ -68,7 +67,6 @@ export class AvailsCalendarComponent implements OnInit {
 
   ngOnInit() {
     const state = this.state$.getValue();
-    state.highlightedRange = this.rows.map(() => this.columns.map(() => false));
 
     this.state$.next(state);
   }
@@ -82,27 +80,23 @@ export class AvailsCalendarComponent implements OnInit {
     if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
     this.stateMatrix = matrix;
 
-    // update inner state (hover/highlight/etc...)
     const currentState = this.state$.getValue();
-    const { highlightedRange } = resetHighlight(currentState);
-    const newState = createAvailCalendarState({ highlightedRange });
-    newState.selectionState = 'waiting';
+    currentState.selectionState = 'waiting';
+    const resetState = reset(currentState, this.stateMatrix);
 
     // if no current selection: reset the selection
     if (!this._selectedMarker) {
-      newState.start = { row: undefined, column: undefined };
-      newState.end = { row: undefined, column: undefined };
-      const resetState = reset(newState);
       this.state$.next(resetState);
 
-    // if there is a current selection: set the selection into the calendar inner state
+      // if there is a current selection: set the selection into the calendar inner state
     } else {
+
       // compute selection start & end position
       const selectionStart = dateToMatrixPosition(this._selectedMarker.from);
       const selectionEnd = dateToMatrixPosition(this._selectedMarker.to);
 
       // "simulate" user click
-      const newSelectStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, newState);
+      const newSelectStateStart = select(selectionStart.row, selectionStart.column, this.stateMatrix, resetState);
       const newSelectStateEnd = select(selectionEnd.row, selectionEnd.column, this.stateMatrix, newSelectStateStart);
       const newSelectState = highlightRange(selectionStart, selectionEnd, this.stateMatrix, newSelectStateEnd);
 
@@ -118,12 +112,20 @@ export class AvailsCalendarComponent implements OnInit {
 
   onExit() {
     const state = this.state$.getValue();
-    const newState = reset(state);
+    const newState = reset(state, this.stateMatrix);
     this.state$.next(newState);
   }
 
   onSelect(row: number, column: number) {
     const state = this.state$.getValue();
+
+    // Prevent user to end selection on the same month as the start month (i.e. selection must be at least 2 month long)
+    if (
+      state.selectionState === 'started' &&
+      state.start.row === row &&
+      state.start.column === column
+    ) return;
+
     const newState = select(row, column, this.stateMatrix, state);
     this.state$.next(newState);
     if (newState.selectionState === 'selected') {
@@ -131,7 +133,16 @@ export class AvailsCalendarComponent implements OnInit {
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
 
-      const parentMarker = this._availableMarkers.find(marker => marker.from <= from && marker.to >= to);
+      const parentMarker = this._availableMarkers.find(marker => {
+
+        // From the calendar pov range starts at the first day of the month
+        // but the avail term might not start at the first day of the month
+        const markerFromYear = marker.from.getFullYear();
+        const markerFromMonth = marker.from.getMonth() + 1;
+        const startDate = new Date(markerFromYear, markerFromMonth, 1).getTime();
+
+        return startDate <= from.getTime() && marker.to >= to;
+      });
 
       if (!parentMarker) throw new Error(`Calendar Invalid Selection: a selection must be included in a marker!`);
 

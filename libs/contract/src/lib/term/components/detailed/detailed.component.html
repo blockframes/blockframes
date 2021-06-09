@@ -1,7 +1,10 @@
-<mat-dialog-content>
-  <button mat-icon-button class="mat-dialog-close" (click)="dialogRef.close()">
+<div fxLayout fxLayoutAlign="end">
+  <button mat-icon-button (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
+</div>
+
+<section fxLayout="column" fxLayoutGap="24px">
   <h2>{{ data.scope | titlecase }}</h2>
   <ng-container *ngIf="!!(groups$ | async).length; else default">
     <ng-container *ngFor="let group of groups$ | async">
@@ -16,4 +19,4 @@
   <ng-template #default>
     <p>{{ data.terms | toLabel:data.scope }}</p>
   </ng-template>
-</mat-dialog-content>
+</section>

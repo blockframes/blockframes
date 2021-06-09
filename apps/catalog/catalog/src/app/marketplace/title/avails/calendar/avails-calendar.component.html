@@ -29,6 +29,9 @@
     <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org | orgName }}</a>.
   </p>
 
+</ng-container>
+
+<section class="surface" fxLayout="column">
   <!-- CALENDAR LEGEND -->
   <ul>
     <li>
@@ -51,16 +54,16 @@
     </li>
   </ul>
 
-</ng-container>
-
-<section class="surface">
   <avails-calendar
+    fxFlexAlign="center"
+    fxFlexAlign.lt-md="start"
     [availableMarkers]="available$ | async"
     [soldMarkers]="sold$ | async"
     [inSelectionMarkers]="inSelection$ | async"
     [selectedMarker]="selected$ | async"
     (selected)="selected($event)"
   ></avails-calendar>
+
 
   <div *ngIf="(status$ | async) === 'INVALID'" class="overlay" fxLayoutAlign="center center">
     <article class="mat-body-2">

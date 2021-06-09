@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
@@ -12,6 +13,7 @@ import { PromotionalLinksModule } from '@blockframes/movie/components/promotiona
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 const routes = [{
   path: '',
@@ -64,6 +66,8 @@ const routes = [{
     WishlistButtonModule,
     PromotionalLinksModule,
     OrgChipModule,
+    ImageModule,
+    FlexLayoutModule,
     MatButtonModule,
     MatIconModule,
     RouterModule.forChild(routes)
