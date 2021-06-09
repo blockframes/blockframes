@@ -10,7 +10,6 @@ import {
   CellState,
   calendarRows,
   highlightRange,
-  resetHighlight,
   calendarColumns,
   markersToMatrix,
   AvailCalendarState,
@@ -89,7 +88,7 @@ export class AvailsCalendarComponent implements OnInit {
     if (!this._selectedMarker) {
       this.state$.next(resetState);
 
-    // if there is a current selection: set the selection into the calendar inner state
+      // if there is a current selection: set the selection into the calendar inner state
     } else {
 
       // compute selection start & end position
@@ -125,7 +124,7 @@ export class AvailsCalendarComponent implements OnInit {
       state.selectionState === 'started' &&
       state.start.row === row &&
       state.start.column === column
-    )  return;
+    ) return;
 
     const newState = select(row, column, this.stateMatrix, state);
     this.state$.next(newState);
@@ -140,7 +139,7 @@ export class AvailsCalendarComponent implements OnInit {
         // but the avail term might not start at the first day of the month
         const markerFromYear = marker.from.getFullYear();
         const markerFromMonth = marker.from.getMonth() + 1;
-        const startDate = Date.parse(`${markerFromYear}-${markerFromMonth}-01`);
+        const startDate = new Date(markerFromYear, markerFromMonth, 1).getTime();
 
         return startDate <= from.getTime() && marker.to >= to;
       });
