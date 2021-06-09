@@ -6,8 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
 import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
-;
-// import { WebkitElement } from '@blockframes/media/pdf/viewer/viewer.component';
+
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 @Component({
