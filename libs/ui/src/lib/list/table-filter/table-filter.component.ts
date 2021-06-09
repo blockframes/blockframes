@@ -91,10 +91,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
         return filter
       }),
       map(col => {
-        const initial = this.initialColumns;
-        col.sort(function(a, b) {
-          return initial.indexOf(a) - initial.indexOf(b);
-        });
+        col.sort((a, b) => this.initialColumns.indexOf(a) - this.initialColumns.indexOf(b));
         return col;
       }),
       startWith(this.columnFilter.value)
