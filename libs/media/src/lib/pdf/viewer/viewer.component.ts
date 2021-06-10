@@ -107,9 +107,25 @@ export class PdfViewerComponent implements OnInit {
     this.loading$.next(false);
   }
 
-  toggleFullScreen() {
-    toggleFullScreen(this.el, this.document, this.fullScreen);
+toggleFullScreen() {
+  if(!this.fullScreen) {
+    if(this.document['requestFullscreen']) {
+      this.document['requestFullscreen']();
+      this.fullScreen = true;
+    } else if (this.el.nativeElement.webkitRequestFullscreen) {
+      this.el.nativeElement.webkitRequestFullscreen();
+      this.fullScreen = true;
+    }
+  } else {
+    if (this.document.exitFullscreen) {
+      this.document.exitFullscreen();
+      this.fullScreen = false;
+    } else if (this.document['webkitExitFullscreen']) {
+      this.document['webkitExitFullscreen']();
+      this.fullScreen = false;
+    }
   }
+}
 
   handleControlChange(control: MeetingPdfControl) {
     // this function is called only in standalone mode
