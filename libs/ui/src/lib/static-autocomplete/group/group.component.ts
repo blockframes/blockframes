@@ -8,7 +8,8 @@ import {
 import {
   FormControl,
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  Validators
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer } from "rxjs";
 import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
@@ -73,12 +74,6 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   filteredGroups$: Observable<StaticGroup[]>;
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
 
-  form = new FormControl([]);
-  // defer the startWith value with subscription happens to get first value
-  value$ = defer(() => this.form.valueChanges.pipe(
-    startWith(this.form.value || []),
-    shareReplay(1)
-  ));
   hidden: Record<string, boolean> = {}
   // all items includes the values of checked items which are not in the filter
   allItems: string[] = [];
@@ -91,6 +86,13 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   @Input() withoutValues: string[] = [];
   @Input() scope: Scope;
   @Input() icon: string;
+
+  form = new FormControl([], this.required ? [Validators.required] : []);
+  // defer the startWith value with subscription happens to get first value
+  value$ = defer(() => this.form.valueChanges.pipe(
+    startWith(this.form.value || []),
+    shareReplay(1)
+  ));
 
   get groups() {
     return this.groups$.getValue();
