@@ -17,6 +17,7 @@ export class TermsConditionsComponent implements OnInit {
   section$: Observable<'dashboard' | 'marketplace'>;
   appUrl: string;
   appName: string;
+  canGoBack = window.history.length > 1;
 
   constructor(
     private routerQuery: RouterQuery,
