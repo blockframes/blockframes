@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Optional } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Optional } from "@angular/core";
 import { Location } from '@angular/common';
 import { getCurrentApp } from "@blockframes/utils/apps";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
