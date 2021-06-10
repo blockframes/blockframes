@@ -7,6 +7,12 @@ import { ImageParameters } from './imgix-helpers';
 import { MediaService } from '../../+state/media.service';
 import { StorageFile } from '../../+state/media.firestore';
 
+
+const aspectRatios = {
+  poster: { w: 3, h: 4 },
+  banner: { w: 16, h: 9 },
+  avatar: { w: 1, h: 1 },
+};
 @Directive({
   selector: 'img[ref][asset], img[asset]'
 })
@@ -25,6 +31,9 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   @HostBinding('srcset') srcset: string;
   @HostBinding('src') src: string;
+  @HostBinding('width') width?: number;
+  @HostBinding('height') height?: number;
+  @HostBinding('style.aspect-ratio') aspectRatio?: string;
   @HostBinding('alt') alt: string;
   @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy';
 
@@ -39,6 +48,13 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   @Input() set loading(strategy: 'lazy' | 'eager') {
     this._loading = strategy;
+  }
+
+  @Input() set size(ratio: 'poster' | 'banner' | 'avatar') {
+    const { w, h } = aspectRatios[ratio];
+    this.width = w;
+    this.height = h;
+    this.aspectRatio = `auto ${w}/${h}`;
   }
 
   // -----------------------------------
