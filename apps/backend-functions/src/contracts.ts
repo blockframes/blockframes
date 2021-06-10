@@ -1,6 +1,5 @@
 import { db } from './internals/firebase';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { Offer } from '@blockframes/contract/offer/+state/offer.model';
 
 export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
 
