@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { combineLatest } from 'rxjs';
-import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
+import { filter, map, pluck, shareReplay, startWith, take } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -17,7 +17,7 @@ import {
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { MovieQuery } from '@blockframes/movie/+state';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -49,9 +49,9 @@ export class MarketplaceMovieAvailsMapComponent {
     this.availsForm.value$,
     this.shell.bucketForm.value$,
     this.territoryMarkers$,
-    this.movieQuery.selectActiveId()
+    this.route.params.pipe(pluck('movieId'))
   ]).pipe(
-    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'exact').filter(t => !!t).map(t => markers[t])),
+    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'exact').map(t => markers[t])),
     startWith([]),
   );
 
@@ -59,10 +59,9 @@ export class MarketplaceMovieAvailsMapComponent {
     this.availsForm.value$,
     this.shell.bucketForm.value$,
     this.territoryMarkers$,
-    this.movieQuery.selectActiveId()
-    // + add unit test 
+    this.route.params.pipe(pluck('movieId'))
   ]).pipe(
-    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'in').filter(t => !!t).map(t => markers[t])),
+    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'in').map(t => markers[t])),
     startWith([]),
   );
 
@@ -98,7 +97,7 @@ export class MarketplaceMovieAvailsMapComponent {
   constructor(
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
-    private movieQuery: MovieQuery,
+    private route: ActivatedRoute
   ) { }
 
   /** Display the territories information in the tooltip */
