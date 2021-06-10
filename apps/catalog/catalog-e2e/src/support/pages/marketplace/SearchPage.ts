@@ -60,18 +60,19 @@ export default class SearchPage extends NavbarPage {
     cy.wait(1 * SEC);
 
     // DATES
-    cy.get('avails-filter mat-datepicker-toggle[test-id="dateFrom"]', {timeout: 3 * SEC}).click();
-    cy.get('button.mat-calendar-period-button', {timeout: 3 * SEC}).click();
-    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.year).click();
-    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.month.toUpperCase()).click();
-    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.day).click();
-    cy.wait(1 * SEC);
-
+    // Fill End Date first to avoid start date problem with pre-filled date
     cy.get('avails-filter mat-datepicker-toggle[test-id="dateTo"]', {timeout: 3 * SEC}).click();
     cy.get('button.mat-calendar-period-button', {timeout: 3 * SEC}).click();
     cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.to.year).click();
     cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.to.month.toUpperCase()).click();
     cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.to.day).click();
+    cy.wait(1 * SEC);
+
+    cy.get('avails-filter mat-datepicker-toggle[test-id="dateFrom"]', {timeout: 3 * SEC}).click();
+    cy.get('button.mat-calendar-period-button', {timeout: 3 * SEC}).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.year).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.month.toUpperCase()).click();
+    cy.get('td.mat-calendar-body-cell', {timeout: 3 * SEC}).contains(avail.from.day).click();
     cy.wait(1 * SEC);
 
     cy.log('Dates filled');
