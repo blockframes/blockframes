@@ -98,15 +98,15 @@ export class FileTypeImagePipe implements PipeTransform {
 
   /**
    * Returns the image or icon path for type of file
-   * e.g. abc.jpg => 'image.webp' for image or 'picture' for icon
+   * e.g. abc.jpg => 'image.svg' for image or 'picture' for icon
    */
   transform(fileName: string, kind: 'image' | 'icon' = 'image'): string {
 
-    if (!fileName) return kind === 'image' ? 'image.webp' : 'document';
+    if (!fileName) return kind === 'image' ? 'image.svg' : 'document';
     if (typeof fileName !== 'string') {
       console.warn('UNEXPECTED FILE', fileName);
       console.warn('This pipe require a string as input');
-      return kind === 'image' ? 'image.webp' : 'document';
+      return kind === 'image' ? 'image.svg' : 'document';
     }
 
     const extension = getFileExtension(fileName);
@@ -118,13 +118,13 @@ export class FileTypeImagePipe implements PipeTransform {
       case 'xls':
         return kind === 'image' ? 'xls.webp' : 'document';
       case 'image':
-        return kind === 'image' ? 'image.webp' : 'image' ;
+        return kind === 'image' ? 'image.svg' : 'image' ;
       case 'pdf':
-        return kind === 'image' ? 'pdf.webp' : 'pdf';
+        return kind === 'image' ? 'pdf.svg' : 'pdf';
       case 'video':
-        return kind === 'image' ? 'image.webp' : 'movie';
+        return kind === 'image' ? 'image.svg' : 'movie';
       default:
-        return kind === 'image' ? 'image.webp' : 'document';
+        return kind === 'image' ? 'image.svg' : 'document';
     }
   }
 }

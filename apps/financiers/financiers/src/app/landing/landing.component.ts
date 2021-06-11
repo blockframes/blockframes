@@ -58,17 +58,17 @@ export class LandingComponent {
   public financierFeatures = [
     {
       title: 'Access a new qualified investors network',
-      imgAsset: 'gems.webp',
+      imgAsset: 'gems.svg',
       description: 'Benefit from a selected pool of high- capacity investors coming from all around the world.'
     },
     {
       title: 'Increase your investment capacity',
-      imgAsset: 'matching.webp',
+      imgAsset: 'matching.svg',
       description: 'Share or refinance your investment ticket to complete your financing, access bigger projects and hedge your risk.'
     },
     {
       title: 'Take a fee on the money you raise',
-      imgAsset: 'filmpage.webp',
+      imgAsset: 'filmpage.svg',
       description: 'Be rewarded for the financing you gather.'
     }
   ]

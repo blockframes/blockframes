@@ -41,7 +41,7 @@ export class CatalogLandingComponent {
     },
     {
       title: 'Benefit from a dedicated sales person',
-      imgAsset: 'human_salesforce.webp',
+      imgAsset: 'human_salesforce.svg',
       description: 'Make the most of your library thanks to the Archipel Content salesforce, who will editorialize the platform and push the right content to the right Buyers.'
     }
   ];
