@@ -51,14 +51,14 @@
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="!!movie.promotional.scenario.storagePath">
-          <img asset="scenario.webp" />
+          <img asset="scenario.svg" />
           <a mat-button [href]="movie.promotional.scenario | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Script</span>
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="!!movie.promotional.moodboard.storagePath">
-          <img asset="moodboard.webp" />
+          <img asset="moodboard.svg" />
           <a mat-button [href]="movie.promotional.moodboard | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Moodboard</span>

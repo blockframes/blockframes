@@ -114,9 +114,9 @@ export class FileTypeImagePipe implements PipeTransform {
 
     switch (type) {
       case 'docx':
-        return kind === 'image' ? 'docx.webp' : 'document';
+        return kind === 'image' ? 'docx.svg' : 'document';
       case 'xls':
-        return kind === 'image' ? 'xls.webp' : 'document';
+        return kind === 'image' ? 'xls.svg' : 'document';
       case 'image':
         return kind === 'image' ? 'image.svg' : 'image' ;
       case 'pdf':

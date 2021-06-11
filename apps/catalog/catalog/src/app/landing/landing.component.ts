@@ -49,12 +49,12 @@ export class CatalogLandingComponent {
   public buyerFeatures = [
     {
       title: 'Access to line-up and library content ',
-      imgAsset: 'library_content.webp',
+      imgAsset: 'library_content.svg',
       description: 'Search for quality content from a multitude of different Rights Holders in one consolidated library.'
     },
     {
       title: 'Efficient content browsing',
-      imgAsset: 'efficient_content_browsing.webp',
+      imgAsset: 'efficient_content_browsing.svg',
       description: 'Search content in a simple and efficient way and find what you’re looking for in just a few clicks, using efficient search criteria and filters'
     },
     {
