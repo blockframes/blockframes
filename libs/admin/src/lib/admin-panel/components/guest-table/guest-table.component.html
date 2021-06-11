@@ -40,7 +40,7 @@
   <ng-template colRef="movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">
       <ng-container *ngIf="movie.poster as poster;">
-        <img class="poster" [ref]="poster" asset="empty_poster.webp">
+        <img class="poster" [ref]="poster" asset="empty_poster.svg">
       </ng-container>
       <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
         <span>{{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')': ''}} </span><mat-icon svgIcon="visibility"></mat-icon>

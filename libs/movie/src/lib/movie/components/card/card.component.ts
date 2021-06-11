@@ -38,6 +38,6 @@ export class CardComponent {
   get placeholderAsset() {
     return this.size === 'banner'
       ? 'empty_banner.webp'
-      : 'empty_poster.webp';
+      : 'empty_poster.svg';
   }
 }

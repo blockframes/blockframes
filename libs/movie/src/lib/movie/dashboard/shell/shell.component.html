@@ -2,7 +2,7 @@
   <header fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
     <ng-container *ngIf="movie$ | async as movie">
       <section fxLayout fxLayoutGap="16px" fxFlex>
-        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.webp" alt="movie poster">
+        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
 
         <article fxLayout="column" fxFlex>
           <h4>{{ movie | movieFeature }}</h4>
@@ -23,7 +23,7 @@
         <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
           <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
             <mat-icon svgIcon="marketplace"></mat-icon>
-            <span>Marketplace Preview</span> 
+            <span>Marketplace Preview</span>
           </a>
         </ng-container>
         <ng-content></ng-content>

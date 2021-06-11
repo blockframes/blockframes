@@ -104,7 +104,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `A new movie was successfully submitted`,
           imgRef: this.getPoster(notification.docId),
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
@@ -123,7 +123,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
       case 'orgAppAccessChanged':
@@ -155,7 +155,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'oneDayReminder':
@@ -176,7 +176,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'invitationToAttendEventUpdated':

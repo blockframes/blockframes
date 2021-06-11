@@ -26,12 +26,12 @@ export class CatalogLandingComponent {
   public sellerFeatures = [
     {
       title: 'Import your content easily',
-      imgAsset: 'bulk_import.webp',
+      imgAsset: 'add_files.svg',
       description: 'Upload your films’ data, promotional elements and rights availabilities directly on the platform or by uploading an Excel template.'
     },
     {
       title: 'Manage your offers and deals',
-      imgAsset: 'deal_management.webp',
+      imgAsset: 'deal_management.svg',
       description: 'Manage your current offers and sales deals, track negotiations and follow each deal’s status directly on the platform.'
     },
     {
@@ -64,7 +64,7 @@ export class CatalogLandingComponent {
     },
     {
       title: 'Deals management',
-      imgAsset: 'deal_management.webp',
+      imgAsset: 'deal_management.svg',
       description: 'Keep track of your deals information and negotiations. Download related documents.Get notified of any new element or information.'
     }
   ]

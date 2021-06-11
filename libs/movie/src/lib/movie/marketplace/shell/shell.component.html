@@ -44,7 +44,7 @@
       <h2>Files</h2>
       <div grid>
         <mat-card [col]="3" *ngIf="!!movie.promotional.presentation_deck.storagePath">
-          <img asset="deck.webp" />
+          <img asset="deck.svg" />
           <a mat-button [href]="movie.promotional.presentation_deck | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Presentation Deck</span>
