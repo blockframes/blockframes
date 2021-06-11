@@ -104,7 +104,7 @@ async function runCommand() {
         return;
       }
       await startMaintenance(db);
-      await migrate();
+      await migrate({ withBackup: !["0", 'false'].includes(arg1) || false });
       await endMaintenance(db);
       break;
     case 'syncUsers':

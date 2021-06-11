@@ -1,62 +1,3 @@
-import * as v0001 from './0001';
-import * as v0002 from './0002';
-import * as v0003 from './0003';
-import * as v0004 from './0004';
-import * as v0005 from './0005';
-import * as v0006 from './0006';
-import * as v0007 from './0007';
-import * as v0008 from './0008';
-import * as v0009 from './0009';
-import * as v0010 from './0010';
-import * as v0011 from './0011';
-import * as v0012 from './0012';
-import * as v0013 from './0013';
-import * as v0014 from './0014';
-import * as v0015 from './0015';
-import * as v0016 from './0016';
-import * as v0017 from './0017';
-import * as v0018 from './0018';
-import * as v0019 from './0019';
-import * as v0020 from './0020';
-import * as v0021 from './0021';
-import * as v0022 from './0022';
-import * as v0023 from './0023';
-import * as v0024 from './0024';
-import * as v0025 from './0025';
-import * as v0026 from './0026';
-import * as v0027 from './0027';
-import * as v0028 from './0028';
-import * as v0029 from './0029';
-import * as v0030 from './0030';
-import * as v0031 from './0031';
-import * as v0032 from './0032';
-import * as v0033 from './0033';
-import * as v0034 from './0034';
-import * as v0035 from './0035';
-import * as v0036 from './0036';
-import * as v0037 from './0037';
-import * as v0038 from './0038';
-import * as v0039 from './0039';
-import * as v0040 from './0040';
-import * as v0041 from './0041';
-import * as v0042 from './0042';
-import * as v0043 from './0043';
-import * as v0044 from './0044';
-import * as v0045 from './0045';
-import * as v0046 from './0046';
-import * as v0047 from './0047';
-import * as v0048 from './0048';
-import * as v0049 from './0049';
-import * as v0050 from './0050';
-import * as v0051 from './0051';
-import * as v0052 from './0052';
-import * as v0053 from './0053';
-import * as v0054 from './0054';
-import * as v0055 from './0055';
-import * as v0056 from './0056';
-import * as v0057 from './0057';
-import * as v0058 from './0058';
-import * as v0059 from './0059';
 import * as v0060 from './0060';
 import * as v0061 from './0061';
 import * as v0062 from './0062';
@@ -72,68 +13,12 @@ export interface IMigrationWithVersion extends IMigration {
 }
 
 export const MIGRATIONS = {
-  1: v0001,
-  2: v0002,
-  3: v0003,
-  4: v0004,
-  5: v0005,
-  6: v0006,
-  7: v0007,
-  8: v0008,
-  9: v0009,
-  10: v0010,
-  11: v0011,
-  12: v0012,
-  13: v0013,
-  14: v0014,
-  15: v0015,
-  16: v0016,
-  17: v0017,
-  18: v0018,
-  19: v0019,
-  20: v0020,
-  21: v0021,
-  22: v0022,
-  23: v0023,
-  24: v0024,
-  25: v0025,
-  26: v0026,
-  27: v0027,
-  28: v0028,
-  29: v0029,
-  30: v0030,
-  31: v0031,
-  32: v0032,
-  33: v0033,
-  34: v0034,
-  35: v0035,
-  36: v0036,
-  37: v0037,
-  38: v0038,
-  39: v0039,
-  40: v0040,
-  41: v0041,
-  42: v0042,
-  43: v0043,
-  44: v0044,
-  45: v0045,
-  46: v0046,
-  47: v0047,
-  48: v0048,
-  49: v0049,
-  50: v0050,
-  51: v0051,
-  52: v0052,
-  53: v0053,
-  54: v0054,
-  55: v0055,
-  56: v0056,
-  57: v0057,
-  58: v0058,
-  59: v0059,
   60: v0060,
   61: v0061,
   62: v0062
 };
+
+const removedMigrations = 59; // Number of previous migrations removed
+export const LATEST_VERSION = removedMigrations + Object.keys(MIGRATIONS).length;
 
 export const VERSIONS_NUMBERS = Object.keys(MIGRATIONS).map(s => parseInt(s, 10));
