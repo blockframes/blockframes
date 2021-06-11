@@ -212,6 +212,13 @@ function orgDirectory(org: Organization): Directory {
         meta: ['orgs', 'notes', org.id],
         form: getFormListStorage(org, 'orgs', 'notes'),
       },
+      videos: {
+        name: 'Videos',
+        type: 'fileList',
+        accept: 'video',
+        meta: ['orgs', 'videos', org.id],
+        form: getFormListStorageVideo(org, 'orgs', 'videos'),
+      },
       logo: {
         name: 'Logo',
         type: 'image',

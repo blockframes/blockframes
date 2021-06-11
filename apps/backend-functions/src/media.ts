@@ -164,7 +164,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
 
-    const isVideo = data.contentType.indexOf('video/') === 0 && metadata.collection === 'movies';
+    const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
     if (isVideo) {
 
       const uploadResult = await uploadToJWPlayer(file);
