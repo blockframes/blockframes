@@ -1,9 +1,9 @@
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay, startWith } from 'rxjs/operators';
 
 import {
@@ -17,6 +17,8 @@ import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder';
 
 
 @Component({
@@ -25,7 +27,7 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   styleUrls: ['./avails-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsCalendarComponent {
+export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestroy {
 
   public availsForm = this.shell.avails.calendarForm;
 
@@ -34,6 +36,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
   private mandates$ = this.shell.mandates$;
+  private subs: Subscription[] = [];
 
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
@@ -81,6 +84,8 @@ export class MarketplaceMovieAvailsCalendarComponent {
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   clear() {
@@ -101,10 +106,30 @@ export class MarketplaceMovieAvailsCalendarComponent {
       this.shell.bucketForm.addDuration(avails, marker);
     }
 
-    this.snackbar.open(`Rights ${ result ? 'updated' : 'added' }`, 'Show ⇩', { duration: 5000 })
+    this.snackbar.open(`Rights ${result ? 'updated' : 'added'}`, 'Show ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
         document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
       });
+  }
+
+  ngOnInit() {
+    const decodedData = decodeUrl(
+      this.activatedRoute,
+    )
+    if (decodedData && Object.keys(decodedData).length > 0) {
+      this.availsForm.setValue(decodedData)
+    }
+    this.availsForm.valueChanges.subscribe(
+      formState => encodeUrlAndNavigate(
+        this.router,
+        this.activatedRoute,
+        formState as any
+      )
+    )
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe())
   }
 }

@@ -3,10 +3,11 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, first, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
-
+import { ActivatedRoute, Router } from '@angular/router'
+import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder'
 @Component({
   selector: 'catalog-organization-list',
   templateUrl: './list.component.html',
@@ -27,21 +28,31 @@ export class ListComponent implements OnInit, OnDestroy {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   private loadMoreToggle: boolean;
   private lastPage: boolean;
+  private currentRoute: string;
 
   constructor(
     private service: OrganizationService,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
     const search = createOrganizationSearch({ appModule: ['marketplace'] });
-    this.searchForm.setValue({ ...search, country: '' });
-    this.sub = this.searchForm.valueChanges.pipe(
+    const decodedData = decodeUrl(
+      this.activatedRoute,
+    )
+    this.searchForm.setValue({
+      ...search,
+      country: '',
+      ...decodedData
+    });
+    const sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
@@ -68,6 +79,20 @@ export class ListComponent implements OnInit, OnDestroy {
       }
       this.lastPage = this.hitsViewed === this.nbHits;
     });
+
+    const subSearchUrl = this.searchForm.valueChanges.subscribe(
+      formValue => encodeUrlAndNavigate(
+        this.router, this.activatedRoute,
+        {
+          country: formValue.country,
+          query: formValue.query
+        }
+      )
+    );
+
+    this.subs.push(
+      sub, subSearchUrl
+    );
   }
 
   async loadMore() {
@@ -77,6 +102,8 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(
+      s => s.unsubscribe()
+    )
   }
 }

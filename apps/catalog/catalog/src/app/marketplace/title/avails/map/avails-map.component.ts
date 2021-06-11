@@ -1,7 +1,7 @@
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,6 +17,8 @@ import {
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -24,7 +26,7 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent {
+export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -36,6 +38,7 @@ export class MarketplaceMovieAvailsMapComponent {
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
+  private subs: Subscription[] = [];
 
   public territoryMarkers$ = combineLatest([
     this.mandates$,
@@ -94,6 +97,8 @@ export class MarketplaceMovieAvailsMapComponent {
   constructor(
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   /** Display the territories information in the tooltip */
@@ -137,5 +142,29 @@ export class MarketplaceMovieAvailsMapComponent {
       .subscribe(() => {
         document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
       });
+  }
+
+  ngOnInit() {
+    const decodedData = decodeUrl(
+      this.activatedRoute,
+    )
+    if (decodedData && Object.keys(decodedData).length > 0) {
+      this.availsForm.setValue(decodedData)
+    }
+    this.availsForm.valueChanges.subscribe(
+      formState => {
+        encodeUrlAndNavigate(
+          this.router,
+          this.activatedRoute,
+          formState as any
+        )
+      }
+    )
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(
+      s => s.unsubscribe()
+    );
   }
 }

@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, skip } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -30,6 +30,7 @@ import { BucketContract, createBucketContract, createBucketTerm } from '@blockfr
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
+import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -50,7 +51,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
 
   private terms: { [movieId: string]: { mandate: Term<Date>[], sale: Term<Date>[] } } = {};
   private parentTerms: Record<string, Term<Date>[]> = {};
@@ -65,7 +66,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private bucketService: BucketService,
     private bucketQuery: BucketQuery,
     private orgQuery: OrganizationQuery,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -73,14 +75,14 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000)
-    const params = this.route.snapshot.queryParams;
-    for (const key in params) {
-      try {
-        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
-      } catch (_) {
-        console.error(`Invalid parameter ${key} in URL`);
-      }
-    }
+    // const params = this.route.snapshot.queryParams;
+    // for (const key in params) {
+    //   try {
+    //     params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
+    //   } catch (_) {
+    //     console.error(`Invalid parameter ${key} in URL`);
+    //   }
+    // }
 
     // No need to await for the results
     Promise.all([
@@ -88,9 +90,54 @@ export class ListComponent implements OnInit, OnDestroy {
       this.getContract('sale')
     ])
 
-    this.sub = combineLatest([
-      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
-      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
+    const { search, avails } = decodeUrl(
+      this.activatedRoute,
+    )
+    this.searchForm.setValue({
+      ...this.searchForm.value,
+      ...search as any
+    });
+    this.availsForm.setValue({
+      ...this.availsForm.value,
+      ...avails as any
+    });
+
+    const subStateUrl = combineLatest([
+      this.searchForm.valueChanges.pipe(
+        startWith(this.searchForm.value)
+      ),
+      this.availsForm.valueChanges.pipe(
+        startWith(this.availsForm.value)
+      ),
+    ])
+      .pipe(
+        skip(1)
+      )
+      .subscribe(
+        ([search, avails]) => {
+          console.log({ countries: search.originCountries })
+          encodeUrlAndNavigate(
+            this.router,
+            this.activatedRoute,
+            {
+              search: {
+                genres: search.genres,
+                query: search.query,
+                originCountries: search.originCountries,
+                contentType: search.contentType,
+              },
+              avails,
+            }
+          )
+        })
+
+    const sub = combineLatest([
+      this.searchForm.valueChanges.pipe(
+        startWith(this.searchForm.value)
+      ),
+      this.availsForm.valueChanges.pipe(
+        startWith(this.availsForm.value)
+      ),
       this.bucketQuery.selectActive().pipe(startWith(undefined))
     ]).pipe(
       distinctUntilChanged(),
@@ -112,6 +159,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.movieResultsState.next(movies.hits)
       }
     })
+
+    this.subs.push(sub, subStateUrl)
   }
 
   clear() {
@@ -236,6 +285,8 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(
+      s => s.unsubscribe()
+    )
   }
 }
