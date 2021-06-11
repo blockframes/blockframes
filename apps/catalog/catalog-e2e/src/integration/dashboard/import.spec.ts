@@ -94,7 +94,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.get('button[test-id="submit-records"]', {timeout: 3 * SEC})
       .click();
 
-    cy.wait(20 * SEC);
+    cy.wait(30 * SEC);
 
     cy.log("Movies submitted; navigate back");
     cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
