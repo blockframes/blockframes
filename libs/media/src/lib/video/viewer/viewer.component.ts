@@ -27,7 +27,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container') playerContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;
 
-  private player: any;
+  private player: typeof jwplayer;
   private timeout: number;
 
   private signalPlayerReady: () => void;
@@ -107,7 +107,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       const privateVideo = this.functions.httpsCallable('privateVideo');
       const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref }).toPromise();
 
-      if (!!error) {
+      if (error) {
         // if error is set, result will contain the error message
         throw new Error(result);
       } else {
@@ -183,7 +183,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   }
 
   toggleFullScreen() {
-    if (!!this.control) {
+    if (this.control) {
       toggleFullScreen(this.playerContainer, this.document, this.fullScreen);
     }
   }

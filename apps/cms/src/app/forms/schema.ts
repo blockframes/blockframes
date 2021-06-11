@@ -1,6 +1,6 @@
 import { MatFormFieldAppearance, FloatLabelType } from '@angular/material/form-field';
 
-export interface MatFormFieldSchema<T> {
+export interface MatFormFieldSchema {
   type?: 'text' | 'number' | 'date';
   label?: string;
   suffix?: string;

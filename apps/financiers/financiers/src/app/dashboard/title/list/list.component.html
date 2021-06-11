@@ -13,12 +13,12 @@
       </div>
     </header>
 
-    <div mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="applyFilter('all')" [active]="filter.value === 'all'">All Projects</button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="filter.value === 'draft'">Draft</button>
       <button mat-tab-link (click)="applyFilter('ongoing')" [active]="filter.value === 'ongoing'">Ongoing</button>
       <button mat-tab-link (click)="applyFilter('achieved')" [active]="filter.value === 'achieved'">Achieved</button>
-    </div>
+    </nav>
 
     <mat-card>
       <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator

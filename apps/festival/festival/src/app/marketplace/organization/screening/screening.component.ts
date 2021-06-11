@@ -5,6 +5,7 @@ import { Event } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { Screening } from '@blockframes/event/+state/event.firestore';
 
 @Component({
   selector: 'festival-screening',
@@ -30,7 +31,7 @@ export class ScreeningComponent implements OnInit {
         return this.service.queryByType(['screening'], query).pipe(
           // We can't filter by meta.titleId directly in the query because
           // firestore supports only one orderBy if it uses .where()
-          map(events => events.filter(event => !!event.meta.titleId))
+          map((events: Event<Screening>[]) => events.filter(event => !!event.meta.titleId))
         );
       }),
     );

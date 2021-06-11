@@ -155,10 +155,10 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   }
 
   private checkIfElementIsReady(id: string) {
-    return new Promise<HTMLElement>((resolve, rej) => {
+    return new Promise<HTMLElement>(resolve => {
       const el = this.doc.getElementById(id);
       if (el) resolve(el);
-      new MutationObserver((_, observer) => {
+      new MutationObserver(() => {
         resolve(this.doc.getElementById(id));
       }).observe(this.doc.documentElement, { childList: true, subtree: true });
     });

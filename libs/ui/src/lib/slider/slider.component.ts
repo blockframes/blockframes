@@ -23,7 +23,8 @@ import {
   Inject,
   PLATFORM_ID,
   HostListener,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  HostBinding
 } from '@angular/core';
 import { AnimationBuilder, animate, style } from '@angular/animations';
 import { ListKeyManager } from '@angular/cdk/a11y';
@@ -44,11 +45,10 @@ enum Direction {
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    'tabIndex': '0'
-  },
 })
 export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewInit, Slider {
+
+  @HostBinding('tabIndex') tabIndex = '0';
 
   //////////////////
   // Public Vars //

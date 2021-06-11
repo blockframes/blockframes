@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, Directive } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Directive, HostBinding } from '@angular/core';
 
 // Blockframes
 import { Movie, Credit } from '@blockframes/movie/+state';
@@ -39,14 +39,16 @@ export class MovieSlideComponent {
 
 @Directive({
   selector: 'movie-slide-cta, [movieSlideCTA]',
-  host: { class: 'movie-slide-cta' }
 })
-// tslint:disable-next-line: directive-class-suffix
-export class MovieSlideCTA { }
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class MovieSlideCTA {
+  @HostBinding('class') class = 'movie-slide-cta'
+}
 
 @Directive({
   selector: 'movie-slide-actions, [movieSlideActions]',
-  host: { class: 'movie-slide-actions' }
 })
-// tslint:disable-next-line: directive-class-suffix
-export class MovieSlideActions { }
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class MovieSlideActions {
+  @HostBinding('class') class = 'movie-slide-actions'
+}

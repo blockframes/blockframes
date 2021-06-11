@@ -40,7 +40,7 @@ describe('Test isTermSold pure function', () => {
     Exclusive: No
     Expected result: Not licensed`, () => {
       const ACRights = getMandateTerms(
-        { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan'], medias: ['freeTv'] },
+        { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan','france'], medias: ['freeTv'] },
         getTerms(Resurrected, 'mandate')
       );
       expect(!!ACRights.length).toBe(false)
@@ -52,7 +52,7 @@ describe('Test isTermSold pure function', () => {
     Exclusive: No
     Expected result: Not licensed`, () => {
       const ACRights = getMandateTerms(
-        { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['france'], medias: ['planes'] },
+        { duration: { to: new Date('06/30/2036'), from: new Date('01/01/2028') }, exclusive: false, territories: ['afghanistan','france'], medias: ['planes'] },
         getTerms(Resurrected, 'mandate')
       );
       expect(!!ACRights.length).toBe(false)
@@ -69,7 +69,7 @@ describe('Test isTermSold pure function', () => {
         availDetails,
         getTerms(Resurrected, 'mandate')
       );
-      expect(!!ACRights.length).toBe(true);
+      expect(ACRights.length).toEqual(1);
       const isTermSold = isSold(
         availDetails,
         getTerms(Resurrected, 'sale')
@@ -88,7 +88,7 @@ describe('Test isTermSold pure function', () => {
         availDetails,
         getTerms(Resurrected, 'mandate')
       );
-      expect(!!ACRights.length).toBe(true);
+      expect(ACRights.length).toEqual(1);
       const isTermSold = isSold(
         availDetails, 
         getTerms(Resurrected, 'sale')
@@ -107,7 +107,7 @@ describe('Test isTermSold pure function', () => {
           availDetails, 
           getTerms(Resurrected, 'mandate')
         );
-        expect(!!ACRights.length).toBe(true);
+        expect(ACRights.length).toEqual(1);
         const isTermSold = isSold(
           availDetails,
           getTerms(Resurrected, 'sale')
@@ -126,7 +126,7 @@ describe('Test isTermSold pure function', () => {
           availDetails,
           getTerms(Resurrected, 'mandate')
         );
-        expect(!!ACRights.length).toBe(true);
+        expect(ACRights.length).toEqual(1);
         const isTermSold = isSold(
           availDetails,
           getTerms(Resurrected, 'sale')
@@ -145,7 +145,7 @@ describe('Test isTermSold pure function', () => {
           availDetails,
           getTerms(Resurrected, 'mandate')
         );
-        expect(!!ACRights.length).toBe(true);
+        expect(ACRights.length).toEqual(1);
         const isTermSold = isSold(
           availDetails,
           getTerms(Resurrected, 'sale')  
@@ -165,7 +165,7 @@ describe('Test isTermSold pure function', () => {
         availDetails, 
         getTerms(Resurrected, 'mandate')
       );
-      expect(!!ACRights.length).toBe(true);
+      expect(ACRights.length).toEqual(1);
       const isTermSold = isSold(
         availDetails, 
         getTerms(Resurrected, 'sale')
@@ -184,7 +184,7 @@ describe('Test isTermSold pure function', () => {
           availDetails,
           getTerms(Resurrected, 'mandate')
         );
-        expect(!!ACRights.length).toBe(true);
+        expect(ACRights.length).toEqual(1);
         const isTermSold = isSold(
           availDetails,
           getTerms(Resurrected, 'sale')
@@ -204,7 +204,7 @@ describe('Test isTermSold pure function', () => {
           availDetails,
           getTerms(Resurrected, 'mandate')
         );
-        expect(!!ACRights.length).toBe(true);
+        expect(ACRights.length).toEqual(1);
         const isTermSold = isSold(
           availDetails, 
           getTerms(Resurrected, 'sale')
@@ -727,7 +727,7 @@ describe('Test isTermSold pure function', () => {
     Not available: Resurrected (sale),
     Available: Mother Schmuckers, 512 Hours With Marina Abramovic, Gaza mon amour, Bigfoot Family`, () => {
       const availDetails: AvailsFilter = {
-        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive:true,
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive:true,
         territories: ['argentina'], medias: ['payTv']
       }
       const gazaRights = getMandateTerms(
@@ -859,7 +859,7 @@ describe('Test isTermSold pure function', () => {
     Not available: 512 Hours With Marina Abramovic, Bigfoot Family (exclusive sales)
     Available: Mother Schmuckers, Gaza mon amour, Resurrected`, () => {
       const availDetails: AvailsFilter = {
-        duration: { to: new Date('06/30/202'), from: new Date('01/01/2022') }, exclusive: false,
+        duration: { to: new Date('06/30/2022'), from: new Date('01/01/2022') }, exclusive: false,
         territories: ['germany'], medias: ['freeTv']
       }
       const gazaRights = getMandateTerms(

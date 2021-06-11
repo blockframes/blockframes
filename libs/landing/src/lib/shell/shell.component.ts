@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -9,9 +9,10 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
-  host: { class: 'dark-contrast-theme' },
 })
-export class LandingHeaderDirective { }
+export class LandingHeaderDirective {
+  @HostBinding('class') theme = 'dark-contrast-theme'
+}
 
 @Directive({selector: 'landing-content, [landingContent]'})
 export class LandingContentDirective { }
@@ -40,6 +41,7 @@ export class LandingFooterComponent { }
 export class LandingShellComponent {
   public submitted = false;
   public appName = getAppName(getCurrentApp(this.routerQuery));
+  public buttonText = 'Send Request';
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',
@@ -74,10 +76,12 @@ export class LandingShellComponent {
       return;
     }
     try {
+      this.buttonText = 'Sending Request...';
       const currentApp = getCurrentApp(this.routerQuery);
       const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
 
       this.sendDemoRequest(information);
+      this.buttonText = 'Request Sent';
       this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
       this.submitted = true;
     } catch (error) {

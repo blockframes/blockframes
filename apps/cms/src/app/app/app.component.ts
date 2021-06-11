@@ -4,10 +4,6 @@ import { map, switchMap } from 'rxjs/operators';
 import { CmsService } from '../cms.service';
 import { CmsApp } from './app.model';
 
-const pages = {
-  festival: ['homepage'],
-}
-
 @Component({
   selector: 'cms-app',
   templateUrl: './app.component.html',

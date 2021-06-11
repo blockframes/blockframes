@@ -1,8 +1,12 @@
 
 import { DurationMarker } from '../avails';
 
-export type CellState = 'empty' | 'avail' | 'sold';
+export type CellState = 'empty' | 'available' | 'sold' | 'selected';
 export type SelectionState = 'waiting' | 'started' | 'selected';
+
+export const calendarColumns = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+export const calendarRows = Array(10).fill(0).map((_, i) => new Date().getFullYear() + i); // [ 2021, 2022, ... 2030 ]
+
 export interface MatrixPosition {
   row: number;
   column: number;
@@ -10,17 +14,31 @@ export interface MatrixPosition {
 
 export interface AvailCalendarState {
   selectionState: SelectionState;
-
   hoverColumn: number;
   hoverRow: number;
-
   hoverStart: MatrixPosition;
   hoverEnd: MatrixPosition;
-
   start: MatrixPosition;
   end: MatrixPosition;
-
   highlightedRange: boolean[][];
+}
+
+export function createAvailCalendarState(params: Partial<AvailCalendarState> = {}): AvailCalendarState {
+  return {
+    selectionState: 'waiting',
+
+    hoverColumn: undefined,
+    hoverRow: undefined,
+
+    hoverStart: { row: undefined, column: undefined },
+    hoverEnd: { row: undefined, column: undefined },
+
+    start: { row: undefined, column: undefined },
+    end: { row: undefined, column: undefined },
+
+    highlightedRange: [],
+    ...params
+  }
 }
 
 /** Apply a given function to each cell of a range */
@@ -36,29 +54,29 @@ export function applyToRange(start: MatrixPosition, end: MatrixPosition, columnL
   // |-|-|-|-|-|-|-|-|  <- (optional) full-line
   // |-|-|-|-|x| | | |  <- partial-line (to end)
 
-  for (let row = start.row ; row <= end.row ; row++) {
+  for (let row = start.row; row <= end.row; row++) {
 
     // partial line: | | |x|-|-|-|x| |
     if (row === start.row && row === end.row) {
-      for (let column = start.column ; column <= end.column ; column++) {
+      for (let column = start.column; column <= end.column; column++) {
         apply(row, column);
       }
 
-    // partial line (from start): | | |x|-|-|-|-|-|
+      // partial line (from start): | | |x|-|-|-|-|-|
     } else if (row === start.row) {
-      for (let column = start.column ; column < columnLength ; column++) {
+      for (let column = start.column; column < columnLength; column++) {
         apply(row, column);
       }
 
-    // partial line (to end): |-|-|-|-|-|-|x| |
+      // partial line (to end): |-|-|-|-|-|-|x| |
     } else if (row === end.row) {
-      for (let column = 0 ; column <= end.column ; column++) {
+      for (let column = 0; column <= end.column; column++) {
         apply(row, column);
       }
 
-    // full line: |-|-|-|-|-|-|-|-|
+      // full line: |-|-|-|-|-|-|-|-|
     } else {
-      for (let column = 0 ; column < columnLength ; column++) {
+      for (let column = 0; column < columnLength; column++) {
         apply(row, column);
       }
     }
@@ -84,31 +102,32 @@ export function isBefore(start: Readonly<MatrixPosition>, end: Readonly<MatrixPo
 
 export function isContinuous(start: Readonly<MatrixPosition>, end: Readonly<MatrixPosition>, stateMatrix: readonly CellState[][]) {
 
-  if (stateMatrix[start.row][start.column] !== 'avail') return false;
-  if (stateMatrix[end.row][end.column] !== 'avail') return false;
+  if (stateMatrix[start.row][start.column] !== 'available') return false;
+  if (stateMatrix[end.row][end.column] !== 'available') return false;
 
   if (isBefore(end, start)) return false;
 
   let result = true;
   applyToRange(start, end, stateMatrix[0].length, (row, column) => {
-    if (stateMatrix[row][column] !== 'avail') result = false;
+    if (stateMatrix[row][column] !== 'available') result = false;
   });
 
   return result;
 }
 
-export function resetHighlight(state: Readonly<AvailCalendarState>): AvailCalendarState {
+export function resetHighlight(state: Readonly<AvailCalendarState>, stateMatrix: readonly CellState[][]): AvailCalendarState {
   return {
     ...state,
-    highlightedRange: state.highlightedRange.map(highlightedRow => highlightedRow.map(_ => false)),
+    highlightedRange: stateMatrix.map(row => row.map(() => false)),
   };
 }
 
 export function highlightRange(start: Readonly<MatrixPosition>, end: Readonly<MatrixPosition>, stateMatrix: readonly CellState[][], state: Readonly<AvailCalendarState>): AvailCalendarState {
-  const localState = resetHighlight(state);
 
-  for (let row = start.row ; row <= end.row ; row++) {
-    for (let column = 0 ; column < stateMatrix[0].length ; column++) {
+  const localState = resetHighlight(state, stateMatrix);
+
+  for (let row = start.row; row <= end.row; row++) {
+    for (let column = 0; column < stateMatrix[0].length; column++) {
       if (
         (row === start.row && row === end.row && column >= start.column && column <= end.column) || // same line range
         (row === start.row && row !== end.row && column >= start.column) || // multi-line start-line
@@ -123,7 +142,7 @@ export function highlightRange(start: Readonly<MatrixPosition>, end: Readonly<Ma
   return localState;
 }
 
-export function reset(state: Readonly<AvailCalendarState>): AvailCalendarState {
+export function reset(state: Readonly<AvailCalendarState>, stateMatrix: readonly CellState[][]): AvailCalendarState {
 
   let localState = {
     ...state,
@@ -133,7 +152,7 @@ export function reset(state: Readonly<AvailCalendarState>): AvailCalendarState {
     hoverEnd: { row: undefined, column: undefined },
   };
 
-  if (state.selectionState !== 'selected') localState = resetHighlight(localState);
+  if (state.selectionState !== 'selected') localState = resetHighlight(localState, stateMatrix);
 
   return localState;
 }
@@ -142,7 +161,7 @@ export function hover(row: number, column: number, stateMatrix: readonly CellSta
 
   let localState = { ...state };
 
-  if (stateMatrix[row][column] === 'avail') {
+  if (stateMatrix[row][column] === 'available') {
 
     localState.hoverColumn = column;
     localState.hoverRow = row;
@@ -173,7 +192,7 @@ export function select(row: number, column: number, stateMatrix: readonly CellSt
 
   const localState = { ...state };
 
-  if (stateMatrix[row][column] !== 'avail') return localState;
+  if (stateMatrix[row][column] !== 'available') return localState;
 
   if (state.selectionState === 'waiting') {
     localState.selectionState = 'started';

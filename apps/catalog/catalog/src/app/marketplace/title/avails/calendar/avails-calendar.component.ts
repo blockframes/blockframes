@@ -1,14 +1,23 @@
 
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { combineLatest, Observable } from 'rxjs';
+import { filter, map, shareReplay, startWith } from 'rxjs/operators';
+
+import {
+  getDurations,
+  getSoldTerms,
+  DurationMarker,
+  toDurationMarker,
+  getDurationMarkers,
+} from '@blockframes/contract/avails/avails';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { DurationMarker, toDurationMarker } from '@blockframes/contract/avails/avails';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'catalog-movie-avails-calendar',
@@ -22,38 +31,80 @@ export class MarketplaceMovieAvailsCalendarComponent {
 
   public org$ = this.orgService.valueChanges(this.movieQuery.getActive().orgIds[0]);
 
-  public durationMarkers: DurationMarker[] = [];
+  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
+
+  private mandates$ = this.shell.mandates$;
 
   private mandateTerms$ = this.shell.mandateTerms$;
+  private salesTerms$ = this.shell.salesTerms$;
 
-  // TODO REMOVE BEHAVIOR-SUBJECT AND COMPUTE FROM TERMS
-  public availableMarkers$ = new Observable<DurationMarker[]>(); // available
-  public soldMarkers$ = new BehaviorSubject<DurationMarker[]>([]); // sold
-  public inBucketMarkers$ = new BehaviorSubject<DurationMarker[]>([]); // already selected in the bucket
+  public selected$: Observable<DurationMarker> = combineLatest([
+    this.availsForm.value$,
+    this.shell.bucketForm.value$,
+  ]).pipe(
+    map(([avails, bucket]) => getDurations(this.shell.movie.id, avails, bucket, 'exact')[0]),
+  );
+
+  public inSelection$: Observable<DurationMarker[]> = combineLatest([
+    this.availsForm.value$,
+    this.shell.bucketForm.value$,
+  ]).pipe(
+    map(([avails, bucket]) => getDurations(this.shell.movie.id, avails, bucket, 'in')),
+  );
+
+  public sold$ = combineLatest([
+    this.mandates$,
+    this.salesTerms$,
+    this.availsForm.value$,
+  ]).pipe(
+    filter(() => this.availsForm.valid),
+    map(([mandates, salesTerms, avails]) => {
+      const soldTerms = getSoldTerms(avails, salesTerms);
+      return soldTerms.map(term => toDurationMarker(mandates, term)).flat();
+    })
+  );
+
+  public available$ = combineLatest([
+    this.mandates$,
+    this.mandateTerms$,
+    this.availsForm.value$,
+  ]).pipe(
+    map(([mandates, mandateTerms]) => {
+      if (this.availsForm.invalid) return [];
+      return getDurationMarkers(mandates, mandateTerms);
+    }),
+    shareReplay(1),
+  );
 
   constructor(
+    private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
-  ) {
-
-    this.availableMarkers$ = combineLatest([
-      this.shell.mandates$,
-      this.mandateTerms$,
-    ]).pipe(
-      map(([mandates, mandateTerms]) => {
-        for (const mandateTerm of mandateTerms) {
-          this.durationMarkers.push(toDurationMarker(mandates, mandateTerm));
-        }
-
-        // TODO available should be computed from DB & sold & avail filter form
-        return this.durationMarkers; // TODO REMOVE THAT !
-      })
-    );
-
-  }
+  ) { }
 
   clear() {
     this.availsForm.reset();
+  }
+
+  async selected(marker: DurationMarker) {
+    const duration = { from: marker.from, to: marker.to };
+    const avails = { ...this.availsForm.value, duration };
+
+    const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
+    if (result) {
+      const { contractIndex, termIndex } = result;
+      const contract = this.shell.bucketForm.get('contracts').at(contractIndex);
+      const term = contract.get('terms').at(termIndex);
+      term.setValue({ ...term.value, ...avails });
+    } else {
+      this.shell.bucketForm.addDuration(avails, marker);
+    }
+
+    this.snackbar.open(`Rights ${ result ? 'updated' : 'added' }`, 'Show ⇩', { duration: 5000 })
+      .onAction()
+      .subscribe(() => {
+        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+      });
   }
 }

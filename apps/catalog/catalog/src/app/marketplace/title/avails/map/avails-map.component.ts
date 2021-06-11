@@ -4,6 +4,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import {
   getSoldTerms,
   getTerritories,
@@ -16,7 +18,6 @@ import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-mode
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 
-
 @Component({
   selector: 'catalog-movie-avails-map',
   templateUrl: './avails-map.component.html',
@@ -24,7 +25,6 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceMovieAvailsMapComponent {
-
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -32,7 +32,7 @@ export class MarketplaceMovieAvailsMapComponent {
 
   public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
-  public status$ = this.availsForm.statusChanges.pipe(startWith('INVALID'));
+  public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.valid ? 'VALID' : 'INVALID'));
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
@@ -41,22 +41,22 @@ export class MarketplaceMovieAvailsMapComponent {
     this.mandates$,
     this.mandateTerms$,
   ]).pipe(
-    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms))
+    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
   );
 
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.territoryMarkers$
+    this.territoryMarkers$,
   ]).pipe(
     map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'exact').map(t => markers[t])),
-    startWith([])
+    startWith([]),
   );
 
   public inSelection$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.territoryMarkers$
+    this.territoryMarkers$,
   ]).pipe(
     map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'in').map(t => markers[t])),
     startWith([]),
@@ -65,7 +65,7 @@ export class MarketplaceMovieAvailsMapComponent {
   public sold$ = combineLatest([
     this.mandates$,
     this.salesTerms$,
-    this.availsForm.value$
+    this.availsForm.value$,
   ]).pipe(
     filter(() => this.availsForm.valid),
     map(([mandates, sales, avails]) => {
@@ -74,8 +74,8 @@ export class MarketplaceMovieAvailsMapComponent {
         .filter(territory => !!territoriesISOA3[territory])
         .map(territory => toTerritoryMarker(territory, mandates, term))
       ).flat();
-    })
-  )
+    }),
+  );
 
   public available$ = combineLatest([
     this.mandates$,
@@ -88,14 +88,13 @@ export class MarketplaceMovieAvailsMapComponent {
       if (this.availsForm.invalid) return [];
       return availableTerritories(selected, sold, inSelection, this.availsForm.value, mandates, mandateTerms);
     }),
-    shareReplay(1) // Multicast with replay
+    shareReplay(1), // Multicast with replay
   );
 
-  constructor(private shell: MarketplaceMovieAvailsComponent) {}
-
-  public trackByTag<T>(tag: T) {
-    return tag;
-  }
+  constructor(
+    private snackbar: MatSnackBar,
+    private shell: MarketplaceMovieAvailsComponent,
+  ) { }
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
@@ -108,7 +107,8 @@ export class MarketplaceMovieAvailsMapComponent {
   }
 
   public addTerritory(territory: TerritoryMarker) {
-    this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
+    const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
+    if (added) this.onNewRight();
   }
 
   public removeTerritory(territory: TerritoryMarker) {
@@ -124,9 +124,18 @@ export class MarketplaceMovieAvailsMapComponent {
         this.shell.bucketForm.addTerritory(this.availsForm.value, term);
       }
     }
+    this.onNewRight();
   }
 
   clear() {
     this.shell.avails.mapForm.reset();
+  }
+
+  onNewRight() {
+    this.snackbar.open(`Rights added`, 'Show ⇩', { duration: 5000 })
+      .onAction()
+      .subscribe(() => {
+        document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
+      });
   }
 }

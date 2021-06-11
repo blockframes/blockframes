@@ -11,7 +11,7 @@ export class TunnelService {
   /** Keep in memory the preivous URL to come back to it when leaving the tunnel */
   constructor(private routerQuery: RouterQuery){
     this.routerQuery.select(({ state }) => state && state.url).pipe(
-      filter(_ => !this.isInTunnel)
+      filter(() => !this.isInTunnel)
     ).subscribe(url => this.setUrls(url));
   }
 

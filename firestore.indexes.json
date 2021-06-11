@@ -1,114 +1,273 @@
 {
-  "indexes": [{
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "app.catalog.access", "order": "ASCENDING" },
-      { "fieldPath": "app.catalog.status", "order": "ASCENDING" },
-      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
-    ]
-  },{
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "app.financiers.access", "order": "ASCENDING" },
-      { "fieldPath": "app.financiers.status", "order": "ASCENDING" },
-      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
-    ]
-  },{
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "app.festival.access", "order": "ASCENDING" },
-      { "fieldPath": "app.festival.status", "order": "ASCENDING" },
-      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
-    ]
-  },{
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
-      { "fieldPath": "app.catalog.access", "order": "ASCENDING" },
-      { "fieldPath": "app.catalog.status", "order": "ASCENDING" },
-      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
-    ]
-  },{
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
-      { "fieldPath": "app.financiers.access", "order": "ASCENDING" },
-      { "fieldPath": "app.financiers.status", "order": "ASCENDING" },
-      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
-    ]
-  }, {
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "orgIds", "arrayConfig": "CONTAINS" },
-      { "fieldPath": "app.festival.access", "order": "ASCENDING" },
-      { "fieldPath": "app.festival.status", "order": "ASCENDING" },
-      { "fieldPath": "_meta.createdAt", "order": "DESCENDING" }
-    ]
-  }, {
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "app.catalog.access", "order": "ASCENDING" },
-      { "fieldPath": "app.catalog.status", "order": "ASCENDING" },
-      { "fieldPath": "release.year", "order": "DESCENDING" }
-    ]
-  }, {
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "app.financiers.access", "order": "ASCENDING" },
-      { "fieldPath": "app.financiers.status", "order": "ASCENDING" },
-      { "fieldPath": "release.year", "order": "DESCENDING" }
-    ]
-  }, {
-    "collectionGroup": "movies",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "app.festival.access", "order": "ASCENDING" },
-      { "fieldPath": "app.festival.status", "order": "ASCENDING" },
-      { "fieldPath": "release.year", "order": "DESCENDING" }
-    ]
-  }, {
-    "collectionGroup": "events",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "type", "order": "ASCENDING" },
-      { "fieldPath": "end", "order": "ASCENDING" }
-    ]
-  },
-  {
-    "collectionGroup": "events",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "ownerOrgId", "order": "ASCENDING" },
-      { "fieldPath": "type", "order": "ASCENDING" },
-      { "fieldPath": "end", "order": "ASCENDING" }
-    ]
-  },
-  {
-    "collectionGroup": "events",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "meta.titleId", "order": "ASCENDING" },
-      { "fieldPath": "isSecret", "order": "ASCENDING" },
-      { "fieldPath": "type", "order": "ASCENDING" },
-      { "fieldPath": "end", "order": "ASCENDING" }
-    ]
-  },
-  {
-    "collectionGroup": "events",
-    "queryScope": "COLLECTION",
-    "fields": [
-      { "fieldPath": "type", "order": "ASCENDING" },
-      { "fieldPath": "isSecret", "order": "ASCENDING" },
-      { "fieldPath": "end", "order": "ASCENDING" }
-    ]
-  }],
+  "indexes": [
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "meta.titleId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isSecret",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "end",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ownerOrgId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "end",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "end",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isSecret",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "end",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "app.catalog.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.catalog.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "app.catalog.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.catalog.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "release.year",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "app.festival.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.festival.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "app.festival.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.festival.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "productionStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "app.festival.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.festival.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "release.year",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "app.financiers.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.financiers.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "app.financiers.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.financiers.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "release.year",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "orgIds",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "app.catalog.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.catalog.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "orgIds",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "app.festival.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.festival.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "movies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "orgIds",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "app.financiers.access",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "app.financiers.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_meta.createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }

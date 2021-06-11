@@ -1,12 +1,12 @@
-@mixin bf-tunnel-theme($theme) {
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $background: map.get($config, 'background');
 
   .tunnel-layout {
-    background-color: mat-color($background, hover);
+    background-color: mat.get-color-from-palette($background, hover);
     padding: 10px;
     .mat-toolbar {
       box-shadow: 0px 6px 30px 5px rgba(0, 0, 0, 0.12);

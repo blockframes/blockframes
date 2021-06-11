@@ -1,5 +1,5 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Injectable, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { MediaMatcher } from '@angular/cdk/layout';
 
@@ -48,7 +48,7 @@ export class ThemeService {
       isDarkMedia.onchange = ({ matches }) => this.setTheme(matches ? 'dark' : 'light');
       theme = isDarkMedia.matches ? 'dark' : 'light';
     }
-    if (!!localStorage) {
+    if (localStorage) {
       const fromStorage = localStorage.getItem('theme') as Theme;
       if (fromStorage) theme = fromStorage;
     }

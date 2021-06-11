@@ -5,9 +5,11 @@ import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
 import { User } from '@blockframes/auth/+state';
 export { EventsAnalytics } from './event.firestore';
+import type firebase from 'firebase';
+type Timestamp = firebase.firestore.Timestamp;
 
 // Event
-export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
+export interface Event<Meta extends EventMeta = unknown> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
   id: string;
   isOwner: boolean;
   allDay: boolean;
@@ -19,10 +21,10 @@ export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Met
   movie?: Movie;
   organizedBy?: User,
 }
-export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<any, Meta>> = {}): Event<Meta> {
-  const meta: any =
-    isMeeting(params) ? createMeeting(params.meta)
-    : isScreening(params) ? createScreening(params.meta)
+export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<Date | Timestamp, Meta>> = {}): Event<Meta> {
+  const meta: EventMeta =
+    isMeeting(params as Event) ? createMeeting(params.meta)
+    : isScreening(params as Event) ? createScreening(params.meta)
     : {};
 
   return {
@@ -37,12 +39,12 @@ export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<an
     ...params,
     start: toDate(params.start || new Date()),
     end: toDate(params.end || new Date()),
-    meta
+    meta: meta as Meta
   };
 }
 
 // Local
-export interface LocalEvent extends Event<{}> {
+export interface LocalEvent extends Event<unknown> {
   type: 'local';
 }
 export const isLocal = (event: Partial<Event>): event is MeetingEvent => event?.type === 'local';
@@ -83,7 +85,7 @@ export function createScreening(screening: Partial<Screening>): Screening {
 }
 
 // Calendar Event
-export function createCalendarEvent<M>(event: Partial<EventBase<any, M>>, isOwner: boolean): Event<M> {
+export function createCalendarEvent<M>(event: Partial<EventBase<Date | Timestamp, M>>, isOwner: boolean): Event<M> {
   return {
     ...createEvent(event),
     isOwner,

@@ -5,7 +5,7 @@ export interface RawRange<D> {
 }
 
 /** Need it for calendar components */
-export interface DateRange extends RawRange<Date> {}
+export type DateRange = RawRange<Date>;
 
 /** check if a date is in a range */
 export function isBetween(date: Date, startRange: Date, endRange: Date){

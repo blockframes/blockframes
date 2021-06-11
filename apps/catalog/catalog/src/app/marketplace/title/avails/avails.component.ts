@@ -1,11 +1,10 @@
 
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { switchMap } from 'rxjs/operators';
-import { of, ReplaySubject, Subscription } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
@@ -16,11 +15,10 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
-import { ContractService, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';
-
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -28,8 +26,8 @@ import { ExplanationComponent } from './explanation/explanation.component';
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent implements OnDestroy {
-  private sub: Subscription;
+export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
+  private subs: Subscription[] = [];
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -46,15 +44,32 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
 
   public movieOrg$ = this.orgService.valueChanges(this.movie.orgIds[0]);
 
+  /** Raw mandates, straight from the db
+   *
+   * _(mandates = available contracts)_
+  */
   public mandates$ = new ReplaySubject<Mandate[]>();
+
+  /** Raw mandate **(available)** terms, straight from the db
+   *
+   * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
+  */
   public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
+
+  /** Raw **sold** terms, straight from the db
+   *
+   * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
+  */
   public salesTerms$ = new ReplaySubject<Term<Date>[]>();
 
+  /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
 
   constructor(
+    private router: Router,
     private dialog: MatDialog,
+    private route: ActivatedRoute,
     private movieQuery: MovieQuery,
     private bucketQuery: BucketQuery,
     private termService: TermService,
@@ -62,18 +77,32 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
-    private snackbar: MatSnackBar,
-    private router: Router,
   ) {
-    this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
+    const sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
+    this.subs.push(sub);
     this.init();
   }
 
+  ngAfterViewInit() {
+    const fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
+      document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
+    });
+
+    const paramsSub = combineLatest([
+      this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
+      this.bucketQuery.selectActive().pipe(filter(bucket => !!bucket))
+    ]).subscribe(([ params, bucket ]) => {
+      const term = bucket.contracts[params.contract].terms[params.term];
+      this.edit(term);
+    });
+    this.subs.push(fragSub, paramsSub)
+  }
+
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   private async init() {
@@ -85,7 +114,7 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
 
     const [mandateTerms, salesTerms] = await Promise.all([
       this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
-      this.termService.getValue(sales.map(sale => sale.termIds).flat())
+      this.termService.getValue(sales.map(sale => sale.termIds).flat()),
     ]);
 
     this.mandates$.next(mandates);
@@ -97,22 +126,20 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const contracts = this.bucketForm.value.contracts;
     await this.bucketService.upsert({ id: this.orgId, contracts });
     this.bucketForm.markAsPristine();
-    this.snackbar
-      .open(`${this.movie.title.international} Rights were added to your Selection`, 'GO TO SELECTION', { duration: 5000 })
-      .onAction()
-      .subscribe(() => this.router.navigate(['/c/o/marketplace/selection']));
+    this.router.navigate(['/c/o/marketplace/selection']);
   }
 
   public explain() {
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
-      width: '80vw'
+      width: '80vw',
+      autoFocus: false
     });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 
   confirmExit() {
@@ -124,8 +151,10 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
       data: {
         title: 'You are about to leave the page',
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
-        buttonName: 'Leave anyway'
-      }
+        confirm: 'Leave anyway',
+        cancel: 'Stay',
+      },
+      autoFocus: false,
     });
     return dialogRef.afterClosed().pipe(
       /* Undefined means user clicked on the backdrop, meaning just close the modal */
@@ -136,13 +165,16 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
   edit({ exclusive, duration, medias, territories }: BucketTerm) {
     const mode = this.router.url.split('/').pop();
 
-    if (mode === 'map') {
+    if (mode.includes('map')) {
+      this.bucketForm.patchValue({}); // Force observable to reload
       this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
     }
 
-    if (mode === 'calendar') {
-      this.avails.calendarForm.setValue({ exclusive, medias, territories });
+    if (mode.includes('calendar')) {
+      this.avails.calendarForm.patchValue({ exclusive, medias, territories });
     }
+
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
   }
 
   remove(control: BucketTermForm) {
@@ -150,5 +182,11 @@ export class MarketplaceMovieAvailsComponent implements OnDestroy {
     const index = terms.controls.findIndex(c => c === control);
     terms.removeAt(index);
     this.bucketForm.change.next();
+  }
+
+  clear() {
+    this.avails.mapForm.reset();
+    this.avails.calendarForm.reset();
+    document.querySelector('#avails').scrollIntoView({ behavior: 'smooth' });
   }
 }

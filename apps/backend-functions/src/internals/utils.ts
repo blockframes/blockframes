@@ -9,5 +9,5 @@ export { firebaseRegion } from '@env';
 export async function getUser(userId: string): Promise<PublicUser> {
   const db = admin.firestore();
   const user = await db.doc(`users/${userId}`).get();
-  return user.data()! as PublicUser;
+  return user.data() as PublicUser;
 }

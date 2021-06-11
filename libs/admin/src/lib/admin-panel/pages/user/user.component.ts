@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'admin-user',
@@ -58,7 +59,8 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private functions: AngularFireFunctions
   ) { }
 
   async ngOnInit() {
@@ -74,7 +76,7 @@ export class UserComponent implements OnInit {
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
 
-      if (!!datastudio.user) {
+      if (datastudio.user) {
         const prms = JSON.stringify({ "ds2.user_id": this.userId });
         const encodedPrms = encodeURIComponent(prms);
         this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/${datastudio.user}?params=${encodedPrms}`);
@@ -109,7 +111,7 @@ export class UserComponent implements OnInit {
       await new Promise((resolve) => {
         subscription = this.userService.valueChanges(this.userId).subscribe((res) => {
           if (!!res && res.orgId === '') {
-            resolve();
+            resolve(undefined);
           }
         })
       })
@@ -196,12 +198,17 @@ export class UserComponent implements OnInit {
     });
   }
 
+  verifyEmail() {
+    const f = this.functions.httpsCallable('verifyEmail');
+    return f({ uid: this.userId }).toPromise();
+  }
+
   /** Simulate how many document will be deleted if we delete this user */
   private async simulateDeletion(user: User) {
     const output: string[] = [];
 
     // organization update
-    if (!!user.orgId) {
+    if (user.orgId) {
       output.push('An organization will be updating without this user.');
     }
 

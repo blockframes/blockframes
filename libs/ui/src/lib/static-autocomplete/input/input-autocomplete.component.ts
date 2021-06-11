@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
-  selector: '[scope][control]input-autocomplete',
+  selector: '[scope][control] input-autocomplete',
   templateUrl: './input-autocomplete.component.html',
   styleUrls: ['./input-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,7 +18,7 @@ import { startWith, map } from 'rxjs/operators';
 export class InputAutocompleteComponent implements OnInit {
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
-  public state: any[];
+  public state: Scope[];
 
   @Input() scope: Scope;
   @Input() control: FormStaticValueArray<Scope>;
@@ -30,15 +30,15 @@ export class InputAutocompleteComponent implements OnInit {
    * Since we input the scope we need to initialize the function after the input gets handled,
    * otherwise scope is undefined and this will throw an error
    */
-  public displayFn: Function;
+  public displayFn: (name: string) => string;
 
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  @ContentChild(TemplateRef) template: TemplateRef<unknown>;
 
   ngOnInit() {
     if (this.withoutValues) {
-      this.state = Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys));
+      this.state = Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys)) as Scope[];
     } else {
-      this.state = Object.keys(staticModel[this.scope]);
+      this.state = Object.keys(staticModel[this.scope]) as Scope[];
     }
 
     this.filteredStates = this.control.valueChanges

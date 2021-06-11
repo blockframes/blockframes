@@ -3,12 +3,13 @@ import {
   Component,
   Input,
   forwardRef,
-  Pipe, PipeTransform, ElementRef, ViewChild, OnInit
+  Pipe, PipeTransform, ElementRef, ViewChild, OnInit, OnDestroy
 } from "@angular/core";
 import {
   FormControl,
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  Validators
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer } from "rxjs";
 import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
@@ -66,19 +67,13 @@ function getItems(groups: StaticGroup[]): string[] {
     }
   ]
 })
-export class StaticGroupComponent implements ControlValueAccessor, OnInit {
+export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDestroy {
   private subs: Subscription[] = [];
-
+  private onTouch: () => void;
   modes: Record<string, Observable<GroupMode>> = {};
   filteredGroups$: Observable<StaticGroup[]>;
   groups$ = new BehaviorSubject<StaticGroup[]>([]);
 
-  form = new FormControl([]);
-  // defer the startWith value with subscription happens to get first value
-  value$ = defer(() => this.form.valueChanges.pipe(
-    startWith(this.form.value || []),
-    shareReplay(1)
-  ));
   hidden: Record<string, boolean> = {}
   // all items includes the values of checked items which are not in the filter
   allItems: string[] = [];
@@ -91,6 +86,13 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   @Input() withoutValues: string[] = [];
   @Input() scope: Scope;
   @Input() icon: string;
+
+  form = new FormControl([], this.required ? [Validators.required] : []);
+  // defer the startWith value with subscription happens to get first value
+  value$ = defer(() => this.form.valueChanges.pipe(
+    startWith(this.form.value || []),
+    shareReplay(1)
+  ));
 
   get groups() {
     return this.groups$.getValue();
@@ -109,10 +111,10 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
       this.filteredGroups$.pipe(map(getItems)),
       this.form.valueChanges.pipe(pairwise())
     ]).subscribe(([filteredItems, [prev, next]]) => {
-      if (!!prev) {
+      if (prev) {
         // checked but filtered out values
         const hiddenValues = prev.filter(value => !filteredItems.includes(value));
-        if (!!hiddenValues.length && !next.includes(hiddenValues[0])) {
+        if (hiddenValues.length && !next.includes(hiddenValues[0])) {
           // add back the values
           this.form.setValue(next.concat(hiddenValues));
         }
@@ -124,7 +126,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit() {
     const groups = staticGroups[this.scope];
-    if (!!this.withoutValues.length) {
+    if (this.withoutValues.length) {
       for (const group of groups) {
         group.items = group.items.filter(item => !this.withoutValues.includes(item));
       }
@@ -146,11 +148,13 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit {
   writeValue(value: string[]): void {
     this.form.reset(value);
   }
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: () => void): void {
     const sub = this.form.valueChanges.subscribe(fn);
     this.subs.push(sub);
   }
-  registerOnTouched() {}
+  registerOnTouched(fn: () => void) {
+    this.onTouch = fn;
+  }
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
@@ -216,7 +220,7 @@ export class TriggerDisplayValue implements PipeTransform {
         ? group.label
         : items;
     })
-      .sort((a, b) => typeof a === 'string' ? -1 : 1)
+      .sort((a) => typeof a === 'string' ? -1 : 1)
       .map(item => typeof item === 'string' ? item : item.join(', '))
       .filter(v => !!v)
       .join(', ');

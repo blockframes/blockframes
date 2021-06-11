@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
@@ -12,17 +12,24 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 export class PreviewModalComponent {
 
   @Input() ref: StorageFile;
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
+
+  private dialogRef: MatDialogRef<unknown>;
 
   constructor(
     private dialog: MatDialog,
   ) { }
 
   async openModal() {
-    this.dialog.open(this.dialogTemplate, {
+    this.dialogRef = this.dialog.open(this.dialogTemplate, {
       height: '60vh',
       hasBackdrop: true,
       data: this.ref,
+      autoFocus: false,
     });
+  }
+
+  public closeModal(): void {
+    this.dialogRef.close(false);
   }
 }

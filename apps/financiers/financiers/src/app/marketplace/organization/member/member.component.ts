@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { UserQuery } from '@blockframes/user/+state/user.query';
 import { ViewComponent } from '../view/view.component';

@@ -1,9 +1,9 @@
 <ng-container [ngSwitch]="appName">
   <ng-container *ngSwitchCase="'festival'">
     <header>
-      <div class="go-back" (click)="goBack()">
+      <button mat-icon-button class="go-back" (click)="goBack()" *ngIf="canGoBack">
         <mat-icon svgIcon="arrow_back"></mat-icon>
-      </div>
+      </button>
       <h1>DATA PRIVACY POLICY</h1>
     </header>
 
@@ -408,7 +408,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'catalog'">
     <header>
-      <a mat-icon-button (click)="goBack()">
+      <a mat-icon-button (click)="goBack()" *ngIf="canGoBack">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>DATA PRIVACY POLICY</h1>
@@ -703,7 +703,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'financiers'">
     <header>
-      <a mat-icon-button (click)="goBack()">
+      <a mat-icon-button (click)="goBack()"  *ngIf="canGoBack">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>DATA PRIVACY POLICY</h1>
