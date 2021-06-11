@@ -77,7 +77,7 @@ export class BucketService extends CollectionService<BucketState> {
         stakeholders: [ ...parentContract.stakeholders, orgId ],
         termIds,
         offerId,
-        specificity
+        specificity,
       });
 
       // @dev: Create income & terms after contract because rules require contract to be created first

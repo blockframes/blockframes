@@ -11,6 +11,8 @@ export interface Contract {
   offerId?: string;
   /** The id of the buyer's org, can be undefined if external sale */
   buyerId?: string;
+  /** The user id of the buyer, can be undefined if external sale */
+  buyerUserId?: string;
   /** Id of the direct seller. AC in the Archipel Content app */
   sellerId: string;
   /** Org ids that have contract parent of this contract */
@@ -24,8 +26,6 @@ export interface Sale extends Contract {
   /** Create the anccestors organization when you create the sale */
   ancestors: string[]; // ??? The orgs that have a parent contract with the
   // incomeId: string; // Id of the terms/right on which income should occurred
-  /** The user id of the buyer, can be undefined if external sale */
-  buyerUserId?: string;
   /** Free text provided by the buyer, addressed to the seller */
   specificity?: string;
 }
@@ -38,6 +38,7 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
     termIds: [],
     parentTermId: '',
     buyerId: '', // For external sales this is undefined
+    buyerUserId: '', // For external sales this is undefined
     sellerId: '', // Archipel content or the Seller
     type: 'mandate',
     status: 'pending',
