@@ -322,6 +322,12 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(...notesToDelete);
     }
 
+    const orgVideosToDelete = checkFileList(
+      before.documents.videos,
+      after.documents.videos
+    );
+    mediaToDelete.push(...orgVideosToDelete);
+
   } else { // Deleting
     if (before.logo) {
       mediaToDelete.push(before.logo);
@@ -329,6 +335,10 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 
     if (before.documents?.notes.length) {
       before.documents.notes.forEach(n => mediaToDelete.push(n));
+    }
+
+    if (before.documents.videos?.length) {
+      before.documents.videos.forEach(m => mediaToDelete.push(m));
     }
   }
 
