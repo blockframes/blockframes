@@ -51,6 +51,8 @@ export class BucketService extends CollectionService<BucketState> {
     // Create offer
     const offerId = await this.offerService.add({
       buyerId: orgId,
+      buyerUserId: this.authQuery.userId,
+      specificity,
       status: 'pending',
       date: new Date(),
       delivery
@@ -70,11 +72,12 @@ export class BucketService extends CollectionService<BucketState> {
         titleId: contract.titleId,
         parentTermId: contract.parentTermId,
         buyerId: orgId,
+        buyerUserId: this.authQuery.userId,
         sellerId: centralOrgId.catalog,
         stakeholders: [ ...parentContract.stakeholders, orgId ],
         termIds,
         offerId,
-        specificity
+        specificity,
       });
 
       // @dev: Create income & terms after contract because rules require contract to be created first
