@@ -1,6 +1,6 @@
 
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { MediaService } from '../../+state/media.service';
@@ -19,7 +19,7 @@ import { StorageFile } from '@blockframes/media/+state/media.firestore';
 export class PdfViewerComponent implements OnInit {
 
   fullScreen = false;
-
+  public keypressed;
   private _ref: StorageFile;
   get ref() { return this._ref; }
   @Input() set ref(file: StorageFile) {
@@ -52,16 +52,61 @@ export class PdfViewerComponent implements OnInit {
    */
   @HostListener('fullscreenchange')
   trackFullScreenMode() {
+
+    // if (!this.document.fullscreenElement && this.document['webkitIsFullScreen'] && !this.document['mozFullScreen'] && !this.document['msFullscreenElement']) {
+      this.fullScreen = !this.fullScreen;
+    //   ///fire your event
+    // }
+    // this.cdr.detectChanges();
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.keypressed = event.code;
+    // console.log(this.keypressed);
+  }
+
+  @HostListener('webkitfullscreenchange', ['$event'])
+
+  screenChange(event) {
     this.fullScreen = !this.fullScreen;
   }
 
+  // @HostListener('webkitfullscreenchange')
+  // trackFullScreenModeSafari() {
+  //   console.log('dans webkitfullscreenchange safari');
+  //   console.log(this.fullScreen);
+  //   // if (!this.document.fullscreenElement && this.document['webkitIsFullScreen'] && !this.document['mozFullScreen'] && !this.document['msFullscreenElement']) {
+  //     this.fullScreen = !this.fullScreen;
+  //     //   ///fire your event
+  //   // }
+  //   this.cdr.markForCheck();
+  // }
+
+
+
   constructor(
-    private el: ElementRef,
+    private el: ElementRef<HTMLDivElement>,
     private mediaService: MediaService,
+    private cdr: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document,
   ) { }
 
   async ngOnInit() {
+
+    // this.document.addEventListener('webkitfullscreenchange', (event) => {
+    //   console.log('dans addeventlistener');
+    //   // document.fullscreenElement will point to the element that
+    //   // is in fullscreen mode if there is one. If there isn't one,
+    //   // the value of the property is null.
+    //   if (document.fullscreenElement) {
+    //     console.log(`Element: ${document.fullscreenElement.id} entered full-screen mode.`);
+    //   } else {
+    //     console.log('fullscreen leaved');
+    //     this.fullScreen = false;
+    //   }
+    // });
+
     if (this.control) {
 
       // The parent passed a control in the Inputs.
@@ -85,6 +130,8 @@ export class PdfViewerComponent implements OnInit {
 
       this.control = { type: 'pdf', currentPage: 1, totalPages };
     }
+
+    // this.cdr.detectChanges();
   }
 
   async generatePdfUrl() {
@@ -107,23 +154,75 @@ export class PdfViewerComponent implements OnInit {
     this.loading$.next(false);
   }
 
-toggleFullScreen() {
-  if(!this.fullScreen) {
-    if(this.document['requestFullscreen']) {
-      this.document['requestFullscreen']();
-      this.fullScreen = true;
-    } else if (this.el.nativeElement.webkitRequestFullscreen) {
-      this.el.nativeElement.webkitRequestFullscreen();
+test() {
+  const is_safari = navigator.userAgent.indexOf('Safari') > -1;
+  const is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
+  const isFullscreen = toggleFullScreen(this.el, this.document, this.fullScreen);
+  this.fullScreen = isFullscreen;
+  console.log(this.fullScreen);
+  // this.trackFullScreenMode();
+  // if(!this.fullScreen) {
+  //   if(this.el.nativeElement.requestFullscreen) {
+  //     this.el.nativeElement.requestFullscreen();
+  //     console.log('onlychrome');
+  //     // this.fullScreen = true;
+  //   } else if (this.el.nativeElement['webkitRequestFullscreen']) {
+  //     console.log('wtf?', this.fullScreen);
+  //     this.el.nativeElement['webkitRequestFullscreen']();
+  //     this.fullScreen = true;
+  //     this.cdr.markForCheck();
+  //     console.log('dans else if webkit fullscreen', this.fullScreen);
+  //   } //document: Document<HTMLdivElement>
+
+  // } else {
+  //   if (this.document.exitFullscreen) {
+  //     console.log('document exitFullscreen');
+  //     // this.fullScreen = false;
+  //     this.document.exitFullscreen();
+
+  //     // this.cdr.detectChanges();
+  //   }
+
+  //   else if (this.document['webkitExitFullscreen']) { //  && this.document['webkitIsFullScreen']
+
+
+  //     //   console.log('after Propagation');
+  //     // })
+
+  //     // this.document.fullscreenEnabled
+  //     console.log('sortie fullscreen safari 1', this.fullScreen);
+  //     this.document.getElementsByTagName('button').item(13).click();
+  //     this.document['webkitExitFullscreen']();
+  //     this.fullScreen = false;
+  //     console.log('sortie fullscreen safari 2', this.fullScreen);
+  //     // this.trackFullScreenMode();
+
+  //     this.cdr.markForCheck();
+
+  //   }
+  // }
+}
+
+
+exitHandler() {
+// Any fullscreen change will trigger this function
+// Normalscreen to fullscreen or fullscreen to normalscreen
+// with the button or with ESC-key.
+    if (!document.fullscreenElement && !document['webkitIsFullScreen'] && !document['mozFullScreen'] && !document['msFullscreenElement']) {
+
+    this.fullScreen = false;
+        // This event is always trickered, but it's meant to be trickered when ESCAPE is used,
+    } else
+    {
       this.fullScreen = true;
     }
-  } else {
-    if (this.document.exitFullscreen) {
-      this.document.exitFullscreen();
-      this.fullScreen = false;
-    } else if (this.document['webkitExitFullscreen']) {
-      this.document['webkitExitFullscreen']();
-      this.fullScreen = false;
-    }
+}
+
+
+onKeydown(event) {
+  if (event.key === "Escape") {
+    console.log(event);
+    this.fullScreen = false;
   }
 }
 

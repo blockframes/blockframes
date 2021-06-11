@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
@@ -18,6 +18,7 @@ export class PreviewModalComponent {
 
   constructor(
     private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
 
   async openModal() {
@@ -27,9 +28,11 @@ export class PreviewModalComponent {
       data: this.ref,
       autoFocus: false,
     });
+    this.cdr.markForCheck();
   }
 
   public closeModal(): void {
     this.dialogRef.close(false);
+    this.cdr.detectChanges();
   }
 }

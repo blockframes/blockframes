@@ -4,7 +4,7 @@
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
   </section>
 </ng-container>
-<ng-template #loaded>
+<ng-template id="pdfViewer" #loaded>
   <mat-progress-bar *ngIf="fetching$ | async" mode="indeterminate"></mat-progress-bar>
 
   <!-- This is not a regular image, don't use the ImageDirective on it -->
@@ -14,12 +14,12 @@
     <pdf-control [control]="control" (controlChange)="handleControlChange($event)"></pdf-control>
   </ng-container>
 
-  <button *ngIf="!fullScreen" (click)="toggleFullScreen()" mat-icon-button>
+  <button id='switchValue' *ngIf="!fullScreen" (click)="test()" class="smallscreen" mat-icon-button>
     <mat-icon svgIcon="fullscreen"></mat-icon>
   </button>
 
-  <button *ngIf="fullScreen" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button>
+  <button *ngIf="fullScreen" (click)="test()" class="fullscreen" mat-icon-button>
     <mat-icon svgIcon="fullscreen_exit"></mat-icon>
   </button>
-
+<!--(keydown.esc)="onKeydown($event)"-->
 </ng-template>
