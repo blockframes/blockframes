@@ -14,6 +14,7 @@ export const fileLabels = [
   // orgs
   'logo',
   'notes',
+  'videos',
 
   // users
   'avatar',
@@ -43,7 +44,8 @@ export type FileLabel = typeof fileLabels[number];
 export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabel, string>>> = {
   orgs: {
     logo: 'logo',
-    notes: 'documents.notes'
+    notes: 'documents.notes',
+    videos: 'documents.videos',
   },
   users: {
     avatar: 'avatar',
@@ -80,6 +82,7 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
     orgs: {
       logo: { uid: '', privacy: 'public', collection, docId, field: 'logo' },
       notes: { uid: '', privacy: 'protected', collection, docId, field: 'documents.notes' },
+      videos: { uid: '', privacy: 'protected', collection, docId, field: 'documents.videos' },
     },
     users: {
       avatar: { uid: '', privacy: 'public', collection, docId, field: 'avatar' },
