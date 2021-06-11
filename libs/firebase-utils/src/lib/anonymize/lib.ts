@@ -110,7 +110,7 @@ function updateOrg(org: Organization | PublicOrganization) {
 }
 
 function updateHostedVideo(screener: MovieVideo): MovieVideo | MovieSalesPitch {
-  const jwPlayerId = 'J4owWnLi';
+  const jwPlayerId = 'Vzo4bhS5';
   return {
     ...screener,
     jwPlayerId
@@ -147,7 +147,9 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'publicContracts/',
     'analytics/',
     'buckets',
-    'terms/'
+    'terms/',
+    'incomes/',
+    'offers/'
   ];
   if (!doc || ignorePaths.some((path) => docPath.includes(path))) return { docPath, content: doc };
 
