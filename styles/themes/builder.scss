@@ -102,7 +102,7 @@
     secondary-text: map.get($foreground, 600),
     icon: map.get($foreground, 700),
     icons: map.get($foreground, 700),
-    text: map.get($foreground, 800),
+    text: map.get($foreground, 700),
     slider-min: map.get($foreground, 700),
     slider-off: rgba(map.get($foreground, 700), 0.26),
     slider-off-active: rgba(map.get($foreground, 700), 0.38),
@@ -169,7 +169,7 @@
   @include bf-table.color($theme);
   @include apex-chart.color($theme);
   @include surface.color($theme);
-  
+
   // override material
   @include expansion-panel.color($theme);
   @include button.color($theme);
