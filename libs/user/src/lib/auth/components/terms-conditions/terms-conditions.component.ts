@@ -32,5 +32,4 @@ export class TermsConditionsComponent implements OnInit {
   goBack() {
     this.location.back();
   }
-
 }
