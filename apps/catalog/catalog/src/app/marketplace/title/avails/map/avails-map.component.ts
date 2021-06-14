@@ -145,11 +145,20 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const decodedData = decodeUrl(
+    const decodedData: any = decodeUrl(
       this.activatedRoute,
     )
     if (decodedData && Object.keys(decodedData).length > 0) {
-      this.availsForm.setValue(decodedData)
+      const data: any = { ...decodedData }
+      if (decodedData.duration) {
+        if (decodedData.duration.from) {
+          data.duration.from = new Date(decodedData.duration.from)
+        }
+        if (decodedData.duration.to) {
+          data.duration.to = new Date(decodedData.duration.to)
+        }
+      }
+      this.availsForm.setValue(data)
     }
     this.availsForm.valueChanges.subscribe(
       formState => {

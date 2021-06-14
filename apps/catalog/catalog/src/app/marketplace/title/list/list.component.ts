@@ -3,7 +3,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef, OnDestroy, AfterViewInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -38,7 +38,7 @@ import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-st
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnDestroy, OnInit {
 
   private movieResultsState = new BehaviorSubject<Movie[]>(null);
 
@@ -72,17 +72,10 @@ export class ListComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
+
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000)
-    // const params = this.route.snapshot.queryParams;
-    // for (const key in params) {
-    //   try {
-    //     params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
-    //   } catch (_) {
-    //     console.error(`Invalid parameter ${key} in URL`);
-    //   }
-    // }
 
     // No need to await for the results
     Promise.all([
@@ -90,13 +83,54 @@ export class ListComponent implements OnInit, OnDestroy {
       this.getContract('sale')
     ])
 
-    const { search, avails } = decodeUrl(
+    const {
+      search: unparsedSearch,
+      avails: unparsedAvails
+    } = decodeUrl(
       this.activatedRoute,
     )
-    this.searchForm.setValue({
-      ...this.searchForm.value,
-      ...search as any
-    });
+    const avails: any = unparsedAvails || {}
+    if (avails.duration) {
+      if (avails.duration.to) {
+        try{
+          avails.duration.to = new Date(avails.duration.to)
+        } catch(err){
+          delete avails.duration.to
+        }
+      }
+      if (avails.duration.from) {
+        try{
+          avails.duration.from = new Date(avails.duration.from)
+        } catch(err){
+          delete avails.duration.to
+        }
+      }
+    }
+
+    if (unparsedSearch) {
+      const search: any = unparsedSearch
+      if (search.query) {
+        this.searchForm.query.setValue(
+          search.query
+        );
+      }
+      if (search.contentType) {
+        this.searchForm.contentType.setValue(
+          search.contentType
+        );
+      }
+      if (search.genres) {
+        this.searchForm.genres.patchAllValue(
+          search.genres
+        );
+      }
+      if (search.originCountries) {
+        this.searchForm.originCountries.patchAllValue(
+          search.originCountries
+        );
+      }
+    }
+
     this.availsForm.setValue({
       ...this.availsForm.value,
       ...avails as any
@@ -115,14 +149,14 @@ export class ListComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         ([search, avails]) => {
-          console.log({ countries: search.originCountries })
+          console.log({ search, avails })
           encodeUrlAndNavigate(
             this.router,
             this.activatedRoute,
             {
               search: {
-                genres: search.genres,
                 query: search.query,
+                genres: search.genres,
                 originCountries: search.originCountries,
                 contentType: search.contentType,
               },
