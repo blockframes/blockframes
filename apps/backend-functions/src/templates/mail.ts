@@ -216,7 +216,7 @@ export function invitationToEventFromOrgUpdated(
     adminFirstName: admin.firstName,
     userFirstName: user.firstName,
     userLastName: user.lastName,
-    userOrg,
+    org: userOrg,
     event,
     eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`,
     pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}}/title`
