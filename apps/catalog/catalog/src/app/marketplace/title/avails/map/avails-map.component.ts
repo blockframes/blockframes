@@ -145,9 +145,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const decodedData: any = decodeUrl(
-      this.activatedRoute,
-    )
+    const decodedData: any = decodeUrl(this.activatedRoute);
     if (decodedData && Object.keys(decodedData).length > 0) {
       const data: any = { ...decodedData }
       if (decodedData.duration) {
@@ -172,8 +170,6 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(
-      s => s.unsubscribe()
-    );
+    this.subs.forEach(s => s.unsubscribe());
   }
 }

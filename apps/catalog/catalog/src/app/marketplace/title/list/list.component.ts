@@ -3,7 +3,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef, OnDestroy, AfterViewInit
+  ChangeDetectorRef, OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -92,16 +92,16 @@ export class ListComponent implements OnDestroy, OnInit {
     const avails: any = unparsedAvails || {}
     if (avails.duration) {
       if (avails.duration.to) {
-        try{
+        try {
           avails.duration.to = new Date(avails.duration.to)
-        } catch(err){
+        } catch (err) {
           delete avails.duration.to
         }
       }
       if (avails.duration.from) {
-        try{
+        try {
           avails.duration.from = new Date(avails.duration.from)
-        } catch(err){
+        } catch (err) {
           delete avails.duration.to
         }
       }
@@ -149,7 +149,6 @@ export class ListComponent implements OnDestroy, OnInit {
       )
       .subscribe(
         ([search, avails]) => {
-          console.log({ search, avails })
           encodeUrlAndNavigate(
             this.router,
             this.activatedRoute,

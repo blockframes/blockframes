@@ -114,9 +114,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
   }
 
   ngOnInit() {
-    const decodedData = decodeUrl(
-      this.activatedRoute,
-    )
+    const decodedData = decodeUrl(this.activatedRoute);
     if (decodedData && Object.keys(decodedData).length > 0) {
       this.availsForm.setValue(decodedData)
     }

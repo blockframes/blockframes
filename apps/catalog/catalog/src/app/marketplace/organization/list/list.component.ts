@@ -3,7 +3,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { debounceTime, distinctUntilChanged, filter, first, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
 import { ActivatedRoute, Router } from '@angular/router'
@@ -44,9 +44,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
     const search = createOrganizationSearch({ appModule: ['marketplace'] });
-    const decodedData = decodeUrl(
-      this.activatedRoute,
-    )
+    const decodedData = decodeUrl(this.activatedRoute);
     this.searchForm.setValue({
       ...search,
       country: '',
@@ -102,8 +100,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(
-      s => s.unsubscribe()
-    )
+    this.subs.forEach(s => s.unsubscribe());
   }
 }
