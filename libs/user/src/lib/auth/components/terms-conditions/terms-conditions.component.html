@@ -1,7 +1,7 @@
 <ng-container [ngSwitch]="appName">
   <ng-container *ngSwitchCase="'festival'">
     <header>
-      <button mat-icon-button class="go-back" *ngIf="canGoBack">
+      <button mat-icon-button class="go-back" *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </button>
       <h1>TERMS AND CONDITIONS OF USE OF ARCHIPEL MARKET</h1>
@@ -441,7 +441,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'catalog'">
     <header>
-      <a mat-icon-button *ngIf="canGoBack">
+      <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>TERMS and conditions of use OF ARCHIPEL CONTENT</h1>
@@ -852,7 +852,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'financiers'">
     <header>
-      <a mat-icon-button *ngIf="canGoBack">
+      <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>TERMS AND CONDITIONS OF USE OF MEDIA FINANCIERS</h1>

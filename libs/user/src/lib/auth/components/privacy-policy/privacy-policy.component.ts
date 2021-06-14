@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { Location } from '@angular/common';
 import { getCurrentApp } from "@blockframes/utils/apps";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 
@@ -14,10 +15,10 @@ export class PrivacyPolicyComponent {
   canGoBack = window.history.length > 1;
   constructor(
     private routerQuery: RouterQuery,
+    private location: Location,
   ) { }
 
-
-
-
-
+  goBack() {
+    this.location.back();
+  }
 }
