@@ -41,7 +41,7 @@ describe('User create a screening', () => {
     p1.clickLogin();
   });
 
-  it('Organiser logs in, creates 4 screening events', () => {
+  it.only('Organiser logs in, creates 4 screening events', () => {
 
     signIn(users[0], true);
     acceptCookie();
@@ -123,6 +123,9 @@ describe('User create a screening', () => {
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     p4.clickRequestInvitation(screeningEvent);
+
+    //TODO Wait until request for invitation is accepted
+    //before proceeding ahead.
 
     cy.log(`>Check in market place event page for {${movieTitle}}`);
     p4.clickOnMenu();
