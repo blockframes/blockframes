@@ -28,12 +28,29 @@ export default class FestivalScreeningPage {
   clickRequestInvitation(screeningTitle: string) {
     cy.pause();
 
+    /*
     //TODO Check something here..spinner test
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
       .contains(screeningTitle)
       .parent().parent().parent()
       .find('button[test-id=invitation-request]')
       .should('exist');
+
+    //Check for change of status after clicking..
+    
+    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
+      .contains(screeningTitle)
+      .parent().parent().parent()
+      .find('button[test-id=invitation-request]').click();
+    */
+
+    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
+      .contains(screeningTitle)
+      .parent().parent().parent()
+      .find('[test-id=invitation-status]')
+      .should('exist');
+
+    cy.pause();
 
     return;
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
