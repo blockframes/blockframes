@@ -30,7 +30,7 @@ import { BucketContract, createBucketContract, createBucketTerm } from '@blockfr
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
-import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -67,7 +67,6 @@ export class ListComponent implements OnDestroy, OnInit {
     private bucketQuery: BucketQuery,
     private orgQuery: OrganizationQuery,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -85,56 +84,26 @@ export class ListComponent implements OnDestroy, OnInit {
 
     const {
       search: unparsedSearch,
-      avails: unparsedAvails
-    } = decodeUrl(
-      this.activatedRoute,
-    )
-    const avails: any = unparsedAvails || {}
-    if (avails.duration) {
-      if (avails.duration.to) {
-        try {
-          avails.duration.to = new Date(avails.duration.to)
-        } catch (err) {
-          delete avails.duration.to
-        }
-      }
-      if (avails.duration.from) {
-        try {
-          avails.duration.from = new Date(avails.duration.from)
-        } catch (err) {
-          delete avails.duration.to
-        }
-      }
-    }
+      avails = {}
+    } = decodeUrl(this.route);
 
     if (unparsedSearch) {
       const search: any = unparsedSearch
       if (search.query) {
-        this.searchForm.query.setValue(
-          search.query
-        );
+        this.searchForm.query.setValue(search.query);
       }
       if (search.contentType) {
-        this.searchForm.contentType.setValue(
-          search.contentType
-        );
+        this.searchForm.contentType.setValue(search.contentType);
       }
       if (search.genres) {
-        this.searchForm.genres.patchAllValue(
-          search.genres
-        );
+        this.searchForm.genres.patchAllValue(search.genres);
       }
       if (search.originCountries) {
-        this.searchForm.originCountries.patchAllValue(
-          search.originCountries
-        );
+        this.searchForm.originCountries.patchAllValue(search.originCountries);
       }
     }
 
-    this.availsForm.setValue({
-      ...this.availsForm.value,
-      ...avails as any
-    });
+    this.availsForm.patchValue(avails);
 
     const subStateUrl = combineLatest([
       this.searchForm.valueChanges.pipe(
@@ -149,9 +118,9 @@ export class ListComponent implements OnDestroy, OnInit {
       )
       .subscribe(
         ([search, avails]) => {
-          encodeUrlAndNavigate(
+          encodeUrl(
             this.router,
-            this.activatedRoute,
+            this.route,
             {
               search: {
                 query: search.query,
@@ -318,8 +287,6 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(
-      s => s.unsubscribe()
-    )
+    this.subs.forEach(s => s.unsubscribe());
   }
 }

@@ -3,11 +3,11 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap, throttleTime } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
+import { OrganizationSearchForm, createOrganizationSearch, OrganizationSearch } from '@blockframes/organization/forms/search.form';
 import { ActivatedRoute, Router } from '@angular/router'
-import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder'
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder'
 @Component({
   selector: 'catalog-organization-list',
   templateUrl: './list.component.html',
@@ -37,14 +37,14 @@ export class ListComponent implements OnInit, OnDestroy {
     private service: OrganizationService,
     private dynTitle: DynamicTitleService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
     const search = createOrganizationSearch({ appModule: ['marketplace'] });
-    const decodedData = decodeUrl(this.activatedRoute);
+    const decodedData = decodeUrl<OrganizationSearch>(this.route);
     this.searchForm.setValue({
       ...search,
       country: '',
@@ -78,19 +78,13 @@ export class ListComponent implements OnInit, OnDestroy {
       this.lastPage = this.hitsViewed === this.nbHits;
     });
 
-    const subSearchUrl = this.searchForm.valueChanges.subscribe(
-      formValue => encodeUrlAndNavigate(
-        this.router, this.activatedRoute,
-        {
-          country: formValue.country,
-          query: formValue.query
-        }
-      )
-    );
+    const subSearchUrl = this.searchForm.valueChanges.pipe(
+      throttleTime(1000)
+    ).subscribe(({ country, query }) => {
+      encodeUrl<Partial<OrganizationSearch>>(this.router, this.route, { country, query, });
+    });
 
-    this.subs.push(
-      sub, subSearchUrl
-    );
+    this.subs.push(sub, subSearchUrl);
   }
 
   async loadMore() {

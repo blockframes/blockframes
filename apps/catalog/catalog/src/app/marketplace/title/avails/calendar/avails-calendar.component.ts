@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { filter, map, shareReplay, startWith } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, throttleTime } from 'rxjs/operators';
 
 import {
   getDurations,
@@ -12,13 +12,14 @@ import {
   DurationMarker,
   toDurationMarker,
   getDurationMarkers,
+  AvailsFilter,
 } from '@blockframes/contract/avails/avails';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 
 @Component({
@@ -115,16 +116,14 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
 
   ngOnInit() {
     const decodedData = decodeUrl(this.activatedRoute);
-    if (decodedData && Object.keys(decodedData).length > 0) {
-      this.availsForm.setValue(decodedData)
-    }
-    this.availsForm.valueChanges.subscribe(
-      formState => encodeUrlAndNavigate(
-        this.router,
-        this.activatedRoute,
-        formState as any
-      )
-    )
+    this.availsForm.patchValue(decodedData)
+    this.availsForm.valueChanges.pipe(
+      throttleTime(1000)
+    ).subscribe(formState => {
+      encodeUrl<AvailsFilter>(
+        this.router, this.activatedRoute, formState
+      );
+    })
   }
 
   ngOnDestroy() {

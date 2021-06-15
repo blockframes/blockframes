@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { combineLatest, Subscription } from 'rxjs';
-import { filter, map, shareReplay, startWith, take } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -13,12 +13,13 @@ import {
   toTerritoryMarker,
   getTerritoryMarkers,
   availableTerritories,
+  AvailsFilter,
 } from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { decodeUrl, encodeUrlAndNavigate } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -98,7 +99,7 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
   ) { }
 
   /** Display the territories information in the tooltip */
@@ -145,28 +146,15 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const decodedData: any = decodeUrl(this.activatedRoute);
-    if (decodedData && Object.keys(decodedData).length > 0) {
-      const data: any = { ...decodedData }
-      if (decodedData.duration) {
-        if (decodedData.duration.from) {
-          data.duration.from = new Date(decodedData.duration.from)
-        }
-        if (decodedData.duration.to) {
-          data.duration.to = new Date(decodedData.duration.to)
-        }
-      }
-      this.availsForm.setValue(data)
-    }
-    this.availsForm.valueChanges.subscribe(
-      formState => {
-        encodeUrlAndNavigate(
-          this.router,
-          this.activatedRoute,
-          formState as any
-        )
-      }
-    )
+    const decodedData = decodeUrl(this.route);
+    this.availsForm.patchValue(decodedData)
+    this.availsForm.valueChanges.pipe(
+      throttleTime(1000)
+    ).subscribe(formState => {
+      encodeUrl<AvailsFilter>(
+        this.router, this.route, formState
+      );
+    });
   }
 
   ngOnDestroy() {
