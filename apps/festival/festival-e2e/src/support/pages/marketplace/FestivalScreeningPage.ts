@@ -26,10 +26,22 @@ export default class FestivalScreeningPage {
    * @param screeningTitle : Title of event
    */
   clickRequestInvitation(screeningTitle: string) {
+    cy.pause();
+
+    //TODO Check something here..spinner test
+    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
+      .contains(screeningTitle)
+      .parent().parent().parent()
+      .find('button[test-id=invitation-request]')
+      .should('exist');
+
+    return;
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
       .contains(screeningTitle)
       .parent().parent().parent()
       .find('button[test-id=invitation-request]').click();
+    //Wait until invitation is accepted here
+
     cy.wait(1 * SEC);
   }
 
