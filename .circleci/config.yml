@@ -143,7 +143,10 @@ commands:
     steps:
         - run: npx cypress install
         - run:
-            command: npm run e2e
+            command: npm run e2e:catalog
+            no_output_timeout: 20m
+        - run:
+            command: npm run e2e:festival
             no_output_timeout: 20m
         - store_artifacts:
             name: Uploading screenshots
@@ -277,6 +280,20 @@ jobs:
           no_output_timeout: 15m
       - save_build_cache
       - slack/status
+  run-e2e-tests:
+    executor: blockframes-ci
+    environment:
+      NG_CONFIG: ''
+    steps:
+      - prepare_environment
+      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
+      - fail_on_production
+      - select_environment
+      - build_deploy_prepare
+      - run:
+          command: npm run test
+          no_output_timeout: 15m
+      - test_e2e_all
   deploy-to-prod:
     executor: blockframes-ci
     environment:
@@ -337,6 +354,13 @@ workflows:
             branches:
               only:
                 - /upgrade\/.*/
+  run-e2e-tests:
+    jobs:
+      - run-e2e-tests:
+          filters:
+            branches:
+              only:
+                - /e2e\/.*/
   prepare-for-testing:
     jobs:
       - prepare-for-testing:
