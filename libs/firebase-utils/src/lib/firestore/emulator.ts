@@ -1,6 +1,6 @@
 import { firebase } from '@env'
 import { initializeApp } from 'firebase-admin'
-import { clearFirestoreData, withFunctionTriggersDisabled } from '@firebase/rules-unit-testing'
+import { clearFirestoreData, withFunctionTriggersDisabled } from '@firebase/rules-unit-testing';
 import { ClearFirestoreDataOptions } from '@firebase/rules-unit-testing/dist/src/api';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
@@ -210,9 +210,8 @@ export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreDa
  */
 export function connectEmulator() {
   throwOnProduction();
-  const app = initializeApp({...firebase(), storageBucket: 'default-bucket'}, 'emulator');
+
   const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  // tslint:disable-next-line: no-eval
   const {
     emulators: {
       firestore: { port: dbPort },
@@ -220,14 +219,21 @@ export function connectEmulator() {
       auth: { port: authPort },
     },
   } = eval('require')(firebaseJsonPath);
+
+  console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
+
   process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
-  process.env['FIRESTORE_STORAGE_EMULATOR_HOST'] = `localhost:${storagePort}`
+  // process.env['FIRESTORE_STORAGE_EMULATOR_HOST'] = `localhost:${storagePort}`
   process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
+  // delete process.env['GOOGLE_APPLICATION_CREDENTIALS']
+
+  const app = initializeApp({ projectId: firebase().projectId }, 'emulator');
+  const storage = app.storage();
   const db = app.firestore() as FirestoreEmulator;
   const auth = app.auth();
-  const storage = app.storage();
+
   db.settings({
-    port: dbPort,
+    // port: dbPort,
     merge: true,
     ignoreUndefinedProperties: true,
     host: 'localhost',

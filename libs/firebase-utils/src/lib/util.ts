@@ -92,7 +92,6 @@ export interface AdminServices {
 
 export function loadAdminServices({ emulator = false }: { emulator: boolean } = { emulator: false }): AdminServices {
   config();
-  warnMissingVars();
 
   if (emulator) return { getCI, ...connectEmulator(), firebaseConfig: firebase() };
 

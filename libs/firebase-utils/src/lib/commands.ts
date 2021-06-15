@@ -60,7 +60,7 @@ export function runShellCommandUntil(cmd: string, until: string) {
  */
 export function awaitProcOutput(proc: ChildProcess, output: string) {
   return new Promise<void>(res => {
-    const reg = new RegExp(output, 'i')
+    const reg = new RegExp(output, 'i');
     proc.stdout.on('data', (out: Buffer) => {
       const lines = out.toString().split('\n');
       const match = lines.find((line) => reg.test(line));
@@ -78,7 +78,8 @@ export function awaitProcOutput(proc: ChildProcess, output: string) {
 export function runInBackground(cmd: string) {
   let proc: ChildProcess;
   const procPromise = new Promise<string>((res, rej) => {
-    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2 }, (err, stdout) => {
+    const { env } = process;
+    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2, env }, (err, stdout) => {
       if (err) rej(err);
       res(stdout);
     });
