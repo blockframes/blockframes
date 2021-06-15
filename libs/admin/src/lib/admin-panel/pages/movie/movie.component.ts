@@ -17,7 +17,6 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 
-
 @Component({
   selector: 'admin-movie',
   templateUrl: './movie.component.html',
@@ -184,10 +183,17 @@ export class MovieComponent implements OnInit {
       output.push(`${documentPermissions.length} permission document will be removed.`);
     }
 
-    const contracts = await this.contractService.getValue(ref => ref.where('titleIds', 'array-contains', movie.id));
+    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movie.id));
     if (contracts.length) {
-      output.push(`${contracts.length} contract will be updated.`);
+      output.push(`${contracts.length} contract will be deleted.`);
     }
+
+    // Check buckets content
+    /**
+     * @dev query cannot be performed unless we retreive all buckets on browser side,
+     * For performances issues, we just say that some buckets may be impacted
+     */
+    output.push('Some buckets may be updated.');
 
     return output;
   }
