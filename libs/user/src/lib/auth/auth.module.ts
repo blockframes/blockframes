@@ -44,6 +44,14 @@ export const AuthRoutes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
   },
   {
+    path: 'terms',
+    loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+  },
+  {
+    path: 'privacy',
+    loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+  },
+  {
     path: 'identity',
     canActivate: [IdentityGuard],
     loadChildren: () => import('./pages/identity/identity.module').then(m => m.IdentityModule)

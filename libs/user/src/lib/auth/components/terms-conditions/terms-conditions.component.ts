@@ -4,7 +4,7 @@ import { map } from "rxjs/operators";
 import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
 import { getAppLocation } from "@blockframes/utils/helpers";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
-import { MatDialog } from "@angular/material/dialog";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'auth-terms-conditions',
@@ -16,10 +16,11 @@ export class TermsConditionsComponent implements OnInit {
   section$: Observable<'dashboard' | 'marketplace'>;
   appUrl: string;
   appName: string;
+  canGoBack = window.history.length > 1;
 
   constructor(
     private routerQuery: RouterQuery,
-    private dialog: MatDialog
+    private location: Location,
   ) { }
 
   ngOnInit() {
@@ -29,6 +30,7 @@ export class TermsConditionsComponent implements OnInit {
   }
 
   goBack() {
-    this.dialog.closeAll();
+    this.location.back();
   }
+
 }

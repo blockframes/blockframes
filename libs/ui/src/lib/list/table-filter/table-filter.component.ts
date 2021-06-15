@@ -90,6 +90,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
         if (this.colAction) filter.push(this.colAction.ref)
         return filter
       }),
+      map(col => col.sort((a, b) => this.initialColumns.indexOf(a) - this.initialColumns.indexOf(b))),
       startWith(this.columnFilter.value)
     );
 

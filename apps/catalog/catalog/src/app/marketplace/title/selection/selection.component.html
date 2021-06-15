@@ -17,7 +17,9 @@
 
     <section>
       <h2>Please select a currency</h2>
-      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies"></static-select>
+      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies">
+        <mat-label>Currency</mat-label>
+      </static-select>
     </section>
 
     <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
@@ -60,7 +62,7 @@
               {{ exclusive ? 'Yes' : 'No' }}
             </ng-template>
             <ng-template colAction="action" label="Actions" let-termIndex="index">
-              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" matTooltip="Edit">
+              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: termIndex }" matTooltip="Edit">
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
               <button mat-icon-button (click)="removeTerm(i, termIndex)" matTooltip="Delete">
@@ -91,7 +93,7 @@
   <section class="empty" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
     <h1>There is no title to display in your Selection.</h1>
     <span>Select titles to populate your Selection.</span>
-    <img asset="no_titles.webp" alt="No rights in selection">
+    <img asset="empty_selection.png" alt="No rights in selection">
     <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Browse Library</button>
   </section>
 </ng-template>

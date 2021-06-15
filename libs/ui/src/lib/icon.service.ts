@@ -117,6 +117,7 @@ export const icons = [
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
   { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
+  { name: 'resend_email', url: 'assets/icons/resend_email.svg' },
   { name: 'save', url: 'assets/icons/save.svg' },
   { name: 'screening', url: 'assets/icons/screening.svg' },
   { name: 'search', url: 'assets/icons/search.svg' },

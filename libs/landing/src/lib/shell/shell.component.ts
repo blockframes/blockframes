@@ -41,6 +41,7 @@ export class LandingFooterComponent { }
 export class LandingShellComponent {
   public submitted = false;
   public appName = getAppName(getCurrentApp(this.routerQuery));
+  public buttonText = 'Send Request';
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',
@@ -75,10 +76,12 @@ export class LandingShellComponent {
       return;
     }
     try {
+      this.buttonText = 'Sending Request...';
       const currentApp = getCurrentApp(this.routerQuery);
       const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
 
       this.sendDemoRequest(information);
+      this.buttonText = 'Request Sent';
       this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });
       this.submitted = true;
     } catch (error) {

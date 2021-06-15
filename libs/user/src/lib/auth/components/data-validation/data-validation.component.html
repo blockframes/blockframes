@@ -38,7 +38,7 @@
       <mat-icon svgIcon="check_circle" color="primary"></mat-icon>
     </ng-container>
     <ng-template #notValid>
-      <mat-icon class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page."></mat-icon>
+      <mat-icon class="refresh-icon" color="primary" (click)="resendEmailVerification()" svgIcon="resend_email" matTooltip="Resend verification email."></mat-icon>
     </ng-template>
   </article>
 
@@ -46,7 +46,7 @@
 
   <article fxLayout fxLayoutAlign="space-between center">
     <div fxLayout>
-      <img class="illustration" asset="org.svg" alt="organization illustration" />
+      <img class="illustration" asset="org_approval.svg" alt="organization illustration" />
       <p>Organization Approval</p>
       <mat-icon class="icon-tooltip" svgIcon="info"
         matTooltip="Please wait for the approval of the company information you provided."></mat-icon>

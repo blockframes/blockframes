@@ -23,6 +23,8 @@ import { heavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
+import { onContractDelete } from './contracts';
+import { onTermDelete } from './terms';
 
 console.log('Function instance loaded')
 
@@ -54,6 +56,9 @@ export const sendVerifyEmailAddress = functions.https.onCall(skipInMaintenance(l
 
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https.onCall(skipInMaintenance(users.startResetPasswordEmail));
+
+/** Trigger: REST call to manually verify email. */
+export const verifyEmail = functions.https.onCall(skipInMaintenance(users.verifyEmail));
 
 //--------------------------------
 //        Misc Management       //
@@ -238,3 +243,11 @@ export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
  * Imports analytics data from BigQuery
  */
 export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *').onRun(importAnalytics); // every day
+
+//--------------------------------
+//     Contracts Management     //
+//--------------------------------
+
+export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', logErrors(onContractDelete));
+
+export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', logErrors(onTermDelete));

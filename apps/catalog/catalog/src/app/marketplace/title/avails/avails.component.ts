@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { filter, switchMap } from 'rxjs/operators';
-import { of, ReplaySubject, Subscription } from 'rxjs';
+import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
 import { Scope } from '@blockframes/utils/static-model';
@@ -27,8 +27,7 @@ import { ExplanationComponent } from './explanation/explanation.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy {
-  private sub: Subscription;
-  private fragSub: Subscription;
+  private subs: Subscription[] = [];
 
   public movie: Movie = this.movieQuery.getActive();
 
@@ -79,22 +78,31 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private orgService: OrganizationService,
     private contractService: ContractService,
   ) {
-    this.sub = this.bucketQuery.selectActive().subscribe(bucket => {
+    const sub = this.bucketQuery.selectActive().subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
+    this.subs.push(sub);
     this.init();
   }
 
   ngAfterViewInit() {
-    this.fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
+    const fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
       document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
-    })
+    });
+
+    const paramsSub = combineLatest([
+      this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
+      this.bucketQuery.selectActive().pipe(filter(bucket => !!bucket))
+    ]).subscribe(([ params, bucket ]) => {
+      const term = bucket.contracts[params.contract].terms[params.term];
+      this.edit(term);
+    });
+    this.subs.push(fragSub, paramsSub)
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
-    this.fragSub.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
   private async init() {
@@ -106,7 +114,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
     const [mandateTerms, salesTerms] = await Promise.all([
       this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
-      this.termService.getValue(sales.map(sale => sale.termIds).flat())
+      this.termService.getValue(sales.map(sale => sale.termIds).flat()),
     ]);
 
     this.mandates$.next(mandates);
@@ -124,13 +132,14 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public explain() {
     this.dialog.open(ExplanationComponent, {
       height: '80vh',
-      width: '80vw'
+      width: '80vw',
+      autoFocus: false
     });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh' });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 
   confirmExit() {
@@ -142,8 +151,10 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       data: {
         title: 'You are about to leave the page',
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
-        buttonName: 'Leave anyway'
-      }
+        confirm: 'Leave anyway',
+        cancel: 'Stay',
+      },
+      autoFocus: false,
     });
     return dialogRef.afterClosed().pipe(
       /* Undefined means user clicked on the backdrop, meaning just close the modal */
@@ -154,12 +165,12 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   edit({ exclusive, duration, medias, territories }: BucketTerm) {
     const mode = this.router.url.split('/').pop();
 
-    if (mode === 'map') {
+    if (mode.includes('map')) {
       this.bucketForm.patchValue({}); // Force observable to reload
       this.avails.mapForm.setValue({ exclusive, duration, medias, territories: [] });
     }
 
-    if (mode === 'calendar') {
+    if (mode.includes('calendar')) {
       this.avails.calendarForm.patchValue({ exclusive, medias, territories });
     }
 

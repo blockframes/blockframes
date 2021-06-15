@@ -41,22 +41,22 @@ export class MarketplaceMovieAvailsMapComponent {
     this.mandates$,
     this.mandateTerms$,
   ]).pipe(
-    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms))
+    map(([mandates, mandateTerms]) => getTerritoryMarkers(mandates, mandateTerms)),
   );
 
   public selected$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.territoryMarkers$
+    this.territoryMarkers$,
   ]).pipe(
     map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'exact').map(t => markers[t])),
-    startWith([])
+    startWith([]),
   );
 
   public inSelection$ = combineLatest([
     this.availsForm.value$,
     this.shell.bucketForm.value$,
-    this.territoryMarkers$
+    this.territoryMarkers$,
   ]).pipe(
     map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'in').map(t => markers[t])),
     startWith([]),
@@ -65,7 +65,7 @@ export class MarketplaceMovieAvailsMapComponent {
   public sold$ = combineLatest([
     this.mandates$,
     this.salesTerms$,
-    this.availsForm.value$
+    this.availsForm.value$,
   ]).pipe(
     filter(() => this.availsForm.valid),
     map(([mandates, sales, avails]) => {
@@ -74,7 +74,7 @@ export class MarketplaceMovieAvailsMapComponent {
         .filter(territory => !!territoriesISOA3[territory])
         .map(territory => toTerritoryMarker(territory, mandates, term))
       ).flat();
-    })
+    }),
   );
 
   public available$ = combineLatest([
@@ -88,17 +88,13 @@ export class MarketplaceMovieAvailsMapComponent {
       if (this.availsForm.invalid) return [];
       return availableTerritories(selected, sold, inSelection, this.availsForm.value, mandates, mandateTerms);
     }),
-    shareReplay(1) // Multicast with replay
+    shareReplay(1), // Multicast with replay
   );
 
   constructor(
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
   ) { }
-
-  public trackByTag<T>(tag: T) {
-    return tag;
-  }
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
@@ -112,7 +108,7 @@ export class MarketplaceMovieAvailsMapComponent {
 
   public addTerritory(territory: TerritoryMarker) {
     const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
-    if (added) this.onNewRight()
+    if (added) this.onNewRight();
   }
 
   public removeTerritory(territory: TerritoryMarker) {

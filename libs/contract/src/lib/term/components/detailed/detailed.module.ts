@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DetailedTermsComponent } from './detailed.component';
 import { ToLabelModule } from '@blockframes/utils/pipes';
@@ -13,6 +14,7 @@ import { MatDialogModule } from '@angular/material/dialog';
   imports: [
     CommonModule,
     ToLabelModule,
+    FlexLayoutModule,
 
     MatButtonModule,
     MatIconModule,
