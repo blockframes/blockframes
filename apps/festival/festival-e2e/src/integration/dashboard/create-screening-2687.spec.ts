@@ -99,7 +99,7 @@ describe('User create a screening', () => {
     p2.acceptInvitationScreening();
   });
 
-  it.only('Invitee adds public screening to his calendar', () => {
+  it('Invitee adds public screening to his calendar', () => {
     const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
@@ -119,15 +119,10 @@ describe('User create a screening', () => {
     p2.searchPartner(OrgName);
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
 
-    cy.pause();
     //Check if public screening exists and request it.
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     p4.clickRequestInvitation(screeningEvent);
-
-    //TODO Wait until request for invitation is accepted
-    //before proceeding ahead.
-    return;
 
     cy.log(`>Check in market place event page for {${movieTitle}}`);
     p4.clickOnMenu();
