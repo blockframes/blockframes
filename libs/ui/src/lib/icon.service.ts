@@ -206,42 +206,6 @@ export class IconService {
 */
 
 
-//? /** IMAGES SVG */
-/*
-//* --- Light et Dark SVG ---
-- completed
-- contract_offer
-- development (mais elles sont très différentes)
-- empty_cast_descriptioin
-- empty_crew_description
-- empty_director_description
-- empty_filmography
-- exclusive_priviledges
-- gift
-- hero
-- knowledge
-- mail (utilisé pour le validation de donnée lors de l'inscription)
-- movie_form_illustration
-- no_stats_promo
-- no_views
-- no_wishlist === no_titles (webp, seulement le + dans le ccercle rouge qui est différent)
-- org === empty_org (webp)
-- post_production
-- production
-- released
-- rocket_background
-- tag_along
-- topfilms
-- user
-- wait
-
-//* --- Dark SVG uniquement ---
-- experts (non utilisée)
-- investment (non utilisée)
-- investment_share (non utilisée)
-
-*/
-
 //? --- Root du dossier asset ---
 /*
 - ACM_banner_landing : non utilisée (c'est la même que banner_landing, banner_header est la même en plus sombre)
@@ -254,29 +218,35 @@ export class IconService {
 - meeting: utilisé pour le lobby des events
 */
 
-//? /** IMAGES WEBP */
+//? /** IMAGES */
 /*
 
-//* --- LIGHT UNIQUEMENT ---
-- sale: non utilisé
-- empty_organization === dark mode
-
-//* --- DARK UNIQUEMENT ---
-- thank_you: non utilisé
+//* --- DARK ---
+    - chart: non utilisée
+    - experts: non utilisée
+    - investment: non utilisée
+    - investment_share: non utilisée
+    - legal_information: non utilisée
+    - mandate: non utilisée
 
 //* --- DARK ET LIGHT ---
-- bulk_import === add_files
-- buyer_marketplace: non utilisée
-- contract_details: non utilisée
-- find_organization: non utilisé
-- gears: non utilisée
-- join_orga & login_signin = doublon, la rocket, presque la même taille (non utilisées)
-- licensed_rights_contractform: non utilisée
-- media: non utilisée
-- profil_user & user: doublon (uniquement zone ombragée autour des pometttes)
-- seller_dashboard: non utilisée
-- servicing_included: non utilisée
-- upload_380: à renommer (utilisé)
-- welcome_archipel_content: non utilisée
+    - bulk_import === add_files (bulk import no used)
+    - buyer_marketplace: non utilisée
+//* - congratulations: non utilisée
+    - contract_details: non utilisée
+//* - delete: non utilisée
+    - find_organization (svg): non utilisée
+//* - fine: non utilisée
+//* - gears: non utilisée
+//* - join_orga & login_signin: non utilisée = doublon, la rocket, presque la même taille (non utilisées)
+    - licensed_rights_contractform: non utilisée
+//* - lock: non utilisée
+    - media: non utilisée
+    - profil_user & user: doublon (uniquement zone ombragée autour des pometttes)
+    - sale: non utilisée
+    - seller_dashboard: non utilisée
+    - servicing_included: non utilisée
+    - spinner: non utilisée
+//* - welcome_archipel_content: non utilisée
 
 */

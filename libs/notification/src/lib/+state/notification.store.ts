@@ -58,7 +58,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'invitationToJoinOrgDeclined':
@@ -66,7 +66,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'orgMemberUpdated':
@@ -86,7 +86,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Members of your organization have been updated`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'movieSubmitted':
@@ -201,7 +201,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       case 'requestToAttendEventSent':
@@ -220,14 +220,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was successfully sent.`,
-          placeholderUrl: 'profil_user.webp'
+          placeholderUrl: 'profil_user.svg'
         }
       default:
         return {

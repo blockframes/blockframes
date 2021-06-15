@@ -1,7 +1,7 @@
 <mat-list-item *ngIf="!!_invitation">
-  <img matListAvatar *ngIf="_invitation.fromUser" asset="profil_user.webp" [ref]="_invitation.fromUser.avatar"
+  <img matListAvatar *ngIf="_invitation.fromUser" asset="profil_user.svg" [ref]="_invitation.fromUser.avatar"
     alt="Profile picture">
-  <img matListAvatar *ngIf="_invitation.fromOrg" asset="profil_user.webp" [ref]="_invitation.fromOrg.logo"
+  <img matListAvatar *ngIf="_invitation.fromOrg" asset="profil_user.svg" [ref]="_invitation.fromOrg.logo"
     alt="Organization logo">
   <div matLine>
     <ng-container [ngSwitch]="_invitation.type">
