@@ -16,7 +16,7 @@ import { AppComponent } from './app.component';
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirestoreModule, SETTINGS as FIRESTORE_SETTINGS, } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
@@ -47,6 +47,14 @@ import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
+
+// Specific config for cypress
+const CYPRESS_SETTINGS = ('Cypress' in window)
+    ? [{
+        provide: FIRESTORE_SETTINGS,
+        useValue: { experimentalForceLongPolling: true },
+      }]
+    : [];
 
 @NgModule({
   declarations: [AppComponent],
@@ -85,7 +93,8 @@ import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
     UserTrackingService,
     PerformanceMonitoringService,
     { provide: REGION, useValue: firebaseRegion },
-    ...getEmulatorsConfig()
+    ...getEmulatorsConfig(),
+    ...CYPRESS_SETTINGS
   ],
   bootstrap: [AppComponent],
 })

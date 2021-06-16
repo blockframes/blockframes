@@ -4,7 +4,8 @@ import userFixture from 'tools/fixtures/users.json';
 
 export enum USER {
   Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
-  Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
+  Jean1 = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
+  Jean = 'wtrii5X4nx0wBIPvWcYthVudoS6H',
   Ivo = 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
   Daphney = 'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
   Camilla = 'qFbytROWQYWJplzck42RLdgAr3K3',

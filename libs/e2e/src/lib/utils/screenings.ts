@@ -4,7 +4,7 @@ export const EVENTS: Partial<Screening>[] = [
   {
     event: 'TKOTL Private Screening',
     by : {
-      uid: '2OJUZoWtTVcew27YDZa8FQQdg5q2'
+      uid: '7i57eOi2t1Zlik9HUoub7KvJqfg3'
     },
     movie: { 
       id: '02L9gsoY4WTdGbxpOKha',
