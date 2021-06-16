@@ -86,7 +86,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private route: ActivatedRoute
   ) { }
 
   clear() {
@@ -115,15 +115,16 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
   }
 
   ngOnInit() {
-    const decodedData = decodeUrl(this.activatedRoute);
+    const decodedData = decodeUrl(this.route);
     this.availsForm.patchValue(decodedData)
-    this.availsForm.valueChanges.pipe(
+    const subSearchUrl = this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {
       encodeUrl<AvailsFilter>(
-        this.router, this.activatedRoute, formState
+        this.router, this.route, formState
       );
-    })
+    });
+    this.subs.push(subSearchUrl);
   }
 
   ngOnDestroy() {

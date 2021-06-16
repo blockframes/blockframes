@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, skip } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -83,39 +83,27 @@ export class ListComponent implements OnDestroy, OnInit {
     ])
 
     const {
-      search: unparsedSearch,
+      search,
       avails = {}
     } = decodeUrl(this.route);
+    // patch everything
+    this.searchForm.patchValue(search);
 
-    if (unparsedSearch) {
-      const search: any = unparsedSearch
-      if (search.query) {
-        this.searchForm.query.setValue(search.query);
-      }
-      if (search.contentType) {
-        this.searchForm.contentType.setValue(search.contentType);
-      }
-      if (search.genres) {
-        this.searchForm.genres.patchAllValue(search.genres);
-      }
-      if (search.originCountries) {
-        this.searchForm.originCountries.patchAllValue(search.originCountries);
-      }
-    }
+    // ensure FromList are also patched
+    this.searchForm.genres.patchAllValue(search?.genres);
+    this.searchForm.originCountries.patchAllValue(search?.originCountries);
 
     this.availsForm.patchValue(avails);
 
-    const subStateUrl = combineLatest([
-      this.searchForm.valueChanges.pipe(
-        startWith(this.searchForm.value)
-      ),
-      this.availsForm.valueChanges.pipe(
-        startWith(this.availsForm.value)
-      ),
-    ])
-      .pipe(
-        skip(1)
-      )
+    const search$ = combineLatest([
+      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
+      this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
+      this.bucketQuery.selectActive().pipe(startWith(undefined))
+    ]).pipe(shareReplay(1));
+
+    const subStateUrl = search$.pipe(
+      skip(1)
+    )
       .subscribe(
         ([search, avails]) => {
           encodeUrl(
@@ -133,15 +121,9 @@ export class ListComponent implements OnDestroy, OnInit {
           )
         })
 
-    const sub = combineLatest([
-      this.searchForm.valueChanges.pipe(
-        startWith(this.searchForm.value)
-      ),
-      this.availsForm.valueChanges.pipe(
-        startWith(this.availsForm.value)
-      ),
-      this.bucketQuery.selectActive().pipe(startWith(undefined))
-    ]).pipe(
+
+
+    const sub = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
       switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(), availsValue, bucketValue]),
