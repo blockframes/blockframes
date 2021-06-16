@@ -146,9 +146,6 @@ commands:
             command: npx nx run catalog-e2e:e2e:ci --headless || true
             no_output_timeout: 20m
         - run:
-            command: npx nx run festival-e2e:e2e:ci --headless || true
-            no_output_timeout: 20m
-        - run:
             command: npx nx run financiers-e2e:e2e:ci --headless || true
             no_output_timeout: 20m
         - run:
@@ -157,6 +154,9 @@ commands:
         #- run:
         #    command: npx nx run cms-e2e:e2e:ci --headless || true
         #    no_output_timeout: 20m
+        - run:
+            command: npx nx run festival-e2e:e2e:ci --headless
+            no_output_timeout: 20m
         - store_artifacts:
             name: Uploading screenshots
             path: ~/repo/dist/cypress/apps
