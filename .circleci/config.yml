@@ -143,7 +143,7 @@ commands:
     steps:
         - run: npx cypress install
         - run:
-            command: npx nx run catalog-e2e:e2e:ci --headless || true
+            command: npx nx run festival-e2e:e2e:ci --headless || true
             no_output_timeout: 20m
         - run:
             command: npx nx run financiers-e2e:e2e:ci --headless || true
@@ -155,7 +155,7 @@ commands:
         #    command: npx nx run cms-e2e:e2e:ci --headless || true
         #    no_output_timeout: 20m
         - run:
-            command: npx nx run festival-e2e:e2e:ci --headless
+            command: npx nx run catalog-e2e:e2e:ci --headless
             no_output_timeout: 20m
         - store_artifacts:
             name: Uploading screenshots
