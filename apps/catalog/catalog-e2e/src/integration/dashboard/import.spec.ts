@@ -94,7 +94,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.get('button[test-id="submit-records"]', {timeout: 3 * SEC})
       .click();
 
-    cy.wait(20 * SEC);
+    cy.wait(30 * SEC);
 
     cy.log("Movies submitted; navigate back");
     cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
@@ -129,7 +129,7 @@ describe('User can fill and save contract tunnel form', () => {
       .click();
 
     cy.log("Check if we reached submission container");
-    cy.wait(45 * SEC);
+    cy.wait(30 * SEC);
     cy.get('h1', {timeout: 30 * SEC})
       .contains("finalize your import");
 
@@ -144,7 +144,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.get('button[test-id="submit-records"]', {timeout: 3 * SEC})
       .click();
 
-    cy.wait(5 * SEC);
+    cy.wait(30 * SEC);
 
     cy.log("Contracts submitted; navigate back");
     cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })

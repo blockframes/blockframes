@@ -18,6 +18,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 import { App, OrgAppAccess } from '@blockframes/utils/apps';
+import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
 
 @Component({
   selector: 'admin-organization',
@@ -78,7 +79,8 @@ export class OrganizationComponent implements OnInit {
     private uploaderService: FileUploaderService,
     private contractService: ContractService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private bucketService: BucketService,
   ) { }
 
   async ngOnInit() {
@@ -245,8 +247,15 @@ export class OrganizationComponent implements OnInit {
     // Calculate how many contracts will be updated
     const contracts = await this.contractService.getValue(ref => ref.where('partyIds', 'array-contains', organization.id))
     if (contracts.length) {
-      output.push(`${contracts.length} contract(s) will be updated.`)
+      output.push(`${contracts.length} contract(s) will be updated.`);
     }
+
+    // Check bucket content
+    const bucket = await this.bucketService.getValue(orgId);
+    if (bucket) {
+      output.push(`1 bucket containing ${bucket.contracts.length} contract(s) will be deleted.`);
+    }
+
     return output;
   }
 
