@@ -7,6 +7,7 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { resolve } from 'path';
 import { App } from '@blockframes/utils/apps';
+import { connectEmulator } from './firestore';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -49,6 +50,14 @@ export function readJsonlFile(dbBackupPath: string) {
 let missingVarsMessageShown = false;
 
 export function warnMissingVars(): void | never {
+  if (process.env['PROJECT_ID'] !== firebase().projectId) {
+    console.warn(
+      'WARNING! Your PROJECT_ID in your shell environment does not match your'
+      + 'Firebase project ID found in your Firebase configuration!'
+      + 'Please use the "use" command to reset this unless you know what you\'re doing.'
+      + '\nIf you are using a demo project ID for emulator, this is to be expected.'
+    );
+  }
   const warn = (key: string, msg: string) => {
     console.warn(`Please ensure the following variable is set in .env : ${key}`);
     console.warn(`More info: ${msg}\n`);
@@ -77,15 +86,14 @@ export interface AdminServices {
   auth: admin.auth.Auth;
   db: admin.firestore.Firestore;
   storage: admin.storage.Storage;
-  firebaseConfig: { projectId: string };
+  firebaseConfig: ReturnType<typeof firebase>;
   getCI: () => admin.app.App;
 }
 
-let ci: admin.app.App;
-
-export function loadAdminServices(): AdminServices {
+export function loadAdminServices({ emulator = false }: { emulator: boolean } = { emulator: false }): AdminServices {
   config();
-  warnMissingVars();
+
+  if (emulator) return { getCI, ...connectEmulator(), firebaseConfig: firebase() };
 
   if (!admin.apps.length) {
     admin.initializeApp({
@@ -94,19 +102,6 @@ export function loadAdminServices(): AdminServices {
     });
   }
 
-  const getCI = () => {
-    if (!ci) {
-      ci = admin.initializeApp(
-        {
-          projectId: firebaseCI().projectId,
-          credential: admin.credential.applicationDefault(),
-        },
-        'CI-app'
-      );
-    }
-    return ci;
-  };
-
   return {
     getCI,
     auth: admin.auth(),
@@ -114,6 +109,21 @@ export function loadAdminServices(): AdminServices {
     firebaseConfig: firebase(),
     storage: admin.storage(),
   };
+}
+
+let ci: admin.app.App;
+
+function getCI() {
+  if (!ci) {
+    ci = admin.initializeApp(
+      {
+        projectId: firebaseCI().projectId,
+        credential: admin.credential.applicationDefault(),
+      },
+      'CI-app'
+    );
+  }
+  return ci;
 }
 
 export const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms));

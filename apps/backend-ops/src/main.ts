@@ -4,7 +4,7 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareDb, prepareStorage, prepareForTesting, upgrade } from './firebaseSetup';
+import { prepareDb, prepareStorage, prepareForTesting, upgrade, prepareEmulators } from './firebaseSetup';
 import { migrate } from './migrations';
 import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -13,7 +13,7 @@ import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup } from './emulator';
+import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup, startEmulators } from './emulator';
 import { backupEnv, restoreEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 
@@ -37,6 +37,12 @@ async function runCommand() {
       break;
     case 'importEmulator':
       await importEmulatorFromBucket(arg1);
+      break;
+    case 'startEmulators':
+      await startEmulators({ importFrom: arg1 });
+      break;
+    case 'prepareEmulators':
+      await prepareEmulators();
       break;
     case 'anonProdDb':
       await anonymizeLatestProdDb();
@@ -161,7 +167,7 @@ runCommand()
     process.exit(0);
   })
   .catch((e) => {
-    console.error(e);
+    console.error('ERROR!\n', e);
     console.timeEnd(consoleMsg);
     process.exit(1);
   });

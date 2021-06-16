@@ -10,4 +10,9 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 export class SummaryMediaNotesComponent {
   @Input() movie: MovieForm;
   @Input() link: string;
+
+  get notes() {
+    return this.movie.promotional.get('notes');
+  }
+
 }
