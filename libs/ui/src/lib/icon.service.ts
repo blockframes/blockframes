@@ -210,7 +210,7 @@ export class IconService {
 /*
 - ACM_banner_landing : non utilisée (c'est la même que banner_landing, banner_header est la même en plus sombre)
 - background_maintenance === banner_header
-- banner_empty: utilisé pour certain fond (notamment hero sur home page)
+- banner_empty: utilisé pour certains fonds (notamment hero sur home page)
 - banner_header: utilisé sur les landing de catalog et festival
 - banner_home: non utilisée
 - banner_landing.png: utilisé pour la landing de financiers
@@ -234,19 +234,52 @@ export class IconService {
     - buyer_marketplace: non utilisée
 //* - congratulations: non utilisée
     - contract_details: non utilisée
-//* - delete: non utilisée
     - find_organization (svg): non utilisée
-//* - fine: non utilisée
-//* - gears: non utilisée
-//* - join_orga & login_signin: non utilisée = doublon, la rocket, presque la même taille (non utilisées)
     - licensed_rights_contractform: non utilisée
-//* - lock: non utilisée
     - media: non utilisée
     - profil_user & user: doublon (uniquement zone ombragée autour des pometttes)
     - sale: non utilisée
     - seller_dashboard: non utilisée
     - servicing_included: non utilisée
     - spinner: non utilisée
-//* - welcome_archipel_content: non utilisée
+
+//* --- DIFFERENCE DARK/LIGHT ---
+  - DARK calendar in webp
+  - LIGHT no chart
+!  - DARK congratulations in webp
+  - LIGHT contact à refaire
+  - LIGHT deck svg a un fond blanc
+  - LIGHT docx in webp
+  - DARK empty_festivla in webp
+  - DARK empty_news in webp
+  - DARK-LIGHT empty_organization in webp
+  - DARK empty_poster in webp
+  - DARK-LIGHT empty_still_pgoto in webp
+  - LIGHT no experts
+  - DARK feature_key1-2-3 in webp
+  - DARK filmpage in webp
+  - DARK gems in webp
+  - DARK human_salesforce in webp
+  - LIGHT no investment
+  - LIGHT no investment_share
+  - DARK-LIGHT key à refaire et en svg
+  - LIGHT no legal_information
+  - LIGHT library_content in webp
+!  - LIGHT licensed_rights_contractform in webp
+  - LIGHT no mandate
+!  - LIGHT media in webp
+  - DARK-LIGHT meeting in webp
+  - LIGHT moodboard in webp
+  - DARK no_titles in webp
+  - DARK-LIGHT package_deal in webp
+  - DARK profil_user in webp
+!  - LIGHT sale in webp
+  - DARK-LIGHT sales_statistics in webp
+  - LIGHT scenario in webp
+  - DARK-LIGHT screening_now in webp
+!  - LIGHT seller_dashboard in webp
+!  - DARK-LIGHT servicing_included in webp
+  - DARK showcase in webp
+  - LIGHT xls in webp
 
 */
