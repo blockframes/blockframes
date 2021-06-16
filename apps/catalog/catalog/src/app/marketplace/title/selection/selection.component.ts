@@ -54,7 +54,9 @@ export class MarketplaceSelectionComponent implements OnDestroy {
       tap(bucket => {
         this.setTitle(bucket?.contracts.length);
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
-        bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price));
+        bucket?.contracts.forEach(
+          (contract, index) => this.setPrice(index, contract.price)
+        );
       })
     );
   }
@@ -77,8 +79,8 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.bucketService.update(id, { currency });
   }
 
-  setPrice(i: number, price: number | string) {
-    this.prices[i] = +price;
+  setPrice(index: number, price: number | string) {
+    this.prices[index] = +price;
     this.priceChanges.next();
   }
 
@@ -92,7 +94,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  removeContract(index: number, title: Movie) {
+  removeContract({ index, title }: { index: number, title: Movie }) {
     const id = this.bucketQuery.getActiveId();
     delete this.prices[index];
     this.bucketService.update(id, bucket => ({
@@ -102,7 +104,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.snackBar.open(text, 'close', { duration: 5000 });
   }
 
-  removeTerm(contractIndex: number, termIndex: number) {
+  removeTerm( contractIndex: number, termIndex: number ) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
@@ -152,7 +154,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.intercom?.show();
   }
 
-  openDetails(terms: string, scope: Scope) {
+  openDetails({ terms, scope }: { terms: string, scope: Scope }) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
   }
 }

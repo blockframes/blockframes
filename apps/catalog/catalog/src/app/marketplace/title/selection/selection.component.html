@@ -17,11 +17,12 @@
 
     <section>
       <h2>Please select a currency</h2>
-      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies">
+      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies"
+        [withoutValues]="withoutCurrencies">
         <mat-label>Currency</mat-label>
       </static-select>
     </section>
-
+<!--
     <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
       <ng-container *ngIf="contract.titleId | getTitle | async as title">
         <section class="contract surface" test-id="avails-section">
@@ -80,7 +81,38 @@
           </footer>
         </section>
       </ng-container>
-    </ng-container>
+    </ng-container> -->
+
+    <contract-item
+      [bucket]="bucket$ |async "
+      [columns]="columns"
+      [initialColumns]="initialColumns"
+      (setPrice)="setPrice"
+      (updatePrice)="updatePrice"
+      (openDetails)="openDetails"
+      (removeTerm)="removeTerm"
+      (removeContract)="removeContract"
+      [priceTemplate]="priceTemplate"
+      [colActionsTemplate]="colActions"
+      >
+      <ng-template let-index="index" let-price="price" #priceTemplate>
+        <mat-form-field appearance="outline">
+          <mat-label>Price</mat-label>
+          <input matInput type="number" min="0" [value]="price" [attr.test-id]="'price-' + index"
+            (input)="setPrice(index, $event.target.value)" (blur)="updatePrice(index, $event.target.value)" />
+          <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
+        </mat-form-field>
+      </ng-template>
+      <ng-template #colActions label="Actions" let-termIndex="index" let-titleId="titleId">
+        <a mat-icon-button [routerLink]="['/c/o/marketplace/title', titleId, 'avails']" [queryParams]="{ contract: termIndex, term: termIndex }" matTooltip="Edit">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+        <button mat-icon-button (click)="removeTerm(termIndex, termIndex)" matTooltip="Delete">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </ng-template>
+    </contract-item>
+
 
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
       <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>

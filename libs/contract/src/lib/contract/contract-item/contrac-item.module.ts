@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
+import { ContracItemComponent } from './contrac-item.component';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { RouterModule } from '@angular/router';
-import { MarketplaceSelectionComponent } from './selection.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
@@ -10,10 +9,10 @@ import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
+import { RouterModule } from '@angular/router';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
-import { ContracItemModule } from '@blockframes/contract/contract/contract-item/contrac-item.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
@@ -25,12 +24,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+
+
 @NgModule({
-  declarations: [MarketplaceSelectionComponent],
+  declarations: [ContracItemComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-
+    RouterModule,
     GetTitlePipeModule,
     BucketPipesModule,
     DeepKeyPipeModule,
@@ -42,7 +43,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToLabelModule,
     DetailedTermsModule,
     StaticSelectModule,
-    ContracItemModule,
 
     // Material
     MatButtonModule,
@@ -52,17 +52,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSelectModule,
     MatSnackBarModule,
     MatTooltipModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: MarketplaceSelectionComponent
-      },
-      {
-        path: 'congratulations',
-        loadChildren: () => import('./congratulations/congratulations.module').then(m => m.CongratulationsModule)
-      }
-    ])
+    ],
+  exports:[
+    ContracItemComponent,
   ]
 })
-export class SelectionModule { }
+export class ContracItemModule { }
