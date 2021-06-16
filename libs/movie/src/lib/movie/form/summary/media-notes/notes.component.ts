@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
@@ -7,7 +7,15 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
   styleUrls: ['./notes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SummaryMediaNotesComponent {
+export class SummaryMediaNotesComponent implements OnInit {
   @Input() movie: MovieForm;
   @Input() link: string;
+
+  get notes() {
+    return this.movie.promotional.get('notes');
+  }
+
+  ngOnInit() {
+    console.log(this.movie.promotional.get('notes'))
+  }
 }
