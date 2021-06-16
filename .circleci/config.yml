@@ -143,10 +143,13 @@ commands:
     steps:
         - run: npx cypress install
         - run:
-            command: npm run e2e:catalog
+            command: ng run catalog-e2e:e2e:ci --headless
             no_output_timeout: 20m
         - run:
-            command: npm run e2e:festival
+            command: ng run festival-e2e:e2e:ci --headless
+            no_output_timeout: 20m
+        - run:
+            command: ng run financiers-e2e:e2e:ci --headless
             no_output_timeout: 20m
         - store_artifacts:
             name: Uploading screenshots
