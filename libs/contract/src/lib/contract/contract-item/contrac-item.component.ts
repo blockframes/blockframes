@@ -4,7 +4,7 @@ import { Scope } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'contract-footer',
-  template:`
+  template: `
     <ng-content></ng-content>
   `
 })
@@ -13,7 +13,7 @@ export class ContractFooterComponent {
 
 @Component({
   selector: 'contract-price',
-  template:`
+  template: `
     <ng-content></ng-content>
   `
 })
@@ -23,7 +23,7 @@ export class ContractPriceComponent {
 @Component({
   selector: 'contract-item',
   templateUrl: './contrac-item.component.html',
-  styleUrls: ['./contrac-item.component.css']
+  styleUrls: ['./contrac-item.component.scss']
 })
 export class ContracItemComponent {
 
