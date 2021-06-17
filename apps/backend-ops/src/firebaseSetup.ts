@@ -7,14 +7,19 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
-import { copyFirestoreExportFromCiBucket, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI } from "@blockframes/firebase-utils";
+import { awaitProcessExit, copyFirestoreExportFromCiBucket, defaultEmulatorBackupPath, firebaseEmulatorExec, importFirestoreEmulatorBackup, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI, shutdownEmulator } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode } from './tools';
-const { storageBucket } = firebase();
+import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
+import { startEmulators } from './emulator';
+import { resolve } from 'path';
+import { loadFirestoreRules } from '@firebase/rules-unit-testing';
+import { readFileSync } from 'fs';
+const { storageBucket, projectId } = firebase();
 
 export async function prepareForTesting() {
   const { storage, db, auth } = loadAdminServices();
@@ -50,6 +55,45 @@ export async function prepareForTesting() {
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
 
+  insurance(); // Switch off maintenance insurance
+}
+export async function prepareEmulators() {
+  console.log('Importing golden Firestore DB data from CI...');
+  const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
+  await importFirestoreEmulatorBackup(anonBackupURL, defaultEmulatorBackupPath);
+  console.log('Done!');
+
+  const proc = await firebaseEmulatorExec({
+    emulators: ['auth', 'firestore'],
+    importPath: defaultEmulatorBackupPath,
+    exportData: true
+  })
+  const { storage, db, auth } = loadAdminServices({ emulator: true });
+  const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
+
+  console.info('Syncing users from db...');
+  await syncUsers(null, db, auth);
+  console.info('Users synced!');
+
+  console.info('Syncing storage with blockframes-ci...');
+  await restoreAnonStorageFromCI();
+  console.info('Storage synced!');
+
+  console.info('Preparing database & storage by running migrations...');
+  await migrate({ db, storage, withBackup: false });
+  console.info('Migrations complete!');
+
+  console.info('Generating fixtures...');
+  await generateFixtures();
+  console.info('Fixtures generated in: tools/fixtures/*.json');
+
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs();
+  await upgradeAlgoliaMovies();
+  await upgradeAlgoliaUsers();
+  console.info('Algolia ready for testing!');
+
+  await shutdownEmulator(proc);
   insurance(); // Switch off maintenance insurance
 }
 

@@ -26,6 +26,7 @@ import { onOfferCreate } from './offer';
 import { onContractDelete } from './contracts';
 import { onTermDelete } from './terms';
 
+console.log('Function instance loaded')
 
 //--------------------------------
 //    Users Management          //

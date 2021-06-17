@@ -209,9 +209,19 @@
           }
         },
         "serve": {
-          "builder": "@nrwl/node:execute",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
-            "buildTarget": "backend-functions:build"
+            "envFile": ".env",
+            "commands": [
+              {
+                "command": "npx nx build backend-functions --watch"
+              },
+              {
+                "command": "npm run backend-ops startEmulators"
+              }
+            ],
+            "parallel": true,
+            "color": true
           }
         },
         "lint": {
@@ -262,12 +272,6 @@
       "prefix": "backend-ops",
       "schematics": {},
       "architect": {
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "backend-ops:build"
-          }
-        },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
