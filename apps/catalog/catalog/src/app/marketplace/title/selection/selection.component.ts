@@ -94,7 +94,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  removeContract({ index, title }: { index: number, title: Movie }) {
+  removeContract( index: number, title: Movie ) {
     const id = this.bucketQuery.getActiveId();
     delete this.prices[index];
     this.bucketService.update(id, bucket => ({

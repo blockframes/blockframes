@@ -1,5 +1,4 @@
 
-    <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
       <ng-container *ngIf="contract.titleId | getTitle | async as title">
         <section class="contract surface" test-id="avails-section">
           <header fxLayout fxLayoutAlign="space-between start">
@@ -14,7 +13,7 @@
                 </div>
               </article>
             </section>
-            <ng-template  *ngIf="showPrice" [ngTemplateOutlet]="priceTemplate" [ngTemplateOutletContext]="{contractIndex:i, price:contract.price}"></ng-template>
+            <ng-content select="contract-price"></ng-content>
           </header>
           <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
             <ng-template colRef="duration" let-duration>
@@ -33,19 +32,11 @@
             <ng-template colRef="exclusive" let-exclusive>
               {{ exclusive ? 'Yes' : 'No' }}
             </ng-template>
-            <ng-template  *ngIf="showPriceTemplate" colAction="action" label="Actions" let-termIndex="index">
-              <ng-template [ngTemplateOutlet]="colActionsTemplate" [ngTemplateOutletContext]="{termIndex:termIndex, contractIndex:i, titleId:contract.titleId}"></ng-template>
+            <ng-template  *ngIf="showColActionsTemplate" colAction="action" label="Actions" let-termIndex="index">
+              <ng-template [ngTemplateOutlet]="colActionsTemplate" [ngTemplateOutletContext]="{termIndex:termIndex, titleId:contract.titleId}"></ng-template>
             </ng-template>
 
           </bf-table-filter>
-          <footer fxLayout fxLayoutAlign="space-between">
-            <button mat-button (click)="_removeContract(i, title)" test-id="delete-contract">
-              Delete all rights for this title
-            </button>
-            <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
-              Add Rights
-            </a>
-          </footer>
+          <ng-content select="contract-footer"></ng-content>
         </section>
       </ng-container>
-    </ng-container>
