@@ -5,13 +5,21 @@
   </a>
 </h6>
 <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-  <mat-icon svgIcon="visibility" color="primary"></mat-icon>
-  <missing-control [control]="movie.promotional.get('notes')" [link]="link">
+  <missing-control [control]="notes" [link]="link">
     <ng-template let-notes>
-      <ng-container *ngFor="let note of notes">
-        <span>{{ note.firstName }} {{ note.lastName }} - {{ note.role | titlecase }} -
-          {{ note.storagePath | fileName | maxLength: 30}}</span>
-      </ng-container>
+      <article *ngFor="let note of notes" fxLayout fxLayoutAlign="start center">
+        <ng-container *ngIf="note.storagePath; else empty">
+          <bf-preview-modal [ref]="note"></bf-preview-modal>
+          <span>{{ note.firstName }} {{ note.lastName }} - {{ note.role | titlecase }} -
+            {{ note.storagePath | fileName | maxLength: 30}}</span>
+        </ng-container>
+        <ng-template #empty>
+          <span fxLayout matTooltip="Save and close to finalize">
+            <mat-icon svgIcon="visibility" color="disabled"></mat-icon>
+            <span> Note</span>
+          </span>
+        </ng-template>
+      </article>
     </ng-template>
   </missing-control>
 </div>
