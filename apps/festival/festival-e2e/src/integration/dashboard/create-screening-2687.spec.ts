@@ -46,9 +46,6 @@ describe('User create a screening', () => {
     signIn(users[0], true);
     acceptCookie();
 
-    cy.pause();
-    return;
-    
     cy.log('From Marketplace Homepage, navigating to calendar...');
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const homePage = new FestivalDashboardHomePage();
