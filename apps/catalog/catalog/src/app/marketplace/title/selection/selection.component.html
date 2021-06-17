@@ -48,7 +48,7 @@
               </button>
             </ng-template>
             <contract-footer>
-              <footer fxLayout fxLayoutAlign="space-between" >
+              <footer fxLayout fxLayoutAlign="space-between" class="footer">
                 <ng-container *ngIf="contract.titleId | getTitle | async as title">
                   <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
                     Delete all rights for this title
