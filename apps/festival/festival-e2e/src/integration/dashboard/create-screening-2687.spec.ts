@@ -99,7 +99,7 @@ describe('User create a screening', () => {
     p2.acceptInvitationScreening();
   });
 
-  it('Invitee adds public screening to his calendar', () => {
+  it.only('Invitee adds public screening to his calendar', () => {
     const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';

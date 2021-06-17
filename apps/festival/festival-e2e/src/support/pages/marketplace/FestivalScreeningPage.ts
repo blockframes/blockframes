@@ -38,7 +38,15 @@ export default class FestivalScreeningPage {
       .parent().parent().parent()
       .find('button[test-id=invitation-request]').click();
 
-    cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
+    cy.wait(0.5 * SEC);
+
+    cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
+      .contains(screeningTitle)
+      .parent().parent().parent()
+      .find('[test-id=invitation-status]')
+      .should('not.contain', 'Pending');
+
+    cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
       .contains(screeningTitle)
       .parent().parent().parent()
       .find('[test-id=invitation-status]')
