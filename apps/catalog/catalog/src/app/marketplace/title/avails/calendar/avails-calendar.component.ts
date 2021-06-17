@@ -1,10 +1,10 @@
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { combineLatest, Observable } from 'rxjs';
-import { filter, map, shareReplay, startWith } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { filter, map, shareReplay, startWith, throttleTime } from 'rxjs/operators';
 
 import {
   getDurations,
@@ -12,11 +12,14 @@ import {
   DurationMarker,
   toDurationMarker,
   getDurationMarkers,
+  AvailsFilter,
 } from '@blockframes/contract/avails/avails';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 
 @Component({
@@ -25,7 +28,7 @@ import { MarketplaceMovieAvailsComponent } from '../avails.component';
   styleUrls: ['./avails-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsCalendarComponent {
+export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestroy {
 
   public availsForm = this.shell.avails.calendarForm;
 
@@ -34,6 +37,7 @@ export class MarketplaceMovieAvailsCalendarComponent {
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
   private mandates$ = this.shell.mandates$;
+  private subs: Subscription[] = [];
 
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
@@ -81,6 +85,8 @@ export class MarketplaceMovieAvailsCalendarComponent {
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private shell: MarketplaceMovieAvailsComponent,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   clear() {
@@ -101,10 +107,27 @@ export class MarketplaceMovieAvailsCalendarComponent {
       this.shell.bucketForm.addDuration(avails, marker);
     }
 
-    this.snackbar.open(`Rights ${ result ? 'updated' : 'added' }`, 'Show ⇩', { duration: 5000 })
+    this.snackbar.open(`Rights ${result ? 'updated' : 'added'}`, 'Show ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
         document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
       });
+  }
+
+  ngOnInit() {
+    const decodedData = decodeUrl(this.route);
+    this.availsForm.patchValue(decodedData)
+    const subSearchUrl = this.availsForm.valueChanges.pipe(
+      throttleTime(1000)
+    ).subscribe(formState => {
+      encodeUrl<AvailsFilter>(
+        this.router, this.route, formState
+      );
+    });
+    this.subs.push(subSearchUrl);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe())
   }
 }
