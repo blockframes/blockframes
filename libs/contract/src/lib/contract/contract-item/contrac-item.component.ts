@@ -20,10 +20,8 @@ export class ContracItemComponent {
   @Output() openDetails = new EventEmitter<{ terms: string, scope: Scope }>();
   @Output() removeTerm = new EventEmitter<{ contractIndex: number, termIndex: number }>();
   @Output() removeContract = new EventEmitter<{ index: number, title: Movie }>();
+
   trackById = (i: number, doc: { id: string }) => doc.id;
-  constructor() {
-    console.log({bucket:this.bucket})
-  }
 
   get showPrice(){
     return Boolean(this.priceTemplate);
@@ -52,7 +50,5 @@ export class ContracItemComponent {
   _removeTerm(contractIndex: number, termIndex: number) {
     this.removeTerm.emit({ contractIndex, termIndex })
   }
-
-
 }
 

@@ -22,80 +22,20 @@
         <mat-label>Currency</mat-label>
       </static-select>
     </section>
-<!--
-    <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
-      <ng-container *ngIf="contract.titleId | getTitle | async as title">
-        <section class="contract surface" test-id="avails-section">
-          <header fxLayout fxLayoutAlign="space-between start">
-            <section fxLayout="column">
-              <h2>{{ title.title.international }}</h2>
-              <article fxLayout fxLayoutGap="12px">
-                <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
-                  alt="Movie Illustration" [routerLink]="['/c/o/marketplace/title/', title.id]">
-                <div fxLayout="column">
-                  <h3>{{ title.directors | displayName }}</h3>
-                  <p>{{ title | movieFeature }}</p>
-                </div>
-              </article>
-            </section>
-            <mat-form-field appearance="outline">
-              <mat-label>Price</mat-label>
-              <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
-                (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
-              <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
-            </mat-form-field>
-          </header>
-          <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
-            <ng-template colRef="duration" let-duration>
-              {{ duration.from | date }} - {{ duration.to | date }}
-            </ng-template>
-            <ng-template colRef="territories" let-territories>
-              <section (click)="openDetails(territories, 'territories')">
-                <p class="ellipsis">
-                  {{ territories | toLabel: 'territories' }}
-                </p>
-              </section>
-            </ng-template>
-            <ng-template colRef="medias" let-medias>
-              {{ medias | toLabel:'medias' }}
-            </ng-template>
-            <ng-template colRef="exclusive" let-exclusive>
-              {{ exclusive ? 'Yes' : 'No' }}
-            </ng-template>
-            <ng-template colAction="action" label="Actions" let-termIndex="index">
-              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: termIndex }" matTooltip="Edit">
-                <mat-icon svgIcon="edit"></mat-icon>
-              </a>
-              <button mat-icon-button (click)="removeTerm(i, termIndex)" matTooltip="Delete">
-                <mat-icon svgIcon="delete"></mat-icon>
-              </button>
-            </ng-template>
-          </bf-table-filter>
-          <footer fxLayout fxLayoutAlign="space-between">
-            <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-              Delete all rights for this title
-            </button>
-            <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
-              Add Rights
-            </a>
-          </footer>
-        </section>
-      </ng-container>
-    </ng-container> -->
 
     <contract-item
       [bucket]="bucket$ |async "
       [columns]="columns"
+      [priceTemplate]="priceTemplate"
+      [colActionsTemplate]="colActions"
       [initialColumns]="initialColumns"
       (setPrice)="setPrice"
       (updatePrice)="updatePrice"
       (openDetails)="openDetails"
       (removeTerm)="removeTerm"
       (removeContract)="removeContract"
-      [priceTemplate]="priceTemplate"
-      [colActionsTemplate]="colActions"
       >
-      <ng-template let-index="index" let-price="price" #priceTemplate>
+      <ng-template #priceTemplate let-index="index" let-price="price">
         <mat-form-field appearance="outline">
           <mat-label>Price</mat-label>
           <input matInput type="number" min="0" [value]="price" [attr.test-id]="'price-' + index"
@@ -103,16 +43,15 @@
           <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
         </mat-form-field>
       </ng-template>
-      <ng-template #colActions label="Actions" let-termIndex="index" let-titleId="titleId">
-        <a mat-icon-button [routerLink]="['/c/o/marketplace/title', titleId, 'avails']" [queryParams]="{ contract: termIndex, term: termIndex }" matTooltip="Edit">
+      <ng-template #colActions label="Actions" let-termIndex="index" let-contractIndex="contractIndex" let-titleId="titleId">
+        <a mat-icon-button [routerLink]="['/c/o/marketplace/title', titleId, 'avails']" [queryParams]="{ contract: contractIndex, term: termIndex }" matTooltip="Edit">
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
-        <button mat-icon-button (click)="removeTerm(termIndex, termIndex)" matTooltip="Delete">
+        <button mat-icon-button (click)="removeTerm(contractIndex, termIndex)" matTooltip="Delete">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-template>
     </contract-item>
-
 
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
       <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>

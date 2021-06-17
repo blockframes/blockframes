@@ -14,7 +14,7 @@
                 </div>
               </article>
             </section>
-            <ng-template  *ngIf="showPrice" [ngTemplateOutlet]="priceTemplate" [ngTemplateOutletContext]="{index:i, price:contract.price}"></ng-template>
+            <ng-template  *ngIf="showPrice" [ngTemplateOutlet]="priceTemplate" [ngTemplateOutletContext]="{contractIndex:i, price:contract.price}"></ng-template>
           </header>
           <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
             <ng-template colRef="duration" let-duration>
@@ -33,7 +33,9 @@
             <ng-template colRef="exclusive" let-exclusive>
               {{ exclusive ? 'Yes' : 'No' }}
             </ng-template>
-            <ng-template  *ngIf="showPriceTemplate" [ngTemplateOutlet]="colActionsTemplate" [ngTemplateOutletContext]="{termIndex:i, titleId:contract.titleId}"></ng-template>
+            <ng-template  *ngIf="showPriceTemplate" colAction="action" label="Actions" let-termIndex="index">
+              <ng-template [ngTemplateOutlet]="colActionsTemplate" [ngTemplateOutletContext]="{termIndex:termIndex, contractIndex:i, titleId:contract.titleId}"></ng-template>
+            </ng-template>
 
           </bf-table-filter>
           <footer fxLayout fxLayoutAlign="space-between">
