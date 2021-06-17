@@ -25,7 +25,7 @@ export default class FestivalScreeningPage {
    *   Public Event  : Event is added to user's calendar
    * @param screeningTitle : Title of event
    */
-  clickRequestInvitation(screeningTitle: string) {
+  clickRequestInvitation(screeningTitle: string, doPublicScreeningAction: boolean = false) {
     cy.get('festival-screening event-screening-item', {timeout: 30 * SEC})
       .contains(screeningTitle)
       .parent().parent().parent()
@@ -40,17 +40,19 @@ export default class FestivalScreeningPage {
 
     cy.wait(0.5 * SEC);
 
-    cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
-      .contains(screeningTitle)
-      .parent().parent().parent()
-      .find('[test-id=invitation-status]')
-      .should('not.contain', 'Pending');
+    if (doPublicScreeningAction) {
+      cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
+        .contains(screeningTitle)
+        .parent().parent().parent()
+        .find('[test-id=invitation-status]')
+        .should('not.contain', 'Pending');
 
-    cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
-      .contains(screeningTitle)
-      .parent().parent().parent()
-      .find('[test-id=invitation-status]')
-      .should('contain', 'Accepted');
+      cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
+        .contains(screeningTitle)
+        .parent().parent().parent()
+        .find('[test-id=invitation-status]')
+        .should('contain', 'Accepted');
+    }
   }
 
   clickOnMenu() {
