@@ -40,7 +40,7 @@ export class UserComponent implements OnInit {
    */
   @Input() limit = Infinity;
 
-  separators = [ENTER, COMMA, SEMICOLON, SPACE];
+  separators = [ENTER, COMMA, SEMICOLON];
   form = createAlgoliaUserForm(Validators.maxLength(50));
   currentLimit$: Observable<{ canSend: boolean, total: number }>;
   sending = new BehaviorSubject(false);
@@ -82,7 +82,13 @@ export class UserComponent implements OnInit {
       const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
       await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
       this.sending.next(false);
+      this.separators.splice(this.separators.length -1, 1);
     }
+  }
+
+  /** Add the SPACE separator if the user pastes email addresses */
+  onPaste(event: ClipboardEvent) {
+    if (event.type === 'paste') this.separators.push(SPACE);
   }
 
   /** Send only the first emails based on the maxlength */
