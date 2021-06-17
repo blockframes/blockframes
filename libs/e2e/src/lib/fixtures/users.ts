@@ -2,9 +2,16 @@
 import { QueryInferface } from "../utils/queryinterface";
 import userFixture from 'tools/fixtures/users.json';
 
+/**
+ * Note these are some specific UIDs for testing.
+ * For use with emulator, we are modifying the UIDs 
+ * associated with certain user to make the test pass
+ * without changes.
+ * Ex. User Jean has uid from auth emulator entry. 
+ */
 export enum USER {
   Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
-  Jean1 = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
+  JeanSr = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
   Jean = 'wtrii5X4nx0wBIPvWcYthVudoS6H',
   Ivo = 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
   Daphney = 'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
