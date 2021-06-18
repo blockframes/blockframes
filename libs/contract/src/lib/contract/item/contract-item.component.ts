@@ -1,9 +1,10 @@
-import { Component, Input, Output, EventEmitter, TemplateRef, ContentChild, ChangeDetectorRef } from '@angular/core';
+import {
+  Component, Input, TemplateRef, ContentChild, ChangeDetectorRef,
+} from '@angular/core';
 import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
 import { Scope } from '@blockframes/utils/static-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-
 
 @Component({
   selector: 'contract-item',
@@ -21,9 +22,8 @@ export class ContractItemComponent {
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   initialColumns = ['duration', 'territories', 'medias', 'exclusive'];
   @Input() columns: Record<string, string>;
-  // @Output() openDetails = new EventEmitter<{ terms: string, scope: Scope }>();
-
   actionTemplate?: TemplateRef<unknown>;
+
   @ContentChild('colActionTemplate') set colActionsTemplate(template: TemplateRef<unknown>) {
     if (template) {
       this.initialColumns.push('action');
@@ -34,11 +34,7 @@ export class ContractItemComponent {
 
   trackById = (i: number, doc: { id: string }) => doc.id;
 
-  // openDetails(terms: string, scope: Scope) {
-  //   this.openDetails.emit({ terms, scope })
-  // }
-
-  openDetails( terms: string, scope: Scope ) {
+  openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
   }
 

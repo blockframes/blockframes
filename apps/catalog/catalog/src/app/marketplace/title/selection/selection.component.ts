@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angula
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieCurrency, movieCurrencies, Scope } from '@blockframes/utils/static-model';
+import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';

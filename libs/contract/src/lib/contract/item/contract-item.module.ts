@@ -7,15 +7,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
-import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
-import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { RouterModule } from '@angular/router';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
-import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
