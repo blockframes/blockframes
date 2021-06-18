@@ -82,7 +82,12 @@ export class UserComponent implements OnInit {
       const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
       await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
       this.sending.next(false);
-      this.separators.splice(this.separators.length -1, 1);
+      /*
+      Remove the Space separator when the user invites the list of emails.
+      If we don't do that, the user won't be able to search after people because
+      the space bar will generate a new chip that will be considered as a new email
+      */
+      if (this.separators.includes(SPACE)) this.separators.splice(this.separators.length -1, 1);
     }
   }
 
