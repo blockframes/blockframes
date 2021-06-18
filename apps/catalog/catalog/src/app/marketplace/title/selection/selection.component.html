@@ -28,17 +28,14 @@
         <contract-item
           [contract]="contract"
           [columns]="columns"
-          [initialColumns]="initialColumns"
           (openDetails)="openDetails"
           >
-            <contract-price>
-              <mat-form-field appearance="outline" >
-                <mat-label>Price</mat-label>
-                <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
-                  (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
-                <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
-              </mat-form-field>
-            </contract-price>
+            <mat-form-field appearance="outline" price>
+              <mat-label>Price</mat-label>
+              <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
+                (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
+              <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
+            </mat-form-field>
             <ng-template #colActionTemplate label="Actions" let-termIndex="index" let-titleId="titleId">
               <a mat-icon-button [routerLink]="['/c/o/marketplace/title', titleId, 'avails']" [queryParams]="{ contract: i, term: termIndex }" matTooltip="Edit">
                 <mat-icon svgIcon="edit"></mat-icon>
@@ -47,18 +44,16 @@
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </ng-template>
-            <contract-footer>
-              <footer fxLayout fxLayoutAlign="space-between" class="footer">
-                <ng-container *ngIf="contract.titleId | getTitle | async as title">
-                  <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-                    Delete all rights for this title
-                  </button>
-                  <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
-                    Add Rights
-                  </a>
-                </ng-container>
-              </footer>
-            </contract-footer>
+            <footer fxLayout fxLayoutAlign="space-between" class="footer" footer>
+              <ng-container *ngIf="contract.titleId | getTitle | async as title">
+                <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
+                  Delete all rights for this title
+                </button>
+                <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
+                  Add Rights
+                </a>
+              </ng-container>
+            </footer>
         </contract-item>
       </ng-container>
     </ng-container>

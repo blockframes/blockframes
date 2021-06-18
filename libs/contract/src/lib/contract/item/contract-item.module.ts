@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
-  ContracItemComponent, ContractFooterComponent, ContractPriceComponent,
- } from './contrac-item.component';
+  ContractItemComponent,
+ } from './contract-item.component';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -30,17 +30,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
-    ContracItemComponent,
-    ContractFooterComponent,
-    ContractPriceComponent,
+    ContractItemComponent,
   ],
   imports: [
     CommonModule,
     FlexLayoutModule,
     RouterModule,
     GetTitlePipeModule,
-    BucketPipesModule,
-    DeepKeyPipeModule,
     ImageModule,
     StorageFileModule,
     TableFilterModule,
@@ -48,7 +44,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MovieFeatureModule,
     ToLabelModule,
     DetailedTermsModule,
-    StaticSelectModule,
 
     // Material
     MatButtonModule,
@@ -60,9 +55,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
     ],
   exports:[
-    ContracItemComponent,
-    ContractFooterComponent,
-    ContractPriceComponent,
+    ContractItemComponent,
   ]
 })
-export class ContracItemModule { }
+export class ContractItemModule { }

@@ -27,7 +27,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     medias: 'Rights',
     exclusive: 'Exclusivity'
   };
-  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
   priceChanges = new Subject();

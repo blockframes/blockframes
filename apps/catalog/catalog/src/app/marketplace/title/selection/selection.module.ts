@@ -3,17 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { MarketplaceSelectionComponent } from './selection.component';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
-import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
-import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
-import { ToLabelModule } from '@blockframes/utils/pipes';
-import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
-import { ContracItemModule } from '@blockframes/contract/contract/contract-item/contrac-item.module';
+import { ContractItemModule } from '@blockframes/contract/contract/item/contract-item.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
@@ -22,8 +15,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [MarketplaceSelectionComponent],
@@ -34,15 +25,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     GetTitlePipeModule,
     BucketPipesModule,
     DeepKeyPipeModule,
-    ImageModule,
-    StorageFileModule,
-    TableFilterModule,
-    DisplayNameModule,
-    MovieFeatureModule,
-    ToLabelModule,
-    DetailedTermsModule,
     StaticSelectModule,
-    ContracItemModule,
+    ContractItemModule,
 
     // Material
     MatButtonModule,
@@ -50,8 +34,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
-    MatSnackBarModule,
-    MatTooltipModule,
 
     RouterModule.forChild([
       {
