@@ -82,21 +82,18 @@ export class UserComponent implements OnInit {
       const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
       await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
       this.sending.next(false);
-      /*
-      Remove the Space separator when the user invites the list of emails.
-      If we don't do that, the user won't be able to search after people because
-      the space bar will generate a new chip that will be considered as a new email
-      */
-     if (this.separators.includes(SPACE)) {
-       const index = this.separators.indexOf(SPACE);
-       this.separators.splice(index, 1);
-      }
     }
   }
 
-  /** Add the SPACE separator if the user pastes email addresses */
-  onPaste(event: ClipboardEvent) {
-    if (event.type === 'paste') this.separators.push(SPACE);
+  /** Add the SPACE separator if the user pastes email addresses and remove it if the user types something*/
+  onInputFilling(event: InputEvent) {
+    if (event.inputType === 'insertFromPaste') this.separators.push(SPACE);
+    else {
+      if (this.separators.includes(SPACE)) {
+        const index = this.separators.indexOf(SPACE);
+        this.separators.splice(index, 1);
+      }
+    }
   }
 
   /** Send only the first emails based on the maxlength */
