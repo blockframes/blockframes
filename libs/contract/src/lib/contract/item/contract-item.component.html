@@ -19,7 +19,7 @@
         {{ duration.from | date }} - {{ duration.to | date }}
       </ng-template>
       <ng-template colRef="territories" let-territories>
-        <section (click)="_openDetails(territories, 'territories')">
+        <section (click)="openDetails(territories, 'territories')">
           <p class="ellipsis">
             {{ territories | toLabel: 'territories' }}
           </p>

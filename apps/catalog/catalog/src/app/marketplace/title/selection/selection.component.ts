@@ -8,7 +8,6 @@ import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/op
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 
@@ -153,7 +152,4 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.intercom?.show();
   }
 
-  openDetails({ terms, scope }: { terms: string, scope: Scope }) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
-  }
 }
