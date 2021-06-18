@@ -87,8 +87,9 @@ export class UserComponent implements OnInit {
 
   /** Add the SPACE separator if the user pastes email addresses and remove it if the user types something*/
   onInputFilling(event: InputEvent) {
-    if (event.inputType === 'insertFromPaste') this.separators.push(SPACE);
-    else {
+    if (event.inputType === 'insertFromPaste') {
+      this.separators.push(SPACE);
+    } else {
       if (this.separators.includes(SPACE)) {
         const index = this.separators.indexOf(SPACE);
         this.separators.splice(index, 1);
