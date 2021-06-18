@@ -20,7 +20,7 @@ import { FormControl } from '@angular/forms';
 })
 export class MarketplaceSelectionComponent implements OnDestroy {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
-  public currencyForm = new FormControl();
+  public currencyForm = new FormControl('EUR');
   columns = {
     duration: 'Terms',
     territories: 'Territories',
@@ -38,7 +38,9 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     distinctUntilChanged()
   );
 
-  private sub = this.currencyForm.valueChanges.pipe(distinctUntilChanged()).subscribe(value => this.updateCurrency(value));
+  private sub = this.currencyForm.valueChanges.pipe(
+    distinctUntilChanged()
+  ).subscribe(value => this.updateCurrency(value));
 
   trackById = (i: number, doc: { id: string }) => doc.id;
 
