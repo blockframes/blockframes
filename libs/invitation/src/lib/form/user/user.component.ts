@@ -87,7 +87,10 @@ export class UserComponent implements OnInit {
       If we don't do that, the user won't be able to search after people because
       the space bar will generate a new chip that will be considered as a new email
       */
-      if (this.separators.includes(SPACE)) this.separators.splice(this.separators.length -1, 1);
+     if (this.separators.includes(SPACE)) {
+       const index = this.separators.indexOf(SPACE);
+       this.separators.splice(index, 1);
+      }
     }
   }
 
