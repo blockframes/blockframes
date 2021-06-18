@@ -30,7 +30,7 @@
     }
 
     // this is needed to make mat-form field icons red on error
-    &.ng-invalid {
+    &.ng-invalid.ng-touched {
       mat-icon {
         svg {
           margin-bottom: 4px;
