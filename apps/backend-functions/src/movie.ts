@@ -11,6 +11,7 @@ import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
 import { App, getAllAppsExcept, getMovieAppAccess, checkMovieStatus } from '@blockframes/utils/apps';
+import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -50,47 +51,67 @@ export async function onMovieDelete(
   // Clean wishlists
   await removeMovieFromWishlists(movie, batch);
 
-  // Delete events
-  const events = await db.collection('events').where('meta.titleId', '==', movie.id).get();
-  events.docs.forEach(d => batch.delete(d.ref));
-
-
   // Delete sub-collections (distribution rights)
   await removeAllSubcollections(snap, batch);
 
-  // Delete permissions
-  const orgsPromises = movie.orgIds.map(o => db.collection('orgs').where('id', '==', o).get());
-  const _orgs = await Promise.all(orgsPromises);
-  const orgIds: string[] = [];
-  _orgs.forEach(s => { s.docs.forEach(d => orgIds.push(d.id)) });
-  const permissionsPromises = orgIds.map(orgId => db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`).get());
-  const permissions = await Promise.all(permissionsPromises);
-  permissions.forEach(p => batch.delete(p.ref));
+  await batch.commit();
 
-  // Delete notifications
-  const notifsCollectionRef = await db.collection('notifications').where('docId', '==', movie.id).get();
-  for (const doc of notifsCollectionRef.docs) {
-    batch.delete(doc.ref);
-  }
+  await db.runTransaction(async tx => {
+    // Read events
+    const events = await tx.get(db.collection('events').where('meta.titleId', '==', movie.id));
 
-  // Update contracts
-  const contracts = await db.collection('contracts').where('titleIds', 'array-contains', movie.id).get();
-  contracts.docs.forEach(c => {
-    const contract = c.data();
-    if (contract.lastVersion?.titles[movie.id]) {
-      delete contract.lastVersion.titles[movie.id];
+    // Read permissions
+    const orgsPromises = movie.orgIds.map(o => tx.get(db.collection('orgs').where('id', '==', o)));
+    const _orgs = await Promise.all(orgsPromises);
+    const orgIds: string[] = [];
+    _orgs.forEach(s => { s.docs.forEach(d => orgIds.push(d.id)) });
+    const permissionsPromises = orgIds.map(orgId => tx.get(db.doc(`permissions/${orgId}/documentPermissions/${movie.id}`)));
+    const permissions = await Promise.all(permissionsPromises);
+
+    // Read notifications
+    const notifsCollectionRef = await tx.get(db.collection('notifications').where('docId', '==', movie.id));
+
+    // Read contracts
+    const contractsCollectionRef = await tx.get(db.collection('contracts').where('titleId', '==', movie.id));
+
+    // Read buckets 
+    const bucketsCollectionRef = await tx.get(db.collection('buckets'));
+
+    // Delete events
+    events.docs.forEach(d => tx.delete(d.ref));
+
+    // Delete permissions
+    permissions.forEach(p => tx.delete(p.ref));
+
+    // Delete notifications
+    for (const doc of notifsCollectionRef.docs) {
+      tx.delete(doc.ref);
     }
-    batch.update(c.ref, contract);
+
+    // Delete contracts
+    for (const doc of contractsCollectionRef.docs) {
+      tx.delete(doc.ref);
+    }
+
+    // Update Buckets
+    for (const doc of bucketsCollectionRef.docs) {
+      const bucket = doc.data() as Bucket;
+
+      if (bucket.contracts.some(c => c.titleId === movie.id)) {
+        bucket.contracts = bucket.contracts.filter(c => c.titleId !== movie.id);
+        tx.update(doc.ref, bucket);
+      }
+    }
+
   });
 
   // Update algolia's index
   const movieAppAccess = getMovieAppAccess(movie);
   const promises = movieAppAccess.map(appName => deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>);
 
-  await Promise.all(promises)
+  await Promise.all(promises);
 
   console.log(`Movie ${movie.id} removed`);
-  return batch.commit();
 }
 
 export async function onMovieUpdate(
@@ -159,9 +180,8 @@ export async function onMovieUpdate(
 
 /** Checks if the store status is going from draft to submitted. */
 function isSubmitted(
-  beforeApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>,
-  afterApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>)
-{
+  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
+  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
   return apps.some(app => {
     return (beforeApp && beforeApp[app].status === 'draft') && (afterApp && afterApp[app].status === 'submitted');
   })
@@ -169,9 +189,8 @@ function isSubmitted(
 
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(
-  beforeApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>,
-  afterApp: Partial<{[app in App]: MovieAppConfig<Timestamp>}>)
-{
+  beforeApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>,
+  afterApp: Partial<{ [app in App]: MovieAppConfig<Timestamp> }>) {
   return apps.some(app => {
     if (app === 'festival') {
       // in festival `draft` -> `accepted`
