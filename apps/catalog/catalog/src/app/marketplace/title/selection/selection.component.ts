@@ -2,13 +2,12 @@ import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angula
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieCurrency, movieCurrencies, Scope } from '@blockframes/utils/static-model';
+import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 
@@ -20,14 +19,8 @@ import { FormControl } from '@angular/forms';
 })
 export class MarketplaceSelectionComponent implements OnDestroy {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
-  public currencyForm = new FormControl('EUR');
-  columns = {
-    duration: 'Terms',
-    territories: 'Territories',
-    medias: 'Rights',
-    exclusive: 'Exclusivity'
-  };
-  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
+  public currencyForm = new FormControl();
+
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
   priceChanges = new Subject();
@@ -42,7 +35,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     distinctUntilChanged()
   ).subscribe(value => this.updateCurrency(value));
 
-  trackById = (i: number, doc: { id: string }) => doc.id;
+  // trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -56,7 +49,9 @@ export class MarketplaceSelectionComponent implements OnDestroy {
       tap(bucket => {
         this.setTitle(bucket?.contracts.length);
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
-        bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price));
+        bucket?.contracts.forEach(
+          (contract, index) => this.setPrice(index, contract.price)
+        );
       })
     );
   }
@@ -79,11 +74,12 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.bucketService.update(id, { currency });
   }
 
-  setPrice(i: number, price: number | string) {
-    this.prices[i] = +price;
+  setPrice(index: number, price: number | string) {
+    this.prices[index] = +price;
     this.priceChanges.next();
   }
 
+  trackById(i: number, doc: { id: string }) { return doc.id; }
 
   async updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
@@ -154,7 +150,4 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.intercom?.show();
   }
 
-  openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
-  }
 }
