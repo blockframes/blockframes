@@ -31,7 +31,9 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     distinctUntilChanged()
   );
 
-  private sub = this.currencyForm.valueChanges.pipe(distinctUntilChanged()).subscribe(value => this.updateCurrency(value));
+  private sub = this.currencyForm.valueChanges.pipe(
+    distinctUntilChanged()
+  ).subscribe(value => this.updateCurrency(value));
 
   // trackById = (i: number, doc: { id: string }) => doc.id;
 
