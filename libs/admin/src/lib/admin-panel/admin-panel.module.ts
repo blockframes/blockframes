@@ -48,6 +48,7 @@ import { InvitationsComponent } from './pages/invitations/invitations.component'
 import { OrganizationCreateComponent } from './components/organization/create-organization/create.component';
 import { CrmFormDialogModule } from './components/crm-form-dialog/crm-form-dialog.module';
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
+import { DashboardModule } from './components/dashboard/dashboard.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -99,7 +100,8 @@ export const panelRoutes: Routes = [
     AppPipeModule,
     MoviePictureUploadModule,
     StaticSelectModule,
-    ToDateModule
+    ToDateModule,
+    DashboardModule
   ],
   declarations: [
     MoviesComponent,
