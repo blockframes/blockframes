@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MarketplaceSelectionComponent } from './selection.component';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
@@ -21,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
   imports: [
     CommonModule,
     FlexLayoutModule,
-
+    ImageModule,
     GetTitlePipeModule,
     BucketPipesModule,
     DeepKeyPipeModule,
