@@ -32,11 +32,11 @@
         {{ exclusive ? 'Yes' : 'No' }}
       </ng-template>
       <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-termIndex="index">
-        <ng-template [ngTemplateOutlet]="actionTemplate"
-          [ngTemplateOutletContext]="{termIndex:termIndex, titleId:contract.titleId}"></ng-template>
+        <ng-template [ngTemplateOutlet]="actionTemplate" [ngTemplateOutletContext]="{index:termIndex, term:contract.terms[termIndex]}">
+        </ng-template>
       </ng-template>
 
     </bf-table-filter>
-    <ng-content select="[footer]"></ng-content>
+    <ng-content select="footer"></ng-content>
   </section>
 </ng-container>

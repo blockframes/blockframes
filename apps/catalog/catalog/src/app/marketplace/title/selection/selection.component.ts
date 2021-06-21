@@ -33,7 +33,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 
   private sub = this.currencyForm.valueChanges.pipe(distinctUntilChanged()).subscribe(value => this.updateCurrency(value));
 
-  trackById = (i: number, doc: { id: string }) => doc.id;
+  // trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -77,6 +77,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.priceChanges.next();
   }
 
+  trackById(i: number, doc: { id: string }) { return doc.id; }
 
   async updatePrice(index: number, price: string) {
     const id = this.bucketQuery.getActiveId();
@@ -87,7 +88,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  removeContract( index: number, title: Movie ) {
+  removeContract(index: number, title: Movie) {
     const id = this.bucketQuery.getActiveId();
     delete this.prices[index];
     this.bucketService.update(id, bucket => ({
@@ -97,7 +98,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.snackBar.open(text, 'close', { duration: 5000 });
   }
 
-  removeTerm( contractIndex: number, termIndex: number ) {
+  removeTerm(contractIndex: number, termIndex: number) {
     const id = this.bucketQuery.getActiveId();
     this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];

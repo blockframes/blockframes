@@ -25,24 +25,22 @@
 
     <ng-container *ngIf="(bucket$ |async) as bucket">
       <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
-        <contract-item
-          [contract]="contract"
-          >
+        <contract-item [contract]="contract">
             <mat-form-field appearance="outline" price>
               <mat-label>Price</mat-label>
               <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
                 (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
               <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
             </mat-form-field>
-            <ng-template #colActionTemplate label="Actions" let-termIndex="index" let-titleId="titleId">
-              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', titleId, 'avails']" [queryParams]="{ contract: i, term: termIndex }" matTooltip="Edit">
+            <ng-template #termAction let-term let-index="index">
+              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
-              <button mat-icon-button (click)="removeTerm(i, termIndex)" matTooltip="Delete">
+              <button mat-icon-button (click)="removeTerm(i, index)" matTooltip="Delete">
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </ng-template>
-            <footer fxLayout fxLayoutAlign="space-between" class="footer" footer>
+            <footer fxLayout fxLayoutAlign="space-between">
               <ng-container *ngIf="contract.titleId | getTitle | async as title">
                 <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
                   Delete all rights for this title
