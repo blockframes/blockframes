@@ -27,7 +27,6 @@
       <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
         <contract-item
           [contract]="contract"
-          [columns]="columns"
           >
             <mat-form-field appearance="outline" price>
               <mat-label>Price</mat-label>

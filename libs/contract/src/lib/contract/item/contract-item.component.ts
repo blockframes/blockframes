@@ -21,7 +21,12 @@ export class ContractItemComponent {
   @Input() contract: BucketContract;
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   initialColumns = ['duration', 'territories', 'medias', 'exclusive'];
-  @Input() columns: Record<string, string>;
+  columns = {
+    duration: 'Terms',
+    territories: 'Territories',
+    medias: 'Rights',
+    exclusive: 'Exclusivity'
+  };
   actionTemplate?: TemplateRef<unknown>;
 
   @ContentChild('colActionTemplate') set colActionsTemplate(template: TemplateRef<unknown>) {
