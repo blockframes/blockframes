@@ -90,14 +90,7 @@
               test-id="invitation-code" required />
               <mat-hint>You'll find your Invitation Pass in your invitation email.</mat-hint>
             </mat-form-field>
-            <button class="intercom" mat-mini-fab color="primary" (click)="openIntercom()">?</button>
-          </div>
-          <div class="pass-info">
-            <mat-icon svgIcon="info"></mat-icon>
-            <p class="mat-caption">
-              Can't find it?
-              <button (click)="openIntercom()">Contact us</button>
-            </p>
+            <button class="intercom" mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
           </div>
         </ng-container>
 
