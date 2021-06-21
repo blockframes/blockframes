@@ -6,6 +6,7 @@ import { getCurrentApp, getAppName } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
+import { ThemeService } from '@blockframes/ui/theme';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -61,7 +62,14 @@ export class LandingShellComponent {
   @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
-  constructor(private snackBar: MatSnackBar, private routerQuery: RouterQuery, private functions: AngularFireFunctions) { }
+  constructor(
+    private snackBar: MatSnackBar,
+    private routerQuery: RouterQuery,
+    private functions: AngularFireFunctions,
+    theme: ThemeService)
+  {
+    theme.initTheme('light');
+  }
 
   /** Send a mail to the admin with user's informations. */
   private async sendDemoRequest(information: RequestDemoInformations) {
