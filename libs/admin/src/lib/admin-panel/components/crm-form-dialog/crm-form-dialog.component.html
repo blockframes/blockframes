@@ -18,6 +18,6 @@
 
   <article fxLayout="row" fxLayoutAlign="space-evenly">
     <button mat-stroked-button (click)="close()">Cancel</button>
-    <button mat-flat-button color="warn" (click)="confirm()">{{ data.confirmButtonText | firstWordTitlecase }}</button>
+    <button type="submit" [disabled]="data.confirmationWord.toUpperCase() !== actionConfirm.value" mat-flat-button color="warn" (click)="confirm()">{{ data.confirmButtonText | firstWordTitlecase }}</button>
   </article>
 </section>
