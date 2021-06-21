@@ -19,6 +19,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
+import { OffersModule } from './pages/offers/offers.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { AppPipeModule, ToLabelModule, ToDateModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
@@ -41,6 +42,7 @@ import { MovieComponent } from './pages/movie/movie.component';
 import { UsersComponent } from './pages/users/users.component';
 import { UserComponent } from './pages/user/user.component';
 import { EventsComponent } from './pages/events/events.component';
+import { OffersComponent } from './pages/offers/offers.component';
 import { EventComponent } from './pages/event/event.component';
 import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
@@ -57,6 +59,7 @@ export const panelRoutes: Routes = [
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'offers', component: OffersComponent },
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
@@ -99,7 +102,8 @@ export const panelRoutes: Routes = [
     AppPipeModule,
     MoviePictureUploadModule,
     StaticSelectModule,
-    ToDateModule
+    OffersModule,
+    ToDateModule,
   ],
   declarations: [
     MoviesComponent,

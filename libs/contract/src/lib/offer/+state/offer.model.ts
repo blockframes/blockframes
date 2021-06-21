@@ -3,7 +3,7 @@ export interface Offer {
   buyerId: string;
   buyerUserId: string;
   specificity: string;
-  status: 'pending';
+  status: 'pending' | 'negociating' | 'accepted' | 'signing' | 'signed' | 'declined';
   date: Date;
   delivery: string;
 }
