@@ -20,4 +20,4 @@ const routes = [{
     RouterModule.forChild(routes),
   ]
 })
-export class ShellModule { }
+export class OfferShellModule { }
