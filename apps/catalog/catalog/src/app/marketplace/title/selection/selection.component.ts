@@ -20,7 +20,7 @@ import { FormControl } from '@angular/forms';
 })
 export class MarketplaceSelectionComponent implements OnDestroy {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
-  public currencyForm = new FormControl();
+  public currencyForm = new FormControl('EUR');
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
