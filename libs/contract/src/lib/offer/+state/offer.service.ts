@@ -9,4 +9,6 @@ export class OfferService extends CollectionService<OfferState> {
   constructor(store: OfferStore) {
     super(store);
   }
+
+
 }
