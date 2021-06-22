@@ -27,6 +27,19 @@ article * {
   min-width: 0;
 }
 
+span.tag {
+  width: 158px;
+  background: var(--background);
+  border-radius: 3px 0 0 3px;
+  text-align: center;
+  padding: auto;
+  text-transform: uppercase;
+  p{
+    margin: auto;
+    color: white;
+  }
+}
+
 h4 {
   text-transform: uppercase;
 }
