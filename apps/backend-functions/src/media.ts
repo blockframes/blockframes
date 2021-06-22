@@ -20,6 +20,7 @@ import { MovieDocument } from './data/types';
 import { imgixToken } from './environments/environment';
 import { db, getStorageBucketName } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
+import { testVideoId } from '@env';
 
 
 /**
@@ -263,7 +264,7 @@ export const deleteMedia = async (file: StorageFile) => {
 
     // if the file has a jwPlayerId, we need to delete the video from JWPlayer's CDN
     // to avoid orphaned videos taking storage space
-    if (file.jwPlayerId) {
+    if (file.jwPlayerId && file.jwPlayerId !== testVideoId) {
       const deleted = await deleteFromJWPlayer(file.jwPlayerId);
       if (!deleted.success) {
         logger.warn(`WARNING: file was delete from our system, but we failed to also delete it from JWPlayer! ${file}`);
