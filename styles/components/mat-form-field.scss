@@ -4,6 +4,7 @@
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
   $primary: map.get($config, 'primary');
+  $warn: map.get($config, 'warn');
   $foreground: map.get($config, 'foreground');
 
 
@@ -25,6 +26,29 @@
     &[no-underline] {
       .mat-form-field-underline {
         display: none;
+      }
+    }
+
+    // this is needed to make mat-form field icons red on error
+    &.ng-invalid.ng-touched {
+      mat-icon {
+        svg {
+          margin-bottom: 4px;
+          path {
+            fill: mat.get-color-from-palette($warn);
+          }
+        }
+      }
+
+      mat-datepicker-toggle {
+        button {
+          svg {
+            margin-bottom: 4px;
+            path {
+              fill: mat.get-color-from-palette($warn);
+            }
+          }
+        }
       }
     }
 

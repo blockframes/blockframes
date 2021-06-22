@@ -254,6 +254,25 @@
         ]
       }
     },
+    "blockframes-yonga": {
+      "hosting": {
+        "catalog": [
+          "catalog-blockframes-yonga"
+        ],
+        "festival": [
+          "festival-blockframes-yonga"
+        ],
+        "crm": [
+          "crm-blockframes-yonga"
+        ],
+        "financiers": [
+          "financiers-blockframes-yonga"
+        ],
+        "cms": [
+          "cms-blockframes-yonga"
+        ]
+      }
+    },
     "blockframes-clelia": {
       "hosting": {
         "catalog": [

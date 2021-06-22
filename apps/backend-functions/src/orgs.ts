@@ -28,7 +28,7 @@ function notifyUser(toUserId: string, notificationType: NotificationTypes, org: 
     type: notificationType,
     user: createPublicUserDocument(user),
     organization: createPublicOrganizationDocument(org),
-    _meta: createDocumentMeta({ createdFrom:createdFrom[0] })
+    _meta: createDocumentMeta({ createdFrom: createdFrom[0] })
   });
 }
 
@@ -221,6 +221,8 @@ export async function onOrganizationDelete(
     }
   }
 
+  // Remove bucket belonging to org, if any
+  await db.doc(`buckets/${org.id}`).delete();
 
   // Clean all media for the organization
   await cleanOrgMedias(org);
@@ -263,7 +265,7 @@ export const accessToAppChanged = async (
 }
 
 /** Send an email to C8 Admins when an organization requests to access to a new platform */
-export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string}, context?: CallableContext) => {
+export const onRequestFromOrgToAccessApp = async (data: { app: App, orgId: string }, context?: CallableContext) => {
   if (!!context.auth.uid && !!data.app && !!data.orgId) {
     const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
     const mailRequest = await organizationRequestedAccessToApp(organization, data.app);

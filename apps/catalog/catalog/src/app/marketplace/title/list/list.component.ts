@@ -3,14 +3,14 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef, OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, take, skip, shareReplay } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -23,13 +23,14 @@ import { Contract, ContractService } from '@blockframes/contract/contract/+state
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
-import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgId } from '@env';
 import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { Territory } from '@blockframes/utils/static-model';
 import { AlgoliaMovie } from '@blockframes/utils/algolia';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -37,7 +38,7 @@ import { AlgoliaMovie } from '@blockframes/utils/algolia';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnDestroy, OnInit {
 
   private movieResultsState = new BehaviorSubject<Movie[]>(null);
 
@@ -50,7 +51,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
 
   private terms: { [movieId: string]: { mandate: Term<Date>[], sale: Term<Date>[] } } = {};
   private parentTerms: Record<string, Term<Date>[]> = {};
@@ -63,24 +64,16 @@ export class ListComponent implements OnInit, OnDestroy {
     private termService: TermService,
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
-    private bucketQuery: BucketQuery,
     private orgQuery: OrganizationQuery,
-    private router: Router
+    private router: Router,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
+
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000)
-    const params = this.route.snapshot.queryParams;
-    for (const key in params) {
-      try {
-        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
-      } catch (_) {
-        console.error(`Invalid parameter ${key} in URL`);
-      }
-    }
 
     // No need to await for the results
     Promise.all([
@@ -88,11 +81,46 @@ export class ListComponent implements OnInit, OnDestroy {
       this.getContract('sale')
     ])
 
-    this.sub = combineLatest([
+    const {
+      search,
+      avails = {}
+    } = decodeUrl(this.route);
+    // patch everything
+    this.searchForm.patchValue(search);
+
+    // ensure FromList are also patched
+    this.searchForm.genres.patchAllValue(search?.genres);
+    this.searchForm.originCountries.patchAllValue(search?.originCountries);
+
+    this.availsForm.patchValue(avails);
+
+    const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
       this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
-      this.bucketQuery.selectActive().pipe(startWith(undefined))
-    ]).pipe(
+      this.bucketService.active$.pipe(startWith(undefined))
+    ]).pipe(shareReplay(1));
+
+    const subStateUrl = search$.pipe(
+      skip(1)
+    )
+      .subscribe(
+        ([search, avails]) => {
+          encodeUrl(
+            this.router,
+            this.route,
+            {
+              search: {
+                query: search.query,
+                genres: search.genres,
+                originCountries: search.originCountries,
+                contentType: search.contentType,
+              },
+              avails,
+            }
+          )
+        })
+        
+    const sub = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
       switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(), availsValue, bucketValue]),
@@ -112,6 +140,8 @@ export class ListComponent implements OnInit, OnDestroy {
         this.movieResultsState.next(movies.hits)
       }
     })
+
+    this.subs.push(sub, subStateUrl)
   }
 
   clear() {
@@ -139,7 +169,7 @@ export class ListComponent implements OnInit, OnDestroy {
     return Promise.all(promises);
   }
 
-  addAvail(title: AlgoliaMovie) {
+  async addAvail(title: AlgoliaMovie) {
     const titleId = title.objectID;
     if (this.availsForm.invalid) {
       this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
@@ -159,7 +189,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     const orgId = this.orgQuery.getActiveId();
-    if (this.bucketQuery.getActive()) {
+    const bucket = await this.bucketService.getActive();
+    if (bucket) {
       this.bucketService.update(orgId, bucket => {
         const contracts = bucket.contracts || [];
         for (const newContract of newContracts) {
@@ -236,6 +267,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(s => s.unsubscribe());
   }
 }

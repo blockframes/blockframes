@@ -1,8 +1,8 @@
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { combineLatest } from 'rxjs';
-import { filter, map, pluck, shareReplay, startWith, take } from 'rxjs/operators';
+import { combineLatest, Subscription } from 'rxjs';
+import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -13,11 +13,13 @@ import {
   toTerritoryMarker,
   getTerritoryMarkers,
   availableTerritories,
+  AvailsFilter,
 } from '@blockframes/contract/avails/avails';
 import { territoriesISOA3, TerritoryValue } from '@blockframes/utils/static-model';
 
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -25,7 +27,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent {
+export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -37,6 +39,7 @@ export class MarketplaceMovieAvailsMapComponent {
   private mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
   private salesTerms$ = this.shell.salesTerms$;
+  private subs: Subscription[] = [];
 
   public territoryMarkers$ = combineLatest([
     this.mandates$,
@@ -97,7 +100,8 @@ export class MarketplaceMovieAvailsMapComponent {
   constructor(
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
-    private route: ActivatedRoute
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   /** Display the territories information in the tooltip */
@@ -141,5 +145,21 @@ export class MarketplaceMovieAvailsMapComponent {
       .subscribe(() => {
         document.querySelector('#rights').scrollIntoView({ behavior: 'smooth' })
       });
+  }
+
+  ngOnInit() {
+    const decodedData = decodeUrl(this.route);
+    this.availsForm.patchValue(decodedData)
+    this.availsForm.valueChanges.pipe(
+      throttleTime(1000)
+    ).subscribe(formState => {
+      encodeUrl<AvailsFilter>(
+        this.router, this.route, formState
+      );
+    });
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe());
   }
 }
