@@ -18,7 +18,7 @@ const specificText = 'Payment schedule: 20% each semester starting at the follow
 const deliveryText = 'Prores file deliver through cloud';
 const userFixture = new User();
 const user = userFixture.getByUID(USER.Camilla);
-const currency = 'US Dollar';
+const currency = { label: 'US Dollar', value: 'USD' };
 const numSections = 3;
 const totalContractValue = '35,000';
 
@@ -57,6 +57,7 @@ describe('Create a new bucket and finalize a new offer', () => {
     }
     p1.openSidenavMenuAndNavigate('selection');
     assertMoveTo(SELECTION_PATH);
+    cy.wait(3 * SEC);
 
     // COMPLETE AND SEND A NEW OFFER
     const p3 = new SelectionPage();
