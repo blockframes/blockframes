@@ -189,7 +189,7 @@ export class ListComponent implements OnDestroy, OnInit {
     }
 
     const orgId = this.orgQuery.getActiveId();
-    const bucket = await this.bucketService.active$.pipe(take(1)).toPromise();
+    const bucket = await this.bucketService.getActive();
     if (bucket) {
       this.bucketService.update(orgId, bucket => {
         const contracts = bucket.contracts || [];

@@ -17,7 +17,8 @@ export class BucketService extends CollectionService<BucketState> {
   active$ = this.orgQuery.selectActiveId().pipe(
     switchMap((orgId) => this.valueChanges(orgId)),
     shareReplay(1)
-    );
+  );
+  
   constructor(
     store: BucketStore,
     private orgQuery: OrganizationQuery,
