@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,10 +10,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./crm-form-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrmFormDialogComponent {
+export class CrmFormDialogComponent implements OnInit {
 
   public actionConfirm = new FormControl('');
-
+  public isValid = false;
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -30,8 +30,18 @@ export class CrmFormDialogComponent {
     private snackbar: MatSnackBar
   ) { }
 
+  ngOnInit() {
+    this.actionConfirm.valueChanges.subscribe(value => {
+      if (this.data.confirmationWord.toUpperCase() === value && this.actionConfirm.valid) {
+        this.isValid = true;
+      } else {
+        this.isValid = false;
+      }
+    });
+  }
+
   public confirm() {
-    if (this.actionConfirm.value === this.data.confirmationWord.toUpperCase() && this.actionConfirm.valid) {
+    if (this.isValid) {
       this.data.onConfirm();
       this.dialogRef.close(true);
     }
