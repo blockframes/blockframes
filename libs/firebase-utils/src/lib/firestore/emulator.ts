@@ -224,7 +224,7 @@ export function connectEmulator() {
 
   process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`
   // process.env['FIRESTORE_STORAGE_EMULATOR_HOST'] = `localhost:${storagePort}`
-  process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
+  // process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
   // delete process.env['GOOGLE_APPLICATION_CREDENTIALS']
 
   const app = initializeApp({ projectId: firebase().projectId }, 'emulator');

@@ -82,7 +82,7 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      emulators: ['auth', 'functions', 'firestore', 'pubsub'],
+      emulators: ['functions', 'firestore', 'pubsub'],
       importPath: emulatorPath,
       exportData: true
     })
