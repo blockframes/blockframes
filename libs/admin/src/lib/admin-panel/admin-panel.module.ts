@@ -63,7 +63,8 @@ export const panelRoutes: Routes = [
   { path: 'event/:eventId', component: EventComponent },
   { path: 'invitations', component: InvitationsComponent },
   { path: 'mails', component: MailsComponent },
-  { path: 'dev-area', component: DevAreaComponent }
+  { path: 'dev-area', component: DevAreaComponent },
+  { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
 ];
 @NgModule({
   imports: [
