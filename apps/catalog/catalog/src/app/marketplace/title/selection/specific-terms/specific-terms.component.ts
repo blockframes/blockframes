@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
+import { BucketService } from '@blockframes/contract/bucket/+state';
 
 @Component({
   selector: 'catalog-specific-terms',
@@ -10,21 +10,22 @@ import { BucketQuery, BucketService } from '@blockframes/contract/bucket/+state'
   styleUrls: ['./specific-terms.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpecificTermsComponent {
+export class SpecificTermsComponent implements OnInit {
   
-  form: FormGroup;
+  form = new FormGroup({
+    specificity: new FormControl(),
+    delivery: new FormControl(),
+  })
 
   constructor(
-    private bucketQuery: BucketQuery,
     private bucketService: BucketService,
     private dialog: MatDialogRef<SpecificTermsComponent>,
     private router: Router
-  ) {
-    const bucket = this.bucketQuery.getActive();
-    this.form = new FormGroup({
-      specificity: new FormControl(bucket.specificity),
-      delivery: new FormControl(bucket.delivery),
-    })
+  ) {}
+
+  async ngOnInit() {
+   const { specificity = "", delivery = "" } = await this.bucketService.getActive();
+   this.form.setValue({ specificity, delivery });
   }
 
   createOffer() {
