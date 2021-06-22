@@ -198,3 +198,9 @@ export const centralOrgId = {
 export const backupBucket = 'staging-backups-bv8ys';
 export const heavyChunkSize = 15;
 export const chunkSize = 30;
+
+// JwPlayer
+// @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
+// ========
+
+export const testVideoId = '7R9ttesP';
