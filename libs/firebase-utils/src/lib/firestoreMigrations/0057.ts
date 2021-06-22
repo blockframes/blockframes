@@ -16,10 +16,10 @@ export async function upgrade(db: Firestore) {
     const org = orgDoc.data() as OrganizationDocument;
 
     if (!org.documents || !org.documents.notes) {
-      org.documents = { notes: [] };
+      org.documents = { notes: [], videos: [] };
     } else if (!Array.isArray(org.documents.notes)) {
       const singleNote = org.documents.notes;
-      org.documents.notes = [ singleNote ];
+      org.documents.notes = [singleNote];
     }
 
     await orgDoc.ref.set(org);

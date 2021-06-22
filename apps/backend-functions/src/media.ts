@@ -164,7 +164,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
 
-    const isVideo = data.contentType.indexOf('video/') === 0 && metadata.collection === 'movies';
+    const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
     if (isVideo) {
 
       const uploadResult = await uploadToJWPlayer(file);
@@ -322,6 +322,14 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(...notesToDelete);
     }
 
+    if (!!before.documents && !!before.documents?.videos) {
+      const orgVideosToDelete = checkFileList(
+        before.documents.videos,
+        after.documents.videos
+      );
+      mediaToDelete.push(...orgVideosToDelete);
+    }
+
   } else { // Deleting
     if (before.logo) {
       mediaToDelete.push(before.logo);
@@ -329,6 +337,10 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 
     if (before.documents?.notes.length) {
       before.documents.notes.forEach(n => mediaToDelete.push(n));
+    }
+
+    if (before.documents.videos?.length) {
+      before.documents.videos.forEach(m => mediaToDelete.push(m));
     }
   }
 
