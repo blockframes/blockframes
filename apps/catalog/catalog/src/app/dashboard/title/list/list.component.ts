@@ -53,10 +53,10 @@ export class TitleListComponent {
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: StoreStatus) {
     this.filter.setValue(filter);
-    this.dynTitle.setPageTitle(storeStatus[filter])
+    this.dynTitle.setPageTitle(storeStatus[filter]);
   }
 
-  /* index paramter is unused because it is a default paramter from the filter javascript function */
+  /* index paramater is unused because it is a default paramater from the filter javascript function */
   filterByMovie(movie: Movie, index: number, value): boolean {
     return value ? movie.app.catalog.status === value : true;
   }

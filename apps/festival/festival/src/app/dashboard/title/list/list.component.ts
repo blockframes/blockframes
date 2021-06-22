@@ -10,6 +10,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Intercom } from 'ng-intercom';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 
 const columns = {
   'title.international': 'Title',
@@ -64,6 +65,20 @@ export class ListComponent implements OnInit {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  /** Dynamic filter of movies for each tab. */
+  applyFilter(filter?: StoreStatus) {
+    this.filter.setValue(filter);
+  }
+
+  resetFilter() {
+    this.filter.reset();
+  }
+
+  /* index paramater is unused because it is a default paramater from the filter javascript function */
+  filterByTitle(movie: Movie, index: number, value): boolean {
+    return value ? movie.app.festival.status === value : true;
   }
 
 }

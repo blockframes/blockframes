@@ -11,7 +11,7 @@ import { Intercom } from 'ng-intercom';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-type Filters = 'all' | 'draft' | 'ongoing' | 'achieved';
+type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
 const columns = {
   title: 'Title',
@@ -27,6 +27,7 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
     case 'draft': return movies.filter(movie => movie.app.financiers.status === 'draft');
     case 'ongoing': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap > movie.campaign?.received);
     case 'achieved': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap === movie.campaign?.received);
+    case 'archived': return movies.filter(movie => movie.app.financiers.status === 'archived');
   }
 }
 

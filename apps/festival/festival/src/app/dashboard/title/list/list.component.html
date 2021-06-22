@@ -13,8 +13,15 @@
       </div>
     </header>
 
+    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All</button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
+      <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Published</button>
+      <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">Archived</button>
+    </nav>
+
     <mat-card>
-      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
+      <bf-table-filter [source]="titles | filterBy: filterByTitle: filter.value" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
         <ng-template colRef="view" let-movie="item">{{ movie.id | getViews | async }}</ng-template>

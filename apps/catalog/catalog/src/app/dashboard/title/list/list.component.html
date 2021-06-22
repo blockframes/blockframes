@@ -17,10 +17,9 @@
     <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All</button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
-      <button mat-tab-link (click)="applyFilter('submitted')"
-        [active]="(filter$ | async) === 'submitted'">Submitted</button>
-      <button mat-tab-link (click)="applyFilter('accepted')"
-        [active]="(filter$ | async) === 'accepted'">Published</button>
+      <button mat-tab-link (click)="applyFilter('submitted')" [active]="(filter$ | async) === 'submitted'">Submitted</button>
+      <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Published</button>
+      <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">Archived</button>
     </nav>
 
     <mat-card>
