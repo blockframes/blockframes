@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
   public dashboardUrl: SafeResourceUrl;
 
   @Input() dashboard: string;
-  @Input() params: Object;
+  @Input() params: Record<string, string>;
 
   constructor(private sanitizer: DomSanitizer) { }
 
