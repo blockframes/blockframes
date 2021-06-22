@@ -2,8 +2,9 @@
 @use '~@angular/material' as mat;
 
 // TYPOGRAPHY
-@mixin typography($config) {
-  $foreground: map.get($theme, "foreground");
+@mixin typography($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map.get($config, "foreground");
   
   .mat-tooltip {
     line-height: 12px;
