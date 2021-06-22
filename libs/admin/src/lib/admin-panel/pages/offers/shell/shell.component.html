@@ -1,3 +1,36 @@
 
-<header></header>
-<router-outlet></router-outlet>
+<ng-container *ngIf="offer$ | async as offer; else notFound">
+  <header
+    class="dark-contrast-theme"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    bgAsset="empty_banner.webp"
+  >
+    <div>
+      <a mat-icon-button (click)="goBack()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <h1>Offer Reference: {{offer.id}}</h1>
+      <p>Offer created: {{offer.date.toDate() | date: 'dd/MM/yyyy'}}</p>
+      <org-chip [org]="offer.buyerOrg" baseUrl="/c/o/admin/panel/organization" ></org-chip>
+    </div>
+    <div class="contracts">
+      <p>{{offer.contracts.length}} titles</p>
+      <p>Total: {{ offer | incomes | currency: offer.contracts[0].incomes[0].currency }}</p>
+    </div>
+  </header>
+
+  <router-outlet></router-outlet>
+
+</ng-container>
+<ng-template #notFound>
+  <section fxLayout="column" fxLayoutAlign="center center" bgAsset="background_404.svg">
+    <mat-card>
+      <a mat-icon-button (click)="goBack()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <h3>Offer not found</h3>
+      <p>The offer <b>"{{offerId$ | async}}"</b> cannot be found.</p>
+    </mat-card>
+  </section>
+</ng-template>
