@@ -1,1 +1,12 @@
-<p>Hello</p>
+<form [formGroup]="form" (ngSubmit)="save()">
+    <header>
+      <mat-form-field>
+        <mat-label>...</mat-label>
+        <mat-select formControlName="titleId">
+          <mat-option *ngFor="let title of (titles$ | async)" [value]="title.id">
+             {{ title.title.international }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </header>
+  </form>
