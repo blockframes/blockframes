@@ -47,17 +47,17 @@ section {
       width: 100%;
     }
 
-    .intercom {
-      margin-top: 20px;
-      margin-left: 12px;
-    }
-
     .privacy {
       text-align: start;
     }
 
     button {
-      margin-top: 40px;
+      &.mat-mini-fab {
+        margin-top: 16px;
+      }
+      &.mat-flat-button {
+        margin-top: 40px;
+      }
     }
   }
 }
