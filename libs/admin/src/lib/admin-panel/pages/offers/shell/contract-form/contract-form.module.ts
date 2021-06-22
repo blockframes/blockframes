@@ -3,11 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ContractFormComponent } from './contract-form.component';
 import { RouterModule } from '@angular/router';
 
+// Material
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
+
 @NgModule({
   declarations: [ContractFormComponent],
   imports: [
-    CommonModule,
-    RouterModule.forChild([{ path: '', component: ContractFormComponent }]),
+    // Material
+    MatSelectModule,
+    MatFormFieldModule
   ]
 })
 export class ContractFormModule { }
