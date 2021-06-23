@@ -122,12 +122,4 @@
   </mat-card>
 </section>
 
-<ng-container *ngIf="!!dashboardURL">
-  <section fxLayout fxLayoutAlign="center">
-    <iframe
-      [src]="dashboardURL"
-      frameborder="0"
-      allowfullscreen>
-    </iframe>
-  </section>
-</ng-container>
+<admin-dashboard dashboard="user" [params]="{ 'ds2.user_id': userId }"></admin-dashboard>
