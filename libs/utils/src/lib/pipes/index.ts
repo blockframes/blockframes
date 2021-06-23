@@ -18,3 +18,4 @@ export * from './date.pipe';
 export * from './url.pipe';
 export * from './cms.pipe';
 export * from './sort-array.pipe';
+export * from './join.pipe'
