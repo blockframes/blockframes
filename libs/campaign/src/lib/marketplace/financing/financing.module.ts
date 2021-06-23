@@ -7,7 +7,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { BudgetPipeModule, FundingsPipeModule } from '../../pipes';
 import { HasKeysModule } from '@blockframes/utils/pipes';
-import { CrmFormDialogModule } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.module';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +25,7 @@ import { MatDividerModule } from '@angular/material/divider';
     DownloadPipeModule,
     HasKeysModule,
     NgApexchartsModule,
-    CrmFormDialogModule,
+    ConfirmInputModule,
     // Materials
     MatIconModule,
     MatButtonModule,

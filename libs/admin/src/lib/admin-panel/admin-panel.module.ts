@@ -46,7 +46,7 @@ import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 import { InvitationsComponent } from './pages/invitations/invitations.component';
 import { OrganizationCreateComponent } from './components/organization/create-organization/create.component';
-import { CrmFormDialogModule } from './components/crm-form-dialog/crm-form-dialog.module';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
 import { DashboardModule } from './components/dashboard/dashboard.module';
 
@@ -97,7 +97,7 @@ export const panelRoutes: Routes = [
     GoToModule,
     AdminOrganizationFormModule,
     MovieVideoUploadModule,
-    CrmFormDialogModule,
+    ConfirmInputModule,
     AppPipeModule,
     MoviePictureUploadModule,
     StaticSelectModule,

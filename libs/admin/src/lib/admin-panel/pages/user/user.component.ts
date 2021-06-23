@@ -7,15 +7,14 @@ import { OrganizationService, Organization } from '@blockframes/organization/+st
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
-import { datastudio } from '@env'
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
@@ -174,13 +173,13 @@ export class UserComponent implements OnInit {
     }
 
     const simulation = await this.simulateDeletion(this.user);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this user from Archipel, are you sure?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'This user will be deleted from the application.',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
