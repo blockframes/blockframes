@@ -21,7 +21,7 @@
     </header>
 
     <mat-card>
-      <bf-table-filter [source]="titles | filterBy: filterByTitle: { value: filter.value, exclude: 'archived' }" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
+      <bf-table-filter [source]="titles | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
         <ng-template colRef="view" let-movie="item">{{ movie.id | getViews | async }}</ng-template>
