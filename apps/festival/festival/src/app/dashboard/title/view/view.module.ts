@@ -10,6 +10,9 @@ import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/sh
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes = [{
   path: '',
@@ -53,6 +56,9 @@ const routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
     // Blockframes
     DashboardTitleShellModule,
     // Material

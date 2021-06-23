@@ -1,16 +1,24 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject, Directive } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { MovieQuery } from '@blockframes/movie/+state';
+import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { StoreStatus } from '@blockframes/utils/static-model';
+
+@Directive({ selector: 'actions-button, [actionsButton]' })
+export class ActionsButtonDirective { }
 
 @Component({
   selector: '[routes] title-dashboard-shell',
+  exportAs: 'titleDashboardShell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   animations: [routeAnimation],
@@ -29,7 +37,9 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private query: MovieQuery,
     private routerQuery: RouterQuery,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -52,4 +62,35 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
   }
+
+  removeAppAccess(movie: Movie) {
+    const appsName = getMovieAppAccess(movie).map(a => getAppName(a).label);
+    this.dialog.open(ConfirmInputComponent, {
+      data: {
+        title: `You are about to delete ${movie.title.international} permanently.`,
+        subtitle: `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/> If you wish to proceed, please type "DELETE" in the field below.`,
+        confirmationWord: 'delete',
+        confirmButtonText: 'delete title',
+        cancelButtonText: 'keep title',
+        onConfirm: async () => {
+          // TODO #6084 change status for current app to "archived"
+          console.log('removeAppAccess', movie.id);
+
+          /*await this.shell.layout.update({ publishing: true });
+          await this.consentsService.createConsent('share', movieId);
+          const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
+          const ref = this.snackBar.open(text, '', { duration: 1000 });
+          ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))*/
+
+        }
+      }
+    })
+  }
+
+  updateStatus(movie: Movie, status: StoreStatus) {
+    // TODO #6084 change status for current app to "archived"
+    console.log('change movie status',status, movie.id);
+  }
 }
+
+

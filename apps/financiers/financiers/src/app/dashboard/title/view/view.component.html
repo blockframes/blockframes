@@ -3,11 +3,20 @@
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
 
-  <title-dashboard-shell [routes]="navLinks">
+  <title-dashboard-shell #shell="titleDashboardShell" [routes]="navLinks">
     <ng-container *ngIf="movie.app.financiers.status === 'accepted'">
       <span>{{ percentage }}% funded</span>
       <button mat-stroked-button color="primary" (click)="openDialog()">Update funding status</button>
     </ng-container>
+    <actions-button>
+      <!-- TODO #6084 action menu with app and status specific content -->
+      <button mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
+      <mat-menu #actionMenuMenu="matMenu">
+        <button mat-menu-item (click)="shell.updateStatus(movie, 'archived')">
+          <mat-icon svgIcon="archive"></mat-icon><span matLine>Archive</span>
+        </button>
+      </mat-menu>
+    </actions-button>
   </title-dashboard-shell>
 
   <ng-template #dialogTemplate let-data>

@@ -5,12 +5,13 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { DashboardTitleShellComponent } from './shell.component';
+import { ActionsButtonDirective, DashboardTitleShellComponent } from './shell.component';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,8 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
-  declarations: [DashboardTitleShellComponent],
-  exports: [DashboardTitleShellComponent],
+  declarations: [DashboardTitleShellComponent, ActionsButtonDirective],
+  exports: [DashboardTitleShellComponent, ActionsButtonDirective],
   imports: [
     CommonModule,
     RouterModule,
@@ -31,7 +32,7 @@ import { MatChipsModule } from '@angular/material/chips';
     DisplayNameModule,
     ImageModule,
     OrgAccessModule,
-
+    ConfirmInputModule,
     // Material
     MatTabsModule,
     MatIconModule,

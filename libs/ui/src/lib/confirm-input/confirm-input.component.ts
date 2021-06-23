@@ -24,6 +24,7 @@ export class ConfirmInputComponent implements OnInit {
       simulation?: string[],
       confirmationWord: string,
       confirmButtonText: string,
+      cancelButtonText?: string,
       onConfirm?: () => void
     },
     public dialogRef: MatDialogRef<ConfirmInputComponent>,
@@ -31,6 +32,7 @@ export class ConfirmInputComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (!this.data.cancelButtonText) { this.data.cancelButtonText = 'Cancel'; }
     this.actionConfirm.valueChanges.subscribe(value => {
       if (this.data.confirmationWord.toUpperCase() === value && this.actionConfirm.valid) {
         this.isValid = true;

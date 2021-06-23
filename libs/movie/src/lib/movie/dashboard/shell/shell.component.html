@@ -30,6 +30,18 @@
           </a>
         </ng-container>
         <ng-content></ng-content>
+
+        <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
+          <button mat-icon-button (click)="removeAppAccess(movie)" matTooltip="Delete title">
+            <mat-icon svgIcon="delete"></mat-icon>
+            <span>Delete title</span>
+          </button>
+        </ng-container>
+        <ng-template #actionsMenu>
+          <!-- TODO #6084 action menu with app and status specific content -->
+          <ng-content select="actions-button"></ng-content>
+        </ng-template>
+        
       </aside>
     </ng-container>
   </header>
