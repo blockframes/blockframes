@@ -59,7 +59,6 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer,
     private functions: AngularFireFunctions
   ) { }
 
@@ -75,12 +74,6 @@ export class UserComponent implements OnInit {
 
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
-
-      if (datastudio.user) {
-        const prms = JSON.stringify({ "ds2.user_id": this.userId });
-        const encodedPrms = encodeURIComponent(prms);
-        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/${datastudio.user}?params=${encodedPrms}`);
-      }
 
       this.cdRef.markForCheck();
     });
