@@ -2,15 +2,15 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
-  <title-dashboard-shell #shell="titleDashboardShell" [routes]="navLinks">
-    <actions-button>
-      <!-- TODO #6084 action menu with app and status specific content -->
-      <button mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
-      <mat-menu #actionMenuMenu="matMenu">
-        <button mat-menu-item (click)="shell.updateStatus(movie, 'archived')">
-          <mat-icon svgIcon="archive"></mat-icon><span matLine>Archive</span>
-        </button>
-      </mat-menu>
-    </actions-button>
+  <title-dashboard-shell [routes]="navLinks">
+    <movie-cta>
+      <!-- TODO #6084 CTA -->
+      <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
+        <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+          <mat-icon svgIcon="marketplace"></mat-icon>
+          <span>Marketplace Preview</span>
+        </a>
+      </ng-container>
+    </movie-cta>
   </title-dashboard-shell>
 </ng-container>

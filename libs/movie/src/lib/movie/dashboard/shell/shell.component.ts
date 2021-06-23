@@ -13,12 +13,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { StoreStatus } from '@blockframes/utils/static-model';
 
-@Directive({ selector: 'actions-button, [actionsButton]' })
-export class ActionsButtonDirective { }
+@Directive({ selector: 'movie-cta, [movieCta]' })
+export class MovieCtaDirective { }
 
 @Component({
   selector: '[routes] title-dashboard-shell',
-  exportAs: 'titleDashboardShell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   animations: [routeAnimation],

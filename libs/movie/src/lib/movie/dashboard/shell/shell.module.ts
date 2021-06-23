@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { ActionsButtonDirective, DashboardTitleShellComponent } from './shell.component';
+import { MovieCtaDirective, DashboardTitleShellComponent } from './shell.component';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -18,10 +18,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
-  declarations: [DashboardTitleShellComponent, ActionsButtonDirective],
-  exports: [DashboardTitleShellComponent, ActionsButtonDirective],
+  declarations: [DashboardTitleShellComponent, MovieCtaDirective],
+  exports: [DashboardTitleShellComponent, MovieCtaDirective],
   imports: [
     CommonModule,
     RouterModule,
@@ -37,7 +38,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatTabsModule,
     MatIconModule,
     MatButtonModule,
-    MatChipsModule
+    MatChipsModule,
+    MatMenuModule,
   ],
 })
 export class DashboardTitleShellModule { }

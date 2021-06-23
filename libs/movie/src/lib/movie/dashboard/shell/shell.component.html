@@ -19,17 +19,20 @@
         </article>
       </section>
       <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start end" fxLayoutGap="8px">
-        <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-          <mat-icon svgIcon="edit"></mat-icon>
-          <span>Edit</span>
-        </a>
-        <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
-          <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-            <mat-icon svgIcon="marketplace"></mat-icon>
-            <span>Marketplace Preview</span>
-          </a>
+
+        <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
+          <button mat-stroked-button color="primary" (click)="updateStatus(movie, 'draft')">Restore title</button>
         </ng-container>
-        <ng-content></ng-content>
+        <ng-template #cta>
+          <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
+            <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+              <mat-icon svgIcon="marketplace"></mat-icon>
+              <span>Marketplace Preview</span>
+            </a>
+          </ng-container>
+          <!-- TODO #6084 here goes CTA app specific content -->
+          <ng-content select="movie-cta"></ng-content>
+        </ng-template>
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
           <button mat-icon-button (click)="removeAppAccess(movie)" matTooltip="Delete title">
@@ -38,8 +41,23 @@
           </button>
         </ng-container>
         <ng-template #actionsMenu>
-          <!-- TODO #6084 action menu with app and status specific content -->
-          <ng-content select="actions-button"></ng-content>
+          <!-- TODO #6084 finnish action menu -->
+          <button mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
+          <mat-menu #actionMenuMenu="matMenu">
+            <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+              <mat-icon svgIcon="edit"></mat-icon>
+              <span>Edit</span>
+            </a>
+            <button mat-menu-item (click)="updateStatus(movie, 'archived')">
+              <mat-icon svgIcon="archive"></mat-icon><span matLine>Archive</span>
+            </button>
+            <button mat-menu-item *ngIf="['catalog','financiers'].includes(appName)" (click)="updateStatus(movie, 'submitted')">
+              <mat-icon svgIcon="archive"></mat-icon><span matLine>Submit Title</span>
+            </button>
+            <button mat-menu-item *ngIf="appName === 'festival'" (click)="updateStatus(movie, 'accepted')">
+              <mat-icon svgIcon="archive"></mat-icon><span matLine>Publish on Marketplace</span>
+            </button>
+          </mat-menu>
         </ng-template>
         
       </aside>
