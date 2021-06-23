@@ -1,14 +1,18 @@
 import { SEC } from "@blockframes/e2e/utils/env";
-
-const defaultCurrency = { label: 'Euro', value: 'EUR'};
+import { Currency } from "@blockframes/e2e/utils/type";
+import { defaultCurrency } from '../../../fixtures/bucket';
 
 export default class SelectionPage {
   constructor() {
     cy.get('catalog-selection', {timeout: 60 * SEC});
   }
 
-  public selectCurrency(currency = defaultCurrency) {
-    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC}).click();
+  public selectCurrency(currency: Currency = defaultCurrency) {
+    cy.log('Check if currency input is here.')
+    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC})
+      .should('contain', `${currency.label}`);
+
+    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC}).click({scrollBehavior: false});
     cy.get('mat-option', {timeout: 30 * SEC}).contains(currency.label).click();
 
     cy.log('Check if the currency is updated and stable on distribution right section.');
