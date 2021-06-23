@@ -52,7 +52,12 @@ section {
     }
 
     button {
-      margin-top: 40px;
+      &.mat-mini-fab {
+        margin-top: 16px;
+      }
+      &.mat-flat-button {
+        margin-top: 40px;
+      }
     }
   }
 }
