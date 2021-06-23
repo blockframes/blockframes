@@ -32,12 +32,12 @@ mat-chip.tag {
   width: 136px;
   background: var(--background);
   border-radius: 3px 0 0 3px;
-  text-align: center;
   padding: auto;
   text-transform: uppercase;
   margin-bottom: 16px;
   p{
-    margin: auto;
+    margin: 0;
+    text-align: center;
     color: white;
   }
 }
