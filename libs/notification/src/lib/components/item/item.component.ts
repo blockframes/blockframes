@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Notification, NotificationService } from '../../+state';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
+import { isSafari } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'notification-item',
@@ -17,5 +18,9 @@ export class ItemComponent {
 
   public markAsRead(notification: Notification) {
     this.service.readNotification(notification);
+  }
+
+  get targetLink() {
+    return isSafari() ? '_blank' : '_self';
   }
 }

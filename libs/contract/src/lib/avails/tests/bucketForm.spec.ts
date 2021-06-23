@@ -1,5 +1,5 @@
 import { createMandate } from "../../contract/+state/contract.model";
-import { AvailsFilter, isSameMapTerm, getTerritories, toTerritoryMarker, toDurationMarker } from "./../avails";
+import { AvailsFilter, isSameMapTerm, getSelectedTerritories, toTerritoryMarker, toDurationMarker } from "./../avails";
 import { BucketForm } from '@blockframes/contract/bucket/form'
 import { createTerm } from "../../term/+state/term.model";
 import { createBucketTerm } from "@blockframes/contract/bucket/+state";
@@ -239,7 +239,7 @@ describe('Test BucketForm behaviors for territories', () => {
       exclusive: true,
       medias: ['theatrical']
     };
-    const territories = getTerritories(availFilter, bucketForm.value, 'exact');
+    const territories = getSelectedTerritories('titleA', availFilter, bucketForm.value, 'exact');
 
     expect(territories.length).toBe(2);
     expect(territories.some(t => t === 'france')).toBe(true);
@@ -281,10 +281,50 @@ describe('Test BucketForm behaviors for territories', () => {
       exclusive: true,
       medias: ['theatrical']
     };
-    const territories = getTerritories(availFilter, bucketForm.value, 'in');
+    const territories = getSelectedTerritories('titleA', availFilter, bucketForm.value, 'in');
 
     expect(territories.length).toBe(1);
     expect(territories.some(t => t === 'germany')).toBe(true);
+  });
+
+  it('Should return empty array if we search for another movie', () => {
+    const bucketForm = new BucketForm();
+    const mandate = createMandate({
+      id: 'MandateA',
+      termIds: ['termA'],
+      titleId: 'titleA',
+      sellerId: 'orgA'
+    });
+
+    const availDetails: AvailsFilter = {
+      duration: { from: new Date('01/01/2019'), to: new Date('01/01/2031') },
+      exclusive: true,
+      medias: ['theatrical']
+    };
+
+    const term = createTerm({
+      id: 'termA',
+      contractId: mandate.id,
+      duration: {
+        from: new Date('01/01/2020'),
+        to: new Date('01/01/2030')
+      },
+      medias: ['theatrical'],
+      territories: ['france', 'germany', 'spain'],
+      exclusive: true
+    });
+
+    const selected1 = toTerritoryMarker('germany', [mandate], term);
+    bucketForm.addTerritory(availDetails, selected1);
+
+    const availFilter: AvailsFilter = {
+      duration: { from: new Date('01/01/2020'), to: new Date('01/01/2030') },
+      exclusive: true,
+      medias: ['theatrical']
+    };
+    const territories = getSelectedTerritories('titleB', availFilter, bucketForm.value, 'in');
+
+    expect(territories.length).toBe(0);
   });
 })
 
