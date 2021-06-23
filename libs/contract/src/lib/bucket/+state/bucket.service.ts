@@ -93,11 +93,12 @@ export class BucketService extends CollectionService<BucketState> {
       await this.termService.add(terms);
       // Create the income
       await this.incomeService.add({
+        id: contractId,
         status: 'pending',
         termsId: contract.parentTermId,
         price: contract.price,
         currency: bucket.currency,
-        contractId,
+        offerId
       });
 
     });
