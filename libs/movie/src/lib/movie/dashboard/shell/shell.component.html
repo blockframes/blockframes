@@ -7,9 +7,9 @@
         <article fxLayout="column" fxFlex>
           <h4>{{ movie | movieFeature }}</h4>
           <h1>{{ movie.title.international }}</h1>
-          <span class="tag">
+          <mat-chip class="tag">
             <p>{{ movie.app[appName].status }}</p>
-          </span>
+          </mat-chip>
           <h6>{{ movie.directors | displayName }}</h6>
           <p>
             <span>{{ movie.originCountries | toLabel: 'territories'}}</span>

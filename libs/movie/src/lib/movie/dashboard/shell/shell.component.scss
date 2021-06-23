@@ -27,7 +27,8 @@ article * {
   min-width: 0;
 }
 
-span.tag {
+// TODO #6084 implement good CSS
+mat-chip.tag {
   width: 158px;
   background: var(--background);
   border-radius: 3px 0 0 3px;

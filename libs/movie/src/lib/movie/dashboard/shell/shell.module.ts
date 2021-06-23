@@ -16,6 +16,7 @@ import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [DashboardTitleShellComponent],
@@ -35,6 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatTabsModule,
     MatIconModule,
     MatButtonModule,
+    MatChipsModule
   ],
 })
 export class DashboardTitleShellModule { }
