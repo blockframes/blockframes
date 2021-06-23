@@ -5,12 +5,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
-  selector: 'admin-form-dialog',
-  templateUrl: './crm-form-dialog.component.html',
-  styleUrls: ['./crm-form-dialog.component.scss'],
+  selector: 'blockframes-confirm-input',
+  templateUrl: './confirm-input.component.html',
+  styleUrls: ['./confirm-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrmFormDialogComponent implements OnInit {
+export class ConfirmInputComponent implements OnInit {
 
   public actionConfirm = new FormControl('');
   public isValid = false;
@@ -26,7 +26,7 @@ export class CrmFormDialogComponent implements OnInit {
       confirmButtonText: string,
       onConfirm?: () => void
     },
-    public dialogRef: MatDialogRef<CrmFormDialogComponent>,
+    public dialogRef: MatDialogRef<ConfirmInputComponent>,
     private snackbar: MatSnackBar
   ) { }
 
