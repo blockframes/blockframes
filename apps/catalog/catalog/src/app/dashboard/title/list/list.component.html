@@ -1,7 +1,6 @@
 <ng-container *ngIf="movies$ | async as movies; else loading">
   <ng-container *ngIf="movies.length; else empty">
-
-    <header fxLayout="row" fxLayoutAlign="space-between center">
+    <header class="import-header"  fxLayout="row" fxLayoutAlign="space-between center">
       <h1>My Titles</h1>
       <div fxLayoutGap="24px">
         <a test-id="import-titles" mat-stroked-button color="primary" routerLink="../import">
@@ -14,13 +13,13 @@
       </div>
     </header>
 
-    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All</button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
       <button mat-tab-link (click)="applyFilter('submitted')" [active]="(filter$ | async) === 'submitted'">Submitted</button>
       <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Published</button>
       <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">Archived</button>
-    </nav>
+    </header>
 
     <mat-card>
       <bf-table-filter [source]="movies | filterBy: filterByMovie: filter.value" [columns]="columns"
