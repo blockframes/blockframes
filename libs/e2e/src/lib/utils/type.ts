@@ -62,3 +62,8 @@ export interface Avails {
   medias: string[],
   exclusive: boolean
 }
+
+export interface Currency {
+  label: string,
+  value: string
+}

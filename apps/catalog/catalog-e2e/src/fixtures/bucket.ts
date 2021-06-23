@@ -1,4 +1,4 @@
-import { Avails } from '@blockframes/e2e/utils/type';
+import { Avails, Currency } from '@blockframes/e2e/utils/type';
 
 export const avails: Avails = {
   territories: ['world'],
@@ -15,3 +15,5 @@ export const avails: Avails = {
   medias: ['A-VOD'],
   exclusive: true
 };
+
+export const defaultCurrency: Currency = { label: 'Euro', value: 'EUR'};
