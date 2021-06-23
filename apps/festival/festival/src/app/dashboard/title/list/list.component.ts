@@ -77,8 +77,14 @@ export class ListComponent implements OnInit {
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterByTitle(movie: Movie, index: number, value): boolean {
-    return value ? movie.app.festival.status === value : true;
+  filterByMovie(movie: Movie, index: number, options): boolean {
+    if (options.value) {
+      return options?.exclude !== options.value ?
+        movie.app.festival.status === options.value && movie.app.festival.status !== options.exclude :
+        movie.app.festival.status === options.value;
+    } else {
+      return options.exclude ? movie.app.festival.status !== options.exclude : true;
+    }
   }
 
 }

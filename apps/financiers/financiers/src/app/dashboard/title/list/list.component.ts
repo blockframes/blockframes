@@ -23,7 +23,7 @@ const columns = {
 
 function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   switch (filter) {
-    case 'all': return movies;
+    case 'all': return movies.filter(movie => movie.app.financiers.status !== 'archived');
     case 'draft': return movies.filter(movie => movie.app.financiers.status === 'draft');
     case 'ongoing': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap > movie.campaign?.received);
     case 'achieved': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap === movie.campaign?.received);

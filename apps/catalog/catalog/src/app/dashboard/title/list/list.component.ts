@@ -32,7 +32,6 @@ export class TitleListComponent {
   public appName = appName[this.app];
   columns = columns;
   initialColumns = ['title.international', 'release.year', 'directors', 'views', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
-  titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
@@ -57,8 +56,14 @@ export class TitleListComponent {
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterByMovie(movie: Movie, index: number, value): boolean {
-    return value ? movie.app.catalog.status === value : true;
+  filterByMovie(movie: Movie, index: number, options): boolean {
+    if (options.value) {
+      return options?.exclude !== options.value ?
+        movie.app.catalog.status === options.value && movie.app.catalog.status !== options.exclude :
+        movie.app.catalog.status === options.value;
+    } else {
+      return options.exclude ? movie.app.catalog.status !== options.exclude : true;
+    }
   }
 
   resetFilter() {

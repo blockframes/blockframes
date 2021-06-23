@@ -22,7 +22,7 @@
     </header>
 
     <mat-card>
-      <bf-table-filter [source]="movies | filterBy: filterByMovie: filter.value" [columns]="columns"
+      <bf-table-filter [source]="movies | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" [columns]="columns"
         [initialColumns]="initialColumns" clickable showFilter showPaginator (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
         <ng-template colRef="release.year" let-year><b>{{ year }}</b></ng-template>
