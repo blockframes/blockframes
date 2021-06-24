@@ -2,15 +2,13 @@ import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/cor
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-
 @Component({
-  selector: 'admin-form-dialog',
-  templateUrl: './crm-form-dialog.component.html',
-  styleUrls: ['./crm-form-dialog.component.scss'],
+  selector: 'blockframes-confirm-input',
+  templateUrl: './confirm-input.component.html',
+  styleUrls: ['./confirm-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrmFormDialogComponent implements OnInit {
+export class ConfirmInputComponent implements OnInit {
 
   public actionConfirm = new FormControl('');
   public isValid = false;
@@ -24,11 +22,14 @@ export class CrmFormDialogComponent implements OnInit {
       simulation?: string[],
       confirmationWord: string,
       confirmButtonText: string,
+      cancelButtonText?: string,
       onConfirm?: () => void
     },
-    public dialogRef: MatDialogRef<CrmFormDialogComponent>,
+    public dialogRef: MatDialogRef<ConfirmInputComponent>,
     private snackbar: MatSnackBar
-  ) { }
+  ) {
+    if (!this.data.cancelButtonText) { this.data.cancelButtonText = 'Cancel'; }
+  }
 
   ngOnInit() {
     this.actionConfirm.valueChanges.subscribe(value => {

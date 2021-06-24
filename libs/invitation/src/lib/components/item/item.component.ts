@@ -9,6 +9,7 @@ import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { applicationUrl, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { isMeeting } from '@blockframes/event/+state';
+import { isSafari } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'invitation-item',
@@ -64,7 +65,7 @@ export class ItemComponent {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (window.Cypress) {
-      const host = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port: ' '}`;
+      const host = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ' '}`;
       this.applicationUrl.festival = host;
       this.applicationUrl[this.app] = host;
     }
@@ -75,13 +76,17 @@ export class ItemComponent {
       if (this._invitation.mode === 'request') {
         return `${this.applicationUrl.festival}/c/o/dashboard/event/${this._invitation.eventId}/edit`;
       } else {
-        const urlPart = this.eventType === 'meeting' ? 'lobby': 'session';
+        const urlPart = this.eventType === 'meeting' ? 'lobby' : 'session';
         return `${this.applicationUrl.festival}/c/o/marketplace/event/${this._invitation.eventId}/${urlPart}`;
       }
     } else if (this._invitation.type === 'joinOrganization') {
       const orgId = this._invitation.fromOrg ? this._invitation.fromOrg.id : this._invitation.toOrg.id;
       return `${this.applicationUrl[this.app]}/c/o/organization/${orgId}/view/members`;
     }
+  }
+
+  get targetLink() {
+    return isSafari() ? '_blank' : '_self';
   }
 
   handleInvitation(invitation: Invitation, action: 'acceptInvitation' | 'declineInvitation') {

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="380px" height="380px" viewBox="0 0 380 380" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #06081C;">
+<svg width="380px" height="380px" viewBox="0 0 380 380" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Illustrations/Dark/380px/import_bulk</title>
     <g id="Illustrations/Dark/380px/import_bulk" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect fill="#06081C" x="0" y="0" width="380" height="380"></rect>
         <g id="box" transform="translate(167.000000, 228.000000)" stroke="#6F7CBD" stroke-linejoin="round" stroke-width="0.892036582">
             <polygon id="Stroke-1" points="179.566436 57.0515839 179.566436 106.100296 98.4999564 134.999555 98.5086732 39.321666 115.933608 72.7549969"></polygon>
             <polygon id="Stroke-2" points="173.465006 82.5372628 141.586703 92.0366716 141.584088 111.881126 173.465006 100.517048"></polygon>
