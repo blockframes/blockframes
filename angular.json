@@ -373,6 +373,14 @@
             "namedChunks": true
           },
           "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/catalog/catalog/src/environment/environment.ts",
+                  "with": "apps/catalog/catalog/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -464,6 +472,9 @@
             "browserTarget": "catalog:build"
           },
           "configurations": {
+            "emulator": {
+              "browserTarget": "catalog:build:emulator"
+            },
             "production": {
               "browserTarget": "catalog:build:production"
             }
@@ -518,15 +529,38 @@
       "sourceRoot": "apps/catalog/catalog-e2e/src",
       "projectType": "application",
       "architect": {
+        "serve": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
+            "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "catalog:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "catalog:serve:emulator"
+            }
+          }
+        },
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
             "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
-            "browser": "chrome"
+            "browser": "chrome",
+            "devServerTarget": "catalog:serve"
           },
           "configurations": {
+            "emulator": {
+              "devServerTarget": "catalog:serve:emulator"
+            },
             "production": {
               "devServerTarget": "catalog:serve:production"
             },
