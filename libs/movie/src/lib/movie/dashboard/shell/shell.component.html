@@ -23,7 +23,7 @@
       <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start end" fxLayoutGap="8px">
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
-          <button mat-stroked-button color="primary" (click)="updateStatus('draft', 'Title restored.')">Restore title</button>
+          <button mat-stroked-button color="primary" (click)="updateStatus('draft', 'Title back to Draft')">Restore Title</button>
         </ng-container>
         <ng-template #cta>
           <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
@@ -37,19 +37,19 @@
         </ng-template>
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
-          <button mat-icon-button (click)="removeAppAccess()" matTooltip="Delete title">
+          <button style="width:fit-content; align-self:flex-start; margin-top:54px;" mat-icon-button (click)="removeAppAccess()" matTooltip="Delete Title">
             <mat-icon svgIcon="delete"></mat-icon>
             <span>Delete title</span>
           </button>
         </ng-container>
         <ng-template #actionsMenu>
           <!-- TODO #6084 finnish action menu -->
-          <button mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
+          <button fxLayoutGap="50px" mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
           <mat-menu #actionMenuMenu="matMenu">
             <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
               <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
             </a>
-            <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item (click)="updateStatus('draft', 'Title back to Draft.')">
+            <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item (click)="updateStatus('draft', 'Title back to Draft')">
               <mat-icon svgIcon="drafts"></mat-icon><span matLine>Switch back to Draft</span>
             </button>
             <button mat-menu-item (click)="updateStatus('archived', 'Title archived.')">
@@ -58,12 +58,12 @@
             <a mat-menu-item *ngIf="['catalog','financiers'].includes(appName)" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']"  fragment="submit">
               <mat-icon svgIcon="cloud_upload"></mat-icon><span matLine>Submit Title</span>
             </a>
-            <a mat-menu-item *ngIf="appName === 'festival'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']"  fragment="publish">
+            <a mat-menu-item *ngIf="appName === 'festival' && movie.app[appName].status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']"  fragment="publish">
               <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Publish on Marketplace</span>
             </a>
           </mat-menu>
         </ng-template>
-        
+
       </aside>
     </ng-container>
   </header>
