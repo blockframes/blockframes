@@ -10,11 +10,15 @@ export default class SelectionPage {
   public selectCurrency(currency: Currency = defaultCurrency) {
     cy.log('Check if currency input is here.')
     cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC})
-      .should('contain', `${currency.label}`);
+      .should('contain', `${defaultCurrency.label}`);
 
-    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC}).click({scrollBehavior: false});
-    cy.get('mat-option', {timeout: 30 * SEC}).contains(currency.label).click();
-
+    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC})
+      .click({scrollBehavior: false});
+    cy.get('mat-option', {timeout: 30 * SEC})
+      .contains(currency.label)
+      .click();
+    cy.wait(0.5 * SEC);
+    
     cy.log('Check if the currency is updated and stable on distribution right section.');
     cy.get(`section[test-id="avails-section"]`, {timeout: 30 * SEC})
       .first()
