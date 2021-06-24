@@ -14,9 +14,9 @@
       <p>Offer created: {{offer.date | date: 'dd/MM/yyyy'}}</p>
       <org-chip *ngIf="buyerOrg$ | async as org" [org]="org" baseUrl="/c/o/admin/panel/organization" ></org-chip>
     </div>
-    <div *ngIf="contracts$ | async as contracts" class="contracts">
-      <p>{{contracts.length}} titles</p>
-      <p>Total: {{ contracts | incomes | currency: offer.currency }}</p>
+    <div class="contracts">
+      <p *ngIf="contracts$ | async as contracts">{{contracts.length}} titles</p>
+      <p *ngIf="incomes$ | async as incomes">Total: {{ incomes | incomes | currency: offer.currency }}</p>
     </div>
   </header>
 
