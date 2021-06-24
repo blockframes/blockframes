@@ -10,8 +10,9 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { startWith, tap } from 'rxjs/operators';
 import { Contract } from '@blockframes/contract/contract/+state';
+import { Income } from '@blockframes/contract/income/+state';
 
-type OfferStatus = 'offers' | 'on_going_deals' | 'past_deals' | 'all'
+type OfferStatus = 'offers' | 'pending' | 'signed' | 'all'
 
 
 const columns = {
@@ -20,22 +21,28 @@ const columns = {
   'contracts.length': '# OF TITLES IN PACKAGE',
   'contracts': 'TITLES',
   'specificity': 'SPECIFIC TERMS',
+  'incomes': 'TOTAL PACKAGE PRICE',
   'status': 'STATUS'
 };
 
-type OfferWithContracts = Offer & { contracts: Contract[] };
+type OfferWithContracts = Offer & { contracts: Contract[], incomes: Income[] };
 const queryOffer: Query<OfferWithContracts> = {
   path: 'offers',
   contracts: (offer: Offer) => ({
     path: 'contracts',
     queryFn: ref => ref.where('offerId', '==', offer.id),
+  }),
+  incomes: (offer: Offer) => ({
+    path: 'incomes',
+    queryFn: ref => ref.where('offerId', '==', offer.id)
   })
+
 }
 
 @Component({
   selector: 'offers-list',
-  templateUrl: './offers.component.html',
-  styleUrls: ['./offers.component.scss'],
+  templateUrl: './offer-list.component.html',
+  styleUrls: ['./offer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OffersComponent {
@@ -48,9 +55,9 @@ export class OffersComponent {
   public appName = appName[this.app];
   columns = columns;
   initialColumns = [
-    'id', 'date', 'contracts.length', 'contracts', 'specificity', 'status',
+    'id', 'date', 'contracts.length', 'contracts', 'specificity', 'incomes', 'status',
   ];
-  filter = new FormControl();
+  filter = new FormControl('all');
   filter$: Observable<OfferStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
   constructor(
@@ -63,21 +70,20 @@ export class OffersComponent {
 
   ) { }
 
-  goToTitle(offer: Offer) {
-    this.router.navigate([offer.id], { relativeTo: this.route });
+  goToOffer(offer: Offer) {
+    this.router.navigate([`../offer/${offer.id}`], { relativeTo: this.route });
   }
 
 
-  /** Dynamic filter of movies for each tab. */
+  /** Dynamic filter of offers for each tab. */
   applyFilter(filter?: OfferStatus) {
     this.filter.setValue(filter);
-    // this.dynTitle.setPageTitle(OfferStatus[filter])
   }
 
   /* index paramter is unused because it is a default paramter from the filter javascript function */
-  filterByMovie(offer: Offer, index: number, value): boolean {
-    return true;
-    // return value ? offer.app.catalog.status === value : true;
+  filterByStatus(offer: Offer, index: number, value: OfferStatus): boolean {
+    if (value === 'all') { return true; }
+    return value ? offer.status === value : true;
   }
 
 

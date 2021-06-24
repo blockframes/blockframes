@@ -19,3 +19,5 @@ export * from './url.pipe';
 export * from './cms.pipe';
 export * from './sort-array.pipe';
 export * from './join.pipe'
+export * from './ellipsis.pipe'
+export * from './total.pipe'

@@ -1,0 +1,27 @@
+nav[mat-tab-nav-bar] button {
+  border: none;
+  background-color: transparent;
+}
+
+.offer-list-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 max(5vw, 1em);
+  padding-top: max(1vw,1em);
+  flex-direction: column;
+}
+
+.mat-spinner{
+  justify-self: center;
+  align-self: center;
+}
+
+.offer-list-empty{
+  justify-self: center;
+  align-self: center;
+}
+
+.mat-card{
+  width: 100%;
+}
