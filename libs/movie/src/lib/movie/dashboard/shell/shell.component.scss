@@ -27,21 +27,14 @@ article * {
   min-width: 0;
 }
 
-// TODO #6084 implement good CSS
-mat-chip.tag {
-  width: 136px;
-  background: var(--background);
-  border-radius: 3px 0 0 3px;
-  padding: auto;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-  p{
-    margin: 0;
-    text-align: center;
-    color: white;
-  }
-}
-
 h4 {
   text-transform: uppercase;
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+h6 {
+  margin-top: 8px;
 }
