@@ -52,6 +52,7 @@ export default class FestivalScreeningPage {
         .parent().parent().parent()
         .find('[test-id=invitation-status]')
         .should('contain', 'Accepted');
+      cy.wait(2.5 * SEC);
     }
   }
 
