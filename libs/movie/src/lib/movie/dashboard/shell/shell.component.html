@@ -49,7 +49,7 @@
               <span>Edit</span>
             </a>
             <button mat-menu-item (click)="updateStatus(movie, 'archived')">
-              <mat-icon svgIcon="archive"></mat-icon><span matLine>Archive</span>
+              <mat-icon svgIcon="archive"></mat-icon><span matLine>Archive Title</span>
             </button>
             <button mat-menu-item *ngIf="['catalog','financiers'].includes(appName)" (click)="updateStatus(movie, 'submitted')">
               <mat-icon svgIcon="archive"></mat-icon><span matLine>Submit Title</span>
