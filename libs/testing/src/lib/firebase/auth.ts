@@ -20,13 +20,7 @@ export async function importAllUsers(auth: admin.auth.Auth, users: admin.auth.Us
   const timeMsg = `Creating ${users.length} users took`;
   console.time(timeMsg); // eslint-disable-line no-restricted-syntax
   const uniqUsers = removeDuplicateUsers(users);
-  await runChunks(uniqUsers, userRecord => {
-    // set emailVerified to true for 'old' users to prevent being unable to enter app because of EmailVerifiedGuard
-    userRecord.emailVerified = new Date(userRecord.metadata.creationTime) < new Date('2021-05-31') ? true : userRecord.emailVerified;
-    return auth.createUser({ ...userRecord, emailVerified: true });
-  },
-    (env?.['chunkSize'] || 10) * 10
-  );
+  await runChunks(uniqUsers, userRecord => auth.createUser(userRecord), (env?.['chunkSize'] || 10) * 10);
   console.timeEnd(timeMsg); // eslint-disable-line no-restricted-syntax
 }
 
