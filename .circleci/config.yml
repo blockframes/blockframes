@@ -144,17 +144,13 @@ commands:
         - run: npx cypress install
         - run:
             command: |
-              npx nx run catalog-e2e:e2e:ci --headless
-              catalog_ret_code=$?
+              npx nx run catalog-e2e:e2e:ci --headless && catalog_ret_code=$? || catalog_ret_code=$?
 
-              npx nx run festival-e2e:e2e:ci --headless
-              festival_ret_code=$?
+              npx nx run festival-e2e:e2e:ci --headless && festival_ret_code=$? || festival_ret_code=$?
 
-              npx nx run financiers-e2e:e2e:ci --headless
-              financiers_ret_code=$?
+              npx nx run financiers-e2e:e2e:ci --headless && financiers_ret_code=$? || financiers_ret_code=$?
 
-              npx nx run cms-e2e:e2e:ci --headless
-              cms_ret_code=$?
+              npx nx run cms-e2e:e2e:ci --headless && cms_ret_code=$? || cms_ret_code=$?
 
               if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $cms_ret_code -eq 0 ]; then 
                 exit 0;
