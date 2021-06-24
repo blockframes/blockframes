@@ -20,14 +20,14 @@
           </p>
         </article>
       </section>
-      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start end" fxLayoutGap="8px">
+      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
           <button mat-stroked-button color="primary" (click)="updateStatus('draft', 'Title back to Draft')">Restore Title</button>
         </ng-container>
         <ng-template #cta>
           <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
-            <a mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+            <a class="outlines" mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
               <mat-icon svgIcon="marketplace"></mat-icon>
               <span>Marketplace Preview</span>
             </a>
@@ -37,14 +37,14 @@
         </ng-template>
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
-          <button style="width:fit-content; align-self:flex-start; margin-top:54px;" mat-icon-button (click)="removeAppAccess()" matTooltip="Delete Title">
+          <button class="fit-content" mat-icon-button (click)="removeAppAccess()" matTooltip="Delete Title">
             <mat-icon svgIcon="delete"></mat-icon>
             <span>Delete title</span>
           </button>
         </ng-container>
         <ng-template #actionsMenu>
-          <!-- TODO #6084 finnish action menu -->
-          <button fxLayoutGap="50px" mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
+          <!-- TODO #6084 finish action menu -->
+          <button mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
           <mat-menu #actionMenuMenu="matMenu">
             <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
               <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
