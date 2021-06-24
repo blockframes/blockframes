@@ -24,7 +24,7 @@
         <ng-template colRef="contracts" let-contracts><b>
             <ng-container *ngFor="let contract of contracts; let last=last">
               <ng-container *ngIf="contract.titleId | getTitle | async as title">
-                {{title.title.international}}{{last ? '': ', '}}
+                {{title.title.international| slice:0:50}}{{last ? '': ', '}}
               </ng-container>
             </ng-container>
           </b></ng-template>

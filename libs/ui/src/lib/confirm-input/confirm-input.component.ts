@@ -1,19 +1,19 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
-  selector: 'admin-form-dialog',
-  templateUrl: './crm-form-dialog.component.html',
-  styleUrls: ['./crm-form-dialog.component.scss'],
+  selector: 'blockframes-confirm-input',
+  templateUrl: './confirm-input.component.html',
+  styleUrls: ['./confirm-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrmFormDialogComponent {
+export class ConfirmInputComponent implements OnInit {
 
   public actionConfirm = new FormControl('');
-
+  public isValid = false;
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -26,12 +26,22 @@ export class CrmFormDialogComponent {
       confirmButtonText: string,
       onConfirm?: () => void
     },
-    public dialogRef: MatDialogRef<CrmFormDialogComponent>,
+    public dialogRef: MatDialogRef<ConfirmInputComponent>,
     private snackbar: MatSnackBar
   ) { }
 
+  ngOnInit() {
+    this.actionConfirm.valueChanges.subscribe(value => {
+      if (this.data.confirmationWord.toUpperCase() === value && this.actionConfirm.valid) {
+        this.isValid = true;
+      } else {
+        this.isValid = false;
+      }
+    });
+  }
+
   public confirm() {
-    if (this.actionConfirm.value === this.data.confirmationWord.toUpperCase() && this.actionConfirm.valid) {
+    if (this.isValid) {
       this.data.onConfirm();
       this.dialogRef.close(true);
     }
