@@ -4,16 +4,25 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { Query, queryChanges } from 'akita-ng-fire';
-import { map, pluck, switchMap } from 'rxjs/operators';
+import { queryChanges } from 'akita-ng-fire';
+import { pluck, switchMap } from 'rxjs/operators';
 
 import { Income } from '@blockframes/contract/income/+state';
-import { Organization } from '@blockframes/organization/+state';
-import { Contract } from '@blockframes/contract/contract/+state';
+import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Offer, OfferService } from '@blockframes/contract/offer/+state';
 
-export type ContractWithIncomes = Contract & { incomes: Income[]};
-export type FullOffer = Offer & { buyerOrg: Organization, contracts: ContractWithIncomes[] };
+export type ContractWithIncome = Contract & { income: Income };
+
+const queryOrg = (offer: Offer) => ({ path: `orgs/${offer.buyerId}` });
+
+const queryContracts = (offer: Offer) => ({
+  path: 'contracts',
+  queryFn: ref => ref.where('offerId', '==', offer.id),
+  income: (contract: Contract) => ({
+    path: `incomes/${contract.id}`,
+  }),
+});
 
 @Component({
   selector: 'offer-shell',
@@ -25,49 +34,33 @@ export class ShellComponent {
 
   public offerId$ = this.route.params.pipe(pluck('offerId'));
 
-  public offer$: Observable<FullOffer> = this.offerId$.pipe(
-    switchMap(offerId => queryChanges.call(this.offerService, {
-      path: 'offers',
-      queryFn: ref => ref.where('id', '==', offerId),
-      buyerOrg: (offer: Offer) => ({
-        path: 'orgs',
-        queryFn: ref => ref.where('id', '==', offer.buyerId),
-      }),
-      contracts: (offer: Offer) => ({
-        path: 'contracts',
-        queryFn: ref => ref.where('offerId', '==', offer.id),
-        incomes: (contract: Contract) => ({
-          path: 'incomes',
-          queryFn: ref => ref.where('contractId', '==', contract.id),
-        }),
-      }),
-    } as Query<FullOffer>)),
-    map(offers => offers[0]),
-    map(offer => {
-      return {
-        ...offer,
-        buyerOrg: offer.buyerOrg[0],
-      }
-    }),
+  public offer$ = this.offerId$.pipe(
+    switchMap((offerId: string): Observable<Offer> => this.offerService.valueChanges(offerId)),
+  );
+
+  public buyerOrg$ = this.offer$.pipe(
+    switchMap((offer: Offer): Observable<Organization> => queryChanges.call(this.orgService, queryOrg(offer))),
+  );
+
+  public contracts$ = this.offer$.pipe(
+    switchMap((offer: Offer): Observable<Contract[]> => queryChanges.call(this.contractService, queryContracts(offer))),
   );
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private offerService: OfferService,
+    private orgService: OrganizationService,
+    private contractService: ContractService,
   ) { }
 
-  goBack() {
-    this.location.back();
-  }
 }
+
+
 
 @Pipe({ name: 'incomes', pure: true })
 export class IncomesPipe implements PipeTransform {
-  transform(offer: FullOffer) {
-    return offer.contracts.reduce((acc, curr) => {
-      const sumOfIncomes = curr.incomes.reduce((acc, curr) => acc + curr.price, 0);
-      return acc + sumOfIncomes;
-    }, 0);
+  transform(contracts: ContractWithIncome[]) {
+    return contracts.reduce((acc, curr) => acc + curr.income.price, 0);
   }
 }
