@@ -20,6 +20,7 @@ import { MovieDocument } from './data/types';
 import { imgixToken } from './environments/environment';
 import { db, getStorageBucketName } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
+import { testVideoId } from '@env';
 
 
 /**
@@ -164,7 +165,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
     // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
 
-    const isVideo = data.contentType.indexOf('video/') === 0 && metadata.collection === 'movies';
+    const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
     if (isVideo) {
 
       const uploadResult = await uploadToJWPlayer(file);
@@ -263,7 +264,7 @@ export const deleteMedia = async (file: StorageFile) => {
 
     // if the file has a jwPlayerId, we need to delete the video from JWPlayer's CDN
     // to avoid orphaned videos taking storage space
-    if (file.jwPlayerId) {
+    if (file.jwPlayerId && file.jwPlayerId !== testVideoId) {
       const deleted = await deleteFromJWPlayer(file.jwPlayerId);
       if (!deleted.success) {
         logger.warn(`WARNING: file was delete from our system, but we failed to also delete it from JWPlayer! ${file}`);
@@ -322,6 +323,12 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
       mediaToDelete.push(...notesToDelete);
     }
 
+    const orgVideosToDelete = checkFileList(
+      before.documents.videos,
+      after.documents.videos
+    );
+    mediaToDelete.push(...orgVideosToDelete);
+
   } else { // Deleting
     if (before.logo) {
       mediaToDelete.push(before.logo);
@@ -329,6 +336,10 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
 
     if (before.documents?.notes.length) {
       before.documents.notes.forEach(n => mediaToDelete.push(n));
+    }
+
+    if (before.documents.videos?.length) {
+      before.documents.videos.forEach(m => mediaToDelete.push(m));
     }
   }
 

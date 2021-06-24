@@ -9,14 +9,13 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getAllAppsExcept, appName } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
-
 
 @Component({
   selector: 'admin-movie',
@@ -131,13 +130,13 @@ export class MovieComponent implements OnInit {
 
   public async deleteMovie() {
     const simulation = await this.simulateDeletion(this.movie);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are about to delete this movie from Archipel, are you sure ?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'Doing this will also delete everything regarding this movie',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.movieService.remove(this.movie.id);
@@ -184,10 +183,17 @@ export class MovieComponent implements OnInit {
       output.push(`${documentPermissions.length} permission document will be removed.`);
     }
 
-    const contracts = await this.contractService.getValue(ref => ref.where('titleIds', 'array-contains', movie.id));
+    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movie.id));
     if (contracts.length) {
-      output.push(`${contracts.length} contract will be updated.`);
+      output.push(`${contracts.length} contract will be deleted.`);
     }
+
+    // Check buckets content
+    /**
+     * @dev query cannot be performed unless we retreive all buckets on browser side,
+     * For performances issues, we just say that some buckets may be impacted
+     */
+    output.push('Some buckets may be updated.');
 
     return output;
   }

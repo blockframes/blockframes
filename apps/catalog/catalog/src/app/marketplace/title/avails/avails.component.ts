@@ -14,7 +14,7 @@ import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
-import { BucketQuery, BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
+import { BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
 import { ContractService, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
@@ -71,14 +71,13 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private movieQuery: MovieQuery,
-    private bucketQuery: BucketQuery,
     private termService: TermService,
     private orgQuery: OrganizationQuery,
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
   ) {
-    const sub = this.bucketQuery.selectActive().subscribe(bucket => {
+    const sub = this.bucketService.active$.subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
       this.bucketForm.change.next();
     });
@@ -93,7 +92,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
     const paramsSub = combineLatest([
       this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
-      this.bucketQuery.selectActive().pipe(filter(bucket => !!bucket))
+      this.bucketService.active$.pipe(filter(bucket => !!bucket))
     ]).subscribe(([ params, bucket ]) => {
       const term = bucket.contracts[params.contract].terms[params.term];
       this.edit(term);

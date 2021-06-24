@@ -4,20 +4,23 @@
 
 .table-container {
   overflow: auto;
-  width: 100%;
+  min-width: 100%;
+  overflow: auto;
   /* Firefox scrollbar */
   scrollbar-color: var(--primary) var(--active);
 }
 
+::-webkit-scrollbar {
+  height: 5px;
+}
+
 table {
-  width: 100%;
+  min-width: 100%;
   table-layout: fixed;
 
   th,
   td {
-    overflow: hidden;
-    width: auto;
-    text-overflow: ellipsis;
+    padding: 0 16px;
     white-space: nowrap;
   }
 }

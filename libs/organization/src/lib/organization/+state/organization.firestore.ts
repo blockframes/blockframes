@@ -2,7 +2,7 @@ import type firebase from 'firebase';
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
-import { createStorageFile, StorageFile } from '@blockframes/media/+state/media.firestore';
+import { createStorageFile, StorageFile, StorageVideo } from '@blockframes/media/+state/media.firestore';
 import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 type Timestamp = firebase.firestore.Timestamp;
@@ -22,6 +22,7 @@ export interface PublicOrganization {
 
 export interface OrgMedias {
   notes: StorageFile[],
+  videos: StorageVideo[],
 };
 
 /** Document model of an Organization */
@@ -94,6 +95,7 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
 export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
   return {
     notes: [],
+    videos: [],
     ...params
   }
 }

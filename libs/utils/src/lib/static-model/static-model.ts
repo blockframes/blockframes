@@ -414,6 +414,7 @@ export const storeStatus = {
   accepted: 'Accepted',
   draft: 'Draft',
   refused: 'Refused',
+  archived: 'Archived',
 } as const
 
 export const unitBox = {
