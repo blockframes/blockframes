@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject, Directive } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { Movie, MovieQuery } from '@blockframes/movie/+state';
+import { Movie, MovieQuery, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
@@ -11,7 +11,8 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { StoreStatus } from '@blockframes/utils/static-model';
+import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
+import { cleanModel } from '@blockframes/utils/helpers';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -39,6 +40,8 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private orgQuery: OrganizationQuery,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private movieService: MovieService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -62,7 +65,8 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
-  removeAppAccess(movie: Movie) {
+  removeAppAccess() {
+    const movie = cleanModel(this.query.getActive());
     const appsName = getMovieAppAccess(movie).map(a => getAppName(a).label);
     this.dialog.open(ConfirmInputComponent, {
       data: {
@@ -72,23 +76,26 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
         confirmButtonText: 'delete title',
         cancelButtonText: 'keep title',
         onConfirm: async () => {
-          // TODO #6084 change status for current app to "archived"
-          console.log('removeAppAccess', movie.id);
+          movie.app[this.appName].access = false;
+          await this.movieService.update(movie);
 
-          /*await this.shell.layout.update({ publishing: true });
-          await this.consentsService.createConsent('share', movieId);
-          const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
-          const ref = this.snackBar.open(text, '', { duration: 1000 });
-          ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))*/
-
+          const ref = this.snackBar.open('Title deleted.', '', { duration: 4000 });
+          ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
         }
       }
     })
   }
 
-  updateStatus(movie: Movie, status: StoreStatus) {
-    // TODO #6084 change status for current app to "archived"
-    console.log('change movie status',status, movie.id);
+  async updateStatus(status: StoreStatus, message?: string) {
+    const movie = cleanModel(this.query.getActive());
+    movie.app[this.appName].status = status;
+    await this.movieService.update(movie);
+
+    if(message) {
+      this.snackBar.open(message, '', { duration: 4000 });
+    } else {
+      this.snackBar.open(`Title ${storeStatus[status]}.`, '', { duration: 4000 });
+    }
   }
 }
 
