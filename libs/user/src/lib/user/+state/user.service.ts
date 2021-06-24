@@ -109,7 +109,7 @@ export class UserService extends CollectionService<UserState> {
     this.authStore.updateProfile({ financing: { rank } });
   }
 
-  // TODO Once we have a custom email verified page, we can update the users' meta there
+  // TODO #6113 nce we have a custom email verified page, we can update the users' meta there
   private async updateEmailVerified() {
     const auth = this.authQuery.getValue();
 
