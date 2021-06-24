@@ -143,7 +143,24 @@ commands:
     steps:
         - run: npx cypress install
         - run:
-            command: npm run e2e
+            command: |
+              npx nx run catalog-e2e:e2e:ci --headless
+              catalog_ret_code=$?
+
+              npx nx run festival-e2e:e2e:ci --headless
+              festival_ret_code=$?
+
+              npx nx run financiers-e2e:e2e:ci --headless
+              financiers_ret_code=$?
+
+              npx nx run cms-e2e:e2e:ci --headless
+              cms_ret_code=$?
+
+              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $cms_ret_code -eq 0 ]; then 
+                exit 0;
+              else
+                exit 1;
+              fi
             no_output_timeout: 20m
         - store_artifacts:
             name: Uploading screenshots
