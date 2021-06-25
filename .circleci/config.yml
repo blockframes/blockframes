@@ -150,9 +150,9 @@ commands:
 
               npx nx run financiers-e2e:e2e:ci --headless && financiers_ret_code=$? || financiers_ret_code=$?
 
-              npx nx run cmr-e2e:e2e:ci --headless && cmr_ret_code=$? || cmr_ret_code=$?
+              npx nx run crm-e2e:e2e:ci --headless && crm_ret_code=$? || crm_ret_code=$?
 
-              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $cmr_ret_code -eq 0 ]; then 
+              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $crm_ret_code -eq 0 ]; then 
                 exit 0;
               else
                 exit 1;
