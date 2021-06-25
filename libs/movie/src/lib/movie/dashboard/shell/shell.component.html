@@ -24,7 +24,8 @@
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
           <button mat-button color="primary" (click)="updateStatus('draft', 'Title back to Draft')">
-            <mat-icon class="flip-icon" svgIcon="refresh"></mat-icon>Restore Title
+            <mat-icon class="flip-icon" svgIcon="refresh"></mat-icon>
+            Restore Title
           </button>
         </ng-container>
         <ng-template #cta>

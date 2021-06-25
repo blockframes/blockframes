@@ -41,12 +41,6 @@ h6 {
   margin-top: 8px;
 }
 
-aside {
-  button.delete-title-button {
-    margin-bottom: 8px;
-  }
-}
-
 mat-chip {
   text-transform: capitalize;
 }
@@ -55,14 +49,5 @@ mat-icon{
   &.flip-icon {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
-    margin-right: 8px;
-    margin-bottom: 4px;
-  }
-  &.more-horiz {
-    margin-right: 8px;
-    margin-bottom: 4px;
-  }
-  &.arrow-dropdown {
-    margin-bottom: 4px; margin-left: 4px;
   }
 }
