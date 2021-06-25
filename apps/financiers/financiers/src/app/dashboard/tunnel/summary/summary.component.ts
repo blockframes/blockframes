@@ -73,6 +73,6 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
           }
         }
       }
-    })
+    });
   }
 }

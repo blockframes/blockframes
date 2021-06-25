@@ -1,9 +1,13 @@
+@use 'sass:map';
 @use '~@angular/material' as mat;
 
 // TYPOGRAPHY
-@mixin typography($config) {
-
+@mixin typography($theme) {
+  $config: mat.get-color-config($theme);
+  $foreground: map.get($config, "foreground");
+  
   .mat-tooltip {
     line-height: 12px;
+    color: map.get($foreground, 700);
   }
 }

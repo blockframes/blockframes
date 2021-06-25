@@ -5,7 +5,7 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+          <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
             <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
