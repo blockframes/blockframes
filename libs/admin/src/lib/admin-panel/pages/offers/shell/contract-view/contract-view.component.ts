@@ -1,17 +1,19 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
+import { AngularFirestore } from '@angular/fire/firestore';
 
-import { combineLatest, Observable, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 
 import { OfferShellComponent } from '../shell.component';
 import { Term, TermService } from '@blockframes/contract/term/+state';
-import { Contract, contractStatus } from '@blockframes/contract/contract/+state';
+import { Contract, ContractService, contractStatus } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { IncomeService } from '@blockframes/contract/income/+state';
 
-import { CRMContractViewForm } from './contract-view.form';
-import { AngularFirestore } from '@angular/fire/firestore';
+
 
 @Component({
   selector: 'contract-view',
@@ -57,7 +59,10 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   );
 
 
-  form = new CRMContractViewForm();
+  form = new FormGroup({
+    status: new FormControl('pending'),
+    price: new FormControl(0),
+  });
 
   private sub: Subscription;
 
@@ -66,7 +71,9 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private termService: TermService,
     private shell: OfferShellComponent,
+    private incomeService: IncomeService,
     private orgService: OrganizationService,
+    private contractService: ContractService,
   ) {}
 
   ngOnInit() {
@@ -74,7 +81,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
       this.contract$,
       this.income$,
     ]).subscribe(([contract, income]) => {
-      this.form.patchAllValue({ status: contract.status, price: income.price });
+      this.form.setValue({ status: contract.status, price: income.price });
     });
   }
 
@@ -83,32 +90,17 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   }
 
   update(contractId: string, incomeId: string) {
-    const batch = this.db.firestore.batch();
-
-    const contractRef = this.db.firestore.doc(`contracts/${contractId}`);
-    const incomeRef = this.db.firestore.doc(`incomes/${incomeId}`);
-
+    const write = this.contractService.batch();
     const { status, price} = this.form.value;
-
-    batch.update(contractRef, { status });
-    batch.update(incomeRef, { price });
-
-    batch.commit();
+    this.contractService.update(contractId, { status }, { write });
+    this.incomeService.update(incomeId, { price }, { write });
+    write.commit();
   }
 
   delete(term: Term) {
-    this.db.firestore.runTransaction(async tx => {
-      const contractRef = this.db.firestore.doc(`contracts/${term.contractId}`);
-      const termRef = this.db.firestore.doc(`terms/${term.id}`);
-
-
-      const contractSnap = await tx.get(contractRef);
-      const { termIds } = contractSnap.data() as Contract;
-
-      tx.update(contractRef, { termIds: termIds.filter(tid => tid !== term.id) });
-      tx.delete(termRef);
-
-      return tx;
-    });
+    this.contractService.update(term.contractId, (contract, write) => {
+      this.incomeService.remove(term.id, { write });
+      return { termIds: contract.termIds.filter(id => id !== term.id) };
+    })
   }
 }
