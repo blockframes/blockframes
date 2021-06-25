@@ -43,12 +43,28 @@ h6 {
 }
 
 aside {
-  a.outlines {
-    margin: 0;
-    padding: 0;
+  button.delete-title-button {
+    width:100%;
+    margin-bottom: 8px;
   }
-  button.fit-content {
-    width:fit-content;
-    margin-bottom: 12px;
+}
+
+mat-chip.capitalize-first-letter {
+  text-transform: capitalize;
+}
+
+mat-icon{
+  &.flip-icon {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    margin-right: 8px;
+    margin-bottom: 4px;
+  }
+  &.more-horiz {
+    margin-right: 8px;
+    margin-bottom: 4px;
+  }
+  &.arrow-dropdown {
+    margin-bottom: 4px; margin-left: 4px;
   }
 }

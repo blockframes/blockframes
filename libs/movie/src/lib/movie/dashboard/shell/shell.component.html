@@ -8,7 +8,7 @@
           <h4>{{ movie | movieFeature }}</h4>
           <h1>{{ movie.title.international }}</h1>
           <mat-chip-list>
-            <mat-chip selected disableRipple class="tag">
+            <mat-chip class="capitalize-first-letter">
               {{ movie.app[appName].status }}
             </mat-chip>
           </mat-chip-list>
@@ -23,12 +23,14 @@
       <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
-          <button mat-stroked-button color="primary" (click)="updateStatus('draft', 'Title back to Draft')">Restore Title</button>
+          <button mat-button color="primary" (click)="updateStatus('draft', 'Title back to Draft')">
+            <mat-icon class="flip-icon" svgIcon="refresh"></mat-icon>Restore Title
+          </button>
         </ng-container>
         <ng-template #cta>
           <ng-container *ngIf="org$ | async | canAccess: 'marketplace': appName">
-            <a class="outlines" mat-button [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-              <mat-icon svgIcon="marketplace"></mat-icon>
+            <a mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+              <mat-icon svgIcon="visibility" color="primary"></mat-icon>
               <span>Marketplace Preview</span>
             </a>
           </ng-container>
@@ -37,14 +39,18 @@
         </ng-template>
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
-          <button class="fit-content" mat-icon-button (click)="removeAppAccess()" matTooltip="Delete Title">
+          <button class="delete-title-button" mat-icon-button (click)="removeAppAccess()" matTooltip="Delete Title">
             <mat-icon svgIcon="delete"></mat-icon>
             <span>Delete title</span>
           </button>
         </ng-container>
         <ng-template #actionsMenu>
           <!-- TODO #6084 finish action menu -->
-          <button mat-button [matMenuTriggerFor]="actionMenuMenu">Actions</button>
+          <button mat-button [matMenuTriggerFor]="actionMenuMenu">
+            <mat-icon class="more-horiz" svgIcon="more_horiz"></mat-icon>
+            Actions
+            <mat-icon class="arrow-dropdown" svgIcon="arrow_drop_down"></mat-icon>
+          </button>
           <mat-menu #actionMenuMenu="matMenu">
             <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
               <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
