@@ -32,7 +32,7 @@
                 (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
               <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
             </mat-form-field>
-            <ng-template #termAction let-term let-index="index">
+            <ng-template #termAction let-index="index">
               <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
