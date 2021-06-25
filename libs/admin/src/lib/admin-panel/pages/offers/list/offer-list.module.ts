@@ -6,9 +6,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {GetTitlePipeModule} from '@blockframes/movie/pipes/get-title.pipe'
 
 // Blockframes
-import { DisplayNameModule, EllipsisPipeModule, JoinPipeModule, ToDateModule, ToLabelModule, TotalPipeModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, JoinPipeModule, ToDateModule, ToLabelModule, TotalPipeModule } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
+import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 // Material
@@ -37,7 +38,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     ToDateModule,
     JoinPipeModule,
     GetTitlePipeModule,
-    EllipsisPipeModule,
+    MaxLengthModule,
     TotalPipeModule,
     ImageModule,
     // Material

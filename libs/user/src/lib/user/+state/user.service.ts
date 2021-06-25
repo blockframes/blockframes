@@ -4,6 +4,7 @@ import { UserState, UserStore } from './user.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { map } from 'rxjs/operators';
 import { User, AuthQuery, AuthStore } from '@blockframes/auth/+state';
+import { DocumentMeta } from '@blockframes/utils/models-meta';
 
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +22,7 @@ export class UserService extends CollectionService<UserState> {
     private organizationQuery: OrganizationQuery,
   ) {
     super(store);
+    this.updateEmailVerified();
   }
 
   //////////
@@ -105,5 +107,21 @@ export class UserService extends CollectionService<UserState> {
   //---------------------------
   public changeRank(rank: string) {
     this.authStore.updateProfile({ financing: { rank } });
+  }
+
+  // TODO #6113 nce we have a custom email verified page, we can update the users' meta there
+  private async updateEmailVerified() {
+    const auth = this.authQuery.getValue();
+
+    if (auth.emailVerified) {
+      const user = await this.getValue(auth.uid);
+      if (user._meta.emailVerified === false) {
+        const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
+          ...user._meta,
+          emailVerified: true
+        }
+        this.update(auth.uid, { _meta });
+      }
+    }
   }
 }

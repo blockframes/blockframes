@@ -10,5 +10,11 @@ export class OfferService extends CollectionService<OfferState> {
     super(store);
   }
 
-
+  formatFromFirestore(offer) {
+    if (!offer) return;
+    return {
+      ...offer,
+      date: offer?.date.toDate(),
+    };
+  }
 }

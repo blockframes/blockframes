@@ -37,7 +37,7 @@ const queryOffer: Query<OfferWithContracts> = {
 
 }
 
-type AllOfferStatus = OfferStatus | 'all';
+type AllOfferStatus =''| 'pending' | 'on_going' | 'past_deals';
 @Component({
   selector: 'offers-list',
   templateUrl: './offer-list.component.html',
@@ -53,22 +53,13 @@ export class OffersListComponent {
   initialColumns = [
     'id', 'date', 'contracts.length', 'contracts', 'specificity', 'incomes', 'status',
   ];
-  filter = new FormControl('all');
-  filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
+  filter = new FormControl('');
+  filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));
 
   constructor(
     private offerService: OfferService,
-    private route: ActivatedRoute,
-    private router: Router,
-
     private routerQuery: RouterQuery,
-
   ) { }
-
-  goToOffer(offer: Offer) {
-    this.router.navigate([`../offer/${offer.id}`], { relativeTo: this.route });
-  }
-
 
   /** Dynamic filter of offers for each tab. */
   applyFilter(filter?: AllOfferStatus) {
@@ -77,8 +68,16 @@ export class OffersListComponent {
 
   /* index paramter is unused because it is a default paramter from the filter javascript function */
   filterByStatus(offer: Offer, index: number, value: AllOfferStatus): boolean {
-    if (value === 'all') { return true; }
-    return value ? offer.status === value : true;
+    if (value === 'pending') {
+      return offer.status === value;
+    }
+    if (value === 'on_going') {
+      return ["negotiating", "accepted", "signing"].includes(offer.status);
+    }
+    if (value === 'past_deals') {
+      return ["signed", "declined"].includes(offer.status);
+    }
+    return true;
   }
 }
 
