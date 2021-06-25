@@ -16,7 +16,7 @@ import { Organization, OrganizationService } from '@blockframes/organization/+st
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ShellComponent {
+export class OfferShellComponent {
 
   public offerId$ = this.route.params.pipe(pluck('offerId'));
 
