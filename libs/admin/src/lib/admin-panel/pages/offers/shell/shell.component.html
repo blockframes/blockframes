@@ -16,7 +16,7 @@
     </div>
     <div class="contracts">
       <p *ngIf="contracts$ | async as contracts">{{contracts.length}} titles</p>
-      <p *ngIf="incomes$ | async as incomes">Total: {{ incomes | incomes | currency: offer.currency }}</p>
+      <p *ngIf="incomes$ | async as incomes">Total: {{ incomes | total:'price' | currency: offer.currency }}</p>
     </div>
   </header>
 
