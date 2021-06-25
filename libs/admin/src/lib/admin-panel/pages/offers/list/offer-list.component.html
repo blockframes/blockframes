@@ -52,17 +52,9 @@
   </ng-template>
 
   <ng-template #empty>
-    <section fxLayout="column" fxLayoutAlign="center center" fxFlexAlign="center">
-      <h1>No Offers</h1>
-      <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
-        <img alt="Add title">
-      </mat-card>
+    <section class="empty" fxLayout="column" fxFlexAlign="center" fxLayoutGap="16px">
+      <h1>There are no offers to display yet.</h1>
+      <img asset="empty_results.svg" alt="Empty result image">
     </section>
-    <ng-template #empty>
-      <section class="empty" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-        <h1>There are no offers to display yet.</h1>
-        <img asset="empty_results.svg" alt="Empty result image">
-      </section>
-    </ng-template>
   </ng-template>
 </section>
