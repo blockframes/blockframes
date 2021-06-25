@@ -44,10 +44,3 @@ h6 {
 mat-chip {
   text-transform: capitalize;
 }
-
-mat-icon{
-  &.flip-icon {
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-  }
-}
