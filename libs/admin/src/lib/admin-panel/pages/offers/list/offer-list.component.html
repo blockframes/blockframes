@@ -1,0 +1,58 @@
+<ng-container *ngIf="offers$ | async as offers; else loading">
+  <ng-container *ngIf="offers.length; else empty">
+
+    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
+      <h1>Offers</h1>
+    </header>
+
+    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="applyFilter('')" [active]="(filter$ | async) === ''">
+        All Offers({{offers.length}})
+      </button>
+      <button mat-tab-link (click)="applyFilter('pending')" [active]="(filter$ | async) === 'pending'">
+        <ng-container *ngIf="(offers | filterBy: filterByStatus: 'pending') as offers">Offers({{offers.length}})
+        </ng-container>
+      </button>
+      <button mat-tab-link (click)="applyFilter('on_going')" [active]="(filter$ | async) === 'on_going'">
+        Ongoing Deals
+      </button>
+      <button mat-tab-link (click)="applyFilter('past_deals')" [active]="(filter$ | async) === 'past_deals'">
+        Past Deals
+      </button>
+    </nav>
+
+    <mat-card>
+      <bf-table-filter [source]="offers | filterBy: filterByStatus: filter.value" [columns]="columns"
+        [initialColumns]="initialColumns" clickable showFilter showPaginator link="/c/o/admin/panel/offer/">
+        <ng-template colRef="id" let-reference>{{ reference }}</ng-template>
+        <ng-template colRef="date" let-date>{{ date| date : 'shortDate'}}</ng-template>
+        <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
+        <ng-template colRef="contracts" let-contracts>
+          <ng-container *ngFor="let contract of contracts; let last=last">
+            <ng-container *ngIf="contract.titleId | getTitle | async as title">
+              {{title.title.international| maxLength:50}}{{last ? '': ', '}}
+            </ng-container>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="specificity" let-specificity>
+          {{ specificity ? 'YES' : '-' }}
+        </ng-template>
+        <ng-template colRef="incomes" let-incomes>
+          {{incomes | total:'price' | currency:incomes[0].currency:'symbol'}}
+        </ng-template>
+        <ng-template colRef="status" let-status>{{ status }}</ng-template>
+      </bf-table-filter>
+    </mat-card>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner fxFlexAlign="center"></mat-spinner>
+</ng-template>
+
+<ng-template #empty>
+  <section class="empty" fxLayout="column" fxFlexAlign="center" fxLayoutGap="16px">
+    <h1>There are no offers to display yet.</h1>
+    <img asset="empty_results.svg" alt="Empty result image">
+  </section>
+</ng-template>
