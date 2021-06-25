@@ -45,12 +45,3 @@ export class ShellComponent {
   ) { }
 
 }
-
-
-
-@Pipe({ name: 'incomes', pure: true })
-export class IncomesPipe implements PipeTransform {
-  transform(incomes: Income[]) {
-    return incomes.reduce((acc, curr) => acc + curr.price, 0);
-  }
-}
