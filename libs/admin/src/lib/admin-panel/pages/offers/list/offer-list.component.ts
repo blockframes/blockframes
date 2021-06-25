@@ -37,7 +37,7 @@ const queryOffer: Query<OfferWithContracts> = {
 
 }
 
-type AllOfferStatus =''| 'pending' | 'on_going' | 'past_deals';
+type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
 @Component({
   selector: 'offers-list',
   templateUrl: './offer-list.component.html',
@@ -68,16 +68,16 @@ export class OffersListComponent {
 
   /* index paramter is unused because it is a default paramter from the filter javascript function */
   filterByStatus(offer: Offer, index: number, value: AllOfferStatus): boolean {
-    if (value === 'pending') {
-      return offer.status === value;
+    switch (value) {
+      case 'pending':
+        return offer.status === value;
+      case 'on_going':
+        return ["negotiating", "accepted", "signing"].includes(offer.status);
+      case 'past_deals':
+        return ["signed", "declined"].includes(offer.status);
+      default:
+        return true;
     }
-    if (value === 'on_going') {
-      return ["negotiating", "accepted", "signing"].includes(offer.status);
-    }
-    if (value === 'past_deals') {
-      return ["signed", "declined"].includes(offer.status);
-    }
-    return true;
   }
 }
 
