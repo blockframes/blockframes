@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { OffersComponent } from './offer-list.component';
+import { OffersListComponent } from './offer-list.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,10 +21,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
-
 @NgModule({
   declarations: [
-    OffersComponent,
+    OffersListComponent,
   ],
   imports: [
     CommonModule,
@@ -50,7 +49,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     MatTooltipModule,
 
     //Router
-    RouterModule.forChild([{ path: '', component: OffersComponent }])
+    RouterModule.forChild([{ path: '', component: OffersListComponent }])
   ],
 })
-export class OffersModule { }
+export class OffersListModule { }

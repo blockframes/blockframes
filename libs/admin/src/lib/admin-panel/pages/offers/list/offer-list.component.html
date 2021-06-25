@@ -1,16 +1,16 @@
-<div class="offer-list-container">
+<section fxLayout="column" fxLayoutAlign="center start">
   <ng-container *ngIf="offers$ | async as offers; else loading">
     <ng-container *ngIf="offers.length; else empty">
 
       <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
-        <h1>Contracts</h1>
+        <h1>Offers</h1>
       </header>
 
       <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
         <button mat-tab-link (click)="applyFilter('all')" [active]="(filter$ | async) === 'all'">All
           Offers({{offers.length}})</button>
-        <button mat-tab-link (click)="applyFilter('offers')"
-          [active]="(filter$ | async) === 'offers'">Offers(1)</button>
+        <button mat-tab-link (click)="applyFilter('pending')"
+          [active]="(filter$ | async) === 'pending'">Offers(1)</button>
         <button mat-tab-link (click)="applyFilter('pending')" [active]="(filter$ | async) === 'pending'">Ongoing
           Deals</button>
         <button mat-tab-link (click)="applyFilter('signed')" [active]="(filter$ | async) === 'signed'">
@@ -21,36 +21,38 @@
       <mat-card>
         <bf-table-filter [source]="offers | filterBy: filterByStatus: filter.value" [columns]="columns"
           [initialColumns]="initialColumns" clickable showFilter showPaginator (rowClick)="goToOffer($event)">
-          <ng-template colRef="id" let-reference><b>{{ reference }}</b></ng-template>
-          <ng-template colRef="date" let-date><b>{{ date.toDate()| date : 'shortDate'}}</b></ng-template>
-          <ng-template colRef="contracts.length" let-length><b>{{ length }}</b></ng-template>
-          <ng-template colRef="contracts" let-contracts><b>
-              <ng-container *ngFor="let contract of contracts; let last=last">
-                <ng-container *ngIf="contract.titleId | getTitle | async as title">
-                  {{title.title.international| ellipsis:50}}{{last ? '': ', '}}
-                </ng-container>
+          <ng-template colRef="id" let-reference>{{ reference }}</ng-template>
+          <ng-template colRef="date" let-date>{{ date.toDate()| date : 'shortDate'}}</ng-template>
+          <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
+          <ng-template colRef="contracts" let-contracts>
+            <ng-container *ngFor="let contract of contracts; let last=last">
+              <ng-container *ngIf="contract.titleId | getTitle | async as title">
+                {{title.title.international| ellipsis:50}}{{last ? '': ', '}}
               </ng-container>
-            </b></ng-template>
-          <ng-template colRef="specificity" let-specificity><b>{{ specificity ? 'TRUE' : 'FALSE' }}</b></ng-template>
-          <ng-template colRef="incomes" let-incomes><b>
-              {{incomes | total_pipe:'price' | currency:incomes[0].currency:'symbol':'1.0-0'}}
-            </b></ng-template>
-          <ng-template colRef="status" let-status><b>{{ status }}</b></ng-template>
+            </ng-container>
+          </ng-template>
+          <ng-template colRef="specificity" let-specificity>
+            {{ specificity ? 'YES' : '-' }}
+          </ng-template>
+          <ng-template colRef="incomes" let-incomes>
+            {{incomes | total:'price' | currency:incomes[0].currency:'symbol':'1.0-0'}}
+          </ng-template>
+          <ng-template colRef="status" let-status>{{ status }}</ng-template>
         </bf-table-filter>
       </mat-card>
     </ng-container>
   </ng-container>
 
   <ng-template #loading>
-    <mat-spinner></mat-spinner>
+    <mat-spinner fxFlexAlign="center"></mat-spinner>
   </ng-template>
 
   <ng-template #empty>
-    <section fxLayout="column" fxLayoutAlign="center center" class="offer-list-empty">
+    <section fxLayout="column" fxLayoutAlign="center center" fxFlexAlign="center">
       <h1>No Offers</h1>
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
         <img asset="empty_results.svg" alt="Add title">
       </mat-card>
     </section>
   </ng-template>
-</div>
+</section>

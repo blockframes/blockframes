@@ -1,9 +1,10 @@
+export type OfferStatus = 'pending' | 'negotiating' | 'accepted' | 'signing' | 'signed' | 'declined';
 export interface Offer {
   id: string;
   buyerId: string;
   buyerUserId: string;
   specificity: string;
-  status: 'pending' | 'negociating' | 'accepted' | 'signing' | 'signed' | 'declined';
+  status: OfferStatus;
   date: Date;
   delivery: string;
 }

@@ -3,25 +3,11 @@ nav[mat-tab-nav-bar] button {
   background-color: transparent;
 }
 
-.offer-list-container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+section {
   padding: 0 max(5vw, 1em);
-  padding-top: max(1vw,1em);
-  flex-direction: column;
+  padding-top: max(1vw, 1em);
 }
 
-.mat-spinner{
-  justify-self: center;
-  align-self: center;
-}
-
-.offer-list-empty{
-  justify-self: center;
-  align-self: center;
-}
-
-.mat-card{
+.mat-card {
   width: 100%;
 }

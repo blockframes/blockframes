@@ -58,7 +58,7 @@ export const panelRoutes: Routes = [
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
   { path: 'users', component: UsersComponent },
-  { path: 'offers', loadChildren:()=>import('./pages/offers/list/offer-list.module').then(s => s.OffersModule) },
+  { path: 'offers', loadChildren:()=>import('./pages/offers/list/offer-list.module').then(s => s.OffersListModule) },
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
