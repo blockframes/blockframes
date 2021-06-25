@@ -23,7 +23,7 @@
       <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
 
         <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
-          <button mat-button color="primary" (click)="updateStatus('draft', 'Title back to Draft')">
+          <button mat-button color="primary" (click)="updateStatus('draft', 'Title restored.')">
             <mat-icon svgIcon="restore"></mat-icon>
             Restore Title
           </button>
@@ -56,8 +56,11 @@
             <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
               <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
             </a>
-            <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item (click)="updateStatus('draft', 'Title back to Draft')">
+            <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item (click)="updateStatus('draft', 'Title back to Draft.')">
               <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
+            </button>
+            <button *ngIf="movie.app[appName].status === 'accepted'" mat-menu-item (click)="updateStatus('draft', 'Title removed from Marketplace.')" matTooltip="Remove from Marketplace">
+              <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
             </button>
             <button mat-menu-item (click)="updateStatus('archived', 'Title archived.')">
               <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
