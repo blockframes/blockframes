@@ -27,9 +27,9 @@ WHERE
     )
 
 GROUP BY
-  event_name, event_date, eventId, eventIdPage, userId
+  event_name, eventId, eventIdPage, userId
 ORDER BY
-  event_name, event_date
+  event_name
 `
 
 const queryAnalyticsActiveUsers = `
@@ -96,7 +96,7 @@ const createEventAnalytics = (result, user: PublicUser | undefined, org: Organiz
   }
 };
 
-/** Call bigQuery with an array of eventId to tet their analytics. */
+/** Call bigQuery with an array of eventId to get their analytics. */
 export const requestEventAnalytics = async (
   data: { eventIds: string[] },
   context: CallableContext
