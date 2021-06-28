@@ -9,7 +9,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getAllAppsExcept, appName } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
@@ -130,13 +130,13 @@ export class MovieComponent implements OnInit {
 
   public async deleteMovie() {
     const simulation = await this.simulateDeletion(this.movie);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are about to delete this movie from Archipel, are you sure ?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'Doing this will also delete everything regarding this movie',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.movieService.remove(this.movie.id);

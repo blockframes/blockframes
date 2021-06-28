@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CrmFormDialogComponent } from './crm-form-dialog.component';
+import { ConfirmInputComponent } from './confirm-input.component';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {  FirstWordTitlecaseModule } from '@blockframes/utils/pipes/first-titlecase.pipe';
+import { FirstWordTitlecaseModule } from '@blockframes/utils/pipes/first-titlecase.pipe';
 
 @NgModule({
-  declarations: [CrmFormDialogComponent],
+  declarations: [ConfirmInputComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -19,6 +19,6 @@ import {  FirstWordTitlecaseModule } from '@blockframes/utils/pipes/first-titlec
     MatInputModule,
     MatFormFieldModule
   ],
-  exports: [CrmFormDialogComponent]
+  exports: [ConfirmInputComponent]
 })
-export class CrmFormDialogModule { }
+export class ConfirmInputModule { }

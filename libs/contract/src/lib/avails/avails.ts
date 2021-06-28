@@ -174,17 +174,17 @@ function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
 }
 
 /** Check if a term is exactly the same as asked in the AvailFilter of the world map */
-export function isSameMapTerm(term: BucketTerm, avail: AvailsFilter)  {
+export function isSameMapTerm(term: BucketTerm, avail: AvailsFilter) {
   return isSameExclusivityTerm(term, avail) &&
-  isSameDurationTerm(term, avail) &&
-  isSameMediaTerm(term, avail);
+    isSameDurationTerm(term, avail) &&
+    isSameMediaTerm(term, avail);
 };
 
 /** Check if a term is exactly the same as asked in the AvailFilter of the calendar */
-export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter)  {
+export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
   return isSameExclusivityTerm(term, avail) &&
-  isSameTerritoriesTerm(term, avail) &&
-  isSameMediaTerm(term, avail);
+    isSameTerritoriesTerm(term, avail) &&
+    isSameMediaTerm(term, avail);
 };
 
 
@@ -228,7 +228,7 @@ export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
 
   if (!avail.territories) return false;
   if (term.territories.length < avail.territories.length) return false;
-  if (avail.territories.some(territory => !term.territories.includes(territory)))return false;
+  if (avail.territories.some(territory => !term.territories.includes(territory))) return false;
 
   return true;
 }
@@ -249,8 +249,9 @@ export function toTerritoryMarker(territory: Territory, mandates: Mandate[], ter
   }
 }
 
-export function getTerritories(avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Territory[] {
+export function getSelectedTerritories(movieId: string, avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Territory[] {
   return bucket.contracts
+    .filter(c => c.titleId === movieId)
     .map(c => c.terms).flat()
     .filter(t => mode === 'exact' ? isSameMapTerm(t, avail) : isInMapTerm(t, avail))
     .map(t => t.territories).flat();

@@ -207,7 +207,7 @@ export function invitationToEventFromOrgUpdated(
   const data = {
     user: toAdmin,
     userSubject,
-    userOrg,
+    org: userOrg,
     event,
     eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`,
     pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}}/title`

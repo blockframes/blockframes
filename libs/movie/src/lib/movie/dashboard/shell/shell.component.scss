@@ -13,12 +13,14 @@ header {
   }
   a.mat-button {
     width: min-content;
-    margin: 8px 0;
   }
 }
 
 section, article {
   overflow: hidden;
+  p {
+    margin-top: auto;
+  }
 }
 article * {
   overflow: hidden;
@@ -29,4 +31,16 @@ article * {
 
 h4 {
   text-transform: uppercase;
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+h6 {
+  margin-top: 8px;
+}
+
+mat-chip {
+  text-transform: capitalize;
 }

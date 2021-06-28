@@ -2,13 +2,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { combineLatest, Subscription } from 'rxjs';
-import { filter, map, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
+import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
   getSoldTerms,
-  getTerritories,
+  getSelectedTerritories,
   TerritoryMarker,
   toTerritoryMarker,
   getTerritoryMarkers,
@@ -52,8 +52,9 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
     this.availsForm.value$,
     this.shell.bucketForm.value$,
     this.territoryMarkers$,
+    this.route.params.pipe(pluck('movieId'))
   ]).pipe(
-    map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'exact').map(t => markers[t])),
+    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'exact').map(t => markers[t])),
     startWith([]),
   );
 
@@ -61,8 +62,9 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
     this.availsForm.value$,
     this.shell.bucketForm.value$,
     this.territoryMarkers$,
+    this.route.params.pipe(pluck('movieId'))
   ]).pipe(
-    map(([avail, bucket, markers]) => getTerritories(avail, bucket, 'in').map(t => markers[t])),
+    map(([avail, bucket, markers, movieId]) => getSelectedTerritories(movieId, avail, bucket, 'in').map(t => markers[t])),
     startWith([]),
   );
 

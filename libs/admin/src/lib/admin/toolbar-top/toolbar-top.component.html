@@ -21,9 +21,9 @@
   </button>
 
 
-  <button mat-button [matMenuTriggerFor]="contractsMenu">
-    <mat-icon svgIcon="document"></mat-icon><span matLine>Contracts</span>
-  </button>
+  <a mat-button routerLink="panel/offers">
+    <mat-icon svgIcon="document"></mat-icon><span matLine>Offers</span>
+  </a>
 
 
   <button mat-button [matMenuTriggerFor]="accountingMenu">
@@ -82,15 +82,6 @@
   </button>
   <button mat-menu-item routerLink="/c/o/admin/panel/invitations">
     <mat-icon svgIcon="person_add"></mat-icon><span matLine>Invitations list</span>
-  </button>
-</mat-menu>
-
-<mat-menu #contractsMenu="matMenu">
-  <button mat-menu-item routerLink="/c/o/admin/panel/contracts">
-    <mat-icon svgIcon="document"></mat-icon><span matLine>Contracts list</span>
-  </button>
-  <button mat-menu-item routerLink="/c/o/admin/panel/rights">
-    <mat-icon svgIcon="video_library"></mat-icon><span matLine>Distribution rights list</span>
   </button>
 </mat-menu>
 

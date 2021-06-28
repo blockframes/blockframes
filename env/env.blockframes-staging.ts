@@ -180,7 +180,8 @@ export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.e
 // ========
 
 export const datastudio = {
-  user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB'
+  user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB',
+  users: '9789ffcf-a04c-43cb-8845-64a2c92f8a0d/page/00YOC'
 }
 
 
