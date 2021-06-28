@@ -17,6 +17,4 @@ export class ContractFormComponent {
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
 
   constructor(private service: MovieService){}
-
-  save() {}
 }
