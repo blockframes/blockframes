@@ -20,6 +20,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 const routes = [{
   path: '',
@@ -76,6 +78,7 @@ const routes = [{
     FlexLayoutModule,
     // Blockframes
     DashboardTitleShellModule,
+    OrgAccessModule,
     // Material
     MatButtonModule,
     MatIconModule,
@@ -87,6 +90,7 @@ const routes = [{
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    MatMenuModule,
     // Route
     RouterModule.forChild(routes)
   ]

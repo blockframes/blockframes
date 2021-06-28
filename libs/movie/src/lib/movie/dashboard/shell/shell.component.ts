@@ -64,54 +64,6 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
-  removeAppAccess() {
-    const movie = this.query.getActive();
-    const appsName = getMovieAppAccess(movie).map(a => getAppName(a).label);
-    this.dialog.open(ConfirmInputComponent, {
-      data: {
-        title: `You are about to delete ${movie.title.international} permanently.`,
-        subtitle: `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/> If you wish to proceed, please type "DELETE" in the field below.`,
-        confirmationWord: 'delete',
-        confirmButtonText: 'delete title',
-        cancelButtonText: 'keep title',
-        onConfirm: async () => {
-          await this.movieService.update(movie.id, movie => ({
-            ...movie,
-            app: {
-              ...movie.app,
-              [this.appName]: {
-                ...movie.app[this.appName],
-                access: false
-              }
-            }
-          }));
-
-          const ref = this.snackBar.open('Title deleted.', '', { duration: 4000 });
-          ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
-        }
-      }
-    })
-  }
-
-  async updateStatus(status: StoreStatus, message?: string) {
-    const movie = this.query.getActive();
-    await this.movieService.update(movie.id, movie => ({
-      ...movie,
-      app: {
-        ...movie.app,
-        [this.appName]: {
-          ...movie.app[this.appName],
-          status: status
-        }
-      }
-    }));
-
-    if (message) {
-      this.snackBar.open(message, '', { duration: 4000 });
-    } else {
-      this.snackBar.open(`Title ${storeStatus[status]}.`, '', { duration: 4000 });
-    }
-  }
 }
 
 
