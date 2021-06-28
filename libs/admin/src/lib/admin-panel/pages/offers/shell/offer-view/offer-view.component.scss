@@ -1,0 +1,42 @@
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 0 64px;
+  padding-top: 16px;
+  & > * {
+    margin-bottom: 16px;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+mat-card {
+  &.no_pd {
+    padding-bottom: 0 !important;
+  }
+  p {
+    font-weight: bold;
+  }
+  p + * {
+    width: 100%;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  transform: translateX(-16px);
+}
+
+.add_rights {
+  justify-self: flex-end;
+  align-self: center;
+  margin-top: 16px;
+  width: min-content;
+}
