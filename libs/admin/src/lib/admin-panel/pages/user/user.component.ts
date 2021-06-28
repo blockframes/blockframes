@@ -36,7 +36,7 @@ export class UserComponent implements OnInit {
   public dashboardURL: SafeResourceUrl
 
   public invitationsColumns = {
-    date: 'Date',
+    date: 'Date Created',
     mode: 'Mode',
     type: 'Type',
     'fromOrg.denomination.full': 'From Organization',
