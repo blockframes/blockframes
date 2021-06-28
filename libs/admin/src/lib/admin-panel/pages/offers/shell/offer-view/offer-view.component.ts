@@ -21,7 +21,7 @@ const columns = {
   styleUrls: ['./offer-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfferViewComponent implements OnInit {
+export class OfferViewComponent {
 
   public offer$ = this.shell.offer$.pipe(shareReplay(1));
   public buyerOrg$ = this.shell.buyerOrg$;
@@ -32,6 +32,30 @@ export class OfferViewComponent implements OnInit {
     buyers_specific_term: this.fb.control(null),
     buyers_delivery_wishlist: this.fb.control(null),
   })
+  public hydratedContracts$ = combineLatest(
+    this.buyerOrg$,
+    this.contracts$,
+    this.offer$,
+  ).pipe(
+    tap(
+      ([buyerOrg, contracts, offer]) => {
+        console.log({ offer, buyerOrg, contracts })
+        this.form.get('buyers_specific_term').setValue(offer.specificity)
+        this.form.get('buyers_delivery_wishlist').setValue(offer.delivery)
+      }
+    ),
+    map(
+      ([buyerOrg, contracts]) => {
+        return contracts.map(_ => ({
+          seller_approved: _.status,
+          sellers_name: _.sellerId,
+          organization_name: buyerOrg.denomination.public,
+          id: _.id,
+        }))
+      }
+    )
+  )
+
   public titles: {
     seller_approved
     sellers_name
@@ -47,26 +71,6 @@ export class OfferViewComponent implements OnInit {
     private userService: UserService,
   ) { }
 
-  ngOnInit() {
-    combineLatest(
-      this.offer$,
-      this.buyerOrg$,
-      this.contracts$,
-      this.incomes$,
-    ).subscribe(
-      ([offer, buyerOrg, contracts, incomes]) => {
-        console.log({ offer, buyerOrg, contracts, incomes })
-        this.form.get('buyers_specific_term').setValue(offer.specificity)
-        this.form.get('buyers_delivery_wishlist').setValue(offer.delivery)
-        this.titles = contracts.map(_ => ({
-          seller_approved: _.status,
-          sellers_name: _.sellerId,
-          organization_name: buyerOrg.denomination.public,
-          id: _.id,
-        }))
-      }
-    )
-  }
 
   update() {
     console.log('hello')
