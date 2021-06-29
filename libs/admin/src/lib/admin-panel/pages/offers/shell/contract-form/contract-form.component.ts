@@ -16,7 +16,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 export class ContractFormComponent implements OnInit {
   form = new FormGroup({
     titleId: new FormControl(null, Validators.required),
-    price: new FormControl(0, Validators.min(0)),
+    price: new FormControl(Validators.min(0)),
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
   currency: String;
