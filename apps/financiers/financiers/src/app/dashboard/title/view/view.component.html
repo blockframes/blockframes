@@ -2,9 +2,7 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
-
   <title-dashboard-shell [routes]="navLinks">
-
     <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
       <ng-container *ngIf="movie.app.financiers.status !=='archived'">
         <button mat-button color="primary" color="primary" (click)="openDialog()">
@@ -14,7 +12,6 @@
       </ng-container>
       <actions-dashboard-shell fxFlex></actions-dashboard-shell>
     </movie-cta>
-
   </title-dashboard-shell>
 
   <ng-template #dialogTemplate let-data>
