@@ -7,15 +7,14 @@ import { OrganizationService, Organization } from '@blockframes/organization/+st
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
-import { datastudio } from '@env'
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
@@ -37,7 +36,7 @@ export class UserComponent implements OnInit {
   public dashboardURL: SafeResourceUrl
 
   public invitationsColumns = {
-    date: 'Date',
+    date: 'Date Created',
     mode: 'Mode',
     type: 'Type',
     'fromOrg.denomination.full': 'From Organization',
@@ -59,7 +58,6 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer,
     private functions: AngularFireFunctions
   ) { }
 
@@ -75,12 +73,6 @@ export class UserComponent implements OnInit {
 
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
-
-      if (datastudio.user) {
-        const prms = JSON.stringify({ "ds2.user_id": this.userId });
-        const encodedPrms = encodeURIComponent(prms);
-        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/${datastudio.user}?params=${encodedPrms}`);
-      }
 
       this.cdRef.markForCheck();
     });
@@ -181,13 +173,13 @@ export class UserComponent implements OnInit {
     }
 
     const simulation = await this.simulateDeletion(this.user);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this user from Archipel, are you sure?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'This user will be deleted from the application.',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.userService.remove(this.userId);

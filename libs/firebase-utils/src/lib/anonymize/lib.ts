@@ -9,7 +9,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { FirestoreEmulator } from '../firestore';
-import { firebase } from '@env'
+import { firebase, testVideoId } from '@env'
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
@@ -110,7 +110,7 @@ function updateOrg(org: Organization | PublicOrganization) {
 }
 
 function updateHostedVideo(screener: MovieVideo): MovieVideo | MovieSalesPitch {
-  const jwPlayerId = 'Vzo4bhS5';
+  const jwPlayerId = testVideoId;
   return {
     ...screener,
     jwPlayerId

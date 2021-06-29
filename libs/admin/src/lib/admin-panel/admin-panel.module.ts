@@ -17,7 +17,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { AppPipeModule, ToLabelModule, ToDateModule } from '@blockframes/utils/pipes';
@@ -46,8 +45,9 @@ import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 import { InvitationsComponent } from './pages/invitations/invitations.component';
 import { OrganizationCreateComponent } from './components/organization/create-organization/create.component';
-import { CrmFormDialogModule } from './components/crm-form-dialog/crm-form-dialog.module';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
+import { DashboardModule } from './components/dashboard/dashboard.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -62,7 +62,9 @@ export const panelRoutes: Routes = [
   { path: 'event/:eventId', component: EventComponent },
   { path: 'invitations', component: InvitationsComponent },
   { path: 'mails', component: MailsComponent },
-  { path: 'dev-area', component: DevAreaComponent }
+  { path: 'dev-area', component: DevAreaComponent },
+  { path: 'offers', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.OffersListModule) },
+  { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
 ];
 @NgModule({
   imports: [
@@ -82,7 +84,6 @@ export const panelRoutes: Routes = [
     TableFilterModule,
     ImageModule,
     AlgoliaAutocompleteModule,
-    ContractTreeModule,
     EventModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
@@ -95,11 +96,12 @@ export const panelRoutes: Routes = [
     GoToModule,
     AdminOrganizationFormModule,
     MovieVideoUploadModule,
-    CrmFormDialogModule,
+    ConfirmInputModule,
     AppPipeModule,
     MoviePictureUploadModule,
     StaticSelectModule,
-    ToDateModule
+    ToDateModule,
+    DashboardModule
   ],
   declarations: [
     MoviesComponent,

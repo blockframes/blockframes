@@ -14,7 +14,7 @@ import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from "date-fns";
-import { EventMeta, Meeting, Screening } from '@blockframes/event/+state/event.firestore';
+import { EventMeta } from '@blockframes/event/+state/event.firestore';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 

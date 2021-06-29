@@ -11,7 +11,7 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
@@ -42,7 +42,7 @@ export class OrganizationComponent implements OnInit {
     'id': { value: 'Id', disableSort: true },
     'internalRef': 'Internal Ref',
     'poster': { value: 'Poster', disableSort: true },
-    'title.original': 'Original title',
+    'title.international': 'International title',
     'releaseYear': 'Release year',
   };
 
@@ -50,7 +50,7 @@ export class OrganizationComponent implements OnInit {
     'id',
     'poster',
     'internalRef',
-    'title.original',
+    'title.international',
     'releaseYear',
   ];
 
@@ -193,13 +193,13 @@ export class OrganizationComponent implements OnInit {
 
   public async deleteOrg() {
     const simulation = await this.simulateDeletion(this.orgId);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this organization from Archipel, are you sure?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'You will also delete everything regarding this organization',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.organizationService.remove(this.orgId);

@@ -127,7 +127,7 @@ export class AuthService extends FireAuthService<AuthState> {
     privacyPolicy: PrivacyPolicy
   }) {
     return {
-      _meta: createDocumentMeta(ctx._meta),
+      _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
       uid: user.uid,
       email: user.email,
       firstName: ctx.firstName,

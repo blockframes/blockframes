@@ -8,21 +8,20 @@ export const persistenceSettings = {
 // ========
 
 export const appUrl = {
-  content: 'https://blockframes-max.web.app',
-  market: 'http://blockframes-max-festival.web.app',
-  crm: 'https://blockframes-max-crm.web.app',
-  financiers: 'http://blockframes-max-financiers.web.app'
+  content: 'https://catalog-blockframes-jeremie.web.app',
+  market: 'https://festival-blockframes-jeremie.web.app',
+  crm: 'https://crm-blockframes-jeremie.web.app',
+  financiers: 'https://financiers-blockframes-jeremie.web.app',
 };
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCOqOXtxD6Rm7VHa3IoMQt7Lsm0ts3tnLw",
-  authDomain: "blockframes-max.firebaseapp.com",
-  databaseURL: "https://blockframes-max.firebaseio.com",
-  projectId: "blockframes-max",
-  storageBucket: "blockframes-max.appspot.com",
-  messagingSenderId: "268195483565",
-  appId: "1:268195483565:web:8caa91b304c743d0",
-  measurementId: "G-22EMF70SGN"
+  apiKey: "AIzaSyA3kix98972YHI4abj4qMgCsaRR0M1s5Ss",
+    authDomain: "blockframes-jeremie.firebaseapp.com",
+    projectId: "blockframes-jeremie",
+    storageBucket: "blockframes-jeremie.appspot.com",
+    messagingSenderId: "902974212916",
+    appId: "1:902974212916:web:c5e2b49ff4d96df5fa7361",
+    measurementId: "G-JSVVG3F4YE"
 };
 
 export const firebaseRegion = 'europe-west1';
@@ -47,26 +46,26 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
-    festival: 'max_festival_org',
-    financiers: 'max_financiers_org',
-    catalog: 'max_catalog_org',
+    festival: 'jeremie_festival_org',
+    financiers: 'jeremie_financiers_org',
+    catalog: 'jeremie_catalog_org'
   },
   indexNameMovies: {
-    festival: 'max_festival_movies',
-    financiers: 'max_financiers_movies',
-    catalog: 'max_catalog_movies',
+    festival: 'jeremie_festival_movies',
+    financiers: 'jeremie_financiers_movies',
+    catalog: 'jeremie_catalog_movies',
   },
-  indexNameUsers: 'max_users'
+  indexNameUsers: 'jeremie_users',
 };
 
 // Support emails 
 // =======
 
 export const supportEmails = {
-  default: 'mfritz@cascade8.com',
-  catalog: 'mfritz+catalog@cascade8.com',
-  festival: 'mfritz+festival@cascade8.com',
-  financiers: 'mfritz+financiers@cascade8.com'
+  default: 'jseguillon@cascade8.com',
+  catalog: 'jseguillon+catalog@cascade8.com',
+  festival: 'jseguillon+festival@cascade8.com',
+  financiers: 'jseguillon+financiers@cascade8.com'
 }
 
 // Yandex 
@@ -81,12 +80,12 @@ export const yandex = {
 // Intercom
 // ========
 
-export const intercomId = 'srwfltp4';
+export const intercomId = '';
 
 // Ethereum
 // ========
 
-export const network = 'goerli';
+export const network = 'ropsten';
 export const baseEnsDomain = 'blockframes.test';
 export const factoryContract = 'factory2.eth';
 
@@ -143,7 +142,7 @@ export const quorum = {
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-max.analytics_205113694.events_';
+export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
 
 // Data Studio
 // ========
@@ -163,6 +162,12 @@ export const centralOrgId = {
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'max-backups';
-export const heavyChunkSize = 10;
-export const chunkSize = 25;
+export const backupBucket = 'blockframes-jeremie-backups';
+export const heavyChunkSize = 7;
+export const chunkSize = 15;
+
+// JwPlayer
+// @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
+// ========
+
+export const testVideoId = '7R9ttesP';

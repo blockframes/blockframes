@@ -9,6 +9,14 @@
 
 table {
   width: 100%;
+  td {
+    padding: 8px;
+  }
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type,
+  td.mat-footer-cell:first-of-type {
+    padding-left: 24px;
+  }
 }
 
 .icon-filter {
@@ -32,7 +40,7 @@ td.clickable {
 
 .loader-container {
   padding-top: 30px;
-  background-color: white;
+  background-color: var(--background-card);
 }
 
 mat-spinner {

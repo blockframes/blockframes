@@ -21,9 +21,9 @@ export class GetViewsPipe implements PipeTransform {
 @Pipe({ name: 'getTitlesAnalytics' })
 export class GetTitlesAnalyticsPipe implements PipeTransform {
   constructor(private analytics: AnalyticsService) {}
-  transform(movies: Movie[]): Observable<MovieAnalytics[]> {
+  transform(movies: Movie[]): Promise<MovieAnalytics[]> {
     const movieIds = movies.map(m => m.id);
-    return this.analytics.valueChanges(movieIds).pipe(map(value => value.filter(v => !!v)));
+    return this.analytics.getValue(movieIds).then(value => value.filter(v => !!v));
   }
 }
 

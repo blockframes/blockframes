@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, take, skip, shareReplay } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -23,7 +23,7 @@ import { Contract, ContractService } from '@blockframes/contract/contract/+state
 import { Term } from '@blockframes/contract/term/+state/term.model';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { SearchResponse } from '@algolia/client-search';
-import { Bucket, BucketQuery, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketService, createBucket } from '@blockframes/contract/bucket/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgId } from '@env';
 import { BucketContract, createBucketContract, createBucketTerm } from '@blockframes/contract/bucket/+state/bucket.model';
@@ -64,7 +64,6 @@ export class ListComponent implements OnDestroy, OnInit {
     private termService: TermService,
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
-    private bucketQuery: BucketQuery,
     private orgQuery: OrganizationQuery,
     private router: Router,
   ) {
@@ -98,7 +97,7 @@ export class ListComponent implements OnDestroy, OnInit {
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
       this.availsForm.valueChanges.pipe(startWith(this.availsForm.value)),
-      this.bucketQuery.selectActive().pipe(startWith(undefined))
+      this.bucketService.active$.pipe(startWith(undefined))
     ]).pipe(shareReplay(1));
 
     const subStateUrl = search$.pipe(
@@ -120,9 +119,7 @@ export class ListComponent implements OnDestroy, OnInit {
             }
           )
         })
-
-
-
+        
     const sub = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
@@ -172,7 +169,7 @@ export class ListComponent implements OnDestroy, OnInit {
     return Promise.all(promises);
   }
 
-  addAvail(title: AlgoliaMovie) {
+  async addAvail(title: AlgoliaMovie) {
     const titleId = title.objectID;
     if (this.availsForm.invalid) {
       this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
@@ -192,7 +189,8 @@ export class ListComponent implements OnDestroy, OnInit {
     }
 
     const orgId = this.orgQuery.getActiveId();
-    if (this.bucketQuery.getActive()) {
+    const bucket = await this.bucketService.getActive();
+    if (bucket) {
       this.bucketService.update(orgId, bucket => {
         const contracts = bucket.contracts || [];
         for (const newContract of newContracts) {

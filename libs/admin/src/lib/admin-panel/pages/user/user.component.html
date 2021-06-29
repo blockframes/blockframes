@@ -11,6 +11,10 @@
         <ul>
           <li><b>Id : </b> {{ user.uid }}</li>
           <li><b>Email : </b> {{ user.email }}</li>
+          <li>
+            <b>Email Verified: </b> {{ user._meta.emailVerified }}
+            <button *ngIf="!user._meta.emailVerified" mat-button color="primary" (click)="verifyEmail()">Verify</button>
+          </li>
           <li><b>Position : </b> {{ user.position }}</li>
           <li><b>Phone Number : </b> {{ user.phoneNumber }}</li>
         </ul>
@@ -96,12 +100,9 @@
         <mat-label>Position</mat-label>
         <input matInput type="text" placeholder="Position" formControlName="position" />
       </mat-form-field>
-      <mat-card-actions fxLayoutAlign="space-between">
-        <button mat-button color="primary" (click)="verifyEmail()">Verify email</button>
-        <div fxLayoutGap="24px">
-          <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
-          <button type="submit" mat-flat-button color="warn" (click)="deleteUser()">Delete</button>
-        </div>
+      <mat-card-actions fxLayoutAlign="end" fxLayoutGap="24px">
+        <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+        <button type="submit" mat-flat-button color="warn" (click)="deleteUser()">Delete</button>
       </mat-card-actions>
     </form>
   </mat-card>
@@ -122,12 +123,4 @@
   </mat-card>
 </section>
 
-<ng-container *ngIf="!!dashboardURL">
-  <section fxLayout fxLayoutAlign="center">
-    <iframe
-      [src]="dashboardURL"
-      frameborder="0"
-      allowfullscreen>
-    </iframe>
-  </section>
-</ng-container>
+<admin-dashboard dashboard="user" [params]="{ 'ds2.user_id': userId }"></admin-dashboard>

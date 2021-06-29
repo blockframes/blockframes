@@ -37,6 +37,9 @@
     <ng-template colRef="addresses.main.country" let-country>
       {{ country ? country : '--' }}
     </ng-template>
+    <ng-template colRef="activity" let-activity>
+      {{ activity | toLabel: 'orgActivity'}}
+    </ng-template>
     <ng-template colRef="appAccess" let-appAccess>
       <ul>
         <ng-container *ngFor="let a of app">
