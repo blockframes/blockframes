@@ -47,6 +47,10 @@ describe('User can create new account and create a new organization', () => {
     assertMoveTo(CREATEPATH);
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
   });
+
+  it('Check emails are sent properly', () => {
+
+  });
 });
 
 //! This one is failing because of the data that are coming from Algolia. The data about organization are not prefilled in the
