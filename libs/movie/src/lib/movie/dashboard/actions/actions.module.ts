@@ -17,14 +17,9 @@ import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardTitleShellModule } from '../shell/shell.module';
 
 @NgModule({
@@ -34,7 +29,6 @@ import { DashboardTitleShellModule } from '../shell/shell.module';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ReactiveFormsModule,
     // Blockframes
     MovieFeatureModule,
     ToLabelModule,
@@ -47,13 +41,9 @@ import { DashboardTitleShellModule } from '../shell/shell.module';
     MatTabsModule,
     MatIconModule,
     MatButtonModule,
-    MatChipsModule,
     MatMenuModule,
-    MatFormFieldModule,
-    MatSelectModule,
     MatInputModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule
+    MatSnackBarModule
   ],
 })
 export class DashboardActionsShellModule { }
