@@ -1,18 +1,19 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
-import { AngularFirestore } from '@angular/fire/firestore';
 
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 
-import { OfferShellComponent } from '../shell.component';
-import { Term, TermService } from '@blockframes/contract/term/+state';
-import { Contract, ContractService, contractStatus } from '@blockframes/contract/contract/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
+import { Term, TermService } from '@blockframes/contract/term/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { ContractService, contractStatus } from '@blockframes/contract/contract/+state';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
+import { OfferShellComponent } from '../shell.component';
 
 
 @Component({
@@ -67,7 +68,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
-    private db: AngularFirestore,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private termService: TermService,
     private shell: OfferShellComponent,
@@ -95,6 +96,19 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.contractService.update(contractId, { status }, { write });
     this.incomeService.update(incomeId, { price }, { write });
     write.commit();
+  }
+
+  confirm(term: Term) {
+    this.dialog.open(ConfirmInputComponent, {
+      data: {
+        title: 'Are you sure ?',
+        subtitle: `You are about to delete permanently this term (#${term.id}). This action will also update the contract #${term.contractId} to remove the reference to the deleted term.`,
+        text: `Please type "DELETE" to confirm.`,
+        confirmationWord: 'DELETE',
+        confirmButtonText: 'Delete term',
+        onConfirm: this.delete(term),
+      }
+    });
   }
 
   delete(term: Term) {
