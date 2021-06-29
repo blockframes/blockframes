@@ -3,12 +3,12 @@
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
 
-  <title-dashboard-shell [routes]="navLinks">
+  <title-dashboard-shell [routes]="navLinks" fxFlex>
     <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
-      <ng-container *ngIf="movie.app.financiers.status === 'accepted' else preview">
+      <ng-container *ngIf="movie.app.financiers.status !=='archived'">
         <button style="" mat-button color="primary" color="primary" (click)="openDialog()">
           <mat-icon svgIcon="update" color="primary"></mat-icon>
-          Update funding status
+          Update Funding Status
         </button>
       </ng-container>
       <ng-template #preview>

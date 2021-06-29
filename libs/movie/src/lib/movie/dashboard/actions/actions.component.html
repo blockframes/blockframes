@@ -30,19 +30,29 @@
         <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
         </a>
-        <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item (click)="updateStatus('draft', 'Title back to Draft')">
+        <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item
+          (click)="updateStatus('draft', 'Title back to Draft')">
           <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
         </button>
-        <button *ngIf="movie.app[appName].status === 'accepted'" mat-menu-item (click)="updateStatus('draft', 'Title removed from Marketplace.')">
+        <button *ngIf="movie.app[appName].status === 'accepted'" mat-menu-item
+          (click)="updateStatus('draft', 'Title removed from Marketplace.')">
           <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
         </button>
         <button mat-menu-item (click)="updateStatus('archived', 'Title archived.')">
           <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
         </button>
-        <a mat-menu-item *ngIf="['catalog','financiers'].includes(appName) && movie.app[appName].status !== 'accepted'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']"  fragment="submit">
+        <a mat-menu-item *ngIf="['catalog','financiers'].includes(appName)
+          && movie.app[appName].status !== 'accepted'
+          && movie.app[appName].status !== 'submitted'"
+          [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="submit">
           <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
         </a>
-        <a mat-menu-item *ngIf="appName === 'festival' && movie.app[appName].status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']"  fragment="publish">
+        <a mat-menu-item *ngIf="['financiers'].includes(appName)"  [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+          <mat-icon svgIcon="visibility" color="primary"></mat-icon>
+          <span>Marketplace Preview</span>
+        </a>
+        <a mat-menu-item *ngIf="appName === 'festival' && movie.app[appName].status === 'draft'"
+          [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="publish">
           <mat-icon svgIcon="marketplace"></mat-icon><span>Publish on Marketplace</span>
         </a>
       </mat-menu>
