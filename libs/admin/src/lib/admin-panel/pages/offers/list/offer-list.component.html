@@ -38,7 +38,8 @@
           {{ specificity ? 'YES' : '-' }}
         </ng-template>
         <ng-template colRef="incomes" let-incomes>
-          {{incomes | total:'price' | currency:incomes[0].currency:'symbol'}}
+          <span *ngIf="incomes.length !== 0">{{ incomes | total: 'price' | currency:incomes[0].currency }}</span>
+          <span *ngIf="incomes.length === 0">$0</span>
         </ng-template>
         <ng-template colRef="status" let-status>{{ status }}</ng-template>
       </bf-table-filter>
