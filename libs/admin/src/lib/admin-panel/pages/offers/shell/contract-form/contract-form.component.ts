@@ -1,18 +1,11 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { MovieService } from "@blockframes/movie/+state";
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-
-// Components
-import { OfferShellComponent } from '../shell.component';
-
-// RXJS
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
 
 @Component({
   selector: 'contract-form',
@@ -22,23 +15,15 @@ import { map, pluck } from 'rxjs/operators';
 })
 export class ContractFormComponent implements OnInit {
   form = new FormGroup({
-    titleId: new FormControl(),
-    price: new FormControl(0),
+    titleId: new FormControl(null, Validators.required),
+    price: new FormControl(0, Validators.min(0)),
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
-  contractId$: Observable<string> = this.route.params.pipe(pluck('contractId'));
-  subscription: Subscription;
+  currency: String;
   
-  income$ = combineLatest([
-    this.contractId$,
-    this.shell.incomes$,
-  ]).pipe(
-    map(([contractId, incomes]) => incomes.find((income) => income.contractId === contractId)));
-    
   constructor(
     private service: MovieService,
     private route: ActivatedRoute,
-    private shell: OfferShellComponent,
     private incomeService: IncomeService,
     private contractService: ContractService
     ){}
@@ -53,5 +38,6 @@ export class ContractFormComponent implements OnInit {
         titleId: contract?.titleId,
         price: income?.price
       })
+      this.currency = income?.currency;
     }
 }
