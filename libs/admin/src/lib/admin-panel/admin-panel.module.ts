@@ -57,13 +57,13 @@ export const panelRoutes: Routes = [
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
   { path: 'users', component: UsersComponent },
-  { path: 'offers', loadChildren:()=>import('./pages/offers/list/offer-list.module').then(s => s.OffersListModule) },
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
   { path: 'invitations', component: InvitationsComponent },
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent },
+  { path: 'offers', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.OffersListModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
 ];
 @NgModule({
