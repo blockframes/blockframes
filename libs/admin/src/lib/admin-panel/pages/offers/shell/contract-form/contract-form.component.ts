@@ -35,7 +35,6 @@ export class ContractFormComponent implements OnInit {
   ]).pipe(
     map(([contractId, incomes]) => incomes.find((income) => income.contractId === contractId)));
     
-
   constructor(
     private service: MovieService,
     private route: ActivatedRoute,
