@@ -7,6 +7,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Material
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -18,7 +21,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     
     // Material
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    FlexLayoutModule
   ]
 })
 export class ContractFormModule { }
