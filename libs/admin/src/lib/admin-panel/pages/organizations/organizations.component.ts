@@ -22,6 +22,7 @@ export class OrganizationsComponent implements OnInit {
     'denomination.public': 'Short name',
     'addresses.main.country': 'Country',
     'email': 'Email',
+    'activity': 'Activity',
     'appAccess': { value: 'App  : Dashboard : Marketplace', disableSort: true }
   };
 
@@ -32,6 +33,7 @@ export class OrganizationsComponent implements OnInit {
     'denomination.public',
     'addresses.main.country',
     'status',
+    'activity',
     'email',
     'appAccess',
   ];
