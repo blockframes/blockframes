@@ -3,24 +3,18 @@
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
 
-  <title-dashboard-shell [routes]="navLinks" fxFlex>
+  <title-dashboard-shell [routes]="navLinks">
+
     <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
       <ng-container *ngIf="movie.app.financiers.status !=='archived'">
-        <button style="" mat-button color="primary" color="primary" (click)="openDialog()">
+        <button mat-button color="primary" color="primary" (click)="openDialog()">
           <mat-icon svgIcon="update" color="primary"></mat-icon>
           Update Funding Status
         </button>
       </ng-container>
-      <ng-template #preview>
-        <ng-container *ngIf="(org$ | async | canAccess: 'marketplace': appName) && movie.app.financiers.status !== 'archived'">
-          <a mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-            <mat-icon svgIcon="visibility" color="primary"></mat-icon>
-            <span>Marketplace Preview</span>
-          </a>
-        </ng-container>
-      </ng-template>
-      <actions-dashboard-shell></actions-dashboard-shell>
+      <actions-dashboard-shell fxFlex></actions-dashboard-shell>
     </movie-cta>
+
   </title-dashboard-shell>
 
   <ng-template #dialogTemplate let-data>
