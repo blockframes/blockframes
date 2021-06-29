@@ -58,7 +58,14 @@ describe.only('User can create new account and create a new organization', () =>
   });
 
   it('Check emails are sent properly', () => {
-
+    //Check for emails sent
+    cy.mailosaurGetMessage(serverId, {
+      sentTo: testEmail
+    }).then(email => {
+      expect(email.subject).to.equal(SUBJECT_DEMO);
+      cy.log(email.text.body);
+      cy.mailosaurDeleteMessage(email.id);
+    })    
   });
 });
 
