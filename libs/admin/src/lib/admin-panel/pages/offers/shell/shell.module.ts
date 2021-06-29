@@ -10,11 +10,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 
-import { IncomesPipe, ShellComponent } from './shell.component';
+import { TotalPipeModule } from '@blockframes/utils/pipes';
+import { OfferShellComponent } from './shell.component';
 
 const routes: Routes = [{
   path: '',
-  component: ShellComponent,
+  component: OfferShellComponent,
   children: [
     { path: '', redirectTo: 'view' },
     { path: 'view', loadChildren: () => import('./offer-view/offer-view.module').then(m => m.OfferViewModule) },
@@ -24,12 +25,13 @@ const routes: Routes = [{
 }]
 
 @NgModule({
-  declarations: [ShellComponent, IncomesPipe],
+  declarations: [OfferShellComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ImageModule,
     OrgChipModule,
+    TotalPipeModule,
 
     MatCardModule,
     MatIconModule,

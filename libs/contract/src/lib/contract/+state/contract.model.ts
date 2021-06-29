@@ -1,7 +1,12 @@
+
+export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
+
+export type ContractStatus = typeof contractStatus[number];
+
 export interface Contract {
   id: string;
   type: 'mandate' | 'sale';
-  status: 'pending' | 'accepted' | 'declined' | 'archived';
+  status: ContractStatus;
   titleId: string;
   /** Parent term on which this contract is created */
   parentTermId: string;

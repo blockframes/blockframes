@@ -36,8 +36,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     distinctUntilChanged()
   ).subscribe(value => this.updateCurrency(value));
 
-  // trackById = (i: number, doc: { id: string }) => doc.id;
-
   constructor(
     @Optional() private intercom: Intercom,
     private orgQuery: OrganizationQuery,
