@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DashboardTitleShellModule } from '../shell/shell.module';
 
 @NgModule({
   declarations: [DashboardActionsShellComponent],
@@ -41,6 +42,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ImageModule,
     OrgAccessModule,
     ConfirmInputModule,
+    DashboardTitleShellModule,
     // Material
     MatTabsModule,
     MatIconModule,
