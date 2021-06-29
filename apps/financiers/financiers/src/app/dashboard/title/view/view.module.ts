@@ -21,6 +21,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 const routes = [{
   path: '',
@@ -78,6 +79,7 @@ const routes = [{
     // Blockframes
     DashboardTitleShellModule,
     DashboardActionsShellModule,
+    OrgAccessModule,
     // Material
     MatButtonModule,
     MatIconModule,

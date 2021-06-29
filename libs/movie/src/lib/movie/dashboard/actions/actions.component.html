@@ -13,13 +13,6 @@
           <span>Marketplace Preview</span>
         </a>
       </ng-container>
-      <ng-container *ngIf="movie.app.financiers.status === 'accepted'">
-        <button style="width: fit-content;" mat-button color="primary" color="primary" (click)="openDialog()">
-          <mat-icon svgIcon="update" color="primary"></mat-icon>
-          Update funding status
-        </button>
-
-      </ng-container>
     </ng-template>
     <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
       <button mat-button (click)="removeAppAccess()" matTooltip="Delete Title">

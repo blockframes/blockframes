@@ -4,16 +4,22 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
 
   <title-dashboard-shell [routes]="navLinks">
-    <movie-cta fxFlex>
-      <!-- TODO #6084 CTA -->
-      <ng-container *ngIf="movie.app.financiers.status === 'accepted'">
-        <button style="width: fit-content;" mat-button color="primary" color="primary" (click)="openDialog()">
+    <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+      <ng-container *ngIf="movie.app.financiers.status === 'accepted' else preview">
+        <button style="" mat-button color="primary" color="primary" (click)="openDialog()">
           <mat-icon svgIcon="update" color="primary"></mat-icon>
           Update funding status
         </button>
-
       </ng-container>
-      <actions-dashboard-shell fxFlex></actions-dashboard-shell>
+      <ng-template #preview>
+        <ng-container *ngIf="(org$ | async | canAccess: 'marketplace': appName) && movie.app.financiers.status !== 'archived'">
+          <a mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+            <mat-icon svgIcon="visibility" color="primary"></mat-icon>
+            <span>Marketplace Preview</span>
+          </a>
+        </ng-container>
+      </ng-template>
+      <actions-dashboard-shell></actions-dashboard-shell>
     </movie-cta>
   </title-dashboard-shell>
 
