@@ -3,20 +3,21 @@ form {
   flex-direction: column;
   margin: 0 64px;
   padding-top: 16px;
-  & > * {
-    margin-bottom: 16px;
-  }
+}
+
+.margin_bottom {
+  margin-bottom: 16px;
 }
 
 .header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
 }
 
 mat-card {
-  &.no_pd {
-    padding-bottom: 0 !important;
+  .no_pd {
+    margin-bottom: -24px;
   }
   p {
     font-weight: bold;
@@ -37,6 +38,37 @@ mat-card {
 .add_rights {
   justify-self: flex-end;
   align-self: center;
-  margin-top: 16px;
+  margin-top: 24px;
   width: min-content;
+}
+
+.confirm_container {
+  display: block;
+
+  section {
+    padding: 40px 80px 80px 80px;
+  }
+
+  div[mat-dialog-content] {
+    text-align: center;
+    max-width: max(252px,80%);
+    margin: 0 auto;
+    mat-form-field {
+      width: 70%;
+      padding: 0;
+      margin-bottom: -24px;
+    }
+  }
+
+  p {
+    max-width: 70%;
+  }
+
+  button {
+    width: fit-content;
+  }
+
+  button.close {
+    aspect-ratio: 1;
+  }
 }

@@ -1,44 +1,50 @@
 <form [formGroup]="form">
   <div class="header">
     <mat-form-field appearance="outline">
-      <mat-select formControlName="type">
+      <mat-select formControlName="select_type">
         <mat-option value="general_contract_status">General contract Status</mat-option>
       </mat-select>
     </mat-form-field>
     <button mat-flat-button color="primary" (click)="update()">Update</button>
   </div>
-  <mat-card class="no_pd">
+  <mat-card class="margin_bottom">
     <p>Buyer's Specific Terms</p>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="no_pd">
       <textarea matInput formControlName="buyers_specific_term"></textarea>
       <mat-hint>You can pick up your favorite car here</mat-hint>
     </mat-form-field>
   </mat-card>
-  <mat-card class="no_pd">
+  <mat-card class="margin_bottom">
     <p>Buyers Delivery Wishlist</p>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="no_pd">
       <textarea matInput formControlName="buyers_delivery_wishlist"></textarea>
       <mat-hint>You can pick up your favorite car here</mat-hint>
     </mat-form-field>
   </mat-card>
 
-  <mat-card>
+  <mat-card class="margin_bottom">
     <p>Contracts in the package</p>
     <ng-container *ngIf="hydratedContracts$|async as contracts">
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable>
-        <ng-template colRef="seller_approved" let-seller_approved>{{ seller_approved }}</ng-template>
-        <ng-template colRef="sellers_name" let-sellers_name>
-          <ng-container *ngIf="(sellers_name | getUser | async) as user">
-            {{user.firstName}} {{user.lastName}} ({{user.email}})
+        <ng-template colRef="titleId" let-titleId>
+          <span>{{titleId}}</span>
+          <span *ngIf="(titleId|getTitle | async) as title">{{title.title?.international}}</span>
+        </ng-template>
+        <ng-template colRef="sellerApproved" let-sellerApproved>{{ sellerApproved }}</ng-template>
+        <ng-template colRef="orgIds" let-orgIds>
+          <ng-container *ngFor="let orgId of orgIds; let last=last">
+            <ng-container *ngIf="(orgId | firstUserFromOrgId | async) as user">
+              {{user.firstName}} {{user.lastName}} ({{user.email}}){{last?'':','}}
+            </ng-container>
           </ng-container>
         </ng-template>
-        <ng-template colRef="organization_name" let-organization_name>{{ organization_name }}</ng-template>
-        <ng-template colRef="id" let-id="id">
+        <ng-template colRef="organizationName" let-organizationName>{{ organizationName |json}}</ng-template>
+        <ng-template colRef="id" let-id>
           <div class="actions">
-            <a mat-icon-button [routerLink]="['./../', id,]" matTooltip="Edit">
+            <a mat-icon-button [routerLink]="['../', id,]" matTooltip="Edit">
               <mat-icon svgIcon="visibility"></mat-icon>
             </a>
-            <button mat-icon-button matTooltip="Delete">
+            <button mat-icon-button matTooltip="Delete" (click)="confirmDelete(id)">
               <mat-icon svgIcon="delete"></mat-icon>
             </button>
           </div>
@@ -46,6 +52,5 @@
       </bf-table-filter>
     </ng-container>
   </mat-card>
-  <a mat-flat-button color="primary" class="add_rights">Add a right to a title</a>
-
+  <a mat-flat-button color="primary" class="add_rights margin_bottom">Add a right to a title</a>
 </form>

@@ -1,17 +1,19 @@
-import { Component, ChangeDetectionStrategy, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state';
-import { Query, queryChanges } from 'akita-ng-fire';
-import { combineLatest } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import {
+  Component, ChangeDetectionStrategy, OnDestroy
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { combineLatest, Subscription } from 'rxjs';
+import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { OfferShellComponent } from '../shell.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 
 const columns = {
-  'seller_approved': 'Seller Approved',
-  'sellers_name': 'Seller\'s name (Email)',
-  'organization_name': 'Organization Name',
+  'sellerApproved': 'Seller Approved',
+  'orgIds': 'Seller\'s name (Email)',
+  'titleId': 'Title ID',
+  'organizationName': 'Organization Name',
   'id': 'Actions',
 };
 
@@ -21,17 +23,24 @@ const columns = {
   styleUrls: ['./offer-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfferViewComponent {
+export class OfferViewComponent implements OnDestroy {
 
   public offer$ = this.shell.offer$.pipe(shareReplay(1));
   public buyerOrg$ = this.shell.buyerOrg$;
   public contracts$ = this.shell.contracts$;
   public incomes$ = this.shell.incomes$;
-  public form = this.fb.group({
-    type: this.fb.control('general_contract_status'),
-    buyers_specific_term: this.fb.control(null),
-    buyers_delivery_wishlist: this.fb.control(null),
+  public form = new FormGroup({
+    select_type: new FormControl('general_contract_status'),
+    buyers_specific_term: new FormControl(null),
+    buyers_delivery_wishlist: new FormControl(null),
   })
+
+  public deleteControl = new FormControl('');
+  public deleteValid$ = this.deleteControl.valueChanges.pipe(
+    map(_ => `${_}`.toLowerCase().trim() !== 'delete'),
+    startWith(true)
+  );
+  public confirmDialog: MatDialogRef<unknown>;
   public hydratedContracts$ = combineLatest(
     this.buyerOrg$,
     this.contracts$,
@@ -39,62 +48,82 @@ export class OfferViewComponent {
   ).pipe(
     tap(
       ([buyerOrg, contracts, offer]) => {
-        console.log({ offer, buyerOrg, contracts })
         this.form.get('buyers_specific_term').setValue(offer.specificity)
         this.form.get('buyers_delivery_wishlist').setValue(offer.delivery)
       }
     ),
     map(
       ([buyerOrg, contracts]) => {
-        return contracts.map(_ => ({
-          seller_approved: _.status,
-          sellers_name: _.sellerId,
-          organization_name: buyerOrg.denomination.public,
-          id: _.id,
-        }))
+        return contracts.map(contract => ({
+          sellerApproved: contract.status,
+          orgIds: contract.stakeholders.filter(
+            stakeholder => ![contract.buyerId, contract.sellerId].includes(stakeholder)
+          ),
+          titleId: contract.titleId,
+          organizationName: buyerOrg.denomination.public,
+          id: contract.id,
+        }));
       }
     )
   )
 
   public titles: {
-    seller_approved
-    sellers_name
-    organization_name
+    sellerApproved
+    orgIds
+    organizationName
     id: string
   }[] = [];
-  columns = columns;
-  initialColumns = ['seller_approved', 'sellers_name', 'organization_name', 'id'];
+  public columns = columns;
+  public initialColumns = ['titleId', 'sellerApproved', 'orgIds', 'organizationName', 'id'];
+  public subs: Subscription[] = [];
 
   constructor(
     private shell: OfferShellComponent,
-    public fb: FormBuilder,
-    private userService: UserService,
+    private dialog: MatDialog,
   ) { }
 
 
   update() {
-    console.log('hello')
+    console.log('updating')
   }
 
-}
-
-
-@Pipe({ name: 'getUser' })
-export class GetUserPipe implements PipeTransform {
-  constructor(private orgService: OrganizationService) { }
-
-  transform(orgid: string) {
-    const queryOffer: Query<Organization> = {
-      path: `orgs/${orgid}`,
-      //@ts-ignore
-      userIds: (org: Organization) => ({
-        path: 'users',
-        queryFn: ref => ref.where('uid', '==', org.userIds[0]),
-      }),
-    }
-    return queryChanges.call(this.orgService, queryOffer).pipe(
-      tap(s => console.log({ s })),
-      map((_) => _.userIds[0])
-    )
+  handleDelete(id: string) {
+    console.log('deleting ' + id)
   }
+
+  close() {
+    this.confirmDialog.close()
+  }
+
+  confirmDelete(id: string) {
+    this.confirmDialog = this.dialog.open(ConfirmInputComponent, {
+      data: {
+        title: 'Are you sure you want to delete a right from this package?',
+        subtitle: '',
+        confirmationWord: 'delete',
+        placeholder: 'Please Type « DELETE »',
+        confirm: 'Delete this right',
+        confirmButtonText: 'Delete this right',
+        cancel: 'Cancel',
+        onConfirm: () => {
+          this.handleDelete(id);
+          this.confirmDialog.close();
+        },
+      },
+      autoFocus: false,
+    });
+  }
+
+
+  // delete(term: Term) {
+  //   this.contractService.update(term.contractId, (contract, write) => {
+  //     this.incomeService.remove(term.id, { write });
+  //     return { termIds: contract.termIds.filter(id => id !== term.id) };
+  //   })
+  // }
+
+  ngOnDestroy() {
+    this.subs.forEach(_ => _.unsubscribe());
+  }
+
 }
