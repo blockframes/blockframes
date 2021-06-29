@@ -13,12 +13,12 @@ export class CatalogLandingComponent {
   public tabTitle = [
     {
       title: 'Valorize your back catalog.',
-      imgAsset: 'lp_catalog_seller_perspective.webp',
+      imgAsset: 'lp_catalog_seller_perspective.png',
       description: 'Get extra visibility on your back catalog and maximize revenues on library sales.'
     },
     {
       title: 'Buy quality content from a multitude of rights holders in one single package.',
-      imgAsset: 'lp_catalog_buyer_perspective.webp',
+      imgAsset: 'lp_catalog_buyer_perspective.png',
       description: 'Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.'
     }
   ]
@@ -36,7 +36,7 @@ export class CatalogLandingComponent {
     },
     {
       title: 'Track your films’ activity',
-      imgAsset: 'sales_statistics.webp',
+      imgAsset: 'sales_statistics.svg',
       description: 'Get detailed stats on your films’ activity on the marketplace, and get notified for any new activity.'
     },
     {
@@ -59,7 +59,7 @@ export class CatalogLandingComponent {
     },
     {
       title: 'Package deals',
-      imgAsset: 'package_deal.webp',
+      imgAsset: 'package_deal.svg',
       description: 'Group several Sellers’ titles together in one deal.'
     },
     {

@@ -13,12 +13,12 @@ export class LandingComponent {
   public tabTitle = [
     {
       title: 'For Sales Agents.',
-      imgAsset: 'lp_festival_seller_perspective.webp',
+      imgAsset: 'lp_festival_seller_perspective.png',
       description: 'Showcase your line-up, get in touch with Buyers and manage meetings and screenings.'
     },
     {
       title: 'For Buyers.',
-      imgAsset: 'lp_festival_buyer_perspective.webp',
+      imgAsset: 'lp_festival_buyer_perspective.png',
       description: 'Explore a large library of films, get in touch with sales agents, plan meetings and watch screenings.'
     }
   ]
@@ -41,7 +41,7 @@ export class LandingComponent {
     },
     {
       title: 'Track your films\' activity',
-      imgAsset: 'sales_statistics.webp',
+      imgAsset: 'sales_statistics.svg',
       description: 'Track your films’ activity on the platform, and get screening reports with detailed stats after each screening.'
     }
   ];

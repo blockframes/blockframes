@@ -50,7 +50,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
-          placeholderUrl: 'empty_organization.webp',
+          placeholderUrl: 'empty_organization.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'requestFromUserToJoinOrgDeclined':
@@ -134,7 +134,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: msg,
-          placeholderUrl: `empty_organization.webp`,
+          placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`
         }

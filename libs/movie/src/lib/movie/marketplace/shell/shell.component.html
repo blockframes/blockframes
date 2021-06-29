@@ -71,7 +71,7 @@
       <h2>Images</h2>
       <bf-carousel flex [min]="3">
         <ng-container *ngFor="let photo of movie.promotional.still_photo">
-          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.webp" loading="eager" (click)="fullscreen(photo)">
+          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.svg" loading="eager" (click)="fullscreen(photo)">
         </ng-container>
       </bf-carousel>
     </article>
