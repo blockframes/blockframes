@@ -1,12 +1,17 @@
 <form [formGroup]="form">
-    <header>
-      <mat-form-field>
-        <mat-label>Select a Title</mat-label>
-        <mat-select formControlName="titleId">
-          <mat-option *ngFor="let title of (titles$ | async)" [value]="title.id">
-             {{ title.title.international }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </header>
-  </form>
+  <header fxLayout="row" fxLayoutAlign="space-around center">
+    <mat-form-field appearance="outline">
+      <mat-label>Select a Title</mat-label>
+      <mat-select formControlName="titleId">
+        <mat-option *ngFor="let title of (titles$ | async)" [value]="title.id">
+          {{ title.title.international }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Title price</mat-label>
+      <input matInput formControlName="price" />
+      <mat-icon matPrefix *ngIf="income$ | async as income" [svgIcon]="income.currency"></mat-icon>
+    </mat-form-field>
+  </header>
+</form>
