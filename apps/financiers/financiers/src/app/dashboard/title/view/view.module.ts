@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
+import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -76,6 +77,7 @@ const routes = [{
     FlexLayoutModule,
     // Blockframes
     DashboardTitleShellModule,
+    DashboardActionsShellModule,
     // Material
     MatButtonModule,
     MatIconModule,

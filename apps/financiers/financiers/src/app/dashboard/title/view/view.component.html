@@ -4,12 +4,16 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
 
   <title-dashboard-shell [routes]="navLinks">
-    <movie-cta fxLayout="column">
+    <movie-cta fxFlex>
       <!-- TODO #6084 CTA -->
       <ng-container *ngIf="movie.app.financiers.status === 'accepted'">
-        <span>{{ percentage }}% funded</span>
-        <button mat-stroked-button color="primary" (click)="openDialog()">Update funding status</button>
+        <button style="width: fit-content;" mat-button color="primary" color="primary" (click)="openDialog()">
+          <mat-icon svgIcon="update" color="primary"></mat-icon>
+          Update funding status
+        </button>
+
       </ng-container>
+      <actions-dashboard-shell fxFlex></actions-dashboard-shell>
     </movie-cta>
   </title-dashboard-shell>
 

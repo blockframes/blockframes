@@ -3,8 +3,9 @@
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
   <title-dashboard-shell [routes]="navLinks">
-    <movie-cta>
+    <movie-cta fxFlex>
       <!-- TODO #6084 CTA -->
+      <actions-dashboard-shell fxFlex></actions-dashboard-shell>
     </movie-cta>
   </title-dashboard-shell>
 </ng-container>
