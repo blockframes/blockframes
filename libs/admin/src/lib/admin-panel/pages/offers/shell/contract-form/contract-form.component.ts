@@ -19,7 +19,7 @@ export class ContractFormComponent implements OnInit {
     price: new FormControl(Validators.min(0)),
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
-  currency: String;
+  currency?: string;
   
   constructor(
     private service: MovieService,

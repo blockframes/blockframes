@@ -10,7 +10,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Title price</mat-label>
-      <input matInput formControlName="price" required min="0"/>
+      <input type="number" matInput formControlName="price" required min="0"/>
       <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
     </mat-form-field>
   </header>
