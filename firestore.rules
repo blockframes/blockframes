@@ -621,7 +621,8 @@ service cloud.firestore {
     }
 
     function notInMaintenance() {
-      return get(/databases/$(database)/documents/_META/_MAINTENANCE).data['endedAt'] != null;
+      return true; // @TODO #6127 temporary disabled
+      //return get(/databases/$(database)/documents/_META/_MAINTENANCE).data['endedAt'] != null;
     }
 
   }
