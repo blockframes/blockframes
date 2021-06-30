@@ -87,9 +87,8 @@ export class LandingShellComponent {
     try {
       this.buttonText = 'Sending Request...';
       const currentApp = getCurrentApp(this.routerQuery);
-      let information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
-      // @ts-ignore
-      if (window.Cypress) {
+      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
+      if ('Cypress' in window) {
         information.test = true;
         information.testEmailTo = testEmail;
       }
