@@ -56,8 +56,6 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
   private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
-  public org$ = this.orgQuery.selectActive();
-  public appName = getCurrentApp(this.routerQuery);
   public loading$: Observable<boolean>;
   public navLinks = links;
   public sub: Subscription;
@@ -65,11 +63,9 @@ export class TitleViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieQuery: MovieQuery,
-    private routerQuery: RouterQuery,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private campaignService: CampaignService,
-    private orgQuery: OrganizationQuery,
     private cdr: ChangeDetectorRef
   ) { }
 
