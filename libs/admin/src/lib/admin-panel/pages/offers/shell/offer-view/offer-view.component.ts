@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
@@ -27,7 +27,7 @@ const columns = {
 })
 export class OfferViewComponent {
 
-  public offer$ = this.shell.offer$.pipe(shareReplay(1));
+  public offer$ = this.shell.offer$;
   public buyerOrg$ = this.shell.buyerOrg$;
   public contracts$ = this.shell.contracts$;
   public incomes$ = this.shell.incomes$;
