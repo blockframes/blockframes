@@ -10,6 +10,7 @@ import { EventEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
+import { testEmail } from "@blockframes/e2e/utils";
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -345,8 +346,10 @@ const userFirstConnexionTemplate = (user: PublicUser) =>
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
 export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
+  // @ts-ignore
+  const supportEmail = (window.Cypress) ? testEmail : getSupportEmail(org._meta.createdFrom);
   return {
-    to: getSupportEmail(org._meta.createdFrom),
+    to: supportEmail,
     subject: 'A new organization has been created',
     text: organizationCreatedTemplate(org.id)
   };
@@ -365,8 +368,10 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
 }
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
+  // @ts-ignore
+  const supportEmail = (window.Cypress) ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
-    to: getSupportEmail(user._meta.createdFrom),
+    to: supportEmail,
     subject: 'New user connexion',
     text: userFirstConnexionTemplate(user)
   };
