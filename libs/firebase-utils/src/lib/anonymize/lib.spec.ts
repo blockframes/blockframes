@@ -1,3 +1,4 @@
+import { testVideoId } from '@env';
 import { DbRecord } from '../util';
 import { anonymizeDocument } from './lib'
 
@@ -158,7 +159,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
 
 describe('Test MOVIES anonymization function', () => {
   it('should anonymize movie documents', async () => {
-    const anonymizedJwplayerId = 'J4owWnLi';
+    const anonymizedJwplayerId = testVideoId;
     const id = 'MOV01';
     const titleRecord: DbRecord = {
       docPath: `movies/${id}`,

@@ -13,7 +13,7 @@ import { NotificationQuery } from '@blockframes/notification/+state';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'layout-dashboard',
@@ -30,7 +30,10 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     map(invitations => invitations.filter(invitation => invitation.status === 'pending').length)
   )
 
-  public ltMd$ = this.breakpointsService.ltMd;
+  public mode$ = this.breakpointsService.ltMd.pipe(
+    map(ltMd => ltMd ? 'over' : 'side'),
+    shareReplay(1)
+  );
 
   public movieIndex: string;
 

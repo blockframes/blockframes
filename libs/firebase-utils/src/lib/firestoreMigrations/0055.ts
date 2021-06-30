@@ -22,7 +22,7 @@ export async function upgrade(db: Firestore) {
     let update = false;
 
     // boxOffice[].territory
-    if (!!data.boxOffice) {
+    if (data.boxOffice) {
       data.boxOffice = data.boxOffice.map(office => {
         if (isReplaced(office.territory)) {
           office.territory = replaced[office.territory];
@@ -33,7 +33,7 @@ export async function upgrade(db: Firestore) {
     }
 
     // rating[].country
-    if (!!data.rating) {
+    if (data.rating) {
       data.rating = data.rating.map(rating => {
         if (isReplaced(rating.country)) {
           rating.country = replaced[rating.country];
@@ -52,7 +52,7 @@ export async function upgrade(db: Firestore) {
     });
 
     // originalRelease[].country
-    if (!!data.originalRelease) {
+    if (data.originalRelease) {
       data.originalRelease = data.originalRelease.map(release => {
         if (isReplaced(release.country)) {
           release.country = replaced[release.country];
@@ -63,11 +63,11 @@ export async function upgrade(db: Firestore) {
     }
 
     // stakeholders => stakeholder[] => countries
-    if (!!data.stakeholders) {
+    if (data.stakeholders) {
       for (const key in data.stakeholders) {
         const stakeholders = data.stakeholders[key] as Stakeholder[]
         data.stakeholders[key] = stakeholders.map(stakeholder => {
-          if (!!stakeholder.countries) {
+          if (stakeholder.countries) {
             stakeholder.countries = stakeholder.countries.map(country => {
               if (isReplaced(country)) {
                 update = true;
@@ -81,7 +81,7 @@ export async function upgrade(db: Firestore) {
     }
 
     // shooting.locations[].country
-    if (!!data.shooting) {
+    if (data.shooting) {
       for (const location of data.shooting.locations) {
         if (isReplaced(location.country)) {
           location.country = replaced[location.country];
@@ -101,7 +101,7 @@ export async function upgrade(db: Firestore) {
 
     // addresses.main.country
     const mainAddress = data.addresses.main;
-    if (!!mainAddress.country) {
+    if (mainAddress.country) {
       if (isReplaced(mainAddress.country)) {
         mainAddress.country = replaced[mainAddress.country];
         update = true;

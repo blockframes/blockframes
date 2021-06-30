@@ -181,7 +181,7 @@
         <mat-label>Other Genre(s)</mat-label>
         <mat-chip-list #chipList>
           <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
-            <mat-chip removable="true" (removed)="removeCustomGenre(i)">
+            <mat-chip removable (removed)="removeCustomGenre(i)">
               <span>{{ value }}</span>
               <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
             </mat-chip>
@@ -200,7 +200,7 @@
       <h3>Director(s)*</h3>
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors">
-        <ng-template colRef="description" let-description>{{ description | maxLength: 20 }}</ng-template>
+        <ng-template colRef="description" let-description>{{ description | maxLength: 80 }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
@@ -238,7 +238,7 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Director's Description</mat-label>
-              <textarea test-id="director-desc" matInput formControlName="description"
+              <textarea test-id="director-desc" matInput formControlName="description" cdkTextareaAutosize cdkAutosizeMinRows="5"
                 placeholder="e.g. James Cameron is a Canadian director, screenwriter, and producer who has had an extensive career in film and television.">
               </textarea>
               <mat-hint>

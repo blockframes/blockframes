@@ -18,8 +18,8 @@ export async function loadDBVersion(db: Firestore): Promise<number> {
   return version.data().currentVersion;
 }
 
-export async function updateDBVersion(db: Firestore, version: number): Promise<any> {
-  const versionRef = await db.collection('_META').doc('_VERSION');
+export async function updateDBVersion(db: Firestore, version: number) {
+  const versionRef = db.collection('_META').doc('_VERSION');
   const doc = await versionRef.get();
 
   if (!doc.exists) {

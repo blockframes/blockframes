@@ -93,7 +93,7 @@ function createMovieControls(movie: Partial<Movie>) {
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
-    productionStatus: new FormControl(entity.productionStatus),
+    productionStatus: new FormControl(entity.productionStatus, [Validators.required]),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     release: new ReleaseYearForm(entity.release),
     review: FormList.factory(entity.review, el => new MovieReviewForm(el)),

@@ -21,14 +21,3 @@ export { RequestDemoInformations } from '@blockframes/utils/request-demo';
 export { MovieAnalytics, MovieEventAnalytics } from '@blockframes/movie/+state/movie.firestore';
 export { NotificationTypes, NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 export { EventsAnalytics, EventAnalytics, ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';
-
-/** Custom object used to create an invitation. */
-export interface RequestToJoinOrganization {
-  adminEmail: string;
-  adminName: string;
-  organizationName: string;
-  organizationId: string;
-  userFirstname: string;
-  userLastname: string;
-}
-

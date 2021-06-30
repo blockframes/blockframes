@@ -8,7 +8,8 @@ export class MaintenanceService {
 
   // if document doesn't exist, it means that there is something not normal, we force maintenance mode to true.
   isInMaintenance$ = this.db.doc<IMaintenanceDoc>(`${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`).valueChanges().pipe(
-    map(maintenanceDoc => maintenanceDoc ? _isInMaintenance(maintenanceDoc) : true)
+    map(maintenanceDoc => maintenanceDoc ? _isInMaintenance(maintenanceDoc) : true),
+    map(_ => false) // @TODO #6127 temporary disabled
   );
 
   constructor(private db: AngularFirestore) { }
@@ -17,7 +18,7 @@ export class MaintenanceService {
     return this.isInMaintenance$.pipe(
       filter(isMaintenance => !!isMaintenance),
       first(),  // Change on maintenance can only happen once during the session
-      tap(_ => window.location.reload())
+      tap(() => window.location.reload())
     )
   }
 }

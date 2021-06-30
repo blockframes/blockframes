@@ -11,7 +11,7 @@ export class FireAnalytics {
     private authQuery: AuthQuery,
   ) {}
 
-  public event(name: AnalyticsEvents, params: Record<string, any>) {
+  public event(name: AnalyticsEvents, params: Record<string, unknown>) {
 
     const { user, orgId, isBlockframesAdmin } = this.authQuery;
     const isOperator = isBlockframesAdmin || Object.values(centralOrgId).includes(orgId);

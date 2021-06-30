@@ -8,7 +8,7 @@
 <ng-container *ngIf="files.length; else noFiles">
   <bf-carousel flex>
 
-    <button carouselItem mat-button (click)="selectFile('')" [disabled]="isSelected('')" matTooltip="Stop presenting file">
+    <button carouselItem mat-button (click)="selectFile('')" matTooltip="Stop presenting file">
       <mat-icon svgIcon="cancel"></mat-icon>
       <p>Stop</p>
     </button>

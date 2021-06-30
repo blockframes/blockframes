@@ -34,16 +34,19 @@
       <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Click the link provided in your verification email.">
       </mat-icon>
     </div>
-    <mat-icon *ngIf="(emailValidate$ | async)" svgIcon="check_circle" color="primary"></mat-icon>
-    <mat-icon *ngIf="!(emailValidate$ | async)" class="refresh-icon" (click)="refresh()" svgIcon="update"
-      matTooltip="Refresh page."></mat-icon>
+    <ng-container *ngIf="emailValidate$ | async; else notValid">
+      <mat-icon svgIcon="check_circle" color="primary"></mat-icon>
+    </ng-container>
+    <ng-template #notValid>
+      <mat-icon class="refresh-icon" color="primary" (click)="resendEmailVerification()" svgIcon="resend_email" matTooltip="Resend verification email."></mat-icon>
+    </ng-template>
   </article>
 
   <mat-divider inset></mat-divider>
 
   <article fxLayout fxLayoutAlign="space-between center">
     <div fxLayout>
-      <img class="illustration" asset="org.svg" alt="organization illustration" />
+      <img class="illustration" asset="org_approval.svg" alt="organization illustration" />
       <p>Organization Approval</p>
       <mat-icon class="icon-tooltip" svgIcon="info"
         matTooltip="Please wait for the approval of the company information you provided."></mat-icon>

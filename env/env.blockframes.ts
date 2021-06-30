@@ -182,7 +182,8 @@ export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
 // ========
 
 export const datastudio = {
-  user: 'fd0ee9b3-0306-4404-ae96-a67d708e2c58/page/dLd2B'
+  user: 'fd0ee9b3-0306-4404-ae96-a67d708e2c58/page/dLd2B',
+  users: '978dc4a0-6dfc-4499-b159-f69f53aeb3a5/page/00YOC'
 }
 
 // Archipel OrgIds
@@ -199,3 +200,9 @@ export const centralOrgId = {
 export const backupBucket = 'blockframes-backups';
 export const heavyChunkSize = 7;
 export const chunkSize = 15;
+
+// JwPlayer
+// @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
+// ========
+
+export const testVideoId = '7R9ttesP';

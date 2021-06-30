@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { Location } from "@angular/common";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
 import { getAppLocation } from "@blockframes/utils/helpers";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'auth-terms-conditions',
@@ -16,10 +16,11 @@ export class TermsConditionsComponent implements OnInit {
   section$: Observable<'dashboard' | 'marketplace'>;
   appUrl: string;
   appName: string;
+  canGoBack = window.history.length > 1;
 
   constructor(
-    private location: Location,
     private routerQuery: RouterQuery,
+    private location: Location,
   ) { }
 
   ngOnInit() {
@@ -31,4 +32,5 @@ export class TermsConditionsComponent implements OnInit {
   goBack() {
     this.location.back();
   }
+
 }

@@ -134,7 +134,7 @@ export async function cleanWatermarkDir(bucket: Bucket) {
     } else {
       const userId = f.name.split('/')[2].replace('.svg', '');
       const user = await getDocument<PublicUser>(`users/${userId}`);
-      if (!!user) {
+      if (user) {
         if (user.watermark.storagePath === f.name) {
           console.log('This should not have happened if migration 29 went well..');
         } else if (await f.delete()) { deleted++; }

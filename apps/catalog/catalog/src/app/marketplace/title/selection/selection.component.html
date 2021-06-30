@@ -9,7 +9,7 @@
       </div>
       <div fxLayout="column" fxLayoutAlign="center center">
         <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
-          {{ (titles | deepKey:'title.international').join(', ') }}
+          {{ (titles | deepKey:'title.international') }}
         </p>
         <button mat-flat-button color="primary" (click)="createOffer(bucket)">Create Offer</button>
       </div>
@@ -17,69 +17,42 @@
 
     <section>
       <h2>Please select a currency</h2>
-      <mat-form-field appearance="outline">
-        <mat-label>Select</mat-label>
-        <mat-select [value]="bucket.currency" (selectionChange)="updateCurrency($event.value)"
-          test-id="selection-currency">
-          <ng-container *ngFor="let currency of currencies | keyvalue">
-            <mat-option [value]="currency.key">{{ currency.value }}</mat-option>
-          </ng-container>
-        </mat-select>
-      </mat-form-field>
+      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies"
+        [withoutValues]="withoutCurrencies">
+        <mat-label>Currency</mat-label>
+      </static-select>
     </section>
 
-    <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
-      <ng-container *ngIf="contract.titleId | getTitle | async as title">
-        <section class="contract surface" test-id="avails-section">
-          <header fxLayout fxLayoutAlign="space-between start">
-            <section fxLayout="column">
-              <h2>{{ title.title.international }}</h2>
-              <article fxLayout fxLayoutGap="12px">
-                <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.webp"
-                  alt="Movie Illustration">
-                <div fxLayout="column">
-                  <h3>{{ title.directors | displayName }}</h3>
-                  <p>{{ title | movieFeature }}</p>
-                </div>
-              </article>
-            </section>
-            <mat-form-field appearance="outline">
+    <ng-container *ngIf="(bucket$ |async) as bucket">
+      <ng-container *ngFor="let contract of bucket.contracts; trackBy: trackById; let i = index">
+        <contract-item [contract]="contract">
+            <mat-form-field appearance="outline" price>
               <mat-label>Price</mat-label>
               <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
                 (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
-              <mat-icon matPrefix [svgIcon]="bucket.currency"></mat-icon>
+              <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
             </mat-form-field>
-          </header>
-          <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
-            <ng-template colRef="duration" let-duration>
-              {{ duration.from | date }} - {{ duration.to | date }}
-            </ng-template>
-            <ng-template colRef="territories" let-territories>
-              <section (click)="openDetails(territories, 'territories')">
-                {{ territories | toLabel:'territories':3 }}
-              </section>
-            </ng-template>
-            <ng-template colRef="medias" let-medias>
-              {{ medias | toLabel:'medias' }}
-            </ng-template>
-            <ng-template colRef="exclusive" let-exclusive>
-              {{ exclusive ? 'Yes' : 'No' }}
-            </ng-template>
-            <ng-template colAction="action" label="Actions" let-termIndex="index">
-              <button mat-icon-button (click)="removeTerm(i, termIndex)">
+            <ng-template #termAction let-index="index">
+              <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+              <button mat-icon-button (click)="removeTerm(i, index)" matTooltip="Delete">
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </ng-template>
-          </bf-table-filter>
-          <footer>
-            <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-              Delete all rights for this title
-            </button>
-          </footer>
-        </section>
+            <footer fxLayout fxLayoutAlign="space-between">
+              <ng-container *ngIf="contract.titleId | getTitle | async as title">
+                <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
+                  Delete all rights for this title
+                </button>
+                <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
+                  Add Rights
+                </a>
+              </ng-container>
+            </footer>
+        </contract-item>
       </ng-container>
     </ng-container>
-
     <footer fxLayout="column" fxLayoutAlign="center center" class="summary" test-id="footer-total-price">
       <p test-id="total-price">Total Price: {{ total$ | async | currency:bucket.currency }}</p>
       <button mat-flat-button color="accent" (click)="createOffer(bucket)" test-id="create-offer">Create Offer</button>
@@ -91,7 +64,7 @@
   <section class="empty" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
     <h1>There is no title to display in your Selection.</h1>
     <span>Select titles to populate your Selection.</span>
-    <img asset="no_titles.webp" alt="No rights in selection">
+    <img asset="empty_selection.png" alt="No rights in selection">
     <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Browse Library</button>
   </section>
 </ng-template>

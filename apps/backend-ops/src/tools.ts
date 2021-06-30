@@ -1,4 +1,4 @@
-import { loadAdminServices, MIGRATIONS, startMaintenance } from "@blockframes/firebase-utils";
+import { LATEST_VERSION, loadAdminServices, startMaintenance } from "@blockframes/firebase-utils";
 import { resolve } from "path";
 import { loadDBVersion } from "./migrations";
 import { firebase } from '@env'
@@ -10,21 +10,20 @@ export function showHelp() {
 
 export async function isMigrationRequired() {
   const { db } = loadAdminServices();
-  const latestVersion = Object.keys(MIGRATIONS).length
   const currentVersion = await loadDBVersion(db);
-  console.log('Detecting if Firestore migration is required:')
-  console.log('Latest DB version:', latestVersion)
-  console.log('Current DB version:', currentVersion)
-  return currentVersion < latestVersion;
+  console.log('Detecting if Firestore migration is required:');
+  console.log('Latest DB version:', LATEST_VERSION);
+  console.log('Current DB version:', currentVersion);
+  return currentVersion < LATEST_VERSION;
 }
 
 export function disableMaintenanceMode() {
   process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
-  console.warn('Maintenance mode is disabled!')
+  console.warn('Maintenance mode is disabled!');
 }
 
 export async function displayCredentials() {
-  let GAP: { [key: string]: any };
+  let GAP: { [key: string]: string };
   try {
     // If service account is a stringified json object
     GAP = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
@@ -37,21 +36,21 @@ export async function displayCredentials() {
   delete GAP.private_key;
   console.log('Using default service account:\n', GAP);
 
-  console.log('Local env.ts:\n', firebase())
+  console.log('Local env.ts:\n', firebase());
 }
 
 export async function ensureMaintenanceMode(db: FirebaseFirestore.Firestore) {
   console.log('Ensuring maintenance mode stays active in Firestore');
   const maintenanceRef = db.collection('_META').doc('_MAINTENANCE');
-  await startMaintenance(db)
+  await startMaintenance(db);
   const unsubscribe = maintenanceRef.onSnapshot(async snap => {
     const maintenance = snap.data() as IMaintenanceDoc;
     if (maintenance.endedAt || !maintenance.startedAt) {
-      await startMaintenance(db)
+      await startMaintenance(db);
     }
   })
   return function () {
     unsubscribe();
-    console.log('Maintenance mode insurance ended')
+    console.log('Maintenance mode insurance ended');
   }
 }

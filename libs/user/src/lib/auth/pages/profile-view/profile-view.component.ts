@@ -10,15 +10,15 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 const navLinks = [
   {
     path: 'settings',
-    label: 'Profile Settings'
+    label: 'Profile'
   },
   {
     path: 'notifications',
-    label: 'General Notifications'
+    label: 'Notifications'
   },
   {
     path: 'cookies',
-    label: 'Cookie Preferences'
+    label: 'Cookie'
   }
 ];
 

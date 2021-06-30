@@ -42,7 +42,7 @@ export class UsersComponent implements OnInit {
     'sessionCount',
     'createdFrom',
   ];
-  public rows: any[] = [];
+  public rows = [];
   public exporting = new BehaviorStore(false);
   public app = getAllAppsExcept(['crm']);
 
@@ -72,7 +72,7 @@ export class UsersComponent implements OnInit {
         lastConnexion: this.adminQuery.getLastConnexion(u.uid),
         pageView: this.adminQuery.getPageView(u.uid),
         sessionCount: this.adminQuery.getSessionCount(u.uid),
-        createdFrom: !!u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
+        createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
         org: org,
       };
     })
@@ -84,7 +84,7 @@ export class UsersComponent implements OnInit {
     this.router.navigate([`c/o/admin/panel/user/${user.uid}`]);
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'uid',
       'firstName',
@@ -109,7 +109,7 @@ export class UsersComponent implements OnInit {
           lastConnexion: this.adminQuery.getLastConnexion(u.uid),
           pageView: this.adminQuery.getPageView(u.uid),
           sessionCount: this.adminQuery.getSessionCount(u.uid),
-          createdFrom: !!u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
+          createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
           edit: {
             id: u.uid,
             link: `/c/o/admin/panel/user/${u.uid}`,

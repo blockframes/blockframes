@@ -1,29 +1,31 @@
-@mixin bf-widget-theme($theme) {
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $background: map.get($config, 'background');
+  $foreground: map.get($config, 'foreground');
+  $primary: map.get($config, 'primary');
 
   .bf-widget .mat-card .mat-card-footer {
-    background-color: mat-color($background, hover);
+    background-color: mat.get-color-from-palette($background, hover);
     border-radius: none;
   }
 
   .widget-card {
-    @include mat-elevation(16);
-    background-color: mat-color($background, card);
+    @include mat.elevation(16);
+    background-color: mat.get-color-from-palette($background, card);
 
     .widget-header[color="primary"] {
-      color: mat-color($primary, default-contrast);
-      background-color: mat-color($primary);
+      color: mat.get-color-from-palette($primary, default-contrast);
+      background-color: mat.get-color-from-palette($primary);
       .mat-caption {
-        color: mat-color($primary, default-contrast);
+        color: mat.get-color-from-palette($primary, default-contrast);
       }
     }
 
     .widget-footer {
-      border-top: solid 1px mat-color($foreground, divider);
+      border-top: solid 1px mat.get-color-from-palette($foreground, divider);
     }
   }
 }

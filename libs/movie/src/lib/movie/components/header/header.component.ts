@@ -4,7 +4,8 @@ import {
   Input,
   ChangeDetectionStrategy,
   Directive,
-  ViewEncapsulation
+  ViewEncapsulation,
+  HostBinding
 } from '@angular/core';
 
 // Blockframes
@@ -35,18 +36,19 @@ type MovieHeaderView = ReturnType<typeof createMovieView>
 export class HeaderComponent {
 
   public movieView: MovieHeaderView;
-  public movie: Movie;
+  private _movie: Movie;
 
   constructor(private location: Location) { }
 
   @Input() showBackArrow = true;
-  @Input('movie')
-  set movieInput(movie: Movie) {
+  @Input() set movie(movie: Movie) {
     if (movie) {
-      this.movie = movie;
+      this._movie = movie;
       this.movieView = createMovieView(movie);
     }
   }
+
+  get movie() { return this._movie }
 
   goBack() {
     this.location.back();
@@ -54,22 +56,25 @@ export class HeaderComponent {
 }
 
 @Directive({
-  selector: 'movie-header-actions, [movieHeaderActions]',
-  host: { class: 'movie-header-actions' }
+  selector: 'movie-header-actions, [movieHeaderActions]'
 })
-// tslint:disable-next-line: directive-class-suffix
-export class MovieHeaderActions { }
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class MovieHeaderActions {
+  @HostBinding('class') class = 'movie-header-actions'
+}
 
 @Directive({
-  selector: 'movie-header-cta, [movieHeaderCTA]',
-  host: { class: 'movie-header-cta' }
+  selector: 'movie-header-cta, [movieHeaderCTA]'
 })
-// tslint:disable-next-line: directive-class-suffix
-export class MovieHeaderCTA { }
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class MovieHeaderCTA {
+  @HostBinding('class') class = 'movie-header-cta'
+}
 
 @Directive({
-  selector: 'movie-header-preferences, [movieHeaderPreferences]',
-  host: { class: 'movie-header-preferences' }
+  selector: 'movie-header-preferences, [movieHeaderPreferences]'
 })
-// tslint:disable-next-line: directive-class-suffix
-export class MovieHeaderPreferences { }
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class MovieHeaderPreferences {
+  @HostBinding('class') class = 'movie-header-preferences'
+}

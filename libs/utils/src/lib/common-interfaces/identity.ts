@@ -1,10 +1,10 @@
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import {
-  CrewRoleValue,
-  ProducerRoleValue,
+  CrewRole,
   LegalRole,
   SubLicensorRole,
-  Territory
+  Territory,
+  ProducerRole
 } from "../static-model/types";
 import { Location } from "./utility";
 
@@ -40,7 +40,7 @@ interface IdentityRaw {
 export interface Person extends IdentityRaw {
   firstName?: string,
   lastName?: string,
-  avatar?: StorageFile,
+  avatar?: StorageFile
 }
 
 export type StakeholderRaw = IdentityRaw;
@@ -69,7 +69,7 @@ export interface Filmography {
  * @dev interface to represent a producer credit
  */
 export interface Producer extends Credit {
-  role: ProducerRoleValue, // overrided role scope from Producer interface
+  role: ProducerRole, // overrided role scope from Producer interface
 };
 
 /**
@@ -88,7 +88,7 @@ export type Cast = Credit;
  * @dev interface to represent a crew credit
  */
 export interface Crew extends Credit {
-  role: CrewRoleValue, // overrided role scope from Crew interface
+  role: CrewRole, // overrided role scope from Crew interface
 };
 
 /**

@@ -69,7 +69,7 @@
             *ngIf="(event.meta.selectedFile | fileType) === 'pdf' || (event.meta.selectedFile | fileType) === 'video'"
           ></file-controls>
 
-          <file-carousel fxFlex="35%" [files]="event.meta.files" (select)="select($event)" (picked)="picked($event)"></file-carousel>
+          <file-carousel fxFlex="35%" [files]="event.meta.files" [selectedFile]="event.meta.selectedFile" (selectPath)="select($event)" (picked)="picked($event)"></file-carousel>
         </ng-container>
 
       </section>

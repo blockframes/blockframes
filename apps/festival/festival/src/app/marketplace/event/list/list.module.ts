@@ -17,6 +17,7 @@ import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider'
 import { MatIconModule } from '@angular/material/icon';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -29,7 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
     ListFilterModule,
     AlgoliaChipsAutocompleteModule,
     FilterByDateModule,
-    
+    ImageModule,
+
     // Material
     MatDividerModule,
     MatProgressSpinnerModule,

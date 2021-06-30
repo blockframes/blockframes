@@ -3,6 +3,18 @@ import { AdminStore } from './admin.store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 
+interface AnalyticsActiveUser {
+  user_id: string,
+  first_connexion: {
+    value: Date
+  },
+  last_connexion: {
+    value: Date
+  },
+  session_count: number,
+  page_view: number
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   constructor(
@@ -26,7 +38,7 @@ export class AdminService {
     });
   }
 
-  private getAnalyticsActiveUsers(): Promise<any[]> {
+  private getAnalyticsActiveUsers(): Promise<AnalyticsActiveUser[]> {
     const f = this.functions.httpsCallable('getAnalyticsActiveUsers');
     return f({}).toPromise();
   }

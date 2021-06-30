@@ -63,7 +63,8 @@ export class EditComponent implements OnInit, OnDestroy {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival')))
+      switchMap(org => this.movieService.valueChanges(fromOrgAndAccepted(org.id, 'festival'))),
+      map(titles => titles.sort((a, b) => a.title.international.localeCompare(b.title.international)))
     );
 
     this.members$ = this.orgQuery.selectActive().pipe(
@@ -85,7 +86,7 @@ export class EditComponent implements OnInit, OnDestroy {
       // FormArray (used in FormList) does not mark as dirty on push,
       // so we do it manually to enable the save button
       // more info : https://github.com/angular/angular/issues/16370
-      if (!!this.formSub) {
+      if (this.formSub) {
         this.formSub.unsubscribe();
         delete this.formSub;
       }
@@ -116,7 +117,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh' })
+    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh', autoFocus: false })
   }
 
   openFileSelector() {

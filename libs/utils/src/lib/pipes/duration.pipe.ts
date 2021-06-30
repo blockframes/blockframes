@@ -29,14 +29,14 @@ export class DurationPipe implements PipeTransform {
 
   convertToTimeString(time: number) {
 
-    let day: number, hour: number, minute: number, second: number;
+    let hour: number, minute: number, second: number;
 
     second = Math.floor(time / 1000);
     minute = Math.floor(second / 60);
     second = second % 60;
     hour = Math.floor(minute / 60);
     minute = minute % 60;
-    day = Math.floor(hour / 24);
+    const day = Math.floor(hour / 24);
     hour = hour % 24;
     hour += day * 24;
 

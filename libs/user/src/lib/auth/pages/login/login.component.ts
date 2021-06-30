@@ -12,7 +12,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
+  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   private snackbarDuration = 8000;
 
   public buttonText = 'Log in';

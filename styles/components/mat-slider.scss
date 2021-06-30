@@ -1,17 +1,19 @@
-@mixin mat-bf-slider-theme($theme) {
+@use 'sass:map';
+@use '~@angular/material' as mat;
 
-  $primary: map-get($theme, primary);
-  $foreground: map-get($theme, foreground);
-  $slider-background: map-get($foreground, divider);
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $primary: map.get($config, 'primary');
+  $foreground: map.get($config, 'foreground');
 
   .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb,
   .mat-slider-min-value.mat-slider-thumb-label-showing.cdk-focused .mat-slider-thumb-label {
-    background-color: mat-color($primary, 500);
+    background-color: mat.get-color-from-palette($primary, 500);
   }
 
   .mat-slider-track-background,
   .mat-slider:hover .mat-slider-track-background {
-    background-color: $slider-background;
+    background-color: mat.get-color-from-palette($foreground, 'divider');
   }
 
   .mat-slider-thumb-label {

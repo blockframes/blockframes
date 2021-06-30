@@ -1,8 +1,6 @@
 import { firebase } from 'env/env';
 import { firebase as firebaseProd } from 'env/env.blockframes';
 import * as admin from 'firebase-admin';
-import { execSync } from 'child_process';
-import { catchErrors } from './util';
 import { gsutilTransfer } from './commands';
 import { getLatestDirName } from './anonymize';
 

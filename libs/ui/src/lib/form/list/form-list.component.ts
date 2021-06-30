@@ -14,7 +14,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 // RxJs
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { startWith, distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { startWith, distinctUntilChanged, map } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
@@ -42,7 +42,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
 
   /** Keep the form open after the user has clicked on the add/save button */
-  @Input() @boolean keepFormOpen: boolean = false;
+  @Input() @boolean keepFormOpen = false;
 
   /** Reverse the list order: the last added element will appear at the top */
   @Input() set reverseList(shouldReverse: boolean) {
@@ -55,10 +55,10 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   @ContentChild(SaveButtonTextDirective, { read: TemplateRef }) saveButtonText: SaveButtonTextDirective;
   @ContentChild(AddButtonTextDirective, { read: TemplateRef }) addButtonText: AddButtonTextDirective;
 
-  list$: Observable<any[]>;
+  list$: Observable<unknown[]>;
   formItem: FormEntity<EntityControl<T>, T>;
   activeIndex: number;
-  activeValue: T
+  activeValue: T;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -129,7 +129,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       this.activeIndex--;
     }
     if (this.isFormEmpty) {
-      this.formItem = this.form.createControl({});
+      this.formItem = this.form.createControl();
     }
   }
 

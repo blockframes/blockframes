@@ -8,7 +8,7 @@ export class GetTitlePipe implements PipeTransform {
 
   constructor(
     private service: MovieService
-  ) {}
+  ) { }
 
   transform(titleId: string): Observable<Movie>
   transform(titleId: string[]): Observable<Movie[]>

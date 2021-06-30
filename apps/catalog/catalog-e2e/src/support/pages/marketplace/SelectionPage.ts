@@ -1,13 +1,30 @@
 import { SEC } from "@blockframes/e2e/utils/env";
+import { Currency } from "@blockframes/e2e/utils/type";
+import { defaultCurrency } from '../../../fixtures/bucket';
 
 export default class SelectionPage {
   constructor() {
     cy.get('catalog-selection', {timeout: 60 * SEC});
   }
 
-  public selectCurrency(currency: string = 'Euro') {
-    cy.get('mat-select[test-id=selection-currency]', {timeout: 30 * SEC}).click();
-    cy.get('mat-option', {timeout: 30 * SEC}).contains(currency).click();
+  public selectCurrency(currency: Currency = defaultCurrency) {
+    cy.log('Check if currency input is here.')
+    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC})
+      .should('contain', `${defaultCurrency.label}`);
+
+    cy.get('static-select[test-id=selection-currency]', {timeout: 30 * SEC})
+      .click({scrollBehavior: false});
+    cy.get('mat-option', {timeout: 30 * SEC})
+      .contains(currency.label)
+      .click();
+    cy.wait(0.5 * SEC);
+    
+    cy.log('Check if the currency is updated and stable on distribution right section.');
+    cy.get(`section[test-id="avails-section"]`, {timeout: 30 * SEC})
+      .first()
+      .find(`mat-form-field[price]`, {timeout: 1 * SEC})
+      .find('mat-icon[matPrefix]')
+      .should('have.attr', 'ng-reflect-svg-icon', `${currency.value}`);
   }
 
   /** Check how many sections we should get on the selection page (one by sales agent and by film) */

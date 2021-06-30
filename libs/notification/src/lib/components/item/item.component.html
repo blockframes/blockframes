@@ -1,7 +1,7 @@
 
 <mat-list-item>
   <img matListAvatar [asset]="notification.placeholderUrl" [ref]="notification.imgRef" alt="Notification picture">
-  <p *ngIf="!(xs$ | async)" matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
+  <p *ngIf="(xs$ | async) === false" matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
   <span matLine>
     <small class="mat-caption">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
   </span>
@@ -11,7 +11,7 @@
       Mark as read
     </div>
   </button>
-  <a mat-button [href]="notification.url">
+  <a mat-button [target]="targetLink" [href]="notification.url">
     <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
       <mat-icon svgIcon="more_vert"></mat-icon>
       More

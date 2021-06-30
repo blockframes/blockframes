@@ -1,7 +1,6 @@
 import { firebase } from '@env';
 import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
-import { storage } from 'firebase-admin';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -52,9 +51,9 @@ export function getImgSize(ref?: string) {
  */
 export function formatParameters(parameters: ImageParameters): string {
 
-  const query = Object.entries(parameters)
-    .filter(([key, value]) => !!value)
-    .map(([key, value]) => `${key}=${value}`)
+  const query = Object.keys(parameters)
+    .filter(key => parameters[key])
+    .map(key => `${key}=${parameters[key]}`)
     .join('&');
 
   return query;

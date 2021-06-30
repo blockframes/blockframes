@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state';
 
 @Component({
@@ -7,9 +7,18 @@ import { Movie } from '@blockframes/movie/+state';
   styleUrls: ['./promotional-links.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PromotionalLinksComponent {
+export class PromotionalLinksComponent implements OnInit {
 
   @Input() movie: Movie;
   @Input() links: string[];
+  public videos = false;
 
+  ngOnInit() {
+    this.videos = this.movie.promotional.videos.otherVideos.some(video => video.storagePath);
+  }
+
+  scrollToFooter() {
+    const footer = document.getElementById('videoFooter');
+    footer.scrollIntoView({ behavior: 'smooth' });
+  }
 }

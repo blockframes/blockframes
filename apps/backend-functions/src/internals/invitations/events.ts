@@ -1,6 +1,6 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
-import { NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser } from "../../data/types";
+import { NotificationDocument, NotificationTypes, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { getUser } from "../utils";
 import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
@@ -30,12 +30,11 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
 
   // Retreive notification recipient
   const recipients: string[] = [];
-  if (!!invitation.toUser) {
+  if (invitation.toUser) {
     /**
      * @dev We wants to send this email only if user have an orgId and a validated account. If not, this means that he already received an
      * email inviting him along with his credentials.
     */
-    const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([invitation.toUser.email]);
     if (!hasOrgOrOrgInvitation) {
       console.log('Invitation have already been sent along with user credentials');
@@ -43,7 +42,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
     }
 
     recipients.push(invitation.toUser.uid);
-  } else if (!!invitation.toOrg) {
+  } else if (invitation.toOrg) {
     const adminIds = await getAdminIds(invitation.toOrg.id);
     const admins = await Promise.all(adminIds.map(i => getUser(i)));
     admins.forEach(a => recipients.push(a.uid));
@@ -147,10 +146,10 @@ export async function onInvitationToAnEventUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
-): Promise<any> {
+) {
   if (wasCreated(before, after)) {
     return onInvitationToAnEventCreate(invitation);
-  } else if (wasAccepted(before!, after) || wasDeclined(before!, after)) {
+  } else if (wasAccepted(before, after) || wasDeclined(before, after)) {
     return onInvitationToAnEventAcceptedOrRejected(invitation);
   }
 }

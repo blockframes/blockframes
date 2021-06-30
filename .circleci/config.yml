@@ -143,7 +143,20 @@ commands:
     steps:
         - run: npx cypress install
         - run:
-            command: npm run e2e
+            command: |
+              npx nx run catalog-e2e:e2e:ci --headless && catalog_ret_code=$? || catalog_ret_code=$?
+
+              npx nx run festival-e2e:e2e:ci --headless && festival_ret_code=$? || festival_ret_code=$?
+
+              npx nx run financiers-e2e:e2e:ci --headless && financiers_ret_code=$? || financiers_ret_code=$?
+
+              npx nx run crm-e2e:e2e:ci --headless && crm_ret_code=$? || crm_ret_code=$?
+
+              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $crm_ret_code -eq 0 ]; then 
+                exit 0;
+              else
+                exit 1;
+              fi
             no_output_timeout: 20m
         - store_artifacts:
             name: Uploading screenshots
@@ -172,6 +185,18 @@ jobs:
       - build_deploy_prepare
       - slack/notify:
           message: 'PFT complete for << pipeline.git.branch >>'
+  build-deploy-upgrade:
+    executor: blockframes-ci
+    environment:
+      NG_CONFIG: ''
+    steps:
+      - prepare_environment
+      - run: echo "export PROJECT_ID=\"$(cut -d'/' -f2\<<<$CIRCLE_BRANCH)\"" >> $BASH_ENV
+      - fail_on_production
+      - select_environment
+      - build_deploy_upgrade
+      - slack/notify:
+          message: 'UPGRADE complete for << pipeline.git.branch >>'
   prepare-for-testing:
     executor: blockframes-ci
     environment:
@@ -318,6 +343,13 @@ workflows:
             branches:
               only:
                 - /deploy\/.*/
+  build-deploy-upgrade:
+    jobs:
+      - build-deploy-upgrade:
+          filters:
+            branches:
+              only:
+                - /upgrade\/.*/
   prepare-for-testing:
     jobs:
       - prepare-for-testing:

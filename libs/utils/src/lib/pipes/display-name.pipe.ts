@@ -19,11 +19,10 @@ export class DisplayNamePipe implements PipeTransform {
    * @returns string
    * @TODO #5530 remove max and use css instead
    */
-  transform(value: Person | Person[] | string[], max?: number): string {
+  transform(value: Person | Person[] | string[]): string {
     if (Array.isArray(value)) {
-      return (value as any)
+      return value
         .map(person => typeof person === 'string' ? person : displayName(person))
-        .slice(0, max)
         .join(', ');
     } else {
       return displayName(value);

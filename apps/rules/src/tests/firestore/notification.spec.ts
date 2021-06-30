@@ -28,7 +28,7 @@ describe('Notification Rules Tests', () => {
       await assertFails(notifRef.set({ note: 'A notification' }));
     });
 
-    const fields: any = [
+    const fields: [string, unknown][] = [
       ['id', '001'],
       ['toUserId', 'uid-002'],
       ['app.isRead', true],
@@ -61,7 +61,7 @@ describe('Notification Rules Tests', () => {
       await assertFails(notifRef.set({ note: 'A notification', toUserId: 'uid-c8' }));
     });
 
-    const fields: any = [
+    const fields: [string, unknown][] = [
       ['id', '002'],
       ['_meta.createdAt', new Date()],
       ['toUserId', 'uid-002'],

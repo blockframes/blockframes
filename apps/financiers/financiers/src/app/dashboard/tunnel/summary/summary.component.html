@@ -136,14 +136,14 @@
 
     <!-- CAMPAIGN -->
     <section id="campaign">
-      <h3>Investment conditions</h3>
+      <h3>Investment Conditions</h3>
       <campaign-summary-proposal [form]="campaignForm" [link]="'proposal' | getPath"></campaign-summary-proposal>
 
       <campaign-summary-perks [form]="campaignForm" [link]="'perks' | getPath"></campaign-summary-perks>
     </section>
 
     <!-- Submit -->
-    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
+    <button id="submit" test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
       [disabled]="isPublished$ | async">
       <span>Submit for Validation</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>

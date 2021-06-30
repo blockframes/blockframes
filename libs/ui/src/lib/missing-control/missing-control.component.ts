@@ -34,12 +34,12 @@ export class MissingControlComponent implements OnInit, OnDestroy {
 
   getStatus = getStatus;
 
-  @ContentChild(TemplateRef) child: TemplateRef<any>;
+  @ContentChild(TemplateRef) child: TemplateRef<unknown>;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.sub = this.control?.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.sub = this.control?.valueChanges.subscribe(() => this.cdr.markForCheck());
   }
 
   ngOnDestroy() {

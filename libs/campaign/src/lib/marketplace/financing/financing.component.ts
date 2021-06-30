@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { formatCurrency, formatPercent } from '@angular/common';
-import { Budget, Campaign, CampaignQuery, CampaignService, Funding } from '../../+state';
+import { Budget, Campaign, CampaignService, Funding } from '../../+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
-import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { StorageFile } from '@blockframes/media/+state/media.firestore';
@@ -74,7 +74,7 @@ export class MarketplaceFinancingComponent implements OnInit {
   consentBeforeDownload(file: string) {
     const movieId = this.movieQuery.getActiveId();
 
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Confidentiality Reminder',
         subtitle: `You are about to download a confidential document. Please make sure that you are aware of our Confidentiality Policy before doing so.`,

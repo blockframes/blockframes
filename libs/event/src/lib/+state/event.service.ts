@@ -9,6 +9,8 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+import type firebase from 'firebase';
+type Timestamp = firebase.firestore.Timestamp;
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -74,7 +76,7 @@ export class EventService extends CollectionService<EventState> {
   }
 
   /** Verify if the current user / organisation is ownr of an event */
-  isOwner(event: EventBase<any, any>) {
+  isOwner(event: EventBase<Date | Timestamp, unknown>) {
     return event.ownerOrgId === this.orgQuery.getActiveId();
   }
 
@@ -132,6 +134,6 @@ export class EventService extends CollectionService<EventState> {
 
   /** Just save local time so we will be able to compute session duration at the end */
   public startLocalSession() {
-    this.store.update(state => ({ localSessionStart: Date.now() }));
+    this.store.update(() => ({ localSessionStart: Date.now() }));
   }
 }
