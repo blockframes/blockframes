@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
+import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +21,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 const routes = [{
   path: '',
@@ -76,6 +78,8 @@ const routes = [{
     FlexLayoutModule,
     // Blockframes
     DashboardTitleShellModule,
+    DashboardActionsShellModule,
+    OrgAccessModule,
     // Material
     MatButtonModule,
     MatIconModule,

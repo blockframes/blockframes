@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
+import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -55,6 +56,7 @@ const routes = [{
     FlexLayoutModule,
     // Blockframes
     DashboardTitleShellModule,
+    DashboardActionsShellModule,
     // Material
     MatProgressSpinnerModule,
     // Route
