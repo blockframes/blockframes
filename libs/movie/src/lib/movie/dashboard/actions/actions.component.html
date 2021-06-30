@@ -1,7 +1,7 @@
 <ng-container *ngIf="movie$ | async as movie">
   <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
     <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
-      <button mat-button color="primary" (click)="updateStatus('draft', 'Title back to Draft')">
+      <button mat-button color="primary" (click)="updateStatus('draft', 'Title restored')">
         <mat-icon svgIcon="restore"></mat-icon>
         Restore Title
       </button>
