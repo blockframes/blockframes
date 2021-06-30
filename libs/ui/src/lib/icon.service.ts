@@ -28,14 +28,11 @@ export const icons = [
   { name: 'call_end', url: 'assets/icons/call_end.svg' },
   { name: 'campaign', url: 'assets/icons/campaign.svg' },
   { name: 'cancel', url: 'assets/icons/cancel.svg' },
-  { name: 'certificate', url: 'assets/icons/certificate.svg' }, // no use
   { name: 'check', url: 'assets/icons/check.svg' },
-  { name: 'checkbox_outline', url: 'assets/icons/checkbox_outline.svg' }, // no use
   { name: 'check_circle', url: 'assets/icons/check_circle.svg' },
-  { name: 'chevron_left', url: 'assets/icons/chevron_left.svg' }
+  { name: 'chevron_left', url: 'assets/icons/chevron_left.svg' },
   { name: 'chevron_right', url: 'assets/icons/chevron_right.svg' },
   { name: 'CHF', url: 'assets/icons/CHF.svg' },
-  { name: 'clear_all', url: 'assets/icons/clear_all.svg' }, // no use
   { name: 'close', url: 'assets/icons/close.svg' },
   { name: 'cloud_download', url: 'assets/icons/cloud_download.svg' },
   { name: 'cloud_upload', url: 'assets/icons/cloud_upload.svg' },
@@ -71,13 +68,12 @@ export const icons = [
   { name: 'JPY', url: 'assets/icons/JPY.svg' },
   { name: 'launch', url: 'assets/icons/launch.svg' },
   { name: 'local_offer', url: 'assets/icons/local_offer.svg' },
-  { name: 'lock', url: 'assets/icons/lock.svg' }, // no use
 /** globalement ces logo ne sont pas utilisés ou utilisés pour CRM */
-  { name: 'logo_archipel_content', url: 'assets/icons/logo_archipel_content.svg' }, //! Doublon (attention pour les emails)
-  { name: 'logo_archipel_content_fill', url: 'assets/icons/logo_archipel_content_fill.svg' }, //! Doublon (attention pour les emails)
+  { name: 'logo_archipel_content', url: 'assets/icons/logo_archipel_content.svg' },
+  { name: 'logo_archipel_content_fill', url: 'assets/icons/logo_archipel_content_fill.svg' },
   { name: 'logo_archipel_market_fill', url: 'assets/icons/logo_archipel_market_fill.svg' },
-  { name: 'logo_media_financiers', url: 'assets/icons/logo_media_financiers.svg' }, //! Doublon (attention pour les emails)
-  { name: 'logo_media_financiers_fill', url: 'assets/icons/logo_media_financiers_fill.svg' }, //! Doublon (attention pour les emails)
+  { name: 'logo_media_financiers', url: 'assets/icons/logo_media_financiers.svg' },
+  { name: 'logo_media_financiers_fill', url: 'assets/icons/logo_media_financiers_fill.svg' },
   { name: 'logout', url: 'assets/icons/log_out.svg' },
   { name: 'mail', url: 'assets/icons/mail.svg' },
   { name: 'marketplace', url: 'assets/icons/marketplace.svg' },
