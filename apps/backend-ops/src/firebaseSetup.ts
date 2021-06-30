@@ -8,13 +8,13 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
 import { copyFirestoreExportFromCiBucket, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI } from "@blockframes/firebase-utils";
-import { cleanDeprecatedData } from './db-cleaning';
-import { cleanStorage } from './storage-cleaning';
+//import { cleanDeprecatedData } from './db-cleaning';
+//import { cleanStorage } from './storage-cleaning';
 import { restoreStorageFromCi } from '@blockframes/firebase-utils';
-import { firebase } from '@env';
+//import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode } from './tools';
-const { storageBucket } = firebase();
+//const { storageBucket } = firebase();
 
 export async function prepareForTesting() {
   const { storage, db, auth } = loadAdminServices();
@@ -70,12 +70,13 @@ export async function prepareStorage() {
 }
 
 export async function upgrade() {
-  const { db, auth, storage } = loadAdminServices();
+  const { db, storage } = loadAdminServices(); // auth, 
 
   console.info('Preparing the database...');
   await migrate({ withBackup: true, db, storage });
   console.info('Database ready for deploy!');
 
+  /* @TODO #6127 after r3.2.1 is released, create a hotfix to uncomment
   console.info('Cleaning unused db data...');
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
@@ -83,6 +84,7 @@ export async function upgrade() {
   console.info('Cleaning unused storage data...');
   await cleanStorage(storage.bucket(storageBucket));
   console.info('Storage data clean and fresh!');
+  */
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();

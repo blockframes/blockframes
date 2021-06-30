@@ -71,9 +71,9 @@ async function runCommand() {
         console.log('Skipping upgrade because migration is not required...');
         return;
       }
-      await startMaintenance(db);
+      // await startMaintenance(db); @TODO #6127 after r3.2.1 is released, create a hotfix to uncomment
       await upgrade();
-      await endMaintenance(db);
+      // await endMaintenance(db); @TODO #6127 after r3.2.1 is released, create a hotfix to uncomment
       break;
     case 'exportFirestore':
       await exportFirestore(arg1)

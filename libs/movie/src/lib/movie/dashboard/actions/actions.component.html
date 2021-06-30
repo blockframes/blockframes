@@ -53,7 +53,7 @@
         </a>
         <a mat-menu-item *ngIf="appName === 'festival' && movie.app[appName].status === 'draft'"
           [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="publish">
-          <mat-icon svgIcon="marketplace"></mat-icon><span>Publish on Marketplace</span>
+          <mat-icon svgIcon="publish"></mat-icon><span>Publish on Marketplace</span>
         </a>
       </mat-menu>
     </ng-template>
