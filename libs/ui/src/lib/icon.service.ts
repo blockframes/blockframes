@@ -20,6 +20,7 @@ export const icons = [
   { name: 'arrow_upward', url: 'assets/icons/arrow_upward.svg' },
   { name: 'attachment', url: 'assets/icons/attachment.svg' },
   { name: 'AUD', url: 'assets/icons/attach_money.svg' },
+  { name: 'back_draft', url: 'assets/icons/back_draft.svg' },
   { name: 'block', url: 'assets/icons/block.svg' },
   { name: 'build', url: 'assets/icons/build.svg' },
   { name: 'business', url: 'assets/icons/business.svg' },
