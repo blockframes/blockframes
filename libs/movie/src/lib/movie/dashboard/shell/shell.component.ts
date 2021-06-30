@@ -7,7 +7,6 @@ import { MovieQuery, MovieService } from '@blockframes/movie/+state';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
@@ -28,7 +27,6 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   movie$ = this.query.selectActive();
 
   public appName = getCurrentApp(this.routerQuery);
-  public org$ = this.orgQuery.selectActive();
 
   @Input() routes: RouteDescription[];
 
@@ -36,7 +34,6 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private query: MovieQuery,
     private routerQuery: RouterQuery,
-    private orgQuery: OrganizationQuery,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
