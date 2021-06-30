@@ -50,10 +50,11 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
+// Those logos have to be in PNG because Gmail doesn't support SVG images
 export const appLogo = {
-  catalog: `${appUrl.content}/assets/logo/light/content-primary-blue.png`,
-  festival: `${appUrl.market}/assets/logo/light/market-primary-blue.png`,
-  financiers: `${appUrl.financiers}/assets/logo/light/mf-primary-blue.png`,
+  catalog: `${appUrl.content}/assets/email/archipel_content.png`,
+  festival: `${appUrl.market}/assets/email/archipel_market.png`,
+  financiers: `${appUrl.financiers}/assets/email/media-financiers.png`,
   crm: ''
 };
 type AppLogoValue = typeof appLogo[App];

@@ -29,17 +29,16 @@
     <contract-item [contract]="contract">
       <p price>{{ income.price | currency: income.currency }}</p>
 
-      <ng-template #termAction let-term let-index="index">
+      <ng-template #termAction let-term>
         <a
-          *ngIf="offerId$ | async as offerId"
           mat-icon-button
           matTooltip="View"
-          [routerLink]="['/c/o/admin/panel/offer', offerId, contract.id, 'form']"
+          [routerLink]="['/c/o/admin/panel/offer', offerId$ | async, contract.id, 'form']"
           [fragment]="term.id"
         >
           <mat-icon svgIcon="visibility"></mat-icon>
         </a>
-        <button mat-icon-button matTooltip="Delete" (click)="delete(term)">
+        <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-template>
