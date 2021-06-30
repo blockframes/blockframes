@@ -1,6 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav class="dark-theme" id="dashboard-navbar" role="navigation" [mode]="(ltMd$ | async) ? 'over' : 'side'"
-    [opened]="!(ltMd$ | async)">
+  <mat-sidenav class="dark-theme" id="dashboard-navbar" role="navigation" [mode]="mode$ | async" [opened]="(mode$ | async) === 'side'">
     <mat-toolbar fxLayout fxLayoutAlign="space-between center">
       <a routerLink=".">
         <app-logo></app-logo>
@@ -8,7 +7,6 @@
     </mat-toolbar>
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
-
 
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()">
     <!-- TOOLBAR -->

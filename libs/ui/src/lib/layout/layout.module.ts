@@ -1,5 +1,5 @@
 import { Directive, Input, HostBinding, NgModule, ElementRef, Optional, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, BehaviorSubject, Subscription, of, Observable } from 'rxjs';
+import { combineLatest, BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -25,7 +25,7 @@ function getLayoutGrid(width: number): LayoutGrid {
 
 
 @Directive({ selector: '[layout]' })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line
 export class Layout implements OnInit, OnDestroy {
   private observer;
   public width: BehaviorSubject<number>;
@@ -55,12 +55,12 @@ export class Layout implements OnInit, OnDestroy {
 
 @Directive({
   selector: '[grid]',
-  host: { class: 'mat-grid' },
 })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line
 export class Grid implements OnInit, OnDestroy {
   private sub: Subscription;
 
+  @HostBinding('class') class = 'mat-grid';
   @HostBinding('style.display') display = 'grid';
   @HostBinding('style.gridTemplateColumns') columns: string;
   @HostBinding('style.columnGap')
@@ -86,12 +86,12 @@ export class Grid implements OnInit, OnDestroy {
 
 @Directive({
   selector: '[flex]',
-  host: { class: 'mat-flex' }
 })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line
 export class Flex implements OnInit, OnDestroy {
   private sub: Subscription;
 
+  @HostBinding('class') class = 'mat-flex';
   @HostBinding('style.marginRight')
   @HostBinding('style.marginLeft')
   margin: string;
@@ -109,7 +109,7 @@ export class Flex implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.layout.layout$.subscribe(({ margin, columns, gutter }) => {
+    this.sub = this.layout.layout$.subscribe(({ margin }) => {
       this._margin = margin
       this.margin = `${margin}px`;
     });
@@ -122,7 +122,7 @@ export class Flex implements OnInit, OnDestroy {
 // TODO: divide those directives into tow
 
 @Directive({ selector: '[col]' })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line
 export class Column implements OnInit, OnDestroy {
   private sub: Subscription;
   private _col = new BehaviorSubject(0);

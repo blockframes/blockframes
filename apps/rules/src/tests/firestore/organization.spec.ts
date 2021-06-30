@@ -64,7 +64,7 @@ describe('Organization Rules Tests', () => {
 
     describe('Update Org', () => {
       const existingOrg = 'O005';
-      const fields: any = [
+      const fields: [string, unknown][] = [
         ['id', 'O004'],
         ['userIds', ['uid-sAdmin']],
         ['_meta', { createdBy: '' }],
@@ -106,7 +106,7 @@ describe('Organization Rules Tests', () => {
 
     describe('Update Org', () => {
       const existingOrg = 'O004';
-      const fields: any = [
+      const fields: [string, unknown][] = [
         ['id', 'O005'],
         ['_meta', { createdBy: '' }],
         ['_meta', { createdAt: '' }],

@@ -9,7 +9,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { FirestoreEmulator } from '../firestore';
-import { firebase } from '@env'
+import { firebase, testVideoId } from '@env'
 import { runChunks } from '../firebase-utils';
 import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
 import { firestore } from 'firebase-admin';
@@ -38,7 +38,7 @@ function fakeFiscalNumber() {
   return start + " " + randomNumber() + "-" + randomNumber() + "-" + randomNumber() + "-" + randomNumber();
 }
 
-function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T {
+function hasKeys<T extends Record<string, any>>(doc: Record<string, any>, ...keys: (keyof T)[]): doc is T {
   return keys.every((key) => key in doc);
 }
 
@@ -55,7 +55,7 @@ function processOrg<T extends Organization | PublicOrganization>(o: T): T {
   const denomination = { full: companyName, public: companyName };
   const email = fakeEmail(companyName);
   const org = { ...o, denomination, email } as any;
-  if (!!org.fiscalNumber) {
+  if (org.fiscalNumber) {
     org.fiscalNumber = fakeFiscalNumber();
   };
   return org;
@@ -92,8 +92,7 @@ function updateUser(user: User | PublicUser | Partial<User>) {
   }
   if (!hasKeys<User>(user, 'uid')) {
     console.warn('WARNING - user does not have UID!', user)
-    // @ts-ignore
-    return processUser(user);
+    return processUser(user as User);
   }
   throw Error(`Unable to process user: ${JSON.stringify(user, null, 4)}`);
 }
@@ -111,7 +110,7 @@ function updateOrg(org: Organization | PublicOrganization) {
 }
 
 function updateHostedVideo(screener: MovieVideo): MovieVideo | MovieSalesPitch {
-  const jwPlayerId = 'J4owWnLi';
+  const jwPlayerId = testVideoId;
   return {
     ...screener,
     jwPlayerId
@@ -148,7 +147,9 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'publicContracts/',
     'analytics/',
     'buckets',
-    'terms/'
+    'terms/',
+    'incomes/',
+    'offers/'
   ];
   if (!doc || ignorePaths.some((path) => docPath.includes(path))) return { docPath, content: doc };
 

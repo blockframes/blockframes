@@ -1,4 +1,7 @@
-@mixin apex-chart-theme($theme) {
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
   // Apex specific style
   .apexcharts-menu-item {
     width: max-content;

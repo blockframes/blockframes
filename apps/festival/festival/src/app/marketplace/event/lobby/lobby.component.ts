@@ -72,7 +72,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   requestAccess() {
     const uid = this.authQuery.userId;
-    const event = this.eventQuery.getActive();
+    const event = this.eventQuery.getActive() as Event<Meeting>;
     const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [uid]: 'requesting' }};
     this.eventService.update(event.id, { meta });
   }

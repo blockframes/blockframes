@@ -7,8 +7,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Campaign, CampaignService } from '@blockframes/campaign/+state';
-import { switchMap } from 'rxjs/operators';
+import { CampaignService } from '@blockframes/campaign/+state';
+import { filter, switchMap } from 'rxjs/operators';
 
 
 const links: RouteDescription[] = [
@@ -49,11 +49,10 @@ const links: RouteDescription[] = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleViewComponent implements OnInit, OnDestroy {
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
-  private dialogRef: MatDialogRef<any, any>;
+  private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
-  public campaign$: Observable<Campaign>;
   public loading$: Observable<boolean>;
   public navLinks = links;
   public sub: Subscription;
@@ -70,11 +69,10 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loading$ = this.movieQuery.selectLoading();
     this.movie$ = this.movieQuery.selectActive();
-    this.campaign$ = this.movie$.pipe(
-      switchMap(movie => this.campaignService.getValue(movie.id))
-    );
-
-    this.sub = this.campaign$.subscribe(data => {
+    this.sub = this.movie$.pipe(
+      switchMap(movie => this.campaignService.getValue(movie.id)),
+      filter(campaign => !!campaign)
+    ).subscribe(data => {
       this.percentage = Math.floor((data.received / data.cap) * 100);
       this.cdr.markForCheck();
     });
@@ -95,7 +93,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
 
   async save() {
     this.dialogRef.close();
-    await this.shell.getConfig('campaign').onSave({ publishing: false });
+    await this.shell.getConfig('campaign').onSave();
     this.snackbar.open('The funding status has been updated.', null, { duration: 1000 });
   }
 }

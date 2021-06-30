@@ -17,13 +17,13 @@ export class FileCarouselComponent {
   /** Array of file path to display in the Carousel */
   @Input() files: StorageFile[];
 
+  @Input() selectedFile: string;
+
   /** Emit the file path that has been selected by the user */
-  @Output() select = new EventEmitter<string>();
+  @Output() selectPath = new EventEmitter<string>();
 
   /** Emit the new files list (array) that has been picked by the user */
   @Output() picked = new EventEmitter<string[]>();
-
-  private selectedFile: string;
 
   constructor(
     private dialog: MatDialog,
@@ -35,7 +35,7 @@ export class FileCarouselComponent {
 
   selectFile(file: string) {
     this.selectedFile = file;
-    this.select.emit(file);
+    this.selectPath.emit(file);
   }
 
   openFileSelector() {

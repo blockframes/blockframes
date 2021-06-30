@@ -4,7 +4,7 @@ import { existsSync, mkdirSync } from 'fs';
 import { catchErrors } from './util';
 import { backupBucket } from '@env';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
-import { gsutilTransfer, runShellCommand } from './commands';
+import { gsutilTransfer } from './commands';
 
 export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl';
 
@@ -58,8 +58,7 @@ export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin
 }
 
 export async function copyFirestoreExportFromCiBucket() {
-  // @ts-ignore
-  if (ciBucketName === backupBucket) return;
+  if (ciBucketName as unknown === backupBucket) return;
 
   const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
   const localBucketURL = `gs://${backupBucket}/${latestAnonDbDir}`;

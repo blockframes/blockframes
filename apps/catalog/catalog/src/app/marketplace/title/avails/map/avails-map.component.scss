@@ -1,0 +1,90 @@
+@use '~@angular/material' as mat;
+
+form {
+  button {
+    margin-top: 16px;
+  }
+}
+
+p {
+  line-height: 24px;
+}
+
+world-map {
+  height: 500px;
+  z-index: 0;
+  background-color: #d3ddff;
+  border-radius: 4px;
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    background-color: rgba(62, 62, 93, 0.72);
+
+    article {
+      padding: 48px;
+      border-radius: 8px;
+      background-color: var(--background-tooltip);
+      width: 80%;
+      height: 80%;
+      text-align: center;
+    }
+  }
+
+  .hovered-territory-card {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    padding: 12px;
+    background-color: #ffffff;
+    color: #434773;
+    border-radius: 4px;
+    @include mat.elevation(1);
+    ul {
+      margin: 0;
+    }
+  }
+
+  .colors-card {
+    position: absolute;
+    bottom: 32px;
+    left: 16px;
+    z-index: 2;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #434773;
+    @include mat.elevation(1);
+
+    mat-list-item {
+      height: 32px;
+    }
+
+    svg {
+      margin-right: 12px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+mat-card {
+  margin-bottom: 24px;
+
+  mat-card-subtitle {
+    margin-top: 20px;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  mat-card-content {
+    margin-top: 20px;
+  }
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ContentChild, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ContentChild, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AcceptConditionsDirective } from './accept-conditions.directive';
 import { FormControl } from '@angular/forms';
@@ -22,7 +22,7 @@ export class AcceptConditionsComponent {
   constructor(private dialog: MatDialog) {}
 
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
-  public openTermsOfUse(conditions: TemplateRef<any>) {
+  public openTermsOfUse(conditions: TemplateRef<unknown>) {
     this.dialog.open(conditions, { maxHeight: '80vh', autoFocus: false })
   }
 

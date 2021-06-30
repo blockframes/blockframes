@@ -1,0 +1,23 @@
+
+:host {
+  min-height: calc(100% - 80px);
+}
+
+header {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  padding: 24px;
+
+  .contracts {
+    font-weight: bold;
+    text-align: end;
+  }
+}
+
+
+section {
+  height: 100%;
+  background-position: left;
+  background-size: cover;
+}

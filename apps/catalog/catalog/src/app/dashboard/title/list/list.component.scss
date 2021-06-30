@@ -4,11 +4,11 @@
   flex-direction: column;
 }
 
-header {
+header.import-header {
   margin-bottom: 24px;
 }
 
-div[mat-tab-nav-bar] button {
+header[mat-tab-nav-bar] button {
   border: none;
   background-color: transparent;
 }

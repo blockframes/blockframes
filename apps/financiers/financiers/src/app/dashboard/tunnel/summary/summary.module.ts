@@ -10,7 +10,7 @@ import { CampaignSummaryModule } from '@blockframes/campaign/form/summary/summar
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { FromCamelCasePipeModule } from '@blockframes/utils/pipes/from-camel-case.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
-import { CrmFormDialogModule } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.module';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +30,7 @@ import { MatDividerModule } from '@angular/material/divider';
     GetPathModule,
     FromCamelCasePipeModule,
     HasStatusModule,
-    CrmFormDialogModule,
+    ConfirmInputModule,
     // Materials
     MatCardModule,
     MatIconModule,

@@ -4,7 +4,7 @@ import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { Invitation, InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ENTER, COMMA, SEMICOLON } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 
@@ -76,12 +76,24 @@ export class UserComponent implements OnInit {
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
     if (this.form.valid && this.form.value.length) {
-      const emails = this.form.value.map(guest => guest.email);
+      const emails = this.form.value.map(guest => guest.email.trim());
       this.form.reset([]);
       this.sending.next(true);
       const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
       await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
       this.sending.next(false);
+    }
+  }
+
+  /** Add the SPACE separator if the user pastes email addresses and remove it if the user types something*/
+  onInputFilling(event: InputEvent) {
+    if (event.inputType === 'insertFromPaste') {
+      this.separators.push(SPACE);
+    } else {
+      if (this.separators.includes(SPACE)) {
+        const index = this.separators.indexOf(SPACE);
+        this.separators.splice(index, 1);
+      }
     }
   }
 

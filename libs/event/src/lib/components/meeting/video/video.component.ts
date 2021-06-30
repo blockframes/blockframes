@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AudioTrack, VideoTrack } from 'twilio-video';
 import { Tracks, TrackKind, Attendee } from '../+state/twilio.model';
@@ -7,10 +7,10 @@ import { Tracks, TrackKind, Attendee } from '../+state/twilio.model';
   selector: '[attendee] meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'dark-theme' },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
+  @HostBinding('class') theme = 'dark-theme';
 
   @Input() set attendee(value: Attendee) {
 
@@ -67,11 +67,11 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
 
       const track = this.track[kind];
 
-      if (!!track) {
+      if (track) {
 
         if (track.isEnabled) {
           this.remoteTrackState$[track.kind].next(true);
-          if (!!this.element[track.kind]) {
+          if (this.element[track.kind]) {
             if (!this.local || track.kind !== 'audio') {
               track.attach(this.element[track.kind]);
             }

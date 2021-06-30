@@ -1,5 +1,5 @@
-import { formatCurrency, formatNumber, getCurrencySymbol } from '@angular/common';
-import { Pipe, PipeTransform, NgModule, DEFAULT_CURRENCY_CODE, Inject, LOCALE_ID } from '@angular/core';
+import { formatNumber } from '@angular/common';
+import { Pipe, PipeTransform, NgModule, Inject, LOCALE_ID } from '@angular/core';
 
 // Code from : https://github.com/angular/angular/blob/10.1.5/packages/common/src/pipes/number_pipe.ts#L256
 function strToNumber(value: number|string): number {
@@ -13,7 +13,7 @@ function strToNumber(value: number|string): number {
   return value;
 }
 
-/** 
+/**
  * Add symbol if it can be divided 10 time by the symbol
  * @example 27_500 -> 27.50K
  * @example 1_250 -> 1_250
@@ -48,8 +48,8 @@ export class BigNumberPipe implements PipeTransform {
 @Pipe({ name: 'sum' })
 export class SumPipe implements PipeTransform {
   transform(source: number[])
-  transform(source: Object[], key: string)
-  transform(source: number[] | Object[], key?: string) {
+  transform(source: unknown[], key: string)
+  transform(source: number[] | unknown[], key?: string) {
     if (key) {
       return source.reduce((sum, item) => {
         const value = key.split('.').reduce((result, k) => result[k], item);

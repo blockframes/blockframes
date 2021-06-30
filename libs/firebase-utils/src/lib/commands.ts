@@ -69,7 +69,7 @@ export function awaitProcOutput(proc: ChildProcess, output: string) {
 export function runInBackground(cmd: string) {
   let proc: ChildProcess;
   const procPromise = new Promise<string>((res, rej) => {
-    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2 }, (err, stdout, stderr) => {
+    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2 }, (err, stdout) => {
       if (err) rej(err);
       res(stdout);
     });

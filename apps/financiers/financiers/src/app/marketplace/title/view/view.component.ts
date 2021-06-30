@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CollectionReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -33,8 +32,8 @@ interface EmailData {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieViewComponent implements OnInit {
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
-  private dialogRef: MatDialogRef<any, any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
+  private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public campaign$: Observable<Campaign>;

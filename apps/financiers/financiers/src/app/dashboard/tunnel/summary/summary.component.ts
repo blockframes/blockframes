@@ -8,10 +8,8 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-
-import { CrmFormDialogComponent } from '@blockframes/admin/admin-panel/components/crm-form-dialog/crm-form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -54,7 +52,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     const movieId = this.movieQuery.getActiveId();
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'Confidentiality Reminder',
         subtitle: 'You are about to submit your project for publication. We kindly remind you that some of the information you\'re about to share might be confidential.',
@@ -67,7 +65,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
             await this.consentsService.createConsent('share', movieId);
             const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
             const ref = this.snackBar.open(text, '', { duration: 1000 });
-            ref.afterDismissed().subscribe(_ => this.router.navigate(['../end'], { relativeTo: this.route }))
+            ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))
           } catch (err) {
             console.error(err);
             // Log the invalid forms
@@ -75,6 +73,6 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
           }
         }
       }
-    })
+    });
   }
 }

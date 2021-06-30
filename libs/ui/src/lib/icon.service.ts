@@ -115,8 +115,10 @@ export const icons = [
   { name: 'play_arrow', url: 'assets/icons/play_arrow.svg' },
   { name: 'play_circle', url: 'assets/icons/play_circle.svg' },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
+  { name: 'restore', url: 'assets/icons/restore.svg' },
   { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
+  { name: 'resend_email', url: 'assets/icons/resend_email.svg' },
   { name: 'save', url: 'assets/icons/save.svg' },
   { name: 'screening', url: 'assets/icons/screening.svg' },
   { name: 'search', url: 'assets/icons/search.svg' },
@@ -174,7 +176,7 @@ export class IconService {
   constructor(
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId
   ) { }
 
   init() {

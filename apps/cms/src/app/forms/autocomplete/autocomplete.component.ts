@@ -11,9 +11,9 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormAutocompleteComponent<T, O> implements OnInit {
+export class FormAutocompleteComponent<O> implements OnInit {
   private options$ = new BehaviorSubject<Record<string, O>>(null);
-  @Output() change = new EventEmitter<string>();
+  @Output() controlChange = new EventEmitter<string>();
   @Input() form?: FormField<MatSelectSchema<string>>;
   @Input() displayLabel: (option: O) => string;
   @Input() getValue: (option: O) => string;
@@ -27,8 +27,6 @@ export class FormAutocompleteComponent<T, O> implements OnInit {
 
   filteredOptions: Observable<string[]>;
   control = new FormControl();
-
-  constructor() { }
 
   get schema() {
     return this.form.schema;
@@ -54,7 +52,7 @@ export class FormAutocompleteComponent<T, O> implements OnInit {
 
   onChange() {
     const value = this.form.value;
-    this.change.emit(value in this.options ? value : null);
+    this.controlChange.emit(value in this.options ? value : null);
   }
 
   displayWith(value: string) {

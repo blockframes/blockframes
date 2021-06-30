@@ -4,8 +4,8 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
-            <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
+          <a mat-flat-button color="primary" routerLink="avails" fragment="avails">
+            <span>Search & Buy Rights</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </ng-container>
@@ -15,5 +15,11 @@
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
+    <section bgAsset="hero.png">
+      <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
+        <h2>Any questions on this Title?</h2>
+        <button mat-flat-button color="accent" (click)="openIntercom()">Contact us</button>
+      </div>
+    </section>
   </title-marketplace-shell>
 </ng-container>

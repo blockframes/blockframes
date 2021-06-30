@@ -7,15 +7,15 @@ import { OrganizationService, Organization } from '@blockframes/organization/+st
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
-import { datastudio } from '@env'
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'admin-user',
@@ -36,7 +36,7 @@ export class UserComponent implements OnInit {
   public dashboardURL: SafeResourceUrl
 
   public invitationsColumns = {
-    date: 'Date',
+    date: 'Date Created',
     mode: 'Mode',
     type: 'Type',
     'fromOrg.denomination.full': 'From Organization',
@@ -58,7 +58,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer
+    private functions: AngularFireFunctions
   ) { }
 
   async ngOnInit() {
@@ -73,12 +73,6 @@ export class UserComponent implements OnInit {
 
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
-
-      if (!!datastudio.user) {
-        const prms = JSON.stringify({ "ds2.user_id": this.userId });
-        const encodedPrms = encodeURIComponent(prms);
-        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/${datastudio.user}?params=${encodedPrms}`);
-      }
 
       this.cdRef.markForCheck();
     });
@@ -109,7 +103,7 @@ export class UserComponent implements OnInit {
       await new Promise((resolve) => {
         subscription = this.userService.valueChanges(this.userId).subscribe((res) => {
           if (!!res && res.orgId === '') {
-            resolve();
+            resolve(undefined);
           }
         })
       })
@@ -179,13 +173,13 @@ export class UserComponent implements OnInit {
     }
 
     const simulation = await this.simulateDeletion(this.user);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this user from Archipel, are you sure?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'This user will be deleted from the application.',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
@@ -196,12 +190,17 @@ export class UserComponent implements OnInit {
     });
   }
 
+  verifyEmail() {
+    const f = this.functions.httpsCallable('verifyEmail');
+    return f({ uid: this.userId }).toPromise();
+  }
+
   /** Simulate how many document will be deleted if we delete this user */
   private async simulateDeletion(user: User) {
     const output: string[] = [];
 
     // organization update
-    if (!!user.orgId) {
+    if (user.orgId) {
       output.push('An organization will be updating without this user.');
     }
 

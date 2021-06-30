@@ -22,6 +22,7 @@ export class OrganizationsComponent implements OnInit {
     'denomination.public': 'Short name',
     'addresses.main.country': 'Country',
     'email': 'Email',
+    'activity': 'Activity',
     'appAccess': { value: 'App  : Dashboard : Marketplace', disableSort: true }
   };
 
@@ -32,6 +33,7 @@ export class OrganizationsComponent implements OnInit {
     'denomination.public',
     'addresses.main.country',
     'status',
+    'activity',
     'email',
     'appAccess',
   ];
@@ -56,7 +58,7 @@ export class OrganizationsComponent implements OnInit {
     this.router.navigate([`/c/o/admin/panel/organization/${org.id}`]);
   }
 
-  public filterPredicate(data: any, filter: string) {
+  public filterPredicate(data, filter: string) {
     const columnsToFilter = [
       'id',
       'denomination.full',
@@ -79,7 +81,7 @@ export class OrganizationsComponent implements OnInit {
         country: r && r.addresses.main.country ? r.addresses.main.country : '--',
         email: r.email,
         memberCount: r.userIds.length,
-        activity: !!r.activity ? r.activity : '--',
+        activity: r.activity ? r.activity : '--',
       }
 
       for (const a of this.app) {

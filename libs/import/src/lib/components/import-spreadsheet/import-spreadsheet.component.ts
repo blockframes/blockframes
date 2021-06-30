@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -56,7 +56,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
 
     this.sub = this.fileType.valueChanges.subscribe(() => {  
-      if (!!this.sheets.length) {
+      if (this.sheets.length) {
         this.importSpreadsheet(this.file);
       }
     });
@@ -101,7 +101,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     }
 
     const reader = new FileReader();
-    reader.addEventListener('loadend', _ => {
+    reader.addEventListener('loadend', () => {
       const buffer = new Uint8Array(reader.result as ArrayBuffer);
       this.sheets = importSpreadsheet(buffer, sheetRange);
       this.cdRef.markForCheck();

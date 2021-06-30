@@ -1,11 +1,11 @@
 <ng-container *ngIf="campaign$ | async as campaign">
   <ng-container *ngIf="campaign | hasKeys: ['budget', 'fundings', 'profits']">
-    <h1>Financial Elements</h1>
+    <h2>Financial Elements</h2>
 
     <!-- Budget -->
     <section id="budget" *ngIf="campaign.budget | apexBudget as options">
       <header fxLayout fxLayoutAlign="space-between center">
-        <h2>Budget</h2>
+        <h3>Budget</h3>
         <ng-container *ngIf="(campaign.files.budget) | getUrl | async as file">
           <a *ngIf="campaign.files.budget.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
@@ -60,7 +60,7 @@
     <!-- Funding -->
     <section id="budget" *ngIf="campaign.fundings | apexFunding as options">
       <header fxLayout fxLayoutAlign="space-between center">
-        <h2>Financing Plan</h2>
+        <h3>Financing Plan</h3>
         <ng-container *ngIf="campaign.files.financingPlan | getUrl | async as file">
           <a *ngIf="campaign.files.financingPlan.storagePath" mat-button target="_blank" (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
@@ -117,7 +117,7 @@
     <!-- Profits -->
     <section id="budget" *ngIf="campaign.profits | apexProfits as options">
       <header fxLayout fxLayoutAlign="space-between center">
-        <h2>Return on Investment</h2>
+        <h3>Return on Investment</h3>
         <ng-container *ngIf="campaign.files.waterfall | getUrl | async as file">
           <a *ngIf="campaign.files.waterfall.storagePath" mat-button (click)="consentBeforeDownload(file)">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
@@ -128,10 +128,10 @@
 
       <article>
         <aside>
-          <h3 fxLayout fxFlayoutAlign="start center">
+          <h5 fxLayout fxFlayoutAlign="start center">
             <mat-icon svgIcon="info"></mat-icon>
             <span>What is the return on investment in cinema industry?</span>
-          </h3>
+          </h5>
           <p>
             The return on investment (ROI) of a project is the performance measure corresponding to the net revenue
             earned, divided by the initial investment. (The result is expressed as a percentage or a ratio. If your ROI

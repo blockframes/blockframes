@@ -4,7 +4,7 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+          <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
             <span>Contact Partner</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
@@ -41,7 +41,6 @@
         <mat-form-field appearance="outline">
           <mat-label>Subject</mat-label>
           <mat-select formControlName="subject" required>
-            <mat-option></mat-option>
             <mat-option value="main">Main</mat-option>
             <mat-option value="artistic">Artistic</mat-option>
             <mat-option value="additional">Additional</mat-option>

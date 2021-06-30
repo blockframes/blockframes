@@ -54,7 +54,7 @@ function toYMD(date: Date) {
   selector: '[analyticsData] movie-analytics-chart',
   templateUrl: './movie-analytics-chart.component.html',
   styleUrls: ['./movie-analytics-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieAnalyticsChartComponent {
   public lineChartOptions = lineChartOptions;

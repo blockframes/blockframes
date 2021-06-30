@@ -5,7 +5,6 @@ import { CampaignControls, CampaignForm } from './form';
 import { Campaign, CampaignService } from '../+state';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from "rxjs";
-import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
 import { FileUploaderService } from "@blockframes/media/+state";
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +17,7 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
     private uploaderService: FileUploaderService,
   ) { }
 
-  onInit(): Observable<any>[] {
+  onInit(): Observable<unknown>[] {
     const sub = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
       tap(campaign => {
@@ -29,7 +28,7 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
     return [sub];
   }
 
-  async onSave(options: FormSaveOptions): Promise<any> {
+  async onSave(): Promise<unknown> {
     const id: string = this.route.getParams('movieId');
 
     this.uploaderService.upload();

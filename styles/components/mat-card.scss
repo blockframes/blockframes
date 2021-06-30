@@ -1,11 +1,15 @@
-@mixin mat-bf-card-theme($theme) {
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $background: map.get($config, 'background');
+  $foreground: map.get($config, 'foreground');
 
   .mat-card {
-    @include mat-private-theme-overridable-elevation(0, $theme);
-    background-color: mat-color($background, card);
-    border: 1px solid mat-color($foreground, divider);
+    @include mat.overridable-elevation(0);
+    background-color: mat.get-color-from-palette($background, 'card');
+    border: 1px solid mat.get-color-from-palette($foreground, 'divider');
     padding: 24px 16px;
     .mat-card-image:first-child {
       margin-top: -24px; // Should be the same as padding-top from .mat-card
@@ -14,7 +18,7 @@
     }
     .mat-card-title {
       font-size: 20px;
-      color: mat-color($foreground, secondary-text);
+      color: mat.get-color-from-palette($foreground, 'secondary-text');
       font-weight: bold;
     }
     .mat-card-subtitle.mat-caption {
