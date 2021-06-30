@@ -6,10 +6,12 @@ import { clearDataAndPrepareTest, assertMoveTo } from "@blockframes/e2e/utils/fu
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
 import { ORG, ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
+import { MessageListResult } from "cypress-mailosaur";
 
 const subjects = [
-  "Test 1",
-  "Test 2"
+  "A new organization has been created",
+  "New user connexion",
+  "Archipel Content - Email address verification"
 ];
 
 const USER: Partial<User> = {
@@ -66,10 +68,6 @@ describe.only('User can create new account and create a new organization', () =>
     cy.mailosaurSearchMessages(serverId, {
       sentTo: testEmail
     }).then((result: MessageListResult) => {
-      //expect(email.subject).to.equal(SUBJECT_DEMO);
-      //cy.log(email.text.body);
-      //cy.mailosaurDeleteMessage(email.id);
-      cy.log(JSON.stringify(result));
       console.log(result)
       const messages = result.items;
       messages.forEach(email => {
