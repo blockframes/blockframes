@@ -42,7 +42,7 @@ export class OrganizationComponent implements OnInit {
     'id': { value: 'Id', disableSort: true },
     'internalRef': 'Internal Ref',
     'poster': { value: 'Poster', disableSort: true },
-    'title.original': 'Original title',
+    'title.international': 'International title',
     'releaseYear': 'Release year',
   };
 
@@ -50,7 +50,7 @@ export class OrganizationComponent implements OnInit {
     'id',
     'poster',
     'internalRef',
-    'title.original',
+    'title.international',
     'releaseYear',
   ];
 

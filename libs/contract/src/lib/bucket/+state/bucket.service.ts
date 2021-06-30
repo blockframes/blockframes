@@ -18,7 +18,7 @@ export class BucketService extends CollectionService<BucketState> {
     switchMap((orgId) => this.valueChanges(orgId)),
     shareReplay(1)
   );
-  
+
   constructor(
     store: BucketStore,
     private orgQuery: OrganizationQuery,
@@ -62,6 +62,7 @@ export class BucketService extends CollectionService<BucketState> {
       buyerUserId: this.authQuery.userId,
       specificity,
       status: 'pending',
+      currency: bucket.currency,
       date: new Date(),
       delivery
     });

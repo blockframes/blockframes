@@ -31,8 +31,8 @@
       <ng-template colRef="exclusive" let-exclusive>
         {{ exclusive ? 'Yes' : 'No' }}
       </ng-template>
-      <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-termIndex="index">
-        <ng-template [ngTemplateOutlet]="actionTemplate" [ngTemplateOutletContext]="{index:termIndex, term:contract.terms[termIndex]}">
+      <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
+        <ng-template [ngTemplateOutlet]="actionTemplate" [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
         </ng-template>
       </ng-template>
 

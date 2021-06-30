@@ -17,7 +17,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { AppPipeModule, ToLabelModule, ToDateModule } from '@blockframes/utils/pipes';
@@ -64,6 +63,7 @@ export const panelRoutes: Routes = [
   { path: 'invitations', component: InvitationsComponent },
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent },
+  { path: 'offers', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.OffersListModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
 ];
 @NgModule({
@@ -84,7 +84,6 @@ export const panelRoutes: Routes = [
     TableFilterModule,
     ImageModule,
     AlgoliaAutocompleteModule,
-    ContractTreeModule,
     EventModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
