@@ -93,6 +93,7 @@ export const icons = [
   { name: 'person_add', url: 'assets/icons/person_add.svg' },
   { name: 'play_arrow', url: 'assets/icons/play_arrow.svg' },
   { name: 'play_circle', url: 'assets/icons/play_circle.svg' },
+  { name: 'publish', url: 'assets/icons/publish.svg' },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
   { name: 'restore', url: 'assets/icons/restore.svg' },
   { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg' },
