@@ -48,7 +48,7 @@
           <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
         </a>
         <a mat-menu-item *ngIf="['financiers'].includes(appName)"  [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-          <mat-icon svgIcon="visibility" color="primary"></mat-icon>
+          <mat-icon svgIcon="visibility"></mat-icon>
           <span>Marketplace Preview</span>
         </a>
         <a mat-menu-item *ngIf="appName === 'festival' && movie.app[appName].status === 'draft'"
