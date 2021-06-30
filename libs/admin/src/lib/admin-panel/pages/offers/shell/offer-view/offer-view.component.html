@@ -1,28 +1,29 @@
-<form [formGroup]="form">
-  <div class="header">
+<form [formGroup]="form" *ngIf="hydratedContracts$; else loading" fxLayout="column">
+  <div fxLayoutAlign="space-between center" fxLayout="row">
     <mat-form-field appearance="outline">
-      <mat-select formControlName="select_type">
-        <mat-option value="general_contract_status">General contract Status</mat-option>
+      <mat-label>General Contract Status</mat-label>
+      <mat-select formControlName="offerStatus">
+        <mat-option *ngFor="let status of offerStatus" [value]="status">{{status}}</mat-option>
       </mat-select>
     </mat-form-field>
     <button mat-flat-button color="primary" (click)="update()">Update</button>
   </div>
-  <mat-card class="margin_bottom">
+  <mat-card class="margin-bottom">
     <p>Buyer's Specific Terms</p>
-    <mat-form-field appearance="outline" class="no_pd">
-      <textarea matInput formControlName="buyers_specific_term"></textarea>
+    <mat-form-field appearance="outline" class="nopd">
+      <textarea matInput formControlName="buyersSpecificTerm"></textarea>
       <mat-hint>You can pick up your favorite car here</mat-hint>
     </mat-form-field>
   </mat-card>
-  <mat-card class="margin_bottom">
+  <mat-card class="margin-bottom">
     <p>Buyers Delivery Wishlist</p>
-    <mat-form-field appearance="outline" class="no_pd">
-      <textarea matInput formControlName="buyers_delivery_wishlist"></textarea>
+    <mat-form-field appearance="outline" class="nopd">
+      <textarea matInput formControlName="buyersDeliveryWishlist"></textarea>
       <mat-hint>You can pick up your favorite car here</mat-hint>
     </mat-form-field>
   </mat-card>
 
-  <mat-card class="margin_bottom">
+  <mat-card class="margin-bottom">
     <p>Contracts in the package</p>
     <ng-container *ngIf="hydratedContracts$|async as contracts">
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable>
@@ -38,9 +39,9 @@
             </ng-container>
           </ng-container>
         </ng-template>
-        <ng-template colRef="organizationName" let-organizationName>{{ organizationName |json}}</ng-template>
+        <ng-template colRef="organizationName" let-organizationName>{{ organizationName}}</ng-template>
         <ng-template colRef="id" let-id>
-          <div class="actions">
+          <div fxLayout="row" fxLayoutAlign="flex-start center" fxLayoutGap="8px">
             <a mat-icon-button [routerLink]="['../', id,]" matTooltip="Edit">
               <mat-icon svgIcon="visibility"></mat-icon>
             </a>
@@ -52,5 +53,10 @@
       </bf-table-filter>
     </ng-container>
   </mat-card>
-  <a mat-flat-button color="primary" class="add_rights margin_bottom">Add a right to a title</a>
+  <a mat-flat-button color="primary" class="add-rights margin-bottom" fxFlexAlign="center">Add a right to a title</a>
 </form>
+
+
+<ng-template #loading>
+  <mat-spinner fxFlexAlign="center"></mat-spinner>
+</ng-template>

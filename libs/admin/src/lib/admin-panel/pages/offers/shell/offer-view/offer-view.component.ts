@@ -1,12 +1,14 @@
 import {
-  Component, ChangeDetectionStrategy, OnDestroy
+  Component, ChangeDetectionStrategy
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { combineLatest, Subscription } from 'rxjs';
-import { map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs/operators';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { Contract, ContractService, Sale } from '@blockframes/contract/contract/+state';
+import { Offer, OfferService, offerStatus } from '@blockframes/contract/offer/+state';
 
 
 const columns = {
@@ -23,33 +25,36 @@ const columns = {
   styleUrls: ['./offer-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfferViewComponent implements OnDestroy {
+export class OfferViewComponent {
 
   public offer$ = this.shell.offer$.pipe(shareReplay(1));
   public buyerOrg$ = this.shell.buyerOrg$;
   public contracts$ = this.shell.contracts$;
   public incomes$ = this.shell.incomes$;
+  public offerStatus = offerStatus;
+  private offer: Offer;
+  private contracts: Contract[];
   public form = new FormGroup({
-    select_type: new FormControl('general_contract_status'),
-    buyers_specific_term: new FormControl(null),
-    buyers_delivery_wishlist: new FormControl(null),
+    offerStatus: new FormControl(null),
+    buyersSpecificTerm: new FormControl(null),
+    buyersDeliveryWishlist: new FormControl(null),
   })
 
-  public deleteControl = new FormControl('');
-  public deleteValid$ = this.deleteControl.valueChanges.pipe(
-    map(_ => `${_}`.toLowerCase().trim() !== 'delete'),
-    startWith(true)
-  );
   public confirmDialog: MatDialogRef<unknown>;
   public hydratedContracts$ = combineLatest(
     this.buyerOrg$,
     this.contracts$,
     this.offer$,
+    this.incomes$
   ).pipe(
     tap(
       ([buyerOrg, contracts, offer]) => {
-        this.form.get('buyers_specific_term').setValue(offer.specificity)
-        this.form.get('buyers_delivery_wishlist').setValue(offer.delivery)
+        console.log({ contracts, offer })
+        this.contracts = contracts
+        this.offer = offer
+        this.form.get('offerStatus').setValue(offer.status)
+        this.form.get('buyersSpecificTerm').setValue(offer.specificity)
+        this.form.get('buyersDeliveryWishlist').setValue(offer.delivery)
       }
     ),
     map(
@@ -74,21 +79,48 @@ export class OfferViewComponent implements OnDestroy {
     id: string
   }[] = [];
   public columns = columns;
-  public initialColumns = ['titleId', 'sellerApproved', 'orgIds', 'organizationName', 'id'];
-  public subs: Subscription[] = [];
+  public initialColumns = [
+    'titleId', 'sellerApproved', 'orgIds', 'organizationName', 'id'
+  ];
 
   constructor(
     private shell: OfferShellComponent,
     private dialog: MatDialog,
+    private offerService: OfferService,
+    private contractService: ContractService,
+
   ) { }
 
-
   update() {
-    console.log('updating')
+    const { offerStatus,
+      buyersSpecificTerm,
+      buyersDeliveryWishlist } = this.form.value
+
+    this.offerService.runTransaction(write => {
+      const promises = []
+      const offerPromise = this.offerService.update(
+        {
+          id: this.offer.id,
+          specificity: buyersSpecificTerm,
+          status: offerStatus,
+          delivery: buyersDeliveryWishlist,
+        }, { write });
+      this.contracts.forEach(contract => {
+        const contractPromise = this.contractService.update(
+          { id: contract.id, specificity: buyersSpecificTerm, } as Sale, { write }
+        );
+        promises.push(contractPromise);
+      })
+
+
+      promises.push(offerPromise)
+      return Promise.all(promises)
+    })
+
   }
 
   handleDelete(id: string) {
-    console.log('deleting ' + id)
+    this.contractService.remove(id)
   }
 
   close() {
@@ -113,17 +145,4 @@ export class OfferViewComponent implements OnDestroy {
       autoFocus: false,
     });
   }
-
-
-  // delete(term: Term) {
-  //   this.contractService.update(term.contractId, (contract, write) => {
-  //     this.incomeService.remove(term.id, { write });
-  //     return { termIds: contract.termIds.filter(id => id !== term.id) };
-  //   })
-  // }
-
-  ngOnDestroy() {
-    this.subs.forEach(_ => _.unsubscribe());
-  }
-
 }
