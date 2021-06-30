@@ -344,6 +344,7 @@ const userFirstConnexionTemplate = (user: PublicUser) =>
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
 export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const supportEmail = (window.Cypress) ? testEmail : getSupportEmail(org._meta.createdFrom);
   return {
@@ -366,6 +367,7 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
 }
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const supportEmail = (window.Cypress) ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
