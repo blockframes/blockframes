@@ -14,4 +14,15 @@
       <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
     </mat-form-field>
   </header>
+  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
+    <!-- Columns -->
+    <ng-template colRef="avails.territories" let-territories><b>{{ territories | json }}</b></ng-template>
+    <ng-template colRef="avails.exclusive" let-exclusive>{{ exclusive }}</ng-template>
+    <!-- Local Form -->
+    <ng-template formView let-termForm>
+      <form [formGroup]="termForm">
+        <avails-filter [form]="termForm.get('avails')"></avails-filter>
+      </form>
+    </ng-template>
+  </bf-form-table>
 </form>
