@@ -40,7 +40,7 @@ beforeEach(() => {
 })
 
 // USER TEST
-describe.only('User can create new account and create a new organization', () => {
+describe('User can create new account and create a new organization', () => {
   beforeEach(() => {
       //Clear all messages on server before the test
       cy.mailosaurDeleteAllMessages(serverId).then(() => {
@@ -68,9 +68,10 @@ describe.only('User can create new account and create a new organization', () =>
     cy.mailosaurSearchMessages(serverId, {
       sentTo: testEmail
     }).then((result: MessageListResult) => {
-      console.log(result)
+      cy.log(`You've Got ${result.items.length} Mails! 💓`);
       const messages = result.items;
       messages.forEach(email => {
+        cy.log(`Message: ${email.subject} ✅`);
         expect(subjects).to.include.members([email.subject]);
       });
     });
