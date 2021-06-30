@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { setForm, serverId, testEmail } from "@blockframes/e2e/utils";
+import { setForm, serverId, testEmail, SEC } from "@blockframes/e2e/utils";
 
 //Test if email is sent correctly.
 const SUBJECT_DEMO = 'A demo has been requested';
@@ -24,21 +24,21 @@ describe('Demo Request Email', () => {
     })
   });
   
-  it('Wait for API to load', () => {
-    cy.get('h1', {timeout: 10000})
+  it('Request Demo and verify request email', () => {
+    cy.get('h1', {timeout: 10 * SEC})
       .contains("Want to learn more?");
 
     cy.log('Trigger send demo request email..');
 
     setForm('festival-landing #demo input, mat-select', {inputValue: demo_contact});
-    cy.get('[test-id="phone-no"] .first', {timeout: 1000}).type(demo_contact.country)
-    cy.get('[test-id="phone-no"] .last', {timeout: 1000}).type(demo_contact.tel)
+    cy.get('[test-id="phone-no"] .first', {timeout: 1 * SEC}).type(demo_contact.country)
+    cy.get('[test-id="phone-no"] .last', {timeout: 1 * SEC}).type(demo_contact.tel)
 
-    cy.get('button[test-id="send-request"]', {timeout: 10000})
+    cy.get('button[test-id="send-request"]', {timeout: 10 * SEC})
       .click()
       .then(() => cy.log("Form clicked!"));
 
-    cy.wait(15000);
+    cy.wait(15 * SEC);
 
     //Test for arrival of email..
     cy.mailosaurGetMessage(serverId, {
