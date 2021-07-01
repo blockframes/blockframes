@@ -58,8 +58,7 @@ export function userResetPassword(email: string, link: string): EmailTemplateReq
 
 /** Send email to an user who is requesting new app access */
 export function appAccessEmail(email: string, user: UserEmailData): EmailTemplateRequest {
-  const data = { user };
-  return { to: email, templateId: templateIds.user.appAccessRequest, data };
+  return { to: email, templateId: templateIds.user.appAccessRequest, data: { user } };
 }
 
 /**
