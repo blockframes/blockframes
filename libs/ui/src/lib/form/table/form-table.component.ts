@@ -43,6 +43,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
+  @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
 
   @ContentChildren(ColRefDirective, { descendants: false }) cols: QueryList<ColRefDirective>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -50,6 +51,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   @ContentChild(AddButtonTextDirective, { read: TemplateRef }) addButtonText: AddButtonTextDirective;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  layout = { top: 'column', bottom: 'column-reverse', left: 'row', right: 'row-reverse' };
   tableColumns: string[] = [];
   showTable$: Observable<boolean>;
   showPaginator$: Observable<boolean>;

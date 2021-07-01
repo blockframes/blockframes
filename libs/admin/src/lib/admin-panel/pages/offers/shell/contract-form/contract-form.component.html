@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-  <header fxLayout="row" fxLayoutAlign="space-around center">
+  <header>
     <mat-form-field appearance="outline">
       <mat-label>Select a Title</mat-label>
       <mat-select formControlName="titleId">
@@ -14,4 +14,15 @@
       <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
     </mat-form-field>
   </header>
+  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
+    <!-- Columns -->
+    <ng-template class="duration" colRef="avails.duration" let-duration>{{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}</ng-template>
+    <ng-template colRef="avails.territories" let-territories>{{ territories | toLabel: 'territories' }}</ng-template>
+    <ng-template colRef="avails.medias" let-media>{{ media | toLabel: 'medias' }}</ng-template>
+    <ng-template colRef="avails.exclusive" let-exclusive >{{ exclusive ? 'Yes' : 'No'}}</ng-template>
+    <!-- Local Form -->
+    <ng-template formView let-termForm>
+        <avails-filter class="surface" [form]="termForm.get('avails')"></avails-filter>
+    </ng-template>
+  </bf-form-table>
 </form>
