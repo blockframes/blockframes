@@ -98,7 +98,7 @@ export const randomID = (): string => (`${new Date().getTime()}-${currentID++}`)
 export const createFakeScript = (title: string) => cy.task('random:pdf', title);
 
 interface FormOptions {
-  inputValue: string;
+  inputValue: any;
   specialIds?: string[];
   fieldHandler?<E extends HTMLElement>($formEl: JQuery<E>, key: string): [boolean, string]
 }
