@@ -190,9 +190,9 @@ export class UserComponent implements OnInit {
     });
   }
 
-  async verifyEmail() {
+  verifyEmail() {
     const f = this.functions.httpsCallable('verifyEmail');
-    await f({ uid: this.userId }).toPromise();
+    f({ uid: this.userId }).toPromise();
   }
 
   /** Simulate how many document will be deleted if we delete this user */
