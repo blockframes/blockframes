@@ -12,6 +12,7 @@ import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/
 import { App, appName } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
+import { testEmail } from "@blockframes/e2e/utils/env";
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -343,8 +344,9 @@ const userFirstConnexionTemplate = (user: PublicUser) =>
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
 export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
+  const supportEmail = ('Cypress' in window) ? testEmail : getSupportEmail(org._meta.createdFrom);
   return {
-    to: getSupportEmail(org._meta.createdFrom),
+    to: supportEmail,
     subject: 'A new organization has been created',
     text: organizationCreatedTemplate(org.id)
   };
@@ -363,8 +365,9 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
 }
 
 export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
+  const supportEmail = ('Cypress' in window) ? testEmail : getSupportEmail(user._meta.createdFrom);
   return {
-    to: getSupportEmail(user._meta.createdFrom),
+    to: supportEmail,
     subject: 'New user connexion',
     text: userFirstConnexionTemplate(user)
   };
@@ -372,7 +375,7 @@ export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest
 
 export function sendDemoRequestMail(information: RequestDemoInformations) {
   return {
-    to: getSupportEmail(information.app),
+    to: information.test ? information.testEmailTo : getSupportEmail(information.app),
     subject: 'A demo has been requested',
     text: `A user wants to schedule a demo.
 
