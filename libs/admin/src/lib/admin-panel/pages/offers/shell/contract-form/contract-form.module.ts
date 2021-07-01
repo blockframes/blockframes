@@ -11,6 +11,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// @blockframes
+import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
+import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
+
+// Pipes
+import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
 
 @NgModule({
   declarations: [ContractFormComponent],
@@ -18,6 +24,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     CommonModule,
     RouterModule.forChild([{ path: '', component: ContractFormComponent }]),
     ReactiveFormsModule,
+    AvailsFilterModule,
+    FormTableModule,
+    ToLabelModule,
     
     // Material
     MatSelectModule,
