@@ -10,8 +10,6 @@ import { Term, TermService } from "@blockframes/contract/term/+state";
 import { FormList } from '@blockframes/utils/form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 
-// 
-
 @Component({
   selector: 'contract-form',
   templateUrl: './contract-form.component.html',
