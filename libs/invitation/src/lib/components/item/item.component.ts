@@ -62,9 +62,7 @@ export class ItemComponent {
   ) {
     //For cypress-environment, keep the event link same as from
     //where app is launced to remove dependency on external host.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (window.Cypress) {
+    if ('Cypress' in window) {
       const host = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ' '}`;
       this.applicationUrl.festival = host;
       this.applicationUrl[this.app] = host;
