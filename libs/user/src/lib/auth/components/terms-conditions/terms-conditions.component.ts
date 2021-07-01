@@ -5,6 +5,7 @@ import { getCurrentApp, applicationUrl } from "@blockframes/utils/apps";
 import { getAppLocation } from "@blockframes/utils/helpers";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { Location } from '@angular/common';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'auth-terms-conditions',
@@ -16,11 +17,12 @@ export class TermsConditionsComponent implements OnInit {
   section$: Observable<'dashboard' | 'marketplace'>;
   appUrl: string;
   appName: string;
-  canGoBack = window.history.length > 1;
+  canGoBack =  this.route.snapshot.queryParamMap.get('no_back')!=='true';
 
   constructor(
     private routerQuery: RouterQuery,
     private location: Location,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
