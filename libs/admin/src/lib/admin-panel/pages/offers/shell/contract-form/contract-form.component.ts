@@ -10,6 +10,8 @@ import { Term, TermService } from "@blockframes/contract/term/+state";
 import { FormList } from '@blockframes/utils/form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 
+// 
+
 @Component({
   selector: 'contract-form',
   templateUrl: './contract-form.component.html',
@@ -27,7 +29,9 @@ export class ContractFormComponent implements OnInit {
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
   currency?: string;
   termColumns = {
+    'avails.duration': 'Duration',
     'avails.territories': 'Territories',
+    'avails.medias': 'Media',
     'avails.exclusive': 'Exclusivity'
   }
   

@@ -15,6 +15,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
 import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
 
+// Pipes
+import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
+
 @NgModule({
   declarations: [ContractFormComponent],
   imports: [
@@ -23,6 +26,7 @@ import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
     ReactiveFormsModule,
     AvailsFilterModule,
     FormTableModule,
+    ToLabelModule,
     
     // Material
     MatSelectModule,
