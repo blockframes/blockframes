@@ -11,7 +11,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { RouterModule } from '@angular/router';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 
 // Material
@@ -40,6 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DisplayNameModule,
     MovieFeatureModule,
     ToLabelModule,
+    ToGroupLabelPipeModule,
     DetailedTermsModule,
 
     // Material
