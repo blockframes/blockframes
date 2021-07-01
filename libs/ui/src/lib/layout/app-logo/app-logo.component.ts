@@ -4,10 +4,10 @@ import { App } from '@blockframes/utils/apps';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
 
 const appLogos: Record<App | 'crm', string> = {
-  catalog: 'archipel_content_logo.svg',
-  festival: 'logo_archipel_market_outline.svg',
-  financiers: 'logo_media_financiers.svg',
-  crm: 'logo_archipel_market_outline.svg'
+  catalog: 'archipel_content.svg',
+  festival: 'archipel_market.svg',
+  financiers: 'media_financiers.svg',
+  crm: 'archipel_market.svg'
 };
 
 @Component({

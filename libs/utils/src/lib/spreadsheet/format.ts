@@ -380,13 +380,18 @@ export function formatSingleValue(value: string, scope: Scope, path: string, mov
     const key = getKeyIfExists(scope, value);
     if (key) {
       const pathParts = path.split('.');
-      if (pathParts.length === 1) {
-        movie[pathParts[0]] = key;
-      } else if (pathParts.length === 2) {
-        movie[pathParts[0]][pathParts[1]] = key;
-      } else if (pathParts.length === 3) {
-        movie[pathParts[0]][pathParts[1]][pathParts[2]] = key;
+
+      let subObject: unknown = movie[pathParts[0]];
+
+      // access sub-sub-object,
+      // we need to stop @length - 2 to keep the reference to the original movie object
+      // stopping on the leaf (movie's property) would create a primitive copy
+      // and would leave the movie unchanged
+      for (let i = 1 ; i < pathParts.length - 1 ; i++) {
+        subObject = subObject[pathParts[i]];
       }
+
+      subObject[pathParts[pathParts.length - 1]] = key;
     }
   }
 }

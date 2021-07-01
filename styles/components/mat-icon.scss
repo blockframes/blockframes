@@ -9,7 +9,7 @@
   $background: map.get($config, 'background');
   $foreground: map.get($config, 'foreground');
 
-  .mat-icon {
+  mat-icon {
     path, g, polygon {
       fill: mat.get-color-from-palette($foreground, icon);
     }
