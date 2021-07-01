@@ -12,7 +12,7 @@ import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/
 import { App, appName } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
-import { testEmail } from "@blockframes/e2e/utils";
+import { testEmail } from "@blockframes/e2e/utils/env";
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';

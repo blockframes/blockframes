@@ -7,7 +7,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
-import { testEmail } from "@blockframes/e2e/utils";
+import { testEmail } from "@blockframes/e2e/utils/env";
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
