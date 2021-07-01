@@ -23,13 +23,13 @@ export class ProfileFormComponent {
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
   ) {}
-  
+
   async sendEmailVerification() {
-    const { email, firstName } = this.authQuery.user;
+    const publicUser = this.authQuery.user;
     const app = getCurrentApp(this.routerQuery);
-    
+
     const sendVerifyEmail = this.functions.httpsCallable('sendVerifyEmailAddress');
-    await sendVerifyEmail({ email, firstName, app }).toPromise();
+    await sendVerifyEmail({ email: publicUser.email, publicUser, app }).toPromise();
     this.emailSent = true;
     this.cdr.markForCheck();
   }
