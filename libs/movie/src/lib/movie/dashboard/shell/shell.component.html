@@ -8,7 +8,7 @@
           <h4>{{ movie | movieFeature }}</h4>
           <h1>{{ movie.title.international }}</h1>
           <mat-chip-list>
-            <mat-chip>
+            <mat-chip disableRipple>
               {{ movie.app[appName].status }}
             </mat-chip>
           </mat-chip-list>
