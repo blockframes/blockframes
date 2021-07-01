@@ -260,6 +260,7 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
 
   try {
     admin.auth().updateUser(uid, { emailVerified: true});
+    return true;
   } catch (e) {
     throw new Error(`There was an error while verifying email : ${e.message}`);
   }
