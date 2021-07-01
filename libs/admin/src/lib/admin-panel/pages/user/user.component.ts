@@ -192,7 +192,7 @@ export class UserComponent implements OnInit {
 
   verifyEmail() {
     const f = this.functions.httpsCallable('verifyEmail');
-    f({ uid: this.userId }).toPromise();
+    return f({ uid: this.userId }).toPromise();
   }
 
   /** Simulate how many document will be deleted if we delete this user */
