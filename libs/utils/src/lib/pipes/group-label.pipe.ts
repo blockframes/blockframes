@@ -1,9 +1,11 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Scope, StaticGroup, staticModel } from '@blockframes/utils/static-model';
+import { StaticGroup, staticModel, staticGroups, GroupScope } from '@blockframes/utils/static-model';
 
 @Pipe({ name: 'toGroupLabel' })
 export class GroupLabel implements PipeTransform {
-  transform(value: string[], groups: StaticGroup[], scope: Scope, all?: string) {
+  transform(value: string[], scope: GroupScope, all?: string) {
+    const groups: StaticGroup[] = staticGroups[scope];
+
     const allItems = groups.reduce((items, group) => items.concat(group.items), []);
     if (allItems.length === value.length) return all;
     return groups.map(group => {

@@ -13,7 +13,7 @@ import {
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer } from "rxjs";
 import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
-import { Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
+import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
@@ -84,7 +84,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   @Input() @boolean disabled = false;
   @Input() placeholder = 'Tap to filter'
   @Input() withoutValues: string[] = [];
-  @Input() scope: Scope;
+  @Input() scope: GroupScope;
   @Input() icon: string;
 
   form = new FormControl([], this.required ? [Validators.required] : []);
@@ -128,7 +128,8 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     const groups = staticGroups[this.scope];
     if (this.withoutValues.length) {
       for (const group of groups) {
-        group.items = group.items.filter(item => !this.withoutValues.includes(item));
+        /* eslint-disable */
+        group.items = (group.items as  any[]).filter((item:string) => !this.withoutValues.includes(item));
       }
     }
     this.groups$.next(groups);
