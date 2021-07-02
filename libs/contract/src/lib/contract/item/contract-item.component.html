@@ -21,18 +21,19 @@
       <ng-template colRef="territories" let-territories>
         <section (click)="openDetails(territories, 'territories')">
           <p class="ellipsis">
-            {{ territories | toLabel: 'territories' }}
+            {{ territories |toGroupLabel:'territories':'World'}}
           </p>
         </section>
       </ng-template>
       <ng-template colRef="medias" let-medias>
-        {{ medias | toLabel:'medias' }}
+        {{ medias | toGroupLabel:'medias':'All' }}
       </ng-template>
       <ng-template colRef="exclusive" let-exclusive>
         {{ exclusive ? 'Yes' : 'No' }}
       </ng-template>
-      <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-termIndex="index">
-        <ng-template [ngTemplateOutlet]="actionTemplate" [ngTemplateOutletContext]="{index:termIndex, $implicit:contract.terms[termIndex]}">
+      <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
+        <ng-template [ngTemplateOutlet]="actionTemplate"
+          [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
         </ng-template>
       </ng-template>
 

@@ -1,0 +1,61 @@
+<ng-container *ngIf="movie$ | async as movie">
+  <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+    <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
+      <button mat-button color="primary" (click)="updateStatus('draft', 'Title restored')">
+        <mat-icon svgIcon="restore"></mat-icon>
+        Restore Title
+      </button>
+    </ng-container>
+    <ng-template #cta>
+      <ng-container *ngIf="(org$ | async | canAccess: 'marketplace': appName) && !['financiers'].includes(appName)">
+        <a mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+          <mat-icon svgIcon="visibility" color="primary"></mat-icon>
+          <span>Marketplace Preview</span>
+        </a>
+      </ng-container>
+    </ng-template>
+    <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
+      <button mat-button (click)="removeAppAccess()" matTooltip="Delete Title">
+        <mat-icon svgIcon="delete"></mat-icon>
+        <span>Delete Title</span>
+      </button>
+    </ng-container>
+    <ng-template #actionsMenu>
+      <button class="align-bottom" mat-button [matMenuTriggerFor]="actionMenuMenu">
+        <mat-icon svgIcon="more_horiz"></mat-icon>
+        <span>Actions</span>
+        <mat-icon svgIcon="arrow_drop_down"></mat-icon>
+      </button>
+      <mat-menu #actionMenuMenu="matMenu">
+        <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+          <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+        </a>
+        <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item
+          (click)="updateStatus('draft', 'Title back to Draft')">
+          <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
+        </button>
+        <button *ngIf="movie.app[appName].status === 'accepted'" mat-menu-item
+          (click)="updateStatus('draft', 'Title removed from Marketplace.')">
+          <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
+        </button>
+        <button mat-menu-item (click)="updateStatus('archived', 'Title archived.')">
+          <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
+        </button>
+        <a mat-menu-item *ngIf="['catalog','financiers'].includes(appName)
+          && movie.app[appName].status !== 'accepted'
+          && movie.app[appName].status !== 'submitted'"
+          [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="submit">
+          <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
+        </a>
+        <a mat-menu-item *ngIf="['financiers'].includes(appName)"  [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+          <mat-icon svgIcon="visibility"></mat-icon>
+          <span>Marketplace Preview</span>
+        </a>
+        <a mat-menu-item *ngIf="appName === 'festival' && movie.app[appName].status === 'draft'"
+          [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="publish">
+          <mat-icon svgIcon="marketplace"></mat-icon><span>Publish on Marketplace</span>
+        </a>
+      </mat-menu>
+    </ng-template>
+  </aside>
+</ng-container>
