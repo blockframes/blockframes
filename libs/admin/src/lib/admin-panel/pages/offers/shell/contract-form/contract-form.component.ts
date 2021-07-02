@@ -7,8 +7,11 @@ import { MovieService } from "@blockframes/movie/+state";
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from "@blockframes/contract/term/+state";
+
+// Forms
 import { FormList } from '@blockframes/utils/form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { MovieVersionInfoForm } from "@blockframes/movie/form/movie.form";
 
 @Component({
   selector: 'contract-form',
@@ -21,7 +24,8 @@ export class ContractFormComponent implements OnInit {
     titleId: new FormControl(null, Validators.required),
     price: new FormControl(Validators.min(0)),
     terms: FormList.factory([], (term: Term) => new FormGroup({
-      avails: new AvailsForm(term, [])
+      avails: new AvailsForm(term, []),
+      versions: new MovieVersionInfoForm(term.languages)
     }))
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
@@ -29,8 +33,9 @@ export class ContractFormComponent implements OnInit {
   termColumns = {
     'avails.duration': 'Duration',
     'avails.territories': 'Territories',
-    'avails.medias': 'Media',
-    'avails.exclusive': 'Exclusivity'
+    'avails.medias': 'Medias',
+    'avails.exclusive': 'Exclusivity',
+    'versions': 'Versions'
   }
   
   constructor(
