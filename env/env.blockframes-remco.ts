@@ -149,7 +149,8 @@ export const bigQueryAnalyticsTable = 'blockframes-remco.analytics_234801912.eve
 
 export const datastudio = {
   user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB',
-  users: '978dc4a0-6dfc-4499-b159-f69f53aeb3a5/page/00YOC'
+  users: '978dc4a0-6dfc-4499-b159-f69f53aeb3a5/page/00YOC',
+  events: 'a98badcf-df61-4f32-903d-6e703c75fd3d/page/TK5PC'
 }
 
 // Archipel OrgIds

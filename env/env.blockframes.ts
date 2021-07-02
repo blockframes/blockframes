@@ -183,7 +183,8 @@ export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
 
 export const datastudio = {
   user: 'fd0ee9b3-0306-4404-ae96-a67d708e2c58/page/dLd2B',
-  users: '978dc4a0-6dfc-4499-b159-f69f53aeb3a5/page/00YOC'
+  users: '978dc4a0-6dfc-4499-b159-f69f53aeb3a5/page/00YOC',
+  events: 'b7d36865-858d-45a0-b667-80e8cc6d0140/page/TK5PC'
 }
 
 // Archipel OrgIds
