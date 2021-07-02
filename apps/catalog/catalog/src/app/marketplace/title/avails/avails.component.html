@@ -40,14 +40,14 @@
             <article class="expansion-panel-content">
               <ng-container *ngIf="term.territories.length <= maxTerritories; else moreTerritories">
                 <mat-chip-list aria-label="Territories">
-                  <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
+                  <mat-chip *ngFor="let territory of term.territories  | toGroupLabel:'territories':'World'">{{ territory }}</mat-chip>
                 </mat-chip-list>
               </ng-container>
               <ng-template #moreTerritories>
                 <div fxFlex fxLayout="column" fxLayoutAlign="start end">
                   <mat-chip-list aria-label="Territories">
-                    <ng-container *ngFor="let territory of term.territories, index as i">
-                      <mat-chip *ngIf="i < maxTerritories">{{ territory | toLabel: 'territories' }}</mat-chip>
+                    <ng-container *ngFor="let territory of term.territories | toGroupLabel:'territories':'World', index as i">
+                      <mat-chip *ngIf="i < maxTerritories">{{ territory  }}</mat-chip>
                     </ng-container>
                   </mat-chip-list>
                   <button mat-button class="spacing" (click)="openTerritoryModal(term.territories, 'territories')">... See {{ term.territories.length - 30 }} More</button>
@@ -66,7 +66,7 @@
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
               <mat-chip-list aria-label="Medias">
-                <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
+                <mat-chip *ngFor="let media of term.medias  | toGroupLabel:'medias':'All'">{{ media  }}</mat-chip>
               </mat-chip-list>
             </article>
           </mat-expansion-panel>
