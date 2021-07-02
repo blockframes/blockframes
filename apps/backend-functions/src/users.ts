@@ -15,10 +15,10 @@ type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
 
-interface EmailFlowData { email: string, app: App, firstName?: string }
+interface EmailFlowData { email: string, app: App, publicUser: PublicUser }
 
 export const startVerifyEmailFlow = async (data: EmailFlowData) => {
-  const { email, app, firstName } = data;
+  const { email, app, publicUser } = data;
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmailAddress()" function');
@@ -26,7 +26,8 @@ export const startVerifyEmailFlow = async (data: EmailFlowData) => {
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
   try {
-    const template = userVerifyEmail(email, firstName, verifyLink);
+    const user = getUserEmailData(publicUser);
+    const template = userVerifyEmail(email, user, verifyLink);
     await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending email verification email : ${e.message}`);
@@ -34,7 +35,8 @@ export const startVerifyEmailFlow = async (data: EmailFlowData) => {
 };
 
 export const startAccountCreationEmailFlow = async (data: EmailFlowData) => {
-  const { email, app, firstName } = data;
+  const { email, app, publicUser } = data;
+  const user = getUserEmailData(publicUser);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
@@ -42,7 +44,7 @@ export const startAccountCreationEmailFlow = async (data: EmailFlowData) => {
 
   try {
     const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-    const template = accountCreationEmail(email, verifyLink, firstName);
+    const template = accountCreationEmail(email, verifyLink, user);
     await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending account creation email : ${e.message}`);
@@ -83,7 +85,7 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
-        await startAccountCreationEmailFlow({ email, firstName: u.firstName, app: u._meta.createdFrom });
+        await startAccountCreationEmailFlow({ email, publicUser: u, app: u._meta.createdFrom });
       }
       tx.update(userDocRef, { email, uid });
     } else {
@@ -257,7 +259,11 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
   }
 
   try {
-    admin.auth().updateUser(uid, { emailVerified: true});
+    await admin.auth().updateUser(uid, { emailVerified: true});
+
+    const { _meta } = await getDocument<PublicUser>(`users/${uid}`);
+    _meta.emailVerified = true;
+    db.doc(`users/${uid}`).update({ _meta });
   } catch (e) {
     throw new Error(`There was an error while verifying email : ${e.message}`);
   }
