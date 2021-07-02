@@ -20,6 +20,7 @@ export class ConfirmInputComponent implements OnInit {
       text?: string,
       warning?: string,
       simulation?: string[],
+      placeholder?: string,
       confirmationWord: string,
       confirmButtonText: string,
       cancelButtonText?: string,

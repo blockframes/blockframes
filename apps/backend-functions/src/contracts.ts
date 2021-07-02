@@ -12,9 +12,15 @@ export async function onContractDelete(contractSnapshot: FirebaseFirestore.Docum
     await term.ref.delete();
   }
 
-  // Delete offers belonging to contract, if any
+  // An offer can have multiple contracts
+  // We don't want to delete the offer if it still have other contracts
+  // We want to delete the offer only when we delete its last contract
   if (contract.offerId) {
-    await db.doc(`offers/${contract.offerId}`).delete();
+    const offerContractsRef = db.collection('contracts').where('offerId', '==', contract.offerId);
+    const offerContractsSnap = await offerContractsRef.get();
+    if (offerContractsSnap.empty) {
+      await db.doc(`offers/${contract.offerId}`).delete();
+    }
   }
 
   // Delete incomes documents, if any

@@ -1,0 +1,26 @@
+.space-horizontal {
+  margin: 0 64px;
+  padding-top: 16px;
+}
+
+.margin-bottom {
+  margin-bottom: 16px;
+}
+
+mat-card {
+  p {
+    font-weight: bold;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.add-rights {
+  margin-top: 24px;
+  width: min-content;
+}
+
+mat-option {
+  text-transform: capitalize;
+}
