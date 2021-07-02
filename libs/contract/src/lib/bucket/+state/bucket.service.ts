@@ -10,6 +10,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgId } from '@env';
 import { AuthQuery } from "@blockframes/auth/+state";
 import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { createOfferId } from '@blockframes/utils/utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -48,6 +49,7 @@ export class BucketService extends CollectionService<BucketState> {
 
   async createOffer(specificity: string, delivery: string) {
     const orgId = this.orgQuery.getActiveId();
+    const orgName = this.orgQuery.getActive().denomination.public;
     const bucket = await this.getActive();
 
     await this.update(orgId, {
@@ -64,7 +66,8 @@ export class BucketService extends CollectionService<BucketState> {
       status: 'pending',
       currency: bucket.currency,
       date: new Date(),
-      delivery
+      delivery,
+      id: createOfferId(orgName.substr(0, 2))
     });
 
     const promises = bucket.contracts.map(async (contract) => {
@@ -83,7 +86,7 @@ export class BucketService extends CollectionService<BucketState> {
         buyerId: orgId,
         buyerUserId: this.authQuery.userId,
         sellerId: centralOrgId.catalog,
-        stakeholders: [ ...parentContract.stakeholders, orgId ],
+        stakeholders: [...parentContract.stakeholders, orgId],
         termIds,
         offerId,
         specificity,

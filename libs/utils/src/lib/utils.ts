@@ -1,4 +1,3 @@
-
 import { Person } from './common-interfaces';
 
 export interface ErrorResultResponse {
@@ -26,7 +25,6 @@ export const clamp = (value: number, clamps: number[]): number => {
     Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
   );
 }
-
 
 export const allowedFileType = ['pdf', 'image', 'video', 'docx', 'xls', 'json', 'csv'] as const;
 export type AllowedFileType = typeof allowedFileType[number];
@@ -154,4 +152,12 @@ export function maxAllowedFileSize(type: AllowedFileType) {
     case 'video':
       return 50000 * 1000000; // 50GB in bytes
   }
+}
+
+export function createOfferId(prefix: string) {
+  let suffix = '';
+  for (let i = 0; i < 6; i++) {
+    suffix += `${Math.floor(Math.random() * 10)}`;
+  }
+  return `${prefix}-${suffix}`;
 }
