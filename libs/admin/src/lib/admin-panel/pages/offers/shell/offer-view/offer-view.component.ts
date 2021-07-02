@@ -19,7 +19,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
 
   public offer$ = this.shell.offer$;
   public buyerOrg$ = this.shell.buyerOrg$;
-  public incomes$ = this.shell.incomes$;
   public contracts$ = this.shell.contracts$;
   public offerStatus = offerStatus;
   public form = new FormGroup({
