@@ -58,8 +58,6 @@ export class ContractFormComponent implements OnInit {
       })
       this.currency = income?.currency;
       const terms = await this.termService.getValue(contract.termIds);
-      console.log( terms);
-      
       (this.form.get('terms') as FormList<any>).patchAllValue(terms);
     }
 }
