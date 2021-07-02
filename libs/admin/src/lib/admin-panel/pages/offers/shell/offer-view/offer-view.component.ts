@@ -2,12 +2,12 @@ import {
   Component, ChangeDetectionStrategy, OnDestroy, OnInit
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import {  Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { Contract, ContractService, Sale } from '@blockframes/contract/contract/+state';
-import {  OfferService, offerStatus } from '@blockframes/contract/offer/+state';
+import { OfferService, offerStatus } from '@blockframes/contract/offer/+state';
 
 @Component({
   selector: 'offer-view',
@@ -26,7 +26,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     specificity: new FormControl(''),
     delivery: new FormControl(''),
   })
-  subscriptions: Subscription[] = [];
+  subscription: Subscription;
 
   public columns = {
     'status': 'Seller Approved',
@@ -81,17 +81,14 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    const sub = this.offer$.subscribe(
-      (offer) => {
-        this.form.patchValue({
-          status: offer.status, specificity: offer.specificity, delivery: offer.delivery
-        })
+    this.subscription = this.offer$.subscribe(
+      ({ status, specificity, delivery, }) => {
+        this.form.patchValue({ status, specificity, delivery })
       }
     );
-    this.subscriptions.push(sub);
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscription.unsubscribe();
   }
 }
