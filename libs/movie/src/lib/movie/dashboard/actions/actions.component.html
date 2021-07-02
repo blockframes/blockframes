@@ -3,7 +3,7 @@
     <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
       <button mat-button color="primary" (click)="updateStatus('draft', 'Title restored')">
         <mat-icon svgIcon="restore"></mat-icon>
-        Restore Title
+        <span>Restore Title</span>
       </button>
     </ng-container>
     <ng-template #cta>
