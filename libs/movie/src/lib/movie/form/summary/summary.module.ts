@@ -22,6 +22,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+import { JoinPipeModule } from '@blockframes/utils/pipes/join.pipe';
 
 // Blockframes Movie
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
@@ -78,6 +79,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     MaxLengthModule,
     FilmographyPipeModule,
     PreviewModalModule,
+    JoinPipeModule,
 
     // Materials
     MatChipsModule,

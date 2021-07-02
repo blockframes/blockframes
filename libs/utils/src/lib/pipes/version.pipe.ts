@@ -6,21 +6,15 @@ import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.fire
   name: 'versionPipe'
 })
 export class VersionPipe implements PipeTransform {
-  transform(language: MovieLanguageSpecification) {
+  transform(movieLanguages: MovieLanguageSpecification) {
     const formatKey = (key: string) => key ? movieLanguageTypes[key.trim().toLocaleLowerCase()] : '';
+    const results = [];
 
-    const versionArray = [];
-    for (const [key, value] of Object.entries(language)) {
-      if (value) {
-        versionArray.push(key);
-      };
-    }
-    let version = '';
-    versionArray.forEach((v, index) => {
-      const isLast = index === versionArray.length - 1;
-      version += formatKey(v) + (isLast ? '' : ', ');
+    Object.entries(movieLanguages).map(([key, value]) => {
+      if(value) results.push(formatKey(key));
     })
-    return version;
+
+    return results;
   }
 }
 
