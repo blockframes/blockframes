@@ -62,7 +62,6 @@ describe('User can create new account and create a new organization', () => {
     p1.submitForm();
     assertMoveTo(CREATEPATH);
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
-    cy.pause();
   });
 
   it('Check emails are sent properly', () => {
@@ -75,7 +74,6 @@ describe('User can create new account and create a new organization', () => {
         cy.log(`Message: ${email.subject} ✅`);
         expect(subjects).to.include.members([email.subject]);
       });
-      cy.pause();
     });
   });
 });
