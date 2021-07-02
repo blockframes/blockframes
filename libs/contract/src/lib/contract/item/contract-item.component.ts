@@ -2,7 +2,7 @@ import {
   Component, Input, TemplateRef, ContentChild, ChangeDetectorRef, ChangeDetectionStrategy,
 } from '@angular/core';
 import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
-import { Scope } from '@blockframes/utils/static-model';
+import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
@@ -20,6 +20,8 @@ export class ContractItemComponent {
     medias: 'Rights',
     exclusive: 'Exclusivity'
   };
+  mediaGroup = mediaGroup;
+  territoriesGroup = territoriesGroup;
   actionTemplate?: TemplateRef<unknown>;
   @Input() contract: BucketContract;
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;

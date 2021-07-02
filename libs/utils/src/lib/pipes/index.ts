@@ -20,3 +20,4 @@ export * from './cms.pipe';
 export * from './sort-array.pipe';
 export * from './join.pipe'
 export * from './total.pipe'
+export * from './group-label.pipe'
