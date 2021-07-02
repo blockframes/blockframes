@@ -47,9 +47,8 @@
                 <ng-template #moreTerritories>
                   <div fxFlex fxLayout="column" fxLayoutAlign="start end">
                     <mat-chip-list aria-label="Territories">
-                      <ng-container
-                        *ngFor="let territory of territories, index as i">
-                        <mat-chip *ngIf="i < maxTerritories">{{ territory }}</mat-chip>
+                      <ng-container *ngFor="let territory of territories| slice:0:maxTerritories">
+                        <mat-chip>{{ territory }}</mat-chip>
                       </ng-container>
                     </mat-chip-list>
                     <button mat-button class="spacing" (click)="openTerritoryModal(territories, 'territories')">...
