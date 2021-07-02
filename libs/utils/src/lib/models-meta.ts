@@ -10,7 +10,7 @@ export interface DocumentMeta<D> {
   updatedAt?: D,
   deletedAt?: D,
   createdFrom?: App,
-  readonly emailVerified?: boolean
+  emailVerified?: boolean
 }
 
 export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {

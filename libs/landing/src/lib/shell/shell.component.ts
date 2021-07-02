@@ -7,6 +7,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
+import { testEmail } from "@blockframes/e2e/utils/env";
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -87,7 +88,10 @@ export class LandingShellComponent {
       this.buttonText = 'Sending Request...';
       const currentApp = getCurrentApp(this.routerQuery);
       const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
-
+      if ('Cypress' in window) {
+        information.test = true;
+        information.testEmailTo = testEmail;
+      }
       this.sendDemoRequest(information);
       this.buttonText = 'Request Sent';
       this.snackBar.open('Your request has been sent.', 'close', { duration: 2000 });

@@ -161,6 +161,7 @@
     "cross-env": "^7.0.2",
     "cypress": "^6.8.0",
     "cypress-file-upload": "^5.0.6",
+    "cypress-mailosaur": "^2.3.3",
     "cypress-wait-until": "^1.7.1",
     "dotenv": "8.2.0",
     "eslint": "7.22.0",
