@@ -20,7 +20,6 @@ export class GroupLabel implements PipeTransform {
       .sort((a) => typeof a === 'string' ? -1 : 1)
       .map(item => typeof item === 'string' ? item : item.join(', '))
       .filter(v => !!v)
-      // .join(', ');
   }
 }
 
