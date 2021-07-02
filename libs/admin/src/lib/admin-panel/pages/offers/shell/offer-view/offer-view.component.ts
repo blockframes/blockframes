@@ -1,16 +1,13 @@
 import {
-  Component, ChangeDetectionStrategy, OnDestroy, OnInit, Pipe, PipeTransform
+  Component, ChangeDetectionStrategy, OnDestroy, OnInit
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { combineLatest, Subscription } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import {  Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { Contract, ContractService, Sale } from '@blockframes/contract/contract/+state';
-import { Offer, OfferService, offerStatus } from '@blockframes/contract/offer/+state';
-import { Organization } from '@blockframes/organization/+state';
-import { Income } from '@blockframes/contract/income/+state';
+import {  OfferService, offerStatus } from '@blockframes/contract/offer/+state';
 
 @Component({
   selector: 'offer-view',
@@ -31,7 +28,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     delivery: new FormControl(''),
   })
   subscriptions: Subscription[] = [];
-  // public confirmDialog: MatDialogRef<unknown>;
 
   public columns = {
     'status': 'Seller Approved',
@@ -98,20 +94,5 @@ export class OfferViewComponent implements OnDestroy, OnInit {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-}
-
-@Pipe({ name: 'parseContract' })
-export class ParseContracts implements PipeTransform {
-  transform([buyerOrg, contracts, offer, [income]]: [Organization, Contract[], Offer, Income[]]) {
-    return contracts.map(contract => ({
-      status: contract.status,
-      orgIds: contract.stakeholders.filter(
-        stakeholder => ![contract.buyerId, contract.sellerId].includes(stakeholder)
-      ),
-      movieId: contract.titleId,
-      organizationName: buyerOrg.denomination.public,
-      id: contract.id,
-    }));
   }
 }

@@ -1,5 +1,5 @@
-<ng-container *ngIf="offer$ | async as offer">
-  <ng-container *ngIf="contracts$ |async as contracts; else loading">
+<ng-container *ngIf="offer$ | async as offer; else loading">
+  <ng-container *ngIf="contracts$ |async as contracts">
     <form [formGroup]="form" fxLayout="column" class="space-horizontal">
       <div fxLayoutAlign="space-between center" fxLayout="row">
         <mat-form-field appearance="outline">

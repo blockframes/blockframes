@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OfferViewComponent, ParseContracts } from './offer-view.component';
+import { OfferViewComponent } from './offer-view.component';
 import { RouterModule } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 
 @NgModule({
-  declarations: [OfferViewComponent, ParseContracts],
+  declarations: [OfferViewComponent],
   imports: [
     CommonModule,
     TableFilterModule,
