@@ -154,10 +154,14 @@ export function maxAllowedFileSize(type: AllowedFileType) {
   }
 }
 
-export function createOfferId(prefix: string) {
+/**
+ *
+ * @param orgName:Must be greater than 2 characters.
+ */
+export function createOfferId([one,two]: string) {
   let suffix = '';
   for (let i = 0; i < 6; i++) {
     suffix += `${Math.floor(Math.random() * 10)}`;
   }
-  return `${prefix}-${suffix}`;
+  return `${one}${two}-${suffix}`;
 }

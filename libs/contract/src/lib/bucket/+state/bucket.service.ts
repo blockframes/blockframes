@@ -59,7 +59,8 @@ export class BucketService extends CollectionService<BucketState> {
     });
 
     // Create offer
-    const offerId = await this.offerService.add({
+    const offerId = createOfferId(orgName);
+    await this.offerService.add({
       buyerId: orgId,
       buyerUserId: this.authQuery.userId,
       specificity,
@@ -67,7 +68,7 @@ export class BucketService extends CollectionService<BucketState> {
       currency: bucket.currency,
       date: new Date(),
       delivery,
-      id: createOfferId(orgName.substr(0, 2))
+      id: offerId,
     });
 
     const promises = bucket.contracts.map(async (contract) => {
