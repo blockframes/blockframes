@@ -24,6 +24,7 @@ export interface MovieSearch extends AlgoliaSearch {
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;
+  minYear: number;
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
@@ -45,6 +46,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     },
     productionStatus: [],
     minBudget: 0,
+    minYear: 1970,
     sellers: [],
     socialGoals: [],
     ...search,
@@ -71,6 +73,7 @@ function createMovieSearchControl(search: MovieSearch) {
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
+    minYear: new FormControl(search.minYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
     contentType: new FormControl(search.contentType),
@@ -101,6 +104,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get languages() { return this.get('languages'); }
   get productionStatus() { return this.get('productionStatus'); }
   get minBudget() { return this.get('minBudget'); }
+  get minYear() { return this.get('minYear'); }
   get sellers() { return this.get('sellers'); }
   get storeStatus() { return this.get('storeStatus'); }
   get socialGoals() { return this.get('socialGoals'); }
@@ -119,6 +123,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.languages.value?.caption.length === 0 &&
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
+      this.minYear?.value === 1970 &&
       this.sellers?.value.length === 0 &&
       !this.contentType.value);
   }
