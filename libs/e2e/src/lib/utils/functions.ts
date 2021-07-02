@@ -98,7 +98,7 @@ export const randomID = (): string => (`${new Date().getTime()}-${currentID++}`)
 export const createFakeScript = (title: string) => cy.task('random:pdf', title);
 
 interface FormOptions {
-  inputValue: string;
+  inputValue: Record<string, unknown>;
   specialIds?: string[];
   fieldHandler?<E extends HTMLElement>($formEl: JQuery<E>, key: string): [boolean, string]
 }
@@ -162,7 +162,7 @@ function handleFormElement(el, id: string, value: string) {
 /**
  * setForm : helper function to set the form with given values
  * @param selector : string to identify the form set
- * @param formOpt : object having input values, callback for spl ids.
+ * @param formOpt : object having input values (Record), callback for spl ids.
  * @example
  *   //set org details in org form
  *   const formOpt: FormOptions = {
