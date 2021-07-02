@@ -6,11 +6,11 @@ import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.fire
   name: 'versionPipe'
 })
 export class VersionPipe implements PipeTransform {
-  transform(movieLanguages: MovieLanguageSpecification) {
+  transform(language: MovieLanguageSpecification) {
     const formatKey = (key: string) => key ? movieLanguageTypes[key.trim().toLocaleLowerCase()] : '';
     const results = [];
 
-    Object.entries(movieLanguages).map(([key, value]) => {
+    Object.entries(language).map(([key, value]) => {
       if(value) results.push(formatKey(key));
     })
 
