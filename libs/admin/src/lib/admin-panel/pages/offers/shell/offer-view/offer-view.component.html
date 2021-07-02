@@ -1,45 +1,47 @@
-<form [formGroup]="form" *ngIf="hydratedContracts$; else loading" fxLayout="column">
-  <div fxLayoutAlign="space-between center" fxLayout="row">
-    <mat-form-field appearance="outline">
-      <mat-label>General Contract Status</mat-label>
-      <mat-select formControlName="offerStatus">
-        <mat-option *ngFor="let status of offerStatus" [value]="status">{{status}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button mat-flat-button color="primary" (click)="update()">Update</button>
-  </div>
-  <mat-card class="margin-bottom">
-    <p>Buyer's Specific Terms</p>
-    <mat-form-field appearance="outline">
-      <textarea matInput formControlName="buyersSpecificTerm"></textarea>
-      <mat-hint>You can pick up your favorite car here</mat-hint>
-    </mat-form-field>
-  </mat-card>
-  <mat-card class="margin-bottom">
-    <p>Buyers Delivery Wishlist</p>
-    <mat-form-field appearance="outline">
-      <textarea matInput formControlName="buyersDeliveryWishlist"></textarea>
-      <mat-hint>You can pick up your favorite car here</mat-hint>
-    </mat-form-field>
-  </mat-card>
+<ng-container *ngIf="offer$ | async as offer">
+  <ng-container *ngIf="contracts$ |async as contracts; else loading">
+    <form [formGroup]="form" fxLayout="column" class="space-horizontal">
+      <div fxLayoutAlign="space-between center" fxLayout="row">
+        <mat-form-field appearance="outline">
+          <mat-label>General Contract Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let status of offerStatus" [value]="status">{{status}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-flat-button color="primary" (click)="update(contracts, offer.id)">Update</button>
+      </div>
+      <mat-card class="margin-bottom">
+        <p>Buyer's Specific Terms</p>
+        <mat-form-field appearance="outline">
+          <textarea matInput formControlName="specificity"></textarea>
+        </mat-form-field>
+      </mat-card>
+      <mat-card class="margin-bottom">
+        <p>Buyers Delivery Wishlist</p>
+        <mat-form-field appearance="outline">
+          <textarea matInput formControlName="delivery"></textarea>
+        </mat-form-field>
+      </mat-card>
+    </form>
 
-  <mat-card class="margin-bottom">
-    <p>Contracts in the package</p>
-    <ng-container *ngIf="hydratedContracts$|async as contracts">
-      <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable>
+    <mat-card class="margin-bottom space-horizontal">
+      <p>Contracts in the package</p>
+      <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns">
         <ng-template colRef="titleId" let-titleId>
-          <span>{{titleId}}</span>
-          <span *ngIf="(titleId|getTitle | async) as title">{{title.title?.international}}</span>
+          <span>{{titleId}}</span><br/>
+          <span *ngIf="(titleId|getTitle | async) as title"> {{title.title?.international}}</span>
         </ng-template>
-        <ng-template colRef="sellerApproved" let-sellerApproved>{{ sellerApproved }}</ng-template>
-        <ng-template colRef="orgIds" let-orgIds>
-          <ng-container *ngFor="let orgId of orgIds; let last=last">
-            <ng-container *ngIf="(orgId | firstUserFromOrgId | async) as user">
-              {{user.firstName}} {{user.lastName}} ({{user.email}}){{last?'':','}}
+        <ng-template colRef="status" let-status>{{ status }}</ng-template>
+        <ng-template colRef="stakeholders" let-stakeholders let-contract='item'>
+          <ng-container *ngFor="let stakeholder of stakeholders; let last=last">
+            <ng-container *ngIf="stakeholder !== contract.buyerId && stakeholder !== contract.sellerId">
+              <ng-container *ngIf="(stakeholder | firstUserFromOrgId | async) as user">
+                {{user.firstName}} {{user.lastName}} ({{user.email}}){{last?'':','}}
+              </ng-container>
             </ng-container>
           </ng-container>
         </ng-template>
-        <ng-template colRef="organizationName" let-organizationName>{{ organizationName}}</ng-template>
+        <ng-template colRef="buyerId" let-buyerId>{{ (buyerId | getOrg|async).denomination.public}}</ng-template>
         <ng-template colRef="id" let-id>
           <div fxLayout="row" fxLayoutAlign="flex-start center" fxLayoutGap="8px">
             <a mat-icon-button [routerLink]="['../', id,]" matTooltip="Edit">
@@ -51,12 +53,11 @@
           </div>
         </ng-template>
       </bf-table-filter>
-    </ng-container>
-  </mat-card>
-  <!-- @TODO: issue #6161 -->
-  <!-- <a mat-flat-button color="primary" class="add-rights margin-bottom" fxFlexAlign="center" >Add a right to a title</a> -->
-</form>
-
+    </mat-card>
+    <!-- @TODO: issue #6161 -->
+    <!-- <a mat-flat-button color="primary" class="add-rights margin-bottom" fxFlexAlign="center" >Add a right to a title</a> -->
+  </ng-container>
+</ng-container>
 
 <ng-template #loading>
   <mat-spinner fxFlexAlign="center"></mat-spinner>

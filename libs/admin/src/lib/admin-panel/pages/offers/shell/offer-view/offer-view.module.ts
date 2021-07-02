@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OfferViewComponent } from './offer-view.component';
+import { OfferViewComponent, ParseContracts } from './offer-view.component';
 import { RouterModule } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,9 +14,10 @@ import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FirstUserFromOrgIdModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
+import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 
 @NgModule({
-  declarations: [OfferViewComponent],
+  declarations: [OfferViewComponent, ParseContracts],
   imports: [
     CommonModule,
     TableFilterModule,
@@ -25,6 +26,7 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
     FlexLayoutModule,
     FirstUserFromOrgIdModule,
     GetTitlePipeModule,
+    GetOrgPipeModule,
 
     //Material
     MatSelectModule,
