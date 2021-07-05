@@ -1,4 +1,3 @@
-
 <header fxLayout fxLayoutAlign="space-between center" id="avails">
   <h2>Search & buy Rights</h2>
   <button mat-button (click)="explain()" fxLayout="row" fxLayoutAlign="center center">
@@ -18,7 +17,8 @@
   <mat-card *ngFor="let control of terms$ | async | reverse">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
-        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date: 'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date:
+          'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
         <section fxLayoutGap="12px">
           <button mat-icon-button (click)="edit(term)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
@@ -38,21 +38,24 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
-              <ng-container *ngIf="term.territories.length <= maxTerritories; else moreTerritories">
-                <mat-chip-list aria-label="Territories">
-                  <mat-chip *ngFor="let territory of term.territories">{{ territory | toLabel: 'territories' }}</mat-chip>
-                </mat-chip-list>
-              </ng-container>
-              <ng-template #moreTerritories>
-                <div fxFlex fxLayout="column" fxLayoutAlign="start end">
+              <ng-container *ngIf="(term.territories| toGroupLabel:'territories':'world') as territories">
+                <ng-container *ngIf="territories.length <= maxTerritories; else moreTerritories">
                   <mat-chip-list aria-label="Territories">
-                    <ng-container *ngFor="let territory of term.territories, index as i">
-                      <mat-chip *ngIf="i < maxTerritories">{{ territory | toLabel: 'territories' }}</mat-chip>
-                    </ng-container>
+                    <mat-chip *ngFor="let territory of territories ">{{territory }}</mat-chip>
                   </mat-chip-list>
-                  <button mat-button class="spacing" (click)="openTerritoryModal(term.territories, 'territories')">... See {{ term.territories.length - 30 }} More</button>
-                </div>
-              </ng-template>
+                </ng-container>
+                <ng-template #moreTerritories>
+                  <div fxFlex fxLayout="column" fxLayoutAlign="start end">
+                    <mat-chip-list aria-label="Territories">
+                      <ng-container *ngFor="let territory of territories| slice:0:maxTerritories">
+                        <mat-chip>{{ territory }}</mat-chip>
+                      </ng-container>
+                    </mat-chip-list>
+                    <button mat-button class="spacing" (click)="openTerritoryModal(territories, 'territories')">...
+                      See {{ territories.length - 30 }} More</button>
+                  </div>
+                </ng-template>
+              </ng-container>
             </article>
 
           </mat-expansion-panel>
@@ -66,7 +69,7 @@
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
               <mat-chip-list aria-label="Medias">
-                <mat-chip *ngFor="let media of term.medias">{{ media | toLabel: 'medias' }}</mat-chip>
+                <mat-chip *ngFor="let media of term.medias  | toGroupLabel:'medias':'All'">{{ media }}</mat-chip>
               </mat-chip-list>
             </article>
           </mat-expansion-panel>
