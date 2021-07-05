@@ -21,12 +21,12 @@
       <ng-template colRef="territories" let-territories>
         <section (click)="openDetails(territories, 'territories')">
           <p class="ellipsis">
-            {{ territories |toGroupLabel:'territories':'World'}}
+            {{ territories |toGroupLabel:'territories':'World' | join}}
           </p>
         </section>
       </ng-template>
       <ng-template colRef="medias" let-medias>
-        {{ medias | toGroupLabel:'medias':'All' }}
+        {{ medias | toGroupLabel:'medias':'All'| join }}
       </ng-template>
       <ng-template colRef="exclusive" let-exclusive>
         {{ exclusive ? 'Yes' : 'No' }}
