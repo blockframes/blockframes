@@ -1,16 +1,19 @@
 :host{
   display: grid;
+  justify-content: stretch;
   justify-items: center;
+  margin: 0 64px;
 }
 
 .space-horizontal {
-  margin: 0 64px;
+  width: 100%;
   padding-top: 16px;
 }
 
 .margin-bottom {
   margin-bottom: 16px;
 }
+
 
 mat-card {
   p {
@@ -21,9 +24,10 @@ mat-card {
   }
 }
 
-.add-rights {
+.add-title {
   margin-top: 24px;
   width: min-content;
+  // justify-self: center;
 }
 
 mat-option {
