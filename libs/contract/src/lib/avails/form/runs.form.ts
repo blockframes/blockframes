@@ -6,10 +6,10 @@ function getControls(runs: Partial<Term['runs']>) {
     return {
         broadcasts: new FormControl(runs?.broadcasts),
         catchup: new FormGroup({
-            from: new FormControl(runs?.catchup.from),
-            duration: new FormControl(runs?.catchup.duration),
-            period: new FormControl(runs?.catchup.period),
-        }),
+            from: new FormControl(runs?.catchup?.from),
+            duration: new FormControl(runs?.catchup?.duration),
+            period: new FormControl(runs?.catchup?.period),
+        })
     }
 }
 
