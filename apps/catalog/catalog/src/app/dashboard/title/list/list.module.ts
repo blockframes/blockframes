@@ -14,6 +14,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { TagModule } from '@blockframes/movie/components/tag/tag.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -36,6 +37,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AnalyticsPipeModule,
     DisplayNameModule,
     NoTitleModule,
+    TagModule,
     // Material
     MatButtonModule,
     MatTabsModule,

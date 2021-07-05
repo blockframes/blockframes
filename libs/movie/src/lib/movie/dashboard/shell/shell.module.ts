@@ -12,12 +12,12 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
+import { TagModule } from '@blockframes/movie/components/tag/tag.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
@@ -34,11 +34,11 @@ import { MatMenuModule } from '@angular/material/menu';
     ImageModule,
     OrgAccessModule,
     ConfirmInputModule,
+    TagModule,
     // Material
     MatTabsModule,
     MatIconModule,
     MatButtonModule,
-    MatChipsModule,
     MatMenuModule,
   ],
 })

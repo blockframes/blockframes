@@ -28,7 +28,9 @@
         <ng-template colRef="release.year" let-year><b>{{ year }}</b></ng-template>
         <ng-template colRef="directors" let-directors><b>{{ directors | displayName }}</b></ng-template>
         <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
-        <ng-template colRef="app.catalog.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="app.catalog.status" let-status>
+          <movie-tag [label]="(status | toLabel: 'storeStatus')"></movie-tag>
+        </ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>

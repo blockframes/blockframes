@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  width: fit-content;
+  border: solid 1px var(--foreground-text);
+  border-radius: 2px;
+  padding: 4px 8px;
+}
+
+span {
+  text-transform: uppercase;
+  // See with UI team for the font refont ?
+  font-size: 14px;
+  font-weight: 500;
+}
