@@ -1,3 +1,7 @@
+:host{
+  display: grid;
+}
+
 .space-horizontal {
   margin: 0 64px;
   padding-top: 16px;
@@ -19,6 +23,7 @@ mat-card {
 .add-rights {
   margin-top: 24px;
   width: min-content;
+  justify-self: center;
 }
 
 mat-option {

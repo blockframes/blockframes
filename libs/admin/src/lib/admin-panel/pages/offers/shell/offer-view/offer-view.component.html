@@ -54,8 +54,9 @@
         </ng-template>
       </bf-table-filter>
     </mat-card>
-    <!-- @TODO: issue #6161 -->
-    <a mat-flat-button color="primary" class="add-rights margin-bottom" fxFlexAlign="center" [routerLink]="['../', contracts[0].id, 'form']">Add a right to a title</a>
+    <button mat-flat-button color="primary" class="add-rights margin-bottom" (click)="addTitle(offer,contracts[0])" [disabled]="loading$ | async">
+      Add a right to a title
+    </button>
   </ng-container>
 </ng-container>
 
