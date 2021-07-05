@@ -29,7 +29,7 @@
         <ng-template colRef="directors" let-directors><b>{{ directors | displayName }}</b></ng-template>
         <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
         <ng-template colRef="app.catalog.status" let-status>
-          <movie-tag [label]="(status | toLabel: 'storeStatus')"></movie-tag>
+          <tag-component [label]="(status | toLabel: 'storeStatus')"></tag-component>
         </ng-template>
       </bf-table-filter>
     </mat-card>

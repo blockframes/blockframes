@@ -12,7 +12,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
-import { TagModule } from '@blockframes/movie/components/tag/tag.module';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';

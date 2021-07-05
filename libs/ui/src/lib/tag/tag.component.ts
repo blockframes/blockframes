@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 
 @Component({
-  selector: 'movie-tag',
+  selector: 'tag-component',
   templateUrl: 'tag.component.html',
   styleUrls: ['./tag.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
