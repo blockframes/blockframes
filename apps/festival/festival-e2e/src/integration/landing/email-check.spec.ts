@@ -25,6 +25,9 @@ describe('Demo Request Email', () => {
   });
   
   it('Request Demo and verify request email', () => {
+    //Wait long enough for page to load
+    cy.get('a href["/auth/identity"]', {timeout: 60 * SEC});
+
     cy.get('h1', {timeout: 10 * SEC})
       .contains("Want to learn more?");
 
