@@ -25,6 +25,7 @@ import { AvailsGuard } from './avails.guard';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { ExplanationModule } from './explanation/explanation.module';
 import { ReverseModule } from '@blockframes/utils/pipes/reverse.pipe';
+import { ToGroupLabelPipeModule } from '@blockframes/utils/pipes/group-label.pipe';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 const routes: Routes = [
@@ -57,6 +58,7 @@ const routes: Routes = [
     ExplanationModule,
     ReverseModule,
     ConfirmModule,
+    ToGroupLabelPipeModule,
 
     // Material
     MatCardModule,
