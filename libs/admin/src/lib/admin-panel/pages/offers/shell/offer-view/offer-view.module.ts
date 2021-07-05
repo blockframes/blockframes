@@ -15,6 +15,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FirstUserFromOrgIdModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [OfferViewComponent],
@@ -33,6 +34,7 @@ import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
+    MatSnackBarModule,
     MatInputModule,
     MatIconModule,
 
