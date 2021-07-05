@@ -1,5 +1,6 @@
 :host{
   display: grid;
+  justify-items: center;
 }
 
 .space-horizontal {
@@ -23,7 +24,6 @@ mat-card {
 .add-rights {
   margin-top: 24px;
   width: min-content;
-  justify-self: center;
 }
 
 mat-option {
