@@ -46,7 +46,7 @@
             required>
             <ng-template optionRef let-result>
               <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
-                <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp"
+                <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.svg"
                   type="logo" alt="Organization Logo">
                 <span>{{ result.name }}</span>
               </div>

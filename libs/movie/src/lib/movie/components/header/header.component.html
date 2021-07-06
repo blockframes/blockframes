@@ -4,7 +4,7 @@
   fxLayoutGap="20px"
   *ngIf="movieView"
   [bgRef]="movieView.banner"
-  bgAsset="empty_banner.webp"
+  bgAsset="empty_banner.png"
   bgTheme="dark"
   >
   <section class="overlay">
@@ -13,7 +13,7 @@
     </a>
     <div class="movie-info" fxLayout="row" fxLayoutGap="20px">
       <!-- Poster -->
-      <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.webp" alt="Movie Poster" class="poster">
+      <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
       <!-- Descriptions -->
       <div fxLayout="column" fxLayoutAlign="space-between start">
           <div class="movie-details">
