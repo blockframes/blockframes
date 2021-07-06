@@ -31,13 +31,14 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['title.international', 'views', 'release.year', 'directors', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
     map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
     map(movies => movies.filter(m => m.app.catalog.access)),
-    tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
+    tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')),
+    tap(s => console.log({s})));
 
   constructor(
     private service: MovieService,

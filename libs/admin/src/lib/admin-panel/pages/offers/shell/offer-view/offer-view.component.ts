@@ -35,6 +35,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     'buyerId': 'Organization Name',
     'id': 'Actions',
   };
+
   public initialColumns = [
     'titleId', 'status', 'stakeholders', 'buyerId', 'id'
   ];
@@ -48,7 +49,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
 
   update(contracts: Contract[], id: string) {
     const { status, specificity, delivery } = this.form.value;
-
     this.offerService.update(id, (offer, write) => {
       contracts.forEach(contract =>
         this.contractService.update(contract.id, { specificity } as Sale, { write })
@@ -60,7 +60,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   handleDelete(id: string) {
     this.contractService.remove(id)
   }
-
 
   confirmDelete(id: string) {
     this.dialog.open(ConfirmInputComponent, {
