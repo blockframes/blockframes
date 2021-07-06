@@ -4,7 +4,7 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
   <title-dashboard-shell [routes]="navLinks">
     <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
-      <ng-container *ngIf="movie.app.financiers.status !=='archived'">
+      <ng-container *ngIf="movie.app.financiers.status === 'accepted'">
         <button mat-button color="primary" color="primary" (click)="openDialog()">
           <mat-icon svgIcon="update" color="primary"></mat-icon>
           Update Funding Status
