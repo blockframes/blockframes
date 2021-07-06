@@ -41,7 +41,7 @@ export default class FestivalScreeningPage {
     cy.wait(0.5 * SEC);
 
     if (doPublicScreeningAction) {
-      cy.get('festival-screening event-screening-item', {timeout: 90 * SEC})
+      cy.get('festival-screening event-screening-item', {timeout: 120 * SEC})
         .contains(screeningTitle)
         .parent().parent().parent()
         .find('[test-id=invitation-status]')
