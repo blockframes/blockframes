@@ -6,7 +6,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { OrganizationService, OrganizationQuery, orgName as getOrgName } from '@blockframes/organization/+state';
+import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
@@ -17,6 +17,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 
 interface EmailData {
   subject: string;
@@ -108,18 +109,21 @@ export class MarketplaceMovieViewComponent implements OnInit {
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
     this.dialogRef.close();
     const templateId = 'd-e902521de8684c57bbfa633bad88567a';
-    const { firstName, lastName, email } = this.authQuery.user;
-    const orgName = getOrgName(this.orgQuery.getActive());
+    const userSubject = getUserEmailData(this.authQuery.user);
+
+    const orgUserSubject = getOrgEmailData(this.orgQuery.getActive());
     const promises: Promise<ErrorResultResponse>[] = [];
 
     for (const org of orgs) {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
+        const toUser = getUserEmailData(user);
         const data = {
           ...emailData,
           currency: getCurrencySymbol(this.currency, 'wide'),
-          investor: { firstName, lastName, email, orgName },
-          user: { firstName: user.firstName },
+          userSubject,
+          user: toUser,
+          org: orgUserSubject,
           title,
         };
 
