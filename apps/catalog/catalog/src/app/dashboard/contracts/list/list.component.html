@@ -20,7 +20,7 @@
         (rowClick)="goToTitle($event)" link="/c/o/dashboard/contract/">
         <ng-template colRef="offerId" let-offerId><b>{{ offerId }}</b></ng-template>
         <ng-template colRef="titleId" let-titleId>
-          <ng-container *ngIf="titleId | getTitle | async as title">{{title}} </ng-container>
+          <ng-container *ngIf="titleId | getTitle | async as title">{{title.title?.international}} </ng-container>
         </ng-template>
       </bf-table-filter>
     </mat-card>
