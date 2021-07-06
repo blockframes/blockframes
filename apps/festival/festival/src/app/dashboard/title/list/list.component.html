@@ -27,7 +27,9 @@
         <ng-template colRef="view" let-movie="item">{{ movie.id | getViews | async }}</ng-template>
         <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
-        <ng-template colRef="app.festival.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="app.festival.status" let-status>
+          <tag-component [label]="(status | toLabel: 'storeStatus')"></tag-component>
+        </ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
@@ -45,11 +47,11 @@
     <dashboard-no-title></dashboard-no-title>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
-        <img asset="add_title.webp" alt="Add title image">
+        <img asset="add_title.svg" alt="Add title image">
         <a routerLink="lobby" mat-button color="primary">Add one title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
-        <img asset="add_files.webp" alt="Upload files image">
+        <img asset="add_files.svg" alt="Upload files image">
         <a routerLink="../import" mat-button color="primary">Import titles in bulk</a>
       </mat-card>
     </article>

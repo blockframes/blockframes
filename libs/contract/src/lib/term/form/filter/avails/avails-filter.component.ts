@@ -8,5 +8,5 @@ import type { AvailsForm } from '@blockframes/contract/avails/form/avails.form'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvailsFilterComponent {
-  @Input() form: AvailsForm
+  @Input() form: AvailsForm;
 }
