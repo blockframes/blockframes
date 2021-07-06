@@ -1,7 +1,7 @@
 <ng-container *ngIf="user$ | async as user">
   <header fxLayout fxLayoutAlign="space-between start" fxLayout.lt-sm="column">
     <article fxLayout fxLayoutAlign="space-around start">
-      <img [ref]="user.avatar" asset="profil_user.webp" alt="profile picture">
+      <img [ref]="user.avatar" asset="profil_user.svg" alt="profile picture">
       <div class="user-info" *ngIf="organization$ | async as org">
         <h1>{{ user.firstName }} {{ user.lastName }}</h1>
         <ng-container *ngIf="user.position && org.denomination">
