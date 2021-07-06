@@ -18,7 +18,8 @@ const columns = {
   'release.year': 'Release Year',
   directors: 'Director(s)',
   views: { value: '# Views', disableSort: true },
-  'app.catalog.status': 'Status'
+  'app.catalog.status': 'Status',
+  'id': 'Sales (Total Gross Receipt)',
 };
 
 @Component({
@@ -31,14 +32,13 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'views', 'release.year', 'directors', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['title.international', 'views', 'id', 'release.year', 'directors', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
     map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
     map(movies => movies.filter(m => m.app.catalog.access)),
-    tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')),
-    tap(s => console.log({s})));
+    tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
 
   constructor(
     private service: MovieService,

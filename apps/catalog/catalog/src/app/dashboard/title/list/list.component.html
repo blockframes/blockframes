@@ -25,9 +25,17 @@
       <bf-table-filter [source]="movies | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" [columns]="columns"
         [initialColumns]="initialColumns" clickable showFilter showPaginator (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
+        <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
+        <ng-template colRef="id" let-titleId>
+          <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">
+            {{ incomes.length }}
+            <ng-container *ngIf="incomes.length > 0">
+              ({{ incomes | sum : 'price' | currency:incomes[0].currency }})
+            </ng-container>
+          </ng-container>
+        </ng-template>
         <ng-template colRef="release.year" let-year><b>{{ year }}</b></ng-template>
         <ng-template colRef="directors" let-directors><b>{{ directors | displayName }}</b></ng-template>
-        <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
         <ng-template colRef="app.catalog.status" let-status>
           <tag-component [label]="(status | toLabel: 'storeStatus')"></tag-component>
         </ng-template>
