@@ -1,11 +1,18 @@
 /// <reference types="cypress" />
 
 import { LandingPage } from '../../support/pages/landing';
-import { User } from "@blockframes/e2e/utils/type";
+import { User, serverId, testEmail } from "@blockframes/e2e/utils";
 import { clearDataAndPrepareTest, assertMoveTo } from "@blockframes/e2e/utils/functions";
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
-import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
+import { ORG, ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
+import { MessageListResult } from "cypress-mailosaur";
+
+const subjects = [
+  "A new organization has been created",
+  "New user connexion",
+  "Archipel Content - Email address verification"
+];
 
 const USER: Partial<User> = {
   email: `dev+user-${Date.now()}@cascade8.com`,
@@ -34,18 +41,40 @@ beforeEach(() => {
 
 // USER TEST
 describe('User can create new account and create a new organization', () => {
+  beforeEach(() => {
+      //Clear all messages on server before the test
+      cy.mailosaurDeleteAllMessages(serverId).then(() => {
+        cy.log('Inbox empty. Ready to roll..');
+      })
+  });
+
   it('Fill all the fields', () => {
+    const newOrg = {...ORGANIZATION, ...{email: testEmail}};
+    const newOrgUSer = {...USER, ...{email: testEmail}};
     const p1 = new AuthIdentityPage();
-    p1.fillUserInformations(USER);
+    p1.fillUserInformations(newOrgUSer);
 
     const p2 = new OrganizationLiteFormPage();
-    p2.createNewDashboardOrg();
+    p2.createNewDashboardOrg(newOrg);
 
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     p1.submitForm();
     assertMoveTo(CREATEPATH);
     cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
+  });
+
+  it('Check emails are sent properly', () => {
+    cy.mailosaurSearchMessages(serverId, {
+      sentTo: testEmail
+    }).then((result: MessageListResult) => {
+      cy.log(`You've Got ${result.items.length} Mails! 💓`);
+      const messages = result.items;
+      messages.forEach(email => {
+        cy.log(`Message: ${email.subject} ✅`);
+        expect(subjects).to.include.members([email.subject]);
+      });
+    });
   });
 });
 

@@ -1,7 +1,12 @@
 ﻿{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["cypress", "cypress-file-upload", "node"]
+    "types": [
+      "cypress",
+      "cypress-file-upload",
+      "cypress-mailosaur",
+      "node"
+     ]
   },
   "include": [],
   "files": [],

@@ -38,7 +38,7 @@
 					</ng-container>
 				</ng-container>
 				<mat-select-trigger>
-					{{ value | triggerDisplay: groups: scope: displayAll }}
+					{{ value | toGroupLabel: scope: displayAll|join }}
 				</mat-select-trigger>
 			</mat-select>
       <mat-hint>

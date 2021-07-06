@@ -14,7 +14,7 @@
     <ng-container [ngSwitch]="ref.storagePath | fileType">
 
       <ng-container *ngSwitchCase="'image'">
-        <img [ref]="ref" asset="empty_banner.webp"/>
+        <img [ref]="ref" asset="empty_banner.png"/>
       </ng-container>
 
       <ng-container *ngSwitchCase="'pdf'">
@@ -31,7 +31,7 @@
       <ng-container *ngSwitchDefault>
 
         <h3>Sorry</h3>
-        <img class="unknown-type" asset="no_titles.webp" alt="Flying saucer">
+        <img class="unknown-type" asset="no_titles.svg" alt="Flying saucer">
         <p>We don't know how to display this file.</p>
         <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
 

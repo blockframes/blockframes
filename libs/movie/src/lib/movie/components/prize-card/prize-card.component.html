@@ -1,4 +1,4 @@
-<img [ref]="prize.logo" asset="empty_festival.webp" alt="Festival brand logo">
+<img [ref]="prize.logo" asset="empty_festival.svg" alt="Festival brand logo">
 <h5>{{ (!!festival[prize.name] ? festival[prize.name] : prize.name) | uppercase }}</h5>
 <p class="mat-body-2">
   <span *ngIf="prize?.prize">{{ prize?.prize | titlecase }} </span>
