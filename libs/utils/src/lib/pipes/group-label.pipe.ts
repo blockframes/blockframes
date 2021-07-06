@@ -7,7 +7,7 @@ export class GroupLabel implements PipeTransform {
     const groups: StaticGroup[] = staticGroups[scope];
 
     const allItems = groups.reduce((items, group) => items.concat(group.items), []);
-    if (allItems.length === value.length) return all;
+    if (allItems.length === value.length) return [all];
     return groups.map(group => {
       const items = [];
       for (const item of group.items) {
@@ -20,7 +20,6 @@ export class GroupLabel implements PipeTransform {
       .sort((a) => typeof a === 'string' ? -1 : 1)
       .map(item => typeof item === 'string' ? item : item.join(', '))
       .filter(v => !!v)
-      .join(', ');
   }
 }
 

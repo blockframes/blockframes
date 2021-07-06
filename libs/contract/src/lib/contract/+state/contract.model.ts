@@ -35,7 +35,6 @@ export interface Sale extends Contract {
   specificity?: string;
 }
 
-
 export function createMandate(params: Partial<Mandate> = {}): Mandate {
   return {
     id: '',
