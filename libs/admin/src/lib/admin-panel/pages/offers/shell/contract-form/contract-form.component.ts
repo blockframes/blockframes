@@ -37,7 +37,8 @@ export class ContractFormComponent implements OnInit {
     'avails.territories': 'Territories',
     'avails.medias': 'Medias',
     'avails.exclusive': 'Exclusivity',
-    'versions': 'Versions'
+    'versions': 'Versions',
+    'runs': '# of broadcasts'
   }
   
   constructor(
