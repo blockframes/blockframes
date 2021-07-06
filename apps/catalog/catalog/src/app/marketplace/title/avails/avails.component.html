@@ -99,36 +99,7 @@
                 <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <article class="expansion-panel-content" fxLayout="column" fxFlex formGroupName="runs">
-              <p>Broadcasts</p>
-              <mat-form-field appearance="outline">
-                <mat-label>Number of Broadcasts</mat-label>
-                <input matInput type="number" placeholder="Number of Broadcasts" formControlName="broadcasts">
-              </mat-form-field>
-              <p>Catch Up Rights</p>
-              <div fxFlex fxLayout fxLayoutGap="16px" fxLayoutAlign="start space-between" formGroupName="catchup">
-                <mat-form-field appearance="outline" fxFlex>
-                  <mat-label>Start Date</mat-label>
-                  <input matInput [matDatepicker]="datePicker" placeholder="MM/DD/YYYY" formControlName="from">
-                  <mat-datepicker-toggle matPrefix [for]="datePicker">
-                    <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #datePicker></mat-datepicker>
-                </mat-form-field>
-                <mat-form-field appearance="outline" fxFlex>
-                  <mat-label>Duration</mat-label>
-                  <input matInput type="number" placeholder="Duration" formControlName="duration">
-                </mat-form-field>
-                <mat-form-field appearance="outline" fxFlex>
-                  <mat-label>Period</mat-label>
-                  <mat-select matInput placeholder="Period" formControlName="period">
-                    <mat-option *ngFor="let period of periods" [value]="period">
-                      {{ period | titlecase }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </article>
+            <runs-form class="expansion-panel-content" [form]="control.get('runs')"></runs-form>
           </mat-expansion-panel>
         </mat-accordion>
       </mat-card-content>
