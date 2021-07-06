@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import type { RunsForm } from '@blockframes/contract/avails/form/runs.form';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 
 @Component({
   selector: 'runs-form',

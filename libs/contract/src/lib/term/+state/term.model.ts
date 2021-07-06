@@ -47,7 +47,6 @@ export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
     licensedOriginal: null,
     languages: {},
     criteria: [],
-    runs: { broadcasts: 1, catchup: {from: new Date(), duration:1, period: 'day'}},
     ...params
   }
 }

@@ -4,7 +4,7 @@ import { FormEntity } from "@blockframes/utils/form";
 
 function getControls(runs: Partial<Term['runs']>) {
     return {
-        broadcasts: new FormControl(runs?.broadcasts),
+        broadcasts: new FormControl(runs.broadcasts),
         catchup: new FormGroup({
             from: new FormControl(runs?.catchup?.from),
             duration: new FormControl(runs?.catchup?.duration),
