@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { setForm, serverId, testEmail, SEC } from "@blockframes/e2e/utils";
+import { clearDataAndPrepareTest, setForm, serverId, testEmail, SEC } from "@blockframes/e2e/utils";
 
 //Test if email is sent correctly.
 const SUBJECT_DEMO = 'A demo has been requested';
@@ -16,7 +16,7 @@ describe('Demo Request Email', () => {
     'tel': '123456789'
   }
   beforeEach(() => {
-    cy.visit('/');
+    clearDataAndPrepareTest('/');
 
     //Clear all messages on server before the test
     cy.mailosaurDeleteAllMessages(serverId).then(() => {
