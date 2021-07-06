@@ -87,31 +87,23 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   }
 
   async addTitle(offer: Offer) {
-    const { buyerId, buyerUserId, specificity } = offer;
+    const { buyerId, buyerUserId, specificity, id } = offer;
     const contractId = this.contractService.createId();
-    const contract = createSale({
-      specificity, id: contractId, buyerId,
-      offerId: offer.id, buyerUserId,
-    })
+    const contract = createSale({ specificity, id: contractId, buyerId, offerId: id, buyerUserId, })
     this.loading$.next(true);
     try {
-      await this.contractService.add(contract)
-      this.router.navigate([`../`, contractId, 'form'], { relativeTo: this.route })
+      await this.contractService.add(contract);
+      this.router.navigate([`../`, contractId, 'form'], { relativeTo: this.route });
     } catch (err) {
-      const { message = "There was an error, please try later" } = err
-      this.snackbar.open(
-        message,
-        'close', { duration: 5000 }
-      )
+      console.warn(err);
+      this.snackbar.open("There was an error, please try later", 'close', { duration: 5000 });
     }
-    this.loading$.next(false)
+    this.loading$.next(false);
   }
 
   ngOnInit() {
     this.subscription = this.offer$.subscribe(
-      ({ status, specificity, delivery, }) => {
-        this.form.patchValue({ status, specificity, delivery })
-      }
+      ({ status, specificity, delivery, }) => this.form.patchValue({ status, specificity, delivery })
     );
   }
 

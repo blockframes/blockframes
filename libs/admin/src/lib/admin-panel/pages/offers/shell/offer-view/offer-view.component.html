@@ -28,8 +28,8 @@
       <p>Contracts in the package</p>
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns">
         <ng-template colRef="titleId" let-titleId>
-          <span>{{titleId}}</span><br />
-          <ng-container *ngIf="titleId">
+          <ng-container *ngIf="titleId; else noTitleYet">
+            <span>{{titleId}}</span><br />
             <span *ngIf="(titleId|getTitle | async) as title"> {{title.title?.international}}</span>
           </ng-container>
         </ng-template>
@@ -56,15 +56,19 @@
         </ng-template>
       </bf-table-filter>
     </mat-card>
-    <div fxLayout="row" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" class="add-title margin-bottom" gdAlignRows="center"
-        (click)="addTitle(offer)" [disabled]="loading$ | async">
+    <section fxLayout="row" fxLayoutAlign="center center">
+      <button mat-flat-button color="primary" class="add-title margin-bottom" (click)="addTitle(offer)"
+        [disabled]="loading$ | async">
         Add a right to a title
       </button>
-    </div>
+    </section>
   </ng-container>
 </ng-container>
 
 <ng-template #loading>
   <mat-spinner fxFlexAlign="center"></mat-spinner>
+</ng-template>
+
+<ng-template #noTitleYet>
+  <span>No Title Yet</span>
 </ng-template>
