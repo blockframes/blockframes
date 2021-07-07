@@ -19,7 +19,7 @@ const columns = {
   directors: 'Director(s)',
   views: { value: '# Views', disableSort: true },
   'app.catalog.status': 'Status',
-  'id': 'Sales (Total Gross Receipt)',
+  'id': { value: '#Sales (Total Gross Receipt)', disableSort: true },
 };
 
 @Component({
@@ -32,7 +32,7 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'views', 'id', 'release.year', 'directors', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'id', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
