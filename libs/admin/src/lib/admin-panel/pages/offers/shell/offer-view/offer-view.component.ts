@@ -38,7 +38,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     'buyerId': 'Organization Name',
     'id': 'Actions',
   };
-
   public initialColumns = [
     'titleId', 'status', 'stakeholders', 'buyerId', 'id'
   ];

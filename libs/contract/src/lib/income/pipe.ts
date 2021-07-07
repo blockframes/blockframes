@@ -9,8 +9,13 @@ export class GetIncomesFromTitlePipe implements PipeTransform {
     private contractService: ContractService,
     private incomeService: IncomeService
   ) { }
+
   transform(titleId: string) {
-    return this.contractService.valueChanges(ref => ref.where('titleId', '==', titleId).where('status', '==', 'approved')).pipe(
+    return this.contractService.valueChanges(ref =>
+      ref.where('titleId', '==', titleId)
+        .where('status', '==', 'approved')
+        .where('type', '==', 'sale')
+    ).pipe(
       map(contracts => contracts.map(contract => contract.id)),
       switchMap(contractIds => this.incomeService.valueChanges(contractIds)),
     );

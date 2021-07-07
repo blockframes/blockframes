@@ -16,8 +16,8 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 const columns = {
   'title.international': 'Title',
   'release.year': 'Release Year',
-  directors: 'Director(s)',
-  views: { value: '# Views', disableSort: true },
+  'directors': 'Director(s)',
+  'views': { value: '# Views', disableSort: true },
   'app.catalog.status': 'Status',
   'id': { value: '#Sales (Total Gross Receipt)', disableSort: true },
 };
@@ -32,7 +32,7 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'id', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'id', 'app.catalog.status'];
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
