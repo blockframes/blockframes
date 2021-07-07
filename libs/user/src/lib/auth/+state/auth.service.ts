@@ -19,6 +19,7 @@ import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { production } from 'env/env';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -36,6 +37,12 @@ export class AuthService extends FireAuthService<AuthState> {
     @Optional() public ngIntercom?: Intercom,
   ) {
     super(store);
+
+    if (!production) { // instrument Cypress only out of PROD
+      if (window['Cypress']) {
+        window['AuthService'] = this;
+      }
+    }
   }
 
   /**
@@ -75,6 +82,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   onSignin(userCredential: UserCredential) {
+    window['LoggedIn'] = true;
     this.updateIntercom(userCredential);
 
     this.analytics.setUserProperties(getBrowserWithVersion());

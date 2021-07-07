@@ -11,6 +11,8 @@
 //
 import 'cypress-mailosaur';
 
+import { AuthService } from '@blockframes/auth/+state/auth.service';
+
 // -- This is a parent command --
 // Cypress.Commands.add("login", (email, password) => { ... })
 //
@@ -25,3 +27,19 @@ import 'cypress-mailosaur';
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("login", async (email, password) => { 
+  try {
+    //await AuthService.signin(email, password);
+    cy.window().should('have.property', 'AuthService')
+    cy.window()
+      .then(async (w) => {
+        const authService = w['AuthService'];
+        await authService.signin({ email, password });
+        cy.log(`Logged in user: ${email}`);
+      });
+    cy.window().should('have.property', 'LoggedIn')
+  } catch (e) {
+    cy.log(`Login Err: ${e}`);
+  }
+})
