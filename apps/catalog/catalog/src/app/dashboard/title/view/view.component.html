@@ -8,7 +8,28 @@
         <mat-icon svgIcon="visibility" color="primary"></mat-icon>
         <span>Marketplace Preview</span>
       </a>
-      <actions-dashboard-shell fxFlex></actions-dashboard-shell>
+      <actions-dashboard-shell fxFlex #actions="actionsDashboardShell">
+        <movie-action-menu>
+          <a mat-menu-item *ngIf="!['accepted','submitted'].includes(movie.app.catalog.status)"
+            [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="submit">
+            <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
+          </a>
+          <button *ngIf="movie.app.catalog.status === 'accepted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title removed from Marketplace.')">
+            <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
+          </button>
+          <button *ngIf="movie.app.catalog.status === 'submitted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title back to Draft.')">
+            <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
+          </button>
+          <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+            <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+          </a>
+          <button mat-menu-item (click)="actions.updateStatus('archived', 'Title archived.')">
+            <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
+          </button>
+        </movie-action-menu>
+      </actions-dashboard-shell>
     </movie-cta>
   </title-dashboard-shell>
 </ng-container>

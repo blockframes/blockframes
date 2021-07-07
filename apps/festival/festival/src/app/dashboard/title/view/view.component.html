@@ -8,7 +8,28 @@
         <mat-icon svgIcon="visibility" color="primary"></mat-icon>
         <span>Marketplace Preview</span>
       </a>
-      <actions-dashboard-shell fxFlex></actions-dashboard-shell>
+      <actions-dashboard-shell fxFlex #actions="actionsDashboardShell">
+        <movie-action-menu>
+          <a mat-menu-item *ngIf="movie.app.festival.status === 'draft'"
+            [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="publish">
+            <mat-icon svgIcon="publish"></mat-icon><span>Publish on Marketplace</span>
+          </a>
+          <button *ngIf="movie.app.festival.status === 'accepted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title removed from Marketplace.')">
+            <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
+          </button>
+          <button *ngIf="movie.app.festival.status === 'submitted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title back to Draft.')">
+            <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
+          </button>
+          <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+            <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+          </a>
+          <button mat-menu-item (click)="actions.updateStatus('archived', 'Title archived.')">
+            <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
+          </button>
+        </movie-action-menu>
+      </actions-dashboard-shell>
     </movie-cta>
   </title-dashboard-shell>
 </ng-container>
