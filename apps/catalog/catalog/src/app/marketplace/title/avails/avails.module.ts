@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
+import { RunsFormModule } from "@blockframes/contract/term/form/runs/runs-form.module";
 
 import { AvailsGuard } from './avails.guard';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
@@ -59,6 +60,7 @@ const routes: Routes = [
     ReverseModule,
     ConfirmModule,
     ToGroupLabelPipeModule,
+    RunsFormModule,
 
     // Material
     MatCardModule,
