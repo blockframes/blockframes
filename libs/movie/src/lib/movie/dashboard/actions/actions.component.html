@@ -1,7 +1,7 @@
 <ng-container *ngIf="movie$ | async as movie">
   <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
     <ng-container *ngIf="movie.app[appName].status === 'archived' else cta">
-      <button mat-button color="primary" (click)="updateStatus('draft', 'Title restored')">
+      <button mat-button color="primary" (click)="updateStatus('draft', 'Title restored.')">
         <mat-icon svgIcon="restore"></mat-icon>
         Restore Title
       </button>
@@ -30,8 +30,8 @@
         <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
         </a>
-        <button *ngIf="movie.app[appName].status !== 'draft'" mat-menu-item
-          (click)="updateStatus('draft', 'Title back to Draft')">
+        <button *ngIf="movie.app[appName].status === 'submitted'" mat-menu-item
+          (click)="updateStatus('draft', 'Title back to Draft.')">
           <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
         </button>
         <button *ngIf="movie.app[appName].status === 'accepted'" mat-menu-item
@@ -53,7 +53,7 @@
         </a>
         <a mat-menu-item *ngIf="appName === 'festival' && movie.app[appName].status === 'draft'"
           [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" fragment="publish">
-          <mat-icon svgIcon="marketplace"></mat-icon><span>Publish on Marketplace</span>
+          <mat-icon svgIcon="publish"></mat-icon><span>Publish on Marketplace</span>
         </a>
       </mat-menu>
     </ng-template>
