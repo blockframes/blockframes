@@ -8,7 +8,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ContractListComponent } from './list.component';
 
 // Blockframes
-import { DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import {
+  DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule,
+  GetIncomePipeModule,
+ } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
@@ -42,6 +45,7 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
     GetTitlePipeModule,
     MaxLengthModule,
     NumberPipeModule,
+    GetIncomePipeModule,
 
     // Material
     MatButtonModule,

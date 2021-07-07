@@ -20,9 +20,14 @@
         (rowClick)="goToTitle($event)" link="/c/o/dashboard/contract/">
         <ng-template colRef="offerId" let-offerId><b>{{ offerId }}</b></ng-template>
         <ng-template colRef="titleId" let-titleId>
-          <!-- titleId might be empty continue working from here -->
-          <ng-container *ngIf="titleId | getTitle | async as title">{{title.title?.international | maxLength:50}}
+          <ng-container *ngIf="titleId">{{(titleId| getTitle | async)?.title?.international | maxLength:50}}
           </ng-container>
+        </ng-template>
+        <ng-template colRef="id" let-id>
+          <ng-container *ngIf="(id| getIncome | async) as income; else noIncome">
+            {{income.price | currency:income.currency}}
+          </ng-container>
+          <ng-template #noIncome>No Price</ng-template>
         </ng-template>
       </bf-table-filter>
     </mat-card>

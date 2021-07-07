@@ -2,11 +2,8 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { startWith, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
-import { fromOrg } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -16,6 +13,7 @@ import { Contract, ContractService } from '@blockframes/contract/contract/+state
 const columns = {
   'offerId': 'Contract Reference',
   'titleId': 'Title',
+  'id': 'Price',
 };
 
 type AllContractStatus = '' | 'contracts' | 'on_going_deals' | 'past_deals';
@@ -31,17 +29,16 @@ export class ContractListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['offerId', 'titleId',]; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['offerId', 'titleId', 'id',]; // 'sales' should be added here but removed due to the #5060 issue
   filter = new FormControl();
   filter$: Observable<AllContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
-  contracts$ = this.service.valueChanges().pipe(tap(s => console.log({ s })));
+  contracts$ = this.service.valueChanges(ref => ref.where('type', '==', 'sale'));
 
   constructor(
     private service: ContractService,
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
     @Optional() private intercom: Intercom
   ) { }
