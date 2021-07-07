@@ -39,7 +39,7 @@ export interface Sale extends Contract {
 
 export function createMandate(params: Partial<Mandate> = {}): Mandate {
   return {
-    _meta: createDocumentMeta({ createdAt: new Date() }),
+    _meta: createDocumentMeta({}),
     id: '',
     titleId: '',
     termIds: [],
@@ -56,7 +56,7 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
 
 export function createSale(params: Partial<Sale> = {}): Sale {
   return {
-    _meta: createDocumentMeta({ createdAt: new Date() }),
+    _meta: createDocumentMeta({}),
     id: '',
     titleId: '',
     termIds: [],

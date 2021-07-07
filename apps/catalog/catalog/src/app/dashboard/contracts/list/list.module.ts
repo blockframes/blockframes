@@ -9,15 +9,9 @@ import { ContractListComponent } from './list.component';
 
 // Blockframes
 import {
-  DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule,
-
+  MaxLengthModule, ToLabelModule,
 } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
-import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
-import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
-import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
@@ -27,7 +21,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [ContractListComponent],
@@ -36,25 +29,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     FlexLayoutModule,
     TableFilterModule,
-    ToLabelModule,
-    ImageModule,
-    FilterByModule,
-    AnalyticsPipeModule,
-    DisplayNameModule,
-    NoTitleModule,
-    TagModule,
     GetTitlePipeModule,
     MaxLengthModule,
-    NumberPipeModule,
     IncomePipeModule,
     OfferPipeModule,
+    ToLabelModule,
 
     // Material
     MatButtonModule,
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatTooltipModule,
     // Router
     RouterModule.forChild([{ path: '', component: ContractListComponent }])
   ]
