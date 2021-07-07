@@ -39,8 +39,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DisplayNameModule,
     NoTitleModule,
     TagModule,
-    IncomePipeModule,
     NumberPipeModule,
+    IncomePipeModule,
 
     // Material
     MatButtonModule,
