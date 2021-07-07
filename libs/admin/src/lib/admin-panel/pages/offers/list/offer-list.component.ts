@@ -1,8 +1,7 @@
 import {
   Component, ChangeDetectionStrategy,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Offer, OfferService, OfferStatus } from '@blockframes/contract/offer/+state';
+import { Offer, OfferService } from '@blockframes/contract/offer/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Query, queryChanges } from "akita-ng-fire";
 import { Observable } from 'rxjs';

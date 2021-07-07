@@ -89,9 +89,9 @@
       </p>
     </article>
     <article *ngIf="movie | hasKeys: 'languages'">
-      <h5>Versions</h5>
-      <ng-container *ngFor="let language of movie.languages | keyvalue">
-        <ng-container *ngIf="language.value | versionPipe">
+      <ng-container *ngIf="movie.languages | versionPipe">
+        <h5>Versions</h5>
+        <ng-container *ngFor="let language of movie.languages | keyvalue">
           <div class="version" fxLayout fxLayoutGap="8px">
             <b>{{ language.key | toLabel: 'languages' }}: </b>
             <mat-chip-list>

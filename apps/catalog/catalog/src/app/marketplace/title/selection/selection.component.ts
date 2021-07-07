@@ -48,9 +48,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
       tap(bucket => {
         this.setTitle(bucket?.contracts.length);
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
-        bucket?.contracts.forEach(
-          (contract, index) => this.setPrice(index, contract.price)
-        );
       })
     );
   }
@@ -73,8 +70,8 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.bucketService.update(id, { currency });
   }
 
-  setPrice(index: number, price: number | string) {
-    this.prices[index] = +price;
+  setPrice(index: number, price: string) {
+    this.prices[index] =  parseFloat(price);
     this.priceChanges.next();
   }
 
@@ -85,7 +82,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     const currency = this.currencyForm.value;
     await this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
-      contracts[index].price = +price;
+      contracts[index].price = parseFloat(price);
       return { contracts, currency };
     });
   }
