@@ -6,14 +6,7 @@
         Restore Title
       </button>
     </ng-container>
-    <ng-template #cta>
-      <ng-container *ngIf="appName !=='financiers' && (org$ | async | canAccess: 'marketplace': appName)">
-        <a mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
-          <mat-icon svgIcon="visibility" color="primary"></mat-icon>
-          <span>Marketplace Preview</span>
-        </a>
-      </ng-container>
-    </ng-template>
+    <ng-template #cta></ng-template>
     <ng-container *ngIf="movie.app[appName].status === 'archived' else actionsMenu">
       <button mat-button (click)="removeAppAccess()" matTooltip="Delete Title">
         <mat-icon svgIcon="delete"></mat-icon>

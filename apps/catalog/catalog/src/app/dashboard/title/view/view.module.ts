@@ -11,6 +11,11 @@ import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/action
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+// Modules
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 const routes = [{
   path: '',
@@ -57,8 +62,11 @@ const routes = [{
     // Blockframes
     DashboardTitleShellModule,
     DashboardActionsShellModule,
+    OrgAccessModule,
     // Material
     MatProgressSpinnerModule,
+    MatIconModule,
+    MatButtonModule,
     // Routes
     RouterModule.forChild(routes)
   ]
