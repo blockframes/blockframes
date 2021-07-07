@@ -4,6 +4,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { displayName } from '../utils';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { Organization } from '@blockframes/organization/+state';
 
 /**
  * This pipe is used to display the firstname and lastname of the user but also the organization in parenthesis.
@@ -13,12 +14,14 @@ import { orgName } from '@blockframes/organization/+state/organization.firestore
   name: 'displayUser'
 })
 export class DisplayUserPipe implements PipeTransform {
+
+  private cachedOrgs: Organization[] = [];
   constructor(private orgService: OrganizationService) { }
 
   async transform(users: PublicUser | PublicUser[]) {
     const getUserName = async (user: PublicUser) => {
       if (user.orgId) {
-        const org = await this.orgService.getValue(user.orgId);
+        const org = await this.getOrg(user.orgId);
         return `${displayName(user)} (${orgName(org)})`;
       } else {
         return displayName(user);
@@ -26,6 +29,18 @@ export class DisplayUserPipe implements PipeTransform {
     }
 
     return Array.isArray(users) ? Promise.all(users.map(getUserName)) : getUserName(users);
+  }
+
+  /**
+   * Caching organizations to prevent userName blinking (caused by async call to get user's org)
+   * (when a notification is updated for example)
+   **/
+  private async getOrg(orgId: string) {
+    if (!this.cachedOrgs[orgId]) {
+      this.cachedOrgs[orgId] = await this.orgService.getValue(orgId);
+    }
+
+    return this.cachedOrgs[orgId];
   }
 }
 

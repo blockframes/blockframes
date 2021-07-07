@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +16,8 @@ import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'auth-identity',
@@ -24,7 +26,7 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
   animations: [slideUp, slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IdentityComponent implements OnInit {
+export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.query.user$;
   public creating = false;
@@ -33,10 +35,12 @@ export class IdentityComponent implements OnInit {
   public indexGroup = 'indexNameOrganizations';
   private snackbarDuration = 8000;
   public form = new IdentityForm();
+  public orgControl = new FormControl();
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
   public existingUser = false;
   private existingOrgId: string;
+  private sub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -67,6 +71,11 @@ export class IdentityComponent implements OnInit {
 
     this.form.patchValue(identity);
 
+    this.sub = this.orgControl.valueChanges.subscribe(value => {
+      const error = value && this.existingOrgId === undefined ? {} : undefined
+      this.orgControl.setErrors(error);
+    });
+
     if (existingUserWithDisplayName) {
       // Updating user (already logged in and with display name setted) : user will only choose or create an org
       this.updateFormForExistingIdentity(this.query.user);
@@ -81,6 +90,10 @@ export class IdentityComponent implements OnInit {
     this.form.get('email').valueChanges.pipe(debounceTime(500)).subscribe(() => {
       if (this.form.get('email').valid) this.searchForInvitation();
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   public openIntercom(): void {
