@@ -25,7 +25,7 @@ export class ContractListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['offerId', 'titleId', 'id', '_meta.createdAt', 'status',]; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['offerId', 'titleId', 'id', '_meta.createdAt', 'status',];
   contracts$ = this.service.valueChanges(ref => ref.where('type', '==', 'sale'));
 
   constructor(

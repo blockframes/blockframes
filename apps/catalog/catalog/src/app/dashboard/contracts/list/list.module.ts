@@ -25,7 +25,6 @@ import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -52,7 +51,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
     // Material
     MatButtonModule,
-    MatTabsModule,
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
