@@ -7,7 +7,17 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
-import { awaitProcessExit, copyFirestoreExportFromCiBucket, defaultEmulatorBackupPath, firebaseEmulatorExec, importFirestoreEmulatorBackup, latestAnonDbDir, loadAdminServices, restoreAnonStorageFromCI, shutdownEmulator } from "@blockframes/firebase-utils";
+import {
+  copyFirestoreExportFromCiBucket,
+  defaultEmulatorBackupPath,
+  endMaintenance,
+  firebaseEmulatorExec,
+  importFirestoreEmulatorBackup,
+  latestAnonDbDir,
+  loadAdminServices,
+  restoreAnonStorageFromCI,
+  shutdownEmulator,
+} from '@blockframes/firebase-utils';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { restoreStorageFromCi } from '@blockframes/firebase-utils';
@@ -15,11 +25,7 @@ import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode } from './tools';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
-import { startEmulators } from './emulator';
-import { resolve } from 'path';
-import { loadFirestoreRules } from '@firebase/rules-unit-testing';
-import { readFileSync } from 'fs';
-const { storageBucket, projectId } = firebase();
+const { storageBucket } = firebase();
 
 export async function prepareForTesting() {
   const { storage, db, auth } = loadAdminServices();
@@ -57,6 +63,7 @@ export async function prepareForTesting() {
 
   insurance(); // Switch off maintenance insurance
 }
+
 export async function prepareEmulators() {
   console.log('Importing golden Firestore DB data from CI...');
   const anonBackupURL = `gs://${ciBucketName}/${latestAnonDbDir}`;
@@ -94,8 +101,9 @@ export async function prepareEmulators() {
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
 
-  await shutdownEmulator(proc);
   insurance(); // Switch off maintenance insurance
+  await endMaintenance(db);
+  await shutdownEmulator(proc);
 }
 
 export async function prepareDb() {
