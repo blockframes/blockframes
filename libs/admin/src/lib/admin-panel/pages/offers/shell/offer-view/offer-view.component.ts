@@ -2,12 +2,14 @@ import {
   Component, ChangeDetectionStrategy, OnDestroy, OnInit
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Contract, ContractService, Sale } from '@blockframes/contract/contract/+state';
-import { OfferService, offerStatus } from '@blockframes/contract/offer/+state';
+import { Contract, ContractService, createSale, Sale } from '@blockframes/contract/contract/+state';
+import { Offer, OfferService, offerStatus } from '@blockframes/contract/offer/+state';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'offer-view',
@@ -20,6 +22,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   public offer$ = this.shell.offer$;
   public buyerOrg$ = this.shell.buyerOrg$;
   public contracts$ = this.shell.contracts$;
+  public loading$ = new BehaviorSubject<boolean>(false);
   public offerStatus = offerStatus;
   public form = new FormGroup({
     status: new FormControl('pending'),
@@ -45,6 +48,9 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private offerService: OfferService,
     private contractService: ContractService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
   ) { }
 
   update(contracts: Contract[], id: string) {
@@ -79,11 +85,24 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     });
   }
 
+  async addTitle(offer: Offer) {
+    const { buyerId, buyerUserId, specificity, id } = offer;
+    const contractId = this.contractService.createId();
+    const contract = createSale({ specificity, id: contractId, buyerId, offerId: id, buyerUserId, })
+    this.loading$.next(true);
+    try {
+      await this.contractService.add(contract);
+      this.router.navigate([`../`, contractId, 'form'], { relativeTo: this.route });
+    } catch (err) {
+      console.warn(err);
+      this.snackbar.open("There was an error, please try later", 'close', { duration: 5000 });
+    }
+    this.loading$.next(false);
+  }
+
   ngOnInit() {
     this.subscription = this.offer$.subscribe(
-      ({ status, specificity, delivery, }) => {
-        this.form.patchValue({ status, specificity, delivery })
-      }
+      ({ status, specificity, delivery, }) => this.form.patchValue({ status, specificity, delivery })
     );
   }
 

@@ -1,11 +1,12 @@
 .space-horizontal {
-  margin: 0 64px;
+  margin: 0 24px;
   padding-top: 16px;
 }
 
 .margin-bottom {
   margin-bottom: 16px;
 }
+
 
 mat-card {
   p {
@@ -16,7 +17,7 @@ mat-card {
   }
 }
 
-.add-rights {
+.add-title {
   margin-top: 24px;
   width: min-content;
 }

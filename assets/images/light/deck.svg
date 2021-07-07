@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="296px" height="235px" viewBox="0 0 296 235" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-150.5%" y="-4.4%" width="401.0%" height="108.9%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-150.5%" y="-4.4%" width="401.0%" height="108.9%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="illus-light" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="illustrations/light/deck" transform="translate(-24.000000, -28.000000)">
+            <g id="presentation-deck" transform="translate(31.000000, 38.000000)">
+                <g id="Group" transform="translate(14.177669, 2.649153)"></g>
+                <rect id="Rectangle" stroke="#000000" x="17.7898402" y="3.14915293" width="247.973699" height="155.009615"></rect>
+                <path d="M125.819257,172.883245 L149.780795,172.883245 C150.056938,172.883245 150.280795,173.107102 150.280795,173.383245 L150.280795,180.350403 C150.280795,180.626545 150.056938,180.850403 149.780795,180.850403 L125.819257,180.850403 C125.543115,180.850403 125.319257,180.626545 125.319257,180.350403 L125.319257,173.383245 C125.319257,173.107102 125.543115,172.883245 125.819257,172.883245 Z" id="Rectangle" fill="#8DA4FA" transform="translate(137.800026, 176.866824) rotate(90.000000) translate(-137.800026, -176.866824) "></path>
+                <polygon id="blur" filter="url(#filter-1)" transform="translate(140.911234, 162.645681) rotate(90.000000) translate(-140.911234, -162.645681) " points="136.924322 27.438167 144.898146 27.438167 144.898146 297.853194 136.924322 297.853194"></polygon>
+                <path d="M137.924784,18.0905299 L143.898609,18.0905299 C144.450894,18.0905299 144.898609,18.5382452 144.898609,19.0905299 L144.898609,297.186943 C144.898609,297.739227 144.450894,298.186943 143.898609,298.186943 L137.924784,298.186943 C137.3725,298.186943 136.924784,297.739227 136.924784,297.186943 L136.924784,19.0905299 C136.924784,18.5382452 137.3725,18.0905299 137.924784,18.0905299 Z" id="bottom-bar" fill="#000000" transform="translate(140.911697, 158.138736) rotate(90.000000) translate(-140.911697, -158.138736) "></path>
+                <polygon id="blur" filter="url(#filter-2)" transform="translate(140.911234, 6.636065) rotate(90.000000) translate(-140.911234, -6.636065) " points="136.924322 -128.571448 144.898146 -128.571448 144.898146 141.843579 136.924322 141.843579"></polygon>
+                <path d="M139.016555,-123.524856 L144.990402,-123.524856 C145.542687,-123.524856 145.990402,-123.077141 145.990402,-122.524856 L145.990402,130.673185 C145.990402,131.22547 145.542687,131.673185 144.990402,131.673185 L139.016555,131.673185 C138.46427,131.673185 138.016555,131.22547 138.016555,130.673185 L138.016555,-122.524856 C138.016555,-123.077141 138.46427,-123.524856 139.016555,-123.524856 Z" id="top-bar" fill="#000000" transform="translate(142.003478, 4.074165) rotate(90.000000) translate(-142.003478, -4.074165) "></path>
+                <g id="ball" transform="translate(121.374678, 189.340659)">
+                    <ellipse id="Oval" fill="#879DEF" cx="18.6730274" cy="18.7211538" rx="15.5608562" ry="15.6009615"></ellipse>
+                    <ellipse id="Oval" stroke="#000000" cx="15.5608562" cy="15.6009615" rx="15.5608562" ry="15.6009615"></ellipse>
+                </g>
+                <g id="cheese" transform="translate(146.272048, 38.477335)">
+                    <ellipse id="Oval" fill="#879DEF" cx="46.6825685" cy="44.7767857" rx="37.3460548" ry="37.4423077"></ellipse>
+                    <ellipse id="Oval" stroke="#121424" stroke-width="1.2" cx="54.7033675" cy="49.6980646" rx="37.3460548" ry="37.4423077"></ellipse>
+                    <polygon id="Triangle" fill="#FFFFFF" transform="translate(34.381586, 32.791881) rotate(128.000000) translate(-34.381586, -32.791881) " points="34.9884517 7.08153471 55.3609159 58.5022269 13.4022558 57.2379965"></polygon>
+                    <polygon id="Triangle" fill="#879DEF" transform="translate(29.894473, 28.696085) rotate(128.000000) translate(-29.894473, -28.696085) " points="30.1625757 11.8501827 45.2410519 44.7841645 14.5478944 45.5419864"></polygon>
+                </g>
+                <g id="chart-bars" transform="translate(43.570397, 64.532967)" fill="#879DEF" stroke="#404B8A">
+                    <rect id="Rectangle" x="0.5" y="31.7019231" width="20.7851986" height="30.2019231" rx="0.5"></rect>
+                    <rect id="Rectangle" x="31.6217123" y="16.1009615" width="20.7851986" height="45.8028846" rx="0.5"></rect>
+                    <rect id="Rectangle" x="59.6312534" y="0.5" width="20.7851986" height="61.4038462" rx="0.5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
