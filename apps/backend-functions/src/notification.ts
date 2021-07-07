@@ -456,7 +456,8 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
 
 /** User receive a notification and an email to confirm his request access has been sent*/
 async function requestAppAccessEmail(recipient: User, notification: NotificationDocument) {
-  const user = await getDocument<User>(`users/${notification.toUserId}`);
+  const userDoc = await getDocument<User>(`users/${notification.user.uid}`);
+  const user = getUserEmailData(userDoc);
   const app = notification._meta.createdFrom;
   const template = appAccessEmail(recipient.email, user);
   await sendMailFromTemplate(template, app, unsubscribeId);

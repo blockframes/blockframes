@@ -34,18 +34,18 @@ function getSupportEmail(app?: App) {
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
 
-export function userVerifyEmail(email: string, userFirstName: string, link: string): EmailTemplateRequest {
+export function userVerifyEmail(email: string, user: UserEmailData, link: string): EmailTemplateRequest {
   const data = {
-    userFirstName,
+    user,
     pageURL: link
   };
   return { to: email, templateId: templateIds.user.verifyEmail, data };
 }
 
-export function accountCreationEmail(email: string, link: string, userFirstName?: string): EmailTemplateRequest {
+export function accountCreationEmail(email: string, link: string, user: UserEmailData): EmailTemplateRequest {
   const data = {
     pageURL: link,
-    userFirstName
+    user
   };
   return { to: email, templateId: templateIds.user.welcomeMessage, data };
 }
@@ -58,9 +58,8 @@ export function userResetPassword(email: string, link: string): EmailTemplateReq
 }
 
 /** Send email to an user who is requesting new app access */
-export function appAccessEmail(email: string, user: User): EmailTemplateRequest {
-  const data = { userFirstName: user.firstName };
-  return { to: email, templateId: templateIds.user.appAccessRequest, data };
+export function appAccessEmail(email: string, user: UserEmailData): EmailTemplateRequest {
+  return { to: email, templateId: templateIds.user.appAccessRequest, data: { user } };
 }
 
 /**
