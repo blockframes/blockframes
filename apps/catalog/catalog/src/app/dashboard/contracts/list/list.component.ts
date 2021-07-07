@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { startWith, tap } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -11,9 +11,11 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 
 const columns = {
-  'offerId': 'Contract Reference',
+  'id': 'Contract Reference',
   'titleId': 'Title',
-  'id': 'Price',
+  // 'id': 'Price',
+  'offerId': 'Date',
+  'status': 'Status',
 };
 
 type AllContractStatus = '' | 'contracts' | 'on_going_deals' | 'past_deals';
@@ -29,7 +31,7 @@ export class ContractListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['offerId', 'titleId', 'id',]; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['titleId', 'id', 'status', 'offerId',]; // 'sales' should be added here but removed due to the #5060 issue
   filter = new FormControl();
   filter$: Observable<AllContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   contracts$ = this.service.valueChanges(ref => ref.where('type', '==', 'sale'));

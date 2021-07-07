@@ -18,7 +18,7 @@
       <bf-table-filter [source]="contracts | filterBy: filterByStatus: { value: filter.value, exclude: 'archived' }"
         [columns]="columns" [initialColumns]="initialColumns" clickable showFilter showPaginator
         (rowClick)="goToTitle($event)" link="/c/o/dashboard/contract/">
-        <ng-template colRef="offerId" let-offerId><b>{{ offerId }}</b></ng-template>
+        <ng-template colRef="id" let-id><b>{{ id }}</b></ng-template>
         <ng-template colRef="titleId" let-titleId>
           <ng-container *ngIf="titleId">{{(titleId| getTitle | async)?.title?.international | maxLength:50}}
           </ng-container>
@@ -28,6 +28,13 @@
             {{income.price | currency:income.currency}}
           </ng-container>
           <ng-template #noIncome>No Price</ng-template>
+        </ng-template>
+        <ng-template colRef="offerId" let-offerId>
+          <ng-container *ngIf="offerId">{{(offerId| getOffer | async)?.date | date:'MM/dd/yyyy'}}
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="status" let-status>
+          <span class="capitalize">{{status??'No status'}}</span>
         </ng-template>
       </bf-table-filter>
     </mat-card>
