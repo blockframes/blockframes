@@ -10,7 +10,7 @@ import { ContractListComponent } from './list.component';
 // Blockframes
 import {
   DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule,
-  GetIncomePipeModule, GetOfferPipeModule,
+
 } from '@blockframes/utils/pipes';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -18,6 +18,9 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
+import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
+import { IncomePipeModule } from '@blockframes/contract/income/pipe';
+import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -26,7 +29,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 
 @NgModule({
   declarations: [ContractListComponent],
@@ -45,8 +47,8 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
     GetTitlePipeModule,
     MaxLengthModule,
     NumberPipeModule,
-    GetIncomePipeModule,
-    GetOfferPipeModule,
+    IncomePipeModule,
+    OfferPipeModule,
 
     // Material
     MatButtonModule,
