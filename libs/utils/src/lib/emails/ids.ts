@@ -52,6 +52,7 @@ export const templateIds = {
       declined: 'd-d3c17695e25a453a98ab5540ea171c5c'
     }
   },
+  // Used only in front (see title view component of MF)
   financiers: {
     invest: 'd-e902521de8684c57bbfa633bad88567a'
   },
