@@ -1,5 +1,5 @@
 <mat-card class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
-  <img asset="empty_news.webp" alt="News brand logo">
+  <img asset="empty_news.svg" alt="News brand logo">
   <h5>{{ review.journalName }}</h5>
   <div class="reviewCritic">
     <p class="mat-body-1" *ngIf="!!review.criticQuote">"{{ review.criticQuote | maxLength: 80 }}"</p>
@@ -17,7 +17,7 @@
 
 <ng-template #dialogRef>
   <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
-    <img asset="empty_news.webp" alt="News brand logo">
+    <img asset="empty_news.svg" alt="News brand logo">
     <h5>{{ review.journalName }}</h5>
     <p class="mat-body-2">"{{ review.criticQuote }}"</p>
     <caption class="mat-caption">{{ review.criticName }}</caption>

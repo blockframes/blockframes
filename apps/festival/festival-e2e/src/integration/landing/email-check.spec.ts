@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { setForm, serverId, testEmail, SEC } from "@blockframes/e2e/utils";
+import { clearDataAndPrepareTest, setForm, serverId, testEmail, SEC } from "@blockframes/e2e/utils";
 
 //Test if email is sent correctly.
 const SUBJECT_DEMO = 'A demo has been requested';
@@ -16,7 +16,7 @@ describe('Demo Request Email', () => {
     'tel': '123456789'
   }
   beforeEach(() => {
-    cy.visit('/');
+    clearDataAndPrepareTest('/');
 
     //Clear all messages on server before the test
     cy.mailosaurDeleteAllMessages(serverId).then(() => {
@@ -25,6 +25,9 @@ describe('Demo Request Email', () => {
   });
   
   it('Request Demo and verify request email', () => {
+    //Wait long enough for page to load
+    cy.get('a[href="/auth/identity"]', {timeout: 60 * SEC});
+
     cy.get('h1', {timeout: 10 * SEC})
       .contains("Want to learn more?");
 

@@ -19,10 +19,25 @@
     <ng-template class="duration" colRef="avails.duration" let-duration>{{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}</ng-template>
     <ng-template colRef="avails.territories" let-territories>{{ territories | toLabel: 'territories' }}</ng-template>
     <ng-template colRef="avails.medias" let-media>{{ media | toLabel: 'medias' }}</ng-template>
-    <ng-template colRef="avails.exclusive" let-exclusive >{{ exclusive ? 'Yes' : 'No'}}</ng-template>
+    <ng-template colRef="avails.exclusive" let-exclusive>{{ exclusive ? 'Yes' : 'No'}}</ng-template>
+    <ng-template colRef="versions" let-version>
+      <ul>
+        <li *ngFor="let item of version | keyvalue">
+          {{item.key | titlecase}} 
+          (
+            <span *ngFor="let option of item.value | keyvalue">
+              {{option.value ? (option.key | titlecase) : '' }}
+            </span> 
+          ) <!-- End of options languages  -->
+        </li>
+      </ul>
+    </ng-template>
+    <ng-template colRef="runs" let-runs>{{ runs?.broadcasts}}</ng-template>
     <!-- Local Form -->
     <ng-template formView let-termForm>
         <avails-filter class="surface" [form]="termForm.get('avails')"></avails-filter>
+        <languages-form class="surface" [form]="termForm.get('versions')"></languages-form>
+        <runs-form class="surface" [form]="termForm.get('runs')"></runs-form>
     </ng-template>
   </bf-form-table>
 </form>
