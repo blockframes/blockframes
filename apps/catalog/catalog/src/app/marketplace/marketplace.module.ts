@@ -16,7 +16,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
-import { CatalogDealsGuard } from '../guards/deals.guard';
 
 const routes: Routes = [{
   path: '',
@@ -61,17 +60,6 @@ const routes: Routes = [{
       path: 'wishlist',
       loadChildren: () => import('@blockframes/ui/marketplace/pages/wishlist/wishlist.module').then(m => m.WishlistModule),
       data: { animation: 'wishlist' }
-    },
-    {
-      path: 'deals',
-      children: [{
-        path: '',
-        canActivate: [CatalogDealsGuard],
-        loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
-      }, {
-        path: ':contractId',
-        loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
-      }]
     },
     {
       path: 'title',
