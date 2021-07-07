@@ -58,7 +58,7 @@ const routes: Routes = [
         loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
       },
       {
-        path: 'contracts', // Import bulk of movies
+        path: 'contracts',
         loadChildren: () => import('./contracts/list/list.module').then(m => m.ContractListModule)
       },
       {

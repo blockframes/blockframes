@@ -5,12 +5,17 @@
     </header>
 
     <mat-card>
-      <bf-table-filter [source]="contracts"
-        [columns]="columns" [initialColumns]="initialColumns" clickable showFilter showPaginator
-        (rowClick)="goToTitle($event)" link="/c/o/dashboard/contract/">
-        <ng-template colRef="id" let-id><b>{{ id }}</b></ng-template>
+      <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
+        showPaginator link="/c/o/dashboard/contract/">
+        <ng-template colRef="offerId" let-id><b>
+            {{ id }}
+            <span class="box-around" *ngIf="(id|getOffer|async) as offer">{{offer?.status | titlecase}}</span>
+          </b></ng-template>
         <ng-template colRef="titleId" let-titleId>
-          <ng-container *ngIf="titleId">{{(titleId| getTitle | async)?.title?.international | maxLength:50}}
+          <ng-container *ngIf="titleId">
+            <ng-container *ngIf="(titleId| getTitle | async) as title">
+              {{title.title?.international | maxLength:50}}
+            </ng-container>
           </ng-container>
         </ng-template>
         <ng-template colRef="id" let-id>
@@ -19,12 +24,12 @@
           </ng-container>
           <ng-template #noIncome>No Price</ng-template>
         </ng-template>
-        <ng-template colRef="offerId" let-offerId>
-          <ng-container *ngIf="offerId">{{(offerId| getOffer | async)?.date | date:'MM/dd/yyyy'}}
+        <ng-template colRef="_meta.createdAt" let-date>
+          <ng-container>{{date | date:'MM/dd/yyyy'}}
           </ng-container>
         </ng-template>
         <ng-template colRef="status" let-status>
-          <span class="capitalize">{{status??'No status'}}</span>
+          <span>{{(status| titlecase)}}</span>
         </ng-template>
       </bf-table-filter>
     </mat-card>

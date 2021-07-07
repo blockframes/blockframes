@@ -1,9 +1,11 @@
+import { createDocumentMeta, DocumentMeta } from "@blockframes/utils/models-meta";
 
 export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
 
 export type ContractStatus = typeof contractStatus[number];
 
 export interface Contract {
+  _meta: DocumentMeta<Date>;
   id: string;
   type: 'mandate' | 'sale';
   status: ContractStatus;
@@ -37,6 +39,7 @@ export interface Sale extends Contract {
 
 export function createMandate(params: Partial<Mandate> = {}): Mandate {
   return {
+    _meta: createDocumentMeta({ createdAt: new Date() }),
     id: '',
     titleId: '',
     termIds: [],
@@ -53,6 +56,7 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
 
 export function createSale(params: Partial<Sale> = {}): Sale {
   return {
+    _meta: createDocumentMeta({ createdAt: new Date() }),
     id: '',
     titleId: '',
     termIds: [],

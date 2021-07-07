@@ -4,37 +4,14 @@
   flex-direction: column;
 }
 
-header.import-header {
-  margin-bottom: 24px;
-}
-
-header[mat-tab-nav-bar] button {
-  border: none;
-  background-color: transparent;
-}
-
-.no-title-card {
-  width: 330px;
-  height: 220px;
-  img {
-    width: 100px;
-    align-self: center;
-  }
-}
-
-h3 {
-  margin-top: 24px;
-}
-
-p {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
 mat-spinner {
   align-self: center;
 }
 
-.capitalize {
-  text-transform: capitalize;
+
+.box-around{
+  padding: 4px 16px;
+  margin-left: 4px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.123);
 }
