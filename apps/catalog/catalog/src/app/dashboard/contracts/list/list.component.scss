@@ -1,0 +1,36 @@
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+header.import-header {
+  margin-bottom: 24px;
+}
+
+header[mat-tab-nav-bar] button {
+  border: none;
+  background-color: transparent;
+}
+
+.no-title-card {
+  width: 330px;
+  height: 220px;
+  img {
+    width: 100px;
+    align-self: center;
+  }
+}
+
+h3 {
+  margin-top: 24px;
+}
+
+p {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+mat-spinner {
+  align-self: center;
+}
