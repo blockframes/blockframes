@@ -40,6 +40,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
     if (!production) { // instrument Cypress only out of PROD
       if (window['Cypress']) {
+        console.log("Cypress auth service");
         window['AuthService'] = this;
       }
     }
@@ -82,6 +83,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   onSignin(userCredential: UserCredential) {
+    console.log("Cypress auth service - logged in");
     window['LoggedIn'] = true;
     this.updateIntercom(userCredential);
 
