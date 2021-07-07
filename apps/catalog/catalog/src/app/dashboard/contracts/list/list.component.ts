@@ -52,18 +52,18 @@ export class ContractListComponent {
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterByStatus(contract: Contract, index: number, value: AllContractStatus): boolean {
-    switch (value) {
-      case 'contracts':
-        return ["accepted"].includes(contract.status);
-      case 'on_going_deals':
-        return ["pending"].includes(contract.status);
-      case 'past_deals':
-        return ["archived", "declined"].includes(contract.status);
-      default:
-        return true;
-    }
-  }
+  // filterByStatus(contract: Contract, index: number, value: AllContractStatus): boolean {
+  //   switch (value) {
+  //     case 'contracts':
+  //       return ["accepted"].includes(contract.status);
+  //     case 'on_going_deals':
+  //       return ["pending"].includes(contract.status);
+  //     case 'past_deals':
+  //       return ["archived", "declined"].includes(contract.status);
+  //     default:
+  //       return true;
+  //   }
+  // }
 
   resetFilter() {
     this.filter.reset();

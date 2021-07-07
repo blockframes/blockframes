@@ -4,18 +4,8 @@
       <h1>Contracts</h1>
     </header>
 
-    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All Contracts</button>
-      <button mat-tab-link (click)="applyFilter('contracts')"
-        [active]="(filter$ | async) === 'contracts'">contracts</button>
-      <button mat-tab-link (click)="applyFilter('on_going_deals')"
-        [active]="(filter$ | async) === 'on_going_deals'">Ongoing Deals</button>
-      <button mat-tab-link (click)="applyFilter('past_deals')" [active]="(filter$ | async) === 'past_deals'">Past
-        Deals</button>
-    </header>
-
     <mat-card>
-      <bf-table-filter [source]="contracts | filterBy: filterByStatus: { value: filter.value, exclude: 'archived' }"
+      <bf-table-filter [source]="contracts"
         [columns]="columns" [initialColumns]="initialColumns" clickable showFilter showPaginator
         (rowClick)="goToTitle($event)" link="/c/o/dashboard/contract/">
         <ng-template colRef="id" let-id><b>{{ id }}</b></ng-template>
