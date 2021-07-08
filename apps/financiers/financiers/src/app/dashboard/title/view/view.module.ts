@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
+import { MatMenuModule } from '@angular/material/menu';
 
 const routes = [{
   path: '',
@@ -91,6 +92,7 @@ const routes = [{
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    MatMenuModule,
     // Route
     RouterModule.forChild(routes)
   ]

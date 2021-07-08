@@ -40,6 +40,14 @@ export class TitleListComponent {
     map(movies => movies.filter(m => m.app.catalog.access)),
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
 
+  movieCount$ = this.movies$.pipe(map(m => ({
+    all: m.length,
+    draft: m.filter(m => m.app.catalog.status === 'draft').length,
+    submitted: m.filter(m => m.app.catalog.status === 'submitted').length,
+    accepted: m.filter(m => m.app.catalog.status === 'accepted').length,
+    archived: m.filter(m => m.app.catalog.status === 'archived').length,
+  })));
+
   constructor(
     private service: MovieService,
     private router: Router,

@@ -5,7 +5,7 @@
  */
 import { supportEmails, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
-import { templateIds } from './ids';
+import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
 import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
