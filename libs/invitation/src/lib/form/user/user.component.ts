@@ -7,6 +7,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: '[eventId] invitation-form-user',
@@ -50,6 +51,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private orgService: OrganizationService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -76,12 +78,21 @@ export class UserComponent implements OnInit {
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
     if (this.form.valid && this.form.value.length) {
-      const emails = this.form.value.map(guest => guest.email.trim());
-      this.form.reset([]);
-      this.sending.next(true);
-      const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
-      await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
-      this.sending.next(false);
+      try {
+        const unique = Array.from(new Set(this.form.value.map(guest => guest.email.trim().toLowerCase())));
+        const emails = unique.filter(email => !this.invitations.some(inv => inv.toUser?.email === email));
+        if (unique.length > emails.length) {
+          throw new Error('There is already an invitation existing for one or more of these users');
+        }
+        this.form.reset([]);
+        this.sending.next(true);
+        const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
+        await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
+        this.sending.next(false);
+      } catch (error) {
+        this.sending.next(false);
+        this.snackBar.open(error.message, 'close', { duration: 5000 });
+      }
     }
   }
 

@@ -16,9 +16,10 @@ import { appName, getCurrentApp } from '@blockframes/utils/apps';
 const columns = {
   'title.international': 'Title',
   'release.year': 'Release Year',
-  directors: 'Director(s)',
-  views: { value: '# Views', disableSort: true },
-  'app.catalog.status': 'Status'
+  'directors': 'Director(s)',
+  'views': { value: '# Views', disableSort: true },
+  'app.catalog.status': 'Status',
+  'id': { value: '#Sales (Total Gross Receipt)', disableSort: true },
 };
 
 @Component({
@@ -31,13 +32,21 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'app.catalog.status']; // 'sales' should be added here but removed due to the #5060 issue
+  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'id', 'app.catalog.status'];
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
     map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
     map(movies => movies.filter(m => m.app.catalog.access)),
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty')));
+
+  movieCount$ = this.movies$.pipe(map(m => ({
+    all: m.length,
+    draft: m.filter(m => m.app.catalog.status === 'draft').length,
+    submitted: m.filter(m => m.app.catalog.status === 'submitted').length,
+    accepted: m.filter(m => m.app.catalog.status === 'accepted').length,
+    archived: m.filter(m => m.app.catalog.status === 'archived').length,
+  })));
 
   constructor(
     private service: MovieService,

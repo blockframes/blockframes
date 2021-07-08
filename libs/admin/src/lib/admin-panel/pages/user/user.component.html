@@ -2,7 +2,7 @@
 <section fxLayout="row" *ngIf="user" fxLayoutAlign="space-around start" fxLayoutGap="40px">
   <mat-card  fxLayout="column" fxLayoutAlign="center" fxFlex>
     <mat-card-header fxLayoutAlign="center center">
-      <img mat-card-avatar [ref]="user.avatar" asset="empty_poster.webp" alt="User avatar">
+      <img mat-card-avatar [ref]="user.avatar" asset="empty_poster.svg" alt="User avatar">
       <h4>{{ user.firstName }} {{ user.lastName }}</h4>
     </mat-card-header>
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxFlex fxLayoutGap="24px">
@@ -12,7 +12,7 @@
           <li><b>Id : </b> {{ user.uid }}</li>
           <li><b>Email : </b> {{ user.email }}</li>
           <li>
-            <b>Email Verified: </b> {{ user._meta.emailVerified }}
+            <b>Email Verified: </b> {{ (user$ | async)?._meta.emailVerified }}
             <button *ngIf="!user._meta.emailVerified" mat-button color="primary" (click)="verifyEmail()">Verify</button>
           </li>
           <li><b>Position : </b> {{ user.position }}</li>

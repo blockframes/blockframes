@@ -225,7 +225,6 @@ export class ViewExtractedContractsComponent implements OnInit {
       // TERMS //
       ///////////
       const contractId = contract.id;
-      const orgId = buyerId;
   
       // Duration
       if (!durationFrom) errors.push(errorsMap['no-duration-from']);
@@ -244,7 +243,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       if (!medias.length) errors.push(errorsMap['no-medias']);
 
       const termId = this.fire.createId();
-      const term = createTerm({ id: termId, contractId, orgId, duration, territories, medias, exclusive });
+      const term = createTerm({ id: termId, contractId, duration, territories, medias, exclusive });
 
       // Languages
       for (const [key, value] of Object.entries({ dubbed, subtitle, closedCaptioning })) {

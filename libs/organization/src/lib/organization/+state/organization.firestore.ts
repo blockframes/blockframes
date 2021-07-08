@@ -50,7 +50,7 @@ export interface AddressSet {
 }
 
 /** Default placeholder logo used when an Organization is created. */
-export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';
+export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.svg';
 
 
 /** A factory function that creates an OrganizationDocument. */
