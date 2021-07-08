@@ -21,6 +21,17 @@
         </span>
         <mat-card>
           <h3>Attendees</h3>
+          <article fxLayout="column" fxLayoutAlign="center center">
+            <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
+              <ng-container *ngIf="exporting.$ | async else export">
+                <span>Generating CSV...</span>
+              </ng-container>
+              <ng-template #export>
+                <span>Export to CSV</span>
+                <mat-icon svgIcon="arrow_upward"></mat-icon>
+              </ng-template>
+            </button>
+          </article>
           <bf-table-filter
             showFilter
             showPaginator
