@@ -11,7 +11,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ProfileFormComponent],
@@ -25,8 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatCardModule,
     MatFormFieldModule,
     MatDividerModule,
-    MatInputModule,
-    MatButtonModule
+    MatInputModule
   ],
   exports: [ProfileFormComponent]
 })

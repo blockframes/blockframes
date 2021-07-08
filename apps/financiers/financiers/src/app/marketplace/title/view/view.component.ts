@@ -10,6 +10,7 @@ import { OrganizationService, OrganizationQuery } from '@blockframes/organizatio
 import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
+import { templateIds } from '@blockframes/utils/emails/ids';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -97,8 +98,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
   openForm(orgs: Organization[]) {
     const form = new FormGroup({
       subject: new FormControl('', Validators.required),
-      from: new FormControl(),
-      to: new FormControl(),
+      scope: new FormGroup({
+        from: new FormControl(),
+        to: new FormControl()
+      }),
       message: new FormControl(),
     });
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
@@ -107,8 +110,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
+
     this.dialogRef.close();
-    const templateId = 'd-e902521de8684c57bbfa633bad88567a';
+    const templateId = templateIds.financiers.invest;
     const userSubject = getUserEmailData(this.authQuery.user);
 
     const orgUserSubject = getOrgEmailData(this.orgQuery.getActive());
