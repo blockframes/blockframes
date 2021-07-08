@@ -80,7 +80,7 @@ export class ContractFormComponent implements OnInit {
         const termIds = await this.termService.upsert(termList, { write });
         const existingTermIds = this.contract?.termIds || [];
         const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));
-        await this.termService.remove(termIdsToDelete);
+        await this.termService.remove(termIdsToDelete, { write });
         await this.contractService.update(contractId, { titleId, termIds  }, { write });
         await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
         await write.commit();
