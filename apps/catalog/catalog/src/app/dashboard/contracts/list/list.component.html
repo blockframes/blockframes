@@ -9,7 +9,11 @@
         showPaginator link="/c/o/dashboard/contract/">
         <ng-template colRef="offerId" let-id>
           {{ id }}&nbsp;&nbsp;
-          <tag-component *ngIf="(id|getOffer|async) as offer" [label]="offer?.status | labelOfferStatus | titlecase"></tag-component>
+          <ng-container *ngIf="(id|getOffer|async) as offer">
+            <ng-container *ngIf="offer">
+              <tag-component [label]="offer.status | toLabel:'offerStatus' | titlecase"></tag-component>
+            </ng-container>
+          </ng-container>
         </ng-template>
         <ng-template colRef="titleId" let-titleId>
           <ng-container *ngIf="titleId">

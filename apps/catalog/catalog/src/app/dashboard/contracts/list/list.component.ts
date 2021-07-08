@@ -37,20 +37,3 @@ export class ContractListComponent {
     private routerQuery: RouterQuery,
   ) { }
 }
-
-@Pipe({
-  name: 'labelOfferStatus'
-})
-export class LabelOfferStatusPipe implements PipeTransform {
-  transform(value: OfferStatus): string {
-    if (!value) return '';
-    switch (value) {
-      case 'pending': return 'New';
-      case 'negotiating': return 'In Negotiation';
-      case 'accepted': return 'Accepted';
-      case 'signing': return 'On Signature';
-      case 'signed': return 'Signed';
-      case 'declined': return 'Declined';
-    }
-  }
-}

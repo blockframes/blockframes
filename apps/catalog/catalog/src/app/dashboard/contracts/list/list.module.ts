@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ContractListComponent, LabelOfferStatusPipe } from './list.component';
+import { ContractListComponent } from './list.component';
 
 // Blockframes
 import {
@@ -26,7 +26,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 @NgModule({
-  declarations: [ContractListComponent, LabelOfferStatusPipe],
+  declarations: [ContractListComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

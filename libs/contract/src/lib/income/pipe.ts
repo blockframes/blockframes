@@ -1,24 +1,16 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Income, IncomeService } from '@blockframes/contract/income/+state';
-import { Observable } from 'rxjs';
+import { IncomeService } from '@blockframes/contract/income/+state';
 import { map, switchMap } from 'rxjs/operators';
 
 @Pipe({ name: 'getIncome', pure: true })
 export class GetIncomePipe implements PipeTransform {
-  record: Record<string, Observable<Income>> = {};
   constructor(
     private incomeService: IncomeService
-  ) {
-    console.log('contract constructor');
-  }
+  ) { }
 
   transform(contractId: string) {
-    if (!this.record[contractId]) {
-      this.record[contractId] = this.incomeService.valueChanges(contractId).pipe(
-      );
-    }
-    return this.record[contractId]
+    return this.incomeService.valueChanges(contractId);
   }
 }
 
