@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ContractListComponent } from './list.component';
+import { ContractListComponent, LabelOfferStatusPipe } from './list.component';
 
 // Blockframes
 import {
@@ -23,9 +23,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 @NgModule({
-  declarations: [ContractListComponent],
+  declarations: [ContractListComponent, LabelOfferStatusPipe],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -37,6 +38,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     OfferPipeModule,
     ImageModule,
     ToLabelModule,
+    TagModule,
 
     // Material
     MatButtonModule,

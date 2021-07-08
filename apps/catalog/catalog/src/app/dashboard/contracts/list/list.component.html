@@ -7,7 +7,10 @@
     <mat-card>
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
         showPaginator link="/c/o/dashboard/contract/">
-        <ng-template colRef="offerId" let-id>{{ id }} {{(id|getOffer|async)?.status | titlecase}} </ng-template>
+        <ng-template colRef="offerId" let-id>
+          {{ id }}&nbsp;&nbsp;
+          <tag-component *ngIf="(id|getOffer|async) as offer" [label]="offer?.status | labelOfferStatus | titlecase"></tag-component>
+        </ng-template>
         <ng-template colRef="titleId" let-titleId>
           <ng-container *ngIf="titleId">
             <ng-container *ngIf="(titleId| getTitle | async) as title">

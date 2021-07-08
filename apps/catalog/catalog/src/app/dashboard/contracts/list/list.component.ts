@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OfferStatus } from '@blockframes/contract/offer/+state';
 
 const columns = {
   'offerId': 'Offer Reference',
@@ -22,17 +23,35 @@ const columns = {
 export class ContractListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
-  columns = columns;
-  initialColumns = ['offerId', 'titleId', 'id', '_meta.createdAt', 'status',];
-  orgId = this.orgQuery.getActiveId();
-  contracts$ = this.service.valueChanges(
+  public columns = columns;
+  public initialColumns = ['offerId', 'titleId', 'id', '_meta.createdAt', 'status',];
+  public orgId = this.orgQuery.getActiveId();
+  public contracts$ = this.contractService.valueChanges(
     ref => ref.where('stakeholders', 'array-contains', this.orgId)
       .where('type', '==', 'sale')
   );
 
   constructor(
-    private service: ContractService,
+    private contractService: ContractService,
     private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
   ) { }
+}
+
+@Pipe({
+  name: 'labelOfferStatus'
+})
+export class LabelOfferStatusPipe implements PipeTransform {
+  //@TODO #5530 remove limit and use css instead
+  transform(value: OfferStatus): string {
+    if (!value) return '';
+    switch (value) {
+      case 'pending': return 'New';
+      case 'negotiating': return 'In Negotiation';
+      case 'accepted': return 'Accepted';
+      case 'signing': return 'On Signature';
+      case 'signed': return 'Signed';
+      case 'declined': return 'Declined';
+    }
+  }
 }
