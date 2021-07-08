@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'festival-dashboard-title-view',
@@ -13,6 +14,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
 
 export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
+  public org$ = this.orgQuery.selectActive();
   public loading$: Observable<boolean>;
 
   navLinks: RouteDescription[] = [
@@ -38,7 +40,10 @@ export class TitleViewComponent implements OnInit {
     }
   ];
 
-  constructor(private movieQuery: MovieQuery) {}
+  constructor(
+    private movieQuery: MovieQuery,
+    private orgQuery: OrganizationQuery
+  ) {}
 
   ngOnInit() {
     this.getMovie();

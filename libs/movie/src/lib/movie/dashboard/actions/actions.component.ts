@@ -1,17 +1,20 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Directive } from '@angular/core';
 import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { MovieQuery, MovieService } from '@blockframes/movie/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getAppName, getCurrentApp, getMovieAppAccess } from '@blockframes/utils/apps';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
 
+@Directive({ selector: 'movie-action-menu, [movieActionMenu]' })
+export class MovieActionMenuDirective { }
+
 @Component({
   selector: 'actions-dashboard-shell',
+  exportAs: 'actionsDashboardShell',
   templateUrl: './actions.component.html',
   styleUrls: ['./actions.component.scss'],
   animations: [routeAnimation],
@@ -21,12 +24,10 @@ export class DashboardActionsShellComponent {
   movie$ = this.query.selectActive();
 
   public appName = getCurrentApp(this.routerQuery);
-  public org$ = this.orgQuery.selectActive();
 
   constructor(
     private query: MovieQuery,
     private routerQuery: RouterQuery,
-    private orgQuery: OrganizationQuery,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private movieService: MovieService,
