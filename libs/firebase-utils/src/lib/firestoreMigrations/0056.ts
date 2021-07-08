@@ -17,7 +17,7 @@ export async function upgrade(db: Firestore) {
   return runChunks(meetings.docs, async (meetingDoc) => {
     const meeting = meetingDoc.data() as Event<OldMeeting>;
 
-    if (!!meeting.meta.files) {
+    if (meeting.meta.files) {
 
       const filesPromises = meeting.meta.files.map(async ref => {
 

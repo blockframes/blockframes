@@ -96,7 +96,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   /** Holds the results of algolia */
-  public algoliaSearchResults$: Observable<any>;
+  public algoliaSearchResults$: Observable<unknown>;
 
   /** The initialized client for algolia */
   private indexSearch: SearchIndex;
@@ -114,7 +114,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // In case of facet search we know the result object will store the matched facets in the `value` field
-    if (!!this.facet.trim()) {
+    if (this.facet.trim()) {
       this.keyToDisplay = 'value';
     }
 
@@ -131,17 +131,17 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
       switchMap(async text => {
-        if (!!this.indexGroup) {
+        if (this.indexGroup) {
           return multipleSearch(text);
         } else {
-          return (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)
+          return this.facet.trim() ? facetSearch(text) : regularSearch(text)
         }
       }),
       tap(data => this.lastValue$.next(data)),
     );
   }
 
-  public selected(result: any) {
+  public selected(result: unknown) {
     this.selectionChange.emit(result);
     if (this.resetInput) {
       this.control.reset();

@@ -90,7 +90,7 @@ export async function upgradeOld() {
 
 
 export async function migrateOld(
-  withBackup: boolean = true,
+  withBackup = true,
   db = loadAdminServices().db,
   storage = loadAdminServices().storage
 ) {

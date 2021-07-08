@@ -1,11 +1,11 @@
 {
   "migrations": [
     {
-      "version": "11.0.0-0",
-      "description": "Updates the Angular CDK to v11",
-      "factory": "./ng-update/index#updateToV11",
-      "package": "@angular/cdk",
-      "name": "migration-v11"
+      "version": "12.0.0-0",
+      "description": "Updates Angular Material to v12",
+      "factory": "./ng-update/index#updateToV12",
+      "package": "@angular/material",
+      "name": "migration-v12"
     }
   ]
 }

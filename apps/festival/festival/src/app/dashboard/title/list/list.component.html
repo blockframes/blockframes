@@ -1,6 +1,6 @@
 <ng-container *ngIf="(titles$ | async) as titles; else loading">
   <ng-container *ngIf="titles.length; else empty">
-    <header fxLayout="row" fxLayoutAlign="space-between center">
+    <header class="import-header"  fxLayout="row" fxLayoutAlign="space-between center">
       <h1>My Titles</h1>
       <div fxLayoutGap="24px">
         <a mat-stroked-button color="primary" routerLink="../import">
@@ -13,14 +13,23 @@
       </div>
     </header>
 
+    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.all }})</span></button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.draft }})</span></button>
+      <button mat-tab-link (click)="applyFilter('accepted')" [active]="(filter$ | async) === 'accepted'">Published <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.accepted }})</span></button>
+      <button mat-tab-link (click)="applyFilter('archived')" [active]="(filter$ | async) === 'archived'">Archived <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
+    </header>
+
     <mat-card>
-      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
+      <bf-table-filter [source]="titles | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
         <ng-template colRef="view" let-movie="item">{{ movie.id | getViews | async }}</ng-template>
         <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
-        <ng-template colRef="app.festival.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="app.festival.status" let-status>
+          <tag-component [label]="(status | toLabel: 'storeStatus')"></tag-component>
+        </ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
@@ -38,11 +47,11 @@
     <dashboard-no-title></dashboard-no-title>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
-        <img asset="add_title.webp" alt="Add title image">
+        <img asset="add_title.svg" alt="Add title image">
         <a routerLink="lobby" mat-button color="primary">Add one title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
-        <img asset="add_files.webp" alt="Upload files image">
+        <img asset="add_files.svg" alt="Upload files image">
         <a routerLink="../import" mat-button color="primary">Import titles in bulk</a>
       </mat-card>
     </article>

@@ -2,7 +2,7 @@ import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Event } from '../../+state/event.model';
+import { Event, isMeeting } from '../../+state/event.model';
 import { EventForm } from '../event.form';
 
 @Component({
@@ -28,7 +28,7 @@ export class EventCreateComponent {
   async createAndRedirect() {
     const event = this.form.value;
     event.ownerOrgId = this.orgQuery.getActiveId();
-    if (event.type === 'meeting') {
+    if (isMeeting(event)) {
       event.meta.organizerUid = (await this.authService.user).uid;
     }
     if (event.allDay) {

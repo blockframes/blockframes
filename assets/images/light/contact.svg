@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Illustrations/100px/contact" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(13.000000, 25.000000)">
+            <polygon id="Path" fill="#8DA4FA" points="4.07752044 -1.75672103e-15 69.9611308 -4.28560608e-14 37 31.505527"></polygon>
+            <rect id="Rectangle" stroke="#000000" stroke-width="2" x="0" y="0" width="74" height="50" rx="3"></rect>
+            <polyline id="Path-14" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="1.29336933 1.28701013 37 35.505527 72.681095 1.28701013"></polyline>
+            <line x1="1.29336933" y1="49.1602691" x2="26.1620263" y2="25.2212287" id="Path-15" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+            <line x1="72.681095" y1="49.1602691" x2="47.654508" y2="25.2212287" id="Path-16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+        </g>
+    </g>
+</svg>

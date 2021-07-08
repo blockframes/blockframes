@@ -1,11 +1,21 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, Subscription, timer } from 'rxjs';
-import { ThemeService } from '@blockframes/ui/theme';
+
 import { map } from 'rxjs/operators';
-import { getAssetPath } from '../../+state/media.model';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+
+import { ThemeService } from '@blockframes/ui/theme';
+
 import { ImageParameters } from './imgix-helpers';
+import { getAssetPath } from '../../+state/media.model';
 import { MediaService } from '../../+state/media.service';
 import { StorageFile } from '../../+state/media.firestore';
+
+
+const aspectRatios = {
+  poster: { w: 3, h: 4 },
+  banner: { w: 16, h: 9 },
+  avatar: { w: 1, h: 1 },
+};
 
 @Directive({
   selector: 'img[ref][asset], img[asset]'
@@ -25,6 +35,7 @@ export class ImageDirective implements OnInit, OnDestroy {
 
   @HostBinding('srcset') srcset: string;
   @HostBinding('src') src: string;
+  @HostBinding('style.aspect-ratio') aspectRatio: string;
   @HostBinding('alt') alt: string;
   @HostBinding('loading') _loading: 'lazy' | 'eager' = 'lazy';
 
@@ -59,15 +70,16 @@ export class ImageDirective implements OnInit, OnDestroy {
    */
   @Input() type: 'images' | 'logo' = 'images';
 
-  @Input() set ratio(ar: string) {
-    this.parameters.next({ ...this.parameters.getValue(), ar });
+  @Input() set ratio(ratio: 'poster' | 'banner' | 'avatar') {
+    const { w, h } = aspectRatios[ratio];
+    this.aspectRatio = `auto ${w}/${h}`;
   }
 
   /**
    * The placeholder asset to display.
    * Just specify the file name, and the component
    * will compute the image path depending on the theme, image format, etc...
-   * @example asset="empty_poster.webp"
+   * @example asset="empty_poster.svg"
    */
   @Input() set asset(asset: string) {
     this.asset$.next(asset);
@@ -106,7 +118,7 @@ export class ImageDirective implements OnInit, OnDestroy {
     // apply latest changes
     this.sub = combineLatest(obs$).subscribe(async ([asset, params, theme, ref]) => {
 
-      if (!!ref) {
+      if (ref) {
         // ref
         this.srcset = await this.mediaService.generateImageSrcset(ref, params);
         this.src = this.srcset.split(' ')[0];

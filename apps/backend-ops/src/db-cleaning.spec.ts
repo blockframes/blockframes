@@ -28,7 +28,7 @@ describe('DB cleaning script', () => {
     initFunctionsTestMock();
     const adminServices = loadAdminServices();
     db = adminServices.db;
-    adminAuth = new AdminAuthMocked() as any;
+    adminAuth = new AdminAuthMocked();
   });
 
   afterEach(async () => {
@@ -807,12 +807,12 @@ describe('DB cleaning script', () => {
 
 });
 
-function isMovieClean(d: any) {
+function isMovieClean(d: FirebaseFirestore.DocumentSnapshot) {
   return d.data().distributionRights === undefined;
 }
 
 function isOrgClean(
-  doc: any,
+  doc: FirebaseFirestore.DocumentSnapshot,
   existingUserIds: string[],
   existingMovies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
@@ -847,7 +847,7 @@ function isOrgClean(
   return true;
 }
 
-function isNotificationClean(doc: any) {
+function isNotificationClean(doc: FirebaseFirestore.DocumentSnapshot) {
   const d = doc.data();
   if (d.user && (!d.user.avatar || !d.user.watermark)) {
     return false;
@@ -865,7 +865,7 @@ function isNotificationClean(doc: any) {
   return true;
 }
 
-function isInvitationClean(doc: any) {
+function isInvitationClean(doc: FirebaseFirestore.DocumentSnapshot) {
   const d = doc.data();
   if (d.fromOrg?.id && (!d.fromOrg.logo)) {
     return false;
@@ -886,7 +886,7 @@ function isInvitationClean(doc: any) {
   return true;
 }
 
-function isUserClean(doc: any, organizationIds: string[]) {
+function isUserClean(doc: FirebaseFirestore.DocumentSnapshot, organizationIds: string[]) {
   const d = doc.data();
   if (d.surname !== undefined) { // old model
     return false;

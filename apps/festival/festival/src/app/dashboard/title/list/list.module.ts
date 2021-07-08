@@ -8,13 +8,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Component
 import { ListComponent } from './list.component';
 
-// Blocfkrames
+// Blockframes
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -36,6 +38,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ImageModule,
     AnalyticsPipeModule,
     NoTitleModule,
+    FilterByModule,
+    TagModule,
     // Material
     MatButtonModule,
     MatTabsModule,

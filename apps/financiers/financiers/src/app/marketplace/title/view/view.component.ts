@@ -1,16 +1,16 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CollectionReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { OrganizationService, OrganizationQuery, orgName as getOrgName } from '@blockframes/organization/+state';
+import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
+import { templateIds } from '@blockframes/utils/emails/ids';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -18,6 +18,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 
 interface EmailData {
   subject: string;
@@ -33,8 +34,8 @@ interface EmailData {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieViewComponent implements OnInit {
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
-  private dialogRef: MatDialogRef<any, any>;
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
+  private dialogRef: MatDialogRef<unknown, unknown>;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public campaign$: Observable<Campaign>;
@@ -97,8 +98,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
   openForm(orgs: Organization[]) {
     const form = new FormGroup({
       subject: new FormControl('', Validators.required),
-      from: new FormControl(),
-      to: new FormControl(),
+      scope: new FormGroup({
+        from: new FormControl(),
+        to: new FormControl()
+      }),
       message: new FormControl(),
     });
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
@@ -107,20 +110,24 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
+
     this.dialogRef.close();
-    const templateId = 'd-e902521de8684c57bbfa633bad88567a';
-    const { firstName, lastName, email } = this.authQuery.user;
-    const orgName = getOrgName(this.orgQuery.getActive());
+    const templateId = templateIds.financiers.invest;
+    const userSubject = getUserEmailData(this.authQuery.user);
+
+    const orgUserSubject = getOrgEmailData(this.orgQuery.getActive());
     const promises: Promise<ErrorResultResponse>[] = [];
 
     for (const org of orgs) {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
+        const toUser = getUserEmailData(user);
         const data = {
           ...emailData,
           currency: getCurrencySymbol(this.currency, 'wide'),
-          investor: { firstName, lastName, email, orgName },
-          user: { firstName: user.firstName },
+          userSubject,
+          user: toUser,
+          org: orgUserSubject,
           title,
         };
 

@@ -13,16 +13,16 @@ import {
 // Blockframes
 import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
 
-@Directive({ selector: 'list-page-app-bar' })
+@Directive({ selector: '[listPageAppBar], list-page-app-bar' })
 export class PageAppBarSearchDirective { }
 
-@Directive({ selector: 'list-page-title' })
+@Directive({ selector: '[listPageTitle], list-page-title' })
 export class PageTitleDirective { }
 
-@Directive({ selector: 'list-page-description' })
+@Directive({ selector: '[listPageDescription], list-page-description' })
 export class PageDescriptionTemplateDirective { }
 
-@Directive({ selector: 'list-page-search' })
+@Directive({ selector: '[listPageSearch], list-page-search' })
 export class PageSearchDirective { }
 
 @Directive({ selector: '[listPageCard]' })
@@ -57,14 +57,14 @@ export class ListPageComponent implements AfterContentInit {
   constructor(private location: Location) { }
 
   ngAfterContentInit() {
-    if (!!this.cardTemplate && !!this.listItemTemplate) {
+    if (this.cardTemplate && this.listItemTemplate) {
       this.canToggle = true;
-    } else if (!!this.listItemTemplate) {
+    } else if (this.listItemTemplate) {
       this.listView = true;
     }
   }
 
-  trackById(entity: Record<string, any>) {
+  trackById(entity: { id: string }) {
     return entity.id;
   }
 
@@ -80,7 +80,7 @@ export class ListPageComponent implements AfterContentInit {
       <ng-content></ng-content>
       <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
       <button mat-stroked-button color="primary" (click)="loadMore.emit()">
-        LOAD MORE
+        Load More
       </button>
     </ng-container>
   `,

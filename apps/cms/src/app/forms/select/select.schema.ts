@@ -4,7 +4,7 @@ import { MatFormFieldSchema } from '../schema';
 export type Options<T> = Record<string, T> | T[];
 
 
-export interface MatSelectSchema<T> extends MatFormFieldSchema<T>, FormControlSchema<T> {
+export interface MatSelectSchema<T> extends MatFormFieldSchema, FormControlSchema<T> {
   options?: Options<T>;
   multiple: false;
 }
@@ -17,7 +17,7 @@ export function matSelect<T>(schema: Partial<MatSelectSchema<T>>): MatSelectSche
   };
 }
 
-export interface MatMultiSelectSchema<T> extends MatFormFieldSchema<T>, FormArraySchema<T> {
+export interface MatMultiSelectSchema<T> extends MatFormFieldSchema, FormArraySchema<T> {
   options?: Options<T>;
   multiple: true;
 }

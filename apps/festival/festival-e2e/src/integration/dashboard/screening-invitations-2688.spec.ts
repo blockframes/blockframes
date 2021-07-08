@@ -118,6 +118,6 @@ describe('Organiser invites other users to private screening', () => {
     cy.log(`Should not access {${SCREENING_URL}}`);
     cy.visit(SCREENING_URL);
     // Assert the user is redirect to event page
-    const p6 = new FestivalMarketplaceEventPage();
+    new FestivalMarketplaceEventPage();
   });
 });

@@ -1,4 +1,5 @@
 
+import { MovieNote, MovieVideo } from '@blockframes/movie/+state/movie.firestore';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 /**
@@ -28,3 +29,5 @@ export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile 
 export interface StorageVideo extends StorageFile {
   jwPlayerId: string;
 }
+
+export type MediaOutput = StorageFile[] | MovieVideo[] | MovieNote[] | string | MovieVideo;

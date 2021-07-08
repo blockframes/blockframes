@@ -2,12 +2,41 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
-
   <title-dashboard-shell [routes]="navLinks">
-    <ng-container *ngIf="movie.app.financiers.status === 'accepted'">
-      <span>{{ percentage }}% funded</span>
-      <button mat-stroked-button color="primary" (click)="openDialog()">Update funding status</button>
-    </ng-container>
+    <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+      <button *ngIf="movie.app.financiers.status === 'accepted'" mat-button color="primary" (click)="openDialog()">
+        <mat-icon svgIcon="update" color="primary"></mat-icon>
+        Update Funding Status
+      </button>
+      <a *ngIf="movie.app.financiers.status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" mat-button color="primary" fragment="submit">
+        <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
+      </a>
+      <a *ngIf="movie.app.financiers.status === 'submitted'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-button color="primary">
+        <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+      </a>
+      <actions-dashboard-shell fxFlex #actions="actionsDashboardShell">
+        <movie-action-menu>
+          <a *ngIf="movie.app.financiers.status !== 'submitted'" mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+            <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
+          </a>
+          <button mat-menu-item (click)="actions.updateStatus('archived', 'Title archived.')">
+            <mat-icon svgIcon="archive"></mat-icon><span>Archive Title</span>
+          </button>
+          <button *ngIf="movie.app.financiers.status === 'submitted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title back to Draft.')">
+            <mat-icon svgIcon="drafts"></mat-icon><span>Switch back to Draft</span>
+          </button>
+          <button *ngIf="movie.app.financiers.status === 'accepted'" mat-menu-item
+            (click)="actions.updateStatus('draft', 'Title removed from Marketplace.')">
+            <mat-icon svgIcon="cancel"></mat-icon><span>Remove from Marketplace</span>
+          </button>
+          <a mat-menu-item *ngIf="(org$ | async | canAccess: 'marketplace': 'financiers')"  [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
+            <mat-icon svgIcon="visibility"></mat-icon>
+            <span>Marketplace Preview</span>
+          </a>
+        </movie-action-menu>
+      </actions-dashboard-shell>
+    </movie-cta>
   </title-dashboard-shell>
 
   <ng-template #dialogTemplate let-data>

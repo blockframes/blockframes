@@ -10,6 +10,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Intercom } from 'ng-intercom';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 
 const columns = {
   'title.international': 'Title',
@@ -33,6 +34,7 @@ export class ListComponent implements OnInit {
   titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  titleCount$: Observable<Record<string, number>>;
 
   constructor(
     private service: MovieService,
@@ -55,6 +57,13 @@ export class ListComponent implements OnInit {
           this.dynTitle.setPageTitle('My titles', 'Empty');
       })
     );
+
+    this.titleCount$ = this.titles$.pipe(map(m => ({
+      all: m.length,
+      draft: m.filter(m => m.app.festival.status === 'draft').length,
+      accepted: m.filter(m => m.app.festival.status === 'accepted').length,
+      archived: m.filter(m => m.app.festival.status === 'archived').length,
+    })));
   }
 
   /** Navigate to tunnel if status is draft, else go to page */
@@ -64,6 +73,26 @@ export class ListComponent implements OnInit {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  /** Dynamic filter of movies for each tab. */
+  applyFilter(filter?: StoreStatus) {
+    this.filter.setValue(filter);
+  }
+
+  resetFilter() {
+    this.filter.reset();
+  }
+
+  /* index paramater is unused because it is a default paramater from the filter javascript function */
+  filterByMovie(movie: Movie, index: number, options): boolean {
+    if (options.value) {
+      return options?.exclude !== options.value ?
+        movie.app.festival.status === options.value && movie.app.festival.status !== options.exclude :
+        movie.app.festival.status === options.value;
+    } else {
+      return options.exclude ? movie.app.festival.status !== options.exclude : true;
+    }
   }
 
 }

@@ -6,16 +6,16 @@ import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
-import { Subscription } from 'rxjs';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
-import { datastudio } from '@env'
+import { Observable, Subscription } from 'rxjs';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
   selector: 'admin-user',
@@ -26,6 +26,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class UserComponent implements OnInit {
   public userId = '';
   public user: User;
+  public user$: Observable<User>
   public userOrg: Organization;
   public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
@@ -36,7 +37,7 @@ export class UserComponent implements OnInit {
   public dashboardURL: SafeResourceUrl
 
   public invitationsColumns = {
-    date: 'Date',
+    date: 'Date Created',
     mode: 'Mode',
     type: 'Type',
     'fromOrg.denomination.full': 'From Organization',
@@ -58,13 +59,14 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer
+    private functions: AngularFireFunctions
   ) { }
 
   async ngOnInit() {
     this.route.params.subscribe(async params => {
       this.userId = params.userId;
       this.user = await this.userService.getUser(this.userId);
+      this.user$ = this.userService.valueChanges(this.userId);
       if (this.user.orgId) {
         this.originalOrgValue = this.user.orgId;
         this.userOrg = await this.organizationService.getValue(this.user.orgId);
@@ -73,12 +75,6 @@ export class UserComponent implements OnInit {
 
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
-
-      if (!!datastudio.user) {
-        const prms = JSON.stringify({ "ds2.user_id": this.userId });
-        const encodedPrms = encodeURIComponent(prms);
-        this.dashboardURL = this.sanitizer.bypassSecurityTrustResourceUrl(`https://datastudio.google.com/embed/reporting/${datastudio.user}?params=${encodedPrms}`);
-      }
 
       this.cdRef.markForCheck();
     });
@@ -109,7 +105,7 @@ export class UserComponent implements OnInit {
       await new Promise((resolve) => {
         subscription = this.userService.valueChanges(this.userId).subscribe((res) => {
           if (!!res && res.orgId === '') {
-            resolve();
+            resolve(undefined);
           }
         })
       })
@@ -179,13 +175,13 @@ export class UserComponent implements OnInit {
     }
 
     const simulation = await this.simulateDeletion(this.user);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this user from Archipel, are you sure?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'This user will be deleted from the application.',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.userService.remove(this.userId);
@@ -196,12 +192,19 @@ export class UserComponent implements OnInit {
     });
   }
 
+  async verifyEmail() {
+    this.snackBar.open('Verifying email...', 'close', { duration: 2000 });
+    const f = this.functions.httpsCallable('verifyEmail');
+    await f({ uid: this.userId }).toPromise(); 
+    this.snackBar.open('Email verified', 'close', { duration: 2000 });
+  }
+
   /** Simulate how many document will be deleted if we delete this user */
   private async simulateDeletion(user: User) {
     const output: string[] = [];
 
     // organization update
-    if (!!user.orgId) {
+    if (user.orgId) {
       output.push('An organization will be updating without this user.');
     }
 

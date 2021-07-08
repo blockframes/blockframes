@@ -1,5 +1,6 @@
 :host {
   display: flex;
+  margin-right: 24px;
 
   aside {
     width: 200px;
@@ -15,13 +16,16 @@
   section {
     flex: 1;
     padding: 0;
-    height: fit-content;
     margin-bottom: 32px;
 
     header {
       display: flex;
       align-items: start;
       margin: 8px;
+
+      button.mat-icon-button {
+        margin-right: 8px;
+      }
 
       div {
         span {
@@ -55,4 +59,8 @@ image-uploader {
 
 .save {
   margin-bottom: 12px;
+}
+
+file-list-uploader {
+  display: block;
 }

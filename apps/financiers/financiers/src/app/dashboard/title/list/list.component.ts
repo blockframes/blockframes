@@ -11,7 +11,7 @@ import { Intercom } from 'ng-intercom';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-type Filters = 'all' | 'draft' | 'ongoing' | 'achieved';
+type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
 const columns = {
   title: 'Title',
@@ -23,10 +23,11 @@ const columns = {
 
 function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   switch (filter) {
-    case 'all': return movies;
+    case 'all': return movies.filter(movie => movie.app.financiers.status !== 'archived');
     case 'draft': return movies.filter(movie => movie.app.financiers.status === 'draft');
     case 'ongoing': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap > movie.campaign?.received);
     case 'achieved': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap === movie.campaign?.received);
+    case 'archived': return movies.filter(movie => movie.app.financiers.status === 'archived');
   }
 }
 
@@ -42,6 +43,7 @@ export class ListComponent implements OnInit {
   columns = columns;
   initialColumns = ['title', 'productionStatus', 'campaign.cap', 'campaign.received', 'campaignStarted'];
   titles$: Observable<MovieCampaign[]>;
+  titleCount$: Observable<Record<string, number>>;
   filter = new FormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
@@ -63,10 +65,23 @@ export class ListComponent implements OnInit {
       map(movies => movies.filter(movie => movie.app.financiers.access)),
       switchMap(movies => this.filter$.pipe(map(filter => filterMovieCampaign(movies, filter)))),
       tap(movies => {
-        !!movies.length ?
+        movies.length ?
           this.dynTitle.setPageTitle('My titles') :
           this.dynTitle.setPageTitle('My titles', 'Empty');
       })
+    );
+
+    this.titleCount$ = this.orgQuery.selectActive().pipe(
+      switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
+      switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
+      map(movies => movies.filter(movie => movie.app.financiers.access)),
+      map(m => ({
+        all: m.length,
+        draft: m.filter(m => m.app.financiers.status === 'draft').length,
+        ongoing: m.filter(m => m.app.financiers.status === 'submitted' && m.campaign?.cap > m.campaign?.received).length,
+        achieved: m.filter(m => m.app.financiers.status === 'accepted' && m.campaign?.cap === m.campaign?.received).length,
+        archived: m.filter(m => m.app.financiers.status === 'archived').length,
+      }))
     );
   }
 

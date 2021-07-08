@@ -15,7 +15,7 @@
 <!-- LANGUAGES -->
 <article>
   <h6>
-    Available Version{ versionLength, plural, =1 {} other {s}}
+    Available Version{ versionLength, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="available-versions">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
@@ -25,7 +25,7 @@
       <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
       <missing-control [control]="language.value" [link]="link">
         <ng-template let-version>
-          <span>{{ version | versionPipe }}</span>
+          <span>{{ version | versionPipe | join }}</span>
         </ng-template>
       </missing-control>
     </li>

@@ -1,4 +1,3 @@
-﻿import 'jest-preset-angular';
-import 'jest';
+﻿import 'jest';
 
 jest.setTimeout(10000);

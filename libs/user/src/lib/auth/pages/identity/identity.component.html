@@ -5,8 +5,11 @@
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>Create your account</h1>
     <p>Please fill in the form below to join the {{ appName }} platform</p>
-    <p *ngIf="!(user$ | async)" class="mat-body-2 text-primary">Already have an account? <a
-        routerLink="/auth/connexion">Log in here</a></p>
+    <ng-container *ngIf="(user$ | async) === null">
+      <p class="mat-body-2 text-primary">
+        Already have an account? <a routerLink="/auth/connexion">Log in here</a>
+      </p>
+    </ng-container>
     <mat-card fxLayout="column" fxLayoutAlign="center center">
       <form [formGroup]="form" fxLayout="column">
 
@@ -40,10 +43,10 @@
 
         <ng-container *ngIf="useAlgolia else orgInput">
           <algolia-autocomplete [indexGroup]="indexGroup" keyToDisplay="name" (selectionChange)="setOrg($event)"
-            required>
+            required [control]="orgControl">
             <ng-template optionRef let-result>
               <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
-                <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.webp"
+                <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.svg"
                   type="logo" alt="Organization Logo">
                 <span>{{ result.name }}</span>
               </div>
@@ -80,18 +83,14 @@
 
         <!-- PASSWORD FIELDS -->
         <ng-container *ngIf="form.get('generatedPassword').enabled">
-          <mat-form-field appearance="outline">
-            <mat-label>Invitation Pass</mat-label>
-            <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
+          <div fxLayout fxLayoutGap="16px" fxLayoutAlign="start">
+            <mat-form-field appearance="outline">
+              <mat-label>Invitation Pass</mat-label>
+              <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
               test-id="invitation-code" required />
-            <mat-hint>You'll find your Invitation Pass in your invitation email.</mat-hint>
-          </mat-form-field>
-          <div class="pass-info">
-            <mat-icon svgIcon="info"></mat-icon>
-            <p class="mat-caption">
-              Can't find it?
-              <button (click)="openIntercom()">Contact us</button>
-            </p>
+              <mat-hint>You'll find your Invitation Pass in your invitation email.</mat-hint>
+            </mat-form-field>
+            <button mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
           </div>
         </ng-container>
 
@@ -99,21 +98,19 @@
 
         <!-- TERMS OF USE & PRIVACY POLICY -->
 
-        <div class="privacy" fxLayout="column" fxLayoutAlign="start">
+        <div class="privacy" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
           <auth-accept-conditions [control]="form.get('termsOfUse')">
-            <span conditionText>I hereby accept {{ appName }}&nbsp;</span>
-            <span conditionLink>Terms and Conditions</span>
-            <ng-template authConditions>
-              <auth-terms-conditions></auth-terms-conditions>
-            </ng-template>
+            <span conditionText>
+              I hereby accept {{ appName }}&nbsp;
+              <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>
+            </span>
           </auth-accept-conditions>
           <auth-accept-conditions [control]="form.get('privacyPolicy')">
-            <span conditionText>I hereby accept the Processing of my Personal Data and declare to know&nbsp;</span>
-            <span conditionLink>the Conditions of such Processing and my rights under GDPR
-              Regulation</span>
-            <ng-template authConditions>
-              <auth-privacy-policy></auth-privacy-policy>
-            </ng-template>
+            <span conditionText>
+              I hereby accept the Processing of my Personal Data and declare to know&nbsp;
+              <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR
+                Regulation</a>
+              </span>
           </auth-accept-conditions>
         </div>
       </form>

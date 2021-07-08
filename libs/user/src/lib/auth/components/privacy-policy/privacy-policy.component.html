@@ -1,9 +1,9 @@
 <ng-container [ngSwitch]="appName">
   <ng-container *ngSwitchCase="'festival'">
     <header>
-      <div class="go-back" (click)="goBack()">
+      <button mat-icon-button class="go-back" *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
-      </div>
+      </button>
       <h1>DATA PRIVACY POLICY</h1>
     </header>
 
@@ -408,7 +408,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'catalog'">
     <header>
-      <a mat-icon-button (click)="goBack()">
+      <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>DATA PRIVACY POLICY</h1>
@@ -420,9 +420,9 @@
           <article>
             <p>
               ARCHIPEL CONTENT (edited by the company CASCADE 8, whose registered office is 4 rue de la République 69001
-              Lyon, France, registered under the Commercial Registry of Lyon under number 847 756 764) is committed to
+              Lyon, France, registered under the Commercial Registry of Lyon under number 847 756 764) is committed to
               safeguarding your privacy. Contact us at if you have any questions or problems regarding the use of your
-              Personal Data and we will gladly assist you.
+              Personal Data and we will gladly assist you.
               By using this site or/and our services (hereinafter designated as “Site” and “Service”), you consent to
               the
               Processing of your Personal Data as described in this Privacy Policy.
@@ -448,11 +448,11 @@
           <article>
             <h3>1. Definitions</h3>
             <p>
-              Personal Data – any information relating to an identified or identifiable natural person.
-              Processing – any operation or set of operations which is performed on Personal Data or on sets of Personal
+              Personal Data – any information relating to an identified or identifiable natural person.
+              Processing – any operation or set of operations which is performed on Personal Data or on sets of Personal
               Data.
-              Data subject – a natural person whose Personal Data is being Processed.
-              We/us (either capitalized or not) – CASCADE 8.
+              Data subject – a natural person whose Personal Data is being Processed.
+              We/us (either capitalized or not) – CASCADE 8.
             </p>
           </article>
           <article>
@@ -476,34 +476,34 @@
             <h3>3. Data Subject’s rights</h3>
             <p>
               The Data Subject has the following rights:
-              1. Right to information – meaning you have to right to know whether your Personal Data is being processed;
+              1. Right to information – meaning you have to right to know whether your Personal Data is being processed;
               what data is gathered, from where it is obtained and why and by whom it is processed.
-              2. Right to access – meaning you have the right to access the data collected from/about you. This includes
+              2. Right to access – meaning you have the right to access the data collected from/about you. This includes
               your right to request and obtain a copy of your Personal Data gathered.
-              3. Right to rectification – meaning you have the right to request rectification or erasure of your
+              3. Right to rectification – meaning you have the right to request rectification or erasure of your
               Personal
               Data that is inaccurate or incomplete.
               4. Right to erasure – meaning in certain circumstances you can request for your Personal Data to be erased
               from our records.
-              5. Right to restrict processing – meaning where certain conditions apply, you have the right to restrict
+              5. Right to restrict processing – meaning where certain conditions apply, you have the right to restrict
               the
               Processing of your Personal Data.
-              6. Right to object to processing – meaning in certain cases you have the right to object to Processing of
+              6. Right to object to processing – meaning in certain cases you have the right to object to Processing of
               your Personal Data, for example in the case of direct marketing.
-              7. Right to object to automated Processing – meaning you have the right to object to automated Processing,
+              7. Right to object to automated Processing – meaning you have the right to object to automated Processing,
               including profiling; and not to be subject to a decision based solely on automated Processing. This right
               you can exercise whenever there is an outcome of the profiling that produces legal effects concerning or
               significantly affecting you.
-              8. Right to data portability – you have the right to obtain your Personal Data in a machine-readable
+              8. Right to data portability – you have the right to obtain your Personal Data in a machine-readable
               format
               or if it is feasible, as a direct transfer from one processor to another.
-              9. Right to lodge a complaint – in the event that we refuse your request under the Rights of Access, we
+              9. Right to lodge a complaint – in the event that we refuse your request under the Rights of Access, we
               will
               provide you with a reason as to why. If you are not satisfied with the way your request has been handled,
               please contact us.
-              10. Right for the help of supervisory authority – meaning you have the right for the help of a supervisory
+              10. Right for the help of supervisory authority – meaning you have the right for the help of a supervisory
               authority and the right for other legal remedies such as claiming damages.
-              11. Right to withdraw consent – you have the right withdraw any given consent for Processing of your
+              11. Right to withdraw consent – you have the right withdraw any given consent for Processing of your
               Personal Data.
             </p>
           </article>
@@ -523,7 +523,7 @@
               We gather information from our trusted partners with confirmation that they have legal grounds to share
               that
               information with us. This is either information you have provided them directly with or that they have
-              gathered about you on other legal grounds. See the list of our partners here.
+              gathered about you on other legal grounds. See the list of our partners here.
             </p>
           </article>
           <article>
@@ -568,7 +568,7 @@
             <p>
               We do not share your Personal Data with strangers. Personal Data about you is in some cases provided to
               other users of our Service which would like to contact you in connection with the Service, our trusted
-              partners in order to either make providing the Service to you possible or to enhance your user experience.
+              partners in order to either make providing the Service to you possible or to enhance your user experience.
               We share your data with:
               Our partners:
 
@@ -585,7 +585,7 @@
               Google Analytics is a service provided by Google LLC.
               Personal Data collected: id, name, surname, email address, Ip address, browser, device, OS, pages visited,
               time spent visiting each page, click on page elements, cookies.
-              Place of processing: United States – Privacy Policy.
+              Place of processing: United States – Privacy Policy.
 
               Google Tag Manager (Google Ireland Limited)
               Google Tag Manager is a service provided by Google Ireland limited
@@ -606,23 +606,23 @@
               Yandex Metrica is a service provided by Yandex, Inc.
               Personal data collected: id, name, surname, email address, Ip address, browser, device, OS, pages visited,
               time spent visiting each page, click on page elements, cookies.
-              Place of processing: United States – Privacy Policy.
+              Place of processing: United States – Privacy Policy.
 
               Sendgrid (Twilio, Inc.)
               Sendgrid is a service provided by Twilio Inc.
               Personal Data collected: id, name, surname, email address.
-              Place of processing: United States – Privacy Policy.
+              Place of processing: United States – Privacy Policy.
 
               Algolia (Algolia, Inc.)
               Algolia is a service provided by Algolia Inc.
               Personal Data collected: id, name, surname, email address, avatar, function, phone number.
-              Place of processing: United States – Privacy Policy.
+              Place of processing: United States – Privacy Policy.
 
               JWPlayer (Longtail Ad Solutions, Inc.)
               JWPlayer is a service provided by Longtail Ad Solutions, Inc.
               Personal Data collected: id, name surname, browser, device, OS, bandwidth, video player loading, click on
               video player, video player viewing time.
-              Place of processing: United States – Privacy Policy.
+              Place of processing: United States – Privacy Policy.
 
               Sentry (Functional Software Inc.)
               Sentry is a service provided by Functional Software Inc.
@@ -647,7 +647,7 @@
           <article>
             <h3>7. How we secure your data</h3>
             <p>
-              We do our best to keep your Personal Data safe.  We use safe protocols for communication and transferring
+              We do our best to keep your Personal Data safe.  We use safe protocols for communication and transferring
               data (such as HTTPS). We use anonymizing and pseudonymizing where suitable. We monitor our systems for
               possible vulnerabilities and attacks.
               Even though we try our best we cannot guarantee the security of information. However, we promise to notify
@@ -703,7 +703,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'financiers'">
     <header>
-      <a mat-icon-button (click)="goBack()">
+      <a mat-icon-button  *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>DATA PRIVACY POLICY</h1>

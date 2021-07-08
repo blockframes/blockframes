@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Event } from '@blockframes/event/+state/event.model';
+import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Organization, OrganizationService, orgName, PublicOrganization } from '@blockframes/organization/+state';
@@ -14,6 +14,7 @@ import { displayName } from '@blockframes/utils/utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { format } from "date-fns";
+import { EventMeta } from '@blockframes/event/+state/event.firestore';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -49,7 +50,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
-          placeholderUrl: 'empty_organization.webp',
+          placeholderUrl: 'empty_organization.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'requestFromUserToJoinOrgDeclined':
@@ -57,7 +58,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'invitationToJoinOrgDeclined':
@@ -65,7 +66,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'orgMemberUpdated':
@@ -85,7 +86,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Members of your organization have been updated`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'movieSubmitted':
@@ -104,7 +105,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `A new movie was successfully submitted`,
           imgRef: this.getPoster(notification.docId),
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[this.app]}/c/o/dashboard/title/${notification.docId}`,
         };
       case 'movieAccepted':
@@ -123,29 +124,31 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `/c/o/dashboard/title/${notification.docId}/main`,
         };
-      case 'orgAppAccessChanged':
-        const msg = !!notification.appAccess
+      case 'orgAppAccessChanged': {
+        const msg = notification.appAccess
           ? `Your organization has now access to ${appName[notification.appAccess]}`
-          : 'Your organization\'s app access have changed.'
+          : 'Your organization\'s app access have changed.';
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: msg,
-          placeholderUrl: `empty_organization.webp`,
+          placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`
         }
+      }
       case 'eventIsAboutToStart':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+        this.getDocument<Event>(`events/${notification.docId}`).then((event: Event<EventMeta>) => {
           this.getDocument<PublicOrganization>(`orgs/${event.ownerOrgId}`).then(org => {
             this.update(notification.id, newNotification => {
+              const titleId = isScreening(event) ? event.meta.titleId : undefined;
               return {
                 ...newNotification,
-                imgRef: this.getPoster(event.meta.titleId),
+                imgRef: this.getPoster(titleId),
                 message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" is about to start.`
               };
             });
@@ -155,18 +158,19 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'oneDayReminder':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+        this.getDocument<Event>(`events/${notification.docId}`).then((event: Event<EventMeta>) => {
           this.getDocument<PublicOrganization>(`orgs/${event.ownerOrgId}`).then(org => {
             this.update(notification.id, newNotification => {
+              const titleId = isScreening(event) ? event.meta.titleId : undefined;
               return {
                 ...newNotification,
-                imgRef: this.getPoster(event.meta.titleId),
+                imgRef: this.getPoster(titleId),
                 message: `REMINDER - ${org.denomination.full}'s ${event.type} "${event.title}" will start tomorrow at ${format(toDate(event.start), 'h:mm a')}.`
               };
             });
@@ -176,7 +180,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `REMINDER - Your event "${notification.docId}" is tomorrow.`,
-          placeholderUrl: 'empty_poster.webp',
+          placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/c/o/marketplace/event/${notification.docId}`,
         };
       case 'invitationToAttendEventUpdated':
@@ -197,7 +201,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Someone has ${notification.invitation.status} your ${notification.invitation.mode} to attend an event.`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       case 'requestToAttendEventSent':
@@ -216,14 +220,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/${module}/event/${notification.docId}`
         };
       case 'offerCreatedConfirmation':
         return {
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
           message: `Your offer was successfully sent.`,
-          placeholderUrl: 'profil_user.webp'
+          placeholderUrl: 'profil_user.svg'
         }
       default:
         return {
@@ -236,7 +240,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     let subject = 'Unknown subject';
 
     // Adding user data to the notification of meeting events
-    if (!!event && event.type === 'meeting' && !!notification.organization) {
+    if (event && isMeeting(event) && notification.organization) {
       const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerUid}`);
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
@@ -254,7 +258,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     return subject;
   }
 
-  public getPoster(id: string) {
+  public getPoster(id?: string) {
     const movie = this.movieQuery.getEntity(id);
     return movie?.poster ?? createStorageFile({
       privacy: 'public',

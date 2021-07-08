@@ -38,9 +38,6 @@ section {
     &.mat-body-2 {
       margin-bottom: 24px;
     }
-    a {
-      font-weight: 600;
-    }
   }
 
   mat-card {
@@ -50,18 +47,17 @@ section {
       width: 100%;
     }
 
-    .email-input {
-      mat-icon {
-        margin-right: 8px;
-      }
-    }
-
     .privacy {
       text-align: start;
     }
 
     button {
-      margin-top: 40px;
+      &.mat-mini-fab {
+        margin-top: 16px;
+      }
+      &.mat-flat-button {
+        margin-top: 40px;
+      }
     }
   }
 }
@@ -72,7 +68,8 @@ section {
   align-items: center;
   margin-bottom: 8px;
   p {
-    margin: 0 6px;
+    margin: 0 8px;
+    // TODO #5770
     button {
       margin: 0;
       background: none;

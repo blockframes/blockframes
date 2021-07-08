@@ -1,6 +1,6 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
-import { unsubscribeGroupIds } from '../templates/ids';
+import { unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
@@ -30,7 +30,7 @@ const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId): Promise<any> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId) {
   const msg: MailDataRequired = {
     from,
     to,
@@ -43,7 +43,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
   return send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId): Promise<any> {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, app: App, groupId: number = criticalsEmailsGroupId) {
   const from: EmailJSON = getSendgridFrom(app);
   const { label } = getAppName(app);
   const appText = appDescription[app];
@@ -62,7 +62,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   return send(msg);
 }
 
-async function send(msg: MailDataRequired): Promise<any> {
+async function send(msg: MailDataRequired) {
   if (sendgridAPIKey === '') {
     throw new Error(emailErrorCodes.missingKey.code);
   }
@@ -145,7 +145,8 @@ export const sendMailWithTemplate = async (
  * @param templateId
  * @param uid
  */
-function isAllowedToUseTemplate(templateId: string, uid: string) {
+function isAllowedToUseTemplate( templateId: string, uid: string) {
+  templateId = uid; //! Fix linter error, delete this once updated.
   // @TODO #4085
   return true;
 }

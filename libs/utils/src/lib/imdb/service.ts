@@ -249,7 +249,7 @@ export class ImdbMovie {
       if (attr === "Year") {
         this._yearData = obj[attr];
         // check for emdash (ie: - or –) possibly comming from omdb
-        if (!obj[attr].match(/\d{4}[\-–](?:\d{4})?/)) {
+        if (!obj[attr].match(/\d{4}[-–](?:\d{4})?/)) {
           const val = parseInt(obj[attr], 10);
           if (isNaN(val)) {
             throw new TypeError("invalid year");

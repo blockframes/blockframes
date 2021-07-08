@@ -14,7 +14,7 @@
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
     [filterPredicate]="filterPredicate" showFilter [pageSize]="50" showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="avatar" let-avatar>
-      <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
+      <img class="avatar" [ref]="avatar" asset="empty_poster.svg">
     </ng-template>
     <ng-template colRef="org" let-org>
       <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
@@ -37,4 +37,5 @@
     </ng-template>
   </bf-table-filter>
 
+  <admin-dashboard dashboard="users"></admin-dashboard>
 </main>

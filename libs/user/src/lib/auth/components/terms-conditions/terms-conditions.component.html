@@ -1,9 +1,9 @@
 <ng-container [ngSwitch]="appName">
   <ng-container *ngSwitchCase="'festival'">
     <header>
-      <div class="go-back" (click)="goBack()">
+      <button mat-icon-button class="go-back" *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
-      </div>
+      </button>
       <h1>TERMS AND CONDITIONS OF USE OF ARCHIPEL MARKET</h1>
     </header>
 
@@ -441,7 +441,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'catalog'">
     <header>
-      <a mat-icon-button (click)="goBack()">
+      <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>TERMS and conditions of use OF ARCHIPEL CONTENT</h1>
@@ -456,7 +456,7 @@
               CASCADE 8,
               whose registered office is 4 rue de la République 69001 Lyon, France, registered under the Commercial
               Registry of Lyon
-              under number 847 756 764 (hereinafter referred to as “CASCADE 8”) and of all users of the ARCHIPEL CONTENT
+              under number 847 756 764 (hereinafter referred to as “CASCADE 8”) and of all users of the ARCHIPEL CONTENT
               service
               (hereinafter referred as the “Service”). User of the Service may be a duly organized company (hereinafter
               designated
@@ -670,7 +670,7 @@
               discover abuse or a breach of the commitments of the T&Cs by any User, You undertake to immediately
               notify
               CASCADE 8
-              by email at the following address: ybossenmeyer@cascade8.com.
+              by email at the following address: ybossenmeyer@cascade8.com.
             </p>
           </article>
 
@@ -852,7 +852,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'financiers'">
     <header>
-      <a mat-icon-button (click)="goBack()">
+      <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>TERMS AND CONDITIONS OF USE OF MEDIA FINANCIERS</h1>

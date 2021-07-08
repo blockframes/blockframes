@@ -15,6 +15,6 @@ export class ListComponent {
   timeFrames = ascTimeFrames;
 
   @Input() events: EventBase<Date>[];
-  @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
+  @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
 }

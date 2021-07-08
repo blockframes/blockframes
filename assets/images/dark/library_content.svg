@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="170px" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustrations/Dark/170px/library_content</title>
+    <defs>
+        <filter x="-110.7%" y="-124.5%" width="321.3%" height="349.0%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-240.0%" y="-24.0%" width="580.0%" height="148.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <filter x="-39.8%" y="-498.0%" width="179.7%" height="1096.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feGaussianBlur stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Illustrations/Dark/170px/library_content" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(35.000000, 39.000000)" fill="#8DA4FA">
+            <g id="Group-2" transform="translate(0.000000, 2.409639)">
+                <polygon id="Triangle" filter="url(#filter-1)" transform="translate(66.469880, 65.457831) rotate(90.000000) translate(-66.469880, -65.457831) " points="66.4698795 60.6385542 71.8915663 70.2771084 61.0481928 70.2771084"></polygon>
+                <rect id="Rectangle" filter="url(#filter-2)" x="21.686747" y="0" width="5" height="50"></rect>
+                <rect id="Rectangle" filter="url(#filter-3)" x="-4.26325641e-13" y="86.746988" width="30.1204819" height="2.40963855"></rect>
+            </g>
+            <g id="Group-2" transform="translate(0.000000, 2.409639)">
+                <polygon id="Triangle" transform="translate(66.469880, 65.457831) rotate(90.000000) translate(-66.469880, -65.457831) " points="66.4698795 60.6385542 71.8915663 70.2771084 61.0481928 70.2771084"></polygon>
+                <rect id="Rectangle" x="21.686747" y="0" width="5" height="50"></rect>
+                <rect id="Rectangle" x="-4.26325641e-13" y="86.746988" width="30.1204819" height="2.40963855"></rect>
+            </g>
+        </g>
+        <polyline id="Path-6" stroke="#414D86" stroke-width="2" fill="#6F7CBD" stroke-linecap="round" stroke-linejoin="round" points="61.4566811 89.6846664 61.4566811 40.1927503 94.5623177 40.1927503 109.594545 54.8713129 109.594545 90.776888"></polyline>
+        <polygon id="Path-7" stroke="#414D86" stroke-width="2" fill="#121424" stroke-linecap="round" stroke-linejoin="round" points="94.5623177 40.1927503 94.5623177 55.209416 109.594545 55.209416"></polygon>
+        <line x1="72" y1="55" x2="86" y2="55" id="Line" stroke="#414D86" stroke-width="2" stroke-linecap="round"></line>
+        <polyline id="Path-8" stroke="#414D86" stroke-width="2" fill="#121424" stroke-linecap="round" stroke-linejoin="round" points="72.3290483 89.6846664 72.3290483 75.3966737 133.927755 75.3966737 133.927755 122.533752 85.4819277 122.533752"></polyline>
+        <line x1="72" y1="66" x2="98" y2="66" id="Line-Copy" stroke="#414D86" stroke-width="2" stroke-linecap="round"></line>
+        <line x1="73" y1="85" x2="134" y2="85" id="Line-Copy-2" stroke="#414D86" stroke-width="2" stroke-linecap="round"></line>
+        <polygon id="Path-9" stroke="#414D86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="39.7748117 90.776888 85.4819277 90.776888 85.4819277 128.156627 39.7748117 128.156627"></polygon>
+        <circle id="Oval" stroke="#414D86" stroke-width="2" cx="54" cy="103" r="4"></circle>
+        <polyline id="Path-10" stroke="#414D86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="40.2398979 124.028501 50.4216867 113.797254 56.1134795 119.34569 71.9179052 103.307816 85 116.516481"></polyline>
+        <polygon id="Path-11" stroke="#414D86" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="98.9256312 97.7889555 98.9256312 110.449789 109.594545 104.109837"></polygon>
+    </g>
+</svg>

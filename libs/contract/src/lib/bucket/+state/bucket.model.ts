@@ -1,5 +1,6 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { Mandate } from '@blockframes/contract/contract/+state';
+import { Term } from '@blockframes/contract/term/+state/term.model';
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
@@ -68,7 +69,7 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   return {
     titleId: '',
     orgId: '',
-    price: 0,
+    price: null ,
     parentTermId: '',
     specificity: '',
     ...params,
@@ -76,12 +77,11 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   }
 }
 
-
-export function toBucketContract(contract: Mandate, avails: AvailsFilter): BucketContract {
+export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter): BucketContract {
   return createBucketContract({
     titleId: contract.titleId,
     orgId: contract.sellerId,
-    parentTermId: contract.parentTermId,
+    parentTermId: term.id,
     terms: [toBucketTerm(avails)]
   });
 }

@@ -71,7 +71,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       let newOrg = true;
       if (spreadSheetRow[SpreadSheetOrganization.email]) {
         const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.email] as string));
-        if (!!existingOrg) {
+        if (existingOrg) {
           org = existingOrg;
           newOrg = false;
         }
@@ -86,7 +86,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       let superAdmin = createUser();
       if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
         const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.superAdminEmail] as string));
-        if (!!existingSuperAdmin) {
+        if (existingSuperAdmin) {
           superAdmin = existingSuperAdmin;
 
           if (superAdmin.orgId) {

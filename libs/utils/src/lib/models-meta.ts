@@ -10,6 +10,7 @@ export interface DocumentMeta<D> {
   updatedAt?: D,
   deletedAt?: D,
   createdFrom?: App,
+  emailVerified?: boolean
 }
 
 export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {
@@ -26,16 +27,16 @@ export function formatDocumentMetaFromFirestore(
 
   const m = { ...meta } as any;
 
-  if (!!meta) {
-    if (!!meta.createdAt) {
+  if (meta) {
+    if (meta.createdAt) {
       m.createdAt = meta.createdAt.toDate();
     }
 
-    if (!!meta.updatedAt) {
+    if (meta.updatedAt) {
       m.updatedAt = meta.updatedAt.toDate();
     }
 
-    if (!!meta.deletedAt) {
+    if (meta.deletedAt) {
       m.deletedAt = meta.deletedAt.toDate();
     }
   }

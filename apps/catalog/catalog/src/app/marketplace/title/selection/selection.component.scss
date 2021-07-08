@@ -1,5 +1,6 @@
 .main-header {
   padding: 48px;
+  background-size: cover;
   .main-title {
     margin-bottom: 32px;
     p {
@@ -7,17 +8,13 @@
     }
   }
 }
-section {
+
+.currency {
   margin: 24px;
 }
-.contract {
-  padding: 24px;
-  margin-bottom: 72px;
 
-  img {
-    max-width: 150px;
-    max-height: 200px;
-  }
+contract-item footer {
+  margin-top: 12px;
 }
 
 .summary {
@@ -25,10 +22,12 @@ section {
 }
 
 .empty {
-  margin-top: 72px;
-
   img {
     width: 380px;
     margin: 24px 0;
   }
+}
+
+static-select {
+  width: 35%;
 }

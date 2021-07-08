@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Event } from '@blockframes/event/+state/event.model';
+import { Event, isScreening } from '@blockframes/event/+state/event.model';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -30,8 +30,8 @@ export class EventComponent implements OnInit {
     this.eventId = this.route.snapshot.paramMap.get('eventId');
     this.event = await this.eventService.getValue(this.eventId);
 
-    if (this.event.type === 'screening') {
-      const titleId = this.event.meta.titleId as string;
+    if (isScreening(this.event)) {
+      const titleId = this.event.meta.titleId;
       if (titleId) {
         try {
           this.movie = await this.movieService.getValue(titleId);

@@ -3,9 +3,9 @@
 		<mat-form-field appearance="outline">
       <mat-icon *ngIf="!!icon" matPrefix [svgIcon]="icon"></mat-icon>
 			<mat-label>
-				<ng-content select="mat-label"></ng-content>{{ required ? ' *' : '' }}
+				<ng-content select="mat-label"></ng-content>
 			</mat-label>
-			<mat-select multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen($event)">
+			<mat-select [required]="required" multiple [formControl]="form" [disabled]="disabled" (openedChange)="onOpen($event)">
 				<header>
 					<mat-checkbox color="primary" [indeterminate]="(value | getMode:groups) === 'indeterminate'"
 						[checked]="(value | getMode:groups) === 'checked'" (change)="checkAll($event.checked)" test-id="checked-all">
@@ -38,15 +38,15 @@
 					</ng-container>
 				</ng-container>
 				<mat-select-trigger>
-					{{ value | triggerDisplay: groups: scope: displayAll }}
+					{{ value | toGroupLabel: scope: displayAll|join }}
 				</mat-select-trigger>
 			</mat-select>
+      <mat-hint>
+        <ng-content select="[groupHint]"></ng-content>
+      </mat-hint>
+      <mat-error>
+        <ng-content select="[groupError]"></ng-content>
+      </mat-error>
 		</mat-form-field>
-		<mat-hint>
-			<ng-content select="mat-hint"></ng-content>
-		</mat-hint>
-		<mat-error>
-			<ng-content select="mat-error"></ng-content>
-		</mat-error>
 	</ng-container>
 </ng-container>

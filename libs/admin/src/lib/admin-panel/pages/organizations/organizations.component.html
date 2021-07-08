@@ -22,7 +22,7 @@
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator clickable (rowClick)="goToEdit($event)">
     <ng-template colRef="logo" let-logo>
       <ng-container *ngIf="logo.storagePath; else nologo">
-        <img class="logo" [ref]="logo" asset="empty_poster.webp">
+        <img class="logo" [ref]="logo" asset="empty_poster.svg">
       </ng-container>
       <ng-template #nologo>
         --
@@ -36,6 +36,9 @@
     </ng-template>
     <ng-template colRef="addresses.main.country" let-country>
       {{ country ? country : '--' }}
+    </ng-template>
+    <ng-template colRef="activity" let-activity>
+      {{ activity | toLabel: 'orgActivity'}}
     </ng-template>
     <ng-template colRef="appAccess" let-appAccess>
       <ul>

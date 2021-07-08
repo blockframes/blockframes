@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { languages, isInKeys, Scope, staticModel } from '@blockframes/utils/static-model';
 
-export const urlValidators = Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/);
+export const urlValidators = Validators.pattern(/^(http(s)?:\/\/www\.|http(s)?:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/);
 
 export function yearValidators(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -155,7 +155,7 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * Check if from date is after to date
  * @param fromKey name of key of from date
  * @param toKey name of key of to date
- * @returns 
+ * @returns
  */
 export function compareDates(fromKey: string, toKey: string, keyOnControl?: string): ValidatorFn {
   return (form: FormControl): ValidationErrors => {

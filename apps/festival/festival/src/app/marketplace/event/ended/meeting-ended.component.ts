@@ -28,7 +28,7 @@ export class MeetingEndedComponent implements OnInit {
   ngOnInit() {
     const { localSessionStart } = this.eventQuery.getValue();
     this.duration = Date.now() - localSessionStart;
-    this.event$ = this.eventQuery.selectActive();
+    this.event$ = this.eventQuery.selectActive<Event<Meeting>>() as Observable<Event<Meeting>>;
     this.attendees$ = this.event$.pipe(
       filter(event => Object.keys(event.meta.attendees).length > 0),
       switchMap(event => Promise.all(

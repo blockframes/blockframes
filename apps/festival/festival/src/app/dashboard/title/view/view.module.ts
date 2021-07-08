@@ -7,9 +7,16 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
+import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+
+// Modules
+import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 const routes = [{
   path: '',
@@ -55,8 +62,13 @@ const routes = [{
     FlexLayoutModule,
     // Blockframes
     DashboardTitleShellModule,
+    DashboardActionsShellModule,
+    OrgAccessModule,
     // Material
     MatProgressSpinnerModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
     // Route
     RouterModule.forChild(routes)
   ]

@@ -1,36 +1,40 @@
-@mixin mat-bf-icon-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@use 'sass:map';
+@use '~@angular/material' as mat;
 
-  .mat-icon {
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $primary: map.get($config, 'primary');
+  $accent: map.get($config, 'accent');
+  $warn: map.get($config, 'warn');
+  $background: map.get($config, 'background');
+  $foreground: map.get($config, 'foreground');
+
+  mat-icon {
     path, g, polygon {
-      fill: mat-color($foreground, icon);
+      fill: mat.get-color-from-palette($foreground, icon);
     }
     &.mat-primary {
-      color: mat-color($primary, 500);
+      color: mat.get-color-from-palette($primary, 500);
       path, g, polygon {
-        fill: mat-color($primary, 500);
+        fill: mat.get-color-from-palette($primary, 500);
       }
     }
     &.mat-accent {
-      color: mat-color($accent, 500);
+      color: mat.get-color-from-palette($accent, 500);
       path, g, polygon {
-        fill: mat-color($accent, 500);
+        fill: mat.get-color-from-palette($accent, 500);
       }
     }
     &.mat-warn {
-      color: mat-color($warn, 500);
+      color: mat.get-color-from-palette($warn, 500);
       path, g, polygon {
-        fill: mat-color($warn, 500);
+        fill: mat.get-color-from-palette($warn, 500);
       }
     }
     &[color="disabled"] {
-      color: mat-color($background, disabled-button);
+      color: mat.get-color-from-palette($background, disabled-button);
       path, g, polygon {
-        fill: mat-color($background, disabled-button);
+        fill: mat.get-color-from-palette($background, disabled-button);
       }
     }
   }

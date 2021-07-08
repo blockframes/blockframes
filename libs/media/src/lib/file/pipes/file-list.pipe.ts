@@ -12,7 +12,7 @@ export class FileListIndexPipe implements PipeTransform {
     }
 
     const nonEmptyCount = list.reduce((acc, file) => {
-      if (!!file.storagePath) return acc + 1;
+      if (file.storagePath) return acc + 1;
       return acc;
     }, 0);
 

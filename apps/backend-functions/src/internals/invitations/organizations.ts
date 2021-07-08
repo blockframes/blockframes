@@ -10,8 +10,9 @@ import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
 import { getAdminIds, getDocument, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument, createDocumentMeta } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
-import { unsubscribeGroupIds } from '../../templates/ids';
+import { unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
 import { applicationUrl } from '@blockframes/utils/apps';
+import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -153,7 +154,9 @@ async function onRequestFromUserToJoinOrgAccept({
   await addUserToOrg(fromUser.uid, toOrg.id);
   const app = await getOrgAppKey(toOrg.id);
   const urlToUse = applicationUrl[app];
-  const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
+  const org = getOrgEmailData(toOrg);
+  const toUser = getUserEmailData(fromUser);
+  const template = userJoinedAnOrganization(toUser, urlToUse, org);
   return sendMailFromTemplate(template, app, unsubscribeGroupIds.allExceptCriticals);
 }
 
@@ -188,10 +191,10 @@ export async function onInvitationToJoinOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
-): Promise<any> {
-  if (wasAccepted(before!, after)) {
+) {
+  if (wasAccepted(before, after)) {
     return onInvitationToOrgAccept(invitation);
-  } else if (wasDeclined(before!, after)) {
+  } else if (wasDeclined(before, after)) {
     return onInvitationToOrgDecline(invitation);
   }
 }
@@ -205,12 +208,12 @@ export async function onRequestToJoinOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
-): Promise<any> {
+) {
   if (wasCreated(before, after)) {
     return onRequestFromUserToJoinOrgCreate(invitation);
-  } else if (wasAccepted(before!, after)) {
+  } else if (wasAccepted(before, after)) {
     return onRequestFromUserToJoinOrgAccept(invitation);
-  } else if (wasDeclined(before!, after)) {
+  } else if (wasDeclined(before, after)) {
     return onRequestFromUserToJoinOrgDecline(invitation);
   }
   return;

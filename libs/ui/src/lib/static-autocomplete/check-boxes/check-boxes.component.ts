@@ -39,19 +39,20 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
   @Output() added = new EventEmitter<string>();
   @Output() removed = new EventEmitter<number>();
 
-  public items: any;
+  public items: unknown;
+  public keepOrder = () => 1;
 
   ngOnInit() {
     this.items = staticModel[this.scope];
     this.sub = this.form.valueChanges.pipe(
       filter(value => !value.length) // Only trigger when value is empty
-    ).subscribe(_ => this.checkboxes.forEach(box => box.checked = false))
+    ).subscribe(() => this.checkboxes.forEach(box => box.checked = false))
   }
 
   isCheckedByDefault(key: string) {
     return this.form.value.includes(key);
   }
-  
+
   public handleChange({checked, source}: MatCheckboxChange) {
     if (checked) {
       this.form.add(source.value);

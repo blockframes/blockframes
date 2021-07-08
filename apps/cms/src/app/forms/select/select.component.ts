@@ -15,7 +15,7 @@ export class SelectOptionDirective {}
 export class SelectComponent<T> {
   private _options: Options<T>;
   @ContentChild(SelectOptionDirective) template?: TemplateRef<SelectOptionDirective>;
-  @Output() change = new EventEmitter<T>();
+  @Output() controlChange = new EventEmitter<T>();
   @Input() form: FormField<MatSelectSchema<T>, T> | FormList<MatMultiSelectSchema<T>, T>;
   @Input()
   set options(options: Options<T>) {

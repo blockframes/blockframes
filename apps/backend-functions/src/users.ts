@@ -9,12 +9,16 @@ import { getDocument } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { cleanUserMedias } from './media';
+import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-export const startVerifyEmailFlow = async (data: any) => {
-  const { email, app } = data;
+
+interface EmailFlowData { email: string, app: App, publicUser: PublicUser }
+
+export const startVerifyEmailFlow = async (data: EmailFlowData) => {
+  const { email, app, publicUser } = data;
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmailAddress()" function');
@@ -22,15 +26,17 @@ export const startVerifyEmailFlow = async (data: any) => {
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
   try {
-    const template = userVerifyEmail(email, verifyLink);
+    const user = getUserEmailData(publicUser);
+    const template = userVerifyEmail(email, user, verifyLink);
     await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending email verification email : ${e.message}`);
   }
 };
 
-export const startAccountCreationEmailFlow = async (data: any) => {
-  const { email, app, firstName } = data;
+export const startAccountCreationEmailFlow = async (data: EmailFlowData) => {
+  const { email, app, publicUser } = data;
+  const user = getUserEmailData(publicUser);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
@@ -38,7 +44,7 @@ export const startAccountCreationEmailFlow = async (data: any) => {
 
   try {
     const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-    const template = accountCreationEmail(email, verifyLink, firstName);
+    const template = accountCreationEmail(email, verifyLink, user);
     await sendMailFromTemplate(template, app);
   } catch (e) {
     throw new Error(`There was an error while sending account creation email : ${e.message}`);
@@ -46,7 +52,7 @@ export const startAccountCreationEmailFlow = async (data: any) => {
 
 };
 
-export const startResetPasswordEmail = async (data: any) => {
+export const startResetPasswordEmail = async (data: EmailFlowData) => {
   const { email, app } = data;
 
   if (!email) {
@@ -79,7 +85,7 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
-        await startAccountCreationEmailFlow({ email, firstName: u.firstName, app: u._meta.createdFrom });
+        await startAccountCreationEmailFlow({ email, publicUser: u, app: u._meta.createdFrom });
       }
       tx.update(userDocRef, { email, uid });
     } else {
@@ -98,13 +104,13 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
-export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
+export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot) {
   const after = snap.data() as PublicUser;
-  if (!!after.firstName) { await sendFirstConnexionEmail(after) }
+  if (after.firstName) { await sendFirstConnexionEmail(after) }
   return true;
 }
 
-export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
+export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>)  {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
 
@@ -115,7 +121,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   await cleanUserMedias(before, after);
 
-  const promises: Promise<any>[] = [];
+  const promises = [];
 
   // if name, email, avatar or orgId has changed : update algolia record
   if (
@@ -140,9 +146,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   return Promise.all(promises);
 }
 
-export async function onUserDelete(
-  userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
-): Promise<any> {
+export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>) {
 
   const user = userSnapshot.data() as PublicUser;
 
@@ -155,7 +159,7 @@ export async function onUserDelete(
   await cleanUserMedias(user);
 
   // remove id from org array
-  if (!!user.orgId) {
+  if (user.orgId) {
     const orgRef = db.doc(`orgs/${user.orgId}`);
     const orgDoc = await orgRef.get();
     const org = orgDoc.data() as OrganizationDocument
@@ -164,7 +168,7 @@ export async function onUserDelete(
   }
 
   // remove permissions
-  if (!!user.orgId) {
+  if (user.orgId) {
     const permissionsRef = db.doc(`permissions/${user.orgId}`);
     const permissionsDoc = await permissionsRef.get();
     const permissions = permissionsDoc.data() as PermissionsDocument;
@@ -195,7 +199,7 @@ export const sendDemoRequest = async (data: RequestDemoInformations): Promise<Re
   return data;
 }
 
-export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext): Promise<any> => {
+export const sendUserMail = async (data: { subject: string, message: string, app: App }, context: CallableContext) => {
   const { subject, message, app } = data;
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
@@ -217,8 +221,8 @@ export const sendUserMail = async (data: { subject: string, message: string, app
  * @param data
  * @param context
  */
-export const createUser = async (data: { email: string, orgName: string, app: App }, context: CallableContext): Promise<PublicUser> => {
-  const { email, orgName, app } = data;
+export const createUser = async (data: { email: string, orgEmailData: OrgEmailData, app: App }, context: CallableContext): Promise<PublicUser> => {
+  const { email, orgEmailData, app } = data;
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
@@ -230,10 +234,10 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
 
   try {
     const newUser = await createUserFromEmail(email, app);
-
+    const toUser = getUserEmailData(newUser.user, newUser.password);
     const urlToUse = applicationUrl[app];
 
-    const template = userInvite(email, newUser.password, orgName, urlToUse);
+    const template = userInvite(toUser, orgEmailData, urlToUse);
     await sendMailFromTemplate(template, app);
 
     return newUser.user;
@@ -241,4 +245,26 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
     throw new Error(`There was an error while sending email to newly created user : ${e.message}`);
   }
 
+}
+
+export const verifyEmail = async (data: { uid: string }, context: CallableContext) => {
+  const { uid } = data;
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
+  if (!blockframesAdmin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
+
+  if (!uid) {
+    throw new Error('uid is mandatory for verifying email');
+  }
+
+  try {
+    await admin.auth().updateUser(uid, { emailVerified: true});
+
+    const { _meta } = await getDocument<PublicUser>(`users/${uid}`);
+    _meta.emailVerified = true;
+    db.doc(`users/${uid}`).update({ _meta });
+  } catch (e) {
+    throw new Error(`There was an error while verifying email : ${e.message}`);
+  }
 }

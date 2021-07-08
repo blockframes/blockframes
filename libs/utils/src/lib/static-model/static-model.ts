@@ -1,11 +1,5 @@
 import { appName } from '@blockframes/utils/apps';
-import {
-  Territory,
-  TerritoryISOA2,
-  TerritoryISOA2Value,
-  TerritoryISOA3,
-  TerritoryISOA3Value
-} from './types'
+import { Territory } from './types'
 
 export const contractStatus = {
   accepted: 'Accepted',
@@ -327,14 +321,13 @@ export const premiereType = {
 } as const
 
 export const producerRoles = {
+  producer: 'Producer',
   executiveProducer: 'Executive Producer',
-  lineProducer: 'Line Producer',
-  associateProducer: 'Associate Producer',
-  productionManager: 'Production Manager'
+  associateProducer: 'Associate Producer'
 } as const
 
 export const productionStatus = {
-  development: 'In development',
+  development: 'In Development',
   shooting: 'In Production',
   post_production: 'In Post-production',
   finished: 'Completed',
@@ -421,6 +414,7 @@ export const storeStatus = {
   accepted: 'Accepted',
   draft: 'Draft',
   refused: 'Refused',
+  archived: 'Archived',
 } as const
 
 export const unitBox = {
@@ -478,6 +472,7 @@ export const festival = {
   venice: 'Venice International Film Festival',
 } as const
 
+// Please keep territories' values in an alphabetic order !
 export const territories = {
   world: 'World',
   "aland-islands": "Åland Islands",
@@ -508,7 +503,6 @@ export const territories = {
   bhutan: "Bhutan",
   bolivia: "Bolivia",
   bonaire: "Bonaire",
-  "sint-eustatius-and-saba": "Sint Eustatius and Saba",
   "bosnia-and-herzegovina": "Bosnia and Herzegovina",
   botswana: "Botswana",
   "bouvet-island": "Bouvet Island",
@@ -541,7 +535,6 @@ export const territories = {
   cyprus: "Cyprus",
   "northern-cyprus": "Northern Cyprus",
   czech: "Czech Republic (Czechia)",
-  "ivory-coast-cote-d-ivoire": "Ivory Coast (Côte d’Ivoire)",
   denmark: "Denmark",
   djibouti: "Djibouti",
   dominica: "Dominica",
@@ -593,6 +586,7 @@ export const territories = {
   "isle-of-man": "Isle of Man",
   israel: "Israel",
   italy: "Italy",
+  "ivory-coast-cote-d-ivoire": "Ivory Coast (Côte d’Ivoire)",
   jamaica: "Jamaica",
   japan: "Japan",
   jersey: "Jersey",
@@ -685,6 +679,7 @@ export const territories = {
   seychelles: "Seychelles",
   "sierra-leone": "Sierra Leone",
   singapore: "Singapore",
+  "sint-eustatius-and-saba": "Sint Eustatius and Saba",
   "saint-martin-dutch": "Sint Maarten (Dutch part)",
   slovakia: "Slovakia",
   slovenia: "Slovenia",
@@ -733,8 +728,8 @@ export const territories = {
   "wallis-and-futuna": "Wallis and Futuna",
   "western-sahara": "Western Sahara",
   yemen: "Yemen",
+  zambia: "Zambia",
   zimbabwe: "Zimbabwe",
-  zambia: "Zambia"
 } as const
 
 export const territoriesISOA2 = {
@@ -1864,6 +1859,6 @@ export function getISO3166TerritoryFromSlug(slug: Territory) {
   }
 }
 
-export function parseToAll(scope: Scope, allKey: string): any[] {
+export function parseToAll(scope: Scope, allKey: string): unknown[] {
   return Object.keys(staticModel[scope]).filter(key => key !== allKey)
 }

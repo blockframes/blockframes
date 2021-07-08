@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Perk } from '@blockframes/campaign/+state';
 
@@ -10,7 +10,7 @@ import { Perk } from '@blockframes/campaign/+state';
 })
 export class PerkCardComponent {
   @Input() perk: Perk;
-  @ViewChild("dialogRef") dialogRef: TemplateRef<any>;
+  @ViewChild("dialogRef") dialogRef: TemplateRef<unknown>;
 
   constructor(private dialog: MatDialog) { }
 

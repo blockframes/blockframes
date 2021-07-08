@@ -1,7 +1,8 @@
 import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue, territories } from "@blockframes/utils/static-model";
 import { Bucket, BucketTerm } from "../bucket/+state";
-import { Mandate } from "../contract/+state/contract.model";
-import { Term } from "../term/+state/term.model";
+import { Mandate } from "../contract/+state/contract.model"
+import { Duration, Term } from "../term/+state/term.model";
+
 export interface AvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
@@ -14,22 +15,21 @@ export interface TerritoryMarker {
   isoA3: TerritoryISOA3Value,
   label: TerritoryValue,
   contract?: Mandate,
+  term?: Term<Date>,
 }
 
-export function toTerritoryMarker(territory: Territory, contractId: string, mandates: Mandate[]): TerritoryMarker {
-  return {
-    slug: territory,
-    isoA3: territoriesISOA3[territory],
-    label: territories[territory],
-    contract: mandates.find(m => m.id === contractId)
-  }
+export interface DurationMarker {
+  from: Date,
+  to: Date,
+  contract?: Mandate,
+  term?: Term<Date>,
 }
 
 /**
- * 
- * @param avails 
+ *
+ * @param avails
  * @param terms Terms of all mandates of the title
- * @returns 
+ * @returns
  */
 export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term<Date>[] | undefined {
   const result: Term<Date>[] = [];
@@ -49,7 +49,7 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
     }
 
     // If terms has some territories of avails: available
-    if (!!avails.territories?.length && term.territories.every(territory => !avails.territories.includes(territory))) {
+    if (avails.territories?.length && term.territories.every(territory => !avails.territories.includes(territory))) {
       continue;
     }
 
@@ -61,7 +61,7 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
   if (avails.medias.some(media => !resultMedias.includes(media))) return [];
 
   // If more territories are selected than there are in the mandates: not available
-  if (!!avails.territories?.length) {
+  if (avails.territories?.length) {
     const resultTerritories = result.map(term => term.territories).flat();
     if (avails.territories.some(territory => !resultTerritories.includes(territory))) return [];
   }
@@ -70,51 +70,47 @@ export function getMandateTerms(avails: AvailsFilter, terms: Term<Date>[]): Term
 }
 
 /**
- * 
- * @param avails 
+ *
+ * @param avails
  * @param terms Terms of all sales of the title
- * @returns 
+ * @returns
  */
 export function isSold(avails: AvailsFilter, terms: Term<Date>[]) {
-  return !!getSoldTerms({ medias: avails.medias, duration: avails.duration, territories: avails.territories, exclusive: avails.exclusive }, terms).length;
+  return !!getSoldTerms(avails, terms).length;
 }
 
 /**
- * 
- * @param avails 
+ * Get all the salesTerms that overlap the avails filter
+ * @param avails
  * @param terms Terms of all sales of the title
- * @returns 
+ * @returns
  */
 export function getSoldTerms(avails: AvailsFilter, terms: Term<Date>[]) {
   const result: Term<Date>[] = [];
   for (const term of terms) {
-    const startDuringDuration = avails.duration.from.getTime() >= term.duration.from.getTime() && avails.duration.from.getTime() <= term.duration.to.getTime();
-    const endDuringDuration = avails.duration.to.getTime() <= term.duration.to.getTime() && avails.duration.to.getTime() >= term.duration.from.getTime();
-    const inDuration = startDuringDuration || endDuringDuration;
-    const wrappedDuration = avails.duration.from.getTime() <= term.duration.from.getTime() && avails.duration.to.getTime() >= term.duration.to.getTime();
 
-    if (avails.exclusive) {
+    // If both of them are false, its available
+    if (!avails.exclusive && !term.exclusive) continue;
 
-      const intersectsMedia = avails.medias.some(medium => term.medias.includes(medium));
-      const intersectsTerritories = !avails.territories.length || avails.territories.some(territory => term.territories.includes(territory));
+    // In case of non-required territories (e.g. map in Avails tab), there is no need to check the territories.
+    if (avails.territories.length) {
+      // If none of the avails territories are in the term, its available
+      if (!term.territories.some(t => avails.territories.includes(t))) continue;
+    };
 
-      if (intersectsMedia && intersectsTerritories && inDuration) {
-        result.push(term);
-      } else continue;
-    } else if (term.exclusive) {
-      if (inDuration || wrappedDuration) {
-        if (!avails.medias.some(medium => term.medias.includes(medium)) || !avails.territories.some(territory => term.territories.includes(territory))) {
-          continue;
-        } else {
-          result.push(term);
-        }
-      } else {
-        continue;
-      }
-    } else {
-      // If buyer wants a non exclusive rights and the sales term that we are currently checking is not exclusive, we skip the iteration
-      continue;
+    if (avails.medias.length) {
+      // If none of the avails medias are in the term, its available
+      if (!term.medias.some(m => avails.medias.includes(m))) continue;
     }
+
+    // If duration is non-required (e.g. calendar on Avails tab), there is no need to check the duration.
+    if (avails.duration.from && avails.duration.to) {
+      if (avails.duration.to.getTime() < term.duration.from.getTime()) continue
+      if (avails.duration.from.getTime() > term.duration.to.getTime()) continue;
+      // if time is the same, its sold.
+    }
+
+    result.push(term);
   }
   return result;
 }
@@ -145,45 +141,119 @@ export function isInBucket(avails: AvailsFilter, terms: BucketTerm[]) {
   return false;
 }
 
-///////////
-// utils //
-///////////
-export function findSameTermIndex(terms: BucketTerm[], avail: AvailsFilter) {
-  return terms.findIndex(t => isSameTerm(t, avail));
-}
+// ----------------------------
+//          SAME TERM        //
+// ----------------------------
 
-/**
- * Avail is matching exactly the bucketTerm
- * @param term 
- * @param avail 
- * @returns 
- */
-export function isSameTerm(term: BucketTerm, avail: AvailsFilter) {
+
+function isSameExclusivityTerm(term: BucketTerm, avail: AvailsFilter) {
   if (term.exclusive !== avail.exclusive) return false;
-  if (!avail.duration?.from || term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
-  if (!avail.duration?.to || term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
-  if (term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
   return true;
 }
+
+function isSameMediaTerm(term: BucketTerm, avail: AvailsFilter) {
+  if (!avail.medias) return false;
+  if (term.medias.length !== avail.medias.length) return false;
+  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
+  return true;
+}
+
+function isSameTerritoriesTerm(term: BucketTerm, avail: AvailsFilter) {
+  if (!avail.territories) return false;
+  if (term.territories.length !== avail.territories.length) return false;
+  if (term.territories.some(territory => !avail.territories.includes(territory))) return false;
+  return true;
+}
+
+function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
+  if (!avail.duration?.from) return false;
+  if (term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
+  if (!avail.duration?.to) return false;
+  if (term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
+  return true;
+}
+
+/** Check if a term is exactly the same as asked in the AvailFilter of the world map */
+export function isSameMapTerm(term: BucketTerm, avail: AvailsFilter) {
+  return isSameExclusivityTerm(term, avail) &&
+    isSameDurationTerm(term, avail) &&
+    isSameMediaTerm(term, avail);
+};
+
+/** Check if a term is exactly the same as asked in the AvailFilter of the calendar */
+export function isSameCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
+  return isSameExclusivityTerm(term, avail) &&
+    isSameTerritoriesTerm(term, avail) &&
+    isSameMediaTerm(term, avail);
+};
+
+
+// ----------------------------
+//            IN TERM        //
+// ----------------------------
 
 /**
  * Avail is included in bucketTerm
- * @param term 
- * @param avail 
- * @returns 
+ * @param term
+ * @param avail
+ * @returns
  */
-export function isInTerm(term: BucketTerm, avail: AvailsFilter) {
+export function isInMapTerm(term: BucketTerm, avail: AvailsFilter) {
+  if (isSameMapTerm(term, avail)) return false;
+
   if (term.exclusive !== avail.exclusive) return false;
-  if (!avail.duration?.from || term.duration.from.getTime() >= avail.duration.from.getTime()) return false;
-  if (!avail.duration?.to || term.duration.to.getTime() <= avail.duration.to.getTime()) return false;
-  if (term.medias.length !== avail.medias.length || term.medias.some(medium => !avail.medias.includes(medium))) return false;
+
+  if (!avail.duration?.from) return false;
+  if (term.duration.from.getTime() > avail.duration.from.getTime()) return false;
+
+  if (!avail.duration?.to) return false;
+  if (term.duration.to.getTime() < avail.duration.to.getTime()) return false;
+
+  if (!avail.medias) return false;
+  if (term.medias.length !== avail.medias.length) return false;
+  if (term.medias.some(medium => !avail.medias.includes(medium))) return false;
+
   return true;
 }
 
-export function getTerritories(avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Territory[] {
+export function isInCalendarTerm(term: BucketTerm, avail: AvailsFilter) {
+
+  if (isSameCalendarTerm(term, avail)) return false;
+
+  if (term.exclusive !== avail.exclusive) return false;
+
+  if (!avail.medias) return false;
+  if (term.medias.length < avail.medias.length) return false;
+  if (avail.medias.some(medium => !term.medias.includes(medium))) return false;
+
+  if (!avail.territories) return false;
+  if (term.territories.length < avail.territories.length) return false;
+  if (avail.territories.some(territory => !term.territories.includes(territory))) return false;
+
+  return true;
+}
+
+
+// ----------------------------
+//        TERRITORIES        //
+// ----------------------------
+
+
+export function toTerritoryMarker(territory: Territory, mandates: Mandate[], term: Term<Date>): TerritoryMarker {
+  return {
+    slug: territory,
+    isoA3: territoriesISOA3[territory],
+    label: territories[territory],
+    contract: mandates.find(m => m.id === term.contractId),
+    term,
+  }
+}
+
+export function getSelectedTerritories(movieId: string, avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Territory[] {
   return bucket.contracts
+    .filter(c => c.titleId === movieId)
     .map(c => c.terms).flat()
-    .filter(t => mode === 'exact' ? isSameTerm(t, avail) : isInTerm(t, avail))
+    .filter(t => mode === 'exact' ? isSameMapTerm(t, avail) : isInMapTerm(t, avail))
     .map(t => t.territories).flat();
 }
 
@@ -200,6 +270,45 @@ export function availableTerritories(
   return mandateTerms.map(term => term.territories
     .filter(t => !!territoriesISOA3[t])
     .filter(t => !notAvailable.includes(t))
-    .map(territory => toTerritoryMarker(territory, term.contractId, mandates))
+    .map(territory => toTerritoryMarker(territory, mandates, term))
   ).flat();
+}
+
+
+export function getTerritoryMarkers(mandates: Mandate[], mandateTerms: Term<Date>[]) {
+  const markers: Record<string, TerritoryMarker> = {};
+  for (const term of mandateTerms) {
+    for (const territory of term.territories) {
+      if (territory in territoriesISOA3) {
+        markers[territory] = toTerritoryMarker(territory, mandates, term);
+      }
+    }
+  }
+
+  return markers;
+}
+
+// ----------------------------
+//         DURATIONS         //
+// ----------------------------
+
+export function toDurationMarker(mandates: Mandate[], term: Term<Date>): DurationMarker {
+  return {
+    from: term.duration.from,
+    to: term.duration.to,
+    contract: mandates.find(m => m.id === term.contractId),
+    term,
+  }
+}
+
+export function getDurations(movieId: string, avail: AvailsFilter, bucket: Bucket, mode: 'exact' | 'in'): Duration[] {
+  return bucket.contracts
+    .filter(contract => contract.titleId === movieId)
+    .map(c => c.terms).flat()
+    .filter(t => mode === 'exact' ? isSameCalendarTerm(t, avail) : isInCalendarTerm(t, avail))
+    .map(t => t.duration).flat();
+}
+
+export function getDurationMarkers(mandates: Mandate[], mandateTerms: Term<Date>[]) {
+  return mandateTerms.map(term => toDurationMarker(mandates, term));
 }

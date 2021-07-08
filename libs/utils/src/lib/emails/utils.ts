@@ -2,6 +2,8 @@ import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 import { App } from "../apps";
 import { format } from "date-fns";
 import { EventDocument, EventMeta, EventTypes } from "@blockframes/event/+state/event.firestore";
+import { Organization, OrganizationDocument } from "@blockframes/organization/+state";
+import { User } from "@blockframes/auth/+state";
 
 export interface EmailRequest {
   to: string;
@@ -12,7 +14,7 @@ export interface EmailRequest {
 export interface EmailTemplateRequest {
   to: string;
   templateId: string;
-  data: { [key: string]: any };
+  data: { [key: string]: unknown };
 }
 
 export interface EmailParameters {
@@ -33,6 +35,26 @@ export interface EventEmailData {
   type: EventTypes,
   viewUrl: string,
   sessionUrl: string
+}
+
+export interface OrgEmailData {
+  denomination: string,
+  email: string,
+  id: string
+}
+
+/**
+ * This interface is used mainly for the users who will receive this email.
+ * @dev In the backend-function/templates/mail.ts, it will refer to the `user` variable.
+ * @dev An other variable `userSubject` can be used also but it will be a subject of the email
+ * @example An email is sent to admins of org to let them know a new member has joined :
+ * `hi user.firstName, we let you know that userSubject.firstName has joined your org today`
+ */
+export interface UserEmailData {
+  firstName?: string,
+  lastName?: string,
+  email: string,
+  password?: string
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -68,7 +90,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
 export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): EventEmailData {
   let eventStart = '';
   let eventEnd = '';
-  if (!!event) {
+  if (event) {
     const eventStartDate = new Date(event.start.toDate());
     const eventEndDate = new Date(event.end.toDate());
 
@@ -86,7 +108,24 @@ export function getEventEmailData(event?: Partial<EventDocument<EventMeta>>): Ev
     start: eventStart,
     end: eventEnd,
     type: event?.type,
-    viewUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}` : '',
-    sessionUrl: !!event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
+    viewUrl: event?.id ? `/c/o/marketplace/event/${event.id}` : '',
+    sessionUrl: event?.id ? `/c/o/marketplace/event/${event.id}/session` : ''
+  }
+}
+
+export function getOrgEmailData(org: Partial<OrganizationDocument | Organization>): OrgEmailData {
+  return {
+    id: org.id,
+    denomination: org.denomination.full ?? org.denomination.public,
+    email: org.email || ''
+  }
+}
+
+export function getUserEmailData(user: Partial<User>, password?: string): UserEmailData {
+  return {
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    email: user.email || '',
+    password
   }
 }

@@ -11,13 +11,14 @@ import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
-import { CrmFormDialogComponent } from '../../components/crm-form-dialog/crm-form-dialog.component';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 import { App, OrgAppAccess } from '@blockframes/utils/apps';
+import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
 
 @Component({
   selector: 'admin-organization',
@@ -30,7 +31,7 @@ export class OrganizationComponent implements OnInit {
   public org: Organization;
   public orgForm: OrganizationAdminForm;
   public movies: Movie[];
-  public members: any[];
+  public members;
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
 
@@ -41,7 +42,7 @@ export class OrganizationComponent implements OnInit {
     'id': { value: 'Id', disableSort: true },
     'internalRef': 'Internal Ref',
     'poster': { value: 'Poster', disableSort: true },
-    'title.original': 'Original title',
+    'title.international': 'International title',
     'releaseYear': 'Release year',
   };
 
@@ -49,7 +50,7 @@ export class OrganizationComponent implements OnInit {
     'id',
     'poster',
     'internalRef',
-    'title.original',
+    'title.international',
     'releaseYear',
   ];
 
@@ -78,7 +79,8 @@ export class OrganizationComponent implements OnInit {
     private uploaderService: FileUploaderService,
     private contractService: ContractService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private bucketService: BucketService,
   ) { }
 
   async ngOnInit() {
@@ -151,7 +153,7 @@ export class OrganizationComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
-  filterPredicateMovies(data: any, filter) {
+  filterPredicateMovies(data, filter) {
     const columnsToFilter = [
       'id',
       'internalRef',
@@ -191,13 +193,13 @@ export class OrganizationComponent implements OnInit {
 
   public async deleteOrg() {
     const simulation = await this.simulateDeletion(this.orgId);
-    this.dialog.open(CrmFormDialogComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this organization from Archipel, are you sure?',
-        text: 'If yes, please write \'DELETE\' inside the form below.',
+        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'You will also delete everything regarding this organization',
         simulation,
-        confirmationWord: 'delete',
+        confirmationWord: 'hard delete',
         confirmButtonText: 'delete',
         onConfirm: async () => {
           await this.organizationService.remove(this.orgId);
@@ -245,8 +247,15 @@ export class OrganizationComponent implements OnInit {
     // Calculate how many contracts will be updated
     const contracts = await this.contractService.getValue(ref => ref.where('partyIds', 'array-contains', organization.id))
     if (contracts.length) {
-      output.push(`${contracts.length} contract(s) will be updated.`)
+      output.push(`${contracts.length} contract(s) will be updated.`);
     }
+
+    // Check bucket content
+    const bucket = await this.bucketService.getValue(orgId);
+    if (bucket) {
+      output.push(`1 bucket containing ${bucket.contracts.length} contract(s) will be deleted.`);
+    }
+
     return output;
   }
 

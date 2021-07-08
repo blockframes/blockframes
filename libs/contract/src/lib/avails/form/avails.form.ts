@@ -6,14 +6,24 @@ import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators
 
 
 function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('territories' | 'duration')[]) {
-  const durationRequired = required.includes('duration') ? [Validators.required] : []
+  const fromValidators = required.includes('duration') ? [compareDates('from', 'to', 'from'), isDateInFuture, Validators.required] : [];
+  const toValidators = required.includes('duration') ? [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required] : [];
+
+  if (!avail.duration) {
+    const date = new Date();
+    avail.duration = {
+      from: date,
+      to: new Date(date.getFullYear() + 1, date.getMonth(), date.getDate())
+    }
+  }
+
   return {
     territories: new FormStaticValueArray<'territories'>(avail.territories, 'territories', required.includes('territories') ? [Validators.required] : []),
     medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required]),
     exclusive: new FormControl(avail.exclusive ?? true, Validators.required),
     duration: new FormGroup({
-      from: new FormControl(avail.duration?.from, [...[compareDates('from', 'to', 'from'), isDateInFuture], ...durationRequired]),
-      to: new FormControl(avail.duration?.to, [...[compareDates('from', 'to', 'to'), isDateInFuture], ...durationRequired])
+      from: new FormControl(avail.duration?.from, fromValidators),
+      to: new FormControl(avail.duration?.to, toValidators)
     })
   }
 }

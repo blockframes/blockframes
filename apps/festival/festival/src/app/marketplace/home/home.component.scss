@@ -73,6 +73,13 @@ movie-slide {
     }
   }
 }
+@include layout-bp(md) {
+  .banner {
+    .banner-details {
+      width: 100%;
+    }
+  }
+}
 @include layout-bp(lt-md) {
   .banner, movie-slide {
     padding: 24px;

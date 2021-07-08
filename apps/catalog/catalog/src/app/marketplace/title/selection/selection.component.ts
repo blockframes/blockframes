@@ -1,15 +1,16 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
 import { Intercom } from 'ng-intercom';
-import { Bucket, BucketQuery, BucketService } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieCurrency, movieCurrencies, Scope } from '@blockframes/utils/static-model';
+import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie } from '@blockframes/movie/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'catalog-selection',
@@ -17,41 +18,42 @@ import { Movie } from '@blockframes/movie/+state';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent {
-  currencies = movieCurrencies;
-  columns = {
-    duration: 'Terms',
-    territories: 'Territories',
-    medias: 'Rights',
-    exclusive: 'Exclusivity'
-  };
-  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'action'];
+export class MarketplaceSelectionComponent implements OnDestroy {
+  withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
+  public currencyForm = new FormControl('EUR');
+
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
   priceChanges = new Subject();
   total$ = this.priceChanges.pipe(
     startWith(0),
     debounceTime(100),
-    map(_ => this.getTotal(this.prices)),
+    map(() => this.getTotal(this.prices)),
     distinctUntilChanged()
   );
 
-  trackById = (i: number, doc: { id: string }) => doc.id;
+  private sub = this.currencyForm.valueChanges.pipe(
+    distinctUntilChanged()
+  ).subscribe(value => this.updateCurrency(value));
 
   constructor(
     @Optional() private intercom: Intercom,
-    private bucketQuery: BucketQuery,
+    private orgQuery: OrganizationQuery,
     private bucketService: BucketService,
     private dialog: MatDialog,
     private dynTitle: DynamicTitleService,
     private snackBar: MatSnackBar
   ) {
-    this.bucket$ = this.bucketQuery.selectActive().pipe(
+    this.bucket$ = this.bucketService.active$.pipe(
       tap(bucket => {
-        this.setTitle(bucket?.contracts.length)
-        bucket?.contracts.forEach((contract, i) => this.setPrice(i, contract.price))
-      }),
+        this.setTitle(bucket?.contracts.length);
+        if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
+      })
     );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   private setTitle(amount: number) {
@@ -64,27 +66,29 @@ export class MarketplaceSelectionComponent {
   }
 
   updateCurrency(currency: MovieCurrency) {
-    const id = this.bucketQuery.getActiveId();
+    const id = this.orgQuery.getActiveId();
     this.bucketService.update(id, { currency });
   }
 
-  setPrice(i: number, price: number | string) {
-    this.prices[i] = +price;
+  setPrice(index: number, price: string) {
+    this.prices[index] =  parseFloat(price);
     this.priceChanges.next();
   }
 
+  trackById(i: number, doc: { id: string }) { return doc.id; }
 
   async updatePrice(index: number, price: string) {
-    const id = this.bucketQuery.getActiveId();
+    const id = this.orgQuery.getActiveId();
+    const currency = this.currencyForm.value;
     await this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
-      contracts[index].price = +price;
-      return { contracts };
+      contracts[index].price = parseFloat(price);
+      return { contracts, currency };
     });
   }
 
   removeContract(index: number, title: Movie) {
-    const id = this.bucketQuery.getActiveId();
+    const id = this.orgQuery.getActiveId();
     delete this.prices[index];
     this.bucketService.update(id, bucket => ({
       contracts: bucket.contracts.filter((_, i) => i !== index)
@@ -94,7 +98,7 @@ export class MarketplaceSelectionComponent {
   }
 
   removeTerm(contractIndex: number, termIndex: number) {
-    const id = this.bucketQuery.getActiveId();
+    const id = this.orgQuery.getActiveId();
     this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       const terms = contracts[contractIndex].terms.filter((_, i) => i !== termIndex);
@@ -134,8 +138,6 @@ export class MarketplaceSelectionComponent {
       })
     })) {
       this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
-    } else if (bucket.contracts.some(contract => !contract.price || contract.price < 0)) {
-      this.snackBar.open('Missing price information.', '', { duration: 2000 });
     } else {
       this.dialog.open(SpecificTermsComponent);
     }
@@ -145,7 +147,4 @@ export class MarketplaceSelectionComponent {
     this.intercom?.show();
   }
 
-  openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
-  }
 }

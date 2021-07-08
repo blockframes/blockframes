@@ -4,12 +4,11 @@ import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
-import { templateIds } from '../templates/ids';
+import { templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { EventEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 
 interface UserProposal {
@@ -35,14 +34,16 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
   } catch {
     try {
       const newUser = await createUserFromEmail(email, app);
+      const toUser = getUserEmailData(newUser.user, newUser.password);
 
       // User does not exists, send him an email.
       const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
+      const orgEmailData = getOrgEmailData(fromOrg);
       const urlToUse = applicationUrl[app];
 
       const templateId = templateIds.user.credentials[invitationType];
 
-      const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId, eventData);
+      const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);
       await sendMailFromTemplate(template, app);
       return newUser.user;
     } catch (e) {
@@ -86,7 +87,7 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
  * Send an informative email to c8 admin
  * @param user
  */
-export const sendFirstConnexionEmail = async (user: PublicUser): Promise<any> => {
+export const sendFirstConnexionEmail = async (user: PublicUser) => {
   const mailRequest = await userFirstConnexion(user);
   const from = await getSendgridFrom(user._meta.createdFrom);
   return sendMail(mailRequest, from).catch(e => console.warn(e.message));

@@ -1,7 +1,8 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
-import { AvailsFilter, findSameTermIndex, TerritoryMarker } from '../avails/avails';
+import { RunsForm } from '@blockframes/contract/avails/form/runs.form';
+import { AvailsFilter, DurationMarker, isSameCalendarTerm, isSameMapTerm, TerritoryMarker } from '../avails/avails';
 import {
   Bucket,
   BucketContract,
@@ -13,7 +14,7 @@ import {
   toBucketTerm
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 //////////
 // TERM //
@@ -29,14 +30,7 @@ function createBucketTermControl(params: Partial<BucketTerm> = {}) {
       to: new FormControl(term.duration?.to)
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
-    runs: new FormGroup({
-      broadcasts: new FormControl(term.runs?.broadcasts),
-      catchup: new FormGroup({
-        from: new FormControl(term.runs?.catchup.from),
-        duration: new FormControl(term.runs?.catchup.duration),
-        period: new FormControl(term.runs?.catchup.period),
-      }),
-    })
+    runs: new RunsForm(term.runs)
   }
 }
 
@@ -105,67 +99,135 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
       .map(terms => terms.controls)
       .flat();
 
-    return this.change.pipe(map(getTerm));
+    return this.change.pipe(startWith([]), map(getTerm));
   }
 
   /**
-   * Find the
-   * @param mandate
-   * @param term
-   * @param territory
+   * Adds a territory to bucket if not already in it
+   * @param avails
+   * @param marker
    * @returns
    */
-
-  toggleTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
-    const { contract: mandate, slug: territory } = marker;
+  addTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
+    const { contract: mandate, slug: territory, term } = marker;
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(c => mandate.termIds.includes(c.parentTermId));
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     // Contract is not registered
     if (contractIndex === -1) {
-      this.get('contracts').add(toBucketContract(mandate, { ...avails, territories: [territory] }));
+      this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }));
+      this.markAsDirty();
       this.change.next();
       return true;
     }
+
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails);
+    const termIndex = contract.terms.findIndex(t => isSameMapTerm(t, avails));
     // New term
     if (termIndex === -1) {
       this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
+      this.markAsDirty();
       this.change.next();
       return true;
     }
-    // Toggle territory
+
     const territories = contract.terms[termIndex].territories;
     const control = this.get('contracts').at(contractIndex).get('terms').at(termIndex).get('territories');
     const hasTerritory = territories.includes(territory);
     // Add territory
     if (!hasTerritory) {
       control.setValue([...territories, territory]);
+      this.markAsDirty();
       return true;
     }
-    // Remove the territory from the list
-    else if (territories.length > 1) {
+    return false;
+  }
+
+  /**
+   * Removes a territory from Bucket and entire term if empty
+   * @param avails
+   * @param marker
+   * @returns
+   */
+  removeTerritory(avails: AvailsFilter, marker: TerritoryMarker) {
+    const { slug: territory, term } = marker;
+    const bucket = this.value;
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
+    if (contractIndex === -1) { return; }
+
+    const contract = bucket.contracts[contractIndex];
+    const termIndex = contract.terms.findIndex(t => isSameMapTerm(t, avails));
+    if (termIndex === -1) { return; }
+
+    const territories = contract.terms[termIndex].territories;
+    const control = this.get('contracts').at(contractIndex).get('terms').at(termIndex).get('territories');
+    const hasTerritory = territories.includes(territory);
+
+    if (!hasTerritory) { return; }
+
+    if (territories.length > 1) {
       control.setValue(territories.filter(t => t !== territory));
-      return false;
-    }
-    // Remove the term as it was the last territory
-    else {
+    } else { // Remove the term as it was the last territory
       this.get('contracts').at(contractIndex).get('terms').removeAt(termIndex);
-      this.change.next();
-      return false;
+      this.change.next()
     }
   }
 
-  isAlreadyToggled(avails: AvailsFilter, marker: TerritoryMarker) {
-    const { contract: mandate, slug: territory } = marker;
+  /**
+   * Checks if a territory is already in bucket
+   * @param avails
+   * @param marker
+   * @returns boolean
+   */
+  isAlreadyInBucket(avails: AvailsFilter, marker: TerritoryMarker): boolean {
+    const { slug: territory, term } = marker;
 
     const bucket = this.value;
-    const contractIndex = bucket.contracts.findIndex(c => mandate.termIds.includes(c.parentTermId));
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     if (contractIndex === -1) { return false; }
     const contract = bucket.contracts[contractIndex];
-    const termIndex = findSameTermIndex(contract.terms, avails);
+    const termIndex = contract.terms.findIndex(t => isSameMapTerm(t, avails));
     if (termIndex === -1) { return false }
     const territories = contract.terms[termIndex].territories;
     return territories.includes(territory);
+  }
+
+  /**
+   * Adds a Duration from Calendar into the bucket if not already in it
+   */
+  addDuration(avails: AvailsFilter, marker: DurationMarker) {
+    const { contract: mandate, term } = marker;
+    const bucket = this.value;
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
+
+    // Contract is not registered
+    if (contractIndex === -1) {
+      const bucketContract = toBucketContract(mandate, term, avails);
+      this.get('contracts').add(bucketContract);
+      this.markAsDirty();
+      this.change.next();
+      return;
+    }
+
+    const bucketTerm = toBucketTerm(avails);
+    this.get('contracts').at(contractIndex).get('terms').add(bucketTerm);
+    this.markAsDirty();
+    this.change.next();
+  }
+
+  /**
+   * This function will retrieved the `termIndex` & `contractIndex` based on the given `DurationMarker`
+   */
+   getTermIndexForCalendar(avails: AvailsFilter, marker: DurationMarker): { contractIndex: number, termIndex: number } | undefined {
+    const { term } = marker;
+    const bucket = this.value;
+
+    const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
+    if (contractIndex === -1) return;
+
+    const contract = bucket.contracts[contractIndex];
+    const termIndex = contract.terms.findIndex(t => isSameCalendarTerm(t, avails));
+    if (termIndex === -1) return;
+
+    return { contractIndex, termIndex };
   }
 }

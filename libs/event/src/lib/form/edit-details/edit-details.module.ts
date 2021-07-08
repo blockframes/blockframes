@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EditDetailsComponent } from './edit-details.component';
 
 // Forms
-import { TimeDateModule } from '../time-date.directive';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 
 // Material
@@ -23,7 +22,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ReactiveFormsModule,
     FlexLayoutModule,
     // Form
-    TimeDateModule,
     TimePickerModule,
     // Material
     MatTooltipModule,

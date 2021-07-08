@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="170px" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Illustrations/Dark/170px/chart</title>
+    <defs>
+        <filter x="-19.9%" y="-20.1%" width="139.8%" height="140.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="3" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Illustrations/Dark/170px/chart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+        <g id="noun_Pie-Chart_3282945" transform="translate(30.000000, 30.000000)" fill-rule="nonzero" stroke-width="2">
+            <path d="M51.8911348,109.421053 C23.6246994,109.017313 0.761524757,86.5306079 0.183303272,58.5646519 C-0.394918212,30.5986959 21.5196491,7.20555849 49.7457447,5.65824561 L49.7457447,57.497193 C49.7457447,58.6695869 50.7062685,59.62 51.8911348,59.62 L104.28156,59.62 C103.109838,87.4219967 80.0132829,109.377015 51.8911348,109.421053 Z" id="Shape" stroke="#414D86"></path>
+            <path d="M59.0840426,50.38 L59.0840426,0.621403509 C86.3637787,1.76603688 108.215175,23.3874189 109.371986,50.38 L59.0840426,50.38 Z" id="Shape" stroke="#8DA4FA" fill="#8DA4FA" filter="url(#filter-1)"></path>
+            <path d="M59.0840426,50.38 L59.0840426,0.621403509 C86.3637787,1.76603688 108.215175,23.3874189 109.371986,50.38 L59.0840426,50.38 Z" id="Shape" stroke="#8DA4FA" fill="#8DA4FA"></path>
+        </g>
+    </g>
+</svg>

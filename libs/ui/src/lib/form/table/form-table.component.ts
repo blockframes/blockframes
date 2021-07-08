@@ -17,7 +17,7 @@ import {
 
 // Blockframes
 import { FormList, FormEntity, EntityControl } from '@blockframes/utils/form';
-import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
+import { ColRefDirective } from '@blockframes/utils/directives/col-ref.directive';
 import { AddButtonTextDirective, SaveButtonTextDirective } from '@blockframes/utils/directives/button-text.directive';
 
 // RxJs
@@ -43,13 +43,15 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
+  @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
 
-  @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
+  @ContentChildren(ColRefDirective, { descendants: false }) cols: QueryList<ColRefDirective>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
   @ContentChild(SaveButtonTextDirective, { read: TemplateRef }) saveButtonText: SaveButtonTextDirective;
   @ContentChild(AddButtonTextDirective, { read: TemplateRef }) addButtonText: AddButtonTextDirective;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  layout = { top: 'column', bottom: 'column-reverse', left: 'row', right: 'row-reverse' };
   tableColumns: string[] = [];
   showTable$: Observable<boolean>;
   showPaginator$: Observable<boolean>;

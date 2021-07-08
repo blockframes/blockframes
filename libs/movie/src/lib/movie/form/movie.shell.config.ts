@@ -62,23 +62,11 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     private uploaderService: FileUploaderService,
   ) { }
 
-  onInit(): Observable<any>[] {
+  onInit(): Observable<unknown>[] {
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.getValue(id)),
       tap(movie => {
-        /* @TODO #5529 investigate & clean this up.
-        We need to check if in the form the value for productionStatus is already set, because
-        initially, this value is null, but since we made a request with `this.service.getValue(id)` to
-        firebase, this code will get pushed onto the async stack, which will be executed later. The result
-        of this is that all the "sync" code that updates this form will be overwritten with the value
-        from the db. For instance, in title-status component we set the movie status to released when
-        app is catalog. If we now wouldn't check if the productionStatus is already set to something, it will
-        erase `released` and set it to null */
-        if (this.form.productionStatus.value) {
-          movie.productionStatus = this.form.productionStatus.value
-        }
-
         if (this.form.release.get('status').value) {
           movie.release.status = this.form.release.get('status').value
         }
@@ -106,7 +94,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   }
 
   // TODO issue#4002
-  async onSave(options: FormSaveOptions): Promise<any> {
+  async onSave(options: FormSaveOptions): Promise<void> {
 
     const base = this.query.getActive();
     const movie = mergeDeep(base, this.form.value);

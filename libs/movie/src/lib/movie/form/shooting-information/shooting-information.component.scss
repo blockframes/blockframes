@@ -14,12 +14,12 @@ mat-radio-button {
   margin-bottom: 16px;
 }
 
-mat-form-field, static-select {
+mat-form-field, input-autocomplete {
   width: 50%;
 }
 
 @include layout-bp(lt-lg) {
-  mat-form-field, static-select {
+  mat-form-field, input-autocomplete {
     width: 100%;
   }
 }

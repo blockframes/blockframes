@@ -6,6 +6,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'auth-data-validation',
@@ -14,7 +16,13 @@ import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthDataValidationComponent implements OnInit {
-  @Input() organization: Organization;
+  @Input() set organization(org: Organization) {
+    this.orgData = hasDenomination(org);
+    const isUserInOrg = org.userIds.includes(this.user.uid);
+    const isOrgAccepted = org.status === "accepted";
+    const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
+    this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
+  };
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   public profileData = false;
@@ -27,6 +35,8 @@ export class AuthDataValidationComponent implements OnInit {
   constructor(
     private query: AuthQuery,
     private routerQuery: RouterQuery,
+    private functions: AngularFireFunctions,
+    private snackbar: MatSnackBar,
     @Optional() private intercom: Intercom) { }
 
   ngOnInit() {
@@ -34,18 +44,6 @@ export class AuthDataValidationComponent implements OnInit {
 
     if (hasDisplayName(this.user) && !!this.user.email) {
       this.profileData = true;
-    }
-
-    if (hasDenomination(this.organization)) {
-      this.orgData = true;
-    }
-
-    const isUserInOrg = this.organization.userIds.includes(this.user.uid);
-    const isOrgAccepted = this.organization.status === "accepted";
-    const orgHaveAccesToAtLeastOneModule = getOrgModuleAccess(this.organization, this.app).length ? true : false;
-
-    if (isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg) {
-      this.orgApproval = true;
     }
 
     this.emailValidate$ = this.query.hasVerifiedEmail$;
@@ -57,5 +55,21 @@ export class AuthDataValidationComponent implements OnInit {
 
   refresh() {
     window.location.reload();
+  }
+
+  async resendEmailVerification() {
+    const snack = this.snackbar.open('Sending verification email...');
+    const publicUser = this.query.user;
+    const app = getCurrentApp(this.routerQuery);
+
+    try {
+      const sendVerifyEmail = this.functions.httpsCallable('sendVerifyEmailAddress');
+      await sendVerifyEmail({ email: publicUser.email, publicUser, app }).toPromise();
+      snack.dismiss();
+      this.snackbar.open('Verification email sent.', '', { duration: 3000 });
+    } catch (err) {
+      snack.dismiss();
+      this.snackbar.open('Something went wrong.', '', { duration: 3000 });
+    }
   }
 }

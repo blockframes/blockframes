@@ -7,7 +7,7 @@ export interface AvailsRoot {
 }
 
 @Injectable({ providedIn: 'root' })
-export class AvailsGuard implements CanDeactivate<any> {
+export class AvailsGuard implements CanDeactivate<unknown> {
 
   canDeactivate(component: AvailsRoot) {
     return component.confirmExit();

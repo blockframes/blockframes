@@ -88,8 +88,7 @@ export interface MovieBase<D> {
 }
 
 /** Document model of a Movie */
-export interface MovieDocument extends MovieBase<Timestamp> {
-}
+export type MovieDocument = MovieBase<Timestamp>
 
 /** Public interface of a movie (to notifications). */
 export interface PublicMovie {
@@ -184,7 +183,7 @@ export interface MovieOriginalReleaseRaw<D> {
   media?: MediaValue
 }
 
-export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> { }
+export type MovieOriginalRelease = MovieOriginalReleaseRaw<Date>
 
 export interface MovieRating {
   country: Territory;
@@ -232,7 +231,7 @@ export interface MovieShootingRaw<D> {
   locations?: MovieShootingLocations[]
 }
 
-export interface MovieShooting extends MovieShootingRaw<Date> { }
+export type MovieShooting = MovieShootingRaw<Date>
 
 export interface MovieShootingLocations {
   cities?: string[],
@@ -245,7 +244,7 @@ export interface MovieShootingDateRaw<D> {
   planned?: MoviePlannedShootingDateRange
 }
 
-export interface MovieShootingDate extends MovieShootingDateRaw<Date> { }
+export type MovieShootingDate = MovieShootingDateRaw<Date>
 
 export type MovieNote = { firstName: string, lastName: string, role: string } & StorageFile;
 
@@ -265,7 +264,7 @@ export interface MovieExpectedPremiereRaw<D> {
   event?: string
 }
 
-export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> { }
+export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>
 
 export interface MovieSalesPitch extends StorageVideo {
   description?: string,

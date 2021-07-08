@@ -180,7 +180,9 @@ export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.e
 // ========
 
 export const datastudio = {
-  user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB'
+  user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB',
+  users: '9789ffcf-a04c-43cb-8845-64a2c92f8a0d/page/00YOC',
+  events: 'a98badcf-df61-4f32-903d-6e703c75fd3d/page/TK5PC'
 }
 
 
@@ -198,3 +200,9 @@ export const centralOrgId = {
 export const backupBucket = 'staging-backups-bv8ys';
 export const heavyChunkSize = 15;
 export const chunkSize = 30;
+
+// JwPlayer
+// @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
+// ========
+
+export const testVideoId = '7R9ttesP';
