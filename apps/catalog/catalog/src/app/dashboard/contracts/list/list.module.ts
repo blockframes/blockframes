@@ -11,6 +11,7 @@ import { ContractListComponent } from './list.component';
 import {
   MaxLengthModule, ToLabelModule,
 } from '@blockframes/utils/pipes';
+
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
@@ -21,6 +22,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [ContractListComponent],
@@ -33,6 +35,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MaxLengthModule,
     IncomePipeModule,
     OfferPipeModule,
+    ImageModule,
     ToLabelModule,
 
     // Material

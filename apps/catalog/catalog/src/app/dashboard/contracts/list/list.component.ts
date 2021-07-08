@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Intercom } from 'ng-intercom';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { ContractService } from '@blockframes/contract/contract/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 const columns = {
   'offerId': 'Offer Reference',
@@ -26,18 +24,15 @@ export class ContractListComponent {
   public appName = appName[this.app];
   columns = columns;
   initialColumns = ['offerId', 'titleId', 'id', '_meta.createdAt', 'status',];
-  contracts$ = this.service.valueChanges(ref => ref.where('type', '==', 'sale'));
+  orgId = this.orgQuery.getActiveId();
+  contracts$ = this.service.valueChanges(
+    ref => ref.where('stakeholders', 'array-contains', this.orgId)
+      .where('type', '==', 'sale')
+  );
 
   constructor(
     private service: ContractService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService,
+    private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
-    @Optional() private intercom: Intercom
   ) { }
-
-  public openIntercom(): void {
-    return this.intercom.show();
-  }
 }
