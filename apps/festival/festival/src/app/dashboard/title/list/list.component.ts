@@ -34,6 +34,7 @@ export class ListComponent implements OnInit {
   titles$: Observable<Movie[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  titleCount$: Observable<Record<string, number>>;
 
   constructor(
     private service: MovieService,
@@ -56,6 +57,13 @@ export class ListComponent implements OnInit {
           this.dynTitle.setPageTitle('My titles', 'Empty');
       })
     );
+
+    this.titleCount$ = this.titles$.pipe(map(m => ({
+      all: m.length,
+      draft: m.filter(m => m.app.festival.status === 'draft').length,
+      accepted: m.filter(m => m.app.festival.status === 'accepted').length,
+      archived: m.filter(m => m.app.festival.status === 'archived').length,
+    })));
   }
 
   /** Navigate to tunnel if status is draft, else go to page */
