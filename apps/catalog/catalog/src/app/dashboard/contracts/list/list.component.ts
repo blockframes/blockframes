@@ -42,7 +42,6 @@ export class ContractListComponent {
   name: 'labelOfferStatus'
 })
 export class LabelOfferStatusPipe implements PipeTransform {
-  //@TODO #5530 remove limit and use css instead
   transform(value: OfferStatus): string {
     if (!value) return '';
     switch (value) {
