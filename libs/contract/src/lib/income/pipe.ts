@@ -2,7 +2,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Observable } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Pipe({ name: 'getIncome', pure: true })
 export class GetIncomePipe implements PipeTransform {
@@ -15,9 +15,7 @@ export class GetIncomePipe implements PipeTransform {
 
   transform(contractId: string) {
     if (!this.record[contractId]) {
-      // console.log({ contractId })
       this.record[contractId] = this.incomeService.valueChanges(contractId).pipe(
-        // tap(contract => console.log({ contract })),
       );
     }
     return this.record[contractId]
