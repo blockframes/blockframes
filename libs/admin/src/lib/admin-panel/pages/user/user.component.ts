@@ -6,7 +6,7 @@ import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 // Material
@@ -26,6 +26,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 export class UserComponent implements OnInit {
   public userId = '';
   public user: User;
+  public user$: Observable<User>
   public userOrg: Organization;
   public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
@@ -65,6 +66,7 @@ export class UserComponent implements OnInit {
     this.route.params.subscribe(async params => {
       this.userId = params.userId;
       this.user = await this.userService.getUser(this.userId);
+      this.user$ = this.userService.valueChanges(this.userId);
       if (this.user.orgId) {
         this.originalOrgValue = this.user.orgId;
         this.userOrg = await this.organizationService.getValue(this.user.orgId);
@@ -190,9 +192,11 @@ export class UserComponent implements OnInit {
     });
   }
 
-  verifyEmail() {
+  async verifyEmail() {
+    this.snackBar.open('Verifying email...', 'close', { duration: 2000 });
     const f = this.functions.httpsCallable('verifyEmail');
-    return f({ uid: this.userId }).toPromise();
+    await f({ uid: this.userId }).toPromise(); 
+    this.snackBar.open('Email verified', 'close', { duration: 2000 });
   }
 
   /** Simulate how many document will be deleted if we delete this user */
