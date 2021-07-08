@@ -19,7 +19,6 @@ export class ProductionYearFilterComponent implements OnInit, OnDestroy {
   maxReleaseYear = maxReleaseYear;
 
   ngOnInit() {
-    this.form.setValue(this.maxReleaseYear);
     this.sub = this.form.valueChanges.pipe(
       map(res => !!res),
       distinctUntilChanged()
