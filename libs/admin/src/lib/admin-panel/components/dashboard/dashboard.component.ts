@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
       if (this.params) {
         const params = JSON.stringify(this.params);
         const encodedParams = encodeURIComponent(params);
-        const fullUrl = `${url}/params=${encodedParams}`;
+        const fullUrl = `${url}?params=${encodedParams}`;
         this.dashboardUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
       } else {
         this.dashboardUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
