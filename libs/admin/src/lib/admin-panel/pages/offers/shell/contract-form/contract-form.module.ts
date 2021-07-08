@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from "@angular/material/button";
 
 // @blockframes
 import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
@@ -37,7 +38,8 @@ import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatButtonModule
   ]
 })
 export class ContractFormModule { }
