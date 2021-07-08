@@ -229,3 +229,11 @@ export function assertMoveTo(path: string) {
     expect(loc.pathname).to.eq(path);
   });
 }
+
+/** Used to navigate from the menu in the navbar */
+export function openSidenavMenuAndNavigate(button: string = '') {
+  cy.get('button[test-id="menu"]', {timeout: 30 * SEC}).click();
+  if(button) {
+    cy.get(`a[test-id="${button}"]`, {timeout: 3 * SEC}).click()
+  };
+}
