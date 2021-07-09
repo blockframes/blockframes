@@ -15,7 +15,7 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
-import { GetIncomeFromTitleModule } from '@blockframes/contract/income/pipe';
+import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -39,8 +39,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DisplayNameModule,
     NoTitleModule,
     TagModule,
-    GetIncomeFromTitleModule,
     NumberPipeModule,
+    IncomePipeModule,
 
     // Material
     MatButtonModule,

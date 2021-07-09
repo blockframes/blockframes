@@ -31,6 +31,15 @@ export const contractType = {
   sale: 'Sale'
 } as const
 
+export const offerStatus = {
+  'pending': ' New',
+  'negotiating': 'In Negotiation',
+  'accepted': ' Accepted',
+  'signing': 'On Signature',
+  'signed': 'Signed',
+  'declined': 'Declined',
+} as const
+
 export const legalDocumentTypes = {
   chain_of_titles: 'Chain of titles',
   invoices: 'Invoices'
@@ -1828,7 +1837,8 @@ export const staticModel = {
   territoriesISOA3,
   territoriesNUMCODE,
   territoriesFR,
-  appName
+  appName,
+  offerStatus,
 };
 
 export type StaticModel = typeof staticModel;
