@@ -50,10 +50,10 @@ describe('Invest Interest Email Test', () => {
     p4.openDiscussionModale();
     p4.fillDiscussionForm(discussionData);
     p4.sendDiscussionEmail();
-    cy.log('Email sent');
 
     // Waiting this snackbar to appear, because it appears after the emails have been sent.
     cy.get('snack-bar-container', {timeout: 30 * SEC}).should('contain', 'Your email has been sent.');
+    cy.log('Email sent');
 
     // Check if emails are well sent.
     cy.log('Checking emails...');

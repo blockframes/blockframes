@@ -126,7 +126,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
         // For e2e test purpose
         if ('Cypress' in window) {
-          console.log(window)
           toUser = {...toUser, email: testEmail};
         }
 
@@ -139,7 +138,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
           title,
         };
 
-        console.log(toUser)
         const promise = this.sendgrid.sendWithTemplate({
           request: { templateId, data, to: toUser.email },
           app: 'financiers'
