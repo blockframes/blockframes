@@ -11,7 +11,7 @@
           {{ id }}&nbsp;&nbsp;
           <ng-container *ngIf="(id|getOffer|async) as offer">
             <ng-container *ngIf="offer">
-              <tag-component [label]="offer.status | toLabel:'offerStatus' | titlecase"></tag-component>
+              <bf-tag>{{offer.status | toLabel:'offerStatus'}}</bf-tag>
             </ng-container>
           </ng-container>
         </ng-template>
