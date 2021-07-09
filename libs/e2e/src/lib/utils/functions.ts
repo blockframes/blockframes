@@ -9,7 +9,7 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
   cy.clearLocalStorage();
   indexedDB.deleteDatabase('firebaseLocalStorageDb');
   if (path !== '') {
-    cy.visit(path);
+    cy.visit(path, {timeout: 30 * SEC});
   }
   cy.viewport('ipad-2', 'landscape');
 }
@@ -234,6 +234,6 @@ export function assertMoveTo(path: string) {
 export function openSidenavMenuAndNavigate(button: string = '') {
   cy.get('button[test-id="menu"]', {timeout: 30 * SEC}).click();
   if(button) {
-    cy.get(`a[test-id="${button}"]`, {timeout: 3 * SEC}).click()
+    cy.get(`a[test-id="${button}"]`, {timeout: 3 * SEC}).click();
   };
 }

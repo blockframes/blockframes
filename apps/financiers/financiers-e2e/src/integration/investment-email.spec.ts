@@ -22,16 +22,13 @@ const discussionData = {
 //! Actually, we have no movie on financiers, so we need to import some to be able to work on E2E test for Financiers
 describe('Invest Interest Email Test', () => {
 
-  before(() => {
+  beforeEach(() => {
+    clearDataAndPrepareTest('/');
+
     //Clear all messages on server before the test
     cy.mailosaurDeleteAllMessages(serverId).then(() => {
       cy.log('Inbox empty. Ready to roll..');
     })
-
-  });
-
-  beforeEach(() => {
-    clearDataAndPrepareTest('/');
   })
 
   it('Connect to Financiers and send an invest interest email to the owners of a movie', () => {
@@ -54,21 +51,12 @@ describe('Invest Interest Email Test', () => {
     p4.fillDiscussionForm(discussionData);
     p4.sendDiscussionEmail();
     cy.log('Email sent');
-    cy.wait(5 * SEC);
 
-    // cy.mailosaurSearchMessages(serverId, {
-    //   sentTo: testEmail
-    // }).then((result: MessageListResult) => {
-    //   console.log(result)
-    //   cy.log(`You've Got ${result.items.length} Mails! 💓`);
-    //   const messages = result.items;
-    //   messages.forEach(email => {
-    //     cy.log(`Message: ${email.subject} ✅`);
-    //   });
-    // });
-  });
+    // Waiting this snackbar to appear, because it appears after the emails have been sent.
+    cy.get('snack-bar-container', {timeout: 30 * SEC}).should('contain', 'Your email has been sent.');
 
-  it('Check email is sent properly', () => {
+    // Check if emails are well sent.
+    cy.log('Checking emails...');
     cy.mailosaurSearchMessages(serverId, {
       sentTo: testEmail
     }).then((result: MessageListResult) => {
