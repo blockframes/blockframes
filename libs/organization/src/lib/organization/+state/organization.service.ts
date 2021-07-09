@@ -59,7 +59,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   formatFromFirestore(org: OrganizationDocument): Organization {
     return {
       ...org,
-      _meta: formatDocumentMetaFromFirestore(org._meta)
+      _meta: formatDocumentMetaFromFirestore(org?._meta)
     };
   }
 

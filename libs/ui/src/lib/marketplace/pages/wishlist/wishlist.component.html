@@ -28,7 +28,7 @@
       <ng-container matColumnDef="originCountry">
         <th mat-header-cell *matHeaderCellDef>Country of origin</th>
         <td mat-cell *matCellDef="let element">
-          <span>{{ element.originCountries | slice: 0:2 | toLabel: 'territories' }}</span>
+          <span>{{ $any(element.originCountries | slice: 0:2) | toLabel: 'territories' }}</span>
         </td>
       </ng-container>
 

@@ -3,6 +3,17 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { map, switchMap } from 'rxjs/operators';
 
+@Pipe({ name: 'getIncome', pure: true })
+export class GetIncomePipe implements PipeTransform {
+  constructor(
+    private incomeService: IncomeService
+  ) { }
+
+  transform(contractId: string) {
+    return this.incomeService.valueChanges(contractId);
+  }
+}
+
 @Pipe({ name: 'getIncomesFromTitle' })
 export class GetIncomesFromTitlePipe implements PipeTransform {
   constructor(
@@ -23,7 +34,7 @@ export class GetIncomesFromTitlePipe implements PipeTransform {
 }
 
 @NgModule({
-  exports: [GetIncomesFromTitlePipe],
-  declarations: [GetIncomesFromTitlePipe]
+  exports: [GetIncomesFromTitlePipe, GetIncomePipe],
+  declarations: [GetIncomesFromTitlePipe, GetIncomePipe]
 })
-export class GetIncomeFromTitleModule { }
+export class IncomePipeModule { }

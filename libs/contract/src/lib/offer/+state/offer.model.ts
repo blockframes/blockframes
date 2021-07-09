@@ -1,3 +1,4 @@
+import { DocumentMeta } from '@blockframes/utils/models-meta';
 import { MovieCurrency } from '@blockframes/utils/static-model';
 
 export const offerStatus = [
@@ -17,6 +18,6 @@ export interface Offer {
   specificity: string;
   status: OfferStatus;
   currency: MovieCurrency;
-  date: Date;
+  _meta: DocumentMeta<Date>;
   delivery: string;
 }

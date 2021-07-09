@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OfferStore, OfferState } from './offer.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'offers' })
@@ -14,7 +15,7 @@ export class OfferService extends CollectionService<OfferState> {
     if (!offer) return;
     return {
       ...offer,
-      date: offer?.date.toDate(),
+      _meta: formatDocumentMetaFromFirestore(offer?._meta)
     };
   }
 }
