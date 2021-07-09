@@ -1,0 +1,20 @@
+.margin-bottom {
+  margin-bottom: 16px;
+}
+
+.no-margin {
+  margin-bottom: 0;
+}
+
+header {
+  padding: 24px;
+  background: linear-gradient(to bottom, var(--primary-lighter), var(--background));
+}
+
+mat-card{
+  margin: 0 24px;
+}
+
+.full_width {
+  width: 100%;
+}

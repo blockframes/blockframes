@@ -1,0 +1,44 @@
+<ng-container *ngIf="offer$ | async as offer; else loading">
+  <ng-container *ngIf="contract$ |async as contract">
+    <header fxLayout="column" fxLayoutAlign="flex-start flex-start" class="margin-bottom">
+      <mat-icon svgIcon="arrow_back" color="primary" class="margin-bottom" [routerLink]="['..']"></mat-icon>
+      <bf-tag>{{offer.status | toLabel: 'offerStatus'}}</bf-tag>
+      <h1 class="no-margin">Offer Reference: {{offer.id}}</h1>
+      <span class="margin-bottom">Offer created: {{offer._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
+      <div fxLayout="row" fxLayoutAlign="space-between center" class="full_width margin-bottom">
+        <div fxLayout="row" fxLayoutAlign="flex-start center" fxLayoutGap="16px">
+          <button mat-stroked-button color="primary" [disabled]="loading$|async" (click)="acceptContract(contract.id)">
+            <mat-icon svgIcon="check" color="primary"></mat-icon>
+            Accept
+          </button>
+          <button mat-stroked-button color="primary" [disabled]="loading$|async" (click)="declineContract(contract.id)">
+            <mat-icon svgIcon="refuse" color="primary"></mat-icon>
+            Decline
+          </button>
+        </div>
+        <button mat-flat-button color="primary" (click)="openIntercom()">
+          <mat-icon svgIcon="comment" color="primary"></mat-icon>
+          Contact Archipel Content Team
+        </button>
+      </div>
+    </header>
+    <mat-card class="margin-bottom" *ngIf="offer.specificity as specificity">
+      <b>
+        <p>Specific Terms</p>
+      </b>
+      <span>{{specificity}}</span>
+    </mat-card>
+
+    <mat-card>
+      <contract-item [contract]="contract">
+        <ng-container *ngIf="contract.id | getIncome | async as income" price>
+          <p>{{ income.price | currency: income.currency }}</p>
+        </ng-container>
+      </contract-item>
+    </mat-card>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner fxFlexAlign="center"></mat-spinner>
+</ng-template>
