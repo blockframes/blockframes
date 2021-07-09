@@ -15,7 +15,7 @@ const users  =  [ userFixture.getByUID(USER.Hettie) ];
 const movieFixture = 'movie.xlsx';
 const contractFixture = 'contract.xlsx';
 const movieRecords = 5;
-const contractRecords = 19;
+const contractRecords = 20;
 
 const logInAdminAndNavigate = () => {
   const loginPage: AuthLoginPage = new AuthLoginPage();
