@@ -1,4 +1,4 @@
-.margin-bottom {
+bf-tag,span,header,mat-card {
   margin-bottom: 16px;
 }
 
@@ -7,10 +7,16 @@ header {
   background: linear-gradient(to bottom, var(--primary-lighter), var(--background));
 }
 
-mat-card{
-  margin: 0 24px;
+mat-card {
+  margin-left: 24px;
+  margin-right: 24px;
 }
 
-.full_width {
+mat-spinner{
+  margin: 16px auto;
+}
+
+.actions {
+  margin-bottom: 16px;
   width: 100%;
 }
