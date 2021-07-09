@@ -23,7 +23,7 @@ export default class ViewPage {
     cy.get('textarea[formControlName="message"]', {timeout: 3 * SEC}).type(data.message);
   }
 
-  public sendDIscussionEmail() {
+  public sendDiscussionEmail() {
     cy.get('button[type="submit"]', {timeout: 3 * SEC}).contains('Send your message').click();
   }
 }

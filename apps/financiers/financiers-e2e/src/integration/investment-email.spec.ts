@@ -22,32 +22,50 @@ const discussionData = {
 //! Actually, we have no movie on financiers, so we need to import some to be able to work on E2E test for Financiers
 describe('Invest Interest Email Test', () => {
 
-  beforeEach(() => {
-    clearDataAndPrepareTest('');
-
+  before(() => {
     //Clear all messages on server before the test
     cy.mailosaurDeleteAllMessages(serverId).then(() => {
       cy.log('Inbox empty. Ready to roll..');
     })
 
+  });
+
+  beforeEach(() => {
+    clearDataAndPrepareTest('/');
+  })
+
+  it('Connect to Financiers and send an invest interest email to the owners of a movie', () => {
     const p1 = new LandingPage();
     const p2 = p1.clickLogin();
     p2.fillSignin(users[0]);
     p2.clickSignIn();
-  });
 
-  it('Connect to Financiers and send an invest interest email to the owner of a movie', () => {
     openSidenavMenuAndNavigate('library');
     assertMoveTo(MOVIE_LIST_PATH);
 
-    const p1 = new SearchPage();
-    p1.selectMovie('Movie 1');
-    const p2 = new ViewPage();
-    cy.get('section[class="progress"]').find('h2').contains('Project Funding');
-    p2.openDiscussionModale();
-    p2.fillDiscussionForm(discussionData);
-    p2.sendDIscussionEmail();
+    const p3 = new SearchPage();
+    cy.wait(2 * SEC);
+    p3.selectMovie('Movie 1');
+    const p4 = new ViewPage();
+    cy.wait(2 * SEC)
+    // Scroll to bottom of the page to be able to see the button opening the form
+    cy.get('main').scrollTo('bottom', {ensureScrollable: false});
+    p4.openDiscussionModale();
+    p4.fillDiscussionForm(discussionData);
+    p4.sendDiscussionEmail();
     cy.log('Email sent');
+    cy.wait(5 * SEC);
+
+    // cy.mailosaurSearchMessages(serverId, {
+    //   sentTo: testEmail
+    // }).then((result: MessageListResult) => {
+    //   console.log(result)
+    //   cy.log(`You've Got ${result.items.length} Mails! 💓`);
+    //   const messages = result.items;
+    //   messages.forEach(email => {
+    //     cy.log(`Message: ${email.subject} ✅`);
+    //   });
+    // });
   });
 
   it('Check email is sent properly', () => {
@@ -58,7 +76,6 @@ describe('Invest Interest Email Test', () => {
       const messages = result.items;
       messages.forEach(email => {
         cy.log(`Message: ${email.subject} ✅`);
-        // expect(subjects).to.include.members([email.subject]);
       });
     });
   });

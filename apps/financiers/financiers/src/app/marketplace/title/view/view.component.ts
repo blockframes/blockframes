@@ -19,6 +19,7 @@ import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { testEmail } from "@blockframes/e2e/utils/env";
 
 interface EmailData {
   subject: string;
@@ -121,7 +122,14 @@ export class MarketplaceMovieViewComponent implements OnInit {
     for (const org of orgs) {
       const users = await this.userService.getValue(org.userIds);
       for (const user of users) {
-        const toUser = getUserEmailData(user);
+        let toUser = getUserEmailData(user);
+
+        // For e2e test purpose
+        if ('Cypress' in window) {
+          console.log(window)
+          toUser = {...toUser, email: testEmail};
+        }
+
         const data = {
           ...emailData,
           currency: getCurrencySymbol(this.currency, 'wide'),
@@ -131,8 +139,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
           title,
         };
 
+        console.log(toUser)
         const promise = this.sendgrid.sendWithTemplate({
-          request: { templateId, data, to: user.email },
+          request: { templateId, data, to: toUser.email },
           app: 'financiers'
         });
         promises.push(promise);
