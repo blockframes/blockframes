@@ -6,7 +6,7 @@ import { ContractService, ContractStatus } from '@blockframes/contract/contract/
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { pluck, switchMap } from 'rxjs/operators';
+import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 
 @Component({
@@ -23,7 +23,8 @@ export class CatalogContractViewComponent {
   );
   contract$ = this.route.params.pipe(
     pluck('contractId'),
-    switchMap((id: string) => this.contractService.valueChanges(id))
+    switchMap((id: string) => this.contractService.valueChanges(id)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   loading$ = new BehaviorSubject<boolean>(false);
   constructor(

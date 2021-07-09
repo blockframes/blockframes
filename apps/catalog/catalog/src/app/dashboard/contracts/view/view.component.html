@@ -1,5 +1,5 @@
-<ng-container *ngIf="offer$ | async as offer; else loading">
-  <ng-container *ngIf="contract$ |async as contract; else loading">
+<ng-container *ngIf=" offer$ | async as offer; else loading">
+  <ng-container *ngIf=" contract$ | async as contract; else loading">
     <header fxLayout="column" fxLayoutAlign="flex-start flex-start" class="margin-bottom">
       <mat-icon svgIcon="arrow_back" color="primary" class="margin-bottom" [routerLink]="['./../..']"></mat-icon>
       <div class="margin-bottom">
@@ -30,7 +30,8 @@
       </b>
       <span>{{specificity}}</span>
     </mat-card>
-
+  </ng-container>
+  <ng-container *ngIf="contract$| async as contract">
     <mat-card>
       <contract-item [contract]="contract">
         <ng-container *ngIf="contract.id | getIncome | async as income" price>
