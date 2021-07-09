@@ -11,6 +11,7 @@ import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [EventAnalyticsComponent],
@@ -21,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     MatCardModule,
     MatIconModule,
+    MatButtonModule,
     ToLabelModule,
     DurationModule,
     MatProgressSpinnerModule,

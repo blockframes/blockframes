@@ -70,6 +70,7 @@ export interface EventAnalytics {
   email: string,
   firstName: string,
   lastName: string,
+  name?: string, // firstName + lastName
   orgName?: string,
   orgActivity?: string,
   orgCountry?: string,
