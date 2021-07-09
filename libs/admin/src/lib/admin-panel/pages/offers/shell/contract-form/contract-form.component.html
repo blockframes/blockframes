@@ -24,10 +24,7 @@
       <ng-template colRef="versions" let-version>
         <ul>
           <li *ngFor="let language of version.languages | keyvalue">
-            <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
-              <ng-template let-version>
-                <span>{{ version | versionPipe | join }}</span>
-              </ng-template>
+            <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
           </li>
         </ul>
       </ng-template>
