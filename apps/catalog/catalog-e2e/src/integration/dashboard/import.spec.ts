@@ -10,12 +10,12 @@ import { SEC } from "@blockframes/e2e/utils/env";
 const MY_TITLES_PAGE = '/c/o/dashboard/title';
 
 const userFixture = new User();
-const users  =  [ userFixture.getByUID(USER.Hettie) ];
+const users  =  [ userFixture.getByUID(USER.Vincent) ];
 
 const movieFixture = 'movie.xlsx';
 const contractFixture = 'contract.xlsx';
 const movieRecords = 5;
-const contractRecords = 20;
+const contractRecords = 19;
 
 const logInAdminAndNavigate = () => {
   const loginPage: AuthLoginPage = new AuthLoginPage();
