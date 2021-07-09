@@ -42,7 +42,7 @@
         <ng-template colRef="release.year" let-year><b>{{ year }}</b></ng-template>
         <ng-template colRef="directors" let-directors><b>{{ directors | displayName }}</b></ng-template>
         <ng-template colRef="app.catalog.status" let-status>
-          <tag-component [label]="(status | toLabel: 'storeStatus')"></tag-component>
+          <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
         </ng-template>
       </bf-table-filter>
     </mat-card>
