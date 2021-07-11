@@ -9,6 +9,7 @@ import { App } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 import { Movie } from '../+state';
+import { maxReleaseYear } from './filters/production-year/production-year.component';
 
 export interface LanguagesSearch {
   original: Language[];
@@ -155,7 +156,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       search['filters'] = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
     if (this.release.value) {
-      search['filters'] = `release.year <= ${this.release.value}`;
+      search['filters'] = `release.year >= ${this.release.value}`;
     }
 
     return this.movieIndex.search<Movie>(search.query, search);
