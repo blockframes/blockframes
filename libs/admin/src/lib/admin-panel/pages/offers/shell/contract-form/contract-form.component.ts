@@ -7,6 +7,8 @@ import { MovieService } from "@blockframes/movie/+state";
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from "@blockframes/contract/term/+state";
+import { OfferService } from '@blockframes/contract/offer/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 // Forms
 import { FormList } from '@blockframes/utils/form';
@@ -38,6 +40,7 @@ export class ContractFormComponent implements OnInit {
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
   currency?: string;
+  showBfFilterTable: boolean =false;
   termColumns = {
     'avails.duration': 'Duration',
     'avails.territories': 'Territories',
@@ -46,27 +49,39 @@ export class ContractFormComponent implements OnInit {
     'versions': 'Versions',
     'runs': '# of broadcasts'
   }
+  public orgId = this.orgQuery.getActiveId();
+  public contracts$ = this.contractService.valueChanges(
+    ref => ref.where('stakeholders', 'array-contains', this.orgId)
+      .where('type', '==', 'sale')
+  );
   
   constructor(
     private service: MovieService,
     private route: ActivatedRoute,
     private incomeService: IncomeService,
     private contractService: ContractService,
-    private termService: TermService
+    private termService: TermService,
+    private offerService: OfferService,
+    private orgQuery: OrganizationQuery,
     ){}
 
     async ngOnInit() {
+      if (this.route.snapshot.queryParams.termId) {
+        this.showBfFilterTable = true;
+      }
       const contractId: string = this.route.snapshot.params.contractId;
-      const [ contract, income ] = await Promise.all([
+      const offerId: string = this.route.snapshot.params.offerId;
+      const [ contract, income, offer ] = await Promise.all([
         this.contractService.getValue(contractId),
         this.incomeService.getValue(contractId),
+        this.offerService.getValue(offerId)
       ]);
       this.form.patchValue({
         titleId: contract?.titleId,
         price: income?.price
       })
       this.contract = contract;
-      this.currency = income?.currency;
+      this.currency = offer?.currency;
       const terms = await this.termService.getValue(contract.termIds);
       (this.form.get('terms') as FormList<any>).patchAllValue(terms);
     }
