@@ -15,18 +15,6 @@
         <mat-error *ngIf="form.hasError('required', 'price')">Price field is required!</mat-error>
       </mat-form-field>
     </header>
-
-    <ng-container>
-      <ng-container *ngIf="contracts$ | async as contracts; else loading">
-        <bf-table-filter
-        [source]="contracts" 
-        [columns]="termColumns" 
-        clickable 
-        showFilter 
-        showPaginator link="/c/o/dashboard/contract/">
-      </bf-table-filter>
-      </ng-container>
-    </ng-container>
     
     <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
       <!-- Columns -->
