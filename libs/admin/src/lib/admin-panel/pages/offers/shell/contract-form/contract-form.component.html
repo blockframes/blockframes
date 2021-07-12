@@ -23,13 +23,8 @@
       <ng-template colRef="avails.exclusive" let-exclusive>{{ exclusive ? 'Yes' : 'No'}}</ng-template>
       <ng-template colRef="versions" let-version>
         <ul>
-          <li *ngFor="let item of version | keyvalue">
-            {{item.key | titlecase}} 
-            (
-              <span *ngFor="let option of item.value | keyvalue">
-                {{option.value ? (option.key | titlecase) : '' }}
-              </span> 
-            ) <!-- End of options languages  -->
+          <li *ngFor="let language of version.languages | keyvalue">
+            <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
           </li>
         </ul>
       </ng-template>

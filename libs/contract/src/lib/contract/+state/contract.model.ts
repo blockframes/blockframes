@@ -1,9 +1,13 @@
+import { createDocumentMeta, DocumentMeta } from "@blockframes/utils/models-meta";
+import type firebase from 'firebase';
+type Timestamp = firebase.firestore.Timestamp;
 
 export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
 
 export type ContractStatus = typeof contractStatus[number];
 
-export interface Contract {
+export interface Contract<D = Date> {
+  _meta: DocumentMeta<D>;
   id: string;
   type: 'mandate' | 'sale';
   status: ContractStatus;
@@ -23,6 +27,9 @@ export interface Contract {
   /** Org ids that have contract parent of this contract */
   stakeholders: string[];
 }
+
+export type ContractDocument = Contract<Timestamp>;
+
 export interface Mandate extends Contract {
   type: 'mandate';
 }
@@ -37,6 +44,7 @@ export interface Sale extends Contract {
 
 export function createMandate(params: Partial<Mandate> = {}): Mandate {
   return {
+    _meta: createDocumentMeta({}),
     id: '',
     titleId: '',
     termIds: [],
@@ -53,6 +61,7 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
 
 export function createSale(params: Partial<Sale> = {}): Sale {
   return {
+    _meta: createDocumentMeta({}),
     id: '',
     titleId: '',
     termIds: [],

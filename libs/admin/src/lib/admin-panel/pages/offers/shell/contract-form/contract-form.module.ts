@@ -20,6 +20,8 @@ import { RunsFormModule } from "@blockframes/contract/term/form/runs/runs-form.m
 
 // Pipes
 import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
+import { VersionPipeModule } from "@blockframes/utils/pipes/version.pipe";
+import { JoinPipeModule } from "@blockframes/utils/pipes/join.pipe";
 
 @NgModule({
   declarations: [ContractFormComponent],
@@ -30,6 +32,8 @@ import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
     AvailsFilterModule,
     FormTableModule,
     ToLabelModule,
+    VersionPipeModule,
+    JoinPipeModule,
     LanguagesFormModule,
     RunsFormModule,
     
