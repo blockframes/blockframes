@@ -2,16 +2,12 @@
 <ng-container *ngIf="invit; else noInvitation">
   <ng-container *ngIf="invit | hasAction else displayStatus">
     <button mat-button test-id="invitation-accept" (click)="accept(invit)">
-      <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
-        <mat-icon svgIcon="check_circle"></mat-icon>
-        Accept
-      </div>
+      <mat-icon svgIcon="check_circle"></mat-icon>
+      <span>Accept Invitation</span>
     </button>
     <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
-      <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
-        <mat-icon svgIcon="cancel"></mat-icon>
-        Decline
-      </div>
+      <mat-icon svgIcon="cancel"></mat-icon>
+      <span>Decline Invitation</span>
     </button>
   </ng-container>
   <ng-template #displayStatus>
