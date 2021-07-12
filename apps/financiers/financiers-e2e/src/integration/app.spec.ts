@@ -9,8 +9,7 @@ describe('financiers', () => {
   });
 
   it('should display welcome message', () => {
-    cy.wait(300 * SEC);
-    cy.get('financiers-landing h4', {timeout: 30 * SEC})
+    cy.get('financiers-landing h4', {timeout: 60 * SEC})
       .contains('Welcome to Media Financiers');
   });
 });
