@@ -40,7 +40,7 @@ export class ContractFormComponent implements OnInit {
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
   currency?: string;
-  showBfFilterTable: boolean =false;
+  showBfFilterTable = false;
   termColumns = {
     'avails.duration': 'Duration',
     'avails.territories': 'Territories',
