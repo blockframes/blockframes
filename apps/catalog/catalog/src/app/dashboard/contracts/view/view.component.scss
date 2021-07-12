@@ -1,4 +1,7 @@
-bf-tag,span,header,mat-card {
+bf-tag,
+span,
+header,
+.surface {
   margin-bottom: 16px;
 }
 
@@ -7,12 +10,12 @@ header {
   background: linear-gradient(to bottom, var(--primary-lighter), var(--background));
 }
 
-mat-card {
+.surface {
   margin-left: 24px;
   margin-right: 24px;
 }
 
-mat-spinner{
+mat-spinner {
   margin: 16px auto;
 }
 

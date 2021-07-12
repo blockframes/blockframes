@@ -36,7 +36,11 @@
           [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
         </ng-template>
       </ng-template>
-
+      <ng-template colRef="languages" let-languages>
+        <ng-container *ngFor="let language of languages| keyvalue; let last='last'">
+          {{language.key|toLabel:'languages'}}({{language.value | versionPipe}}){{last? '': ', '}}
+        </ng-container>
+      </ng-template>
     </bf-table-filter>
     <ng-content select="footer"></ng-content>
   </section>

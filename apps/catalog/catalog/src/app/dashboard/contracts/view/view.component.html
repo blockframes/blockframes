@@ -6,40 +6,52 @@
     <bf-tag>{{offer.status | toLabel: 'offerStatus'}}</bf-tag>
     <h1>Offer Reference: {{offer.id}}</h1>
     <span>Offer created: {{offer._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
-    <div fxLayout="row" fxLayoutAlign="space-between center" class="actions">
-      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+    <div fxLayout fxLayoutAlign="space-between center" class="actions">
+      <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
         <ng-container *ngIf="contract$ | async as contract">
-          <button mat-stroked-button color="primary" [disabled]="loading$|async" (click)="acceptContract(contract.id)">
-            <mat-icon svgIcon="check" color="primary"></mat-icon>
-            <span>Accept</span>
-          </button>
-          <button mat-stroked-button color="primary" [disabled]="loading$|async" (click)="declineContract(contract.id)">
-            <mat-icon svgIcon="refuse" color="primary"></mat-icon>
-            <span>Decline</span>
-          </button>
+          <ng-container *ngIf="['accepted','declined'].includes(offer.status); else noStatus">
+            <button mat-flat-button color="default" [disabled]="true" *ngIf="offer.status === 'accepted'"
+              matTooltip="You have already accepted this offer, please connect the AC Team">
+              <span>Accepted</span>
+              <mat-icon svgIcon="check"></mat-icon>
+            </button>
+            <button mat-flat-button color="primary" [disabled]="true" *ngIf="offer.status === 'declined'"
+              matTooltip="You have already declined this offer, please connect the AC Team">
+              <span>Declined</span>
+              <mat-icon svgIcon="refuse"></mat-icon>
+            </button>
+          </ng-container>
+          <ng-template #noStatus>
+            <button mat-stroked-button color="primary" [disabled]="loading$|async"
+              (click)="changeStatus('accepted',contract.id)">
+              <span>Accept</span>
+              <mat-icon svgIcon="check"></mat-icon>
+            </button>
+            <button mat-stroked-button color="primary" [disabled]="loading$|async"
+              (click)="changeStatus('declined',contract.id)">
+              <span>Decline</span>
+              <mat-icon svgIcon="refuse"></mat-icon>
+            </button>
+          </ng-template>
         </ng-container>
       </div>
       <button mat-flat-button color="primary" (click)="openIntercom()">
-        <mat-icon svgIcon="comment" color="primary"></mat-icon>
+        <mat-icon svgIcon="comment"></mat-icon>
         <span>Contact Archipel Content Team</span>
       </button>
     </div>
   </header>
   <section class="surface" *ngIf="offer.specificity as specificity">
-    <b>
-      <p>Specific Terms</p>
-    </b>
+    <h2>Specific Terms</h2>
     <span>{{specificity}}</span>
   </section>
 </ng-container>
 <ng-container *ngIf="contract$| async as contract">
-  <section class="surface">
-    <contract-item [contract]="contract">
-      <ng-container *ngIf="contract.id | getIncome | async as income" price>
-        <p>{{ income.price | currency: income.currency }}</p>
-      </ng-container>
-    </contract-item>
-  </section>
+  <contract-item [contract]="contract">
+    <ng-container *ngIf="contract.id | getIncome | async as income" price>
+      <h2>{{ income.price | currency: income.currency }}</h2>
+    </ng-container>
+  </contract-item>
 </ng-container>
 
 <ng-template #loading>

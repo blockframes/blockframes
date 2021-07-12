@@ -13,6 +13,7 @@ import { ContractItemModule } from '@blockframes/contract/contract/item/contract
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [CatalogContractViewComponent],
@@ -32,7 +33,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule,
     MatIconModule,
     MatSnackBarModule,
-
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: CatalogContractViewComponent }]),
   ]
 })
