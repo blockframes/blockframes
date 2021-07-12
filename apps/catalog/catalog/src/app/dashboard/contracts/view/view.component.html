@@ -1,0 +1,47 @@
+<ng-container *ngIf=" offer$ | async as offer; else loading">
+  <header fxLayout="column" fxLayoutAlign="start start">
+    <a mat-icon-button routerLink="../../.." color="primary">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <bf-tag>{{offer.status | toLabel: 'offerStatus'}}</bf-tag>
+    <h1>Offer Reference: {{offer.id}}</h1>
+    <span>Offer created: {{offer._meta.createdAt | date: 'MM/dd/yyyy'}}</span>
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="actions">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+        <ng-container *ngIf="contract$ | async as contract">
+          <button mat-stroked-button color="primary" [disabled]="loading$|async" (click)="acceptContract(contract.id)">
+            <mat-icon svgIcon="check" color="primary"></mat-icon>
+            <span>Accept</span>
+          </button>
+          <button mat-stroked-button color="primary" [disabled]="loading$|async" (click)="declineContract(contract.id)">
+            <mat-icon svgIcon="refuse" color="primary"></mat-icon>
+            <span>Decline</span>
+          </button>
+        </ng-container>
+      </div>
+      <button mat-flat-button color="primary" (click)="openIntercom()">
+        <mat-icon svgIcon="comment" color="primary"></mat-icon>
+        <span>Contact Archipel Content Team</span>
+      </button>
+    </div>
+  </header>
+  <section class="surface" *ngIf="offer.specificity as specificity">
+    <b>
+      <p>Specific Terms</p>
+    </b>
+    <span>{{specificity}}</span>
+  </section>
+</ng-container>
+<ng-container *ngIf="contract$| async as contract">
+  <section class="surface">
+    <contract-item [contract]="contract">
+      <ng-container *ngIf="contract.id | getIncome | async as income" price>
+        <p>{{ income.price | currency: income.currency }}</p>
+      </ng-container>
+    </contract-item>
+  </section>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

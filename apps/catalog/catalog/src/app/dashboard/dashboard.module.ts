@@ -62,6 +62,10 @@ const routes: Routes = [
         loadChildren: () => import('./contracts/list/list.module').then(m => m.ContractListModule)
       },
       {
+        path: 'contracts/:offerId/:contractId',
+        loadChildren: () => import('./contracts/view/view.module').then(m => m.CatalogContractViewModule)
+      },
+      {
         path: 'title',
         children: [{
           path: '',
