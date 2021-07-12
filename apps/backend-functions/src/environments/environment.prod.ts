@@ -36,4 +36,4 @@ export const twilioAccountSecret = functions.config().twilio.account.secret;
 export const twilioApiKeySecret = functions.config().twilio.api.key.secret;
 export const twilioApiKeySid = functions.config().twilio.api.key.sid;
 
-export const enableDailyFirestoreBackup = true;
+export const enableDailyFirestoreBackup = false;
