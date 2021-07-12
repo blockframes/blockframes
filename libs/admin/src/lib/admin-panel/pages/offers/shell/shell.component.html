@@ -4,14 +4,14 @@
     class="dark-contrast-theme"
     fxLayout="row"
     fxLayoutAlign="space-between center"
-    bgAsset="empty_banner.webp"
+    bgAsset="empty_banner.png"
   >
     <div>
       <a mat-icon-button routerLink="/c/o/admin/panel/offers">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <h1>Offer Reference: {{offer.id}}</h1>
-      <p>Offer created: {{offer.date | date: 'dd/MM/yyyy'}}</p>
+      <p>Offer created: {{offer._meta.createdAt | date: 'dd/MM/yyyy'}}</p>
       <org-chip *ngIf="buyerOrg$ | async as org" [org]="org" baseUrl="/c/o/admin/panel/organization" ></org-chip>
     </div>
     <div class="contracts">

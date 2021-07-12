@@ -11,6 +11,7 @@ import { centralOrgId } from '@env';
 import { AuthQuery } from "@blockframes/auth/+state";
 import { shareReplay, switchMap, take } from 'rxjs/operators';
 import { createOfferId } from '@blockframes/utils/utils';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -66,7 +67,7 @@ export class BucketService extends CollectionService<BucketState> {
       specificity,
       status: 'pending',
       currency: bucket.currency,
-      date: new Date(),
+      _meta: createDocumentMeta({ createdAt: new Date() }),
       delivery,
       id: offerId,
     });
@@ -79,6 +80,7 @@ export class BucketService extends CollectionService<BucketState> {
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
       // Create the contract
       await this.contractService.add({
+        _meta: createDocumentMeta({ createdAt: new Date(), }),
         id: contractId,
         type: 'sale',
         status: 'pending',

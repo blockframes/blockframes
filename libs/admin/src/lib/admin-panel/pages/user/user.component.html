@@ -12,7 +12,7 @@
           <li><b>Id : </b> {{ user.uid }}</li>
           <li><b>Email : </b> {{ user.email }}</li>
           <li>
-            <b>Email Verified: </b> {{ user._meta.emailVerified }}
+            <b>Email Verified: </b> {{ (user$ | async)?._meta.emailVerified }}
             <button *ngIf="!user._meta.emailVerified" mat-button color="primary" (click)="verifyEmail()">Verify</button>
           </li>
           <li><b>Position : </b> {{ user.position }}</li>

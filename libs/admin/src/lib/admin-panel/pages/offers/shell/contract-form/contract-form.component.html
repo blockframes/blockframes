@@ -1,43 +1,43 @@
-<form [formGroup]="form">
-  <header>
-    <mat-form-field appearance="outline">
-      <mat-label>Select a Title</mat-label>
-      <mat-select formControlName="titleId">
-        <mat-option *ngFor="let title of (titles$ | async)" [value]="title.id">
-          {{ title.title.international }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Title price</mat-label>
-      <input type="number" matInput formControlName="price" required min="0"/>
-      <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
-    </mat-form-field>
-  </header>
-  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
-    <!-- Columns -->
-    <ng-template class="duration" colRef="avails.duration" let-duration>{{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}</ng-template>
-    <ng-template colRef="avails.territories" let-territories>{{ territories | toLabel: 'territories' }}</ng-template>
-    <ng-template colRef="avails.medias" let-media>{{ media | toLabel: 'medias' }}</ng-template>
-    <ng-template colRef="avails.exclusive" let-exclusive>{{ exclusive ? 'Yes' : 'No'}}</ng-template>
-    <ng-template colRef="versions" let-version>
-      <ul>
-        <li *ngFor="let item of version | keyvalue">
-          {{item.key | titlecase}} 
-          (
-            <span *ngFor="let option of item.value | keyvalue">
-              {{option.value ? (option.key | titlecase) : '' }}
-            </span> 
-          ) <!-- End of options languages  -->
-        </li>
-      </ul>
-    </ng-template>
-    <ng-template colRef="runs" let-runs>{{ runs?.broadcasts}}</ng-template>
-    <!-- Local Form -->
-    <ng-template formView let-termForm>
-        <avails-filter class="surface" [form]="termForm.get('avails')"></avails-filter>
-        <languages-form class="surface" [form]="termForm.get('versions')"></languages-form>
-        <runs-form class="surface" [form]="termForm.get('runs')"></runs-form>
-    </ng-template>
-  </bf-form-table>
-</form>
+<ng-container>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <header>
+      <mat-form-field appearance="outline">
+        <mat-label>Select a Title</mat-label>
+        <mat-select formControlName="titleId">
+          <mat-option *ngFor="let title of (titles$ | async)" [value]="title.id">
+            {{ title.title.international }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Title price</mat-label>
+        <input type="number" matInput formControlName="price" required min="0"/>
+        <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
+      </mat-form-field>
+    </header>
+    <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
+      <!-- Columns -->
+      <ng-template class="duration" colRef="avails.duration" let-duration>{{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}</ng-template>
+      <ng-template colRef="avails.territories" let-territories>{{ territories | toLabel: 'territories' }}</ng-template>
+      <ng-template colRef="avails.medias" let-media>{{ media | toLabel: 'medias' }}</ng-template>
+      <ng-template colRef="avails.exclusive" let-exclusive>{{ exclusive ? 'Yes' : 'No'}}</ng-template>
+      <ng-template colRef="versions" let-version>
+        <ul>
+          <li *ngFor="let language of version.languages | keyvalue">
+            <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
+          </li>
+        </ul>
+      </ng-template>
+      <ng-template colRef="runs" let-runs>{{ runs?.broadcasts}}</ng-template>
+      <!-- Local Form -->
+      <ng-template formView let-termForm>
+          <avails-filter class="surface" [form]="termForm.get('avails')"></avails-filter>
+          <languages-form class="surface" [form]="termForm.get('versions')"></languages-form>
+          <runs-form class="surface" [form]="termForm.get('runs')"></runs-form>
+      </ng-template>
+    </bf-form-table>
+    <footer>
+      <button mat-flat-button color="primary" type="submit">Confirm</button>
+    </footer>
+  </form>
+</ng-container>

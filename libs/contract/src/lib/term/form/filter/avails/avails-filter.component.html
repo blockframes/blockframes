@@ -1,7 +1,8 @@
 <form [formGroup]="form">
   <hr />
   <h3>Territories*</h3>
-  <static-group formControlName="territories" scope="territories" displayAll="World" placeholder="Specify territory to filter" required test-id="territories">
+  <!-- Dont use formControlName instead of [formControl] because of form Group Directive parents -->
+  <static-group [formControl]="form.get('territories')" scope="territories" displayAll="World" placeholder="Specify territory to filter" required test-id="territories">
     <mat-label>Select territories</mat-label>
   </static-group>
 
@@ -28,7 +29,8 @@
   <hr />
 
   <h3>Rights*</h3>
-  <static-group formControlName="medias" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias">
+  <!-- Dont use formControlName instead of [formControl] because of form Group Directive parents -->
+  <static-group [formControl]="form.get('medias')" scope="medias" displayAll="All Rights" required placeholder="Specify right(s) to filter" [withoutValues]="['theatrical']" test-id="medias">
     <mat-label>Select rights</mat-label>
   </static-group>
 
@@ -42,3 +44,4 @@
     </mat-select>
   </mat-form-field>
 </form>
+

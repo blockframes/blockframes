@@ -10,19 +10,21 @@ import { SEC } from "@blockframes/e2e/utils/env";
 const MY_TITLES_PAGE = '/c/o/dashboard/title';
 
 const userFixture = new User();
-const users  =  [ userFixture.getByUID(USER.Hettie) ];
+const users  =  [ userFixture.getByUID(USER.Vincent) ];
 
 const movieFixture = 'movie.xlsx';
 const contractFixture = 'contract.xlsx';
 const movieRecords = 5;
 const contractRecords = 19;
 
+const MOVIE_IMPORT_TIMEOUT = 120 * SEC;
+const CONTRACT_IMPORT_TIMEOUT = 240 * SEC;
+
 const logInAdminAndNavigate = () => {
   const loginPage: AuthLoginPage = new AuthLoginPage();
   loginPage.fillSignin(users[0]);
   loginPage.clickSignIn();
 
-  //cy.url().contains("marketplace/home", {timeout: 60 * SEC});
   cy.location('pathname', {timeout: 120 * SEC})
     .should('include', '/marketplace/home');
 
@@ -84,7 +86,7 @@ describe('User can fill and save contract tunnel form', () => {
       .contains("finalizing your submission");
 
     cy.log(`Check for ${movieRecords} records in the extracted data`);
-    cy.get('p[test-id="record-length"]', {timeout: 10 * SEC})
+    cy.get('p[test-id="record-length"]', {timeout: MOVIE_IMPORT_TIMEOUT})
       .contains(`${movieRecords}`);
     
     cy.log("Selecting all records to submit");
@@ -134,7 +136,7 @@ describe('User can fill and save contract tunnel form', () => {
       .contains("finalize your import");
 
     cy.log(`Check for ${contractRecords} records in the extracted data`);
-    cy.get('p[test-id="record-length"]', {timeout: 150 * SEC})
+    cy.get('p[test-id="record-length"]', {timeout: CONTRACT_IMPORT_TIMEOUT})
       .contains(`${contractRecords}`);
     
     cy.log("Selecting all records to submit");

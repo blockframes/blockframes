@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from "@angular/material/button";
 
 // @blockframes
 import { AvailsFilterModule } from '@blockframes/contract/term/form/filter/avails/avails-filter.module';
@@ -19,6 +20,8 @@ import { RunsFormModule } from "@blockframes/contract/term/form/runs/runs-form.m
 
 // Pipes
 import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
+import { VersionPipeModule } from "@blockframes/utils/pipes/version.pipe";
+import { JoinPipeModule } from "@blockframes/utils/pipes/join.pipe";
 
 @NgModule({
   declarations: [ContractFormComponent],
@@ -29,6 +32,8 @@ import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
     AvailsFilterModule,
     FormTableModule,
     ToLabelModule,
+    VersionPipeModule,
+    JoinPipeModule,
     LanguagesFormModule,
     RunsFormModule,
     
@@ -37,7 +42,8 @@ import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatButtonModule
   ]
 })
 export class ContractFormModule { }
