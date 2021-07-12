@@ -30,7 +30,7 @@ describe('Invest Interest Email Test', () => {
     cy.mailosaurDeleteAllMessages(serverId).then(() => {
       cy.log('Inbox empty. Ready to roll..');
     })
-  })
+  });
 
   it('Connect to Financiers and send an invest interest email to the owners of a movie', () => {
     const p1 = new LandingPage();
@@ -38,7 +38,7 @@ describe('Invest Interest Email Test', () => {
     p2.fillSignin(users[0]);
     p2.clickSignIn();
 
-    clickOnMenu(['financiers-marketplace-home'], 'menu', 'library');
+    clickOnMenu(['financiers-marketplace'], 'menu', 'title', false);
     assertMoveTo(MOVIE_LIST_PATH);
 
     const p3 = new SearchPage();
@@ -53,7 +53,7 @@ describe('Invest Interest Email Test', () => {
     p4.sendDiscussionEmail();
 
     // Waiting this snackbar to appear, because it appears after the emails have been sent.
-    cy.get('snack-bar-container', {timeout: 30 * SEC}).should('contain', 'Your email has been sent.');
+    cy.get('snack-bar-container', {timeout: 60 * SEC}).should('contain', 'Your email has been sent.');
     cy.log('Email sent');
 
     // Check if emails are well sent.
