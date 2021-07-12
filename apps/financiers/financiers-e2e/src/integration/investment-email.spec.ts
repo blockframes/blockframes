@@ -1,4 +1,4 @@
-import { clearDataAndPrepareTest, assertMoveTo, openSidenavMenuAndNavigate } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest, assertMoveTo, clickOnMenu } from '@blockframes/e2e/utils/functions';
 import { SEC, serverId, testEmail } from '@blockframes/e2e/utils';
 import { LandingPage } from '../support/pages/landing';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
@@ -17,6 +17,7 @@ const discussionData = {
   },
   message: 'This is the first E2E test email on Media Financiers !'
 }
+const title = 'Movie 1';
 
 //! IMPORTANT for this test to run, we need to do the movie import test in catalog before.
 //! Actually, we have no movie on financiers, so we need to import some to be able to work on E2E test for Financiers
@@ -37,12 +38,12 @@ describe('Invest Interest Email Test', () => {
     p2.fillSignin(users[0]);
     p2.clickSignIn();
 
-    openSidenavMenuAndNavigate('library');
+    clickOnMenu(['financiers-marketplace-home'], 'menu', 'library');
     assertMoveTo(MOVIE_LIST_PATH);
 
     const p3 = new SearchPage();
     cy.wait(2 * SEC);
-    p3.selectMovie('Movie 1');
+    p3.selectMovie(title);
     const p4 = new ViewPage();
     cy.wait(2 * SEC)
     // Scroll to bottom of the page to be able to see the button opening the form
@@ -63,6 +64,7 @@ describe('Invest Interest Email Test', () => {
       cy.log(`You've Got ${result.items.length} Mails! 💓`);
       const messages = result.items;
       messages.forEach(email => {
+        expect(email.subject).to.contain(`is interested in ${title}`);
         cy.log(`Message: ${email.subject} ✅`);
       });
     });

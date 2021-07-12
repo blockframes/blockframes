@@ -41,7 +41,7 @@ export default class SearchPage {
     cy.get('movie-card', {timeout: 30 * SEC})
       .contains(movieName).parent().parent()
       .find('button[test-id=heart-button]').click('bottom', {force: true} );
-    cy.wait(2000);
+    cy.wait(2 * SEC);
   }
 
   /** Click on a movie-card and navigate to the movie-view */
@@ -50,6 +50,7 @@ export default class SearchPage {
     cy.get('movie-card', {timeout: 30 * SEC})
       .contains(movieName).parent().parent()
       .find('a').click();
+    cy.wait(0.5 * SEC);
     return new ViewPage();
   }
 }

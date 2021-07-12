@@ -9,7 +9,7 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
   cy.clearLocalStorage();
   indexedDB.deleteDatabase('firebaseLocalStorageDb');
   if (path !== '') {
-    cy.visit(path, {timeout: 30 * SEC});
+    cy.visit(path);
   }
   cy.viewport('ipad-2', 'landscape');
 }
@@ -78,8 +78,12 @@ export function selectAction(element: string,
  * @param menu_item : side menu item to click
  * @param closeMenu : boolean, false to leave side menu opened
  */
-export function clickOnMenu(page: string[], menu: string, menu_item: string,
-  closeMenu: boolean = true) {
+export function clickOnMenu(
+  page: string[],
+  menu: string,
+  menu_item: string,
+  closeMenu: boolean = true
+) {
   cy.get(`${page[0]} button[test-id="${menu}"]`, { timeout: 3 * SEC })
     .first().click();
   cy.wait(3 * SEC);
@@ -228,12 +232,4 @@ export function assertMoveTo(path: string) {
   cy.location().should(loc => {
     expect(loc.pathname).to.eq(path);
   });
-}
-
-/** Used to navigate from the menu in the navbar */
-export function openSidenavMenuAndNavigate(button: string = '') {
-  cy.get('button[test-id="menu"]', {timeout: 30 * SEC}).click();
-  if(button) {
-    cy.get(`a[test-id="${button}"]`, {timeout: 3 * SEC}).click();
-  };
 }
