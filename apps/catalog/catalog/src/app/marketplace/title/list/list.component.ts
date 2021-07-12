@@ -114,12 +114,13 @@ export class ListComponent implements OnDestroy, OnInit {
                 genres: search.genres,
                 originCountries: search.originCountries,
                 contentType: search.contentType,
+                release: search.release
               },
               avails,
             }
           )
         })
-        
+
     const sub = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
