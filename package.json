@@ -30,7 +30,7 @@
     "lint": "cross-env nx run-many --target=lint --all --configuration=$NG_CONFIG",
     "e2e": "cross-env nx run-many --target=e2e --all  --configuration=$NG_CONFIG",
     "e2e:catalog": "cross-env nx e2e catalog-e2e --configuration=$NG_CONFIG --headless",
-    "e2e:catalog:serve:emulator": "concurrently --kill-others 'nx build backend-functions --watch' 'npm:emulators:start' 'nx serve catalog-e2e --configuration=emulator'",
+    "e2e:catalog:serve:emulator": "concurrently --kill-others 'npx nx build backend-functions --watch' 'npm:emulators:start' 'npx nx serve catalog-e2e --configuration=emulator'",
     "e2e:festival": "cross-env nx e2e festival-e2e --configuration=$NG_CONFIG --headless",
     "affected:apps": "cross-env nx affected:apps --configuration=$NG_CONFIG",
     "affected:libs": "cross-env nx affected:libs --configuration=$NG_CONFIG",
