@@ -47,7 +47,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
-import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
+
+import { emulatorConfig } from '../environment/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -97,7 +98,7 @@ import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
   providers: [
     ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
     { provide: REGION, useValue: firebaseRegion },
-    ...getEmulatorsConfig()
+    ...emulatorConfig
   ],
   bootstrap: [AppComponent]
 })
