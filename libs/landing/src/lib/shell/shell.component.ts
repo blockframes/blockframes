@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -40,7 +40,7 @@ export class LandingFooterComponent { }
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class LandingShellComponent {
+export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public appName = getAppName(getCurrentApp(this.routerQuery));
   public buttonText = 'Send Request';
@@ -67,9 +67,14 @@ export class LandingShellComponent {
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
-    theme: ThemeService)
-  {
-    theme.initTheme('light');
+    private theme: ThemeService
+  ) {
+    theme.setTheme('light')
+  }
+
+  ngOnDestroy() {
+    // resetting theme to theme preference of system/browser
+    this.theme.initTheme('light')
   }
 
   /** Send a mail to the admin with user's informations. */
