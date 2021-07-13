@@ -13,13 +13,14 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractItemComponent {
-  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'languages'];
+  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'languages', 'runs.broadcasts'];
   columns = {
-    duration: 'Terms',
-    territories: 'Territories',
-    medias: 'Rights',
-    exclusive: 'Exclusivity',
-    languages: 'Versions',
+    'duration': 'Terms',
+    'territories': 'Territories',
+    'medias': 'Rights',
+    'exclusive': 'Exclusivity',
+    'languages': 'Versions',
+    'runs.broadcasts': '# of Broadcasts',
   };
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;

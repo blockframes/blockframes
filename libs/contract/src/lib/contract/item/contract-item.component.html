@@ -41,6 +41,9 @@
           {{language.key|toLabel:'languages'}}({{language.value | versionPipe}}){{last? '': ', '}}
         </ng-container>
       </ng-template>
+      <ng-template colRef="runs.broadcasts" let-broadcasts>
+        {{broadcasts ?? '-'}}
+      </ng-template>
     </bf-table-filter>
     <ng-content select="footer"></ng-content>
   </section>

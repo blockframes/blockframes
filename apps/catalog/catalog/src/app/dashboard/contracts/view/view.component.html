@@ -10,25 +10,27 @@
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
         <ng-container *ngIf="contract$ | async as contract">
           <ng-container *ngIf="['accepted','declined'].includes(offer.status); else noStatus">
-            <button mat-flat-button color="default" [disabled]="true" *ngIf="offer.status === 'accepted'"
-              matTooltip="You have already accepted this offer, please connect the AC Team">
-              <span>Accepted</span>
-              <mat-icon svgIcon="check"></mat-icon>
-            </button>
-            <button mat-flat-button color="primary" [disabled]="true" *ngIf="offer.status === 'declined'"
-              matTooltip="You have already declined this offer, please connect the AC Team">
-              <span>Declined</span>
-              <mat-icon svgIcon="refuse"></mat-icon>
-            </button>
+            <div matTooltip="You have already accepted this offer, please connect the AC Team">
+              <button mat-flat-button color="default" [disabled]="true" *ngIf="offer.status === 'accepted'">
+                <span>Accepted</span>
+                <mat-icon svgIcon="check"></mat-icon>
+              </button>
+            </div>
+            <div matTooltip="You have already declined this offer, please connect the AC Team">
+              <button mat-flat-button color="primary" [disabled]="true" *ngIf="offer.status === 'declined'">
+                <span>Declined</span>
+                <mat-icon svgIcon="refuse"></mat-icon>
+              </button>
+            </div>
           </ng-container>
           <ng-template #noStatus>
             <button mat-stroked-button color="primary" [disabled]="loading$|async"
-              (click)="changeStatus('accepted',contract.id)">
+              (click)="changeStatus('accepted',offer.id)">
               <span>Accept</span>
               <mat-icon svgIcon="check"></mat-icon>
             </button>
             <button mat-stroked-button color="primary" [disabled]="loading$|async"
-              (click)="changeStatus('declined',contract.id)">
+              (click)="changeStatus('declined',offer.id)">
               <span>Decline</span>
               <mat-icon svgIcon="refuse"></mat-icon>
             </button>

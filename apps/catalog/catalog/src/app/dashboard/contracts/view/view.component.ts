@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Contract, ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
-import { OfferService } from '@blockframes/contract/offer/+state';
+import { OfferService, OfferStatus } from '@blockframes/contract/offer/+state';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
@@ -64,9 +64,9 @@ export class CatalogContractViewComponent {
     @Optional() private intercom: Intercom,
   ) { }
 
-  changeStatus(status: ContractStatus, id: string) {
+  changeStatus(status: OfferStatus, id: string) {
     this.loading$.next(true);
-    this.contractService.update(id, { status })
+    this.offerService.update(id, { status })
       .finally(() => this.loading$.next(false))
       .catch((err) => {
         console.error(err)
