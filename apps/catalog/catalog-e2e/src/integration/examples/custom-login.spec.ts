@@ -14,7 +14,12 @@ describe('Checking login with custom command', () => {
   it('Test for custom login', () => {
     //Check for emails sent
     cy.log("Checking log-in");
-    cy.login("dev+dustin-cwv@blockframes.io", "blockframes");
+    cy.login("dev+troy-exl@blockframes.io", "blockframes")
+      .then((user) => {
+        cy.log(JSON.stringify(user));
+        console.log(user);
+      });
+    cy.window().should('have.property', 'LoggedIn');
   });
 
 });

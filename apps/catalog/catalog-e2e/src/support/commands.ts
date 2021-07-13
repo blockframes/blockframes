@@ -18,7 +18,7 @@ import { firebase as firebaseConfig } from '@env';
 
 declare namespace Cypress {
   interface Chainable<Subject> {
-    login(email: string, password: string): Chainable<any>;
+    login(email: string, password: string): void;
   }
 }
 
@@ -42,7 +42,7 @@ firebase.initializeApp(firebaseConfig('catalog'));
 Cypress.Commands.add("login", async (email, password) => { 
   try {
     //await AuthService.signin(email, password);
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    return firebase.auth().signInWithEmailAndPassword(email, password)
     /*
     cy.window().should('have.property', 'AuthService')
     cy.window()
@@ -52,9 +52,10 @@ Cypress.Commands.add("login", async (email, password) => {
         cy.log(`Logged in user: ${email}`);
       });
     */
-    cy.window().should('have.property', 'LoggedIn')
-    cy.log('Logged In');
+    //cy.window().should('have.property', 'LoggedIn')
+    //cy.log('Logged In');
   } catch (e) {
-    cy.log(`Login Err: ${e}`);
+    //cy.log(`Login Err: ${e}`);
+    console.log(e);
   }
 })
