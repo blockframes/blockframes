@@ -2,7 +2,7 @@ import {
   Component, ChangeDetectionStrategy, Optional
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Contract, ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
+import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService, OfferStatus } from '@blockframes/contract/offer/+state';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -43,7 +43,7 @@ export class CatalogContractViewComponent {
         map(contract => ({
           ...contract,
           terms: contract.terms.map(term => {
-            console.log({term})
+            console.log({ term })
             return ({
               ...term,
               duration: { from: term.duration.from.toDate(), to: term.duration.to.toDate() }
@@ -56,6 +56,7 @@ export class CatalogContractViewComponent {
   );
 
   loading$ = new BehaviorSubject<boolean>(false);
+
   constructor(
     private offerService: OfferService,
     private contractService: ContractService,
