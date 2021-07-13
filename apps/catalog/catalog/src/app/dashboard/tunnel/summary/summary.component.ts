@@ -49,7 +49,7 @@ export class TunnelSummaryComponent implements OnInit {
     } else {
       // Log the invalid forms
       if (this.invalidFields.length) {
-        this.snackBar.open('Errors within the form.', '', { duration: 2000 });
+        this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
       }
       else if (this.missingFields.length) {
         this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
