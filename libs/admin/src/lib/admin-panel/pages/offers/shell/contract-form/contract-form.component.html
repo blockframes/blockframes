@@ -15,12 +15,12 @@
         <mat-error *ngIf="form.hasError('required', 'price')">Price field is required!</mat-error>
       </mat-form-field>
     </header>
-    
-    <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
+    {{indexId}}
+    <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
       <!-- Columns -->
       <ng-template class="duration" colRef="avails.duration" let-duration>{{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}</ng-template>
       <ng-template colRef="avails.territories" let-territories>{{ territories | toGroupLabel:'territories':'World' | join }}</ng-template>
-      <ng-template colRef="avails.medias" let-media>{{ media | toLabel: 'medias' }}</ng-template>
+      <ng-template colRef="avails.medias" let-media> {{ media | toGroupLabel:'medias':'All'| join }}</ng-template>
       <ng-template colRef="avails.exclusive" let-exclusive>{{ exclusive ? 'Yes' : 'No'}}</ng-template>
       <ng-template colRef="versions" let-version>
         <ul>

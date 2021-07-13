@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -40,7 +40,8 @@ export class ContractFormComponent implements OnInit {
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
   currency?: string;
-  showBfFilterTable = false;
+  termId: string;
+  indexId: number;
   termColumns = {
     'avails.duration': 'Duration',
     'avails.territories': 'Territories',
@@ -49,11 +50,6 @@ export class ContractFormComponent implements OnInit {
     'versions': 'Versions',
     'runs': '# of broadcasts'
   }
-  public orgId = this.orgQuery.getActiveId();
-  public contracts$ = this.contractService.valueChanges(
-    ref => ref.where('stakeholders', 'array-contains', this.orgId)
-      .where('type', '==', 'sale')
-  );
   
   constructor(
     private service: MovieService,
@@ -62,13 +58,10 @@ export class ContractFormComponent implements OnInit {
     private contractService: ContractService,
     private termService: TermService,
     private offerService: OfferService,
-    private orgQuery: OrganizationQuery,
+    private cdr: ChangeDetectorRef
     ){}
 
     async ngOnInit() {
-      if (this.route.snapshot.queryParams.termId) {
-        this.showBfFilterTable = true;
-      }
       const contractId: string = this.route.snapshot.params.contractId;
       const offerId: string = this.route.snapshot.params.offerId;
       const [ contract, income, offer ] = await Promise.all([
@@ -84,7 +77,15 @@ export class ContractFormComponent implements OnInit {
       this.currency = offer?.currency;
       const terms = await this.termService.getValue(contract.termIds);
       (this.form.get('terms') as FormList<any>).patchAllValue(terms);
-    }
+
+      // We show the term sent in the Query from the view terms page
+      if (this.route.snapshot.queryParams.termId) {
+        this.termId = this.route.snapshot.queryParams.termId;
+        const tabTerms = this.form.get('terms').value;
+        const index = tabTerms.findIndex(value => value.id === this.termId);
+        this.indexId = index;
+        }
+      }
 
     async save() {
       if (this.form.valid) {
