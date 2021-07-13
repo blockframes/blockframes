@@ -20,15 +20,15 @@
           </mat-card>
         </span>
         <mat-card>
-          <h3>Attendees</h3>
-          <article fxLayout="column" fxLayoutAlign="center center">
-            <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
+          <article fxLayout="row" fxLayoutAlign="space-between start" flex>
+            <h3>Attendees</h3>
+            <button [disabled]="exporting.$ | async" mat-button color="primary" (click)="exportTable()">
               <ng-container *ngIf="exporting.$ | async else export">
                 <span>Generating CSV...</span>
               </ng-container>
               <ng-template #export>
+                <mat-icon svgIcon="excel"></mat-icon>
                 <span>Export to CSV</span>
-                <mat-icon svgIcon="arrow_upward"></mat-icon>
               </ng-template>
             </button>
           </article>

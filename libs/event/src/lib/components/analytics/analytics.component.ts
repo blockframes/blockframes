@@ -39,40 +39,7 @@ export class EventAnalyticsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-
-    const mockedAnalytics: EventsAnalytics = {
-      eventId: 'yNFpTbcc4XLIab1LFMac',
-      eventUsers: [{
-        event_name: 'pageView',
-        hits: 10,
-        eventIdPage: '',
-        userId: 'sIMAPCfiznXvyye7kPq1VxaJ1Uh2',
-        eventId: 'yNFpTbcc4XLIab1LFMac',
-        email: 'eelios@gmail.com',
-        firstName: 'bruce',
-        lastName: 'delorme',
-        orgName: 'c8',
-        orgActivity: 'buyer',
-        orgCountry: 'france',
-        watchTime: 123, // in seconds
-      }, {
-        event_name: 'pageView',
-        hits: 741,
-        eventIdPage: '',
-        userId: 'sIMAPCfiznXvyye7kPq1VxaJ1Uh2',
-        eventId: 'yNFpTbcc4XLIab1LFMac',
-        email: 'eelios@gmail.com',
-        firstName: 'bruce',
-        lastName: 'delorme',
-        orgName: 'c8',
-        orgActivity: 'buyer',
-        orgCountry: 'france',
-        watchTime: 1444, // in seconds
-      }]
-    };
-
-
-    const analytics = mockedAnalytics; // @TODO #4288 remove mocked data // await this.service.queryAnalytics(this.event.id);
+    const analytics = await this.service.queryAnalytics(this.event.id);
 
     // transform the analytics records
     this.analytics = analytics.eventUsers.map(analytic => {
@@ -116,16 +83,16 @@ export class EventAnalyticsComponent implements OnInit {
       this.exporting.value = true;
 
       const exportedRows = this.analytics.map(analytic => {
-        const row: Partial<EventAnalytics> = {
-          'name': analytic.name,
-          'email': analytic.email,
-          'orgName': analytic.orgName ?? '--',
-          'orgActivity': analytic.orgActivity ? toLabel(analytic.orgActivity, 'orgActivity') as string : '--',
-          'orgCountry': analytic.orgCountry ? toLabel(analytic.orgCountry, 'territories') as string : '--',
+        const row: any = {
+          'Name': analytic.name,
+          'Email Address': analytic.email,
+          'Company Name': analytic.orgName ?? '--',
+          'Company Activity': analytic.orgActivity ? toLabel(analytic.orgActivity, 'orgActivity') as string : '--',
+          'Country': analytic.orgCountry ? toLabel(analytic.orgCountry, 'territories') as string : '--',
         };
 
         if (this.event.type === 'screening') {
-          row.watchTime = analytic.watchTime;
+          row['Watch Time'] = analytic.watchTime;
         }
         return row;
       });
