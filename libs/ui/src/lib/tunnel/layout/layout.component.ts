@@ -202,7 +202,6 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
           if (Object.keys(control.errors).includes('required')) missingFields.push(field)
           else errorFields.push(field);
         }
-        else missingFields.push(field);
       }
 
 

@@ -40,6 +40,8 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       const results = findInvalidControls(this.form);
       this.invalidFields = results.errorFields;
       this.missingFields = results.missingFields;
+      console.log('missing', this.missingFields, this.missingFields.length);
+      console.log('invalid', this.invalidFields, this.invalidFields.length);
     });
   }
 
