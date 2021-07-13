@@ -11,6 +11,12 @@
 //
 import 'cypress-mailosaur';
 
+declare namespace Cypress {
+  interface Chainable<Subject> {
+    login(email: string, password: string): Chainable<any>;
+  }
+}
+
 // -- This is a parent command --
 // Cypress.Commands.add("login", (email, password) => { ... })
 //
