@@ -37,14 +37,13 @@ export class ListComponent {
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   titles$: Observable<Movie[]> = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
+    map(movies => movies.filter(movie => !!movie)),
+    map(movies => movies.filter(movie => movie.app.festival.access)),
     switchMap(movies => combineLatest([
       of(movies),
       this.analytics.valueChanges(movies.map(movie => movie.id)).pipe(map(analytics => analytics.map(getViews)))
     ])),
     map(([ movies, views ]) => movies.map((movie, i) => ({ ...movie, views: views[i] })) ),
-    tap(console.log),
-    map(movies => movies.filter(movie => !!movie)),
-    map(movies => movies.filter(movie => movie.app.festival.access)),
     map(movies => movies.sort((movieA, movieB) => movieA.title.international > movieB.title.international ? 1 : -1)),
     tap(movies => {
       movies.length ?

@@ -39,16 +39,16 @@ export class TitleListComponent {
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
   movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
+    map(movies => movies.filter(movie => !!movie)),
+    map(movies => movies.filter(m => m.app.catalog.access)),
     switchMap(movies => combineLatest([
       of(movies),
       this.analytics.valueChanges(movies.map(movie => movie.id)).pipe(map(analytics => analytics.map(getViews)))
     ])),
     map(([ movies, views ]) => movies.map((movie, i) => ({ ...movie, views: views[i] })) ),
     map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
-    map(movies => movies.filter(m => m.app.catalog.access)),
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty'))
   )
-
 
   movieCount$ = this.movies$.pipe(map(m => ({
     all: m.length,
