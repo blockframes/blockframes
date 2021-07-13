@@ -44,7 +44,6 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
-  // @Input() activeIndexForm: number;
   @Input() set active(index: number) {
     if (typeof index !== 'number') return;
     this.edit(index);
