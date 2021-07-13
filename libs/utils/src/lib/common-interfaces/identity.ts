@@ -101,15 +101,6 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
   }
 }
 
-export function createParty(params: Partial<Party> = {}): Party {
-  return {
-    orgId: '',
-    role: 'undefined',
-    showName: false,
-    ...params,
-  }
-}
-
 export function createCredit(params: Partial<Credit> = {}) {
   return {
     firstName: '',
