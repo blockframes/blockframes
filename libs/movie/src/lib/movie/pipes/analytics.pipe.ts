@@ -5,13 +5,14 @@ import { map } from "rxjs/operators";
 import { MovieAnalytics } from "../+state/movie.firestore";
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
+export const getViews = (analytics?: MovieAnalytics) => {
+  return analytics?.movieViews.current.reduce((sum, event) => sum + event.hits, 0) || 0;
+}
+
 @Pipe({ name: 'getViews' })
 export class GetViewsPipe implements PipeTransform {
   constructor(private analytics: AnalyticsService) {}
   transform(id: string): Observable<number> {
-    const getViews = (analytics?: MovieAnalytics) => {
-      return analytics?.movieViews.current.reduce((sum, event) => sum + event.hits, 0) || 0;
-    }
     return this.analytics.valueChanges(id).pipe(
       map(getViews)
     );
