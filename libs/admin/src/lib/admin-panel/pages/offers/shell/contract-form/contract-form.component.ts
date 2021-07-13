@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -8,7 +8,6 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 
 // Forms
 import { FormList } from '@blockframes/utils/form';
@@ -40,7 +39,7 @@ export class ContractFormComponent implements OnInit {
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
   currency?: string;
-  showBfFilterTable = false;
+  indexId: number;
   termColumns = {
     'avails.duration': 'Duration',
     'avails.territories': 'Territories',
@@ -49,11 +48,6 @@ export class ContractFormComponent implements OnInit {
     'versions': 'Versions',
     'runs': '# of broadcasts'
   }
-  public orgId = this.orgQuery.getActiveId();
-  public contracts$ = this.contractService.valueChanges(
-    ref => ref.where('stakeholders', 'array-contains', this.orgId)
-      .where('type', '==', 'sale')
-  );
   
   constructor(
     private service: MovieService,
@@ -62,13 +56,10 @@ export class ContractFormComponent implements OnInit {
     private contractService: ContractService,
     private termService: TermService,
     private offerService: OfferService,
-    private orgQuery: OrganizationQuery,
+    private cdr: ChangeDetectorRef
     ){}
 
     async ngOnInit() {
-      if (this.route.snapshot.queryParams.termId) {
-        this.showBfFilterTable = true;
-      }
       const contractId: string = this.route.snapshot.params.contractId;
       const offerId: string = this.route.snapshot.params.offerId;
       const [ contract, income, offer ] = await Promise.all([
@@ -84,7 +75,15 @@ export class ContractFormComponent implements OnInit {
       this.currency = offer?.currency;
       const terms = await this.termService.getValue(contract.termIds);
       (this.form.get('terms') as FormList<any>).patchAllValue(terms);
-    }
+
+      // We show the term sent in the Query from the view terms page
+      if (this.route.snapshot.queryParams.termId) {
+        const termId = this.route.snapshot.queryParams.termId;
+        const tabTerms = this.form.get('terms').value;
+        const index = tabTerms.findIndex(value => value.id === termId);
+        this.indexId = index;
+        }
+      }
 
     async save() {
       if (this.form.valid) {
