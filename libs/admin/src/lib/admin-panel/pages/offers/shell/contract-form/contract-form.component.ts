@@ -8,7 +8,6 @@ import { IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 
 // Forms
 import { FormList } from '@blockframes/utils/form';
@@ -40,7 +39,6 @@ export class ContractFormComponent implements OnInit {
   })
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
   currency?: string;
-  termId: string;
   indexId: number;
   termColumns = {
     'avails.duration': 'Duration',
@@ -80,9 +78,9 @@ export class ContractFormComponent implements OnInit {
 
       // We show the term sent in the Query from the view terms page
       if (this.route.snapshot.queryParams.termId) {
-        this.termId = this.route.snapshot.queryParams.termId;
+        const termId = this.route.snapshot.queryParams.termId;
         const tabTerms = this.form.get('terms').value;
-        const index = tabTerms.findIndex(value => value.id === this.termId);
+        const index = tabTerms.findIndex(value => value.id === termId);
         this.indexId = index;
         }
       }

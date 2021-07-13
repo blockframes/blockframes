@@ -15,7 +15,6 @@
         <mat-error *ngIf="form.hasError('required', 'price')">Price field is required!</mat-error>
       </mat-form-field>
     </header>
-    {{indexId}}
     <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
       <!-- Columns -->
       <ng-template class="duration" colRef="avails.duration" let-duration>{{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}</ng-template>
