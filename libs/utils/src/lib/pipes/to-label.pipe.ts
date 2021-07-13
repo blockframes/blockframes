@@ -11,17 +11,18 @@ export function toLabel(value: string | string[], scope: Scope): string | string
       return staticModel[scope][value];
     }
   } catch (error) {
-    console.error(`Could not find label for key "${value}" in scope "${scope}"`)
-    return value;
+    console.error(`Could not find label for key "${value}" in scope "${scope}"`);
+    if (typeof value === 'string') return value;
+    return '';
   }
 }
 
-@Pipe({
-  name: 'toLabel'
-})
+@Pipe({ name: 'toLabel' })
 export class ToLabelPipe implements PipeTransform {
   //@TODO #5530 remove limit and use css instead
-  transform(value: string | string[], scope: Scope): string | string[] {
+  transform(value: string | null | undefined, scope: Scope): string
+  transform(value: string[], scope: Scope): string[]
+  transform(value: string | null | undefined | string[], scope: Scope): string | string[] {
     return toLabel(value, scope);
   }
 }

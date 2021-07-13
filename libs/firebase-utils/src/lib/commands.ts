@@ -18,6 +18,15 @@ export function runShellCommand(cmd: string) {
   });
 }
 
+export function awaitProcessExit(proc: ChildProcess) {
+  return new Promise((res, rej) => {
+    proc.on('error', rej);
+    proc.on('exit', (code) => (code === 0 ? res : rej));
+    proc.stdout.on('close', res);
+    proc.stdout.on('exit', res);
+  });
+}
+
 export function runShellCommandUntil(cmd: string, until: string) {
   process.env.FORCE_COLOR = 'true';
   const spawnSettings: SpawnOptions = { env: Object.create(process.env), shell: true };
@@ -51,7 +60,7 @@ export function runShellCommandUntil(cmd: string, until: string) {
  */
 export function awaitProcOutput(proc: ChildProcess, output: string) {
   return new Promise<void>(res => {
-    const reg = new RegExp(output, 'i')
+    const reg = new RegExp(output, 'i');
     proc.stdout.on('data', (out: Buffer) => {
       const lines = out.toString().split('\n');
       const match = lines.find((line) => reg.test(line));
@@ -69,7 +78,8 @@ export function awaitProcOutput(proc: ChildProcess, output: string) {
 export function runInBackground(cmd: string) {
   let proc: ChildProcess;
   const procPromise = new Promise<string>((res, rej) => {
-    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2 }, (err, stdout) => {
+    const { env } = process;
+    proc = exec(cmd, { maxBuffer: 1000 * 1000 * 2, env }, (err, stdout) => {
       if (err) rej(err);
       res(stdout);
     });
