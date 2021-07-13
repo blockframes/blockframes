@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TermPipeModule } from '@blockframes/contract/term/pipes';
 
 
 
@@ -44,6 +45,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     JoinPipeModule,
     VersionPipeModule,
     ToLabelModule,
+    TermPipeModule,
 
     // Material
     MatButtonModule,

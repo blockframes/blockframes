@@ -6,6 +6,7 @@ import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-m
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
+
 @Component({
   selector: 'contract-item',
   templateUrl: './contract-item.component.html',
