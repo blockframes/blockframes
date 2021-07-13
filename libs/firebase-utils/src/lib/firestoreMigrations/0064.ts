@@ -38,6 +38,10 @@ import { PublicUser } from '@blockframes/user/+state';
       ...user._meta
     }
 
+    if (new Date(authUser.metadata.creationTime) < new Date(2021, 5, 31)) {
+      auth.updateUser(authUser.uid, { emailVerified: true });
+    }
+
     return db.doc(`users/${user.uid}`).update({ _meta });
   });
 }

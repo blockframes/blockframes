@@ -13,24 +13,9 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 })
 export class ProfileFormComponent {
   public uid = this.authQuery.userId;
-  public emailSent = false;
 
   @Input() form: ProfileForm;
 
-  constructor(
-    public authQuery: AuthQuery,
-    private cdr: ChangeDetectorRef,
-    private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery
-  ) {}
-  
-  async sendEmailVerification() {
-    const { email, firstName } = this.authQuery.user;
-    const app = getCurrentApp(this.routerQuery);
-    
-    const sendVerifyEmail = this.functions.httpsCallable('sendVerifyEmailAddress');
-    await sendVerifyEmail({ email, firstName, app }).toPromise();
-    this.emailSent = true;
-    this.cdr.markForCheck();
-  }
+  constructor(public authQuery: AuthQuery) {}
+
 }

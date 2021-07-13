@@ -5,9 +5,8 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { DashboardActionsShellComponent } from './actions.component';
+import { DashboardActionsShellComponent, MovieActionMenuDirective } from './actions.component';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
-import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 
 // Material
@@ -18,15 +17,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [DashboardActionsShellComponent],
-  exports: [DashboardActionsShellComponent],
+  declarations: [DashboardActionsShellComponent, MovieActionMenuDirective],
+  exports: [DashboardActionsShellComponent, MovieActionMenuDirective],
   imports: [
     CommonModule,
     RouterModule,
     FlexLayoutModule,
     // Blockframes
     ToLabelModule,
-    OrgAccessModule,
     ConfirmInputModule,
     // Material
     MatTabsModule,

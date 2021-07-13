@@ -1,4 +1,4 @@
-<ng-container *ngIf="allMoviesFromOrg$ | async as titles; else loading">
+<ng-container *ngIf="titles$ | async as titles; else loading">
   <ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
@@ -39,18 +39,18 @@
       </ng-template>
       <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
         <!-- Should only be shown for noAcceptedMovies && !noMovies -->
-        <ng-container *ngIf="(hasMovies$ | async)">
+        <ng-container *ngIf="hasDraftMovies$ | async">
           <mat-card fxLayout="column" fxLayoutalign="center center">
-            <img asset="add_draft.webp" alt="Manage Drafts">
+            <img asset="add_draft.svg" alt="Manage Drafts">
             <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
           </mat-card>
         </ng-container>
         <mat-card fxLayout="column" fxLayoutalign="center center">
-          <img asset="add_title.webp" alt="Add title image">
+          <img asset="add_title.svg" alt="Add title image">
           <a routerLink="../title/lobby" mat-button color="primary">Add one title</a>
         </mat-card>
         <mat-card fxLayout="column">
-          <img asset="add_files.webp" alt="Upload files image">
+          <img asset="add_files.svg" alt="Upload files image">
           <a routerLink="../import" mat-button color="primary" test-id="import">Import titles in bulk</a>
         </mat-card>
       </article>

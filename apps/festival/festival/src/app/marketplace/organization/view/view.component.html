@@ -1,7 +1,7 @@
 <ng-container *ngIf="org$ | async as org">
   <org-view [org]="org" [navLinks]="navLinks">
     <ng-container *ngIf="org.email">
-      <a mat-stroked-button color="primary"
+      <a mat-flat-button color="primary"
         [href]="'mailto:' + org.email + '?subject=Meeting%20request%20via%20Archipel%20Market'">
         <span>Ask for a meeting</span>
       </a>

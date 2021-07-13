@@ -2,16 +2,13 @@
   <header fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
     <ng-container *ngIf="movie$ | async as movie">
       <section fxLayout fxLayoutGap="16px" fxFlex>
-        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.webp" alt="movie poster">
+        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
 
         <article fxLayout="column" fxFlex>
           <h4>{{ movie | movieFeature }}</h4>
           <h1>{{ movie.title.international }}</h1>
-          <mat-chip-list>
-            <mat-chip>
-              {{ movie.app[appName].status }}
-            </mat-chip>
-          </mat-chip-list>
+          <bf-tag>{{ movie.app[appName].status }}</bf-tag>
+
           <h6>{{ movie.directors | displayName }}</h6>
           <p>
             <span>{{ movie.originCountries | toLabel: 'territories'}}</span>

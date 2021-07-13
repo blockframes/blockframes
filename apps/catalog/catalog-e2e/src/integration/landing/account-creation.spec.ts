@@ -5,7 +5,7 @@ import { User, serverId, testEmail } from "@blockframes/e2e/utils";
 import { clearDataAndPrepareTest, assertMoveTo } from "@blockframes/e2e/utils/functions";
 import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationLiteFormPage } from "@blockframes/e2e/pages/organization";
-import { ORG, ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
+import { ORGANIZATION } from '@blockframes/e2e/fixtures/orgs';
 import { MessageListResult } from "cypress-mailosaur";
 
 const subjects = [

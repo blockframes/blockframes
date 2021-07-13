@@ -1,8 +1,7 @@
 import {
   Component, ChangeDetectionStrategy,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Offer, OfferService, OfferStatus } from '@blockframes/contract/offer/+state';
+import { Offer, OfferService } from '@blockframes/contract/offer/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Query, queryChanges } from "akita-ng-fire";
 import { Observable } from 'rxjs';
@@ -15,7 +14,7 @@ import { Income } from '@blockframes/contract/income/+state';
 
 const columns = {
   'id': 'Offer Reference',
-  'date': 'Offer created',
+  '_meta.createdAt': 'Offer created',
   'contracts.length': '# Of Titles In Package',
   'contracts': 'Titles',
   'specificity': 'Specific Terms',
@@ -51,7 +50,7 @@ export class OffersListComponent {
   appName = appName[this.app];
   columns = columns;
   initialColumns = [
-    'id', 'date', 'contracts.length', 'contracts', 'specificity', 'incomes', 'status',
+    'id', '_meta.createdAt', 'contracts.length', 'contracts', 'specificity', 'incomes', 'status',
   ];
   filter = new FormControl('');
   filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));

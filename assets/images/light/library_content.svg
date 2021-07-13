@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="170px" height="170px" viewBox="0 0 170 170" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Illustrations/Light/170px/library_content" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(35.000000, 39.000000)" fill="#8DA4FA">
+            <rect id="Rectangle" x="21.686747" y="2.40963855" width="5" height="50"></rect>
+            <rect id="Rectangle" x="0" y="89.1566265" width="30.1204819" height="2.40963855"></rect>
+        </g>
+        <polyline id="Path-6" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="61.4566811 89.6846664 61.4566811 40.1927503 94.5623177 40.1927503 109.594545 54.8713129 109.594545 74.2636039"></polyline>
+        <polyline id="Path-7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="94.1971676 40.1927503 94.1971676 55.209416 109.594545 55.209416"></polyline>
+        <line x1="72" y1="55" x2="86" y2="55" id="Line" stroke="#000000" stroke-width="2" stroke-linecap="round"></line>
+        <polyline id="Path-8" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="72.3290483 89.6846664 72.3290483 75.3966737 133.927755 75.3966737 133.927755 122.533752 85.4819277 122.533752"></polyline>
+        <line x1="72" y1="66" x2="98" y2="66" id="Line-Copy" stroke="#000000" stroke-width="2" stroke-linecap="round"></line>
+        <line x1="73" y1="85" x2="134" y2="85" id="Line-Copy-2" stroke="#000000" stroke-width="2" stroke-linecap="round"></line>
+        <polygon id="Path-9" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="39.7748117 90.776888 85.4819277 90.776888 85.4819277 128.156627 39.7748117 128.156627"></polygon>
+        <circle id="Oval" stroke="#000000" stroke-width="2" cx="54" cy="103" r="4"></circle>
+        <polyline id="Path-10" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="40.2398979 124.028501 50.4216867 113.797254 56.1134795 119.34569 71.9179052 103.307816 85 116.516481"></polyline>
+        <polygon id="Path-11" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="98.9256312 97.7889555 98.9256312 110.449789 109.594545 104.109837"></polygon>
+    </g>
+</svg>

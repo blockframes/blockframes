@@ -78,8 +78,12 @@ export function selectAction(element: string,
  * @param menu_item : side menu item to click
  * @param closeMenu : boolean, false to leave side menu opened
  */
-export function clickOnMenu(page: string[], menu: string, menu_item: string,
-  closeMenu: boolean = true) {
+export function clickOnMenu(
+  page: string[],
+  menu: string,
+  menu_item: string,
+  closeMenu: boolean = true
+) {
   cy.get(`${page[0]} button[test-id="${menu}"]`, { timeout: 3 * SEC })
     .first().click();
   cy.wait(3 * SEC);
@@ -98,7 +102,7 @@ export const randomID = (): string => (`${new Date().getTime()}-${currentID++}`)
 export const createFakeScript = (title: string) => cy.task('random:pdf', title);
 
 interface FormOptions {
-  inputValue: string;
+  inputValue: Record<string, unknown>;
   specialIds?: string[];
   fieldHandler?<E extends HTMLElement>($formEl: JQuery<E>, key: string): [boolean, string]
 }
@@ -162,7 +166,7 @@ function handleFormElement(el, id: string, value: string) {
 /**
  * setForm : helper function to set the form with given values
  * @param selector : string to identify the form set
- * @param formOpt : object having input values, callback for spl ids.
+ * @param formOpt : object having input values (Record), callback for spl ids.
  * @example
  *   //set org details in org form
  *   const formOpt: FormOptions = {

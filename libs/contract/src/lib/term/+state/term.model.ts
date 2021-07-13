@@ -16,7 +16,6 @@ export interface Duration<T extends Date | firebase.firestore.Timestamp = Date> 
  */
 export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
   id: string;
-  orgId: string;
   contractId: string;
   territories: Territory[];
   medias: Media[];
@@ -25,12 +24,19 @@ export interface Term<T extends Date | firebase.firestore.Timestamp = Date> {
   duration: Duration<T>;
   languages: Record<string, MovieLanguageSpecification>;
   criteria: unknown[];
+  runs?: {
+    broadcasts: number;
+    catchup: {
+      from: Date,
+      duration: number,
+      period: 'day' | 'week' | 'month'
+    }
+  }
 }
 
 export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
   return {
     id: '',
-    orgId: '',
     contractId: '',
     territories: [],
     medias: [],
