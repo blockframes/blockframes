@@ -1,12 +1,9 @@
 import { createStorageFile, StorageFile } from "@blockframes/media/+state/media.firestore";
 import {
   CrewRole,
-  LegalRole,
-  SubLicensorRole,
   Territory,
   ProducerRole
 } from "../static-model/types";
-import { Location } from "./utility";
 
 
 //////////////////////////
@@ -91,19 +88,6 @@ export interface Crew extends Credit {
   role: CrewRole, // overrided role scope from Crew interface
 };
 
-/**
- * @dev interface to represent an entity within contracts
- */
-export interface Party extends StakeholderRaw {
-  role: LegalRole | SubLicensorRole, // overrided role scope from Person interface
-  address?: Location
-}
-
-// This is just for more readable code :
-
-export type SalesAgent = Stakeholder;
-
-
 ///////////////////
 // CREATE FUNCTIONS
 ///////////////////
@@ -114,15 +98,6 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
     countries: [],
     ...params,
     logo: createStorageFile(params.logo),
-  }
-}
-
-export function createParty(params: Partial<Party> = {}): Party {
-  return {
-    orgId: '',
-    role: 'undefined',
-    showName: false,
-    ...params,
   }
 }
 

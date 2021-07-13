@@ -32,7 +32,7 @@ import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 
 // Export for other files
-export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
+export { Credit } from '@blockframes/utils/common-interfaces/identity';
 export {
   MoviePromotionalElements,
   MovieStakeholders,
