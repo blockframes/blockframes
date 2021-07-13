@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component'
 
@@ -14,9 +13,8 @@ import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.compon
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TunnelSummaryComponent implements OnInit, OnDestroy {
+export class TunnelSummaryComponent implements OnInit {
   form = this.shell.getForm('movie');
-  subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.app.catalog.status).pipe(
@@ -35,18 +33,9 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.missingFields = findInvalidControls(this.form).missingFields;
-    this.subscription = this.form.valueChanges.subscribe(() => {
-      const results = findInvalidControls(this.form);
-      this.invalidFields = results.errorFields;
-      this.missingFields = results.missingFields;
-      console.log('missing', this.missingFields, this.missingFields.length);
-      console.log('invalid', this.invalidFields, this.invalidFields.length);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    const { missingFields, errorFields } = findInvalidControls(this.form)
+    this.invalidFields = errorFields;
+    this.missingFields = missingFields;
   }
 
   public async submit() {

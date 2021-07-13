@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -6,7 +6,6 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -14,9 +13,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TunnelSummaryComponent implements OnInit, OnDestroy {
+export class TunnelSummaryComponent implements OnInit {
   form = this.shell.getForm('movie');
-  subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.app.festival.status).pipe(
@@ -34,16 +32,9 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.missingFields = findInvalidControls(this.form).errorFields
-    this.subscription = this.form.valueChanges.subscribe(() => {
-      const results = findInvalidControls(this.form);
-      this.invalidFields = results.errorFields;
-      this.missingFields = results.missingFields;
-    });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+    const { missingFields, errorFields } = findInvalidControls(this.form)
+    this.invalidFields = errorFields;
+    this.missingFields = missingFields;
   }
 
   public async submit() {
