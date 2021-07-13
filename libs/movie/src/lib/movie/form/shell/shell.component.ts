@@ -58,7 +58,11 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       path: 'available-versions',
       label: 'Available Versions',
       shouldHide: isStatus(status, ['development'])
-    }]
+    }, {
+      path: 'available-materials',
+      label: 'Available Materials',
+      shouldHide: isStatus(status, ['development'])
+    },]
   }, {
     title: 'Promotional Elements',
     icon: 'cloud_upload',
