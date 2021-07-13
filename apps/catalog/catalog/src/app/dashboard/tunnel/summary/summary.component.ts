@@ -35,8 +35,12 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.missingFields = findInvalidControls(this.form);
-    this.subscription = this.form.valueChanges.subscribe(() => this.missingFields = findInvalidControls(this.form));
+    this.missingFields = findInvalidControls(this.form).missingFields;
+    this.subscription = this.form.valueChanges.subscribe(() => {
+      const results = findInvalidControls(this.form);
+      this.invalidFields = results.errorFields;
+      this.missingFields = results.missingFields;
+    });
   }
 
   ngOnDestroy(): void {
@@ -53,7 +57,12 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       })
     } else {
       // Log the invalid forms
-      this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+      if (this.invalidFields.length) {
+        this.snackBar.open('Errors within the form.', '', { duration: 2000 });
+      }
+      else if (this.missingFields.length) {
+        this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+      }
     }
   }
 
