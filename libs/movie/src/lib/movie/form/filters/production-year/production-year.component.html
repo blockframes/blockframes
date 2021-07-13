@@ -1,12 +1,11 @@
 <mat-slider
   thumbLabel
   [displayWith]="displayLabel"
-  min="1970"
-  [max]="maxReleaseYear"
-  value="2030"
+  [min]="minYear"
+  [max]="maxYear"
   step="10"
   tickInterval="1"
-  [formControl]="form"
+  [formControl]="componentForm"
   color="primary"
   invert
 ></mat-slider>
