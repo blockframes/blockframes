@@ -63,9 +63,9 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule),
       },
       {
-        path: 'available-materials',
+        path: 'available-versions',
         data: { animation: 9 },
-        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
+        loadChildren: () => import('@blockframes/movie/form/available-versions/available-versions.module').then(m => m.MovieFormAvailableVersionsModule),
       },
       {
         path: 'sales-pitch',
