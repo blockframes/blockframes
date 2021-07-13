@@ -91,6 +91,8 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.add();
+
+    this.cdr.markForCheck();
   }
 
   ngAfterViewInit() {
