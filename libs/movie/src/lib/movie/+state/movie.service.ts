@@ -120,21 +120,17 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   queryDashboard(app: App) {
-    return this.queryWithAnalytics().pipe(
-      map(movies => movies.filter(movie => !!movie?.app[app].access)),
-      map(movies => movies.map((movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) }})) ),
-      map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1))
-    );
-  }
-
-  private queryWithAnalytics(): Observable<MovieWithAnalytics[]> {
     const queryAnalytics: Query<MovieWithAnalytics> = {
       path: 'movies',
       queryFn: fromOrg(this.orgQuery.getActiveId()),
       analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
     }
 
-    return queryChanges.call(this, queryAnalytics);
+    return queryChanges.call(this, queryAnalytics).pipe(
+      map((movies: MovieWithAnalytics[]) => movies.filter(movie => !!movie?.app[app].access)),
+      map(movies => movies.map(movie => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) }})) ),
+      map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1))
+    );
   }
 }
 
