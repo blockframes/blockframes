@@ -23,6 +23,7 @@ export const tunnelRoutes: Routes = [
     path: '',
     component: MovieFormShellComponent,
     canDeactivate: [TunnelGuard],
+    data:{appSteps},
     children: [
       {
         path: '',
@@ -76,7 +77,7 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'available-materials',
-        data: { animation: 9, appSteps },
+        data: { animation: 9 },
         loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
       },
       {
