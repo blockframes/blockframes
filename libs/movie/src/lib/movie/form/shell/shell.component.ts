@@ -61,8 +61,8 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
     }]
   }, {
     title: 'Delivery List',
-    //@TODO:Change icon of delivery list
-    icon: 'cloud_upload',
+    //@TODO: change icon to propery icon when you receive it.
+    icon: 'specific_delivery_list',
     time: 10,
     routes: [{
       path: 'available-materials',

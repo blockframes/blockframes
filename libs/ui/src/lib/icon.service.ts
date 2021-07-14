@@ -40,6 +40,7 @@ export const icons = [
   { name: 'CNY', url: 'assets/icons/CNY.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'delete', url: 'assets/icons/delete.svg' },
+  { name: 'specific_delivery_list', url: 'assets/icons/specific_delivery_list.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
   { name: 'done_all', url: 'assets/icons/done_all.svg' },
   { name: 'drafts', url: 'assets/icons/drafts.svg' },
