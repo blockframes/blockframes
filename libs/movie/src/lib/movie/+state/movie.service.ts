@@ -17,7 +17,7 @@ import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { getViews } from '../pipes/analytics.pipe';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
@@ -123,8 +123,7 @@ export class MovieService extends CollectionService<MovieState> {
     return this.queryWithAnalytics().pipe(
       map(movies => movies.filter(movie => !!movie?.app[app].access)),
       map(movies => movies.map((movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) }})) ),
-      map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
-      tap(console.log)
+      map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1))
     );
   }
 
