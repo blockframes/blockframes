@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 
 const columns = {
   'titleId': 'Title',
-  'price': 'Price'
+  'id': 'Price'
 }
 
 @Component({
@@ -16,10 +16,14 @@ const columns = {
 export class ContractListComponent  {
   columns = columns;
   initialColumns = Object.keys(columns);
-  contracts$ = this.shell.fullContracts$.pipe(
-    map(record => Object.values(record))
-  );
+  offer$ = this.shell.offer$;
+  contracts$ = this.shell.contracts$;
 
   constructor(private shell: OfferShellComponent) { }
 
+  getIncome(id: string) {
+    return this.shell.incomes$.pipe(
+      map(incomes => incomes.find(income => income.id === id))
+    );
+  }
 }

@@ -1,4 +1,18 @@
-<bf-table-filter
-  [source]="contracts$ | async"
-  [columns]="columns">
-</bf-table-filter>
+<ng-container *ngIf="contracts$ | async as contracts">
+  <bf-table-filter link="." [source]="contracts" [columns]="columns" [initialColumns]="initialColumns">
+    <!-- Title -->
+    <ng-template colRef="titleId" let-titleId>
+      <span *ngIf="titleId | getTitle | async as title">
+        {{ title.title.international | maxLength:50 }}
+      </span>
+    </ng-template>
+    <!-- Price -->
+    <ng-template colRef="id" let-contractId>
+      <ng-container *ngIf="getIncome(contractId) | async as income">
+        <span *ngIf="offer$ | async as offer">
+          {{ income.price | currency:offer.currenty }}
+        </span>
+      </ng-container>
+    </ng-template>
+  </bf-table-filter>
+</ng-container>

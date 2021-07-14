@@ -159,7 +159,7 @@ export function maxAllowedFileSize(type: AllowedFileType) {
  * @param orgName:Must be greater than 2 characters.
  */
 export function createOfferId(orgName: string) {
-  const suffix = orgName.substring(0, 2);
+  const suffix = orgName.substring(0, 2).toLowerCase();
   let id = '';
   for (let i = 0; i < 6; i++) {
     id += `${Math.floor(Math.random() * 10)}`;

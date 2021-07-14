@@ -21,7 +21,7 @@ function mergeContracts(contracts: Contract[], incomes: Income[]): Record<string
 }
 
 @Component({
-  selector: 'catalog-shell',
+  selector: 'catalog-offer-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -31,6 +31,7 @@ export class OfferShellComponent {
 
   offer$ = this.offerId$.pipe(
     switchMap((id: string) => this.offerService.valueChanges(id)),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   contracts$ = this.offerId$.pipe(
