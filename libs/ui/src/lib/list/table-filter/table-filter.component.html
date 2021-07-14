@@ -17,7 +17,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="sortColumnDisabled(column.value)">
         {{ column.value?.value || column.value }}
       </th>
-      <td [ngClass]="{'clickable': clickable}" mat-cell *matCellDef="let row">
+      <td [ngClass]="{'clickable': link ?? clickable}" mat-cell *matCellDef="let row">
         <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
           <ng-template [ngTemplateOutlet]="col.template"
             [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.key, item: row }">
