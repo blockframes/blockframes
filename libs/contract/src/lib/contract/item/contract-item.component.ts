@@ -6,6 +6,7 @@ import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-m
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
+
 @Component({
   selector: 'contract-item',
   templateUrl: './contract-item.component.html',
@@ -13,12 +14,14 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractItemComponent {
-  initialColumns = ['duration', 'territories', 'medias', 'exclusive'];
+  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'languages', 'runs.broadcasts'];
   columns = {
-    duration: 'Terms',
-    territories: 'Territories',
-    medias: 'Rights',
-    exclusive: 'Exclusivity'
+    'duration': 'Terms',
+    'territories': 'Territories',
+    'medias': 'Rights',
+    'exclusive': 'Exclusivity',
+    'languages': 'Versions',
+    'runs.broadcasts': '# of Broadcasts',
   };
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;

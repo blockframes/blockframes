@@ -1,4 +1,3 @@
-
 .contract {
   padding: 24px;
   margin-bottom: 72px;
@@ -15,6 +14,11 @@
   cursor: pointer;
 }
 
-section {
+section.contract {
   margin: 24px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
 }
