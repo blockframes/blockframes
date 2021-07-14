@@ -3,8 +3,8 @@ import { OfferShellComponent } from '../shell.component';
 import { map } from 'rxjs/operators';
 
 const columns = {
-  'titleId': 'Title',
-  'id': 'Price'
+  titleId: { value: 'Title', disableSort: true },
+  id: { value: 'Price', disableSort: true },
 }
 
 @Component({
