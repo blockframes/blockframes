@@ -15,7 +15,6 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { LanguagesFormModule } from '../languages/languages.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 
 @NgModule({
@@ -24,7 +23,6 @@ import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-u
     TunnelPageModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-        LanguagesFormModule,
     FileUploaderModule,
     RouterModule.forChild([{ path: '', component: MovieFormAvailableMaterialsComponent }]),
 
