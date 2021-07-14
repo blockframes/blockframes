@@ -1,25 +1,22 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { combineLatest, Observable, of } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { storeStatus } from '@blockframes/utils/static-model';
 import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { AnalyticsService } from '@blockframes/utils/analytics/analytics.service';
-import { getViews } from '@blockframes/movie/pipes/analytics.pipe';
 
 const columns = {
   'title.international': 'Title',
   'release.year': 'Release Year',
   'directors': 'Director(s)',
-  'views': '# Views',
+  'analytics.views': '# Views',
   'app.catalog.status': 'Status',
   'id': { value: '#Sales (Total Gross Receipt)', disableSort: true },
 };
@@ -34,19 +31,11 @@ export class TitleListComponent {
   public app = getCurrentApp(this.routerQuery);
   public appName = appName[this.app];
   columns = columns;
-  initialColumns = ['title.international', 'release.year', 'directors', 'views', 'id', 'app.catalog.status'];
+  initialColumns = ['title.international', 'release.year', 'directors', 'analytics.views', 'id', 'app.catalog.status'];
   filter = new FormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
-  movies$ = this.service.valueChanges(fromOrg(this.orgQuery.getActiveId())).pipe(
-    map(movies => movies.filter(movie => !!movie)),
-    map(movies => movies.filter(m => m.app.catalog.access)),
-    switchMap(movies => combineLatest([
-      of(movies),
-      this.analytics.valueChanges(movies.map(movie => movie.id)).pipe(map(analytics => analytics.map(getViews)))
-    ])),
-    map(([ movies, views ]) => movies.map((movie, i) => ({ ...movie, views: views[i] })) ),
-    map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
+  movies$ = this.service.queryDashboard(this.app).pipe(
     tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty'))
   )
 
@@ -63,9 +52,7 @@ export class TitleListComponent {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
-    private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
-    private analytics: AnalyticsService,
     @Optional() private intercom: Intercom
   ) { }
 
