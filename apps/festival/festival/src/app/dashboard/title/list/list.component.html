@@ -24,7 +24,6 @@
       <bf-table-filter [source]="titles | filterBy: filterByMovie: { value: filter.value, exclude: 'archived' }" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
-        <ng-template colRef="view" let-movie="item">{{ movie.id | getViews | async }}</ng-template>
         <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
         <ng-template colRef="app.festival.status" let-status>
