@@ -8,21 +8,11 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-//
 import 'cypress-mailosaur';
-//import { AuthService } from '@blockframes/auth/+state';
-//import { AngularFireAuth } from 'angularfire2/auth';
 
 import firebase  from 'firebase/app';
+import "firebase/auth";
 import { firebase as firebaseConfig } from '@env';
-
-declare namespace Cypress {
-  interface Chainable<Subject> {
-    login(email: string, password: string): void;
-  }
-}
-
-firebase.initializeApp(firebaseConfig('catalog'));
 
 // -- This is a parent command --
 // Cypress.Commands.add("login", (email, password) => { ... })
@@ -39,23 +29,9 @@ firebase.initializeApp(firebaseConfig('catalog'));
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("login", async (email, password) => { 
-  try {
-    //await AuthService.signin(email, password);
-    return firebase.auth().signInWithEmailAndPassword(email, password)
-    /*
-    cy.window().should('have.property', 'AuthService')
-    cy.window()
-      .then(async (w) => {
-        const authService = w['AuthService'];
-        await authService.signin({ email, password });
-        cy.log(`Logged in user: ${email}`);
-      });
-    */
-    //cy.window().should('have.property', 'LoggedIn')
-    //cy.log('Logged In');
-  } catch (e) {
-    //cy.log(`Login Err: ${e}`);
-    console.log(e);
-  }
-})
+//Init the app
+const app = firebase.initializeApp(firebaseConfig('catalog'));
+
+export const login = (email: string, password: string) => { 
+  return app.auth().signInWithEmailAndPassword(email, password);
+}
