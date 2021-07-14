@@ -26,7 +26,7 @@
       <bf-table-filter [source]="offers | filterBy: filterByStatus: filter.value" [columns]="columns"
         [initialColumns]="initialColumns" clickable showFilter showPaginator link=".">
         <ng-template colRef="id" let-reference>{{ reference }}</ng-template>
-        <ng-template colRef="date" let-date>{{ date| date : 'shortDate'}}</ng-template>
+        <ng-template colRef="_meta.createdAt" let-date>{{ date| date : 'M/d/y'}}</ng-template>
         <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
         <ng-template colRef="contracts" let-contracts>
           <ng-container *ngFor="let contract of contracts; let last=last">
@@ -44,7 +44,9 @@
         <ng-template colRef="incomes" let-incomes let-offer="item">
           {{ incomes | total: 'price' | currency: offer.currency }}
         </ng-template>
-        <ng-template colRef="status" let-status>{{ status }}</ng-template>
+        <ng-template colRef="status" let-status>
+          <bf-tag>{{ status }}</bf-tag>
+        </ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>

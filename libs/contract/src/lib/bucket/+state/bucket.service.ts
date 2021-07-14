@@ -50,7 +50,7 @@ export class BucketService extends CollectionService<BucketState> {
 
   async createOffer(specificity: string, delivery: string) {
     const orgId = this.orgQuery.getActiveId();
-    const orgName = this.orgQuery.getActive().denomination.public;
+    const orgName = this.orgQuery.getActive().denomination.full;
     const bucket = await this.getActive();
 
     await this.update(orgId, {
