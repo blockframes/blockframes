@@ -29,17 +29,22 @@
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns">
         <ng-template colRef="titleId" let-titleId>
 
-          <ng-container *ngIf="titleId; else noTitleYet">
-            <span>{{titleId}}</span><br />
-            <span>{{(titleId | getTitle | async).title?.international | maxLength: 50 }}</span>
-          </ng-container>
+          <p *ngIf="titleId; else noTitleYet">
+            <span>{{ titleId }}</span>
+            <br />
+            <span *ngIf="titleId | getTitle | async as title">
+              {{ title.title?.international | maxLength: 50 }}
+            </span>
+          </p>
 
           <ng-template #noTitleYet>
             <span>No Title Yet</span>
           </ng-template>
 
         </ng-template>
-        <ng-template colRef="status" let-status>{{ status }}</ng-template>
+        <ng-template colRef="status" let-status>
+          <bf-tag>{{ status }}</bf-tag>
+        </ng-template>
         <ng-template colRef="stakeholders" let-stakeholders let-contract='item'>
           <ng-container *ngFor="let stakeholder of stakeholders; let last=last">
             <ng-container *ngIf="stakeholder !== contract.buyerId && stakeholder !== contract.sellerId">

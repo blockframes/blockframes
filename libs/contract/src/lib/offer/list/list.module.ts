@@ -11,6 +11,8 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -19,7 +21,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     MaxLengthModule,
     TotalPipeModule,
     ImageModule,
+    TagModule,
     // Material
     MatButtonModule,
     MatTabsModule,
