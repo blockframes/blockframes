@@ -2,9 +2,21 @@
 import { Routes } from '@angular/router';
 
 // Blockframes
-import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { TunnelGuard, TunnelStep } from '@blockframes/ui/tunnel';
 import { productionStatus } from '@blockframes/utils/static-model/static-model'
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+
+const appSteps: TunnelStep[] = [{
+  title: 'Delivery List',
+  //@TODO(#6293): change icon to propery icon when you receive it.
+  icon: 'specific_delivery_list',
+  time: 10,
+  routes: [{
+    path: 'available-materials',
+    label: 'Available Materials',
+  },
+  ]
+}];
 
 export const tunnelRoutes: Routes = [
   {
@@ -64,7 +76,7 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'available-materials',
-        data: { animation: 9 },
+        data: { animation: 9, appSteps },
         loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
       },
       {

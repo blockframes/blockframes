@@ -60,17 +60,6 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       shouldHide: isStatus(status, ['development'])
     }]
   }, {
-    title: 'Delivery List',
-    //@TODO: change icon to propery icon when you receive it.
-    icon: 'specific_delivery_list',
-    time: 10,
-    routes: [{
-      path: 'available-materials',
-      label: 'Available Materials',
-      shouldHide: isStatus(status, ['development'])
-    },
-    ]
-  }, {
     title: 'Promotional Elements',
     icon: 'cloud_upload',
     time: 10,
