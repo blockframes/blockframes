@@ -55,10 +55,21 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       path: 'technical-spec',
       label: 'Technical Specification'
     }, {
+      path: 'available-versions',
+      label: 'Available Versions',
+      shouldHide: isStatus(status, ['development'])
+    }]
+  }, {
+    title: 'Delivery List',
+    //@TODO:Change icon of delivery list
+    icon: 'cloud_upload',
+    time: 10,
+    routes: [{
       path: 'available-materials',
       label: 'Available Materials',
       shouldHide: isStatus(status, ['development'])
-    }]
+    },
+    ]
   }, {
     title: 'Promotional Elements',
     icon: 'cloud_upload',

@@ -6,20 +6,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 
 // Components
 import { MovieFormAvailableMaterialsComponent } from './available-materials.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { LanguagesFormModule } from '../languages/languages.module';
 
 // Material
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
+import { LanguagesFormModule } from '../languages/languages.module';
+import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 
 @NgModule({
   imports: [
@@ -27,18 +24,14 @@ import { MatDividerModule } from '@angular/material/divider';
     TunnelPageModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    InputAutocompleteModule,
-    LanguagesFormModule,
-
+        LanguagesFormModule,
+    FileUploaderModule,
     RouterModule.forChild([{ path: '', component: MovieFormAvailableMaterialsComponent }]),
 
     // Material
-    MatCheckboxModule,
-    MatSlideToggleModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatDividerModule
 
   ],
   declarations: [MovieFormAvailableMaterialsComponent],
