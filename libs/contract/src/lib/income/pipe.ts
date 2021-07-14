@@ -5,12 +5,10 @@ import { map, switchMap } from 'rxjs/operators';
 
 @Pipe({ name: 'getIncome', pure: true })
 export class GetIncomePipe implements PipeTransform {
-  constructor(
-    private incomeService: IncomeService
-  ) { }
+  constructor(private service: IncomeService) { }
 
   transform(contractId: string) {
-    return this.incomeService.valueChanges(contractId);
+    return this.service.valueChanges(contractId);
   }
 }
 

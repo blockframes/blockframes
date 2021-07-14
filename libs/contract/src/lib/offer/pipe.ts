@@ -3,9 +3,7 @@ import { OfferService } from './+state/offer.service';
 
 @Pipe({ name: 'getOffer' })
 export class GetOfferPipe implements PipeTransform {
-  constructor(
-    private offerService: OfferService
-  ) { }
+  constructor(private offerService: OfferService) { }
   transform(offerId: string) {
     return this.offerService.valueChanges(offerId);
   }
