@@ -11,7 +11,12 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
   selector: 'contract-item',
   templateUrl: './contract-item.component.html',
   styleUrls: ['./contract-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // eslint-disable-next-line
+  host: {
+    'class': 'surface',
+    'test-id': 'avails-section'
+  }
 })
 export class ContractItemComponent {
   initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'languages', 'runs.broadcasts'];
