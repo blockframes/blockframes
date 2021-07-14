@@ -6,6 +6,7 @@ import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta"
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'offers' })
 export class OfferService extends CollectionService<OfferState> {
+  useMemorization=true;
 
   constructor(store: OfferStore) {
     super(store);

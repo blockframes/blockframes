@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { OfferStatus } from '@blockframes/contract/offer/+state';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const columns = {
   'offerId': 'Offer Reference',
@@ -35,5 +35,12 @@ export class ContractListComponent {
     private contractService: ContractService,
     private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
+
+
+  goToContract({ offerId, id }: Contract) {
+    this.router.navigate([offerId, id], { relativeTo: this.route });
+  }
 }

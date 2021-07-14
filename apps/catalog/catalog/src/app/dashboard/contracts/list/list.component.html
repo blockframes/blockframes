@@ -6,7 +6,7 @@
 
     <mat-card>
       <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns" clickable showFilter
-        showPaginator link="/c/o/dashboard/contract/">
+        showPaginator (rowClick)="goToContract($event)">
         <ng-template colRef="offerId" let-id>
           {{ id }}&nbsp;&nbsp;
           <ng-container *ngIf="(id|getOffer|async) as offer">
