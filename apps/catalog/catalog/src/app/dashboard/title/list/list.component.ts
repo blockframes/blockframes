@@ -36,7 +36,7 @@ export class TitleListComponent {
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
 
   movies$ = this.service.queryDashboard(this.app).pipe(
-    tap(movies => movies?.length ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('My titles', 'Empty'))
+    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty'))
   )
 
   movieCount$ = this.movies$.pipe(map(m => ({

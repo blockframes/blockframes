@@ -34,11 +34,7 @@ export class ListComponent {
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   titles$ = this.service.queryDashboard(this.app).pipe(
-    tap(movies => {
-      movies.length ?
-        this.dynTitle.setPageTitle('My titles') :
-        this.dynTitle.setPageTitle('My titles', 'Empty');
-    })
+    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty'))
   )
 
   titleCount$: Observable<Record<string, number>> = this.titles$.pipe(map(m => ({

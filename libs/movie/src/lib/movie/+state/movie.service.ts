@@ -16,7 +16,6 @@ import type firebase from 'firebase';
 import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getViews } from '../pipes/analytics.pipe';
 
@@ -126,9 +125,11 @@ export class MovieService extends CollectionService<MovieState> {
       analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
     }
 
+    const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics)}});
+
     return queryChanges.call(this, queryAnalytics).pipe(
       map((movies: MovieWithAnalytics[]) => movies.filter(movie => !!movie?.app[app].access)),
-      map(movies => movies.map(movie => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) }})) ),
+      map(movies => movies.map(addViews)),
       map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1))
     );
   }
