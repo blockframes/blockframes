@@ -27,6 +27,9 @@ import { MatIconModule } from '@angular/material/icon';
       children: [{
         path: '',
         loadChildren: () => import('./contract-list/contract-list.module').then(m => m.ContractListModule)
+      }, {
+        path: ':contractId',
+        loadChildren: () => import('./contract-view/contract-view.module').then(m => m.ContractViewModule)
       }]
     }])
   ]
