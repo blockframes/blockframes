@@ -29,22 +29,11 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   offerId$ = this.shell.offerId$;
   contractId$: Observable<string> = this.route.params.pipe(pluck('contractId'));
 
-  private rawContract$ = combineLatest([
+  contract$ = combineLatest([
     this.contractId$,
     this.shell.contracts$,
   ]).pipe(
     map(([contractId, contracts]) => contracts.find(contract => contract.id === contractId)),
-  );
-
-  private terms$ = this.contractId$.pipe(
-    switchMap(contractId => this.termService.valueChanges(ref => ref.where('contractId', '==', contractId))),
-  );
-
-  contract$ = combineLatest([
-    this.rawContract$,
-    this.terms$,
-  ]).pipe(
-    map(([ contract, terms]) => ({ ...contract, terms })),
   );
 
 
@@ -55,7 +44,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     map(([contractId, incomes]) => incomes.find(income => income.id === contractId)),
   );
 
-  sellerOrg$ = this.rawContract$.pipe(
+  sellerOrg$ = this.contract$.pipe(
     switchMap(contract => this.orgService.valueChanges(contract.sellerId)),
   );
 

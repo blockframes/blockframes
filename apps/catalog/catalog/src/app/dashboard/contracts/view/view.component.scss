@@ -1,0 +1,26 @@
+bf-tag,
+span,
+header,
+.surface {
+  margin-bottom: 16px;
+}
+
+header {
+  padding: 24px;
+  background: linear-gradient(to bottom, var(--primary-lighter), var(--background));
+}
+
+section.surface {
+  padding: 24px;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+mat-spinner {
+  margin: 16px auto;
+}
+
+.actions {
+  margin-bottom: 16px;
+  width: 100%;
+}

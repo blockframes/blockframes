@@ -6,13 +6,15 @@ import { TermState, TermStore } from './term.store'
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'terms' })
 export class TermService extends CollectionService<TermState> {
+  useMemorization=true;
+
   constructor(store: TermStore) {
     super(store)
   }
 
   formatFromFirestore(term): Term<Date> {
-    term.duration.from = term.duration.from.toDate();
-    term.duration.to = term.duration.to.toDate();
+    if (term.duration?.from) term.duration.from = term.duration.from.toDate();
+    if (term.duration?.to) term.duration.to = term.duration.to.toDate();
     return term;
   }
 }

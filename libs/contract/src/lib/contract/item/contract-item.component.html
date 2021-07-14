@@ -14,30 +14,41 @@
       </section>
       <ng-content select="[price]"></ng-content>
     </header>
-    <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
-      <ng-template colRef="duration" let-duration>
-        {{ duration.from | date }} - {{ duration.to | date }}
-      </ng-template>
-      <ng-template colRef="territories" let-territories>
-        <section (click)="openDetails(territories, 'territories')">
-          <p class="ellipsis">
-            {{ territories |toGroupLabel:'territories':'World' | join}}
-          </p>
-        </section>
-      </ng-template>
-      <ng-template colRef="medias" let-medias>
-        {{ medias | toGroupLabel:'medias':'All'| join }}
-      </ng-template>
-      <ng-template colRef="exclusive" let-exclusive>
-        {{ exclusive ? 'Yes' : 'No' }}
-      </ng-template>
-      <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
-        <ng-template [ngTemplateOutlet]="actionTemplate"
-          [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
+    <ng-container *ngIf="contract | getTermsFromContract | async as terms">
+      <bf-table-filter [source]="terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
+        <ng-template colRef="duration" let-duration>
+          {{ duration.from | date }} - {{ duration.to | date }}
         </ng-template>
-      </ng-template>
-
-    </bf-table-filter>
+        <ng-template colRef="territories" let-territories>
+          <section (click)="openDetails(territories, 'territories')">
+            <p class="ellipsis">
+              {{ territories |toGroupLabel:'territories':'World' | join}}
+            </p>
+          </section>
+        </ng-template>
+        <ng-template colRef="medias" let-medias>
+          {{ medias | toGroupLabel:'medias':'All'| join }}
+        </ng-template>
+        <ng-template colRef="exclusive" let-exclusive>
+          {{ exclusive ? 'Yes' : 'No' }}
+        </ng-template>
+        <ng-template *ngIf="actionTemplate" colAction="action" label="Actions" let-term let-termIndex="index">
+          <ng-template [ngTemplateOutlet]="actionTemplate"
+            [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
+          </ng-template>
+        </ng-template>
+        <ng-template colRef="languages" let-languages>
+          <ul *ngIf="languages">
+            <li *ngFor="let language of languages| keyvalue">
+              {{language.key|toLabel:'languages'}} ({{language.value | versionPipe | join}})
+            </li>
+          </ul>
+        </ng-template>
+        <ng-template colRef="runs.broadcasts" let-broadcasts>
+          {{broadcasts ?? '-'}}
+        </ng-template>
+      </bf-table-filter>
+    </ng-container>
     <ng-content select="footer"></ng-content>
   </section>
 </ng-container>

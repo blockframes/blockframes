@@ -33,7 +33,6 @@ const queryOffer: Query<OfferWithContracts> = {
     path: 'incomes',
     queryFn: ref => ref.where('offerId', '==', offer.id)
   })
-
 }
 
 type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
