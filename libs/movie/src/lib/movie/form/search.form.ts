@@ -10,6 +10,8 @@ import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 import { Movie } from '../+state';
 
+export const minReleaseYear = 1980;
+
 export interface LanguagesSearch {
   original: Language[];
   dubbed: Language[];
@@ -24,7 +26,7 @@ export interface MovieSearch extends AlgoliaSearch {
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;
-  release?: number;
+  minReleaseYear: number;
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
@@ -47,6 +49,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     },
     productionStatus: [],
     minBudget: 0,
+    minReleaseYear: minReleaseYear,
     sellers: [],
     socialGoals: [],
     ...search,
@@ -73,7 +76,7 @@ function createMovieSearchControl(search: MovieSearch) {
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
-    release: new FormControl(search.release),
+    minReleaseYear: new FormControl(search.minReleaseYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
     contentType: new FormControl(search.contentType),
@@ -104,7 +107,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get languages() { return this.get('languages'); }
   get productionStatus() { return this.get('productionStatus'); }
   get minBudget() { return this.get('minBudget'); }
-  get release() { return this.get('release'); }
+  get minReleaseYear() { return this.get('minReleaseYear'); }
   get sellers() { return this.get('sellers'); }
   get storeStatus() { return this.get('storeStatus'); }
   get socialGoals() { return this.get('socialGoals'); }
@@ -123,7 +126,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.languages.value?.caption.length === 0 &&
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
-      !this.release.value &&
+      this.minReleaseYear.value === minReleaseYear &&
       this.sellers?.value.length === 0 &&
       !this.contentType.value);
   }
@@ -154,8 +157,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     if (this.minBudget.value) {
       search['filters'] = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
-    if (this.release.value) {
-      search['filters'] = `release.year <= ${this.release.value}`;
+    if (this.minReleaseYear.value) {
+      search['filters'] = `release.year >= ${this.minReleaseYear.value}`;
     }
 
     return this.movieIndex.search<Movie>(search.query, search);
