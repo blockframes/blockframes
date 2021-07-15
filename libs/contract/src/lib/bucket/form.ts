@@ -15,6 +15,7 @@ import {
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { HoldbackForm } from '../contract/holdback/form';
 
 //////////
 // TERM //
@@ -55,6 +56,7 @@ function createBucketContractControl(params: Partial<BucketContract> = {}) {
     parentTermId: new FormControl(contract.parentTermId),
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, createBucketTermControl)),
     specificity: new FormControl(contract.price),
+    holdbacks: FormList.factory(contract.holdbacks, holdback => new HoldbackForm(holdback))
   }
 }
 type BucketContractControls = ReturnType<typeof createBucketContractControl>;

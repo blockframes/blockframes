@@ -1,10 +1,21 @@
+import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.firestore";
 import { createDocumentMeta, DocumentMeta } from "@blockframes/utils/models-meta";
+import { Media, Territory } from "@blockframes/utils/static-model";
+import { Duration } from '../../term/+state/term.model';
 import type firebase from 'firebase';
+import { createLanguageKey } from "@blockframes/movie/+state";
 type Timestamp = firebase.firestore.Timestamp;
 
 export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
 
 export type ContractStatus = typeof contractStatus[number];
+
+export interface Holdback<D extends Timestamp | Date = Date> {
+  territories: Territory[];
+  medias: Media[];
+  duration: Duration<D>;
+  languages: Record<string, MovieLanguageSpecification>;
+}
 
 export interface Contract<D = Date> {
   _meta: DocumentMeta<D>;
@@ -40,6 +51,16 @@ export interface Sale extends Contract {
   // incomeId: string; // Id of the terms/right on which income should occurred
   /** Free text provided by the buyer, addressed to the seller */
   specificity?: string;
+}
+
+export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
+  return {
+    territories: [],
+    medias: [],
+    duration: { from: new Date(), to: new Date() },
+    ...params,
+    languages: createLanguageKey(params.languages)
+  }
 }
 
 export function createMandate(params: Partial<Mandate> = {}): Mandate {
