@@ -26,7 +26,9 @@
         </section>
       </ng-template>
       <ng-template colRef="medias" let-medias>
-        {{ medias | toGroupLabel:'medias':'All'| join }}
+        <section (click)="openDetails(medias, 'medias')">
+          {{ medias | toGroupLabel:'medias':'All'| join }}
+        </section>
       </ng-template>
       <ng-template colRef="exclusive" let-exclusive>
         {{ exclusive ? 'Yes' : 'No' }}
