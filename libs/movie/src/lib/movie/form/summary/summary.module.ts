@@ -36,7 +36,7 @@ import { SummaryArtisticComponent } from './artistic/artistic.component';
 import { SummaryReviewComponent } from './review/review.component';
 import { SummaryAdditionalInformationComponent } from './additional-information/additional-information.component';
 import { SummaryTechnicalInfoComponent } from './technical-info/technical-info.component';
-import { SummaryAvailableMaterialsComponent } from './available-materials/available-materials.component';
+import { SummaryAvailableVersionsComponent } from './available-versions/available-versions.component';
 import { SummaryMediaFilesComponent } from './media-files/media-files.component';
 import { SummaryMediaImagesComponent } from './media-images/media-images.component';
 import { SummaryMediaVideosComponent } from './media-videos/media-videos.component';
@@ -54,7 +54,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     SummaryReviewComponent,
     SummaryAdditionalInformationComponent,
     SummaryTechnicalInfoComponent,
-    SummaryAvailableMaterialsComponent,
+    SummaryAvailableVersionsComponent,
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
@@ -98,7 +98,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     SummaryReviewComponent,
     SummaryAdditionalInformationComponent,
     SummaryTechnicalInfoComponent,
-    SummaryAvailableMaterialsComponent,
+    SummaryAvailableVersionsComponent,
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
