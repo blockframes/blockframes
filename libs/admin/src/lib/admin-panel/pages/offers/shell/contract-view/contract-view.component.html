@@ -33,7 +33,7 @@
           mat-icon-button
           matTooltip="View"
           [routerLink]="['/c/o/admin/panel/offer', offerId$ | async, contract.id, 'form']"
-          [fragment]="term.id"
+          [queryParams]="{ termId: term.id }"
         >
           <mat-icon svgIcon="visibility"></mat-icon>
         </a>

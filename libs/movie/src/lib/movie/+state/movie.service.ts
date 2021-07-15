@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, Query, queryChanges, WriteOptions } from 'akita-ng-fire';
 import {
   createMovie,
   Movie,
   createMovieAppConfig,
+  MovieAnalytics,
 } from './movie.model';
 import { createDocumentMeta } from "@blockframes/utils/models-meta";
 import { MovieState, MovieStore } from './movie.store';
@@ -15,11 +16,15 @@ import type firebase from 'firebase';
 import { App } from '@blockframes/utils/apps';
 import { QueryFn } from '@angular/fire/firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { map } from 'rxjs/operators';
+import { getViews } from '../pipes/analytics.pipe';
 
 export const fromOrg = (orgId: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId);
 export const fromOrgAndAccepted = (orgId: string, appli: App): QueryFn => ref => ref.where(`app.${appli}.status`, '==', 'accepted').where('orgIds', 'array-contains', orgId);
 export const fromOrgAndInternalRef = (orgId: string, internalRef: string): QueryFn => ref => ref.where('orgIds', 'array-contains', orgId).where('internalRef', '==', internalRef);
 export const fromInternalRef = (internalRef: string): QueryFn => ref => ref.where('internalRef', '==', internalRef);
+
+type MovieWithAnalytics = Movie & { analytics: MovieAnalytics };
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -112,4 +117,21 @@ export class MovieService extends CollectionService<MovieState> {
 
     return movies.map(movie => createMovie(movie));
   }
+
+  queryDashboard(app: App) {
+    const queryAnalytics: Query<MovieWithAnalytics> = {
+      path: 'movies',
+      queryFn: fromOrg(this.orgQuery.getActiveId()),
+      analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
+    }
+
+    const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics)}});
+
+    return queryChanges.call(this, queryAnalytics).pipe(
+      map((movies: MovieWithAnalytics[]) => movies.filter(movie => !!movie?.app[app].access)),
+      map(movies => movies.map(addViews)),
+      map(movies => movies.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1))
+    );
+  }
 }
+

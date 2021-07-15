@@ -4,9 +4,11 @@
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
   $background: map-get($config, 'background');
+  $foreground: map-get($config, 'foreground');
   .surface {
     background-color: mat.get-color-from-palette($background, card);
-    padding: 8px;
+    padding: 24px;
     border-radius: 4px;
+    border: 1px solid mat.get-color-from-palette($foreground, divider);
   }
 }

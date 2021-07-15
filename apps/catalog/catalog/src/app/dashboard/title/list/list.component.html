@@ -29,7 +29,6 @@
         [columns]="columns" [initialColumns]="initialColumns" clickable showFilter showPaginator
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
-        <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
         <ng-template colRef="id" let-titleId>
           <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">
             {{ incomes.length }}
