@@ -2,15 +2,28 @@
 import { Routes } from '@angular/router';
 
 // Blockframes
-import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { TunnelGuard, TunnelStep } from '@blockframes/ui/tunnel';
 import { productionStatus } from '@blockframes/utils/static-model/static-model'
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+
+const appSteps: TunnelStep[] = [{
+  title: 'Delivery List',
+  //@TODO(#6293): change icon to propery icon when you receive it.
+  icon: 'specific_delivery_list',
+  time: 10,
+  routes: [{
+    path: 'available-materials',
+    label: 'Available Materials',
+  },
+  ]
+}];
 
 export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
     canDeactivate: [TunnelGuard],
+    data:{appSteps},
     children: [
       {
         path: '',
@@ -68,33 +81,38 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule),
       },
       {
-        path: 'sales-pitch',
+        path: 'available-versions',
         data: { animation: 10 },
+        loadChildren: () => import('@blockframes/movie/form/available-versions/available-versions.module').then(m => m.MovieFormAvailableVersionsModule),
+      },
+      {
+        path: 'sales-pitch',
+        data: { animation: 11 },
         loadChildren: () => import('@blockframes/movie/form/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule),
       },
       {
         path: 'media-files',
-        data: { animation: 11 },
+        data: { animation: 12 },
         loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule),
       },
       {
         path: 'media-images',
-        data: { animation: 12 },
+        data: { animation: 13 },
         loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule),
       },
       {
         path: 'media-videos',
-        data: { animation: 13 },
+        data: { animation: 14 },
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule),
       },
       {
         path: 'summary',
-        data: { animation: 14 },
+        data: { animation: 15 },
         loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule),
       },
       {
         path: 'end',
-        data: { animation: 15 },
+        data: { animation: 16 },
         loadChildren: () => import('@blockframes/movie/form/end/end.module').then(m => m.EndTunnelModule),
       }
     ]
