@@ -78,8 +78,12 @@ export function selectAction(element: string,
  * @param menu_item : side menu item to click
  * @param closeMenu : boolean, false to leave side menu opened
  */
-export function clickOnMenu(page: string[], menu: string, menu_item: string,
-  closeMenu: boolean = true) {
+export function clickOnMenu(
+  page: string[],
+  menu: string,
+  menu_item: string,
+  closeMenu: boolean = true
+) {
   cy.get(`${page[0]} button[test-id="${menu}"]`, { timeout: 3 * SEC })
     .first().click();
   cy.wait(3 * SEC);
