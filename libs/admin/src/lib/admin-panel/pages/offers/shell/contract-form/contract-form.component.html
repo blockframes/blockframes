@@ -21,14 +21,14 @@
         {{ duration.from | date : 'M/d/yyyy' }} - {{ duration.to | date : 'M/d/yyyy' }}
       </ng-template>
       <ng-template colRef="avails.territories" let-territories>
-        <section (click)="openDetails(territories, 'territories')">
+        <span class="group-label" (click)="openDetails(territories, 'territories')">
           {{ territories | toGroupLabel:'territories':'World' | join }}
-        </section>
+        </span>
       </ng-template>
       <ng-template colRef="avails.medias" let-media> 
-        <section (click)="openDetails(media, 'medias')">
+        <span class="group-label" (click)="openDetails(media, 'medias')">
           {{ media | toGroupLabel:'medias':'All'| join }}
-        </section>
+        </span>
       </ng-template>
       <ng-template colRef="avails.exclusive" let-exclusive>
         {{ exclusive ? 'Yes' : 'No'}}
