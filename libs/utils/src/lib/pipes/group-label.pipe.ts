@@ -4,7 +4,6 @@ import { StaticGroup, staticModel, staticGroups, GroupScope } from '@blockframes
 @Pipe({ name: 'toGroupLabel' })
 export class GroupLabel implements PipeTransform {
   transform(value: string[], scope: GroupScope, all?: string) {
-    console.log({value,})
     const groups: StaticGroup[] = staticGroups[scope];
 
     const allItems = groups.reduce((items, group) => items.concat(group.items), []);
