@@ -38,7 +38,7 @@ export class ContractFormComponent implements OnInit {
       runs: new RunsForm(term.runs)
     }))
   })
-  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
+  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   indexId: number;
   termColumns = {
@@ -96,10 +96,10 @@ export class ContractFormComponent implements OnInit {
         const existingTermIds = this.contract?.termIds || [];
         const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));
         await this.termService.remove(termIdsToDelete, { write });
-        if(this.form.value.titleId !== this.contract.titleId) {
+        if(titleId !== this.contract.titleId) {
           await this.contractService.update(contractId, { titleId, termIds  }, { write });
         }
-        if(this.form.value.price !== this.income.price) {
+        if(price !== this.income.price) {
           await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
         }
         await write.commit();
