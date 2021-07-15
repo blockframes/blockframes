@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -55,8 +55,7 @@ export class ContractFormComponent implements OnInit {
     private incomeService: IncomeService,
     private contractService: ContractService,
     private termService: TermService,
-    private offerService: OfferService,
-    private cdr: ChangeDetectorRef
+    private offerService: OfferService
     ){}
 
     async ngOnInit() {
