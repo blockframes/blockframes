@@ -9,11 +9,18 @@ import { Contract, ContractService } from '@blockframes/contract/contract/+state
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
 
+// Components
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+
 // Forms
 import { FormList } from '@blockframes/utils/form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { MovieVersionInfoForm } from "@blockframes/movie/form/movie.form";
 import { RunsForm } from "@blockframes/contract/avails/form/runs.form";
+import { Scope } from '@blockframes/utils/static-model';
+
+// Material
+import { MatDialog } from '@angular/material/dialog';
 
 function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Term> {
   return { id, contractId, runs, languages: versions, ...avails };
@@ -56,7 +63,8 @@ export class ContractFormComponent implements OnInit {
     private incomeService: IncomeService,
     private contractService: ContractService,
     private termService: TermService,
-    private offerService: OfferService
+    private offerService: OfferService,
+    private dialog: MatDialog
     ){}
 
     async ngOnInit() {
@@ -104,5 +112,9 @@ export class ContractFormComponent implements OnInit {
         }
         await write.commit();
       }
+    }
+
+    openDetails(terms: string, scope: Scope) {
+      this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
     }
 }
