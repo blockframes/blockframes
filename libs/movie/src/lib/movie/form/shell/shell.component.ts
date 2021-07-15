@@ -55,8 +55,8 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       path: 'technical-spec',
       label: 'Technical Specification'
     }, {
-      path: 'available-materials',
-      label: 'Available Materials',
+      path: 'available-versions',
+      label: 'Available Versions',
       shouldHide: isStatus(status, ['development'])
     }]
   }, {

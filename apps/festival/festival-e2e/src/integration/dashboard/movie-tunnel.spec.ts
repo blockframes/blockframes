@@ -117,7 +117,7 @@ const Movie = {
     "colorInfo": 'Color & Black & White',
     "soundMix": 'Dolby SR'
   },
-  availableMaterials: {
+  availableVersions: {
     "languages": 'English',
     "original-version": false,
   },
@@ -189,8 +189,8 @@ const testSteps = [
     input: 'shootingInformation', comp_save: [], save_form: true, debug: false},
   {title: 'Technical Specification', selector: 'movie-form-technical-info static-select',
     input: 'techSpec', comp_save: [], save_form: true, debug: false},
-  {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input',
-    input: 'availableMaterials', comp_save: [], save_form: true, debug: false},
+  {title: 'Available Versions', selector: 'movie-form-available-versions mat-slide-toggle, input',
+    input: 'availableVersions', comp_save: [], save_form: true, debug: false},
   {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select',
     input: 'salesPitch', comp_save: [], save_form: true, debug: false},
   {title: 'Files', selector: 'movie-form-media-files file-uploader',

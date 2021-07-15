@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { MovieService } from "@blockframes/movie/+state";
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
@@ -33,7 +33,8 @@ function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Ter
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractFormComponent implements OnInit {
-  private contract?: Contract
+  private contract?: Contract;
+  private income?: Income;
   form = new FormGroup({
     titleId: new FormControl(null, Validators.required),
     price: new FormControl(Validators.min(0)),
@@ -44,7 +45,7 @@ export class ContractFormComponent implements OnInit {
       runs: new RunsForm(term.runs)
     }))
   })
-  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
+  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   indexId: number;
   termColumns = {
@@ -79,6 +80,7 @@ export class ContractFormComponent implements OnInit {
         price: income?.price
       })
       this.contract = contract;
+      this.income = income;
       this.currency = offer?.currency;
       const terms = await this.termService.getValue(contract.termIds);
       (this.form.get('terms') as FormList<any>).patchAllValue(terms);
@@ -102,8 +104,12 @@ export class ContractFormComponent implements OnInit {
         const existingTermIds = this.contract?.termIds || [];
         const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));
         await this.termService.remove(termIdsToDelete, { write });
-        await this.contractService.update(contractId, { titleId, termIds  }, { write });
-        await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+        if(titleId !== this.contract.titleId) {
+          await this.contractService.update(contractId, { titleId, termIds  }, { write });
+        }
+        if(price !== this.income.price) {
+          await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+        }
         await write.commit();
       }
     }

@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
-  selector: '[movie][link] movie-summary-available-materials',
-  templateUrl: './available-materials.component.html',
-  styleUrls: ['./available-materials.component.scss']
+  selector: '[movie][link] movie-summary-available-versions',
+  templateUrl: './available-versions.component.html',
+  styleUrls: ['./available-versions.component.scss']
 })
-export class SummaryAvailableMaterialsComponent implements OnInit {
+export class SummaryAvailableVersionsComponent implements OnInit {
 
   @Input() movie: MovieForm;
   @Input() link: string;
