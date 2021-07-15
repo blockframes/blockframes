@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { MovieService } from "@blockframes/movie/+state";
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
@@ -26,7 +26,8 @@ function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Ter
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractFormComponent implements OnInit {
-  private contract?: Contract
+  private contract?: Contract;
+  private income?: Income;
   form = new FormGroup({
     titleId: new FormControl(null, Validators.required),
     price: new FormControl(Validators.min(0)),
@@ -71,6 +72,7 @@ export class ContractFormComponent implements OnInit {
         price: income?.price
       })
       this.contract = contract;
+      this.income = income;
       this.currency = offer?.currency;
       const terms = await this.termService.getValue(contract.termIds);
       (this.form.get('terms') as FormList<any>).patchAllValue(terms);
@@ -94,8 +96,12 @@ export class ContractFormComponent implements OnInit {
         const existingTermIds = this.contract?.termIds || [];
         const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));
         await this.termService.remove(termIdsToDelete, { write });
-        await this.contractService.update(contractId, { titleId, termIds  }, { write });
-        await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+        if(this.form.value.titleId !== this.contract.titleId) {
+          await this.contractService.update(contractId, { titleId, termIds  }, { write });
+        }
+        if(this.form.value.price !== this.income.price) {
+          await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+        }
         await write.commit();
       }
     }
