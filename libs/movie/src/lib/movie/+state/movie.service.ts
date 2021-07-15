@@ -122,7 +122,7 @@ export class MovieService extends CollectionService<MovieState> {
     const queryAnalytics: Query<MovieWithAnalytics> = {
       path: 'movies',
       queryFn: fromOrg(this.orgQuery.getActiveId()),
-      analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
+      // analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
     }
 
     const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics)}});

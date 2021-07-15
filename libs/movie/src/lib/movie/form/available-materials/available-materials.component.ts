@@ -1,19 +1,15 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component,  ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 // Blockframes
-import { createMovieLanguageSpecification } from '@blockframes/movie/+state';
-import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
-import { Language } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 // RxJs
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'movie-form-available-materials',
@@ -24,13 +20,22 @@ import { tap } from 'rxjs/operators';
 export class MovieFormAvailableMaterialsComponent implements OnDestroy {
 
   public form = this.shell.getForm('movie');
-  private sub: Subscription;
+  public sub: Subscription;
+  public movieId=this.route.snapshot.paramMap.get('movieId')
 
-  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+  constructor(
+    private shell: MovieFormShellComponent,
+    private dynTitle: DynamicTitleService,
+    private route:ActivatedRoute,
+  ) {
     this.dynTitle.setPageTitle('Available Materials')
   }
 
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
+  }
+
+  get fileForm() {
+    return this.form.get('delivery').get('file')
   }
 }
