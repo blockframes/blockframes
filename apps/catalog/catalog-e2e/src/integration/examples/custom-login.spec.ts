@@ -8,10 +8,10 @@ describe('Checking login with custom command', () => {
 
   });
 
-  it('Test for custom login', async () => {
+  it('Test for custom login', () => {
     //Check for emails sent
     cy.log("Checking log-in");
-    const user = await login("dev+troy-exl@blockframes.io", "blockframes");
+    const user = login("dev+troy-exl@blockframes.io", "blockframes");
     console.log(user);
   });
 
