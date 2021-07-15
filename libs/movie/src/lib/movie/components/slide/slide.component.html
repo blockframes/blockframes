@@ -2,8 +2,9 @@
 <h1 *ngIf="movieView.titles.international" class="mat-display-2">{{ movieView.titles.international }}</h1>
 <h2 *ngIf="movieView.titles.original">{{ movieView.titles.original }}</h2>
 <movie-title-features [movie]="title"></movie-title-features>
-<ng-content select="movie-slide-cta"></ng-content>
-<p *ngIf="movieView.synopsis" class="mat-body-2">
-    {{ movieView.synopsis | maxLength: 332}}
+<span *ngIf="!movieView.logline" class="fixBanner"></span>
+<p *ngIf="movieView.logline" class="mat-body-2">
+    {{ movieView.logline | maxLength: 332}}
 </p>
+<ng-content select="movie-slide-cta"></ng-content>
 <ng-content select="movie-slide-actions"></ng-content>
