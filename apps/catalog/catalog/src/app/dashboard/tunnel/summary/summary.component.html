@@ -6,6 +6,8 @@
     </p>
 
     <div *ngIf="invalidFields.length" class="mat-body">
+      <span class="mandatory-control">You have {{ invalidFields.length }} mandatory fields
+        to fill in.</span>
       <div fxLayout="row wrap" fxLayoutGap="8px">
         <span class="mandatory-control">
           {{ invalidFields | fromCamelCase | titlecase }}

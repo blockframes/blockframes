@@ -24,6 +24,8 @@ export class ActionComponent {
     }
   }
 
+  @Input() display: 'full' | 'icon-only' = 'full';
+
   private requestPending = false;
 
   constructor(
