@@ -2,9 +2,8 @@ import { MovieLanguageSpecification } from "@blockframes/movie/+state/movie.fire
 import { createDocumentMeta, DocumentMeta } from "@blockframes/utils/models-meta";
 import { Media, Territory } from "@blockframes/utils/static-model";
 import { Duration } from '../../term/+state/term.model';
-import type firebase from 'firebase';
 import { createLanguageKey } from "@blockframes/movie/+state";
-type Timestamp = firebase.firestore.Timestamp;
+import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 
 export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
 
@@ -17,7 +16,7 @@ export interface Holdback<D extends Timestamp | Date = Date> {
   languages: Record<string, MovieLanguageSpecification>;
 }
 
-export interface Contract<D = Date> {
+export interface Contract<D extends Timestamp | Date = Date> {
   _meta: DocumentMeta<D>;
   id: string;
   type: 'mandate' | 'sale';
@@ -37,6 +36,7 @@ export interface Contract<D = Date> {
   sellerId: string;
   /** Org ids that have contract parent of this contract */
   stakeholders: string[];
+  holdbacks: Holdback<D>[];
 }
 
 export type ContractDocument = Contract<Timestamp>;
@@ -76,6 +76,7 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
     type: 'mandate',
     status: 'pending',
     stakeholders: [],
+    holdbacks: [],
     ...params
   }
 }
@@ -95,6 +96,7 @@ export function createSale(params: Partial<Sale> = {}): Sale {
     type: 'sale',
     status: 'pending',
     stakeholders: [],
+    holdbacks: [],
     ...params
   }
 }
@@ -105,4 +107,12 @@ export function isMandate(contract: Contract): contract is Mandate {
 
 export function isSale(contract: Contract): contract is Sale {
   return contract.type === 'sale';
+}
+
+
+export function convertDuration(duration: Duration<Timestamp>): Duration<Date> {
+  return {
+    from: duration.from.toDate(),
+    to: duration.to.toDate(),
+  }
 }
