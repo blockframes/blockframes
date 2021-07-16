@@ -6,7 +6,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MarketplaceSelectionComponent } from './selection.component';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
-import { DeepKeyPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
+import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { ContractItemModule } from '@blockframes/contract/contract/item/contract-item.module';
 import { HoldbackFormModule } from '@blockframes/contract/contract/holdback/form/form.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
@@ -31,7 +31,6 @@ import { MatDividerModule } from '@angular/material/divider';
     StaticSelectModule,
     ContractItemModule,
     HoldbackFormModule,
-    MaxLengthModule,
 
     // Material
     MatButtonModule,

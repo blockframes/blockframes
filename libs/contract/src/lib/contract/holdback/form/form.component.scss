@@ -13,7 +13,7 @@ header {
   }
 }
 
-bf-form-table {
+bf-form-table, bf-table-filter {
   margin-bottom: 24px;
   languages-form {
     margin-bottom: 24px;
@@ -38,7 +38,7 @@ mat-divider {
   cursor: pointer;
 }
 
-footer {
+.actions {
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -12,6 +12,7 @@ import { Movie } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
 import { HolbackFormComponent } from '@blockframes/contract/contract/holdback/form/form.component';
+import { Holdback } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-selection',
@@ -78,19 +79,13 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
 
-  openHoldbacks(index: number, contract: BucketContract, title: Movie) {
-    const data = { holdbacks: contract.holdbacks, title };
-    const config = { data, maxHeight: '80vh', width: '1000px', maxWidth: '100vw' };
-    const ref = this.dialog.open(HolbackFormComponent, config);
-    ref.afterClosed().subscribe(holdbacks => {
-      if (!holdbacks) return;
-      const id = this.orgQuery.getActiveId();
-      this.bucketService.update(id, bucket => {
-        const contracts = [...bucket.contracts];
-        contracts[index].holdbacks = holdbacks;
-        return { contracts };
-      });
-    })
+  updateHoldbacks(index: number, holdbacks: Holdback[]) {
+    const id = this.orgQuery.getActiveId();
+    this.bucketService.update(id, bucket => {
+      const contracts = [...bucket.contracts];
+      contracts[index].holdbacks = holdbacks;
+      return { contracts };
+    });
   }
 
   async updatePrice(index: number, price: string) {
