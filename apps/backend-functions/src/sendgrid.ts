@@ -37,7 +37,8 @@ export const eventWebhook = async (req: Request, res: Response) => {
       'sg_template_id',
       'sg_template_name',
       'reason',
-      'status'
+      'status',
+      'projectId'
       // category (array of strings)
     ];
     const rows = body.map(event => copyFields(event, fields));
