@@ -83,8 +83,11 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     this.stateChanges.next();
   }
 
-  // Tag ID
-
+  /*
+    Tag ID
+    This input allows us to custom our class on the mat-option.
+    It will help to scroll to the mat-option user have already pre-selected via the scrollToOption function
+  */
   @Input() tagID = 'tag';
 
   // VALUE
@@ -214,7 +217,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   scrollToOption() {
     const time =this.form.get('time').value
     const index = hours.indexOf(time);
-    const option = this.document.getElementsByClassName(`${this.tagID}-hour-${index}`)[0];
+    const option = this.document.getElementsByClassName(`${this.tagID}-${index}`)[0];
     option.scrollIntoView();
   }
 }
