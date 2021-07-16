@@ -14,7 +14,7 @@ function copyFields<T>(from: T, fields: string[]): T {
  * Listens to Events Webhook of Sengrid
  * 
  * Event Webhook Schema
- * email:string, timestamp:timestamp, event:string, asm_group_id:numeric, sg_event_id:string, sg_message_id:string, sg_template_id:string, sg_template_name:string, reason:string, status:string 
+ * email:string, timestamp:timestamp, event:string, asm_group_id:numeric, sg_event_id:string, sg_message_id:string, sg_template_id:string, sg_template_name:string, reason:string, status:string, projectId: string 
  */
 export const eventWebhook = async (req: Request, res: Response) => {
 
