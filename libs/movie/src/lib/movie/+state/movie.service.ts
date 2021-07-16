@@ -75,7 +75,7 @@ export class MovieService extends CollectionService<MovieState> {
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
     const ref = this.getRef(movie.id);
-    write.update(ref, { '_meta.createdAt': new Date()});
+    write.update(ref, { '_meta.createdAt': new Date() });
     return this.permissionsService.addDocumentPermissions(movie.id, write as firebase.firestore.Transaction, user.orgId);
   }
 
@@ -122,10 +122,10 @@ export class MovieService extends CollectionService<MovieState> {
     const queryAnalytics: Query<MovieWithAnalytics> = {
       path: 'movies',
       queryFn: fromOrg(this.orgQuery.getActiveId()),
-      // analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
+      analytics: (movie: Movie) => ({ path: `analytics/${movie.id}` })
     }
 
-    const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics)}});
+    const addViews = (movie: MovieWithAnalytics) => ({ ...movie, analytics: { ...movie.analytics, views: getViews(movie.analytics) } });
 
     return queryChanges.call(this, queryAnalytics).pipe(
       map((movies: MovieWithAnalytics[]) => movies.filter(movie => !!movie?.app[app].access)),
