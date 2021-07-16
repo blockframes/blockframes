@@ -26,7 +26,7 @@ export class ContractService extends CollectionService<ContractState> {
     return {
       ...contract,
       _meta: formatDocumentMetaFromFirestore(contract?._meta),
-      holdbacks: contract.holdbacks.map(convertHoldback)
+      holdbacks: contract.holdbacks?.map(convertHoldback) ?? []
     };
   }
 }

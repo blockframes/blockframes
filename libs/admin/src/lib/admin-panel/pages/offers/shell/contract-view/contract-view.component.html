@@ -41,6 +41,14 @@
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-template>
+
+      <footer *ngIf="contract.titleId | getTitle | async as title">
+        <holdbacks-form
+          [holdbacks]="contract.holdbacks"
+          [title]="title"
+          (change)="updateHoldbacks(contract.id, $event)">
+        </holdbacks-form>
+      </footer>
     </contract-item>
   </ng-container>
 </ng-container>
