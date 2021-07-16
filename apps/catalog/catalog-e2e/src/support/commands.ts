@@ -32,6 +32,18 @@ import { firebase as firebaseConfig } from '@env';
 //Init the app
 const app = firebase.initializeApp(firebaseConfig('catalog'));
 
-export const login = (email: string, password: string) => { 
+const login = (email: string, password: string) => {
   return app.auth().signInWithEmailAndPassword(email, password);
 }
+
+const logout = () => {
+  return app.auth().signOut();
+}
+
+Cypress.Commands.add('login', (email: string, password: string) => {
+  return login(email, password);
+})
+
+Cypress.Commands.add('logout', () => {
+  return logout();
+})
