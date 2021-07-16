@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormList } from '@blockframes/utils/form';
 import { Holdback } from '../../+state/contract.model';
@@ -11,6 +11,7 @@ import { HoldbackForm } from '../form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HolbackFormComponent {
+  form: FormList<Holdback, HoldbackForm>;
   columns = {
     duration: 'Duration',
     territories: 'Territories',
@@ -19,7 +20,9 @@ export class HolbackFormComponent {
   }
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public form: FormList<Holdback, HoldbackForm>,
-  ) { }
+    @Inject(MAT_DIALOG_DATA) holdbacks: Holdback[],
+  ) {
+    this.form = FormList.factory(holdbacks, holdback => new HoldbackForm(holdback))
+  }
 
 }

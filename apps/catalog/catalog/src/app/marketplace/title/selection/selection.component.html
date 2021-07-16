@@ -40,14 +40,22 @@
               <mat-icon svgIcon="delete"></mat-icon>
             </button>
           </ng-template>
-          <footer fxLayout fxLayoutAlign="space-between">
+          <footer>
             <ng-container *ngIf="contract.titleId | getTitle | async as title">
-              <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-                Delete all rights for this title
-              </button>
-              <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
-                Add Rights
-              </a>
+              <div fxLayout fxLayoutAlign="space-between">
+                <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
+                  Delete all rights for this title
+                </button>
+                <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
+                  Add Rights
+                </a>
+              </div>
+              <mat-divider></mat-divider>
+              <div fxLayout fxLayoutAlign="center center">
+                <button mat-button (click)="openHoldbacks(i, contract)">
+                  <span>Add holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
+                </button>
+              </div>
             </ng-container>
           </footer>
         </contract-item>

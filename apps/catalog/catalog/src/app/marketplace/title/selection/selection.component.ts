@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
 import { Intercom } from 'ng-intercom';
-import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketContract, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject } from 'rxjs';
@@ -11,6 +11,7 @@ import { SpecificTermsComponent } from './specific-terms/specific-terms.componen
 import { Movie } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
+import { HolbackFormComponent } from '@blockframes/contract/contract/holdback/form/form.component';
 
 @Component({
   selector: 'catalog-selection',
@@ -76,6 +77,24 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
+
+  openHoldbacks(index: number, contract: BucketContract) {
+    this.dialog.open(HolbackFormComponent, {
+      data: contract.holdbacks,
+      maxHeight: '80vh',
+      maxWidth: '500px',
+    })
+    .afterClosed()
+    .subscribe(holdbacks => {
+      if (!holdbacks) return;
+      const id = this.orgQuery.getActiveId();
+      this.bucketService.update(id, bucket => {
+        const contracts = [...bucket.contracts];
+        contracts[index].holdbacks = holdbacks;
+        return { contracts };
+      });
+    })
+  }
 
   async updatePrice(index: number, price: string) {
     const id = this.orgQuery.getActiveId();
