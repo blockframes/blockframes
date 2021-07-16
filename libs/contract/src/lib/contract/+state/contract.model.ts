@@ -4,6 +4,7 @@ import { Media, Territory } from "@blockframes/utils/static-model";
 import { Duration } from '../../term/+state/term.model';
 import { createLanguageKey } from "@blockframes/movie/+state";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
+import { toDate } from "@blockframes/utils/helpers";
 
 export const contractStatus = ['pending', 'accepted', 'declined', 'archived'] as const;
 
@@ -112,7 +113,7 @@ export function isSale(contract: Contract): contract is Sale {
 
 export function convertDuration(duration: Duration<Timestamp>): Duration<Date> {
   return {
-    from: duration.from.toDate(),
-    to: duration.to.toDate(),
+    from: toDate(duration.from),
+    to: toDate(duration.to),
   }
 }

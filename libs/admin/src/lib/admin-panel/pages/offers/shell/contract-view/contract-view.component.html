@@ -46,7 +46,7 @@
         <holdbacks-form
           [holdbacks]="contract.holdbacks"
           [title]="title"
-          (change)="updateHoldbacks(contract.id, $event)">
+          (holdbacksChange)="updateHoldbacks(contract.id, $event)">
         </holdbacks-form>
       </footer>
     </contract-item>

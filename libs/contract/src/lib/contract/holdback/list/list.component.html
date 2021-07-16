@@ -2,7 +2,7 @@
   <h3>Holdbacks</h3>
   <bf-table-filter [source]="holdbacks" [columns]="columns">
     <ng-template colRef="duration" let-duration>
-      {{ duration.from | date }} - {{ duration.to | date:'M/d/y' }}
+      {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
     </ng-template>
   
     <ng-template colRef="territories" let-territories>

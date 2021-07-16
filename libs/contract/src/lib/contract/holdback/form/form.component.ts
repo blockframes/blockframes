@@ -16,7 +16,7 @@ import { HoldbackForm } from '../form';
 export class HolbackFormComponent {
   @Input() title: Movie;
   @Input() holdbacks: Holdback[] = [];
-  @Output() change = new EventEmitter<Holdback[]>();
+  @Output() holdbacksChange = new EventEmitter<Holdback[]>();
 
   ref: MatDialogRef<void, void>;
   form: FormList<Holdback, HoldbackForm>;
@@ -43,7 +43,7 @@ export class HolbackFormComponent {
 
   save() {
     if (this.form.valid) {
-      this.change.emit(this.form.value);
+      this.holdbacksChange.emit(this.form.value);
       this.ref.close();
     }
   }
