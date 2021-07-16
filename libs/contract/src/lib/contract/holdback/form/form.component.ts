@@ -7,13 +7,6 @@ import { Scope } from '@blockframes/utils/static-model';
 import { Holdback } from '../../+state/contract.model';
 import { HoldbackForm } from '../form';
 
-const columns = {
-  duration: 'Duration',
-  territories: 'Territories',
-  medias: 'Media',
-  languages: 'Versions',
-};
-
 @Component({
   selector: 'holdbacks-form',
   templateUrl: './form.component.html',
@@ -27,8 +20,12 @@ export class HolbackFormComponent {
 
   ref: MatDialogRef<void, void>;
   form: FormList<Holdback, HoldbackForm>;
-  initialsColumns = Object.keys(columns);
-  columns = columns;
+  columns = {
+    duration: 'Duration',
+    territories: 'Territories',
+    medias: 'Media',
+    languages: 'Versions',
+  };
 
   constructor(private dialog: MatDialog) {}
 

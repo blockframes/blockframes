@@ -12,6 +12,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ContractItemModule } from '@blockframes/contract/contract/item/contract-item.module';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
+import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
+
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -25,7 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     IncomePipeModule,
     TagModule,
     ToLabelModule,
-
+    HoldbackListModule,
     //Material
     MatButtonModule,
     MatCardModule,

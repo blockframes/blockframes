@@ -7,7 +7,7 @@ import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule, VersionPipeModule } from '@blockframes/utils/pipes';
 import { LanguagesFormModule } from "@blockframes/movie/form/languages/languages.module";
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { HoldbackListModule } from '../list/list.module';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -32,7 +32,7 @@ import { MatIconModule } from '@angular/material/icon';
     VersionPipeModule,
     MaxLengthModule,
     LanguagesFormModule,
-    TableFilterModule,
+    HoldbackListModule,
     MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,

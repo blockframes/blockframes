@@ -2,4 +2,10 @@
   <mat-icon svgIcon="arrow_back"></mat-icon>
   <span>Come back to Contract List</span>
 </a>
-<contract-item [contract]="contract$ | async"></contract-item>
+<ng-container *ngIf="contract$ | async as contract">
+  <contract-item [contract]="contract">
+    <footer>
+      <holdback-list [holdbacks]="contract.holdbacks"></holdback-list>
+    </footer>
+  </contract-item>
+</ng-container>
