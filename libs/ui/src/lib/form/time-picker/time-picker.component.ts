@@ -83,6 +83,10 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     this.stateChanges.next();
   }
 
+  // Tag ID
+
+  @Input() tagID = 'tag';
+
   // VALUE
 
   @Input()
@@ -206,14 +210,11 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     this.timeChange.emit(value);
   }
 
-  // Allow us to display the "pre-selected" mat-option
+  /* Allow us to display the "pre-selected" mat-option */
   scrollToOption() {
     const time =this.form.get('time').value
-    console.log('time', time)
     const index = hours.indexOf(time);
-    console.log('index', index)
-    const option = this.document.getElementsByClassName(`hour-${index}`)[0];
-    console.log('option', option)
+    const option = this.document.getElementsByClassName(`${this.tagID}-hour-${index}`)[0];
     option.scrollIntoView();
   }
 }
