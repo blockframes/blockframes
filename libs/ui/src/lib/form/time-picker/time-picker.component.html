@@ -15,7 +15,8 @@
     formControlName="time"
     (input)="setDate()"
   />
+
 </div>
-<mat-autocomplete #timing="matAutocomplete" (optionSelected)="setDate()">
-  <mat-option *ngFor="let hour of hours" [value]="hour">{{ hour }}</mat-option>
+<mat-autocomplete #timing="matAutocomplete" (optionSelected)="setDate()" (opened)="scrollToOption()">
+  <mat-option [class]="'hour-' + i" *ngFor="let hour of hours; let i = index" [value]="hour">{{ hour }}</mat-option>
 </mat-autocomplete>

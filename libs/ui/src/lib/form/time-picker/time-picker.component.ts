@@ -1,10 +1,11 @@
-import { Component, Input, Optional, Self, ElementRef, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, Input, Optional, Self, ElementRef, OnDestroy, EventEmitter, Output, Inject } from '@angular/core';
 import { FormGroup, FormControl, NgControl, ControlValueAccessor, NgForm, FormGroupDirective } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { DOCUMENT } from '@angular/common';
 
 function createDate({ day, time }: { day: Date, time: string }): Date {
   const [h, m] = time.split(':');
@@ -144,7 +145,8 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     private _elementRef: ElementRef<HTMLElement>,
     @Optional() parentForm: NgForm,
     @Optional() parentFormGroup: FormGroupDirective,
-    @Optional() @Self() public ngControl: NgControl
+    @Optional() @Self() public ngControl: NgControl,
+    @Inject(DOCUMENT) private document: Document,
   ) {
     this.parent = parentForm || parentFormGroup;
     _focusMonitor.monitor(_elementRef, true).subscribe(origin => {
@@ -202,5 +204,16 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     const value = createDate(this.form.getRawValue());
     this.onChange(value)
     this.timeChange.emit(value);
+  }
+
+  // Allow us to display the "pre-selected" mat-option
+  scrollToOption() {
+    const time =this.form.get('time').value
+    console.log('time', time)
+    const index = hours.indexOf(time);
+    console.log('index', index)
+    const option = this.document.getElementsByClassName(`hour-${index}`)[0];
+    console.log('option', option)
+    option.scrollIntoView();
   }
 }
