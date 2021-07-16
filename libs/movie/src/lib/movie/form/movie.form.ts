@@ -20,6 +20,7 @@ import {
   MovieVideos,
   MovieVideo,
   MovieAppConfig,
+  MovieDeliveryForm,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -105,6 +106,7 @@ function createMovieControls(movie: Partial<Movie>) {
     app: new MovieAppConfigForm(entity.app),
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
+    delivery: new MovieDeliveryForm(entity.delivery),
   }
 }
 
