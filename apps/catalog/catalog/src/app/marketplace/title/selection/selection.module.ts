@@ -8,6 +8,7 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { BucketPipesModule } from '@blockframes/contract/bucket/pipes';
 import { DeepKeyPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { ContractItemModule } from '@blockframes/contract/contract/item/contract-item.module';
+import { HoldbackFormModule } from '@blockframes/contract/contract/holdback/form/form.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
@@ -29,6 +30,7 @@ import { MatDividerModule } from '@angular/material/divider';
     DeepKeyPipeModule,
     StaticSelectModule,
     ContractItemModule,
+    HoldbackFormModule,
     MaxLengthModule,
 
     // Material

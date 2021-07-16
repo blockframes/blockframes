@@ -52,7 +52,8 @@
               </div>
               <mat-divider></mat-divider>
               <div fxLayout fxLayoutAlign="center center">
-                <button mat-button (click)="openHoldbacks(i, contract)">
+                <button mat-button (click)="openHoldbacks(i, contract, title)">
+                  <mat-icon svgIcon="add"></mat-icon>
                   <span>Add holdbacks for "{{ title.title.international | maxLength:10 }}"</span>
                 </button>
               </div>

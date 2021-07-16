@@ -78,14 +78,11 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
 
-  openHoldbacks(index: number, contract: BucketContract) {
-    this.dialog.open(HolbackFormComponent, {
-      data: contract.holdbacks,
-      maxHeight: '80vh',
-      maxWidth: '500px',
-    })
-    .afterClosed()
-    .subscribe(holdbacks => {
+  openHoldbacks(index: number, contract: BucketContract, title: Movie) {
+    const data = { holdbacks: contract.holdbacks, title };
+    const config = { data, maxHeight: '80vh', width: '1000px', maxWidth: '100vw' };
+    const ref = this.dialog.open(HolbackFormComponent, config);
+    ref.afterClosed().subscribe(holdbacks => {
       if (!holdbacks) return;
       const id = this.orgQuery.getActiveId();
       this.bucketService.update(id, bucket => {

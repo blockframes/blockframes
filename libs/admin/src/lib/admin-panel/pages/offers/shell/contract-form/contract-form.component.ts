@@ -44,7 +44,7 @@ export class ContractFormComponent implements OnInit {
       versions: new MovieVersionInfoForm(term.languages),
       runs: new RunsForm(term.runs)
     }))
-  })
+  });
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   indexId: number;
@@ -55,7 +55,7 @@ export class ContractFormComponent implements OnInit {
     'avails.exclusive': 'Exclusivity',
     'versions': 'Versions',
     'runs': '# of broadcasts'
-  }
+  };
   
   constructor(
     private service: MovieService,
@@ -91,8 +91,8 @@ export class ContractFormComponent implements OnInit {
         const tabTerms = this.form.get('terms').value;
         const index = tabTerms.findIndex(value => value.id === termId);
         this.indexId = index;
-        }
       }
+    }
 
     async save() {
       if (this.form.valid) {
