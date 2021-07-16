@@ -1,9 +1,10 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { Mandate } from '@blockframes/contract/contract/+state';
-import { Term } from '@blockframes/contract/term/+state/term.model';
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
+import { Term } from '../../term/+state/term.model';
+import { createHoldback, Holdback } from '../../contract/+state/contract.model';
 
 export interface Bucket {
   id: string;
@@ -27,6 +28,7 @@ export interface BucketContract {
   /** List of sub terms derived from the parent terms that the buyer want to buy */
   terms: BucketTerm[];
   specificity: string;
+  holdbacks: Holdback<Date>[];
 }
 
 export interface BucketTerm {
@@ -73,7 +75,8 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
     parentTermId: '',
     specificity: '',
     ...params,
-    terms: params.terms?.map(createBucketTerm) ?? []
+    terms: params.terms?.map(createBucketTerm) ?? [],
+    holdbacks: params.holdbacks?.map(createHoldback) ?? [],
   }
 }
 
