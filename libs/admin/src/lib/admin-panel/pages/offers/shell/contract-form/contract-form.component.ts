@@ -1,19 +1,26 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { MovieService } from "@blockframes/movie/+state";
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Term, TermService } from "@blockframes/contract/term/+state";
 import { OfferService } from '@blockframes/contract/offer/+state';
+
+// Components
+import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 // Forms
 import { FormList } from '@blockframes/utils/form';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { MovieVersionInfoForm } from "@blockframes/movie/form/movie.form";
 import { RunsForm } from "@blockframes/contract/avails/form/runs.form";
+import { Scope } from '@blockframes/utils/static-model';
+
+// Material
+import { MatDialog } from '@angular/material/dialog';
 
 function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Term> {
   return { id, contractId, runs, languages: versions, ...avails };
@@ -26,7 +33,8 @@ function toTerm({ id, avails, runs, versions }, contractId: string): Partial<Ter
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractFormComponent implements OnInit {
-  private contract?: Contract
+  private contract?: Contract;
+  private income?: Income;
   form = new FormGroup({
     titleId: new FormControl(null, Validators.required),
     price: new FormControl(Validators.min(0)),
@@ -37,7 +45,7 @@ export class ContractFormComponent implements OnInit {
       runs: new RunsForm(term.runs)
     }))
   })
-  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'approved'));
+  titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   indexId: number;
   termColumns = {
@@ -56,7 +64,7 @@ export class ContractFormComponent implements OnInit {
     private contractService: ContractService,
     private termService: TermService,
     private offerService: OfferService,
-    private cdr: ChangeDetectorRef
+    private dialog: MatDialog
     ){}
 
     async ngOnInit() {
@@ -72,6 +80,7 @@ export class ContractFormComponent implements OnInit {
         price: income?.price
       })
       this.contract = contract;
+      this.income = income;
       this.currency = offer?.currency;
       const terms = await this.termService.getValue(contract.termIds);
       (this.form.get('terms') as FormList<any>).patchAllValue(terms);
@@ -95,9 +104,17 @@ export class ContractFormComponent implements OnInit {
         const existingTermIds = this.contract?.termIds || [];
         const termIdsToDelete = existingTermIds.filter(id => !termIds.includes(id));
         await this.termService.remove(termIdsToDelete, { write });
-        await this.contractService.update(contractId, { titleId, termIds  }, { write });
-        await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+        if(titleId !== this.contract.titleId) {
+          await this.contractService.update(contractId, { titleId, termIds  }, { write });
+        }
+        if(price !== this.income.price) {
+          await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+        }
         await write.commit();
       }
+    }
+
+    openDetails(terms: string, scope: Scope) {
+      this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
     }
 }

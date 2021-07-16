@@ -18,7 +18,7 @@ export class GroupLabel implements PipeTransform {
         : items;
     })
       .sort((a) => typeof a === 'string' ? -1 : 1)
-      .map(item => typeof item === 'string' ? item : item.join(', '))
+      .flat()
       .filter(v => !!v)
   }
 }
