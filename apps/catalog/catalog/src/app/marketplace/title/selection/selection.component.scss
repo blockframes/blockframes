@@ -17,6 +17,9 @@ contract-item {
   margin: 24px;
   footer {
     margin-top: 12px;
+    mat-divider {
+      margin: 16px 0;
+    }
   }
 }
 

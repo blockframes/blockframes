@@ -1,19 +1,20 @@
-<div fxLayout fxLayoutAlign="end">
+<header>
+  <h1>{{ data.scope | titlecase }}</h1>
   <button mat-icon-button (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
-</div>
-
-<section fxLayout="column" fxLayoutGap="24px">
-  <h2>{{ data.scope | titlecase }}</h2>
+</header>
+<section>
   <ng-container *ngIf="!!(groups$ | async).length; else default">
     <ng-container *ngFor="let group of groups$ | async">
-      <ng-container *ngIf="group.items.length">
+      <article *ngIf="group.items.length">
         <p class="mat-body-2">{{ group.label }}</p>
         <mat-chip-list>
-          <mat-chip disableRipple *ngFor="let item of group.items">{{ item | toLabel: data.scope }}</mat-chip>
+          <mat-chip disableRipple *ngFor="let item of group.items">
+            {{ item | toLabel: data.scope }}
+          </mat-chip>
         </mat-chip-list>
-      </ng-container>
+      </article>
     </ng-container>
   </ng-container>
   <ng-template #default>
