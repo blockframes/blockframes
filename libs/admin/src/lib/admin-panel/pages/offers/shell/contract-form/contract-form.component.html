@@ -12,7 +12,8 @@
       <mat-label>Title price</mat-label>
       <input type="number" matInput formControlName="price" />
       <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
-      <!-- <mat-error *ngIf="form.hasError('required', 'price')">Price field is required!</mat-error> -->
+      <!-- Please live this comment if PM change idea 
+      <mat-error *ngIf="form.hasError('required', 'price')">Price field is required!</mat-error> -->
       <mat-hint>If no price entered. Seller will recieve active price.</mat-hint>
     </mat-form-field>
   </header>
