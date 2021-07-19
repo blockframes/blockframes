@@ -7,15 +7,13 @@ import { MovieSlideComponent, MovieSlideActions, MovieSlideCTA } from './slide.c
 
 // Blockframes
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
-import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
 @NgModule({
     imports: [
         CommonModule,
         FlexLayoutModule,
         // Blockframes
-        MovieTitleFeaturesModule,
-        MaxLengthModule
+        MovieTitleFeaturesModule
     ],
     declarations: [MovieSlideComponent, MovieSlideActions, MovieSlideCTA],
     exports: [MovieSlideComponent, MovieSlideActions, MovieSlideCTA]
