@@ -77,7 +77,7 @@ export class ContractFormComponent implements OnInit {
       ]);
       this.form.patchValue({
         titleId: contract?.titleId,
-        price: income?.price ? income.price :  0
+        price: income.price ? income.price :  0
       })
       this.contract = contract;
       this.income = income;
