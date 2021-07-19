@@ -5,7 +5,9 @@ article {
 a {
   margin-left: 8px;
   margin-bottom: 32px;
-  opacity: 0.5;
+  span {
+    opacity: 0.5;
+  }
 }
 
 h3 {
