@@ -12,7 +12,7 @@
       <mat-label>Title price</mat-label>
       <input type="number" matInput formControlName="price" min="0"/>
       <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
-      <mat-hint>If no price entered. Seller will receive active price.</mat-hint>
+      <mat-hint>If no price entered. Seller will receive asking price.</mat-hint>
     </mat-form-field>
   </header>
   <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
