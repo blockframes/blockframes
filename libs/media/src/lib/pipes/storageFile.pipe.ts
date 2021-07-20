@@ -24,8 +24,9 @@ export class StorageFilePipe implements PipeTransform {
 @Pipe({ name: 'getDownloadUrl' })
 export class DownloadUrl implements PipeTransform {
   constructor(private storage: AngularFireStorage) { }
-  transform(storagePath: string, basePath: 'protected' | 'public' = 'public'): Observable<string> {
-    const pathReference = this.storage.ref(`/${basePath}/${storagePath}`);
+  transform(storageFile: StorageFile, basePath: 'protected' | 'public' = 'public'): Observable<string> {
+    const pathReference = this.storage.ref(`/${basePath}/${storageFile.storagePath}`);
+    console.log({storageFile})
     return pathReference.getDownloadURL()
   }
 }

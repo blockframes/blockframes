@@ -5,7 +5,7 @@
     </a>
   </h6>
   <ul>
-    <ng-container *ngIf="mode === 'preview'; else download">
+    <ng-container *ngIf="preview; else download">
       <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px" *ngIf="file.storagePath">
         <bf-preview-modal [ref]="file">
           <strong> {{file.storagePath | fileName}} </strong>
@@ -14,7 +14,7 @@
     </ng-container>
     <ng-template #download>
       <li fxLayout fxLayoutAlign="start center" >
-        <a mat-button color="primary" [href]="file.storagePath | getDownloadUrl | async" target="_blank"
+        <a mat-button color="primary" [href]="file | getDownloadUrl | async" target="_blank"
           *ngIf="file.storagePath">
           <mat-icon svgIcon="cloud_upload"></mat-icon>
           <span>Download Available Materials</span>

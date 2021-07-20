@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: '[movie][link] movie-summary-available-materials',
@@ -11,7 +12,7 @@ export class SummaryAvailableMaterialsComponent implements OnInit {
 
   @Input() movie: MovieForm;
   @Input() link: string;
-  @Input() mode: 'preview' | 'download' = 'preview';
+  @Input() @boolean preview=true;
 
   public versionLength: number;
 

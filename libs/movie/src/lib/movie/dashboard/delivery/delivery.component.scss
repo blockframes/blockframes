@@ -1,7 +1,8 @@
-section {
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-bottom: 24px;
+:host {
+  display: block;
+  margin-left: 24px;
+  margin-right: 24px;
+  margin-bottom: 24px;
 }
 
 h3 {
