@@ -1,4 +1,3 @@
-<!-- ORIGINAL VERSION -->
 <article>
   <h6>Available Materials
     <a mat-icon-button [routerLink]="link" fragment="available-materials">
@@ -6,10 +5,21 @@
     </a>
   </h6>
   <ul>
-    <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px" *ngIf="file.storagePath">
-      <bf-preview-modal [ref]="file">
-        <strong> {{file.storagePath | fileName}} </strong>
-      </bf-preview-modal>
-    </li>
+    <ng-container *ngIf="mode === 'preview'; else download">
+      <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px" *ngIf="file.storagePath">
+        <bf-preview-modal [ref]="file">
+          <strong> {{file.storagePath | fileName}} </strong>
+        </bf-preview-modal>
+      </li>
+    </ng-container>
+    <ng-template #download>
+      <li fxLayout fxLayoutAlign="start center" >
+        <a mat-button color="primary" [href]="file.storagePath | getDownloadUrl | async" target="_blank"
+          *ngIf="file.storagePath">
+          <mat-icon svgIcon="cloud_upload"></mat-icon>
+          <span>Download Available Materials</span>
+        </a>
+      </li>
+    </ng-template>
   </ul>
 </article>

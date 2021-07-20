@@ -2,7 +2,8 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { createStorageFile, StorageFile } from '../+state/media.firestore';
 import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../+state/static-files';
-import firebase from 'firebase';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable } from 'rxjs';
 
 @Pipe({
   name: 'storageFile',
@@ -22,9 +23,9 @@ export class StorageFilePipe implements PipeTransform {
 
 @Pipe({ name: 'getDownloadUrl' })
 export class DownloadUrl implements PipeTransform {
-  async transform(storagePath: string, basePath: 'protected' | 'public' = 'public'): Promise<string> {
-    const storage = firebase.storage();
-    const pathReference = storage.ref(`/${basePath}/${storagePath}`);
+  constructor(private storage: AngularFireStorage) { }
+  transform(storagePath: string, basePath: 'protected' | 'public' = 'public'): Observable<string> {
+    const pathReference = this.storage.ref(`/${basePath}/${storagePath}`);
     return pathReference.getDownloadURL()
   }
 }

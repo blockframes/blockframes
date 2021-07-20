@@ -43,7 +43,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     },
     {
       path: 'delivery',
-      label: 'Delivery',
+      label: 'Available Materials',
     },
   ];
 

@@ -9,8 +9,6 @@ import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summar
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { FileNameModule } from '@blockframes/utils/pipes';
-import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -19,8 +17,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     CommonModule,
     MovieTunnelSummaryModule,
     GetPathModule,
-    FlexLayoutModule,
-    StorageFileModule,
     FileNameModule,
     RouterModule.forChild([{ path: '', component: MovieViewDeliveryComponent }]),
 
@@ -28,4 +24,4 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   ],
   exports: [MovieViewDeliveryComponent]
 })
-export class MovieViewAdditionalModule { }
+export class MovieViewDeliveryModule { }

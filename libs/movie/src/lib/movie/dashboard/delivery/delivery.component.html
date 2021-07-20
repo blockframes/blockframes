@@ -1,13 +1,7 @@
-<article>
-  <h3>Delivery List</h3>
-  <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
-  </movie-summary-available-materials>
-
-  <a fxLayout mat-flat-button [href]="file.storagePath | getDownloadUrl | async" target="_blank" *ngIf="file.storagePath">
-    <mat-icon svgIcon="cloud_upload" color="primary"></mat-icon>
-    <span>Your {{file.storagePath | fileName}}</span>
-  </a>
-</article>
-
-
-
+<section>
+  <article class="surface">
+    <h3>Available Materials</h3>
+    <movie-summary-available-materials mode="download" [movie]="form" [link]="('available-materials' | getPath)">
+    </movie-summary-available-materials>
+  </article>
+</section>
