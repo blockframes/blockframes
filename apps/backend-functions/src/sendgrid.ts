@@ -44,7 +44,7 @@ export const eventWebhook = async (req: Request, res: Response) => {
     const bigquery = new BigQuery();
     const dataset = bigquery.dataset(datasetId);
     const table = dataset.table(tableId);
-    const body = req.body as Array<any>;
+    const body = req.body as Array<unknown>;
 
     const fields = [
       'email',
