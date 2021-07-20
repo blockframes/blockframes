@@ -2,12 +2,22 @@ import { BigQuery } from '@google-cloud/bigquery';
 import { Request, Response } from "firebase-functions";
 import { EventWebhook } from '@sendgrid/eventwebhook';
 
+/** Return object with only the properties defined in fields parameter */
+function copyFields<T>(from: T, fields: string[]): T {
+  const result: Partial<T> = {};
+  for (const key in from) {
+    if (fields.includes(key)) result[key] = from[key];
+  }
+  return result as T;
+}
+
+const displayError = (e) => typeof e === 'object' ? JSON.stringify(e) : e;
 
 /**
  * Listens to Events Webhook of Sengrid
  * 
  * Event Webhook Schema
- * email:string, timestamp:timestamp, event:string, asm_group_id:numeric, sg_event_id:string, sg_message_id:string, sg_template_id:string, sg_template_name:string, reason:string, status:string 
+ * email:string, timestamp:timestamp, event:string, asm_group_id:numeric, sg_event_id:string, sg_message_id:string, sg_template_id:string, sg_template_name:string, reason:string, status:string, projectId: string
  */
 export const eventWebhook = async (req: Request, res: Response) => {
 
@@ -36,35 +46,25 @@ export const eventWebhook = async (req: Request, res: Response) => {
     const table = dataset.table(tableId);
     const body = req.body as Array<any>;
 
-    const cleaned = body.map(({ 
-      email,
-      timestamp,
-      event,
-      asm_group_id,
-      sg_event_id,
-      sg_message_id,
-      sg_template_id,
-      sg_template_name,
-      reason,
-      status,
-      // category (array of strings)
-    }) => ({ 
-      email,
-      timestamp,
-      event,
-      asm_group_id,
-      sg_event_id,
-      sg_message_id,
-      sg_template_id,
-      sg_template_name,
-      reason,
-      status
-    }));
+    const fields = [
+      'email',
+      'timestamp',
+      'event',
+      'asm_group_id',
+      'sg_event_id',
+      'sg_message_id',
+      'sg_template_id',
+      'sg_template_name',
+      'reason',
+      'status',
+      'projectId'
+    ];
+    const rows = body.map(event => copyFields(event, fields));
 
-    table.insert(cleaned).catch(err => console.error('error while inserting: ', typeof err === 'object' ? JSON.stringify(err) : err));
+    table.insert(rows).catch(err => console.error('error while inserting: ', displayError(err)));
 
   } catch (e) {
-    console.error(typeof e === 'object' ? JSON.stringify(e) : e);
+    console.error(displayError(e));
   }
 
   // in any case we return 200 OK to the sendgrid servers
