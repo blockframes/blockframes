@@ -4,14 +4,10 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { DashboardTitleShellComponent } from '../shell/shell.component';
 
 @Component({
-  selector: 'movie-view-delivery',
+  selector: 'dashboard-title-delivery',
   templateUrl: './delivery.component.html',
   styleUrls: ['./delivery.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // eslint-disable next-line // <-- eslint doesn't like to update the host directly for some reasons
-  host: {
-    class: 'surface'
-  }
 })
 export class MovieViewDeliveryComponent implements OnInit {
 

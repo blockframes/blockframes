@@ -12,7 +12,7 @@ export class SummaryAvailableMaterialsComponent implements OnInit {
 
   @Input() movie: MovieForm;
   @Input() link: string;
-  @Input() @boolean preview=true;
+  @Input() @boolean download = false;
 
   public versionLength: number;
 
