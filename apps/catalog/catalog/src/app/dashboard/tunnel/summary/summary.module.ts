@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 
 @NgModule({
   declarations: [TunnelSummaryComponent],
@@ -27,6 +28,8 @@ import { MatDividerModule } from '@angular/material/divider';
     GetPathModule,
     FromCamelCasePipeModule,
     HasStatusModule,
+    StorageFileModule,
+
     // Materials
     MatCardModule,
     MatIconModule,
