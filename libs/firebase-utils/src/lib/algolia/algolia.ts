@@ -121,8 +121,8 @@ export function storeSearchableMovie(
       keywords: movie.keywords ? movie.keywords : [],
       // Register the entire festival name because it will be used for research by users
       festivals: movie.prizes.map(prize => festival[prize.name]) || [],
-      productionCompany: movie.stakeholders.productionCompany.map(company => company.displayName),
-      salesAgent: movie.stakeholders.salesAgent.map(agent => agent.displayName),
+      productionCompany: movie.stakeholders.productionCompany.map(company => company.displayName) || [],
+      salesAgent: movie.stakeholders.salesAgent.map(agent => agent.displayName) || [],
 
       // facets
       genres: movie.genres ? movie.genres : [],
