@@ -87,6 +87,18 @@ const routes: Routes = [{
         data: { animation: 'view' },
       }]
     },
+    {
+      path: 'offer',
+      children: [{
+        path: '',
+        loadChildren: () => import('./offer/list/list.module').then(m => m.ListModule),
+        data: { animation: 'list' }
+      }, {
+        path: ':offerId',
+        loadChildren: () => import('./offer/shell/shell.module').then(m => m.ShellModule),
+        data: { animation: 'list' }
+      }]
+    }
   ]
 }];
 

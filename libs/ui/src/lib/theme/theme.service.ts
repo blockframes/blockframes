@@ -32,7 +32,7 @@ export class ThemeService {
     localStorage.setItem('theme', mode);
   }
 
-  private setTheme(mode: Theme) {
+  setTheme(mode: Theme) {
     this.document.body.classList.remove('dark-theme');
     this.document.body.classList.remove('light-theme');
     this.document.body.classList.add(`${mode}-theme`);

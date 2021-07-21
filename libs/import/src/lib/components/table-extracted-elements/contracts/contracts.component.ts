@@ -13,6 +13,7 @@ import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { createDocumentMeta } from '@blockframes/utils/models-meta';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -113,7 +114,10 @@ export class TableExtractedContractsComponent implements OnInit {
     const data = this.rows.data;
     const termIds = await this.termService.add(importState.terms);
     importState.contract.termIds = termIds;
-    await this.contractService.add(importState.contract);
+    await this.contractService.add({
+      ...importState.contract,
+      _meta: createDocumentMeta({createdAt: new Date()})
+    });
     const titleId = importState.contract.titleId;
     if (!!titleId && importState.contract.type === 'mandate') {
       const title = await this.movieService.getValue(titleId);

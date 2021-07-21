@@ -1,0 +1,16 @@
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-spinner {
+  align-self: center;
+}
+
+.empty {
+  img {
+    width: 380px;
+    margin: 0 auto;
+  }
+}

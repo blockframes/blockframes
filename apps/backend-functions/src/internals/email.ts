@@ -1,5 +1,5 @@
 import SendGrid from '@sendgrid/mail';
-import { sendgridAPIKey } from '../environments/environment';
+import { sendgridAPIKey, projectId } from '../environments/environment';
 import { unsubscribeGroupIds } from '@blockframes/utils/emails/ids';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
@@ -37,7 +37,8 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
     subject,
     text,
     asm: { groupId, groupsToDisplay },
-    substitutions: substitutions
+    substitutions: substitutions,
+    customArgs: { projectId }
   };
 
   return send(msg);
@@ -56,7 +57,8 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     to,
     templateId,
     dynamicTemplateData: { ...data, ...substitutions, app: appMailSettings, from },
-    asm: { groupId, groupsToDisplay }
+    asm: { groupId, groupsToDisplay },
+    customArgs: { projectId }
   };
 
   return send(msg);

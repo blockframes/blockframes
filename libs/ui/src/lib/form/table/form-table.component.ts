@@ -44,6 +44,10 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
+  @Input() set active(index: number) {
+    if (typeof index !== 'number') return;
+    this.edit(index);
+  }
 
   @ContentChildren(ColRefDirective, { descendants: false }) cols: QueryList<ColRefDirective>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -84,10 +88,11 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     // Keep the table updated
     this.sub = values$.subscribe(values => {
       this.dataSource.data = values;
-      this.cdr.markForCheck();
     });
 
     this.add();
+
+    this.cdr.markForCheck();
   }
 
   ngAfterViewInit() {

@@ -1,13 +1,19 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 
 @Component({
-  selector: 'tag-component',
-  templateUrl: 'tag.component.html',
-  styleUrls: ['./tag.component.scss'],
+  selector: 'bf-tag',
+  template: '<ng-content></ng-content>',
+  styles: [`
+    :host {
+      border: solid 1px var(--foreground-text);
+      border-radius: 2px;
+      padding: 4px 8px;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagComponent {
-  @Input() label: string;
-}
+export class TagComponent { }
