@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { BucketStore, BucketState } from './bucket.store';
-import { Bucket } from './bucket.model';
+import { Bucket, createBucket } from './bucket.model';
 import { TermService } from '../../term/+state';
 import { ContractService, convertDuration } from '../../contract/+state';
 import { OfferService } from '../../offer/+state';
@@ -9,16 +9,16 @@ import { IncomeService } from '../../income/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { centralOrgId } from '@env';
 import { AuthQuery } from "@blockframes/auth/+state";
-import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { createOfferId } from '@blockframes/utils/utils';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
 export class BucketService extends CollectionService<BucketState> {
+  useMemorization = true;
   active$ = this.orgQuery.selectActiveId().pipe(
-    switchMap((orgId) => this.valueChanges(orgId)),
-    shareReplay(1)
+    switchMap(orgId => this.valueChanges(orgId)),
   );
 
   constructor(
@@ -33,13 +33,14 @@ export class BucketService extends CollectionService<BucketState> {
     super(store);
   }
 
-  formatFromFirestore(bucket): Bucket {
-    if (!bucket) return;
+  formatFromFirestore(document): Bucket {
+    if (!document) return;
+    const bucket = createBucket(document);
     for (const contract of bucket.contracts) {
-      for (const term of contract.terms || []) {
+      for (const term of contract.terms) {
         term.duration = convertDuration(term.duration);
       }
-      for (const holdback of contract.holdbacks || []) {
+      for (const holdback of contract.holdbacks) {
         holdback.duration = convertDuration(holdback.duration);
       }
     }

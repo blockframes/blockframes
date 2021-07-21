@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
 import { Intercom } from 'ng-intercom';
-import { Bucket, BucketContract, BucketService } from '@blockframes/contract/bucket/+state';
+import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject } from 'rxjs';
@@ -11,7 +11,6 @@ import { SpecificTermsComponent } from './specific-terms/specific-terms.componen
 import { Movie } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
-import { HolbackFormComponent } from '@blockframes/contract/contract/holdback/form/form.component';
 import { Holdback } from '@blockframes/contract/contract/+state';
 
 @Component({
@@ -28,10 +27,10 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   private prices: number[] = [];
   priceChanges = new Subject();
   total$ = this.priceChanges.pipe(
-    startWith(0),
     debounceTime(100),
     map(() => this.getTotal(this.prices)),
-    distinctUntilChanged()
+    distinctUntilChanged(),
+    startWith(0),
   );
 
   private sub = this.currencyForm.valueChanges.pipe(
@@ -63,7 +62,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.dynTitle.setPageTitle(title);
   }
 
-  private getTotal(prices) {
+  private getTotal(prices: number[]) {
     return prices.reduce((arr, curr) => (arr + curr), 0)
   }
 
@@ -72,8 +71,8 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.bucketService.update(id, { currency });
   }
 
-  setPrice(index: number, price: string) {
-    this.prices[index] =  parseFloat(price);
+  setPrice(index: number, price: string | null) {
+    this.prices[index] = parseFloat(price || '0');  // if "", fallback to '0'
     this.priceChanges.next();
   }
 
