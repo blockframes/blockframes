@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
         distinctUntilChanged(),
         debounceTime(500),
-        switchMap(() => this.searchForm.search()),
+        switchMap(() => this.searchForm.search(true)),
         tap(res => this.nbHits = res.nbHits),
         pluck('hits')
       ).subscribe((movies: Movie[]) => {
