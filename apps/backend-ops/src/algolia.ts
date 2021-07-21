@@ -152,7 +152,14 @@ const baseConfig: AlgoliaConfig = {
     'title.international',
     'title.original',
     'directors',
-    'keywords'
+    'keywords',
+    'originCountries',
+    'genres',
+    'originalLanguages',
+    'orgName',
+    'festivals',
+    'productionCompany',
+    'salesAgent'
   ],
   attributesForFaceting: [
     // filters
