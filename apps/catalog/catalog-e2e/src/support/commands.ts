@@ -8,8 +8,11 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-//
 import 'cypress-mailosaur';
+
+import firebase  from 'firebase/app';
+import "firebase/auth";
+import { firebase as firebaseConfig } from '@env';
 
 // -- This is a parent command --
 // Cypress.Commands.add("login", (email, password) => { ... })
@@ -25,3 +28,22 @@ import 'cypress-mailosaur';
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+//Init the app
+const app = firebase.initializeApp(firebaseConfig('catalog'));
+
+const login = (email: string, password: string) => {
+  return app.auth().signInWithEmailAndPassword(email, password);
+}
+
+const logout = () => {
+  return app.auth().signOut();
+}
+
+Cypress.Commands.add('login', (email: string, password: string) => {
+  return login(email, password);
+})
+
+Cypress.Commands.add('logout', () => {
+  return logout();
+})
