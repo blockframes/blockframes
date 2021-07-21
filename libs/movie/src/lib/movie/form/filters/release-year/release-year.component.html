@@ -1,0 +1,18 @@
+<mat-slider
+  thumbLabel
+  [displayWith]="invert"
+  [min]="minReleaseYear"
+  [max]="maxReleaseYear"
+  step="10"
+  tickInterval="1"
+  [formControl]="inverted"
+  color="primary"
+  invert
+></mat-slider>
+<footer fxLayout fxLayoutAlign="space-between">
+  <span class="mat-caption">1980</span>
+  <span class="mat-caption">1990</span>
+  <span class="mat-caption">2000</span>
+  <span class="mat-caption">2010</span>
+  <span class="mat-caption">2020</span>
+</footer>
