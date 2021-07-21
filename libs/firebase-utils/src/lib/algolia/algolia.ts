@@ -1,7 +1,7 @@
 import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
-import { Language } from '@blockframes/utils/static-model';
+import { festival, Language } from '@blockframes/utils/static-model';
 import { App, app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -119,6 +119,10 @@ export function storeSearchableMovie(
         movie.directors.map((director) => `${director.firstName} ${director.lastName}`) :
         [],
       keywords: movie.keywords ? movie.keywords : [],
+      // Register the entire festival name because it will be used for research by users
+      festivals: movie.prizes.map(prize => festival[prize.name]) || [],
+      productionCompany: movie.stakeholders.productionCompany.map(company => company.displayName) || [],
+      salesAgent: movie.stakeholders.salesAgent.map(agent => agent.displayName) || [],
 
       // facets
       genres: movie.genres ? movie.genres : [],
