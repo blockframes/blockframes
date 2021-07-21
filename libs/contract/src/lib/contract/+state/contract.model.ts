@@ -111,7 +111,7 @@ export function isSale(contract: Contract): contract is Sale {
 }
 
 
-export function convertDuration(duration: Duration<Timestamp>): Duration<Date> {
+export function convertDuration(duration: Duration<Date | Timestamp>): Duration<Date> {
   return {
     from: toDate(duration.from),
     to: toDate(duration.to),
