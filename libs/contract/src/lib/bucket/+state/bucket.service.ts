@@ -36,10 +36,10 @@ export class BucketService extends CollectionService<BucketState> {
   formatFromFirestore(bucket): Bucket {
     if (!bucket) return;
     for (const contract of bucket.contracts) {
-      for (const term of contract.terms) {
+      for (const term of contract.terms || []) {
         term.duration = convertDuration(term.duration);
       }
-      for (const holdback of contract.holdbacks) {
+      for (const holdback of contract.holdbacks || []) {
         holdback.duration = convertDuration(holdback.duration);
       }
     }
