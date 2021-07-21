@@ -3,11 +3,11 @@
   <ng-container *ngIf="invit | hasAction else displayStatus">
     <button mat-button test-id="invitation-accept" (click)="accept(invit)">
       <mat-icon svgIcon="check_circle"></mat-icon>
-      <span *ngIf="display === 'full'">Accept Invitation</span>
+      <span *ngIf="!small">Accept Invitation</span>
     </button>
     <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
       <mat-icon svgIcon="cancel"></mat-icon>
-      <span *ngIf="display === 'full'">Decline Invitation</span>
+      <span *ngIf="!small">Decline Invitation</span>
     </button>
   </ng-container>
   <ng-template #displayStatus>
