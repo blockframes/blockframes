@@ -144,7 +144,6 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'cms/',
     'campaigns/',
     'permissions/',
-    'publicContracts/',
     'analytics/',
     'buckets',
     'terms/',

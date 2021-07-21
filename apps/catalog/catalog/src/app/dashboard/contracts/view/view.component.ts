@@ -1,7 +1,6 @@
 import {
   Component, ChangeDetectionStrategy, Optional
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { ContractService, ContractStatus } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { ActivatedRoute } from '@angular/router';
