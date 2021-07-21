@@ -2,6 +2,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Event } from '@blockframes/event/+state';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Invitation, InvitationService } from '../../+state';
 
 @Component({
@@ -24,7 +25,7 @@ export class ActionComponent {
     }
   }
 
-  @Input() display: 'full' | 'icon-only' = 'full';
+  @Input() @boolean small = false;
 
   private requestPending = false;
 
