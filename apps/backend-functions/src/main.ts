@@ -19,6 +19,7 @@ import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailW
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
+import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { heavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
@@ -243,6 +244,8 @@ export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
  * Imports analytics data from BigQuery
  */
 export const dailyAnalyticsImport = functions.pubsub.schedule('0 1 * * *').onRun(importAnalytics); // every day
+
+export const sendgridEventWebhookListener = functions.https.onRequest(sendgridEventWebhook);
 
 //--------------------------------
 //     Contracts Management     //

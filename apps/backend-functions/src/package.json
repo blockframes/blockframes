@@ -13,6 +13,7 @@
     "@google-cloud/storage": "^4.3.1",
     "@sendgrid/helpers": "^6.4.0",
     "@sendgrid/mail": "^6.4.0",
+    "@sendgrid/eventwebhook": "^7.4.5",
     "@sentry/browser": "^5.5.0",
     "@sentry/node": "^5.5.0",
     "@types/date-fns": "^2.6.0",
