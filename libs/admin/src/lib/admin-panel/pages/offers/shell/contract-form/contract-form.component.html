@@ -10,10 +10,9 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Title price</mat-label>
-      <input type="number" matInput formControlName="price" />
+      <input type="number" matInput formControlName="price" min="0"/>
       <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
-      <!-- <mat-error *ngIf="form.hasError('required', 'price')">Price field is required!</mat-error> -->
-      <mat-hint>If no price entered. Seller will recieve active price.</mat-hint>
+      <mat-hint>If no price entered, Seller will receive Asking Price</mat-hint>
     </mat-form-field>
   </header>
   <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">

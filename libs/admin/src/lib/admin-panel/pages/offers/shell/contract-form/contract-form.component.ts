@@ -77,7 +77,7 @@ export class ContractFormComponent implements OnInit {
       ]);
       this.form.patchValue({
         titleId: contract?.titleId,
-        price: income?.price ? income.price :  0
+        price: income.price ? income.price :  0
       })
       this.contract = contract;
       this.income = income;
@@ -108,8 +108,9 @@ export class ContractFormComponent implements OnInit {
           await this.contractService.update(contractId, { titleId, termIds  }, { write });
         }
         if(price !== this.income.price) {
-          await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+          await this.incomeService.update(contractId, { price }, { write });
         }
+        
         await write.commit();
       }
     }
