@@ -8,7 +8,7 @@ import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
-  useMemorization=true;
+  useMemorization = true;
 
   constructor(store: ContractStore) {
     super(store);
