@@ -24,6 +24,12 @@
         "ignoreExistingTslintConfig": true,
         "removeTSLintIfNoMoreTSLintTargets": true
       }
+    },
+    "@nrwl/angular:component": {
+      "displayBlock": true,
+      "changeDetection": "OnPush",
+      "skipTests": true,
+      "style": "scss"
     }
   },
   "projects": {
@@ -332,11 +338,6 @@
     },
     "catalog": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/catalog/catalog",
       "sourceRoot": "apps/catalog/catalog/src",
       "prefix": "catalog",
@@ -585,11 +586,6 @@
     },
     "festival": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/festival/festival",
       "sourceRoot": "apps/festival/festival/src",
       "prefix": "festival",
@@ -851,11 +847,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
       }
     },
     "event": {
@@ -876,11 +867,6 @@
             "jestConfig": "libs/event/jest.config.js",
             "passWithNoTests": true
           }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
         }
       }
     },
@@ -903,11 +889,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
-        }
       }
     },
     "landing": {
@@ -928,11 +909,6 @@
             "jestConfig": "libs/landing/jest.config.js",
             "passWithNoTests": true
           }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
         }
       }
     },
@@ -955,11 +931,6 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "media": {
@@ -981,20 +952,10 @@
             "passWithNoTests": true
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "crm": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/crm/crm",
       "sourceRoot": "apps/crm/crm/src",
       "prefix": "crm",
@@ -1269,11 +1230,6 @@
             "setupFile": "libs/invitation/src/test-setup.ts"
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "firebase-utils": {
@@ -1302,11 +1258,6 @@
     },
     "financiers": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/financiers/financiers",
       "sourceRoot": "apps/financiers/financiers/src",
       "prefix": "financiers",
@@ -1540,20 +1491,10 @@
             "setupFile": "libs/campaign/src/test-setup.ts"
           }
         }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
       }
     },
     "cms": {
       "projectType": "application",
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "apps/cms",
       "sourceRoot": "apps/cms/src",
       "prefix": "cms",
@@ -1745,11 +1686,6 @@
             "passWithNoTests": true,
             "setupFile": "libs/consents/src/test-setup.ts"
           }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "style": "scss"
         }
       }
     }

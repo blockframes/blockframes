@@ -31,6 +31,9 @@ export const fileLabels = [
   'otherVideos',
   'salesPitch',
 
+  //catalog & movies
+  'delivery',
+
   // orgs & movies
   'notes',
 
@@ -61,7 +64,8 @@ export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabe
     screener: 'promotional.videos.screener',
     otherVideos: 'promotional.videos.otherVideos',
     salesPitch: 'promotional.salesPitch',
-    notes: 'promotional.notes'
+    notes: 'promotional.notes',
+    delivery: 'delivery.file',
   },
   campaigns: {
     budget: 'files.budget',
@@ -99,6 +103,7 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       screener: { uid: '', privacy: 'protected', collection, docId, field: 'promotional.videos.screener' },
       otherVideos: { uid: '', privacy: 'public', collection, docId, field: 'promotional.videos.otherVideos' },
       salesPitch: { uid: '', privacy: 'public', collection, docId, field: 'promotional.salesPitch' },
+      delivery: { uid: '', privacy: 'public', collection, docId, field: 'delivery.file' },
     },
     campaigns: {
       budget: { uid: '', privacy: 'public', collection, docId, field: 'files.budget' },

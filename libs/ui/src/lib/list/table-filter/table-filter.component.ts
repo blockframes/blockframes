@@ -49,7 +49,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
 
   // Name of the column headers
   @Input() columns: Record<string, string | { value: string, disableSort: boolean }>;
-  @Input() initialColumns: string[];
+  @Input() initialColumns?: string[];
   @Input() link: string;
   @Input() showLoader = false;
   @Input() pageSize = 10;
@@ -84,13 +84,14 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit() {
-    this.columnFilter.patchValue(this.initialColumns);
+    const initialColumns = this.initialColumns || Object.keys(this.columns);
+    this.columnFilter.patchValue(initialColumns);
     this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
       map(filter => {
         if (this.colAction) filter.push(this.colAction.ref)
         return filter
       }),
-      map(col => col.sort((a, b) => this.initialColumns.indexOf(a) - this.initialColumns.indexOf(b))),
+      map(col => col.sort((a, b) => initialColumns.indexOf(a) - initialColumns.indexOf(b))),
       startWith(this.columnFilter.value)
     );
 

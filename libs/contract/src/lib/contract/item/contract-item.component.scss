@@ -1,7 +1,6 @@
-
-.contract {
+:host {
+  display: block;
   padding: 24px;
-  margin-bottom: 72px;
 
   img {
     max-width: 150px;
@@ -15,6 +14,11 @@
   cursor: pointer;
 }
 
-section {
-  margin: 24px;
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+span.group-label {
+  cursor: pointer;
 }

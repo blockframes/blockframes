@@ -13,7 +13,6 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
@@ -36,7 +35,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToLabelModule,
     DisplayNameModule,
     ImageModule,
-    AnalyticsPipeModule,
     NoTitleModule,
     FilterByModule,
     TagModule,

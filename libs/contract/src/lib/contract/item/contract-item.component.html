@@ -1,32 +1,34 @@
 <ng-container *ngIf="contract.titleId | getTitle | async as title">
-  <section class="contract surface" test-id="avails-section">
-    <header fxLayout fxLayoutAlign="space-between start">
-      <section fxLayout="column">
-        <h2>{{ title.title.international }}</h2>
-        <article fxLayout fxLayoutGap="12px">
-          <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.svg"
-            alt="Movie Illustration" [routerLink]="['/c/o/marketplace/title/', title.id]">
-          <div fxLayout="column">
-            <h3>{{ title.directors | displayName }}</h3>
-            <p>{{ title | movieFeature }}</p>
-          </div>
-        </article>
-      </section>
-      <ng-content select="[price]"></ng-content>
-    </header>
-    <bf-table-filter [source]="contract.terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
+  <header fxLayout fxLayoutAlign="space-between start">
+    <section fxLayout="column">
+      <h2>{{ title.title.international }}</h2>
+      <article fxLayout fxLayoutGap="12px">
+        <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.svg"
+          alt="Movie Illustration" [routerLink]="['/c/o/marketplace/title/', title.id]">
+        <div fxLayout="column">
+          <h3>{{ title.directors | displayName }}</h3>
+          <p>{{ title | movieFeature }}</p>
+        </div>
+      </article>
+    </section>
+    <ng-content select="[price]"></ng-content>
+  </header>
+  <ng-container *ngIf="contract | getTermsFromContract | async as terms">
+    <bf-table-filter [source]="terms" [columns]="columns" [initialColumns]="initialColumns" showFilter>
       <ng-template colRef="duration" let-duration>
-        {{ duration.from | date }} - {{ duration.to | date }}
+        {{ duration.from | date:'M/d/y' }} - {{ duration.to | date:'M/d/y' }}
       </ng-template>
       <ng-template colRef="territories" let-territories>
-        <section (click)="openDetails(territories, 'territories')">
+        <span class="group-label" (click)="openDetails(territories, 'territories')">
           <p class="ellipsis">
             {{ territories |toGroupLabel:'territories':'World' | join}}
           </p>
-        </section>
+        </span>
       </ng-template>
       <ng-template colRef="medias" let-medias>
-        {{ medias | toGroupLabel:'medias':'All'| join }}
+        <span class="group-label" (click)="openDetails(medias, 'medias')">
+          {{ medias | toGroupLabel:'medias':'All'| join }}
+        </span>
       </ng-template>
       <ng-template colRef="exclusive" let-exclusive>
         {{ exclusive ? 'Yes' : 'No' }}
@@ -36,8 +38,17 @@
           [ngTemplateOutletContext]="{ $implicit:term, index:termIndex }">
         </ng-template>
       </ng-template>
-
+      <ng-template colRef="languages" let-languages>
+        <ul *ngIf="languages">
+          <li *ngFor="let language of languages| keyvalue">
+            {{language.key|toLabel:'languages'}} ({{language.value | versionPipe | join}})
+          </li>
+        </ul>
+      </ng-template>
+      <ng-template colRef="runs.broadcasts" let-broadcasts>
+        {{broadcasts ?? '-'}}
+      </ng-template>
     </bf-table-filter>
-    <ng-content select="footer"></ng-content>
-  </section>
+  </ng-container>
+  <ng-content select="footer"></ng-content>
 </ng-container>

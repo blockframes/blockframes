@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angula
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
-import { pluck, switchMap } from 'rxjs/operators';
+import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 
 import { Offer, OfferService } from '@blockframes/contract/offer/+state';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
@@ -30,10 +30,12 @@ export class OfferShellComponent {
 
   public contracts$ = this.offerId$.pipe(
     switchMap((offerId: string): Observable<Contract[]> => this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId))),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   public incomes$ = this.offerId$.pipe(
     switchMap((offerId: string): Observable<Income[]> => this.incomeService.valueChanges(ref => ref.where('offerId', '==', offerId))),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   constructor(

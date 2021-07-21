@@ -36,6 +36,7 @@ import { SummaryArtisticComponent } from './artistic/artistic.component';
 import { SummaryReviewComponent } from './review/review.component';
 import { SummaryAdditionalInformationComponent } from './additional-information/additional-information.component';
 import { SummaryTechnicalInfoComponent } from './technical-info/technical-info.component';
+import { SummaryAvailableVersionsComponent } from './available-versions/available-versions.component';
 import { SummaryAvailableMaterialsComponent } from './available-materials/available-materials.component';
 import { SummaryMediaFilesComponent } from './media-files/media-files.component';
 import { SummaryMediaImagesComponent } from './media-images/media-images.component';
@@ -43,6 +44,8 @@ import { SummaryMediaVideosComponent } from './media-videos/media-videos.compone
 import { SummaryMediaNotesComponent } from './media-notes/notes.component';
 import { SummaryShootingInformationComponent } from './shooting-information/shooting-information.component';
 import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component';
+import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
+import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 
 
 @NgModule({
@@ -54,6 +57,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     SummaryReviewComponent,
     SummaryAdditionalInformationComponent,
     SummaryTechnicalInfoComponent,
+    SummaryAvailableVersionsComponent,
     SummaryAvailableMaterialsComponent,
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
@@ -67,6 +71,9 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     FlexLayoutModule,
     TunnelPageModule,
     ToLabelModule,
+    DownloadPipeModule,
+    StorageFileModule,
+
 
     MissingControlModule,
     ToLabelModule,
@@ -98,6 +105,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     SummaryReviewComponent,
     SummaryAdditionalInformationComponent,
     SummaryTechnicalInfoComponent,
+    SummaryAvailableVersionsComponent,
     SummaryAvailableMaterialsComponent,
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
@@ -107,4 +115,4 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     SummarySalesPitchComponent,
   ]
 })
-export class MovieTunnelSummaryModule {}
+export class MovieTunnelSummaryModule { }

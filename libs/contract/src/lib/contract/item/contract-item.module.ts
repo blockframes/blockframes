@@ -11,7 +11,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { RouterModule } from '@angular/router';
 import { MovieFeatureModule } from '@blockframes/movie/pipes/movie-feature.pipe';
-import { JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
+import { JoinPipeModule, VersionPipeModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 
 // Material
@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TermPipeModule } from '@blockframes/contract/term/pipes';
 
 
 
@@ -42,6 +43,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToGroupLabelPipeModule,
     DetailedTermsModule,
     JoinPipeModule,
+    VersionPipeModule,
+    ToLabelModule,
+    TermPipeModule,
 
     // Material
     MatButtonModule,

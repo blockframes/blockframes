@@ -1,0 +1,33 @@
+<!-- ORIGINAL VERSION -->
+<article>
+  <h6>Original Version
+    <a mat-icon-button [routerLink]="link" fragment="original-version">
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <li>
+      {{ movie.isOriginalVersionAvailable.value ? 'Available' : 'Not available' }}
+    </li>
+  </ul>
+</article>
+
+<!-- LANGUAGES -->
+<article>
+  <h6>
+    Available Version{ versionLength, plural, =0 {} =1 {} other {s}}
+    <a mat-icon-button [routerLink]="link" fragment="available-versions">
+      <mat-icon svgIcon="edit" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <li *ngFor="let language of movie.languages.controls | keyvalue">
+      <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
+      <missing-control [control]="language.value" [link]="link">
+        <ng-template let-version>
+          <span>{{ version | versionPipe | join }}</span>
+        </ng-template>
+      </missing-control>
+    </li>
+  </ul>
+</article>
