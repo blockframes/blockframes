@@ -42,12 +42,11 @@ const logInAdminAndNavigate = () => {
 
 describe('User can fill and save contract tunnel form', () => {
   beforeEach(() => {
-    clearDataAndPrepareTest('');
+    //clearDataAndPrepareTest('');
   });
   
   it('Login as admin, Select Movies and import ', () => {
     logInAdminAndNavigate();
-
     cy.wait(1 * SEC);
 
     cy.log("Select movie type to upload");
@@ -99,7 +98,6 @@ describe('User can fill and save contract tunnel form', () => {
 
   it('Login as admin, Select contracts and import ', () => {
     logInAdminAndNavigate();
-
     cy.wait(1 * SEC);
 
     cy.log("Select Contract type to upload");
