@@ -9,6 +9,6 @@ import { Firestore } from '../types';
 export async function upgrade(db: Firestore) {
   const publicContracts = await db.collection('publicContracts').get();
   return runChunks(publicContracts.docs, async (doc) => {
-    await doc.ref.delete;
+    await doc.ref.delete();
   });
 }
