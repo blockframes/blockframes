@@ -108,11 +108,7 @@ export class ContractFormComponent implements OnInit {
           await this.contractService.update(contractId, { titleId, termIds  }, { write });
         }
         if(price !== this.income.price) {
-          if(price === null) {
-            await this.incomeService.update(contractId, { price: 0 }, { write });
-          } else {
-            await this.incomeService.update(contractId, { price }, { write });
-          }
+          await this.incomeService.update(contractId, { price }, { write });
         }
         
         await write.commit();
