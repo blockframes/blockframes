@@ -6,19 +6,27 @@ import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-m
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
+
 @Component({
   selector: 'contract-item',
   templateUrl: './contract-item.component.html',
   styleUrls: ['./contract-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // eslint-disable-next-line
+  host: {
+    'class': 'surface',
+    'test-id': 'avails-section'
+  }
 })
 export class ContractItemComponent {
-  initialColumns = ['duration', 'territories', 'medias', 'exclusive'];
+  initialColumns = ['duration', 'territories', 'medias', 'exclusive', 'languages', 'runs.broadcasts'];
   columns = {
-    duration: 'Terms',
-    territories: 'Territories',
-    medias: 'Rights',
-    exclusive: 'Exclusivity'
+    'duration': 'Terms',
+    'territories': 'Territories',
+    'medias': 'Rights',
+    'exclusive': 'Exclusivity',
+    'languages': 'Versions',
+    'runs.broadcasts': '# of Broadcasts',
   };
   mediaGroup = mediaGroup;
   territoriesGroup = territoriesGroup;
@@ -40,7 +48,7 @@ export class ContractItemComponent {
 
 
   openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope } });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
   }
 
 }

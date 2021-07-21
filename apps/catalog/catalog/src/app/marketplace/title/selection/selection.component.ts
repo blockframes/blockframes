@@ -11,6 +11,7 @@ import { SpecificTermsComponent } from './specific-terms/specific-terms.componen
 import { Movie } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
+import { Holdback } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-selection',
@@ -26,10 +27,10 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   private prices: number[] = [];
   priceChanges = new Subject();
   total$ = this.priceChanges.pipe(
-    startWith(0),
     debounceTime(100),
     map(() => this.getTotal(this.prices)),
-    distinctUntilChanged()
+    distinctUntilChanged(),
+    startWith(0),
   );
 
   private sub = this.currencyForm.valueChanges.pipe(
@@ -61,7 +62,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.dynTitle.setPageTitle(title);
   }
 
-  private getTotal(prices) {
+  private getTotal(prices: number[]) {
     return prices.reduce((arr, curr) => (arr + curr), 0)
   }
 
@@ -70,12 +71,21 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.bucketService.update(id, { currency });
   }
 
-  setPrice(index: number, price: string) {
-    this.prices[index] =  parseFloat(price);
+  setPrice(index: number, price: string | null) {
+    this.prices[index] = parseFloat(price || '0');  // if "", fallback to '0'
     this.priceChanges.next();
   }
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
+
+  updateHoldbacks(index: number, holdbacks: Holdback[]) {
+    const id = this.orgQuery.getActiveId();
+    this.bucketService.update(id, bucket => {
+      const contracts = [...bucket.contracts];
+      contracts[index].holdbacks = holdbacks;
+      return { contracts };
+    });
+  }
 
   async updatePrice(index: number, price: string) {
     const id = this.orgQuery.getActiveId();

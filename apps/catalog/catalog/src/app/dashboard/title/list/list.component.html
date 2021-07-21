@@ -14,14 +14,14 @@
     </header>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All</button>
-      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts</button>
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">All <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.all }})</span></button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="(filter$ | async) === 'draft'">Drafts <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.draft }})</span></button>
       <button mat-tab-link (click)="applyFilter('submitted')"
-        [active]="(filter$ | async) === 'submitted'">Submitted</button>
+        [active]="(filter$ | async) === 'submitted'">Submitted <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.submitted }})</span></button>
       <button mat-tab-link (click)="applyFilter('accepted')"
-        [active]="(filter$ | async) === 'accepted'">Published</button>
+        [active]="(filter$ | async) === 'accepted'">Published <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.accepted }})</span></button>
       <button mat-tab-link (click)="applyFilter('archived')"
-        [active]="(filter$ | async) === 'archived'">Archived</button>
+        [active]="(filter$ | async) === 'archived'">Archived <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.archived }})</span></button>
     </header>
 
     <mat-card>
@@ -29,7 +29,6 @@
         [columns]="columns" [initialColumns]="initialColumns" clickable showFilter showPaginator
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title.international" let-title><b>{{ title }}</b></ng-template>
-        <ng-template colRef="views" let-movie="item"><b>{{movie.id | getViews | async}}</b></ng-template>
         <ng-template colRef="id" let-titleId>
           <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">
             {{ incomes.length }}
@@ -42,7 +41,7 @@
         <ng-template colRef="release.year" let-year><b>{{ year }}</b></ng-template>
         <ng-template colRef="directors" let-directors><b>{{ directors | displayName }}</b></ng-template>
         <ng-template colRef="app.catalog.status" let-status>
-          <tag-component [label]="(status | toLabel: 'storeStatus')"></tag-component>
+          <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
         </ng-template>
       </bf-table-filter>
     </mat-card>

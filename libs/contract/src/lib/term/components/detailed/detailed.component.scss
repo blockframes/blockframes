@@ -2,6 +2,18 @@
   display: block;
 }
 
-section {
-  padding: 24px;
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  overflow: hidden;
+  h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+article {
+  margin-bottom: 16px;
 }

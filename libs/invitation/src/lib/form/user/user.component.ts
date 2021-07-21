@@ -80,7 +80,7 @@ export class UserComponent implements OnInit {
     if (this.form.valid && this.form.value.length) {
       try {
         const unique = Array.from(new Set(this.form.value.map(guest => guest.email.trim().toLowerCase())));
-        const emails = unique.filter(email => !this.invitations.some(inv => inv.toUser.email === email));
+        const emails = unique.filter(email => !this.invitations.some(inv => inv.toUser?.email === email));
         if (unique.length > emails.length) {
           throw new Error('There is already an invitation existing for one or more of these users');
         }

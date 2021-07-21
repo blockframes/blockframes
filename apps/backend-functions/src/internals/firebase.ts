@@ -1,4 +1,4 @@
-import { region, config } from 'firebase-functions';
+import { region } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { firebaseRegion } from '@env';
 export const functions = region(firebaseRegion);
@@ -8,7 +8,7 @@ import { isInMaintenance } from '@blockframes/firebase-utils';
 import { IMaintenanceDoc, META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 
 if (!admin.apps.length) {
-  admin.initializeApp(config().firebase);
+  admin.initializeApp();
 }
 export const db = admin.firestore();
 export const auth = admin.auth();

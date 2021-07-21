@@ -169,7 +169,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
       for (const name in this.configs) {
         const form = this.getForm(name as keyof ShellConfig);
         if (form.invalid) {
-          const fields = findInvalidControls(form);
+          const arrays = findInvalidControls(form);
+          const fields = arrays.errorFields.concat(arrays.missingFields);
           throw new Error(`Form "${name}" should be valid before publishing.Invalid fields are: ${fields.join()} `);
         }
       }
@@ -187,21 +188,28 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   }
 }
 
-
-/* Utils function to get the list of invalid form. Not used yet, but could be useful later */
+/* Utils function to get the list of invalid form. */
 export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
+  const errorFields = [];
+  const missingFields = [];
   const recursiveFunc = (form: FormGroup | FormArray) => {
-    const fields = [];
+
     for (const field in form.controls) {
       const control = form.get(field);
+
       if (control.invalid) {
-        fields.push(field);
+        if (control.errors) {
+          if (Object.keys(control.errors).includes('required')) missingFields.push(field)
+          else errorFields.push(field);
+        }
       }
+
+
       if (control instanceof FormArray || control instanceof FormGroup) {
-        fields.concat(recursiveFunc(control));
+        missingFields.concat(recursiveFunc(control));
       }
     }
-    return fields;
+    return { errorFields, missingFields };
   }
   return recursiveFunc(formToInvestigate);
 }

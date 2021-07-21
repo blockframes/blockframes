@@ -10,7 +10,7 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractService, contractStatus } from '@blockframes/contract/contract/+state';
+import { ContractService, contractStatus, Holdback } from '@blockframes/contract/contract/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 import { OfferShellComponent } from '../shell.component';
@@ -29,22 +29,11 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   offerId$ = this.shell.offerId$;
   contractId$: Observable<string> = this.route.params.pipe(pluck('contractId'));
 
-  private rawContract$ = combineLatest([
+  contract$ = combineLatest([
     this.contractId$,
     this.shell.contracts$,
   ]).pipe(
     map(([contractId, contracts]) => contracts.find(contract => contract.id === contractId)),
-  );
-
-  private terms$ = this.contractId$.pipe(
-    switchMap(contractId => this.termService.valueChanges(ref => ref.where('contractId', '==', contractId))),
-  );
-
-  contract$ = combineLatest([
-    this.rawContract$,
-    this.terms$,
-  ]).pipe(
-    map(([ contract, terms]) => ({ ...contract, terms })),
   );
 
 
@@ -55,7 +44,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     map(([contractId, incomes]) => incomes.find(income => income.id === contractId)),
   );
 
-  sellerOrg$ = this.rawContract$.pipe(
+  sellerOrg$ = this.contract$.pipe(
     switchMap(contract => this.orgService.valueChanges(contract.sellerId)),
   );
 
@@ -96,6 +85,10 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.contractService.update(contractId, { status }, { write });
     this.incomeService.update(incomeId, { price }, { write });
     write.commit();
+  }
+
+  updateHoldbacks(contractId: string, holdbacks: Holdback[]) {
+    this.contractService.update(contractId, { holdbacks });
   }
 
   confirm(term: Term) {
