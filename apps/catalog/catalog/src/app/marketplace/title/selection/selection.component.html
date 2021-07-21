@@ -1,6 +1,6 @@
 <!-- In case bucket doesn't exist yet, empty is shown -->
 <ng-container *ngIf="bucket$ | async as bucket; else empty">
-  <ng-container *ngIf="!!bucket.contracts.length else empty">
+  <ng-container *ngIf="bucket.contracts.length else empty">
     <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.png">
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
@@ -31,6 +31,7 @@
             <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
               (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
             <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
+            <mat-hint>If no price entered. Seller will receive "Asking Price"</mat-hint>
           </mat-form-field>
           <ng-template #termAction let-index="index">
             <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
