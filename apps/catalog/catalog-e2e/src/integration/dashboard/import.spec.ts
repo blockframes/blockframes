@@ -1,14 +1,14 @@
 ﻿/// <reference types="cypress" />
 
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { assertMoveTo, clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
+import { assertMoveTo } from "@blockframes/e2e/utils/functions";
 
 import { SEC } from "@blockframes/e2e/utils/env";
 
 const MY_TITLES_PAGE = '/c/o/dashboard/title';
 
 const userFixture = new User();
-const users  =  [ userFixture.getByUID(USER.Hettie) ];
+const users  =  [ userFixture.getByUID(USER.Vincent) ];
 
 const movieFixture = 'movie.xlsx';
 const contractFixture = 'contract.xlsx';
@@ -42,7 +42,7 @@ const logInAdminAndNavigate = () => {
 
 describe('User can fill and save contract tunnel form', () => {
   beforeEach(() => {
-    //clearDataAndPrepareTest('');
+    cy.viewport('ipad-2', 'landscape');
   });
   
   it('Login as admin, Select Movies and import ', () => {
