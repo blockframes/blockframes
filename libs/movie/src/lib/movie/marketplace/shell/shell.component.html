@@ -43,9 +43,8 @@
       <h2>Files</h2>
       <div grid>
         <mat-card [col]="3" *ngIf="!!movie.delivery?.file?.storagePath">
-          <img asset="deck.svg" />
+          <img asset="delivery_list.svg" />
           <a mat-button [href]="movie.delivery?.file| getDownloadUrl | async" target="_blank">
-            <!-- @TODO: #6342 -->
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Available Materials</span>
           </a>
