@@ -51,7 +51,12 @@ const routes = [{
       path: 'additional',
       loadChildren: () => import('@blockframes/movie/dashboard/additional/additional.module').then(m => m.MovieViewAdditionalModule),
       data: { animation: 4 }
-    }
+    },
+    {
+      path: 'delivery',
+      loadChildren: () => import('@blockframes/movie/dashboard/delivery/delivery.module').then(m => m.MovieViewDeliveryModule),
+      data: { animation: 5 }
+    },
   ]
 }];
 
