@@ -102,7 +102,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   },
   directors: string[],
   keywords: string[],
-  genres: Genre[]
+  genres: Genre[],
   originCountries: Territory[],
   languages: {
     original: Language[],
@@ -118,8 +118,11 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   banner: string,
   originalLanguages: Language[],
   runningTime: MovieRunningTime,
-  release: MovieRelease
-  contentType: ContentType
+  release: MovieRelease,
+  contentType: ContentType,
+  festivals: string[],
+  productionCompany: string[],
+  salesAgent: string[]
 }
 
 /* ORGANIZATION */

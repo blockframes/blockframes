@@ -131,7 +131,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       !this.contentType.value);
   }
 
-  search() {
+  search(needMultipleQueries = false) {
     const search = {
       hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
@@ -151,7 +151,6 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
-
     };
 
     if (this.minBudget.value) {
@@ -159,6 +158,16 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     }
     if (this.minReleaseYear.value) {
       search['filters'] = `release.year >= ${this.minReleaseYear.value}`;
+    }
+
+    /*
+    Allow the user to use comma or space to separate their research.
+    ex : `France, Berlinale, Action` can be a research but without the `optionalWords`
+    it will be considered as one string/research and not 3 differents.
+    */
+    if (needMultipleQueries) {
+      const multipleQueries: string[] = this.query.value.split(',' || ' ');
+      search['optionalWords'] = multipleQueries;
     }
 
     return this.movieIndex.search<Movie>(search.query, search);
