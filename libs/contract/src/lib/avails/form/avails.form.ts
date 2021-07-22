@@ -10,10 +10,12 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('terri
   const toValidators = required.includes('duration') ? [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required] : [];
 
   if (!avail.duration) {
-    const date = new Date();
+    const date = new Date(); //--/--/--:--:--:--
     avail.duration = {
-      from: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-      to: new Date(date.getFullYear() + 1, date.getMonth(), date.getDate())
+      // only the year, month and date are useful.
+      from: new Date(date.getFullYear(), date.getMonth(), date.getDate()), //--/--/--:0:0:0:0,
+      // only the year, month and date are useful.
+      to: new Date(date.getFullYear() + 1, date.getMonth(), date.getDate()) // --/--/--:0:0:0:0,
     }
   }
 
