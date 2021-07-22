@@ -2,7 +2,7 @@ import { Media, territoriesISOA3, Territory, TerritoryISOA3Value, TerritoryValue
 import { Bucket, BucketTerm } from "../bucket/+state";
 import { Mandate } from "../contract/+state/contract.model"
 import { Duration, Term } from "../term/+state/term.model";
-
+import { format } from 'date-fns'
 export interface AvailsFilter {
   medias: Media[],
   duration: { from: Date, to: Date },
@@ -166,10 +166,14 @@ function isSameTerritoriesTerm(term: BucketTerm, avail: AvailsFilter) {
 }
 
 function isSameDurationTerm(term: BucketTerm, avail: AvailsFilter) {
+  const term_from = format(term.duration.from, 'MM/dd/yyyy');
   if (!avail.duration?.from) return false;
-  if (term.duration.from.getTime() !== avail.duration.from.getTime()) return false;
+  const avail_from = format(avail.duration.from, 'MM/dd/yyyy');
+  if (term_from !== avail_from) return false;
+  const term_to = format(term.duration.to, 'MM/dd/yyyy');
   if (!avail.duration?.to) return false;
-  if (term.duration.to.getTime() !== avail.duration.to.getTime()) return false;
+  const avail_to = format(avail.duration.to, 'MM/dd/yyyy');
+  if (term_to !== avail_to) return false;
   return true;
 }
 
