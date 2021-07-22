@@ -17,19 +17,19 @@ import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.mod
 import { GoToAppModule } from '@blockframes/admin/admin/pipes/go-to.pipe';
 
 // Components
-import { CrmComponent } from './crm/crm.component';
+import { LayoutComponent } from './layout/layout.component';
 import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { MatListModule } from '@angular/material/list';
 
 export const adminRoutes: Routes = [
   { path: '',
-    component: CrmComponent,
+    component: LayoutComponent,
     children: [
       { path: '', redirectTo: 'crm', pathMatch: 'full' },
       { 
         path: 'crm',
         canActivate: [BlockframesAdminGuard],
-        loadChildren: () => import('../admin-panel/admin-panel.module').then(m => m.AdminPanelModule)
+        loadChildren: () => import('../crm/crm.module').then(m => m.CrmModule)
       },
     ]
   }
@@ -37,7 +37,7 @@ export const adminRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    CrmComponent,
+    LayoutComponent,
     ToolbarTopComponent,
   ],
   imports: [
