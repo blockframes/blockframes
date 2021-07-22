@@ -35,7 +35,7 @@ export class ListComponent {
   filter = new FormControl('');
   filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));
 
-  constructor(private routerQuery: RouterQuery,) { }
+  constructor(private routerQuery: RouterQuery) { }
 
   /** Dynamic filter of offers for each tab. */
   applyFilter(filter?: AllOfferStatus) {
