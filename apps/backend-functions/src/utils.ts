@@ -20,6 +20,12 @@ export function onDocumentWrite(docPath: string, fn: FunctionType) {
     .onWrite(skipInMaintenance(logErrors(fn)));
 }
 
+export function onDocumentUpdate(docPath: string, fn: FunctionType) {
+  return functions.firestore
+    .document(docPath)
+    .onUpdate(skipInMaintenance(logErrors(fn)));
+}
+
 export function onDocumentDelete(docPath: string, fn: FunctionType) {
   return functions.firestore
     .document(docPath)

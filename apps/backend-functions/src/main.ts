@@ -5,7 +5,7 @@ import * as invitations from './invitation';
 import {
   onDocumentCreate,
   onDocumentDelete,
-  onDocumentWrite,
+  onDocumentUpdate,
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
@@ -102,7 +102,7 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}', o
 //--------------------------------
 
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
-export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
+export const onInvitationUpdateEvent = onDocumentUpdate('invitations/{invitationID}', onInvitationWrite);
 
 /** Used to check if users have already an invitation to join org existing */
 export const hasUserAnOrgOrIsAlreadyInvited = functions.https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
@@ -253,6 +253,6 @@ export const sendgridEventWebhookListener = functions.https.onRequest(sendgridEv
 
 export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', onContractDelete);
 
-export const onContractUpdateEvent = onDocumentWrite('contracts/{contractId}', onContractUpdate);
+export const onContractUpdateEvent = onDocumentUpdate('contracts/{contractId}', onContractUpdate);
 
 export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete);
