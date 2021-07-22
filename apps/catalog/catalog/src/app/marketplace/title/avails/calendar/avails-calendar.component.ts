@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -28,7 +28,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
   styleUrls: ['./avails-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, OnDestroy {
 
   public availsForm = this.shell.avails.calendarForm;
 
@@ -114,7 +114,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements OnInit, OnDestro
       });
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const decodedData = decodeUrl(this.route);
     this.availsForm.patchValue(decodedData)
     const subSearchUrl = this.availsForm.valueChanges.pipe(
