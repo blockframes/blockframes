@@ -10,10 +10,10 @@ export class TimeSincePipe implements PipeTransform {
    * Example: "1 hour ago"
    */
   transform(value: Date) {
-    return this.convertToTimeString(value);
+    return this.timeSince(value);
   }
 
-  convertToTimeString(date: Date) {
+  timeSince(date: Date) {
 
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
 
