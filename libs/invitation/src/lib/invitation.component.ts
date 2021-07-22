@@ -2,6 +2,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Invitation, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { getCurrentApp, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'invitation-view',
@@ -23,6 +27,9 @@ export class InvitationComponent {
   constructor(
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
+    private router: Router,
+    private routerQuery: RouterQuery,
+    private orgQuery: OrganizationQuery
   ) { }
 
   acceptAll(invitations: Invitation[]) {
@@ -30,5 +37,12 @@ export class InvitationComponent {
     for (const invitation of pendingInvitations) {
       this.service.acceptInvitation(invitation);
     }
+  }
+
+  leadToHomepage() {
+    const app = getCurrentApp(this.routerQuery);
+    const org = this.orgQuery.getActive();
+    const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
+    return this.router.navigate([`/c/o/${moduleAccess}/home`]);
   }
 }
