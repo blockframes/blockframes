@@ -12,13 +12,14 @@
             <ng-container *ngIf="event.type === 'meeting'; else inviteScreening">
 
               <ng-container *ngIf="fromUser.$ | async as user">
-                <a [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a> invited you to {{ event.type }}
+                <a matLine [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a>invited you to {{ event.type }}
                 <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/lobby']" id="link">{{ event.title }}</a>.
+                <span matLine>({{ event | eventRange }})</span>
               </ng-container>
 
             </ng-container>
             <ng-template #inviteScreening>
-              <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a> invited you to
+              <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a>texte a la con invited you to
               <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/session']" id="link">{{ event.title }}</a>.
               <span matLine>({{event | eventRange }})</span>
             </ng-template>
@@ -51,12 +52,12 @@
         </ng-template>
       </ng-container>
     </ng-container>
-  </div>
-  <span matLine>
-    <small class="mat-caption">
-      {{ _invitation.date | date: 'medium' }}
-    </small>
-  </span>
+</div>
+<span matLine>
+  <small class="mat-caption">
+    {{ _invitation.date | toDate | timesince }} ago
+  </small>
+</span>
   <invitation-action [invitation]="_invitation" fxLayoutAlign="end" display="icon-only"></invitation-action>
   <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
     <mat-icon svgIcon="more_vert">
