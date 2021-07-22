@@ -3,7 +3,6 @@ import { StorageFile } from "@blockframes/media/+state/media.firestore";
 import { MovieDocument, MoviePromotionalElements } from "@blockframes/movie/+state/movie.firestore";
 import { StoreStatus } from "@blockframes/utils/static-model";
 
-
 export interface OldStoreConfig {
   appAccess: {
     catalog: boolean,
