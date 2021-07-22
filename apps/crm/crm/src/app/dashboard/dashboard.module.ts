@@ -10,24 +10,24 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 // Guards
-import { BlockframesAdminGuard } from '../admin-panel/guard/blockframes-admin.guard';
+import { BlockframesAdminGuard } from '@blockframes/admin/admin/guard/blockframes-admin.guard';;
 
 // Mobules
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
-import { GoToAppModule } from '../admin-panel/pipes/go-to.pipe';
+import { GoToAppModule } from '@blockframes/admin/admin/pipes/go-to.pipe';
 
 // Components
-import { AdminComponent } from './admin/admin.component';
+import { CrmComponent } from './crm/crm.component';
 import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { MatListModule } from '@angular/material/list';
 
 export const adminRoutes: Routes = [
   { path: '',
-    component: AdminComponent,
+    component: CrmComponent,
     children: [
-      { path: '', redirectTo: 'panel', pathMatch: 'full' },
+      { path: '', redirectTo: 'crm', pathMatch: 'full' },
       { 
-        path: 'panel',
+        path: 'crm',
         canActivate: [BlockframesAdminGuard],
         loadChildren: () => import('../admin-panel/admin-panel.module').then(m => m.AdminPanelModule)
       },
@@ -37,7 +37,7 @@ export const adminRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    AdminComponent,
+    CrmComponent,
     ToolbarTopComponent,
   ],
   imports: [
@@ -53,4 +53,4 @@ export const adminRoutes: Routes = [
     RouterModule.forChild(adminRoutes),
   ]
 })
-export class AdminModule {}
+export class DashboardModule {}

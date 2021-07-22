@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { createEmailRequest } from '@blockframes/utils/emails/utils';
-import { TestEmailForm } from '../../forms/test-email.form';
+import { TestEmailForm } from '@blockframes/admin/admin/forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service'
 import { sendgridEmailsFrom } from '@blockframes/utils/apps';

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { MoviePictureAdminForm } from "@blockframes/admin/admin-panel/forms/movie-admin.form";
+import { MoviePictureAdminForm } from "@blockframes/admin/admin/forms/movie-admin.form";
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageFileForm } from '@blockframes/media/form/media.form';

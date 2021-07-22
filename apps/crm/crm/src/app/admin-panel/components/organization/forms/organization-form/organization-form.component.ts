@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 // Blockframes
 import { organizationStatus } from '@blockframes/utils/static-model';
-import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
+import { OrganizationAdminForm } from '@blockframes/admin/admin/forms/organization-admin.form';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { OrganizationService } from '@blockframes/organization/+state';

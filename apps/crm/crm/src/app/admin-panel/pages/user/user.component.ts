@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '@blockframes/auth/+state/auth.store';
-import { UserAdminForm } from '../../forms/user-admin.form';
+import { UserAdminForm } from '@blockframes/admin/admin/forms/user-admin.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';

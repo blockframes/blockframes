@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieAdminForm } from '../../forms/movie-admin.form';
+import { MovieAdminForm } from '@blockframes/admin/admin/forms/movie-admin.form';
 import { getValue } from '@blockframes/utils/helpers';
 import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';

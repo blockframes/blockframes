@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrganizationAdminForm } from '../../forms/organization-admin.form';
+import { OrganizationAdminForm } from '@blockframes/admin/admin/forms/organization-admin.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
