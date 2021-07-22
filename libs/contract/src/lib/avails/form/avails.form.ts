@@ -11,9 +11,8 @@ function createAvailControl(avail: Partial<AvailsFilter> = {}, required: ('terri
 
   if (!avail.duration) {
     const date = new Date();
-    date.setHours(0,0,0,0);
     avail.duration = {
-      from: date,
+      from: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
       to: new Date(date.getFullYear() + 1, date.getMonth(), date.getDate())
     }
   }
