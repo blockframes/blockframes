@@ -19,7 +19,7 @@
 
             </ng-container>
             <ng-template #inviteScreening>
-              <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a>texte a la con invited you to
+              <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a> invited you to
               <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/session']" id="link">{{ event.title }}</a>.
               <span matLine>({{event | eventRange }})</span>
             </ng-template>
