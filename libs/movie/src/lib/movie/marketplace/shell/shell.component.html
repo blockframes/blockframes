@@ -39,10 +39,16 @@
   <!-- Footer -->
   <footer>
     <article
-      *ngIf="movie | hasKeys: ['promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']"
-    >
+      *ngIf="movie | hasKeys: ['promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']">
       <h2>Files</h2>
       <div grid>
+        <mat-card [col]="3" *ngIf="movie.delivery?.file?.storagePath">
+          <img asset="delivery_list.svg" alt="file with gears"/>
+          <a mat-button [href]="movie.delivery?.file| getDownloadUrl | async" target="_blank">
+            <mat-icon svgIcon="cloud_download"></mat-icon>
+            <span>Available Materials</span>
+          </a>
+        </mat-card>
         <mat-card [col]="3" *ngIf="!!movie.promotional.presentation_deck.storagePath">
           <img asset="deck.svg" />
           <a mat-button [href]="movie.promotional.presentation_deck | getUrl | async" target="_blank">
@@ -71,7 +77,8 @@
       <h2>Images</h2>
       <bf-carousel flex [min]="3">
         <ng-container *ngFor="let photo of movie.promotional.still_photo">
-          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.svg" loading="eager" (click)="fullscreen(photo)">
+          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.svg" loading="eager"
+            (click)="fullscreen(photo)">
         </ng-container>
       </bf-carousel>
     </article>
