@@ -1,0 +1,104 @@
+{
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "denomination",
+      "type": "map",
+      "fields": [
+        {
+          "name": "full",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "activity",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "userIds",
+      "type": "array"
+    },
+    {
+      "name": "wishlist",
+      "type": "array"
+    },
+    {
+      "name": "appAccess",
+      "type": "map",
+      "fields": [
+        {
+          "name": "catalog",
+          "type": "map",
+          "fields": [
+            {
+              "name": "dashboard",
+              "type": "boolean"
+            },
+            {
+              "name": "marketplace",
+              "type": "boolean"
+            }
+          ]
+        },
+        {
+          "name": "festival",
+          "type": "map",
+          "fields": [
+            {
+              "name": "dashboard",
+              "type": "boolean"
+            },
+            {
+              "name": "marketplace",
+              "type": "boolean"
+            }
+          ]
+        },
+        {
+          "name": "financiers",
+          "type": "map",
+          "fields": [
+            {
+              "name": "dashboard",
+              "type": "boolean"
+            },
+            {
+              "name": "marketplace",
+              "type": "boolean"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "_meta",
+      "type": "map",
+      "fields": [
+        {
+          "name": "createdAt",
+          "type": "timestamp"
+        },
+        {
+          "name": "createdBy",
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "type": "timestamp"
+        }
+      ]
+    }
+  ]
+}
