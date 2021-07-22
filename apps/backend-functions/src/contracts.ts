@@ -60,22 +60,21 @@ export async function onContractUpdate(
     const offerSnap = await offerRef.get();
     const offer = offerSnap.data() as Offer;
 
-    if (offer.status !== 'signed' && offer.status !== 'signing') {
+    if (offer.status === 'signed' || offer.status === 'signing') return
 
-      const offerContractsQuery = db.collection('contracts')
-        .where('offerId', '==', contractAfter.offerId)
-        .where('type', '==', 'sale');
-      const offerContractsSnap = await offerContractsQuery.get();
+    const offerContractsQuery = db.collection('contracts')
+      .where('offerId', '==', contractAfter.offerId)
+      .where('type', '==', 'sale');
+    const offerContractsSnap = await offerContractsQuery.get();
 
-      const contractsStatus: ContractStatus[] = offerContractsSnap.docs.map(doc => doc.data().status);
+    const contractsStatus: ContractStatus[] = offerContractsSnap.docs.map(doc => doc.data().status);
 
-      let newOfferStatus = offer.status;
-      newOfferStatus = contractsStatus.every(status => status !== 'accepted') ? 'pending' : newOfferStatus;
-      newOfferStatus = contractsStatus.some(status => status !== 'pending') ? 'negotiating' : newOfferStatus;
-      newOfferStatus = contractsStatus.every(status => status === 'accepted') ? 'accepted' : newOfferStatus;
-      newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
+    let newOfferStatus = offer.status;
+    newOfferStatus = contractsStatus.some(status => status !== 'pending') ? 'negotiating' : newOfferStatus;
+    newOfferStatus = contractsStatus.every(status => status === 'accepted') ? 'accepted' : newOfferStatus;
+    newOfferStatus = contractsStatus.every(status => status === 'declined') ? 'declined' : newOfferStatus;
 
-      offerRef.update({ status: newOfferStatus });
-    }
+    if (newOfferStatus === offer.status) return;
+    offerRef.update({ status: newOfferStatus });
   }
 }
