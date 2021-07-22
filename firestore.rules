@@ -347,7 +347,7 @@ service cloud.firestore {
     }
 
     match /offers/{offerId} {
-      allow read: if (userOrgId() == existingData()) && notInMaintenance();
+      allow read: if (userOrgId() == existingData().buyerId) && notInMaintenance();
       allow create: if (userOrgId() == incomingData().buyerId) && notInMaintenance();
       allow update: if false;
       allow delete: if false;

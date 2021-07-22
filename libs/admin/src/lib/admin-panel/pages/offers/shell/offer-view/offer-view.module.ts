@@ -8,7 +8,7 @@ import { OfferViewComponent } from './offer-view.component';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
-import { FirstUserFromOrgIdModule, MaxLengthModule } from '@blockframes/utils/pipes';
+import { FirstUserFromOrgIdModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
@@ -34,6 +34,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     GetOrgPipeModule,
     MaxLengthModule,
     TagModule,
+    ToLabelModule,
 
     //Material
     MatSelectModule,
