@@ -51,11 +51,11 @@ export async function onContractUpdate(
   const contractAfter = after.data() as Sale | Mandate | undefined;
 
   // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS
-  if (
-    contractBefore && contractAfter && // contract was updated (not created nor deleted)
-    contractBefore.type === contractAfter.type && contractBefore.type === 'sale' && // contract is of type 'sale'
-    contractBefore.status !== contractAfter.status // contract status has changed
-  ) {
+  const isUpdated = contractBefore && contractAfter // contract was updated (not created nor deleted)
+  const isSale = contractBefore.type === contractAfter.type && contractBefore.type === 'sale' // contract is of type 'sale'
+  const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed
+
+  if (isUpdated && isSale && statusHasChanged) {
 
     const offerRef = db.doc(`offers/${contractAfter.offerId}`);
     const offerSnap = await offerRef.get();
