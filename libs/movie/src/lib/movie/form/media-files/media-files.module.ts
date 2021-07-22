@@ -11,9 +11,6 @@ import { MatDividerModule } from '@angular/material/divider';
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
-// Blockframes Movie
-import { PromotionalLinksModule } from '@blockframes/movie/form/links/promotional-links.module';
-
 // Blockframes Media
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 
@@ -26,7 +23,6 @@ import { MovieFormMediaFilesComponent } from './media-files.component';
     CommonModule,
     ReactiveFormsModule,
     TunnelPageModule,
-    PromotionalLinksModule,
     FileUploaderModule,
 
     // Material
