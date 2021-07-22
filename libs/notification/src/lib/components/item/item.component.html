@@ -13,12 +13,11 @@
   </button>
 
   <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
-    <mat-icon svgIcon="more_vert">
-    </mat-icon>
+    <mat-icon svgIcon="more_vert"></mat-icon>
   </button>
 </mat-list-item>
 <mat-menu #menu="matMenu">
-  <a mat-button [target]="targetLink" [href]="notification.url">More Details</a>
+  <a mat-menu-item [target]="targetLink" [href]="notification.url">More Details</a>
 </mat-menu>
 <ng-container *ngIf="xs$ | async">
   <p class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
