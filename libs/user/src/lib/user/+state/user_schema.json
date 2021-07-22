@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "name": "uid",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "firstName",
+      "type": "string"
+    },
+    {
+      "name": "lastName",
+      "type": "string"
+    },
+    {
+      "name": "orgId",
+      "type": "string"
+    },
+    {
+      "fields": [
+        {
+          "name": "createdAt",
+          "type": "timestamp"
+        },
+        {
+          "name": "createdBy",
+          "type": "string"
+        },
+        {
+          "name": "createdFrom",
+          "type": "string"
+        },
+        {
+          "name": "emailVerified",
+          "type": "boolean"
+        }
+      ],
+      "name": "_meta",
+      "type": "map"
+    }
+  ]
+}

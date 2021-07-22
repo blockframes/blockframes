@@ -52,13 +52,13 @@
         </ng-template>
       </ng-container>
     </ng-container>
-</div>
-<span matLine>
-  <small class="mat-caption">
-    {{ _invitation.date | toDate | timesince }} ago
-  </small>
-</span>
-  <invitation-action [invitation]="_invitation" fxLayoutAlign="end" display="icon-only"></invitation-action>
+  </div>
+  <span matLine>
+    <small class="mat-caption">
+      {{ _invitation.date | toDate | timesince }} ago
+    </small>
+  </span>
+  <invitation-action [invitation]="_invitation" fxLayoutAlign="end" small></invitation-action>
   <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
     <mat-icon svgIcon="more_vert">
     </mat-icon>

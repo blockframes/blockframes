@@ -124,7 +124,7 @@ export class ListComponent implements OnDestroy, OnInit {
     const sub = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
-      switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(), availsValue, bucketValue]),
+      switchMap(async ([_, availsValue, bucketValue]) => [await this.searchForm.search(true), availsValue, bucketValue]),
     ).subscribe(([movies, availsValue, bucketValue]: [SearchResponse<Movie>, AvailsFilter, Bucket]) => {
       if (this.availsForm.valid) {
         const hits = movies.hits.filter(movie => {

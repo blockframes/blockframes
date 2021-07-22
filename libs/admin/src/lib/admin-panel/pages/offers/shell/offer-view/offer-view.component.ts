@@ -7,9 +7,10 @@ import { OfferShellComponent } from '../shell.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { Contract, ContractService, createSale, Sale } from '@blockframes/contract/contract/+state';
-import { Offer, OfferService, offerStatus } from '@blockframes/contract/offer/+state';
+import { Offer, OfferService } from '@blockframes/contract/offer/+state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { staticModel } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'offer-view',
@@ -23,7 +24,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   public buyerOrg$ = this.shell.buyerOrg$;
   public contracts$ = this.shell.contracts$;
   public loading$ = new BehaviorSubject<boolean>(false);
-  public offerStatus = offerStatus;
+  public offerStatus = Object.keys(staticModel['offerStatus']);
   public form = new FormGroup({
     status: new FormControl('pending'),
     specificity: new FormControl(''),

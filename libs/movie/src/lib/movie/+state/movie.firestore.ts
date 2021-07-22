@@ -98,12 +98,6 @@ export interface MovieBase<D> {
 /** Document model of a Movie */
 export type MovieDocument = MovieBase<Timestamp>
 
-/** Public interface of a movie (to notifications). */
-export interface PublicMovie {
-  id: string;
-  title: Title;
-}
-
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
   otherVideos?: MovieVideo[]; // Other videos
