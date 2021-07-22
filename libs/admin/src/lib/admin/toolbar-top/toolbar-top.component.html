@@ -25,11 +25,6 @@
     <mat-icon svgIcon="document"></mat-icon><span matLine>Offers</span>
   </a>
 
-
-  <button mat-button [matMenuTriggerFor]="accountingMenu">
-    <mat-icon svgIcon="shopping_basket"></mat-icon><span matLine>Accounting</span>
-  </button>
-
   <a mat-button [href]="'festival' | goToApp:'dashboard':'import'">
     <mat-icon svgIcon="excel"></mat-icon><span matLine>Import</span>
   </a>
@@ -82,18 +77,6 @@
   </button>
   <button mat-menu-item routerLink="/c/o/admin/panel/invitations">
     <mat-icon svgIcon="person_add"></mat-icon><span matLine>Invitations list</span>
-  </button>
-</mat-menu>
-
-<mat-menu #accountingMenu="matMenu">
-  <button mat-menu-item routerLink="/c/o/admin/panel/invoices">
-    <mat-icon svgIcon="CAD"></mat-icon><span matLine>Invoices</span>
-  </button>
-  <button mat-menu-item routerLink="/c/o/admin/panel/financial-reports">
-    <mat-icon svgIcon="article"></mat-icon><span matLine>Financial reports</span>
-  </button>
-  <button mat-menu-item routerLink="/c/o/admin/panel/expenses">
-    <mat-icon svgIcon="EUR"></mat-icon><span matLine>Expenses</span>
   </button>
 </mat-menu>
 
