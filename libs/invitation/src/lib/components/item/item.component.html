@@ -12,7 +12,7 @@
             <ng-container *ngIf="event.type === 'meeting'; else inviteScreening">
 
               <ng-container *ngIf="fromUser.$ | async as user">
-                <p matLine class="mat-body1">
+                <p matLine class="mat-body">
                   <a matLine [href]="'mailto:' + user.email">{{ user | displayUser | async }}</a>invited you to {{ event.type }}
                   <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/lobby']" id="link">{{ event.title }}</a>.
                 </p>
@@ -21,7 +21,7 @@
 
             </ng-container>
             <ng-template #inviteScreening>
-              <p matLine class="mat-body1">
+              <p matLine class="mat-body">
                 <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a> invited you to
                 <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId + '/session']" id="link">{{ event.title }}</a>.
               </p>
@@ -40,8 +40,10 @@
 
             </ng-container>
             <ng-template #requestScreening>
-              <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> would like to attend {{ event.type }}
-              <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>.
+              <p matLine class="mat-body">
+                <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> would like to attend {{ event.type }}
+                <a [target]="targetLink" [href]="[applicationUrl.festival + '/c/o/marketplace/event/' + _invitation.eventId]" id="link">{{ event.title }}</a>.
+              </p>
               <span class="mat-caption" matLine>({{ event | eventRange }})</span>
             </ng-template>
           </ng-template>
