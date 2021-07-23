@@ -94,18 +94,14 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  async updatePrices() {
-    const promises = this.prices.map(async (price, index) => {
-      if ([null, undefined].includes(price)) { return }
-      const id = this.orgQuery.getActiveId();
-      const currency = this.currencyForm.value;
-      return this.bucketService.update(id, bucket => {
-        const contracts = [...bucket.contracts];
-        contracts[index].price = price;
-        return { contracts, currency };
-      });
-    })
-    return Promise.all(promises.filter(promise => !!promise))
+  updatePrice(index: number, price: string) {
+    const id = this.orgQuery.getActiveId();
+    const currency = this.currencyForm.value;
+    return this.bucketService.update(id, bucket => {
+      const contracts = [...bucket.contracts];
+      contracts[index].price = parseFloat(price);
+      return { contracts, currency };
+    });
   }
 
   removeContract(index: number, title: Movie) {
@@ -138,7 +134,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
   async createOffer(bucket: Bucket) {
-    await this.updatePrices()
     if (bucket.contracts.some(contract => {
       return contract.terms.some((term, index) => {
         const from = term.duration.from.getTime();
