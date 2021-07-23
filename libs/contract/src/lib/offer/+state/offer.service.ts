@@ -4,9 +4,7 @@ import { CollectionConfig, CollectionService, Query, queryChanges } from 'akita-
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Offer } from './offer.model';
 import { Contract } from '../../contract/+state';
-import { Income } from '../..//income/+state';
-import { QueryFn } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Income } from '../../income/+state';
 
 export type OfferWithContracts = Offer & { contracts: (Contract & { income: Income })[] };
 
@@ -25,19 +23,5 @@ export class OfferService extends CollectionService<OfferState> {
       ...offer,
       _meta: formatDocumentMetaFromFirestore(offer?._meta)
     };
-  }
-
-  queryWithContracts(queryFn?: QueryFn): Observable<OfferWithContracts[]> {
-    return queryChanges.call(this, {
-      path: 'offers',
-      queryFn,
-      contracts: (offer: Offer) => ({
-        path: 'contracts',
-        queryFn: ref => ref.where('offerId', '==', offer.id),
-        income: (contract: Contract) => ({
-          path: `incomes/${contract.id}`,
-        })
-      }),
-    } as Query<OfferWithContracts>);
   }
 }
