@@ -23,6 +23,22 @@ interface JoinWithOptions {
   shouldAwait?: boolean;
 }
   
+/**
+ * Operator that join the source with sub queries.
+ * There are two stategies : 
+ * 1. `shouldAwait: true`: Await all subqueries to emit once before emitting a next value
+ * 2. `shouldAwait: false`: Emit the source and hydrate it with the subqueries along the way
+ * @example
+ * ```typescript
+ * of({ docUrl: '...' }).valueChanges().pipe(
+ *   joinWith({
+ *     doc: source => fetch(docUrl).then(res => res.json()),
+ *   }, { shouldAwait: true })
+ * ).subscribe(res => console.log(res.subQuery))
+ * ```
+ * @param queries A map of subqueries to apply. Each query can return a static value, Promise or Observable
+ * @param options Strategy to apply on the joinWith
+ */
 export function joinWith<T, Query extends QueryMap<T>>(queries: Query, options: JoinWithOptions = {}): OperatorFunction<T, Jointure<T, Query>> {
   const shouldAwait = options.shouldAwait ?? true;
   const runQuery = (entity: Entity<T>) => {
