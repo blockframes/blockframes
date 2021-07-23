@@ -14,9 +14,6 @@ import { MatCardModule } from '@angular/material/card';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 
-// Blockframes Movie
-import { PromotionalLinksModule } from '@blockframes/movie/form/links/promotional-links.module';
-
 // Blockframes Media
 import { FileListPipeModule } from '@blockframes/media/file/pipes/file-list.pipe';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
@@ -31,7 +28,6 @@ import { MovieFormMediaImagesComponent } from './media-images.component';
     CommonModule,
     ReactiveFormsModule,
     TunnelPageModule,
-    PromotionalLinksModule,
     FileUploaderModule,
     FileListPipeModule,
     FormTableModule,

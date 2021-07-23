@@ -114,8 +114,6 @@ export interface MovieVideo extends StorageVideo {
 ////////////////////
 
 export interface MoviePromotionalElements {
-
-  financialDetails: StorageFile,
   moodboard: StorageFile,
   notes: MovieNote[],
   presentation_deck: StorageFile,
@@ -123,15 +121,6 @@ export interface MoviePromotionalElements {
   scenario: StorageFile,
   still_photo: StorageFile[],
   videos?: MovieVideos,
-
-  // @TODO #5350 remove the component for external links
-  // + migration for cleaning
-  clip_link: string,
-  promo_reel_link: string,
-  screener_link: string,
-  teaser_link: string,
-  trailer_link: string,
-  other_links: OtherLink[],
 }
 
 ////////////////////
@@ -221,11 +210,6 @@ export interface MovieRunningTime {
   time?: number,
   status?: string,
   episodeCount?: number
-}
-
-export interface OtherLink {
-  name: string;
-  url: string;
 }
 
 export interface MovieShootingRaw<D> {

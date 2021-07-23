@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 
 import { combineLatest, Subscription } from 'rxjs';
 import { filter, map, pluck, shareReplay, startWith, take, throttleTime } from 'rxjs/operators';
@@ -27,7 +27,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
+export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDestroy {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -147,9 +147,9 @@ export class MarketplaceMovieAvailsMapComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const decodedData = decodeUrl(this.route);
-    this.availsForm.patchValue(decodedData)
+    this.availsForm.patchValue(decodedData);
     this.availsForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(formState => {

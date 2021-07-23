@@ -82,10 +82,13 @@ export class UserComponent implements OnInit {
         const unique = Array.from(new Set(this.form.value.map(guest => guest.email.trim().toLowerCase())));
 
         // Retreive emails that are not already invited and that did not already made a request to attend event
-        const emails = unique.filter(email => !this.invitations.some(inv => (inv.toUser?.email === email && inv.mode === 'invitation') || (inv.fromUser?.email === email && inv.mode === 'request')));
+        const isInvited = (inv, email) => inv.toUser?.email === email && inv.mode === 'invitation';
+        const hasRequested = (inv, email) => inv.fromUser?.email === email && inv.mode === 'request';
+
+        const emails = unique.filter(email => !this.invitations.some(inv => isInvited(inv, email) || hasRequested(inv, email)));
 
         // Retreive existing requests for emails we want to invite
-        const requests = unique.map(email => this.invitations.find(inv => inv.fromUser?.email === email && inv.mode === 'request' && inv.status === 'pending')).filter(inv => !!inv);
+        const requests = unique.map(email => this.invitations.find(inv => hasRequested(inv, email) && inv.status === 'pending')).filter(inv => !!inv);
 
         this.form.reset([]);
         this.sending.next(true);
