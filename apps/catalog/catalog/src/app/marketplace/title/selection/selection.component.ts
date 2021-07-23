@@ -3,8 +3,8 @@ import { Intercom } from 'ng-intercom';
 import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
-import { Observable, Subject, concat } from 'rxjs';
-import { debounceTime, distinctUntilChanged, first, map, tap } from 'rxjs/operators';
+import { Observable, Subject, merge } from 'rxjs';
+import { distinctUntilChanged, map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -28,6 +28,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   priceChanges = new Subject<number>();
   total$: Observable<number>;
 
+
   private sub = this.currencyForm.valueChanges.pipe(
     distinctUntilChanged()
   ).subscribe(value => this.updateCurrency(value));
@@ -46,19 +47,19 @@ export class MarketplaceSelectionComponent implements OnDestroy {
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
       })
     );
-    this.total$ = concat(
-      this.bucket$.pipe(
-        first(),
-        map(bucket => bucket.contracts.reduce((acc, cur) => acc + (+cur.price ?? 0), 0)
-        )
-      ),
-      this.priceChanges.pipe(
-        debounceTime(100),
-        map(() => this.getTotal(this.prices)),
-        distinctUntilChanged(),
-      )
-    )
+
+    const bucketPrices$ = this.bucket$.pipe(
+      map(bucket => bucket.contracts.map(c => c.price))
+    );
+    const localPrice$ = this.priceChanges.pipe(
+      mapTo(this.prices)
+    );
+    this.total$ = merge(bucketPrices$, localPrice$).pipe(
+      map(prices => this.getTotal(prices))
+    );
   }
+
+
 
   ngOnDestroy() {
     this.sub.unsubscribe();
@@ -133,7 +134,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.snackBar.open(`Rights deleted`, 'close', { duration: 4000 })
   }
 
-  async createOffer(bucket: Bucket) {
+  createOffer(bucket: Bucket) {
     if (bucket.contracts.some(contract => {
       return contract.terms.some((term, index) => {
         const from = term.duration.from.getTime();
