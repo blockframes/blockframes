@@ -3,8 +3,8 @@ import { Intercom } from 'ng-intercom';
 import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { Observable, Subject, concat } from 'rxjs';
+import { debounceTime, distinctUntilChanged, first, map, shareReplay, skip, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -25,13 +25,8 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
-  priceChanges = new Subject();
-  total$ = this.priceChanges.pipe(
-    debounceTime(100),
-    map(() => this.getTotal(this.prices)),
-    distinctUntilChanged(),
-    startWith(0),
-  );
+  priceChanges = new Subject<number>();
+  total$//: Observable<number>;
 
   private sub = this.currencyForm.valueChanges.pipe(
     distinctUntilChanged()
@@ -51,6 +46,20 @@ export class MarketplaceSelectionComponent implements OnDestroy {
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
       })
     );
+    this.total$ = concat(
+      this.bucket$.pipe(
+        first(),
+        map(bucket => bucket.contracts.reduce((acc, cur) => acc + (+cur.price ?? 0), 0)
+        )
+      ),
+      this.priceChanges.pipe(
+        debounceTime(100),
+        map(() => this.getTotal(this.prices)),
+        distinctUntilChanged(),
+      )
+    ).pipe(
+      shareReplay({ refCount: true, bufferSize: 1 })
+    )
   }
 
   ngOnDestroy() {
@@ -87,14 +96,18 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  async updatePrice(index: number, price: string) {
-    const id = this.orgQuery.getActiveId();
-    const currency = this.currencyForm.value;
-    await this.bucketService.update(id, bucket => {
-      const contracts = [...bucket.contracts];
-      contracts[index].price = parseFloat(price);
-      return { contracts, currency };
-    });
+  async updatePrices() {
+    const promises = this.prices.map(async (price, index) => {
+      if ([null, undefined].includes(price)) { return }
+      const id = this.orgQuery.getActiveId();
+      const currency = this.currencyForm.value;
+      return this.bucketService.update(id, bucket => {
+        const contracts = [...bucket.contracts];
+        contracts[index].price = price;
+        return { contracts, currency };
+      });
+    })
+    return Promise.all(promises.filter(promise => !!promise))
   }
 
   removeContract(index: number, title: Movie) {
@@ -126,7 +139,8 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     this.snackBar.open(`Rights deleted`, 'close', { duration: 4000 })
   }
 
-  createOffer(bucket: Bucket) {
+  async createOffer(bucket: Bucket) {
+    await this.updatePrices()
     if (bucket.contracts.some(contract => {
       return contract.terms.some((term, index) => {
         const from = term.duration.from.getTime();

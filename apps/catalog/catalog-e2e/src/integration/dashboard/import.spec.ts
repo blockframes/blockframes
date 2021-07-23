@@ -16,7 +16,7 @@ const movieRecords = 5;
 const contractRecords = 19;
 
 const MOVIE_IMPORT_TIMEOUT = 120 * SEC;
-const CONTRACT_IMPORT_TIMEOUT = 240 * SEC;
+const CONTRACT_IMPORT_TIMEOUT = 2*240 * SEC;
 
 const logInAdminAndNavigate = () => {
   cy.log("Log in Admin user Vincent");
@@ -39,7 +39,7 @@ const logInAdminAndNavigate = () => {
   assertMoveTo(MY_TITLES_PAGE);
 
   cy.log("Navigate to import page");
-  cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
+  cy.get('a[test-id="import-titles"]', {timeout: 2*30 * SEC})
     .click();
 }
 
@@ -47,7 +47,7 @@ describe('User can fill and save contract tunnel form', () => {
   beforeEach(() => {
     cy.viewport('ipad-2', 'landscape');
   });
-  
+
   it('Login as admin, Select Movies and import ', () => {
     logInAdminAndNavigate();
     cy.wait(1 * SEC);
@@ -55,11 +55,11 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log("Select movie type to upload");
     cy.get('mat-form-field', {timeout: 30 * SEC})
       .click();
-    
+
     cy.get('mat-option')
       .contains("Movies")
       .click();
-      
+
     //Import the Movie file here
     cy.log("Start upload by attaching the fixture");
     cy.get('#filePicker', {timeout: 10 * SEC})
@@ -82,7 +82,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log(`Check for ${movieRecords} records in the extracted data`);
     cy.get('p[test-id="record-length"]', {timeout: MOVIE_IMPORT_TIMEOUT})
       .contains(`${movieRecords}`);
-    
+
     cy.log("Selecting all records to submit");
     cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
       .click();
@@ -106,11 +106,11 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log("Select Contract type to upload");
     cy.get('mat-form-field', {timeout: 30 * SEC})
       .click();
-    
+
     cy.get('mat-option')
       .contains("Contract")
       .click();
-      
+
     //Import the Contracts file here
     cy.log("Start upload by attaching the fixture");
     cy.get('#filePicker', {timeout: 10 * SEC})
@@ -133,7 +133,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log(`Check for ${contractRecords} records in the extracted data`);
     cy.get('p[test-id="record-length"]', {timeout: CONTRACT_IMPORT_TIMEOUT})
       .contains(`${contractRecords}`);
-    
+
     cy.log("Selecting all records to submit");
     cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
       .click();
