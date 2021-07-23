@@ -1,16 +1,6 @@
 <tunnel-page>
-  <section tunnel-form fxLayout="column" fxLayoutGap="32px">
-
-    <h3>1. Download our template</h3>
-    <span>Our template can help you structure your delivery list. If you have your own, you can share it with us.</span>
-    <button mat-stroked-button color="primary" fxFlexAlign="start">
-      <mat-icon svgIcon="cloud_upload"></mat-icon>
-      <span>Download delivery list template</span>
-    </button>
-    <small>Please check that all the information you enter is up to date.</small>
-
-    <h3>2. Please upload your delivery list.</h3>
-    <span>You can upload your final document here.</span>
+  <section tunnel-form fxLayout="column" fxLayoutGap="32px" class="surface">
+    <span><b>Please upload your available material list</b></span>
     <file-uploader [form]="fileForm" [meta]="['movies', 'delivery', movieId]"
       [accept]="['pdf','xls', 'docx']" listenToChanges>
       <h3 title>Document</h3>
