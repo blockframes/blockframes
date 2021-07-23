@@ -9,12 +9,7 @@ export class TimeSincePipe implements PipeTransform {
    * Converting the date to seconds, minutes, hours, months and years from the date created
    * Example: "1 hour ago"
    */
-  transform(value: Date) {
-    return this.timeSince(value);
-  }
-
-  timeSince(date: Date) {
-
+  transform(date: Date) {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
 
     let interval = seconds / (60 * 60 * 24 * 365);
