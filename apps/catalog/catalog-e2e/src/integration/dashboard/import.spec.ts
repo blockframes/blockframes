@@ -16,7 +16,7 @@ const movieRecords = 5;
 const contractRecords = 19;
 
 const MOVIE_IMPORT_TIMEOUT = 120 * SEC;
-const CONTRACT_IMPORT_TIMEOUT = 2*240 * SEC;
+const CONTRACT_IMPORT_TIMEOUT = 240 * SEC;
 
 const logInAdminAndNavigate = () => {
   cy.log("Log in Admin user Vincent");
@@ -39,7 +39,7 @@ const logInAdminAndNavigate = () => {
   assertMoveTo(MY_TITLES_PAGE);
 
   cy.log("Navigate to import page");
-  cy.get('a[test-id="import-titles"]', {timeout: 2*30 * SEC})
+  cy.get('a[test-id="import-titles"]', {timeout: 30 * SEC})
     .click();
 }
 

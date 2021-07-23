@@ -4,7 +4,7 @@ import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject, concat } from 'rxjs';
-import { debounceTime, distinctUntilChanged, first, map, shareReplay, skip, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first, map, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -26,7 +26,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
   priceChanges = new Subject<number>();
-  total$//: Observable<number>;
+  total$: Observable<number>;
 
   private sub = this.currencyForm.valueChanges.pipe(
     distinctUntilChanged()
@@ -57,8 +57,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
         map(() => this.getTotal(this.prices)),
         distinctUntilChanged(),
       )
-    ).pipe(
-      shareReplay({ refCount: true, bufferSize: 1 })
     )
   }
 
