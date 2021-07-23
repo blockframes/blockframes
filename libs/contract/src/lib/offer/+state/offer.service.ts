@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OfferStore, OfferState } from './offer.store';
-import { CollectionConfig, CollectionService, Query, queryChanges } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Offer } from './offer.model';
 import { Contract } from '../../contract/+state';
