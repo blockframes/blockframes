@@ -19,14 +19,14 @@ export class TimeSincePipe implements PipeTransform {
     if (interval > 1) {
       return Math.floor(interval) + " years";
     }
-    interval = seconds / 2592000;
-    if (interval >= 1)  return (Math.floor(interval) + (interval < 2 || interval === 0 ? ' month' : ' months'));
-    interval = seconds / 86400;
-    if (interval >= 1) return (Math.floor(interval) + (interval < 2 || interval === 0 ? ' day' : ' days'));
-    interval = seconds / 3600;
-    if (interval >= 1) return Math.floor(interval) + (interval < 2 || interval === 0 ? ' hour' : ' hours');
-    interval = seconds / 60;
-    if (interval >= 1) return Math.floor(interval) + (interval < 2 || interval === 0 ? ' minute' : ' minutes');
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) return `${interval} ${interval === 1 ? ' month' : 'months'}`;
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) return `${interval} ${interval === 1 ? ' day' : ' days'}`;
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) return `${interval} ${interval === 1 ? ' hour' : ' hours'}`;
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) return `${interval} ${interval === 1 ? ' minute' : ' minutes'}`;
     return Math.floor(seconds) + " seconds";
   }
 }
