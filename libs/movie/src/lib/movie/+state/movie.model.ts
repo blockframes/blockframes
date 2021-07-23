@@ -12,7 +12,6 @@ import {
   Prize,
   BoxOffice,
   MovieRelease,
-  OtherLink,
   MovieShooting,
   MovieShootingDate,
   MovieExpectedPremiere,
@@ -105,16 +104,7 @@ export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
   return {
-    clip_link: params.clip_link ?? '',
-    promo_reel_link: params.promo_reel_link ?? '',
-    screener_link: params.screener_link ?? '',
-    trailer_link: params.trailer_link ?? '',
-    teaser_link: params.teaser_link ?? '',
-    other_links: params.other_links ?? [],
-
     ...params,
-
-    financialDetails: createStorageFile(params?.financialDetails),
     moodboard: createStorageFile(params?.moodboard),
     notes: params?.notes?.map(note => createMovieNote(note)) ?? [],
     salesPitch: createSalesPitch(params.salesPitch),
@@ -333,13 +323,6 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0);
-  }
-}
-
-export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
-  return {
-    name: otherLink.name ?? '',
-    url: otherLink.url ?? '',
   }
 }
 

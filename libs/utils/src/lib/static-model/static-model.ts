@@ -318,10 +318,6 @@ export const promotionalElementTypes = {
   still_photo: 'Stills',
   presentation_deck: 'Presentation deck',
   scenario: 'Script',
-  promo_reel_link: 'Promo reel',
-  screener_link: 'Screener',
-  trailer_link: 'Trailer',
-  teaser_link: 'Teaser',
   moodboard: 'Moodboard'
 } as const
 
