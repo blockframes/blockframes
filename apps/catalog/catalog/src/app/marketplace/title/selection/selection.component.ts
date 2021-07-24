@@ -3,8 +3,8 @@ import { Intercom } from 'ng-intercom';
 import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { Observable, Subject, merge } from 'rxjs';
+import { distinctUntilChanged, map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -25,13 +25,9 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
-  priceChanges = new Subject();
-  total$ = this.priceChanges.pipe(
-    debounceTime(100),
-    map(() => this.getTotal(this.prices)),
-    distinctUntilChanged(),
-    startWith(0),
-  );
+  priceChanges = new Subject<number>();
+  total$: Observable<number>;
+
 
   private sub = this.currencyForm.valueChanges.pipe(
     distinctUntilChanged()
@@ -51,7 +47,19 @@ export class MarketplaceSelectionComponent implements OnDestroy {
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
       })
     );
+
+    const bucketPrices$ = this.bucket$.pipe(
+      map(bucket => bucket.contracts.map(c => c.price))
+    );
+    const localPrice$ = this.priceChanges.pipe(
+      mapTo(this.prices)
+    );
+    this.total$ = merge(bucketPrices$, localPrice$).pipe(
+      map(prices => this.getTotal(prices))
+    );
   }
+
+
 
   ngOnDestroy() {
     this.sub.unsubscribe();
@@ -87,10 +95,10 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     });
   }
 
-  async updatePrice(index: number, price: string) {
+  updatePrice(index: number, price: string) {
     const id = this.orgQuery.getActiveId();
     const currency = this.currencyForm.value;
-    await this.bucketService.update(id, bucket => {
+    return this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       contracts[index].price = parseFloat(price);
       return { contracts, currency };
