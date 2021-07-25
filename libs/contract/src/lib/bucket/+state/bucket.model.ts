@@ -1,10 +1,9 @@
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { Mandate } from '@blockframes/contract/contract/+state';
+import { createHoldback, Holdback, Mandate } from '@blockframes/contract/contract/+state';
 import { createLanguageKey } from '@blockframes/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { Media, MovieCurrency, Territory } from '@blockframes/utils/static-model';
 import { Term } from '../../term/+state/term.model';
-import { createHoldback, Holdback } from '../../contract/+state/contract.model';
 
 export interface Bucket {
   id: string;
@@ -45,14 +44,16 @@ export interface BucketTerm {
       period: 'day' | 'week' | 'month'
     }
   }
+  holdbacks: Holdback<Date>[];
 }
 
-export function toBucketTerm(avail: AvailsFilter): BucketTerm {
+export function toBucketTerm(avail: AvailsFilter, holdbacks: Holdback[]): BucketTerm {
   return createBucketTerm({
     medias: avail.medias,
     duration: avail.duration,
     territories: avail.territories,
     exclusive: avail.exclusive,
+    holdbacks,
   });
 }
 
@@ -63,7 +64,8 @@ export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
     exclusive: false,
     duration: { from: new Date(), to: new Date() },
     ...params,
-    languages: createLanguageKey(params.languages)
+    languages: createLanguageKey(params.languages),
+    holdbacks: params.holdbacks?.map(createHoldback) ?? [],
   }
 }
 
@@ -80,12 +82,12 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   }
 }
 
-export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter): BucketContract {
+export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter, holdbacks: Holdback[]): BucketContract {
   return createBucketContract({
     titleId: contract.titleId,
     orgId: contract.sellerId,
     parentTermId: term.id,
-    terms: [toBucketTerm(avails)]
+    terms: [toBucketTerm(avails, holdbacks)]
   });
 }
 

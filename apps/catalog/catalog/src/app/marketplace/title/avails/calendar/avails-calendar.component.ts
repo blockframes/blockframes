@@ -104,7 +104,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
       const term = contract.get('terms').at(termIndex);
       term.setValue({ ...term.value, ...avails });
     } else {
-      this.shell.bucketForm.addDuration(avails, marker);
+      this.shell.bucketForm.addDuration(avails, marker, this.shell.holdbacks);
     }
 
     this.snackbar.open(`Rights ${result ? 'updated' : 'added'}`, 'Show ⇩', { duration: 5000 })

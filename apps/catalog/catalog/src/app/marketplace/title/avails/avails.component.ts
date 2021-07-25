@@ -15,7 +15,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
 import { BucketService, BucketTerm } from '@blockframes/contract/bucket/+state';
-import { ContractService, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
+import { ContractService, Holdback, isMandate, isSale, Mandate } from '@blockframes/contract/contract/+state';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';
@@ -65,6 +65,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
   public terms$ = this.bucketForm.selectTerms(this.movie.id);
 
+  public holdbacks: Holdback[] = [];
 
   constructor(
     private router: Router,
@@ -101,7 +102,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       const term = bucket.contracts[params.contract].terms[params.term];
       this.edit(term);
     });
-    this.subs.push(fragSub, paramsSub)
+
+    this.subs.push(fragSub, paramsSub);
   }
 
   ngOnDestroy() {
@@ -114,6 +116,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
     const mandates = contracts.filter(isMandate);
     const sales = contracts.filter(isSale);
+
+    this.holdbacks = sales.map(sale => sale.holdbacks).flat();
 
     const [mandateTerms, salesTerms] = await Promise.all([
       this.termService.getValue(mandates.map(mandate => mandate.termIds).flat()),
