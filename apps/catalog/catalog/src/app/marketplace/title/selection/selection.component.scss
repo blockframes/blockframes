@@ -1,3 +1,8 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
 .main-header {
   padding: 48px;
   background-size: cover;
@@ -30,7 +35,6 @@ contract-item {
 .empty {
   img {
     width: 380px;
-    margin: 24px 0;
   }
 }
 
