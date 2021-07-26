@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
+import { movieCurrencies } from '@blockframes/utils/static-model';
 import { Observable, Subject, merge } from 'rxjs';
-import { distinctUntilChanged, map, mapTo, tap } from 'rxjs/operators';
+import { map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
@@ -19,7 +19,7 @@ import { Holdback } from '@blockframes/contract/contract/+state';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent implements OnDestroy {
+export class MarketplaceSelectionComponent {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
   public currencyForm = new FormControl('EUR');
 
@@ -27,11 +27,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   private prices: number[] = [];
   priceChanges = new Subject<number>();
   total$: Observable<number>;
-
-
-  private sub = this.currencyForm.valueChanges.pipe(
-    distinctUntilChanged()
-  ).subscribe(value => this.updateCurrency(value));
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -60,11 +55,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
   }
 
 
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
   private setTitle(amount: number) {
     const title = amount ? 'My Selection' : 'No selections yet';
     this.dynTitle.setPageTitle(title);
@@ -72,11 +62,6 @@ export class MarketplaceSelectionComponent implements OnDestroy {
 
   private getTotal(prices: number[]) {
     return prices.reduce((arr, curr) => (arr + curr), 0)
-  }
-
-  updateCurrency(currency: MovieCurrency) {
-    const id = this.orgQuery.getActiveId();
-    this.bucketService.update(id, { currency });
   }
 
   setPrice(index: number, price: string | null) {
@@ -157,7 +142,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     })) {
       this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
     } else {
-      this.dialog.open(SpecificTermsComponent);
+      this.dialog.open(SpecificTermsComponent, { data: { currency: this.currencyForm.value } });
     }
   }
 
