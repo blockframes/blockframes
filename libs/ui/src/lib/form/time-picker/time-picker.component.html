@@ -18,5 +18,7 @@
 
 </div>
 <mat-autocomplete #timing="matAutocomplete" (optionSelected)="setDate()" (opened)="scrollToOption()">
-  <mat-option [class]="tagID + '-' + i" *ngFor="let hour of hours; let i = index" [value]="hour">{{ hour }}</mat-option>
+  <ng-container *ngFor="let hour of hours; let i = index">
+    <mat-option [class]="tagID + '-' + i" [value]="hour">{{ hour }}</mat-option>
+  </ng-container>
 </mat-autocomplete>
