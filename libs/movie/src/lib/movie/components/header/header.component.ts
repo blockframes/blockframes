@@ -5,12 +5,16 @@ import {
   ChangeDetectionStrategy,
   Directive,
   ViewEncapsulation,
-  HostBinding
+  HostBinding,
+  OnInit,
+  OnDestroy
 } from '@angular/core';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
 import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { Event, EventService } from '@blockframes/event/+state';
 
 function createMovieView(movie: Movie) {
   return {
@@ -33,12 +37,15 @@ type MovieHeaderView = ReturnType<typeof createMovieView>
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   public movieView: MovieHeaderView;
+  public screeningOngoing = false;
+  public eventId: string;
+  public sub: Subscription;
   private _movie: Movie;
 
-  constructor(private location: Location) { }
+  constructor(private location: Location, private eventService: EventService) { }
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {
@@ -50,8 +57,34 @@ export class HeaderComponent {
 
   get movie() { return this._movie }
 
+  ngOnInit() {
+    const q = ref => ref
+      .where('isSecret', '==', false)
+      .where('meta.titleId', '==', this.movie.id)
+      .where('type', '==', 'screening');
+
+    const events$ = this.eventService.queryByType(['screening'], q);
+    this.sub = events$.subscribe(screenings => {
+      screenings.sort(this.sortByDate);
+      this.eventId = screenings[0].id;
+      return screenings[0].start <= new Date() && new Date() <= screenings[0].end
+        ? this.screeningOngoing = true
+        : this.screeningOngoing = false;
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
   goBack() {
     this.location.back();
+  }
+
+  private sortByDate(a: Event, b: Event): number {
+    if (a.start.getTime() < b.start.getTime()) return -1
+    if (a.start.getTime() > b.start.getTime()) return 1
+    return 0
   }
 }
 

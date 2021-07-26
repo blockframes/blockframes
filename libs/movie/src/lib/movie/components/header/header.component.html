@@ -11,21 +11,26 @@
     <a mat-icon-button (click)="goBack()" *ngIf="showBackArrow">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <div class="movie-info" fxLayout="row" fxLayoutGap="20px">
-      <!-- Poster -->
-      <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
-      <!-- Descriptions -->
-      <div fxLayout="column" fxLayoutAlign="space-between start">
-          <div class="movie-details">
-              <h4>{{ movieView.directors | displayName }}</h4>
-              <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
-              <h2>{{ movieView.title.original }}</h2>
-              <movie-title-features [movie]="movie"></movie-title-features>
-          </div>
-          <ng-content select="movie-header-preferences"></ng-content>
-          <ng-content select="movie-header-cta"></ng-content>
-          <ng-content select="movie-header-actions"></ng-content>
+    <div class="movie-info" fxLayout fxLayoutAlign="space-between start">
+      <div fxLayout fxLayoutGap="20px">
+        <!-- Poster -->
+        <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
+        <!-- Descriptions -->
+        <div fxLayout="column" fxLayoutAlign="space-between start">
+            <div class="movie-details">
+                <h4>{{ movieView.directors | displayName }}</h4>
+                <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
+                <h2>{{ movieView.title.original }}</h2>
+                <movie-title-features [movie]="movie"></movie-title-features>
+            </div>
+            <ng-content select="movie-header-preferences"></ng-content>
+            <ng-content select="movie-header-cta"></ng-content>
+            <ng-content select="movie-header-actions"></ng-content>
+        </div>
       </div>
+      <ng-container *ngIf="screeningOngoing">
+        <bf-ongoing-button [eventId]="eventId"></bf-ongoing-button>
+      </ng-container>
     </div>
   </section>
 </header>
