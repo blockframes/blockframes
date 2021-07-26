@@ -12,6 +12,7 @@ import { AuthQuery } from "@blockframes/auth/+state";
 import { switchMap, take } from 'rxjs/operators';
 import { createOfferId } from '@blockframes/utils/utils';
 import { createDocumentMeta } from '@blockframes/utils/models-meta';
+import { MovieCurrency } from '@blockframes/utils/static-model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -51,14 +52,14 @@ export class BucketService extends CollectionService<BucketState> {
     return this.active$.pipe(take(1)).toPromise();
   }
 
-  async createOffer(specificity: string, delivery: string) {
+  async createOffer(specificity: string, delivery: string, currency:MovieCurrency) {
     const orgId = this.orgQuery.getActiveId();
     const orgName = this.orgQuery.getActive().denomination.full;
     const bucket = await this.getActive();
-
     await this.update(orgId, {
       specificity,
       delivery,
+      currency,
       uid: this.authQuery.userId  // Specify who is updating the
     });
 
@@ -69,7 +70,7 @@ export class BucketService extends CollectionService<BucketState> {
       buyerUserId: this.authQuery.userId,
       specificity,
       status: 'pending',
-      currency: bucket.currency,
+      currency,
       _meta: createDocumentMeta({ createdAt: new Date() }),
       delivery,
       id: offerId,
