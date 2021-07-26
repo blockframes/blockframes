@@ -52,7 +52,7 @@ export class BucketService extends CollectionService<BucketState> {
     return this.active$.pipe(take(1)).toPromise();
   }
 
-  async createOffer(specificity: string, delivery: string, currency:MovieCurrency) {
+  async createOffer(specificity: string, delivery: string, currency: MovieCurrency) {
     const orgId = this.orgQuery.getActiveId();
     const orgName = this.orgQuery.getActive().denomination.full;
     const bucket = await this.getActive();
