@@ -11,7 +11,7 @@
     <a mat-icon-button (click)="goBack()" *ngIf="showBackArrow">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <div class="movie-info" fxLayout fxLayoutAlign="space-between start">
+    <div class="movie-info" fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap.lt-md="16px">
       <div fxLayout fxLayoutGap="20px">
         <!-- Poster -->
         <img fxHide.lt-md [ref]="movieView.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
