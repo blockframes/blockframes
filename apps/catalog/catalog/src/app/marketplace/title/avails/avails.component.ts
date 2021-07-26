@@ -7,7 +7,6 @@ import { delay, filter, switchMap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
-import { Scope } from '@blockframes/utils/static-model';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
@@ -19,6 +18,7 @@ import { ContractService, Holdback, isMandate, isSale, Mandate } from '@blockfra
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 
 import { ExplanationComponent } from './explanation/explanation.component';
+import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -145,8 +145,13 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
-  public openTerritoryModal(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+  public openTerritoryModal(terms: string[]) {
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope: 'territories' }, maxHeight: '80vh', autoFocus: false });
+  }
+
+  /** Open a modal to display holdback warnings */
+  openHoldbackModal(holdbacks: Holdback[]) {
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks }, maxHeight: '80vh', autoFocus: false });
   }
 
   confirmExit() {

@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Scope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
+
 import { BehaviorSubject } from 'rxjs';
+
+import { toLabel } from '@blockframes/utils/pipes';
+import { Scope, StaticGroup, staticGroups } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'contract-detailed-terms',
@@ -21,7 +24,7 @@ export class DetailedTermsComponent implements OnInit {
     const groups = JSON.parse(JSON.stringify(staticGroups[this.data.scope]));
     if (groups) {
       for (const group of groups) {
-        group.items = group.items.filter(item => this.data.terms.includes(item));
+        group.items = group.items.filter(item => this.data.terms.includes(toLabel(item, this.data.scope) as string));
       }
       this.groups$.next(groups);
     }

@@ -28,6 +28,7 @@ import { ExplanationModule } from './explanation/explanation.module';
 import { ReverseModule } from '@blockframes/utils/pipes/reverse.pipe';
 import { ToGroupLabelPipeModule } from '@blockframes/utils/pipes/group-label.pipe';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { HoldbackModalModule } from '@blockframes/contract/contract/holdback/modal/holdback-modal.module';
 
 const routes: Routes = [
   {
@@ -61,6 +62,7 @@ const routes: Routes = [
     ConfirmModule,
     ToGroupLabelPipeModule,
     RunsFormModule,
+    HoldbackModalModule,
 
     // Material
     MatCardModule,

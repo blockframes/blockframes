@@ -114,7 +114,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   }
 
   public addTerritory(territory: TerritoryMarker) {
-    console.log(this.shell.holdbacks);
     const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory, this.shell.holdbacks);
     if (added) this.onNewRight();
   }
