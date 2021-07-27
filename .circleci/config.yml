@@ -374,6 +374,7 @@ jobs:
             - ".firebase/emulator"
             - "dist/apps/backend-functions"
             - "~/.cache/firebase/emulators"
+            - "tools/fixtures"
 workflows:
   anon-db:
     jobs:
