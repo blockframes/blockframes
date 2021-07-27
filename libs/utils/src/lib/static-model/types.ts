@@ -8,6 +8,8 @@ import {
   crewRoles,
   genres,
   hostedVideoTypes,
+  invitationType,
+  invitationStatus,
   medias,
   movieCurrencies,
   movieFormat,
@@ -52,6 +54,8 @@ export type GenresValue = keyof typeof genres[Genre] & string;
 
 export type HostedVideoType = keyof typeof hostedVideoTypes;
 
+export type InvitationType = keyof typeof invitationType;
+
 export type Language = keyof typeof languages;
 export type LanguageValue = typeof languages[Language];
 
@@ -68,7 +72,10 @@ export type MovieLanguageType = keyof typeof movieLanguageTypes;
 export type MovieLanguageTypeValue = typeof movieLanguageTypes[MovieLanguageType];
 
 export type OrgActivity = keyof typeof orgActivity;
+
 export type OrganizationStatus = keyof typeof organizationStatus;
+
+export type InvitationStatus = keyof typeof invitationStatus;
 
 export type PremiereType = keyof typeof premiereType;
 
