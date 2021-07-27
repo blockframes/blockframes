@@ -1,6 +1,6 @@
-<main fxLayout="column">
-  <h1><a routerLink="/c/o/dashboard/crm/">CRM dashboard</a> > Event > {{ eventId }} </h1>
-  <article fxLayout="row" fxLayoutAlign="space-around start" *ngIf="event">
+<main fxLayout="column" *ngIf="event">
+  <crm-bread-crumb>{{ event.type}} event</crm-bread-crumb>
+  <article fxLayout="row" fxLayoutAlign="space-around start">
 
     <crm-event-info [event]="event"></crm-event-info>
     <section>

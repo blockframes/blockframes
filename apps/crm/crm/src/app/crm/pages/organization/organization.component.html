@@ -1,6 +1,6 @@
 <ng-container *ngIf="org">
   <main fxLayout="column" fxFlex fxLayoutGap="40px">
-    <h1><a routerLink="/c/o/dashboard/crm/">CRM dashboard</a> > Organization > {{ orgId }} </h1>
+    <crm-bread-crumb>{{ org | orgName:'long' }}</crm-bread-crumb>
     <section *ngIf="org" fxLayout="column" fxLayoutGap="40px">
       <article fxLayout="row" fxLayoutAlign="space-between end">
         <organization-display [organization]="org">
