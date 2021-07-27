@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { ContractDocument, convertDuration, Holdback, Mandate, Sale } from './contract.model';
+import { ContractDocument, convertDuration, createMandate, createSale, Holdback, Mandate, Sale } from './contract.model';
 import { formatDocumentMetaFromFirestore } from "@blockframes/utils/models-meta";
 import { Timestamp } from "@blockframes/utils/common-interfaces/timestamp";
 
@@ -25,17 +25,9 @@ export class ContractService extends CollectionService<ContractState> {
     });
     const _meta = formatDocumentMetaFromFirestore(contract?._meta);
 
-    if (contract.type === 'mandate') {
-      return {
-        ...contract,
-        _meta
-      }
-    } else {
-      return {
-        ...contract,
-        _meta,
-        holdbacks: contract.holdbacks?.map(convertHoldback) ?? []
-      };
-    }
+    return contract.type === 'mandate' ?
+      createMandate({ ...contract, _meta }) :
+      createSale({ ...contract, _meta, holdbacks: contract.holdbacks?.map(convertHoldback) ?? [] })
+    ;
   }
 }

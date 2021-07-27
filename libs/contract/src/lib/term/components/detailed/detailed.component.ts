@@ -24,7 +24,10 @@ export class DetailedTermsComponent implements OnInit {
     const groups = JSON.parse(JSON.stringify(staticGroups[this.data.scope]));
     if (groups) {
       for (const group of groups) {
-        group.items = group.items.filter(item => this.data.terms.includes(toLabel(item, this.data.scope) as string));
+        group.items = group.items.filter(item => {
+          const label = toLabel(item, this.data.scope) as string;
+          return this.data.terms.includes(label);
+        });
       }
       this.groups$.next(groups);
     }

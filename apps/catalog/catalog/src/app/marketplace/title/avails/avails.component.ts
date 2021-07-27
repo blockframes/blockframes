@@ -151,7 +151,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   /** Open a modal to display holdback warnings */
   openHoldbackModal(holdbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks }, maxHeight: '80vh' });
   }
 
   confirmExit() {
