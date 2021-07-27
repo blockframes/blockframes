@@ -172,6 +172,7 @@ commands:
             name: Uploading screenshots
             path: ~/repo/dist/cypress/apps
 orbs:
+  cypress: cypress-io/cypress@1
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
 executors:
@@ -344,24 +345,40 @@ jobs:
       - prepare_environment
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e
+      - store_artifacts:
+          path: dist/cypress/apps/crm/crm-e2e/videos
+      - store_artifacts:
+          path: dist/cypress/apps/crm/crm-e2e/screenshots
   festival-e2e:
     executor: blockframes-ci
     steps:
       - prepare_environment
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e
+      - store_artifacts:
+          path: dist/cypress/apps/festival/festival-e2e/videos
+      - store_artifacts:
+          path: dist/cypress/apps/festival/festival-e2e/screenshots
   financiers-e2e:
     executor: blockframes-ci
     steps:
       - prepare_environment
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e
+      - store_artifacts:
+          path: dist/cypress/apps/financiers/financiers-e2e/videos
+      - store_artifacts:
+          path: dist/cypress/apps/financiers/financiers-e2e/screenshots
   catalog-e2e:
     executor: blockframes-ci
     steps:
       - prepare_environment
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
+      - store_artifacts:
+          path: dist/cypress/apps/catalog/catalog-e2e/videos
+      - store_artifacts:
+          path: dist/cypress/apps/catalog/catalog-e2e/screenshots
   prepare-emulators:
     executor: blockframes-ci
     steps:
