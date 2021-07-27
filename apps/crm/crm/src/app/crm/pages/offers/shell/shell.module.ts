@@ -12,6 +12,7 @@ import { OrgChipModule } from '@blockframes/organization/components/chip/chip.mo
 
 import { TotalPipeModule } from '@blockframes/utils/pipes';
 import { OfferShellComponent } from './shell.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const routes: Routes = [{
   path: '',
@@ -36,6 +37,7 @@ const routes: Routes = [{
     MatCardModule,
     MatIconModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
 
     RouterModule.forChild(routes),
   ]

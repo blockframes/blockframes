@@ -21,8 +21,6 @@ import { staticModel } from '@blockframes/utils/static-model';
 export class OfferViewComponent implements OnDestroy, OnInit {
 
   public offer$ = this.shell.offer$;
-  public buyerOrg$ = this.shell.buyerOrg$;
-  public contracts$ = this.shell.contracts$;
   public loading$ = new BehaviorSubject<boolean>(false);
   public offerStatus = Object.keys(staticModel['offerStatus']);
   public form = new FormGroup({
@@ -33,15 +31,13 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   subscription: Subscription;
 
   public columns = {
+    'titleId': 'Title ID',
+    'title.title.international': 'Title',
     'status': 'Seller Approved',
-    'stakeholders': 'Seller\'s name (Email)',
-    'titleId': 'Movie ID',
-    'buyerId': 'Organization Name',
+    'seller.denomination.public': 'Seller\'s name',
+    'seller.email': 'Seller\'s email',
     'id': 'Actions',
   };
-  public initialColumns = [
-    'titleId', 'status', 'stakeholders', 'buyerId', 'id'
-  ];
 
   constructor(
     private shell: OfferShellComponent,
