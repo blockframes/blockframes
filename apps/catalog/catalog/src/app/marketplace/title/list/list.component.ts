@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { debounceTime, switchMap, startWith, distinctUntilChanged, take, skip, shareReplay } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay } from 'rxjs/operators';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
@@ -71,12 +71,12 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
     this.searchForm.hitsPerPage.setValue(1000)
 
     // No need to await for the results
-    Promise.all([
+    await Promise.all([
       this.getContract('mandate'),
       this.getContract('sale')
     ])
