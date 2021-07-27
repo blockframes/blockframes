@@ -1,10 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { OfferShellComponent } from '../shell.component';
-import { map } from 'rxjs/operators';
 
 const columns = {
-  titleId: { value: 'Title', disableSort: true },
-  id: { value: 'Price', disableSort: true },
+  'title.title.international': 'Title',
+  'title.release.year': 'Release Year',
+  'title.directors': 'Directors',
+  'income.price': 'Price',
 }
 
 @Component({
@@ -15,15 +16,8 @@ const columns = {
 })
 export class ContractListComponent  {
   columns = columns;
-  initialColumns = Object.keys(columns);
   offer$ = this.shell.offer$;
-  contracts$ = this.shell.contracts$;
 
   constructor(private shell: OfferShellComponent) { }
 
-  getIncome(id: string) {
-    return this.shell.incomes$.pipe(
-      map(incomes => incomes.find(income => income.id === id))
-    );
-  }
 }
