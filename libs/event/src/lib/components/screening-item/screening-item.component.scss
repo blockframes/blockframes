@@ -1,6 +1,7 @@
 :host {
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
 }
 
 a {
@@ -14,16 +15,7 @@ a {
 
 article {
   flex: 1;
-  position: relative;
-  width: 100%;
-  div {
-    position: absolute;
-    left: 0;
-    right: 0;
-  }
-  footer {
-    margin-top: auto;
-  }
+  height: 100%;
 }
 
 h5 {
