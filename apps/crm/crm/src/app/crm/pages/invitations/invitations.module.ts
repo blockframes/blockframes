@@ -12,6 +12,7 @@ import { InvitationsComponent } from './invitations.component';
 
 // Modules
 import { GuestTableModule } from '../../components/guest-table/guest-table.module';
+import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { GuestTableModule } from '../../components/guest-table/guest-table.modul
     MatButtonModule,
     RouterModule,
     GuestTableModule,
+    BreadCrumbModule
   ],
   declarations: [
     InvitationsComponent,
