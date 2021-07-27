@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
+import { Contract } from '@blockframes/contract/contract/+state';
+import { Movie } from '@blockframes/movie/+state';
+import { Income } from '@blockframes/contract/income/+state';
 
 const columns = {
   'id': 'Offer Reference',
@@ -19,6 +22,14 @@ const initialColumns = Object.keys(columns);
 
 type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
 
+interface ContractView extends Contract {
+  title: Movie;
+  income: Income;
+}
+interface OfferView extends Offer {
+  contracts: ContractView[];
+}
+
 @Component({
   selector: 'offer-list',
   templateUrl: './list.component.html',
@@ -27,7 +38,7 @@ type AllOfferStatus = '' | 'pending' | 'on_going' | 'past_deals';
 })
 export class ListComponent {
 
-  @Input() offers?: null | Offer[];
+  @Input() offers?: null | OfferView[];
   app = getCurrentApp(this.routerQuery);
   appName = appName[this.app];
   columns = columns;

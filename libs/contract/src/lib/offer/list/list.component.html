@@ -30,11 +30,8 @@
         <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
         <ng-template colRef="contracts" let-contracts>
           <ng-container *ngFor="let contract of contracts; let last=last">
-            <!-- Verify the titleId before calling the getTitle pipe otherwise, error is thrown for empty titleIds -->
-            <ng-container *ngIf="contract.titleId">
-              <ng-container *ngIf="contract.titleId | getTitle | async as title">
-                {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
-              </ng-container>
+            <ng-container *ngIf="contract.title as title">
+              {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
             </ng-container>
           </ng-container>
         </ng-template>
