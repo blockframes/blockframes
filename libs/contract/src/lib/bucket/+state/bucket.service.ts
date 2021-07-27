@@ -78,8 +78,7 @@ export class BucketService extends CollectionService<BucketState> {
     const promises = bucket.contracts.map(async (contract) => {
       const contractId = this.db.createId();
       const terms = contract.terms
-        .map(t => ({ ...t, contractId, id: this.db.createId() }))
-        .map(t => { delete t.holdbacks; return t }); // delete "term blocking" holdbacks, we don't want to store that in the db
+        .map(t => ({ ...t, contractId, id: this.db.createId() }));
       const termIds = terms.map(t => t.id);
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);

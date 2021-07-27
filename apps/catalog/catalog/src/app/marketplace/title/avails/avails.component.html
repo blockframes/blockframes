@@ -31,10 +31,12 @@
         </section>
       </mat-card-header>
       <mat-card-content>
-        <button mat-button *ngIf="term.holdbacks" (click)="openHoldbackModal(term.holdbacks)">
-          <mat-icon svgIcon="info"></mat-icon>
-          <span>Holdback(s) exist for this right</span>
-        </button>
+        <ng-container *ngIf="(term | collidingHoldbacks: holdbacks) as collision">
+          <button mat-button (click)="openHoldbackModal(collision)">
+            <mat-icon svgIcon="info"></mat-icon>
+            <span>Holdback(s) exist for this right</span>
+          </button>
+        </ng-container>
         <mat-accordion>
           <!-- TERRITORIES -->
           <mat-expansion-panel expanded>

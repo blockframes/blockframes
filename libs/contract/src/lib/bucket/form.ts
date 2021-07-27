@@ -32,16 +32,6 @@ function createBucketTermControl(params: Partial<BucketTerm> = {}) {
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
     runs: new RunsForm(term.runs),
-
-    holdbacks: new FormArray(term.holdbacks.map(holdback => new FormGroup({
-      territories: new FormStaticValueArray<'territories'>(holdback.territories, 'territories'),
-      medias: new FormStaticValueArray<'medias'>(holdback.medias, 'medias'),
-      duration: new FormGroup({
-        from: new FormControl(holdback.duration.from),
-        to: new FormControl(holdback.duration.to)
-      }),
-      languages: MovieVersionInfoForm.factory(holdback.languages, createLanguageControl),
-    }))),
   }
 }
 
@@ -119,14 +109,13 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
    * @param marker
    * @returns
    */
-  addTerritory(avails: AvailsFilter, marker: TerritoryMarker, holdbacks: Holdback[]): boolean {
+  addTerritory(avails: AvailsFilter, marker: TerritoryMarker): boolean {
     const { contract: mandate, slug: territory, term } = marker;
-    const collidingHoldbacks = getCollidingHoldbacks(holdbacks, [term]);
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
     // Contract is not registered
     if (contractIndex === -1) {
-      this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }, collidingHoldbacks));
+      this.get('contracts').add(toBucketContract(mandate, term, { ...avails, territories: [territory] }));
       this.markAsDirty();
       this.change.next();
       return true;
@@ -136,7 +125,7 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
     const termIndex = contract.terms.findIndex(t => isSameMapTerm(t, avails));
     // New term
     if (termIndex === -1) {
-      this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }, collidingHoldbacks));
+      this.get('contracts').at(contractIndex).get('terms').add(toBucketTerm({ ...avails, territories: [territory] }));
       this.markAsDirty();
       this.change.next();
       return true;
@@ -206,22 +195,21 @@ export class BucketForm extends FormEntity<BucketControls, Bucket> {
   /**
    * Adds a Duration from Calendar into the bucket if not already in it
    */
-  addDuration(avails: AvailsFilter, marker: DurationMarker, holdbacks: Holdback[]) {
+  addDuration(avails: AvailsFilter, marker: DurationMarker) {
     const { contract: mandate, term } = marker;
-    const collidingHoldbacks = getCollidingHoldbacks(holdbacks, [term]);
     const bucket = this.value;
     const contractIndex = bucket.contracts.findIndex(c => c.parentTermId === term.id);
 
     // Contract is not registered
     if (contractIndex === -1) {
-      const bucketContract = toBucketContract(mandate, term, avails, collidingHoldbacks);
+      const bucketContract = toBucketContract(mandate, term, avails);
       this.get('contracts').add(bucketContract);
       this.markAsDirty();
       this.change.next();
       return;
     }
 
-    const bucketTerm = toBucketTerm(avails, collidingHoldbacks);
+    const bucketTerm = toBucketTerm(avails);
     this.get('contracts').at(contractIndex).get('terms').add(bucketTerm);
     this.markAsDirty();
     this.change.next();

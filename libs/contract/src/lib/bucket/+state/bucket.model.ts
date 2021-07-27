@@ -44,16 +44,14 @@ export interface BucketTerm {
       period: 'day' | 'week' | 'month'
     }
   }
-  holdbacks: Holdback<Date>[];
 }
 
-export function toBucketTerm(avail: AvailsFilter, holdbacks: Holdback[]): BucketTerm {
+export function toBucketTerm(avail: AvailsFilter): BucketTerm {
   return createBucketTerm({
     medias: avail.medias,
     duration: avail.duration,
     territories: avail.territories,
     exclusive: avail.exclusive,
-    holdbacks,
   });
 }
 
@@ -65,7 +63,6 @@ export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
     duration: { from: new Date(), to: new Date() },
     ...params,
     languages: createLanguageKey(params.languages),
-    holdbacks: params.holdbacks?.map(createHoldback) ?? [],
   }
 }
 
@@ -82,12 +79,12 @@ export function createBucketContract(params: Partial<BucketContract> = {}): Buck
   }
 }
 
-export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter, holdbacks: Holdback[]): BucketContract {
+export function toBucketContract(contract: Mandate, term: Term<Date>, avails: AvailsFilter): BucketContract {
   return createBucketContract({
     titleId: contract.titleId,
     orgId: contract.sellerId,
     parentTermId: term.id,
-    terms: [toBucketTerm(avails, holdbacks)]
+    terms: [toBucketTerm(avails)]
   });
 }
 

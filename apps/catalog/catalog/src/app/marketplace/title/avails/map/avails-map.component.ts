@@ -114,7 +114,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   }
 
   public addTerritory(territory: TerritoryMarker) {
-    const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory, this.shell.holdbacks);
+    const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
     if (added) this.onNewRight();
   }
 
@@ -128,7 +128,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     for (const term of available) {
       const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(this.availsForm.value, term);
       if (!alreadyInBucket) {
-        this.shell.bucketForm.addTerritory(this.availsForm.value, term, this.shell.holdbacks);
+        this.shell.bucketForm.addTerritory(this.availsForm.value, term);
       }
     }
     this.onNewRight();
