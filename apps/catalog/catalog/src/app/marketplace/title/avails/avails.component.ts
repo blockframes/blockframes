@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 
-import { filter, switchMap } from 'rxjs/operators';
+import { delay, filter, switchMap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
 
 import { FormList } from '@blockframes/utils/form';
@@ -86,14 +86,18 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-    const fragSub = this.route.fragment.pipe(filter(fragment => !!fragment)).subscribe(fragment => {
+    const fragSub = this.route.fragment.pipe(
+      filter(fragment => !!fragment),
+      //@why: #6383
+      delay(200)
+    ).subscribe(fragment => {
       document.querySelector(`#${fragment}`).scrollIntoView({ behavior: 'smooth' });
     });
 
     const paramsSub = combineLatest([
       this.route.queryParams.pipe(filter(params => !!params.contract && !!params.term)),
       this.bucketService.active$.pipe(filter(bucket => !!bucket))
-    ]).subscribe(([ params, bucket ]) => {
+    ]).subscribe(([params, bucket]) => {
       const term = bucket.contracts[params.contract].terms[params.term];
       this.edit(term);
     });
