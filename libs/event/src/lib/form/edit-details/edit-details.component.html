@@ -9,13 +9,13 @@
     <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
       <mat-form-field fxFlex appearance="outline" test-id="event-start">
         <mat-label>Start</mat-label>
-        <time-picker formControlName="start" [allDay]="form.value.allDay"></time-picker>
+        <time-picker formControlName="start" [allDay]="form.value.allDay" tagID="start"></time-picker>
         <mat-error *ngIf="form.hasError('startOverEnd', 'start')">Start date must not be later than end date</mat-error>
       </mat-form-field>
       <span>to</span>
       <mat-form-field fxFlex appearance="outline" test-id="event-end">
         <mat-label>End</mat-label>
-        <time-picker formControlName="end" [allDay]="form.value.allDay"></time-picker>
+        <time-picker formControlName="end" [allDay]="form.value.allDay" tagID="end"></time-picker>
         <mat-error *ngIf="form.hasError('startOverEnd', 'end')">End date must not be earlier than start date</mat-error>
       </mat-form-field>
     </div>
