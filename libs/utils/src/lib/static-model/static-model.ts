@@ -425,8 +425,14 @@ export const orgActivity = {
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
 export const organizationStatus = {
-  pending: 'Pending',
-  accepted: 'Accepted'
+  accepted: 'Accepted',
+  declined: 'Declined',
+  pending: 'Pending'
+} as const
+
+export const invitationType = {
+  attendEvent: 'Attend Event',
+  joinOrganization: 'Join organization'
 } as const
 
 export const festival = {
@@ -1255,6 +1261,7 @@ export const staticModel = {
   directorCategory,
   genres,
   hostedVideoTypes,
+  invitationType,
   languages,
   medias,
   memberStatus,

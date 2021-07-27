@@ -8,6 +8,7 @@ import {
   crewRoles,
   genres,
   hostedVideoTypes,
+  invitationType,
   medias,
   movieCurrencies,
   movieFormat,
@@ -51,6 +52,8 @@ export type Genre = keyof typeof genres;
 export type GenresValue = keyof typeof genres[Genre] & string;
 
 export type HostedVideoType = keyof typeof hostedVideoTypes;
+
+export type InvitationType = keyof typeof invitationType;
 
 export type Language = keyof typeof languages;
 export type LanguageValue = typeof languages[Language];
