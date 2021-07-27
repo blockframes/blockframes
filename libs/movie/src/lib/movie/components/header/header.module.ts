@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 // Component
 import {
@@ -32,7 +33,8 @@ import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-butt
     ImageModule,
     MovieTitleFeaturesModule,
     MatIconModule,
-    OngoingButtonModule
+    OngoingButtonModule,
+    RouterModule
   ],
   exports: [
     HeaderComponent,

@@ -29,7 +29,7 @@
         </div>
       </div>
       <ng-container *ngIf="screeningOngoing">
-        <bf-ongoing-button [eventId]="eventId"></bf-ongoing-button>
+        <a ongoing-button [routerLink]="['/c/o/marketplace/event', eventId]" class="mat-button-base">Ongoing Screening</a>
       </ng-container>
     </div>
   </section>

@@ -1,4 +1,4 @@
-a {
+:host {
   text-transform: uppercase;
   white-space: nowrap;
   display: flex;
@@ -62,10 +62,13 @@ a {
   }
 }
 
-a:hover {
+:host:hover {
   background: var(--primary);
 }
 
+span {
+  margin: 0;
+}
 
 @keyframes pulse {
   to {
