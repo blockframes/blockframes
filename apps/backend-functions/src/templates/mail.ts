@@ -7,7 +7,7 @@ import { supportEmails, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations, OrganizationDocument, PublicOrganization } from '../data/types';
-import { PublicUser, User } from '@blockframes/user/+state/user.firestore';
+import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName } from '@blockframes/utils/apps';
 import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
@@ -16,7 +16,7 @@ import { testEmail } from "@blockframes/e2e/utils/env";
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
-export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
+export const ADMIN_ACCEPT_ORG_PATH = '/c/o/dashboard/crm/organization';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
 
 /**
