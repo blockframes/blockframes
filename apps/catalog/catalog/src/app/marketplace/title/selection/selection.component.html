@@ -29,9 +29,9 @@
           <mat-form-field appearance="outline" price>
             <mat-label>Price</mat-label>
             <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
-              (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)" />
+            (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)"/>
             <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
-            <mat-hint>If no price entered. Seller will receive "Asking Price"</mat-hint>
+            <mat-hint>Leave this field empty to request an asking price.</mat-hint>
           </mat-form-field>
           <ng-template #termAction let-index="index">
             <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
@@ -45,7 +45,7 @@
             <ng-container *ngIf="contract.titleId | getTitle | async as title">
               <div fxLayout fxLayoutAlign="space-between">
                 <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-                  Delete all rights for this title
+                  Delete all Rights for this Title
                 </button>
                 <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
                   Add Rights
@@ -70,10 +70,10 @@
 </ng-container>
 
 <ng-template #empty>
-  <section class="empty" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+  <section class="empty" fxLayout="column" fxLayoutAlign="center center">
     <h1>There is no title to display in your Selection.</h1>
     <span>Select titles to populate your Selection.</span>
     <img asset="empty_selection.svg" alt="No rights in selection">
-    <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Browse Library</button>
+    <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Discover Titles</button>
   </section>
 </ng-template>

@@ -20,6 +20,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { ToDateModule } from '@blockframes/utils/pipes';
+import { TimeSinceModule } from '@blockframes/utils/pipes/time-since.pipe';
 
 @NgModule({
   declarations: [ItemComponent],
@@ -36,6 +38,8 @@ import { MatMenuModule } from '@angular/material/menu';
     DisplayNameModule,
     EventFromInvitationPipeModule,
     EventRangeModule,
+    TimeSinceModule,
+    ToDateModule,
 
     // Material
     MatListModule,

@@ -1,0 +1,81 @@
+<ng-container *ngIf="offer$ | async as offer; else loading">
+  <ng-container *ngIf="contracts$ |async as contracts">
+    <form [formGroup]="form" fxLayout="column" class="space-horizontal">
+      <div fxLayoutAlign="space-between center" fxLayout="row">
+        <mat-form-field appearance="outline">
+          <mat-label>General Contract Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let status of offerStatus" [value]="status">{{status | toLabel: 'offerStatus'}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-flat-button color="primary" (click)="update(contracts, offer.id)">Update</button>
+      </div>
+      <mat-card class="margin-bottom">
+        <p>Buyer's Specific Terms</p>
+        <mat-form-field appearance="outline">
+          <textarea matInput formControlName="specificity"></textarea>
+        </mat-form-field>
+      </mat-card>
+      <mat-card class="margin-bottom">
+        <p>Buyers Delivery Wishlist</p>
+        <mat-form-field appearance="outline">
+          <textarea matInput formControlName="delivery"></textarea>
+        </mat-form-field>
+      </mat-card>
+    </form>
+
+    <mat-card class="margin-bottom space-horizontal">
+      <p>Contracts in the package</p>
+      <bf-table-filter [source]="contracts" [columns]="columns" [initialColumns]="initialColumns">
+        <ng-template colRef="titleId" let-titleId>
+
+          <p *ngIf="titleId; else noTitleYet">
+            <span>{{ titleId }}</span>
+            <br />
+            <span *ngIf="titleId | getTitle | async as title">
+              {{ title.title?.international | maxLength: 50 }}
+            </span>
+          </p>
+
+          <ng-template #noTitleYet>
+            <span>No Title Yet</span>
+          </ng-template>
+
+        </ng-template>
+        <ng-template colRef="status" let-status>
+          <bf-tag>{{ status }}</bf-tag>
+        </ng-template>
+        <ng-template colRef="stakeholders" let-stakeholders let-contract='item'>
+          <ng-container *ngFor="let stakeholder of stakeholders; let last=last">
+            <ng-container *ngIf="stakeholder !== contract.buyerId && stakeholder !== contract.sellerId">
+              <ng-container *ngIf="(stakeholder | firstUserFromOrgId | async) as user">
+                {{user.firstName}} {{user.lastName}} ({{user.email}}){{last?'':','}}
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="buyerId" let-buyerId>{{ (buyerId | getOrg|async).denomination.public}}</ng-template>
+        <ng-template colRef="id" let-id>
+          <div fxLayout="row" fxLayoutAlign="flex-start center" fxLayoutGap="8px">
+            <a mat-icon-button [routerLink]="['../', id,]" matTooltip="Edit">
+              <mat-icon svgIcon="visibility"></mat-icon>
+            </a>
+            <button mat-icon-button matTooltip="Delete" (click)="confirmDelete(id)">
+              <mat-icon svgIcon="delete"></mat-icon>
+            </button>
+          </div>
+        </ng-template>
+      </bf-table-filter>
+    </mat-card>
+    <section fxLayout="row" fxLayoutAlign="center center">
+      <button mat-flat-button color="primary" class="add-title margin-bottom" (click)="addTitle(offer)"
+        [disabled]="loading$ | async">
+        Add a right to a title
+      </button>
+    </section>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <mat-spinner fxFlexAlign="center"></mat-spinner>
+</ng-template>

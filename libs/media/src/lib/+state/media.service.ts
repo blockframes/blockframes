@@ -19,11 +19,6 @@ export class MediaService {
     private functions: AngularFireFunctions,
   ) { }
 
-
-
-
-
-
   /**
    * This https callable method will check if current user asking for the media
    * have the rights to do so.

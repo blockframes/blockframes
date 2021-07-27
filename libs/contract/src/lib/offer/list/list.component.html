@@ -30,11 +30,8 @@
         <ng-template colRef="contracts.length" let-length>{{ length }}</ng-template>
         <ng-template colRef="contracts" let-contracts>
           <ng-container *ngFor="let contract of contracts; let last=last">
-            <!-- Verify the titleId before calling the getTitle pipe otherwise, error is thrown for empty titleIds -->
-            <ng-container *ngIf="contract.titleId">
-              <ng-container *ngIf="contract.titleId | getTitle | async as title">
-                {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
-              </ng-container>
+            <ng-container *ngIf="contract.title as title">
+              {{ title.title.international | maxLength:50 }}{{last ? '': ', '}}
             </ng-container>
           </ng-container>
         </ng-template>
@@ -42,10 +39,10 @@
           {{ specificity ? 'YES' : '-' }}
         </ng-template>
         <ng-template colRef="incomes" let-incomes let-offer="item">
-          {{ incomes | total: 'price' | currency: offer.currency }}
+          {{ offer.contracts | total: 'income.price' | currency: offer.currency }}
         </ng-template>
         <ng-template colRef="status" let-status>
-          <bf-tag>{{ status }}</bf-tag>
+          <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>
         </ng-template>
       </bf-table-filter>
     </mat-card>

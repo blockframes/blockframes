@@ -5,7 +5,7 @@ import * as invitations from './invitation';
 import {
   onDocumentCreate,
   onDocumentDelete,
-  onDocumentWrite,
+  onDocumentUpdate,
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
@@ -24,7 +24,7 @@ import { heavyConfig } from '@blockframes/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { importAnalytics } from './pubsub/daily-analytics-import';
 import { onOfferCreate } from './offer';
-import { onContractDelete } from './contracts';
+import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 
 console.log('Function instance loaded');
@@ -102,7 +102,7 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}', o
 //--------------------------------
 
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
-export const onInvitationUpdateEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
+export const onInvitationUpdateEvent = onDocumentUpdate('invitations/{invitationID}', onInvitationWrite);
 
 /** Used to check if users have already an invitation to join org existing */
 export const hasUserAnOrgOrIsAlreadyInvited = functions.https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
@@ -114,7 +114,7 @@ export const getInvitationLinkedToEmail = functions.https.onCall(invitations.get
 //    Events Management          //
 //--------------------------------
 
-export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', logErrors(onEventDelete));
+export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', onEventDelete);
 
 /** Trigger: REST call to invite a list of users by email. */
 export const inviteUsers = functions.https.onCall(skipInMaintenance(logErrors(invitations.inviteUsers)));
@@ -158,7 +158,7 @@ export const onMovieUpdateEvent = functions
 /**
  * Trigger: when a movie is deleted
  */
-export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors(onMovieDelete))
+export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', onMovieDelete)
 
 //--------------------------------
 //     Consents Management      //
@@ -251,6 +251,8 @@ export const sendgridEventWebhookListener = functions.https.onRequest(sendgridEv
 //     Contracts Management     //
 //--------------------------------
 
-export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', logErrors(onContractDelete));
+export const onContractDeleteEvent = onDocumentDelete('contracts/{contractId}', onContractDelete);
 
-export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', logErrors(onTermDelete));
+export const onContractUpdateEvent = onDocumentUpdate('contracts/{contractId}', onContractUpdate);
+
+export const onTermDeleteEvent = onDocumentDelete('terms/{termId}', onTermDelete);
