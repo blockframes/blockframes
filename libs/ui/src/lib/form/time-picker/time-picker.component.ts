@@ -217,7 +217,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   scrollToOption() {
     const time =this.form.get('time').value
     const index = hours.indexOf(time);
-    const option = this.document.getElementsByClassName(`${this.tagID}-${index}`)[0];
+    const option = this.document.getElementById(`${this.tagID}-${index}`)[0];
     option.scrollIntoView();
   }
 }
