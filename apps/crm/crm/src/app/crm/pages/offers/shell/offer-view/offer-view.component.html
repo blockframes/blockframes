@@ -12,21 +12,21 @@
         </mat-form-field>
         <button mat-flat-button color="primary" (click)="update(contracts, offer.id)">Update</button>
       </div>
-      <mat-card class="margin-bottom">
+      <section class="surface">
         <p>Buyer's Specific Terms</p>
         <mat-form-field appearance="outline">
           <textarea matInput formControlName="specificity"></textarea>
         </mat-form-field>
-      </mat-card>
-      <mat-card class="margin-bottom">
+      </section>
+      <section class="surface">
         <p>Buyers Delivery Wishlist</p>
         <mat-form-field appearance="outline">
           <textarea matInput formControlName="delivery"></textarea>
         </mat-form-field>
-      </mat-card>
+      </section>
     </form>
 
-    <mat-card class="margin-bottom space-horizontal">
+    <section class="surface">
       <p>Contracts in the package</p>
       <bf-table-filter [source]="contracts" [columns]="columns">
         <ng-template colRef="titleId" let-titleId>
@@ -55,13 +55,13 @@
           </div>
         </ng-template>
       </bf-table-filter>
-    </mat-card>
-    <section fxLayout="row" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" class="add-title margin-bottom" (click)="addTitle(offer)"
+    </section>
+    <footer fxLayout="row" fxLayoutAlign="center center">
+      <button mat-flat-button color="primary" class="add-title" (click)="addTitle(offer)"
         [disabled]="loading$ | async">
         Add a right to a title
       </button>
-    </section>
+    </footer>
   </ng-container>
 </ng-container>
 

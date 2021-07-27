@@ -61,6 +61,7 @@ export class OfferShellComponent {
         seller: contract => {
           // Get the ID of the seller, not AC
           const sellerId = contract.stakeholders.find(id => id !== contract.sellerId && id !== contract.buyerId);
+          if (!sellerId) return null;
           return this.orgService.valueChanges(sellerId);
         }
       })
