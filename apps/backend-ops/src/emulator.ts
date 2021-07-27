@@ -19,7 +19,7 @@ import {
   firebaseEmulatorExec
 } from '@blockframes/firebase-utils';
 import { ChildProcess } from 'child_process';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin'
 import { backupBucket, firebase } from '@env'
@@ -27,7 +27,7 @@ import { migrate } from './migrations';
 import { generateWatermarks, syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { resolve } from 'path';
+import { openSync } from 'fs';
 
 /**
  * This function will download the Firestore backup from specified bucket, import it into
@@ -86,6 +86,7 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
       importPath: emulatorPath,
       exportData: true
     })
+    openSync(join(emulatorPath, '.ready'), 'w');
     await awaitProcessExit(proc);
   } catch (e) {
     await shutdownEmulator(proc)

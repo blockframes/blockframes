@@ -35,6 +35,14 @@ references:
     - staging
 
 commands:
+  start_e2e_emulators:
+    steps:
+      - restore_cache:
+          keys:
+            - emulator-cache
+      - run:
+          background: true
+          command: npm start emulators
   fail_on_production:
     description: Exit if run against production - failsafe
     steps:
@@ -152,7 +160,7 @@ commands:
 
               npx nx run crm-e2e:e2e:ci --headless && crm_ret_code=$? || crm_ret_code=$?
 
-              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $crm_ret_code -eq 0 ]; then 
+              if [ $catalog_ret_code -eq 0 ] && [ $festival_ret_code -eq 0 ] && [ $financiers_ret_code -eq 0 ] && [ $crm_ret_code -eq 0 ]; then
                 exit 0;
               else
                 exit 1;
@@ -328,6 +336,24 @@ jobs:
     steps:
       - prepare_environment
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
+  catalog-e2e:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - start_e2e_emulators
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
+  prepare-emulators:
+    executor: blockframes-ci
+    steps:
+      - prepare_environment
+      - run: npm start prepareEmulators
+      - run: npx nx build backend-functions
+      - save_cache:
+          key: emulator-cache
+          paths:
+            - ".firebase/emulator"
+            - "dist/apps/backend-functions"
+            - "~/.cache/firebase/emulators"
 workflows:
   anon-db:
     jobs:
@@ -418,3 +444,16 @@ workflows:
             branches:
               only:
                 - ci
+  e2e-tests:
+    jobs:
+      - prepare-emulators:
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - catalog-e2e:
+          requires:
+            - prepare-emulators
+          filters:
+            branches:
+              ignore: *deployment_branches
+
