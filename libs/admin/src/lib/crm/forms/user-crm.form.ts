@@ -2,7 +2,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { User, createUser } from '@blockframes/auth/+state/auth.store';
 
-function createUserAdminControls(entity: Partial<User>) {
+function createUserCrmControls(entity: Partial<User>) {
   const user = createUser(entity);
   return {
     email: new FormControl(user.email, [Validators.required, Validators.email]),
@@ -14,10 +14,10 @@ function createUserAdminControls(entity: Partial<User>) {
   };
 }
 
-type UserAdminControl = ReturnType<typeof createUserAdminControls>;
+type UserCrmControl = ReturnType<typeof createUserCrmControls>;
 
-export class UserAdminForm extends FormEntity<UserAdminControl> {
+export class UserCrmForm extends FormEntity<UserCrmControl> {
   constructor(data?: User) {
-    super(createUserAdminControls(data));
+    super(createUserCrmControls(data));
   }
 }

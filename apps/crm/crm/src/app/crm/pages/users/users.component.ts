@@ -3,15 +3,15 @@ import { Router } from '@angular/router';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
-import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
+import { CrmService } from '@blockframes/admin/crm/+state/crm.service';
+import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { orgName } from '@blockframes/organization/+state';
 import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
 import { territories } from '@blockframes/utils/static-model/static-model';
 
 @Component({
-  selector: 'admin-users',
+  selector: 'crm-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -49,8 +49,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private cdRef: ChangeDetectorRef,
-    private adminService: AdminService,
-    private adminQuery: AdminQuery,
+    private crmService: CrmService,
+    private crmQuery: CrmQuery,
     private orgService: OrganizationService,
     private router: Router,
   ) { }
@@ -59,7 +59,7 @@ export class UsersComponent implements OnInit {
     const [users, orgs] = await Promise.all([
       this.userService.getAllUsers(),
       this.orgService.getValue(),
-      this.adminService.loadAnalyticsData()
+      this.crmService.loadAnalyticsData()
     ]);
     this.rows = users.map(u => {
       const org = orgs.find(o => o.id === u.orgId);
@@ -68,10 +68,10 @@ export class UsersComponent implements OnInit {
         firstName: u.firstName,
         lastName: u.lastName,
         email: u.email,
-        firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
-        lastConnexion: this.adminQuery.getLastConnexion(u.uid),
-        pageView: this.adminQuery.getPageView(u.uid),
-        sessionCount: this.adminQuery.getSessionCount(u.uid),
+        firstConnexion: this.crmQuery.getFirstConnexion(u.uid),
+        lastConnexion: this.crmQuery.getLastConnexion(u.uid),
+        pageView: this.crmQuery.getPageView(u.uid),
+        sessionCount: this.crmQuery.getSessionCount(u.uid),
         createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
         org: org,
       };
@@ -105,10 +105,10 @@ export class UsersComponent implements OnInit {
         const org = orgs.find(o => o.id === u.orgId);
         return {
           ...u,
-          firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
-          lastConnexion: this.adminQuery.getLastConnexion(u.uid),
-          pageView: this.adminQuery.getPageView(u.uid),
-          sessionCount: this.adminQuery.getSessionCount(u.uid),
+          firstConnexion: this.crmQuery.getFirstConnexion(u.uid),
+          lastConnexion: this.crmQuery.getLastConnexion(u.uid),
+          pageView: this.crmQuery.getPageView(u.uid),
+          sessionCount: this.crmQuery.getSessionCount(u.uid),
           createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
           edit: {
             id: u.uid,

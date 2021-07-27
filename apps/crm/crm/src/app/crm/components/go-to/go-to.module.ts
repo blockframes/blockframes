@@ -7,7 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 
 // Modules 
-import { GoToAppModule } from '@blockframes/admin/admin/pipes/go-to.pipe';
+import { GoToAppModule } from '@blockframes/admin/crm/pipes/go-to.pipe';
 
 // Components 
 import { GoToComponent } from './go-to.component';

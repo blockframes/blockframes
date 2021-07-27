@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { AdminStore, AdminState } from './admin.store';
+import { CrmStore, CrmState } from './crm.store';
 
 @Injectable({ providedIn: 'root' })
-export class AdminQuery extends Query<AdminState> {
+export class CrmQuery extends Query<CrmState> {
 
-  constructor(protected store: AdminStore) {
+  constructor(protected store: CrmStore) {
     super(store);
   }
 

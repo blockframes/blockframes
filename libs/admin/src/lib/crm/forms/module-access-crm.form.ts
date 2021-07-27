@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { ModuleAccess, createModuleAccess } from '@blockframes/utils/apps';
 
-function createModuleAccessAdminControls(entity: Partial<ModuleAccess>) {
+function createModuleAccessCrmControls(entity: Partial<ModuleAccess>) {
   const moduleAccess = createModuleAccess(entity);
   return {
     marketplace: new FormControl(moduleAccess.marketplace),
@@ -10,10 +10,10 @@ function createModuleAccessAdminControls(entity: Partial<ModuleAccess>) {
   };
 }
 
-type ModuleAccessAdminControl = ReturnType<typeof createModuleAccessAdminControls>;
+type ModuleAccessCrmControl = ReturnType<typeof createModuleAccessCrmControls>;
 
-export class ModuleAccessAdminForm extends FormEntity<ModuleAccessAdminControl> {
+export class ModuleAccessCrmForm extends FormEntity<ModuleAccessCrmControl> {
   constructor(data?: ModuleAccess) {
-    super(createModuleAccessAdminControls(data));
+    super(createModuleAccessCrmControls(data));
   }
 }

@@ -10,7 +10,7 @@ export interface ConnectedUserInfo {
   sessionCount: number,
 }
 
-export interface AdminState {
+export interface CrmState {
   analytics: {
     connectedUsers: ConnectedUserInfo[]
   }
@@ -23,8 +23,8 @@ const initialState = {
 };
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'admin' })
-export class AdminStore extends Store<AdminState> {
+@StoreConfig({ name: 'crm' })
+export class CrmStore extends Store<CrmState> {
 
   constructor() {
     super(initialState);

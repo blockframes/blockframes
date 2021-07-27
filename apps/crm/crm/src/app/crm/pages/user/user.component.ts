@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '@blockframes/auth/+state/auth.store';
-import { UserAdminForm } from '@blockframes/admin/admin/forms/user-admin.form';
+import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
-import { AdminService } from '@blockframes/admin/admin/+state';
+import { CrmService } from '@blockframes/admin/crm/+state';
 import { Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
@@ -30,7 +30,7 @@ export class UserComponent implements OnInit {
   public userOrg: Organization;
   public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
-  public userForm: UserAdminForm;
+  public userForm: UserCrmForm;
   public invitations: Invitation[];
   private originalOrgValue: string;
 
@@ -55,7 +55,7 @@ export class UserComponent implements OnInit {
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private permissionService: PermissionsService,
-    private adminService: AdminService,
+    private crmService: CrmService,
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -163,7 +163,7 @@ export class UserComponent implements OnInit {
   }
 
   public async sendPasswordResetEmail() {
-    await this.adminService.sendPasswordResetEmail(this.user.email);
+    await this.crmService.sendPasswordResetEmail(this.user.email);
     this.snackBar.open(`Reset password email sent to : ${this.user.email}`, 'close', { duration: 2000 });
   }
 

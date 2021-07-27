@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrganizationAdminForm } from '@blockframes/admin/admin/forms/organization-admin.form';
+import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,7 +21,7 @@ import { App, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
 
 @Component({
-  selector: 'admin-organization',
+  selector: 'crm-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -29,7 +29,7 @@ import { BucketService } from '@blockframes/contract/bucket/+state/bucket.servic
 export class OrganizationComponent implements OnInit {
   public orgId = '';
   public org: Organization;
-  public orgForm: OrganizationAdminForm;
+  public orgForm: OrganizationCrmForm;
   public movies: Movie[];
   public members;
   public notifyCheckbox = new FormControl(false);

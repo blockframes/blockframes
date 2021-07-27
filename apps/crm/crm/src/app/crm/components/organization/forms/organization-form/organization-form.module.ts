@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { AdminOrganizationFormComponent } from './organization-form.component';
+import { CrmOrganizationFormComponent } from './organization-form.component';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -39,7 +39,7 @@ import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.
     OrganizationFormDescriptionModule,
     ImageUploaderModule
   ],
-  declarations: [AdminOrganizationFormComponent],
-  exports: [AdminOrganizationFormComponent]
+  declarations: [CrmOrganizationFormComponent],
+  exports: [CrmOrganizationFormComponent]
 })
 export class AdminOrganizationFormModule { }

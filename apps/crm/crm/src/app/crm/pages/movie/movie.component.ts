@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieAdminForm } from '@blockframes/admin/admin/forms/movie-admin.form';
+import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
 import { getValue } from '@blockframes/utils/helpers';
 import { storeStatus, productionStatus } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -26,7 +26,7 @@ import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 export class MovieComponent implements OnInit {
   public movieId = '';
   public movie: Movie;
-  public movieForm: MovieAdminForm;
+  public movieForm: MovieCrmForm;
   public movieAppConfigForm: MovieAppConfigForm;
   public storeStatus = storeStatus;
   public productionStatus = productionStatus;

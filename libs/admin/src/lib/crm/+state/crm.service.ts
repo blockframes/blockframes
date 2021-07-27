@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AdminStore } from './admin.store';
+import { CrmStore } from './crm.store';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -16,9 +16,9 @@ interface AnalyticsActiveUser {
 }
 
 @Injectable({ providedIn: 'root' })
-export class AdminService {
+export class CrmService {
   constructor(
-    protected store: AdminStore,
+    protected store: CrmStore,
     private functions: AngularFireFunctions,
     private auth: AngularFireAuth,
   ) { }

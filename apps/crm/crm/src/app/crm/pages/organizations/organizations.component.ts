@@ -8,7 +8,7 @@ import { Organization } from '@blockframes/organization/+state';
 import { getAllAppsExcept, appName, modules } from '@blockframes/utils/apps';
 
 @Component({
-  selector: 'admin-organizations',
+  selector: 'crm-organizations',
   templateUrl: './organizations.component.html',
   styleUrls: ['./organizations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,20 +1,20 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 // Blockframes
 import { organizationStatus } from '@blockframes/utils/static-model';
-import { OrganizationAdminForm } from '@blockframes/admin/admin/forms/organization-admin.form';
+import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
-  selector: '[form] admin-organization-form',
+  selector: '[form] crm-organization-form',
   templateUrl: './organization-form.component.html',
   styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdminOrganizationFormComponent {
-  @Input() form: OrganizationAdminForm;
+export class CrmOrganizationFormComponent {
+  @Input() form: OrganizationCrmForm;
 
   @Input() @boolean disableCropper = false;
   @Input() orgId: string;

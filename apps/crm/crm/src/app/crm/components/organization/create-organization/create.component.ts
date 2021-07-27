@@ -8,7 +8,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '@blockframes/user/+state';
 import { FormEntity } from '@blockframes/utils/form';
-import { OrganizationAdminForm } from '@blockframes/admin/admin/forms/organization-admin.form';
+import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { getOrgAppAccess } from '@blockframes/utils/apps';
 
 @Component({
@@ -18,7 +18,7 @@ import { getOrgAppAccess } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationCreateComponent {
-  public form = new OrganizationAdminForm();
+  public form = new OrganizationCrmForm();
   public superAdminForm = new FormEntity({
     email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this))
   }, {
