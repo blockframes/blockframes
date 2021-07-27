@@ -84,6 +84,7 @@ commands:
       - run: touch .env # dotenv will crash without this
       - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install
+      - run: npx cypress install
       - run:
           name: 'Verify that this PR is not introducing weird package.json changes'
           command: |
@@ -97,6 +98,7 @@ commands:
       - save_cache:
           paths:
             - node_modules
+            - /home/circleci/.cache/Cypress
           key: dependencies-v1-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
       - save_cache:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
