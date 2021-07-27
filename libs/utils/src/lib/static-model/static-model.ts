@@ -435,6 +435,12 @@ export const invitationType = {
   joinOrganization: 'Join organization'
 } as const
 
+export const invitationStatus = {
+  accepted: 'Accepted',
+  declined: 'Declined',
+  pending: 'Pending'
+} as const
+
 export const festival = {
   berlinale: 'Berlin International Film Festival (The Berlinale)',
   bfta: 'BAFTA Film Awards',
@@ -1262,6 +1268,7 @@ export const staticModel = {
   genres,
   hostedVideoTypes,
   invitationType,
+  invitationStatus,
   languages,
   medias,
   memberStatus,
