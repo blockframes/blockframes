@@ -30,7 +30,7 @@ function createBucketTermControl(params: Partial<BucketTerm> = {}) {
       to: new FormControl(term.duration?.to)
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
-    runs: new RunsForm(term.runs)
+    runs: new RunsForm(term.runs),
   }
 }
 

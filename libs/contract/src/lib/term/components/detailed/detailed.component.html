@@ -18,6 +18,8 @@
     </ng-container>
   </ng-container>
   <ng-template #default>
-    <p>{{ data.terms | toLabel:data.scope }}</p>
+    <mat-chip disableRipple *ngFor="let item of data.terms">
+      {{ item | toLabel: data.scope }}
+    </mat-chip>
   </ng-template>
 </section>
