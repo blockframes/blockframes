@@ -2,16 +2,11 @@
   text-transform: uppercase;
   white-space: nowrap;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0;
-  border: transparent;
-  min-width: 64px;
   padding: 12px 16px;
   border-radius: 4px;
-  color: var(--primary-contrast);
-  background-color: var(--primary-lighter);
-  transition: background 1s;
+  color: #FFF;
+  background-color: #8da4fa;
+  transition: background-color 1s;
   box-shadow: 0 0 0 0 rgba(87, 95, 148, 0.64);
   animation: pulse 2s infinite cubic-bezier(0.20, 0, 0, 0.5);
   cursor: pointer;
@@ -21,49 +16,50 @@
     height: 24px;
     margin-right: 8px;
 
-    .outCircle {
-      width: 24px;
-      height: 24px;
-      background-color: #FFF;
-      border-radius: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
+    // .outCircle {
+    //   width: 24px;
+    //   height: 24px;
+    //   background-color: #FFF;
+    //   border-radius: 100%;
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   position: relative;
 
       .play {
         position: absolute;
-        top: 19%;
-        left: 21%;
+        // top: 19%;
+        // left: 21%;
         z-index: 2;
       }
 
-      .rotate {
-        width: 18px;
-        height: 18px;
-        border-radius: 100%;
+      .satellite {
+        // width: 18px;
+        // height: 18px;
+        // border-radius: 100%;
+        transform-origin: center;
         animation: circle 10s infinite linear;
-        background-color: var(--primary-lighter);
+        // background-color: #8da4fa;
 
-        .counterrotate {
-          width: 3px;
-          height: 3px;
+    //     .counterrotate {
+    //       width: 3px;
+    //       height: 3px;
 
-          .inner {
-            width: 5px;
-            height: 5px;
-            background-color: var(--primary);
-            display: block;
-            border-radius: 100%;
-          }
-        }
-      }
+    //       .inner {
+    //         width: 5px;
+    //         height: 5px;
+    //         background-color: #3C64F7;
+    //         display: block;
+    //         border-radius: 100%;
+    //       }
+    //     }
+    //   }
     }
   }
 }
 
 :host:hover {
-  background: var(--primary);
+  background: #3C64F7;
 }
 
 span {
