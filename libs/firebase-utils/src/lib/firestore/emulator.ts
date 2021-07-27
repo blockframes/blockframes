@@ -184,7 +184,7 @@ function createEmulatorMetadataJson(emuPath: string) {
  * @param proc the `ChildPRocess` object for the running emulator process.
  * @param timeLimit number of seconds to await gracefull shutdown before SIGKILL
  */
-export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit: number = 60 * 2) {
+export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit: number = 30) {
   if (!proc) {
     console.warn('Kill emulator process cannot run as there is no process');
     return;
