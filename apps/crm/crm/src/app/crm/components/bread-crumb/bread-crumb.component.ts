@@ -17,8 +17,6 @@ type BreadCrumbConfig = Record<string, BreadCrumbItem>;
 })
 export class BreadCrumbComponent {
 
-  crmDefaultPath = '/c/o/dashboard/crm/';
-
   config: BreadCrumbConfig = {
     'dev-area': {
       path: 'dev-area',
