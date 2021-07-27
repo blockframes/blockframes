@@ -1,8 +1,8 @@
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
 import { RunsForm } from '@blockframes/contract/avails/form/runs.form';
-import { AvailsFilter, DurationMarker, getCollidingHoldbacks, isSameCalendarTerm, isSameMapTerm, TerritoryMarker } from '../avails/avails';
+import { AvailsFilter, DurationMarker, isSameCalendarTerm, isSameMapTerm, TerritoryMarker } from '../avails/avails';
 import {
   Bucket,
   BucketContract,
@@ -15,7 +15,6 @@ import {
 } from './+state/bucket.model';
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Holdback } from '../contract/+state';
 
 //////////
 // TERM //
