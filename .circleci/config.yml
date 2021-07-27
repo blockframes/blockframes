@@ -346,9 +346,7 @@ jobs:
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e
       - store_artifacts:
-          path: dist/cypress/apps/crm/crm-e2e/videos
-      - store_artifacts:
-          path: dist/cypress/apps/crm/crm-e2e/screenshots
+          path: dist/cypress/apps
   festival-e2e:
     executor: blockframes-ci
     steps:
@@ -356,9 +354,7 @@ jobs:
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e
       - store_artifacts:
-          path: dist/cypress/apps/festival/festival-e2e/videos
-      - store_artifacts:
-          path: dist/cypress/apps/festival/festival-e2e/screenshots
+          path: dist/cypress/apps
   financiers-e2e:
     executor: blockframes-ci
     steps:
@@ -366,9 +362,7 @@ jobs:
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e
       - store_artifacts:
-          path: dist/cypress/apps/financiers/financiers-e2e/videos
-      - store_artifacts:
-          path: dist/cypress/apps/financiers/financiers-e2e/screenshots
+          path: dist/cypress/apps
   catalog-e2e:
     executor: blockframes-ci
     steps:
@@ -376,9 +370,7 @@ jobs:
       - start_e2e_emulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e
       - store_artifacts:
-          path: dist/cypress/apps/catalog/catalog-e2e/videos
-      - store_artifacts:
-          path: dist/cypress/apps/catalog/catalog-e2e/screenshots
+          path: dist/cypress/apps
   prepare-emulators:
     executor: blockframes-ci
     steps:
