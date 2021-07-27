@@ -92,7 +92,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest, from).catch(e => console.warn(e.message)),
+    sendMail(emailRequest, from, 0).catch(e => console.warn(e.message)),
     // Update algolia's index
     storeSearchableOrg(org)
   ]);

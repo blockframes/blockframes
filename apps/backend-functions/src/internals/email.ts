@@ -30,13 +30,11 @@ const groupsToDisplay = [unsubscribeGroupIds.allExceptCriticals];
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId) {
+export async function sendMail(email: EmailRequest, from: EmailJSON = getSendgridFrom(), groupId: number = criticalsEmailsGroupId) {
   const msg: MailDataRequired = {
+    ...email,
     from,
-    to,
-    subject,
-    text,
-    asm: { groupId, groupsToDisplay },
+    asm: groupId ? { groupId, groupsToDisplay } : undefined,
     substitutions: substitutions,
     customArgs: { projectId }
   };
