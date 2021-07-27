@@ -2,7 +2,7 @@
 <mat-card>
   <h5>Access</h5>
   <span>{{ event.id }} </span>
-  <admin-go-to type="event" [id]="event.id" [catalog]="false"></admin-go-to>
+  <crm-go-to type="event" [id]="event.id" [catalog]="false"></crm-go-to>
   <h5>Owner</h5>
   <ng-container *ngIf="org">
     <a [routerLink]="['/c/o/dashboard/crm/organization', org.id]">

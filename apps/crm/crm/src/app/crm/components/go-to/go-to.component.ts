@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { appUrl } from '@env';
 
 @Component({
-  selector: 'admin-go-to',
+  selector: 'crm-go-to',
   templateUrl: './go-to.component.html',
   styleUrls: ['./go-to.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

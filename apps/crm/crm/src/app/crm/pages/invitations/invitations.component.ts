@@ -9,7 +9,7 @@ import { MovieService, Movie } from '@blockframes/movie/+state';
 
 
 @Component({
-  selector: 'admin-invitations',
+  selector: 'crm-invitations',
   templateUrl: './invitations.component.html',
   styleUrls: ['./invitations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

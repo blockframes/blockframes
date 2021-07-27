@@ -7,7 +7,7 @@ import { sendgridEmailsFrom } from '@blockframes/utils/apps';
 import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
-  selector: 'admin-mails',
+  selector: 'crm-mails',
   templateUrl: './mails.component.html',
   styleUrls: ['./mails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

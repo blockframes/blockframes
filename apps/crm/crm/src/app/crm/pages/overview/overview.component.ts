@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'admin-overview',
+  selector: 'crm-overview',
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss']
 })

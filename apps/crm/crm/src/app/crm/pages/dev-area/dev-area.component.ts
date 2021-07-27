@@ -4,7 +4,7 @@ import { first } from 'rxjs/operators';
 import { firebase } from '@env';
 
 @Component({
-  selector: 'admin-dev-area',
+  selector: 'crm-dev-area',
   templateUrl: './dev-area.component.html',
   styleUrls: ['./dev-area.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

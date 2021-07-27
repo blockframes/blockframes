@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { OrganizationService, orgName } from '@blockframes/organization/+state';
 
 @Component({
-  selector: 'admin-events',
+  selector: 'crm-events',
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

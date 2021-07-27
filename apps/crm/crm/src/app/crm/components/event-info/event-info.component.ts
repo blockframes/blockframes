@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
-  selector: 'admin-event-info',
+  selector: 'crm-event-info',
   templateUrl: './event-info.component.html',
   styleUrls: ['./event-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

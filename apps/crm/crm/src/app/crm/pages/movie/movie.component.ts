@@ -18,7 +18,7 @@ import { CampaignService } from '@blockframes/campaign/+state';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
-  selector: 'admin-movie',
+  selector: 'crm-movie',
   templateUrl: './movie.component.html',
   styleUrls: ['./movie.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

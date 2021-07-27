@@ -3,7 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { datastudio } from '@env'
 
 @Component({
-  selector: 'admin-dashboard',
+  selector: 'crm-dashboard',
   templateUrl: 'dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

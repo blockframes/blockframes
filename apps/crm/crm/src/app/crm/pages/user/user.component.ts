@@ -18,7 +18,7 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Component({
-  selector: 'admin-user',
+  selector: 'crm-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -73,7 +73,7 @@ export class UserComponent implements OnInit {
         this.userOrgRole = await this.organizationService.getMemberRole(this.user.orgId, this.user.uid);
       }
 
-      this.userForm = new UserAdminForm(this.user);
+      this.userForm = new UserCrmForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
 
       this.cdRef.markForCheck();

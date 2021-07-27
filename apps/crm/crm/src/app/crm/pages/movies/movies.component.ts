@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { EventService, isScreening } from '@blockframes/event/+state';
 
 @Component({
-  selector: 'admin-movies',
+  selector: 'crm-movies',
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

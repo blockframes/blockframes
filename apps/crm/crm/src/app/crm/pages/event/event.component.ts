@@ -6,7 +6,7 @@ import { MovieService, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'admin-event',
+  selector: 'crm-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
