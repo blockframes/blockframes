@@ -1,5 +1,5 @@
 <main fxLayout="column">
-  <h1><a routerLink="/c/o/dashboard/crm/">CRM dashboard</a> > Invitations</h1>
+  <crm-bread-crumb></crm-bread-crumb>
   <article fxLayout="column" fxLayoutAlign="center center">
     <button [disabled]="!invitationListLoaded" mat-flat-button color="primary" (click)="exportTable()">
       <span>Export to CSV</span>

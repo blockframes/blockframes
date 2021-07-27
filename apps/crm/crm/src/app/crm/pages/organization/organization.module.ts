@@ -28,6 +28,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../../components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from '../../components/organization/forms/organization-form/organization-form.module';
 import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.module';
+import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.mo
     OrgNameModule,
     GoToModule,
     AdminOrganizationFormModule,
-    FileExplorerModule
+    FileExplorerModule,
+    BreadCrumbModule
   ],
   declarations: [
     OrganizationComponent,
