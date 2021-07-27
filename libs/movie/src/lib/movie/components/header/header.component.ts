@@ -66,10 +66,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const events$ = this.eventService.queryByType(['screening'], q);
     this.sub = events$.subscribe(screenings => {
       screenings.sort(this.sortByDate);
-      this.eventId = screenings[0].id;
-      return screenings[0].start <= new Date() && new Date() <= screenings[0].end
-        ? this.screeningOngoing = true
-        : this.screeningOngoing = false;
+      const screeningsRemaining = [];
+      for (const screening of screenings) {
+        if (screening.end >= new Date()) {
+          screeningsRemaining.push(screening);
+        }
+      }
+      if (screeningsRemaining.length) {
+        this.eventId = screeningsRemaining[0].id;
+        return screeningsRemaining[0].start <= new Date() && new Date() <= screeningsRemaining[0].end
+          ? this.screeningOngoing = true
+          : this.screeningOngoing = false;
+      }
     });
   }
 
