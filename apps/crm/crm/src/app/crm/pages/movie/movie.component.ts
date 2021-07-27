@@ -65,7 +65,7 @@ export class MovieComponent implements OnInit {
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     this.movie = await this.movieService.getValue(this.movieId);
-    this.movieForm = new MovieAdminForm(this.movie);
+    this.movieForm = new MovieCrmForm(this.movie);
     this.movieAppConfigForm = new MovieAppConfigForm(this.movie.app);
 
     this.cdRef.markForCheck();

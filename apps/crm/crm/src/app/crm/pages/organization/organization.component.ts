@@ -87,7 +87,7 @@ export class OrganizationComponent implements OnInit {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
     this.org = await this.organizationService.getValue(this.orgId);
 
-    this.orgForm = new OrganizationAdminForm();
+    this.orgForm = new OrganizationCrmForm();
     this.orgForm.reset(this.org);
 
     const movies = await this.movieService.getValue(fromOrg(this.orgId))
