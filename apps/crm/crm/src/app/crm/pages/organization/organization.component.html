@@ -1,6 +1,10 @@
 <ng-container *ngIf="org">
   <main fxLayout="column" fxFlex fxLayoutGap="40px">
+<<<<<<< HEAD:apps/crm/crm/src/app/crm/pages/organization/organization.component.html
     <crm-bread-crumb>{{ org | orgName:'long' }}</crm-bread-crumb>
+=======
+    <h1><a routerLink="/c/o/dashboard/crm/">CRM dashboard</a> > Organization > {{ orgId }} </h1>
+>>>>>>> origin/develop:apps/crm/crm/src/app/crm/pages/organization/organization.component.html
     <section *ngIf="org" fxLayout="column" fxLayoutGap="40px">
       <article fxLayout="row" fxLayoutAlign="space-between end">
         <organization-display [organization]="org">

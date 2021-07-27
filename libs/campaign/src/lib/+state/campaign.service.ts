@@ -15,6 +15,7 @@ export interface MovieCampaign extends Movie {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'campaigns' })
 export class CampaignService extends CollectionService<CampaignState> {
+  useMemorization = true;
 
   constructor(
     protected store: CampaignStore,

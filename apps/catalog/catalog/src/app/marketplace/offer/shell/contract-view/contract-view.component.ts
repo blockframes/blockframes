@@ -13,10 +13,10 @@ import { map, pluck } from 'rxjs/operators';
 export class ContractViewComponent {
 
   contract$ = combineLatest([
-    this.shell.contracts$,
+    this.shell.offer$,
     this.route.params.pipe(pluck('contractId'))
   ]).pipe(
-    map(([contracts, id]) => contracts.find(contract => contract.id === id))
+    map(([offer, id]) => offer.contracts?.find(contract => contract.id === id))
   );
 
   constructor(

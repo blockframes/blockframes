@@ -31,7 +31,7 @@
             <input matInput type="number" min="0" [value]="contract.price" [attr.test-id]="'price-' + i"
             (input)="setPrice(i, $event.target.value)" (blur)="updatePrice(i, $event.target.value)"/>
             <mat-icon matPrefix [svgIcon]="currencyForm.value"></mat-icon>
-            <mat-hint>If no price entered. Seller will receive "Asking Price"</mat-hint>
+            <mat-hint>Leave this field empty to request an asking price.</mat-hint>
           </mat-form-field>
           <ng-template #termAction let-index="index">
             <a mat-icon-button [routerLink]="['/c/o/marketplace/title', contract.titleId, 'avails']" [queryParams]="{ contract: i, term: index }" matTooltip="Edit">
@@ -45,7 +45,7 @@
             <ng-container *ngIf="contract.titleId | getTitle | async as title">
               <div fxLayout fxLayoutAlign="space-between">
                 <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-                  Delete all rights for this title
+                  Delete all Rights for this Title
                 </button>
                 <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
                   Add Rights

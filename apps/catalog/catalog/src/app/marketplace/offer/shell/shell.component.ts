@@ -1,24 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Contract, ContractService } from '@blockframes/contract/contract/+state';
-import { Income, IncomeService } from '@blockframes/contract/income/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
+import { IncomeService } from '@blockframes/contract/income/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
+import { MovieService } from '@blockframes/movie/+state';
+import { joinWith } from '@blockframes/utils/operators';
 import { Intercom } from 'ng-intercom';
-import { combineLatest } from 'rxjs';
-import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 
-type FullContract = Contract & Income;
-function mergeContracts(contracts: Contract[], incomes: Income[]): Record<string, FullContract> {
-  const result: Record<string, FullContract> = {};
-  for (const contract of contracts) {
-    const income = incomes.find(income => income.id === contract.id);
-    result[contract.id] = {
-      ...contract,
-      ...income,
-    }
-  }
-  return result;
-}
 
 @Component({
   selector: 'catalog-offer-shell',
@@ -31,24 +20,10 @@ export class OfferShellComponent {
 
   offer$ = this.offerId$.pipe(
     switchMap((id: string) => this.offerService.valueChanges(id)),
+    joinWith({
+      contracts: offer => this.getContracts(offer.id)
+    }),
     shareReplay({ bufferSize: 1, refCount: true }),
-  );
-
-  contracts$ = this.offerId$.pipe(
-    switchMap(id => this.contractService.valueChanges(ref => ref.where('offerId', '==', id))),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
-
-  incomes$ = this.offerId$.pipe(
-    switchMap(id => this.incomeService.valueChanges(ref => ref.where('offerId', '==', id))),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
-
-  fullContracts$ = combineLatest([
-    this.contracts$,
-    this.incomes$
-  ]).pipe(
-    map(([contracts, incomes]) => mergeContracts(contracts, incomes))
   );
 
   constructor(
@@ -56,8 +31,18 @@ export class OfferShellComponent {
     private offerService: OfferService,
     private contractService: ContractService,
     private incomeService: IncomeService,
+    private titleService: MovieService,
     @Optional() private intercom?: Intercom
   ) { }
+
+  private getContracts(offerId: string) {
+    return this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId)).pipe(
+      joinWith({
+        title: contract => this.titleService.valueChanges(contract.titleId),
+        income: contract => this.incomeService.valueChanges(contract.id),
+      })
+    );
+  }
 
   openIntercom() {
     this.intercom?.show();

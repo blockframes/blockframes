@@ -6,11 +6,11 @@ import type firebase from 'firebase';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { UserService } from '@blockframes/user/+state';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
+  readonly useMemorization = true;
+
   constructor(
     private organizationQuery: OrganizationQuery,
     private userService: UserService,
