@@ -1,7 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Offer } from '@blockframes/contract/offer/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Query } from "akita-ng-fire";
 import { Observable } from 'rxjs';
 import { appName, getCurrentApp } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
@@ -36,7 +35,7 @@ export class ListComponent {
   filter = new FormControl('');
   filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(startWith(this.filter.value ?? ''));
 
-  constructor(private routerQuery: RouterQuery,) { }
+  constructor(private routerQuery: RouterQuery) { }
 
   /** Dynamic filter of offers for each tab. */
   applyFilter(filter?: AllOfferStatus) {

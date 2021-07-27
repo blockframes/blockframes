@@ -80,14 +80,33 @@ export class UserComponent implements OnInit {
     if (this.form.valid && this.form.value.length) {
       try {
         const unique = Array.from(new Set(this.form.value.map(guest => guest.email.trim().toLowerCase())));
-        const emails = unique.filter(email => !this.invitations.some(inv => inv.toUser?.email === email));
-        if (unique.length > emails.length) {
-          throw new Error('There is already an invitation existing for one or more of these users');
-        }
+
+        // Retreive emails that are not already invited and that did not already made a request to attend event
+        const isInvited = (inv, email) => inv.toUser?.email === email && inv.mode === 'invitation';
+        const hasRequested = (inv, email) => inv.fromUser?.email === email && inv.mode === 'request';
+
+        const emails = unique.filter(email => !this.invitations.some(inv => isInvited(inv, email) || hasRequested(inv, email)));
+
+        // Retreive existing requests for emails we want to invite
+        const requests = unique.map(email => this.invitations.find(inv => hasRequested(inv, email) && inv.status === 'pending')).filter(inv => !!inv);
+
         this.form.reset([]);
         this.sending.next(true);
         const fromOrg = this.ownerOrgId ? await this.orgService.getValue(this.ownerOrgId) : undefined;
-        await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
+
+        // Send invitation to emails
+        if (emails.length) {
+          await this.invitationService.invite(emails, fromOrg).to('attendEvent', this.eventId);
+        }
+
+        // Accept existing requests
+        const promises = requests.map(req => this.invitationService.acceptInvitation(req));
+        await Promise.all(promises);
+
+        if (promises.length === 0 && emails.length === 0) {
+          this.snackBar.open('All selected emails are already invited', 'close', { duration: 5000 });
+        }
+
         this.sending.next(false);
       } catch (error) {
         this.sending.next(false);

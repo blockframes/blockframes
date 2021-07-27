@@ -7,7 +7,6 @@ import {
   MovieOriginalRelease,
   MovieRating,
   MovieLanguageSpecification,
-  OtherLink,
   MovieExpectedPremiere,
   MovieShootingDate,
   MoviePlannedShootingDateRange,
@@ -20,6 +19,7 @@ import {
   MovieVideos,
   MovieVideo,
   MovieAppConfig,
+  MovieDeliveryForm,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -31,7 +31,6 @@ import {
   createMovieStakeholders,
   createMoviePromotional,
   createMovieLanguageSpecification,
-  createOtherLink,
   createShootingPlannedObject,
   createExpectedPremiere,
   createAudienceGoals,
@@ -105,6 +104,7 @@ function createMovieControls(movie: Partial<Movie>) {
     app: new MovieAppConfigForm(entity.app),
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
+    delivery: new MovieDeliveryForm(entity.delivery),
   }
 }
 
@@ -521,7 +521,7 @@ type ReleaseYearFormControl = ReturnType<typeof createReleaseYearFormControl>;
 
 export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
   constructor(runningTime?: Movie['runningTime'], validators: ValidatorFn[] = []) {
-    super(createRunningTimeFormControl(runningTime), [...validators ]);
+    super(createRunningTimeFormControl(runningTime), [...validators]);
   }
 }
 
@@ -542,12 +542,12 @@ type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
 // ------------------------------
 
 export class MovieAppConfigForm extends FormEntity<MovieAppConfigControl> {
-  constructor(app?: Partial<{[app in App]: MovieAppConfig<Date>}>) {
+  constructor(app?: Partial<{ [app in App]: MovieAppConfig<Date> }>) {
     super(createMovieAppConfigFormControl(app));
   }
 }
 
-function createMovieAppConfigFormControl(app?: Partial<{[app in App]: MovieAppConfig<Date>}>) {
+function createMovieAppConfigFormControl(app?: Partial<{ [app in App]: MovieAppConfig<Date> }>) {
   const apps = {};
   for (const a in app) {
     apps[a] = new AppConfigForm(app[a])
@@ -583,21 +583,6 @@ type AppConfigControl = ReturnType<typeof createAppConfigFormControl>;
 //   Every Promotional Elements
 // ------------------------------
 
-export class OtherLinkForm extends FormEntity<OtherLinkControl> {
-  constructor(otherLink?: Partial<OtherLink>) {
-    super(createOtherLinkFormControl(otherLink));
-  }
-}
-
-function createOtherLinkFormControl(otherLink?: Partial<OtherLink>) {
-  const { name, url } = createOtherLink(otherLink);
-  return {
-    name: new FormControl(name, [Validators.required]),
-    url: new FormControl(url, [Validators.required, urlValidators]),
-  }
-}
-
-type OtherLinkControl = ReturnType<typeof createOtherLinkFormControl>;
 
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotional(promotionalElements);
@@ -606,7 +591,6 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     still_photo: FormList.factory(entity.still_photo, el => new StorageFileForm(el)),
 
     // Hosted Media
-    financialDetails: new StorageFileForm(entity.financialDetails),
     presentation_deck: new StorageFileForm(entity.presentation_deck),
     scenario: new StorageFileForm(entity.scenario),
     moodboard: new StorageFileForm(entity.moodboard),
@@ -615,14 +599,6 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
 
     // Hosted Videos
     videos: new MovieVideosForm(entity.videos),
-
-    // External Media
-    clip_link: new FormControl(entity.clip_link, urlValidators),
-    promo_reel_link: new FormControl(entity.promo_reel_link, urlValidators),
-    screener_link: new FormControl(entity.screener_link, urlValidators),
-    trailer_link: new FormControl(entity.trailer_link, urlValidators),
-    teaser_link: new FormControl(entity.teaser_link, urlValidators),
-    other_links: FormList.factory<OtherLink>(entity.other_links, el => new OtherLinkForm(el)),
   }
 }
 

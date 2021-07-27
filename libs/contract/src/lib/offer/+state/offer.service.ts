@@ -8,7 +8,7 @@ import { Income } from '../..//income/+state';
 import { QueryFn } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
-export type OfferWithContracts = Offer & { contracts: Contract[], incomes: Income[] };
+export type OfferWithContracts = Offer & { contracts: (Contract & { income: Income })[] };
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'offers' })
@@ -18,7 +18,7 @@ export class OfferService extends CollectionService<OfferState> {
   constructor(store: OfferStore) {
     super(store);
   }
-  
+
   formatFromFirestore(offer) {
     if (!offer) return;
     return {
@@ -26,7 +26,7 @@ export class OfferService extends CollectionService<OfferState> {
       _meta: formatDocumentMetaFromFirestore(offer?._meta)
     };
   }
-  
+
   queryWithContracts(queryFn?: QueryFn): Observable<OfferWithContracts[]> {
     return queryChanges.call(this, {
       path: 'offers',
@@ -34,11 +34,10 @@ export class OfferService extends CollectionService<OfferState> {
       contracts: (offer: Offer) => ({
         path: 'contracts',
         queryFn: ref => ref.where('offerId', '==', offer.id),
+        income: (contract: Contract) => ({
+          path: `incomes/${contract.id}`,
+        })
       }),
-      incomes: (offer: Offer) => ({
-        path: 'incomes',
-        queryFn: ref => ref.where('offerId', '==', offer.id)
-      })
     } as Query<OfferWithContracts>);
   }
 }

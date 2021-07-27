@@ -1,9 +1,7 @@
 ﻿/// <reference types="cypress" />
 
-import { LandingPage } from '../../support/pages/landing';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { assertMoveTo, clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
-import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
+import { assertMoveTo } from "@blockframes/e2e/utils/functions";
 
 import { SEC } from "@blockframes/e2e/utils/env";
 
@@ -21,18 +19,18 @@ const MOVIE_IMPORT_TIMEOUT = 120 * SEC;
 const CONTRACT_IMPORT_TIMEOUT = 240 * SEC;
 
 const logInAdminAndNavigate = () => {
-  const loginPage: AuthLoginPage = new AuthLoginPage();
-  loginPage.fillSignin(users[0]);
-  loginPage.clickSignIn();
+  cy.log("Log in Admin user Vincent");
+  cy.login(users[0].email, users[0].password);
+  cy.visit('/c/o/marketplace/home');
 
   cy.location('pathname', {timeout: 120 * SEC})
     .should('include', '/marketplace/home');
 
   cy.log("Switch to dashboard home");
   //Reach dashboard home
-  cy.get('catalog-marketplace button[test-id=menu]', {timeout: 3 * SEC})
+  cy.get('catalog-marketplace button[test-id=menu]', {timeout: 60 * SEC})
     .first().click();
-  cy.get('aside a[routerlink="/c/o/dashboard/home"]', {timeout: 0.5 * SEC})
+  cy.get('aside a[routerlink="/c/o/dashboard/home"]', {timeout: 3 * SEC})
     .click();
   cy.wait(5 * SEC);
   cy.get('aside a[routerlink="title"]', {timeout: 5 * SEC})
@@ -47,25 +45,21 @@ const logInAdminAndNavigate = () => {
 
 describe('User can fill and save contract tunnel form', () => {
   beforeEach(() => {
-    clearDataAndPrepareTest();
-    cy.visit('/');
-    const p1 = new LandingPage();
-    p1.clickLogin();
+    cy.viewport('ipad-2', 'landscape');
   });
-  
+
   it('Login as admin, Select Movies and import ', () => {
     logInAdminAndNavigate();
-
     cy.wait(1 * SEC);
 
     cy.log("Select movie type to upload");
     cy.get('mat-form-field', {timeout: 30 * SEC})
       .click();
-    
+
     cy.get('mat-option')
       .contains("Movies")
       .click();
-      
+
     //Import the Movie file here
     cy.log("Start upload by attaching the fixture");
     cy.get('#filePicker', {timeout: 10 * SEC})
@@ -88,7 +82,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log(`Check for ${movieRecords} records in the extracted data`);
     cy.get('p[test-id="record-length"]', {timeout: MOVIE_IMPORT_TIMEOUT})
       .contains(`${movieRecords}`);
-    
+
     cy.log("Selecting all records to submit");
     cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
       .click();
@@ -101,21 +95,22 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log("Movies submitted; navigate back");
     cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
       .click();
+
+    cy.logout();
   });
 
   it('Login as admin, Select contracts and import ', () => {
     logInAdminAndNavigate();
-
     cy.wait(1 * SEC);
 
     cy.log("Select Contract type to upload");
     cy.get('mat-form-field', {timeout: 30 * SEC})
       .click();
-    
+
     cy.get('mat-option')
       .contains("Contract")
       .click();
-      
+
     //Import the Contracts file here
     cy.log("Start upload by attaching the fixture");
     cy.get('#filePicker', {timeout: 10 * SEC})
@@ -138,7 +133,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log(`Check for ${contractRecords} records in the extracted data`);
     cy.get('p[test-id="record-length"]', {timeout: CONTRACT_IMPORT_TIMEOUT})
       .contains(`${contractRecords}`);
-    
+
     cy.log("Selecting all records to submit");
     cy.get('[test-id="select-all"]', {timeout: 10 * SEC})
       .click();
@@ -151,5 +146,7 @@ describe('User can fill and save contract tunnel form', () => {
     cy.log("Contracts submitted; navigate back");
     cy.get('button[test-id="cancel-import"]', { timeout: 3 *SEC })
       .click();
+
+    cy.logout();
   });
 });

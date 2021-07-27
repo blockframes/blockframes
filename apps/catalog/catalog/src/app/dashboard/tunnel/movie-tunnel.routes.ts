@@ -8,8 +8,7 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 
 const appSteps: TunnelStep[] = [{
   title: 'Delivery List',
-  //@TODO(#6293): change icon to propery icon when you receive it.
-  icon: 'specific_delivery_list',
+  icon: 'archive',
   time: 10,
   routes: [{
     path: 'available-materials',

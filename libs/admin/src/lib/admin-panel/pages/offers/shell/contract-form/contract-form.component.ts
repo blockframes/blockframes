@@ -44,7 +44,7 @@ export class ContractFormComponent implements OnInit {
       versions: new MovieVersionInfoForm(term.languages),
       runs: new RunsForm(term.runs)
     }))
-  })
+  });
   titles$ = this.service.valueChanges(ref => ref.where('app.catalog.status', '==', 'accepted'));
   currency?: string;
   indexId: number;
@@ -55,7 +55,7 @@ export class ContractFormComponent implements OnInit {
     'avails.exclusive': 'Exclusivity',
     'versions': 'Versions',
     'runs': '# of broadcasts'
-  }
+  };
   
   constructor(
     private service: MovieService,
@@ -77,7 +77,7 @@ export class ContractFormComponent implements OnInit {
       ]);
       this.form.patchValue({
         titleId: contract?.titleId,
-        price: income?.price
+        price: income.price ? income.price :  0
       })
       this.contract = contract;
       this.income = income;
@@ -91,8 +91,8 @@ export class ContractFormComponent implements OnInit {
         const tabTerms = this.form.get('terms').value;
         const index = tabTerms.findIndex(value => value.id === termId);
         this.indexId = index;
-        }
       }
+    }
 
     async save() {
       if (this.form.valid) {
@@ -108,8 +108,9 @@ export class ContractFormComponent implements OnInit {
           await this.contractService.update(contractId, { titleId, termIds  }, { write });
         }
         if(price !== this.income.price) {
-          await this.incomeService.update(contractId, { price }, { write }); // Update the price in the batch
+          await this.incomeService.update(contractId, { price }, { write });
         }
+        
         await write.commit();
       }
     }

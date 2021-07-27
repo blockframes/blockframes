@@ -40,13 +40,17 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     {
       path: 'additional',
       label: 'Additional',
-    }
+    },
+    {
+      path: 'delivery',
+      label: 'Available Materials',
+    },
   ];
 
   constructor(
     private movieQuery: MovieQuery,
     private dynTitle: DynamicTitleService,
-    private router: Router, 
+    private router: Router,
     private orgQuery: OrganizationQuery
   ) {
     const titleName = this.movieQuery.getActive().title.international || 'No title'

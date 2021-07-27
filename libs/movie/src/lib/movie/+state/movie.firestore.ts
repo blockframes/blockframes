@@ -27,6 +27,9 @@ import { App } from "@blockframes/utils/apps";
 import { DocumentMeta } from "@blockframes/utils/models-meta";
 import { AnalyticsBase } from '@blockframes/utils/analytics/analytics-model';
 import { StorageFile, StorageVideo } from "@blockframes/media/+state/media.firestore";
+import { FormEntity } from "@blockframes/utils/form";
+import { Movie } from ".";
+import { StorageFileForm } from "@blockframes/media/form/media.form";
 
 //////////////////
 // MOVIE OBJECT //
@@ -43,7 +46,7 @@ export interface MovieBase<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
-  app: Partial<{[app in App]: MovieAppConfig<D>}>, //! required
+  app: Partial<{ [app in App]: MovieAppConfig<D> }>, //! required
   audience?: MovieGoalsAudience,
   banner?: StorageFile;
   boxOffice?: BoxOffice[],
@@ -84,17 +87,16 @@ export interface MovieBase<D> {
   synopsis: string, //! required
   title: Title, //! required
   orgIds: string[] //! required
-  campaignStarted: D
+  campaignStarted: D,
+
+  //CATALOG specific
+  delivery?: {
+    file: StorageFile,
+  }
 }
 
 /** Document model of a Movie */
 export type MovieDocument = MovieBase<Timestamp>
-
-/** Public interface of a movie (to notifications). */
-export interface PublicMovie {
-  id: string;
-  title: Title;
-}
 
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
@@ -112,8 +114,6 @@ export interface MovieVideo extends StorageVideo {
 ////////////////////
 
 export interface MoviePromotionalElements {
-
-  financialDetails: StorageFile,
   moodboard: StorageFile,
   notes: MovieNote[],
   presentation_deck: StorageFile,
@@ -121,15 +121,6 @@ export interface MoviePromotionalElements {
   scenario: StorageFile,
   still_photo: StorageFile[],
   videos?: MovieVideos,
-
-  // @TODO #5350 remove the component for external links
-  // + migration for cleaning
-  clip_link: string,
-  promo_reel_link: string,
-  screener_link: string,
-  teaser_link: string,
-  trailer_link: string,
-  other_links: OtherLink[],
 }
 
 ////////////////////
@@ -221,11 +212,6 @@ export interface MovieRunningTime {
   episodeCount?: number
 }
 
-export interface OtherLink {
-  name: string;
-  url: string;
-}
-
 export interface MovieShootingRaw<D> {
   dates?: MovieShootingDateRaw<D>,
   locations?: MovieShootingLocations[]
@@ -301,3 +287,21 @@ export interface MovieAnalytics extends AnalyticsBase {
     past: MovieEventAnalytics[]
   }
 }
+
+// ---------------------------------
+//        MOVIE DELIVERY
+// ---------------------------------
+export class MovieDeliveryForm extends FormEntity<MovieDeliveryControl> {
+  constructor(delivery: Partial<Movie['delivery']> = {}) {
+    super(createMovieDeliveryControls(delivery));
+  }
+}
+
+function createMovieDeliveryControls(delivery: Partial<Movie['delivery']>) {
+  const file = new StorageFileForm(delivery.file)
+  return {
+    file,
+  }
+}
+
+type MovieDeliveryControl = ReturnType<typeof createMovieDeliveryControls>;

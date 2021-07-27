@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-// Blockframes
-
 // Components
 import { MovieFormAvailableMaterialsComponent } from './available-materials.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';

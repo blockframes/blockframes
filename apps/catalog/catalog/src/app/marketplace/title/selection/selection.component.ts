@@ -1,16 +1,17 @@
-import { Component, ChangeDetectionStrategy, Optional, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieCurrency, movieCurrencies } from '@blockframes/utils/static-model';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { movieCurrencies } from '@blockframes/utils/static-model';
+import { Observable, Subject, merge } from 'rxjs';
+import { map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { Movie } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
+import { Holdback } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-selection',
@@ -18,23 +19,14 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent implements OnDestroy {
+export class MarketplaceSelectionComponent {
   withoutCurrencies = Object.keys(movieCurrencies).filter(currency => currency !== 'EUR' && currency !== 'USD');
   public currencyForm = new FormControl('EUR');
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
-  priceChanges = new Subject();
-  total$ = this.priceChanges.pipe(
-    startWith(0),
-    debounceTime(100),
-    map(() => this.getTotal(this.prices)),
-    distinctUntilChanged()
-  );
-
-  private sub = this.currencyForm.valueChanges.pipe(
-    distinctUntilChanged()
-  ).subscribe(value => this.updateCurrency(value));
+  priceChanges = new Subject<number>();
+  total$: Observable<number>;
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -50,37 +42,48 @@ export class MarketplaceSelectionComponent implements OnDestroy {
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);
       })
     );
+
+    const bucketPrices$ = this.bucket$.pipe(
+      map(bucket => bucket.contracts.map(c => c.price))
+    );
+    const localPrice$ = this.priceChanges.pipe(
+      mapTo(this.prices)
+    );
+    this.total$ = merge(bucketPrices$, localPrice$).pipe(
+      map(prices => this.getTotal(prices))
+    );
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 
   private setTitle(amount: number) {
     const title = amount ? 'My Selection' : 'No selections yet';
     this.dynTitle.setPageTitle(title);
   }
 
-  private getTotal(prices) {
+  private getTotal(prices: number[]) {
     return prices.reduce((arr, curr) => (arr + curr), 0)
   }
 
-  updateCurrency(currency: MovieCurrency) {
-    const id = this.orgQuery.getActiveId();
-    this.bucketService.update(id, { currency });
-  }
-
-  setPrice(index: number, price: string) {
-    this.prices[index] =  parseFloat(price);
+  setPrice(index: number, price: string | null) {
+    this.prices[index] = parseFloat(price || '0');  // if "", fallback to '0'
     this.priceChanges.next();
   }
 
   trackById(i: number, doc: { id: string }) { return doc.id; }
 
-  async updatePrice(index: number, price: string) {
+  updateHoldbacks(index: number, holdbacks: Holdback[]) {
+    const id = this.orgQuery.getActiveId();
+    this.bucketService.update(id, bucket => {
+      const contracts = [...bucket.contracts];
+      contracts[index].holdbacks = holdbacks;
+      return { contracts };
+    });
+  }
+
+  updatePrice(index: number, price: string) {
     const id = this.orgQuery.getActiveId();
     const currency = this.currencyForm.value;
-    await this.bucketService.update(id, bucket => {
+    return this.bucketService.update(id, bucket => {
       const contracts = [...bucket.contracts];
       contracts[index].price = parseFloat(price);
       return { contracts, currency };
@@ -139,7 +142,7 @@ export class MarketplaceSelectionComponent implements OnDestroy {
     })) {
       this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
     } else {
-      this.dialog.open(SpecificTermsComponent);
+      this.dialog.open(SpecificTermsComponent, { data: { currency: this.currencyForm.value } });
     }
   }
 

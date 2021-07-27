@@ -10,6 +10,8 @@ import { AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 import { Movie } from '../+state';
 
+export const minReleaseYear = 1980;
+
 export interface LanguagesSearch {
   original: Language[];
   dubbed: Language[];
@@ -24,12 +26,14 @@ export interface MovieSearch extends AlgoliaSearch {
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;
+  minReleaseYear: number;
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
+
   return {
     query: '',
     page: 0,
@@ -45,6 +49,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     },
     productionStatus: [],
     minBudget: 0,
+    minReleaseYear: minReleaseYear,
     sellers: [],
     socialGoals: [],
     ...search,
@@ -71,6 +76,7 @@ function createMovieSearchControl(search: MovieSearch) {
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
+    minReleaseYear: new FormControl(search.minReleaseYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: FormList.factory(search.socialGoals),
     contentType: new FormControl(search.contentType),
@@ -101,6 +107,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get languages() { return this.get('languages'); }
   get productionStatus() { return this.get('productionStatus'); }
   get minBudget() { return this.get('minBudget'); }
+  get minReleaseYear() { return this.get('minReleaseYear'); }
   get sellers() { return this.get('sellers'); }
   get storeStatus() { return this.get('storeStatus'); }
   get socialGoals() { return this.get('socialGoals'); }
@@ -119,11 +126,12 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.languages.value?.caption.length === 0 &&
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
+      this.minReleaseYear.value === minReleaseYear &&
       this.sellers?.value.length === 0 &&
       !this.contentType.value);
   }
 
-  search() {
+  search(needMultipleQueries = false) {
     const search = {
       hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
@@ -143,12 +151,25 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
-
     };
 
     if (this.minBudget.value) {
       search['filters'] = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
+    if (this.minReleaseYear.value) {
+      search['filters'] = `release.year >= ${this.minReleaseYear.value}`;
+    }
+
+    /*
+    Allow the user to use comma or space to separate their research.
+    ex : `France, Berlinale, Action` can be a research but without the `optionalWords`
+    it will be considered as one string/research and not 3 differents.
+    */
+    if (needMultipleQueries) {
+      const multipleQueries: string[] = this.query.value.split(',' || ' ');
+      search['optionalWords'] = multipleQueries;
+    }
+
     return this.movieIndex.search<Movie>(search.query, search);
   }
 }

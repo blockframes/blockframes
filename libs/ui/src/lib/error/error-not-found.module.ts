@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
 
 export const errorRoutes: Routes = [
   { path: '', component: NotFoundComponent},
@@ -16,6 +17,7 @@ export const errorRoutes: Routes = [
     MatCardModule,
     ImageModule,
     FlexLayoutModule,
+    MatButtonModule,
     RouterModule.forChild(errorRoutes)
   ],
   declarations: [NotFoundComponent],

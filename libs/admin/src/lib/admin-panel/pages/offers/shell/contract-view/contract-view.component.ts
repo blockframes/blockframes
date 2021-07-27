@@ -10,7 +10,7 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { Term, TermService } from '@blockframes/contract/term/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractService, contractStatus } from '@blockframes/contract/contract/+state';
+import { ContractService, contractStatus, Holdback } from '@blockframes/contract/contract/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 import { OfferShellComponent } from '../shell.component';
@@ -85,6 +85,10 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.contractService.update(contractId, { status }, { write });
     this.incomeService.update(incomeId, { price }, { write });
     write.commit();
+  }
+
+  updateHoldbacks(contractId: string, holdbacks: Holdback[]) {
+    this.contractService.update(contractId, { holdbacks });
   }
 
   confirm(term: Term) {

@@ -1,5 +1,4 @@
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { PublicMovie } from '@blockframes/movie/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { PublicInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { firestore } from 'firebase-admin';
@@ -58,7 +57,6 @@ export interface NotificationBase<D> {
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
   docId?: string;
-  movie?: PublicMovie;
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket;
