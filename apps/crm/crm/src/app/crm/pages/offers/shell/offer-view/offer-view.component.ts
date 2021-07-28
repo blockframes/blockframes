@@ -1,16 +1,15 @@
-import {
-  Component, ChangeDetectionStrategy, OnDestroy, OnInit
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Contract, ContractService, createSale, Sale } from '@blockframes/contract/contract/+state';
-import { Offer, OfferService } from '@blockframes/contract/offer/+state';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Contract, ContractService, Sale } from '@blockframes/contract/contract/+state';
+import { OfferService } from '@blockframes/contract/offer/+state';
 import { staticModel } from '@blockframes/utils/static-model';
+import { IncomeService } from '@blockframes/contract/income/+state';
+import { TermService } from '@blockframes/contract/term/+state';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'offer-view',
@@ -44,67 +43,58 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private offerService: OfferService,
     private contractService: ContractService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private snackbar: MatSnackBar,
+    private incomeService: IncomeService,
+    private termService: TermService,
+    private snackbar: MatSnackBar
   ) { }
 
-  update(contracts: Contract[], id: string) {
-    const { status, specificity, delivery } = this.form.value;
-
-    this.offerService.update(id, (offer, write) => {
-      contracts.forEach(contract =>
-        this.contractService.update(contract.id, { specificity } as Sale, { write })
-      );
-      return { specificity, status, delivery };
-    });
-  }
-
-  handleDelete(id: string) {
-    this.contractService.remove(id)
-  }
-
-
-  confirmDelete(id: string) {
-    this.dialog.open(ConfirmInputComponent, {
-      data: {
-        title: 'Are you sure you want to delete a right from this package?',
-        subtitle: '',
-        confirmationWord: 'delete',
-        placeholder: 'Please Type « DELETE »',
-        confirm: 'Delete this right',
-        confirmButtonText: 'Delete this right',
-        cancel: 'Cancel',
-        onConfirm: () => {
-          this.handleDelete(id);
-        },
-      },
-      autoFocus: false,
-    });
-  }
-
-  async addTitle(offer: Offer) {
-    const { buyerId, buyerUserId, specificity, id } = offer;
-    const contractId = this.contractService.createId();
-    const contract = createSale({ specificity, id: contractId, buyerId, offerId: id, buyerUserId, })
-    this.loading$.next(true);
-    try {
-      await this.contractService.add(contract);
-      this.router.navigate([`../`, contractId, 'form'], { relativeTo: this.route });
-    } catch (err) {
-      console.warn(err);
-      this.snackbar.open("There was an error, please try later", 'close', { duration: 5000 });
-    }
-    this.loading$.next(false);
-  }
-
   ngOnInit() {
-    this.subscription = this.offer$.subscribe(
-      ({ status, specificity, delivery, }) => this.form.patchValue({ status, specificity, delivery })
-    );
+    this.subscription = this.offer$.subscribe(({ status, specificity, delivery, }) => {
+      this.form.patchValue({ status, specificity, delivery })
+    });
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
+  private async handleDelete(id: string) {
+    this.contractService.runTransaction(async write => {
+      const snap = await write.get(this.contractService.getRef(id));
+      const contract = snap.data() as Contract;
+      return Promise.all([
+        this.termService.remove(contract.termIds, { write }),
+        this.incomeService.remove(id, { write }),
+        this.contractService.remove(id, { write }),
+      ]);
+    });
+  }
+
+  async update(offerId: string, contracts: Contract[]) {
+    const { status, specificity, delivery } = this.form.value;
+    const sale = { specificity } as Sale;
+    const write = this.offerService.batch();
+    await this.offerService.update(offerId, { specificity, status, delivery }, { write });
+    const updateContract = contract => this.contractService.update(contract.id, sale, { write });
+    await Promise.all(contracts.map(updateContract));
+    await write.commit();
+    this.snackbar.open('Updated', '', { duration: 1000 });
+  }
+
+  confirmDelete(id: string) {
+    this.dialog.open(ConfirmInputComponent, {
+      data: {
+        title: 'Are you sure you want to delete a right from this package?',
+        subtitle: 'This action cannot be undone.',
+        confirmationWord: 'delete',
+        placeholder: 'Please Type « DELETE »',
+        confirm: 'Delete this right',
+        confirmButtonText: 'Delete this right',
+        cancel: 'Cancel',
+        onConfirm: () => this.handleDelete(id),
+      },
+      autoFocus: false,
+    });
+  }
+
 }

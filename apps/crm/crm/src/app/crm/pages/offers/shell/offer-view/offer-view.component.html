@@ -1,6 +1,6 @@
 <ng-container *ngIf="offer$ | async as offer; else loading">
   <ng-container *ngIf="offer.contracts as contracts">
-    <form [formGroup]="form" fxLayout="column" class="space-horizontal">
+    <form [formGroup]="form" fxLayout="column" (ngSubmit)="update(offer.id, contracts)">
       <div fxLayoutAlign="space-between center" fxLayout>
         <mat-form-field appearance="outline">
           <mat-label>General Contract Status</mat-label>
@@ -10,7 +10,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <button mat-flat-button color="primary" (click)="update(contracts, offer.id)">Update</button>
+        <button mat-flat-button color="primary" type="submit">Update</button>
       </div>
       <section class="surface">
         <p>Buyer's Specific Terms</p>
@@ -56,12 +56,6 @@
         </ng-template>
       </bf-table-filter>
     </section>
-    <footer fxLayout="row" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" class="add-title" (click)="addTitle(offer)"
-        [disabled]="loading$ | async">
-        Add a right to a title
-      </button>
-    </footer>
   </ng-container>
 </ng-container>
 

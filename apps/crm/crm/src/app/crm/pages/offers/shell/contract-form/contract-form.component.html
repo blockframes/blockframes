@@ -1,5 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="save()">
   <header>
+    <h2>{{ title?.title.international }}</h2>
     <mat-form-field appearance="outline">
       <mat-select formControlName="titleId"  placeholder="Select a title">
         <mat-option *ngFor="let title of (titles$ | async)" [value]="title.id">
