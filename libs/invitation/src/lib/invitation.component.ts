@@ -20,7 +20,6 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   styleUrls: ['./invitation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class InvitationComponent {
   form = new FormGroup({
     type: new FormControl([]),
@@ -69,6 +68,6 @@ export class InvitationComponent {
   }
 
   clearFilters() {
-    this.formName.map(val => this.form.get(val).reset());
+    this.form.reset();
   }
 }
