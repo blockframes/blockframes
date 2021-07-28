@@ -23,10 +23,15 @@
           </ng-container>
         </ng-template>
         <ng-template colRef="id" let-id>
-          <ng-container *ngIf="(id| getIncome | async) as income; else noIncome">
-            {{income.price | currency:income.currency}}
+          <ng-container *ngIf="(id| getIncome | async) as income; else loadingPrice">
+            <ng-container *ngIf="income?.price; else noIncome">
+              {{income.price | currency:income.currency}}
+            </ng-container>
           </ng-container>
           <ng-template #noIncome>No Price</ng-template>
+          <ng-template #loadingPrice>
+            <mat-spinner diameter="15"></mat-spinner>
+          </ng-template>
         </ng-template>
         <ng-template colRef="_meta.createdAt" let-date>{{date | date:'MM/dd/yyyy'}}</ng-template>
         <ng-template colRef="status" let-status>
