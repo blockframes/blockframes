@@ -1,14 +1,10 @@
-.space-horizontal {
-  margin: 0 24px;
-  padding-top: 16px;
+:host {
+  display: block;
+  padding: 32px;
 }
 
-.margin-bottom {
-  margin-bottom: 16px;
-}
-
-
-mat-card {
+section, footer {
+  margin-bottom: 32px;
   p {
     font-weight: bold;
   }
@@ -16,6 +12,7 @@ mat-card {
     width: 100%;
   }
 }
+
 
 .add-title {
   margin-top: 24px;
