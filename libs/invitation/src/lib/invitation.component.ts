@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy} from '@angular/core';
 import { Invitation, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
@@ -21,11 +21,13 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InvitationComponent implements OnInit, OnDestroy{
+export class InvitationComponent {
   form = new FormGroup({
     type: new FormControl([]),
     status: new FormControl([]),
   });
+
+  invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length));
 
   // Invitation that require an action
   invitations$ = combineLatest([
@@ -42,8 +44,7 @@ export class InvitationComponent implements OnInit, OnDestroy{
   )
 
   formName = ['type', 'status'];
-  emptyMessage = false;
-  subscribe: Subscription;
+  loadingCount = true;
 
   constructor(
     private service: InvitationService,
@@ -52,14 +53,6 @@ export class InvitationComponent implements OnInit, OnDestroy{
     private routerQuery: RouterQuery,
     private orgQuery: OrganizationQuery
   ) { }
-
-  ngOnInit() {
-    this.subscribe = this.invitations$.subscribe(val => val.length ? this.emptyMessage = false : this.emptyMessage = true)
-  }
-
-  ngOnDestroy() {
-    this.subscribe.unsubscribe();
-  }
 
   acceptAll(invitations: Invitation[]) {
     const pendingInvitations = invitations.filter(invitation => invitation.status === 'pending');
