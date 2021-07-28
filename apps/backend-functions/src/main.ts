@@ -6,6 +6,7 @@ import {
   onDocumentCreate,
   onDocumentDelete,
   onDocumentUpdate,
+  onDocumentWrite
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
@@ -101,8 +102,8 @@ export const onPermissionDeleteEvent = onDocumentDelete('permissions/{orgID}', o
 //    Invitations Management    //
 //--------------------------------
 
-/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
-export const onInvitationUpdateEvent = onDocumentUpdate('invitations/{invitationID}', onInvitationWrite);
+/** Trigger: when an invitation is created/updated/deleted (e. g. when invitation.status change). */
+export const onInvitationWriteEvent = onDocumentWrite('invitations/{invitationID}', onInvitationWrite);
 
 /** Used to check if users have already an invitation to join org existing */
 export const hasUserAnOrgOrIsAlreadyInvited = functions.https.onCall(invitations.hasUserAnOrgOrIsAlreadyInvited);
