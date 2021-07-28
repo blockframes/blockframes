@@ -7,7 +7,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
@@ -21,13 +21,13 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationComponent {
+  formName = ['type', 'status'];
   form = new FormGroup({
     type: new FormControl([]),
     status: new FormControl([]),
-  });
-
+  })
+  // Invitation count for conditions
   invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length))
-  
   // Invitation that require an action
   invitations$ = combineLatest([
     this.service.myInvitations$,
@@ -41,10 +41,7 @@ export class InvitationComponent {
         this.dynTitle.setPageTitle('Invitations List', 'Empty');
     })
   )
-
-  formName = ['type', 'status'];
-  loadingCount = true;
-
+  
   constructor(
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
