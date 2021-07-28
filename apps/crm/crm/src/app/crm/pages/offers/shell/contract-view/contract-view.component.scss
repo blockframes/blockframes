@@ -1,6 +1,10 @@
+:host {
+  display: block;
+  padding: 32px;
+}
 
-mat-card {
-  margin: 24px;
+section {
+  margin-bottom: 32px;
 
   mat-form-field {
     width: 100%;
@@ -8,7 +12,6 @@ mat-card {
 }
 
 contract-item {
-  margin: 24px;
   p {
     font-weight: bold;
   }
