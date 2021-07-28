@@ -89,6 +89,6 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
  */
 export const sendFirstConnexionEmail = async (user: PublicUser) => {
   const mailRequest = await userFirstConnexion(user);
-  const from = await getSendgridFrom(user._meta.createdFrom);
-  return sendMail(mailRequest, from).catch(e => console.warn(e.message));
+  const from = getSendgridFrom(user._meta.createdFrom);
+  return sendMail(mailRequest, from, 0).catch(e => console.warn(e.message));
 };

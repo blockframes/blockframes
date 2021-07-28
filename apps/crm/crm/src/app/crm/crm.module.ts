@@ -48,6 +48,7 @@ import { OrganizationCreateComponent } from './components/organization/create-or
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
 import { DashboardModule } from './components/dashboard/dashboard.module';
+import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -101,7 +102,8 @@ export const panelRoutes: Routes = [
     MoviePictureUploadModule,
     StaticSelectModule,
     ToDateModule,
-    DashboardModule
+    DashboardModule,
+    BreadCrumbModule
   ],
   declarations: [
     MoviesComponent,

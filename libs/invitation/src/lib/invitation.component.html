@@ -1,7 +1,15 @@
 <ng-container *ngIf="invitations$ | async as invitations; else loading">
   <ng-container *ngIf="invitations.length else empty">
-    <header fxLayout="row" fxLayoutAlign="space-between start">
-      <h1>Invitations</h1>
+    <h1>Invitations</h1>
+    <header fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between start">
+      <form [formGroup]=form fxLayout="row" fxLayout.xs="column">
+        <static-select [control]="form.get('type')" scope="invitationType" multiple="true">
+          <mat-label>Filter by type</mat-label>
+        </static-select>
+        <static-select [control]="form.get('status')" scope="invitationStatus" multiple="true">
+          <mat-label>Filter by status</mat-label>
+        </static-select>
+      </form>
       <button mat-button test-id="invitation-accept-all" (click)="acceptAll(invitations)">
         <mat-icon svgIcon="check_circle"></mat-icon>
         <span>Accept All</span>
@@ -20,6 +28,5 @@
     <h1>You have no invitation yet.</h1>
     <p>You haven't received any invitations at this time.</p>
     <img asset="empty_invitation.svg" alt="No invitations">
-    <button mat-flat-button color="accent" (click)="leadToHomepage()">Back to Homepage</button>
   </section>
 </ng-template>
