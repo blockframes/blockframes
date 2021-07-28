@@ -1,59 +1,20 @@
 :host {
   text-transform: uppercase;
-  white-space: nowrap;
   display: flex;
   padding: 12px 16px;
   border-radius: 4px;
   color: #FFF;
   background-color: #8da4fa;
   transition: background-color 1s;
-  box-shadow: 0 0 0 0 rgba(87, 95, 148, 0.64);
   animation: pulse 2s infinite cubic-bezier(0.20, 0, 0, 0.5);
   cursor: pointer;
 
-  .animated-icon {
-    width: 24px;
-    height: 24px;
+  svg {
     margin-right: 8px;
 
-    // .outCircle {
-    //   width: 24px;
-    //   height: 24px;
-    //   background-color: #FFF;
-    //   border-radius: 100%;
-    //   display: flex;
-    //   justify-content: center;
-    //   align-items: center;
-    //   position: relative;
-
-      .play {
-        position: absolute;
-        // top: 19%;
-        // left: 21%;
-        z-index: 2;
-      }
-
-      .satellite {
-        // width: 18px;
-        // height: 18px;
-        // border-radius: 100%;
-        transform-origin: center;
-        animation: circle 10s infinite linear;
-        // background-color: #8da4fa;
-
-    //     .counterrotate {
-    //       width: 3px;
-    //       height: 3px;
-
-    //       .inner {
-    //         width: 5px;
-    //         height: 5px;
-    //         background-color: #3C64F7;
-    //         display: block;
-    //         border-radius: 100%;
-    //       }
-    //     }
-    //   }
+    circle.satellite {
+      transform-origin: center;
+      animation: circle 10s infinite linear;
     }
   }
 }
@@ -67,6 +28,9 @@ span {
 }
 
 @keyframes pulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(87, 95, 148, 0.64);
+  }
   to {
     box-shadow: 0 0 0 15px rgba(232, 76, 61, 0);
   }

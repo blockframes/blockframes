@@ -17,7 +17,6 @@ import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
 import { MatIconModule } from '@angular/material/icon';
-import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +32,6 @@ import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-butt
     ImageModule,
     MovieTitleFeaturesModule,
     MatIconModule,
-    OngoingButtonModule,
     RouterModule
   ],
   exports: [

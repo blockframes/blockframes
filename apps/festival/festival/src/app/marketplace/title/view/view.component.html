@@ -5,10 +5,15 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
-            <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
+          <div class="cta-button" fxFlex fxLayout fxLayoutAlign="space-between start" fxLayout.lt-md="column" fxLayoutGap.lt-md="16px">
+            <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
+              <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
+              <mat-icon svgIcon="arrow_forward"></mat-icon>
+            </a>
+            <ng-container *ngIf="true">
+              <a ongoing-button [routerLink]="['/c/o/marketplace/event', 'trololo']">Ongoing Screening</a>
+            </ng-container>
+          </div>
         </ng-container>
       </movie-header-cta>
 
