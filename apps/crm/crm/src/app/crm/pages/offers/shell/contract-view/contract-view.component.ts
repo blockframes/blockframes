@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { map, pluck, switchMap } from 'rxjs/operators';
+import { filter, map, pluck, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 
 import { IncomeService } from '@blockframes/contract/income/+state';
@@ -26,28 +26,14 @@ export class ContractViewComponent implements OnInit, OnDestroy {
 
   status = contractStatus;
 
-  offerId$ = this.shell.offerId$;
-  contractId$: Observable<string> = this.route.params.pipe(pluck('contractId'));
-
+  offer$ = this.shell.offer$;
   contract$ = combineLatest([
-    this.contractId$,
-    this.shell.contracts$,
+    this.offer$,
+    this.route.params.pipe(pluck('contractId')),
   ]).pipe(
-    map(([contractId, contracts]) => contracts.find(contract => contract.id === contractId)),
+    map(([offer, contractId]) => offer.contracts?.find(contract => contract.id === contractId)),
+    filter(contract => !!contract)
   );
-
-
-  income$ = combineLatest([
-    this.contractId$,
-    this.shell.incomes$,
-  ]).pipe(
-    map(([contractId, incomes]) => incomes.find(income => income.id === contractId)),
-  );
-
-  sellerOrg$ = this.contract$.pipe(
-    switchMap(contract => this.orgService.valueChanges(contract.sellerId)),
-  );
-
 
   form = new FormGroup({
     status: new FormControl('pending'),
@@ -59,19 +45,17 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private termService: TermService,
     private shell: OfferShellComponent,
     private incomeService: IncomeService,
-    private orgService: OrganizationService,
     private contractService: ContractService,
   ) {}
 
   ngOnInit() {
-    this.sub = combineLatest([
-      this.contract$,
-      this.income$,
-    ]).subscribe(([contract, income]) => {
-      this.form.setValue({ status: contract.status, price: income.price });
+    this.sub = this.contract$.subscribe(contract => {
+      this.form.setValue({
+        status: contract.status,
+        price: contract.income?.price ?? 0
+      });
     });
   }
 
@@ -79,11 +63,11 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  update(contractId: string, incomeId: string) {
+  update(contractId: string) {
     const write = this.contractService.batch();
     const { status, price} = this.form.value;
     this.contractService.update(contractId, { status }, { write });
-    this.incomeService.update(incomeId, { price }, { write });
+    this.incomeService.update(contractId, { price }, { write });
     write.commit();
   }
 
