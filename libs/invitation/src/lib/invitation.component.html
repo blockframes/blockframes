@@ -1,5 +1,4 @@
 <ng-container *ngIf="invitations$ | async as invitations; else loading">
-  <ng-container *ngIf="invitations.length else empty">
     <h1>Invitations</h1>
     <header fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between start">
       <form [formGroup]=form fxLayout="row" fxLayout.xs="column">
@@ -10,7 +9,7 @@
           <mat-label>Filter by status</mat-label>
         </static-select>
       </form>
-      <button mat-button (click)="clear()" matTooltip="Clear fields">
+      <button mat-button (click)="clearFilters()" matTooltip="Clear fields">
         <mat-icon svgIcon="refresh_filters"></mat-icon>
         Clear filters
       </button>
@@ -19,18 +18,18 @@
         <span>Accept All</span>
       </button>
     </header>
-    <invitation-list [invitations]="invitations" class="surface"></invitation-list>
-  </ng-container>
+    <invitation-list *ngIf="!emptyMessage" [invitations]="invitations" class="surface"></invitation-list>
+    <ng-container *ngIf="emptyMessage">
+      <section fxLayout="column" fxLayoutAlign="center center">
+        <h1>You have no invitation yet</h1>
+        <p>Reload the page or click on the clear filter button above</p>
+        <img asset="empty_invitation.svg" alt="No invitations">
+      </section>
+    </ng-container>
 </ng-container>
 <ng-template #loading>
   <article fxLayout="column" fxLayoutAlign="center center">
     <mat-spinner color="primary"></mat-spinner>
   </article>
 </ng-template>
-<ng-template #empty>
-  <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>You have no invitation yet.</h1>
-    <p>You haven't received any invitations at this time.</p>
-    <img asset="empty_invitation.svg" alt="No invitations">
-  </section>
-</ng-template>
+

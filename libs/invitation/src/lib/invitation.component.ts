@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Invitation, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
@@ -10,8 +10,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
-  const inv = filters.type.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
-  return filters.status.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
+  const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
+  return filters.status?.length ? inv.filter(inv => filters.status.includes(inv.status)) : inv;
 };
 
 @Component({
@@ -20,16 +20,19 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   styleUrls: ['./invitation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvitationComponent {
+
+export class InvitationComponent implements OnInit{
   form = new FormGroup({
     type: new FormControl([]),
     status: new FormControl([]),
   });
+
   // Invitation that require an action
   invitations$ = combineLatest([
     this.service.myInvitations$,
     this.form.valueChanges.pipe(startWith({ type: [], status: []  }))
-  ]).pipe(
+  ])
+  .pipe(
     map(([invitations, filters]) => applyFilters(invitations, filters)),
     tap(invitations => {
       invitations.length ?
@@ -38,6 +41,9 @@ export class InvitationComponent {
     })
   )
 
+  formName = ['type', 'status'];
+  emptyMessage = false;
+
   constructor(
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
@@ -45,6 +51,10 @@ export class InvitationComponent {
     private routerQuery: RouterQuery,
     private orgQuery: OrganizationQuery
   ) { }
+
+  ngOnInit() {
+    this.invitations$.subscribe(val => val.length ? this.emptyMessage = false : this.emptyMessage = true)
+  }
 
   acceptAll(invitations: Invitation[]) {
     const pendingInvitations = invitations.filter(invitation => invitation.status === 'pending');
@@ -60,7 +70,11 @@ export class InvitationComponent {
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);
   }
 
-  clear() {
-    
+  clearSelect (formName: string[]) {
+    formName.map(val => this.form.get(val).reset());
+  }
+
+  clearFilters() {
+    this.clearSelect (this.formName);
   }
 }
