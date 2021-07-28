@@ -10,8 +10,8 @@
               <span>{{ org.activity === 'intlSales' ? 'Contact Sales Agent' : 'Contact' }}</span>
               <mat-icon svgIcon="arrow_forward"></mat-icon>
             </a>
-            <ng-container *ngIf="true">
-              <a ongoing-button [routerLink]="['/c/o/marketplace/event', 'trololo']">Ongoing Screening</a>
+            <ng-container *ngIf="screeningOngoing">
+              <a ongoing-button [routerLink]="['/c/o/marketplace/event', eventId]">Ongoing Screening</a>
             </ng-container>
           </div>
         </ng-container>

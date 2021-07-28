@@ -52,22 +52,18 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
     const q = ref => ref
     .where('isSecret', '==', false)
     .where('meta.titleId', '==', this.movieId)
-    .where('type', '==', 'screening');
+    .where('type', '==', 'screening')
+    .orderBy('end', 'asc')
+    .startAt(new Date());
 
     const events$ = this.eventService.queryByType(['screening'], q);
     this.sub = events$.subscribe(screenings => {
+      screenings.filter(s => s.start < new Date());
       screenings.sort(this.sortByDate);
-      const screeningsRemaining = [];
-      for (const screening of screenings) {
-        if (screening.end >= new Date()) {
-          screeningsRemaining.push(screening);
-        }
-      }
-      if (screeningsRemaining.length) {
-        this.eventId = screeningsRemaining[0].id;
-        return screeningsRemaining[0].start <= new Date() && new Date() <= screeningsRemaining[0].end
-          ? this.screeningOngoing = true
-          : this.screeningOngoing = false;
+
+      if (screenings.length) {
+        this.eventId = screenings[0].id;
+        return this.screeningOngoing = true;
       }
     });
   }
