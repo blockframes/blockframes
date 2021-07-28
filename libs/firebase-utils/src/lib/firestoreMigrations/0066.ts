@@ -21,9 +21,12 @@ export async function upgrade(db: Firestore) {
   await runChunks(mandates.docs, async (doc) => {
     const mandate = doc.data() as Mandate<Timestamp>;
 
-    // there is some weird legacy contract in the db (e.g: 'contracts/CDFArchipelMandate')
+    // clean weird legacy contract in the db (e.g: 'contracts/CDFArchipelMandate')
     const isRogueMandate = !!(mandate as any).titleIds;
-    if (isRogueMandate) return;
+    if (isRogueMandate) {
+      await doc.ref.delete();
+      return;
+    }
 
     let update = false;
 
@@ -32,7 +35,7 @@ export async function upgrade(db: Firestore) {
       mandate.sellerId = centralOrgId.catalog;
     }
 
-    if (!mandate.stakeholders || !mandate.stakeholders.length) {
+    if (!mandate.stakeholders?.length) {
       update = true;
       const movieSnap = await db.collection('movies').doc(mandate.titleId).get();
       const movie = movieSnap.data() as Movie;
