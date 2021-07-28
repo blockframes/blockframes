@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Invitation, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
@@ -7,7 +7,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 
 const applyFilters = (invitations: Invitation[], filters: { type: string[], status: string[] }) => {
   const inv = filters.type?.length ? invitations.filter(inv => filters.type.includes(inv.type)) : invitations;
@@ -21,7 +21,7 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InvitationComponent implements OnInit{
+export class InvitationComponent implements OnInit, OnDestroy{
   form = new FormGroup({
     type: new FormControl([]),
     status: new FormControl([]),
@@ -43,6 +43,7 @@ export class InvitationComponent implements OnInit{
 
   formName = ['type', 'status'];
   emptyMessage = false;
+  subscribe: Subscription;
 
   constructor(
     private service: InvitationService,
@@ -53,7 +54,11 @@ export class InvitationComponent implements OnInit{
   ) { }
 
   ngOnInit() {
-    this.invitations$.subscribe(val => val.length ? this.emptyMessage = false : this.emptyMessage = true)
+    this.subscribe = this.invitations$.subscribe(val => val.length ? this.emptyMessage = false : this.emptyMessage = true)
+  }
+
+  ngOnDestroy() {
+    this.subscribe.unsubscribe();
   }
 
   acceptAll(invitations: Invitation[]) {
