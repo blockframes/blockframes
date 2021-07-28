@@ -2,18 +2,9 @@
   <header>
     <h2>{{ title?.title.international }}</h2>
     <mat-form-field appearance="outline">
-      <mat-select formControlName="titleId"  placeholder="Select a title">
-        <mat-option *ngFor="let title of (titles$ | async)" [value]="title.id">
-          {{ title.title.international }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="form.get('titleId').hasError('required')">Title is required!</mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
       <mat-label>Title price</mat-label>
       <input type="number" matInput formControlName="price" min="0"/>
       <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
-      <mat-hint>If no price entered, Seller will receive Asking Price</mat-hint>
     </mat-form-field>
   </header>
   <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">

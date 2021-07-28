@@ -12,6 +12,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
       padding: 4px 8px;
       text-transform: uppercase;
       font-size: 14px;
+      white-space: nowrap;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
