@@ -17,8 +17,10 @@
   <mat-card *ngFor="let control of terms$ | async | reverse">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
-        <mat-card-title>{{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date:
-          'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}</mat-card-title>
+        <mat-card-title>
+          {{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date:
+          'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}
+        </mat-card-title>
         <section fxLayoutGap="12px">
           <button mat-icon-button (click)="edit(term)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
@@ -29,6 +31,12 @@
         </section>
       </mat-card-header>
       <mat-card-content>
+        <ng-container *ngIf="(term | collidingHoldbacks: holdbacks) as collision">
+          <button mat-button (click)="openHoldbackModal(collision)">
+            <mat-icon svgIcon="info"></mat-icon>
+            <span>Holdback(s) exist for this right</span>
+          </button>
+        </ng-container>
         <mat-accordion>
           <!-- TERRITORIES -->
           <mat-expansion-panel expanded>
@@ -51,7 +59,7 @@
                         <mat-chip disableRipple>{{ territory }}</mat-chip>
                       </ng-container>
                     </mat-chip-list>
-                    <button mat-button class="spacing" (click)="openTerritoryModal(territories, 'territories')">
+                    <button mat-button class="spacing" (click)="openTerritoryModal(territories)">
                       ...See {{ territories.length - 30 }} More
                     </button>
                   </div>

@@ -1,0 +1,13 @@
+<header>
+  <h1>Holdbacks exist for this right</h1>
+  <button mat-icon-button (click)="close()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</header>
+<section>
+  <p>
+    There are some holdbacks that exists for this right.<br/>
+    You can still add this right to your selection.
+  </p>
+  <holdback-list [holdbacks]="data.holdbacks"></holdback-list>
+</section>

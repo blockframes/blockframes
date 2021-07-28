@@ -1,5 +1,5 @@
 <main fxLayout="column">
-  <h1><a routerLink="/c/o/dashboard/crm/">CRM dashboard</a> > Users</h1>
+  <crm-bread-crumb></crm-bread-crumb>
   <article fxLayout="column" fxLayoutAlign="center center">
     <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
       <ng-container *ngIf="exporting.$ | async else export">

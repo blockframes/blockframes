@@ -9,6 +9,8 @@ import { Offer, OfferService } from '@blockframes/contract/offer/+state';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { Contract, ContractService } from '@blockframes/contract/contract/+state';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { joinWith } from '@blockframes/utils/operators';
+import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'offer-shell',
@@ -21,7 +23,12 @@ export class OfferShellComponent {
   public offerId$ = this.route.params.pipe(pluck('offerId'));
 
   public offer$ = this.offerId$.pipe(
-    switchMap((offerId: string): Observable<Offer> => this.offerService.valueChanges(offerId)),
+    switchMap((offerId: string) => this.service.valueChanges(offerId)),
+    joinWith({
+      buyer: offer => this.orgService.valueChanges(offer.buyerId),
+      contracts: offer => this.getContract(offer.id)
+    }),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   public buyerOrg$ = this.offer$.pipe(
@@ -35,15 +42,30 @@ export class OfferShellComponent {
 
   public incomes$ = this.offerId$.pipe(
     switchMap((offerId: string): Observable<Income[]> => this.incomeService.valueChanges(ref => ref.where('offerId', '==', offerId))),
-    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   constructor(
     private route: ActivatedRoute,
-    private offerService: OfferService,
+    private service: OfferService,
     private incomeService: IncomeService,
     private orgService: OrganizationService,
     private contractService: ContractService,
+    private titleService: MovieService,
   ) { }
+
+  getContract(offerId: string) {
+    return this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId)).pipe(
+      joinWith({
+        title: contract => this.titleService.valueChanges(contract.titleId),
+        income: contract => this.incomeService.valueChanges(contract.id),
+        seller: contract => {
+          // Get the ID of the seller, not AC
+          const sellerId = contract.stakeholders.find(id => id !== contract.sellerId && id !== contract.buyerId);
+          if (!sellerId) return null;
+          return this.orgService.valueChanges(sellerId);
+        }
+      })
+    );
+  }
 
 }

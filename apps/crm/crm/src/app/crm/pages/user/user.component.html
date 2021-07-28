@@ -1,4 +1,4 @@
-<h1><a routerLink="/c/o/dashboard/crm/">CRM dashboard</a> > User > {{ userId }} </h1>
+<crm-bread-crumb *ngIf="user">{{ user.email }}</crm-bread-crumb>
 <section fxLayout="row" *ngIf="user" fxLayoutAlign="space-around start" fxLayoutGap="40px">
   <mat-card  fxLayout="column" fxLayoutAlign="center" fxFlex>
     <mat-card-header fxLayoutAlign="center center">
