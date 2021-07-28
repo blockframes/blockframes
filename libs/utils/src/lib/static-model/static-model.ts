@@ -33,7 +33,7 @@ export const contractType = {
 
 export const offerStatus = {
   'pending': ' New',
-  'negotiating': 'Negotiating',
+  'negotiating': 'In Negotiation',
   'accepted': ' Accepted',
   'signing': 'On Signature',
   'signed': 'Signed',
