@@ -27,8 +27,8 @@ export class InvitationComponent {
     status: new FormControl([]),
   });
 
-  invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length));
-
+  invitationCount$ = this.service.myInvitations$.pipe(map(inv => inv.length))
+  
   // Invitation that require an action
   invitations$ = combineLatest([
     this.service.myInvitations$,
@@ -68,11 +68,7 @@ export class InvitationComponent {
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);
   }
 
-  clearSelect (formName: string[]) {
-    formName.map(val => this.form.get(val).reset());
-  }
-
   clearFilters() {
-    this.clearSelect (this.formName);
+    this.formName.map(val => this.form.get(val).reset());
   }
 }
