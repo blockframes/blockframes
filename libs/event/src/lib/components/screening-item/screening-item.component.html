@@ -1,32 +1,30 @@
 <ng-container *ngIf="event$ | async as event">
-  <section fxLayoutAlign="space-between start">
-    <a matRipple [routerLink]="['/c/o/marketplace/event/', event.id]">
-      <img fxHide.lt-sm
-      [ref]="(event.meta.titleId | getTitle | async)?.poster"
-      asset="empty_poster.svg"
-      width="225px"
-      height="300px"
-      alt="Movie poster of the screening">
-    </a>
-    <article fxLayout="column" fxLayoutAlign="space-between start">
-      <div fxLayout="column" fxLayoutAlign="start start">
-        <h3><a [routerLink]="['/c/o/marketplace/event/', event.id]">{{ event.title }}</a></h3>
-        <h5>{{ event.isPrivate ? 'Private' : 'Public' }} Screening </h5>
-        <pre class="mat-body-1">{{ event | eventRange }}</pre>
-        <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
-          <org-chip @fade [org]="org"></org-chip>
+  <a matRipple [routerLink]="['/c/o/marketplace/event/', event.id]">
+    <img fxHide.lt-sm
+    [ref]="(event.meta.titleId | getTitle | async)?.poster"
+    asset="empty_poster.svg"
+    width="225px"
+    height="300px"
+    alt="Movie poster of the screening">
+  </a>
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <div>
+      <h3><a [routerLink]="['/c/o/marketplace/event/', event.id]">{{ event.title }}</a></h3>
+      <h5>{{ event.isPrivate ? 'Private' : 'Public' }} Screening </h5>
+      <pre class="mat-body-1">{{ event | eventRange }}</pre>
+      <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
+        <org-chip @fade [org]="org"></org-chip>
+      </ng-container>
+    </div>
+    <footer fxLayout>
+      <ng-container *ngIf="event.isOwner; else notOwner">
+        <h3>You are the owner of this event</h3>
+      </ng-container>
+      <ng-template #notOwner>
+        <ng-container *ngIf="invitation !== undefined">
+          <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
         </ng-container>
-      </div>
-      <footer>
-        <ng-container *ngIf="event.isOwner; else notOwner">
-          <h3>You are the owner of this event</h3>
-        </ng-container>
-        <ng-template #notOwner>
-          <ng-container *ngIf="invitation !== undefined">
-            <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
-          </ng-container>
-        </ng-template>
-      </footer>
-    </article>
-  </section>
+      </ng-template>
+    </footer>
+  </article>
 </ng-container>
